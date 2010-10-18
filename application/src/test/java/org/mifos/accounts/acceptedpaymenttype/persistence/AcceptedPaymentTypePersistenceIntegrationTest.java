@@ -51,12 +51,6 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
         acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
     }
 
-    @Override
-    @After
-    public void tearDown() throws Exception {
-        StaticHibernateUtil.rollbackTransaction();
-    }
-
     @Test
     public void testGetAcceptedPaymentTypes() throws Exception {
         // get all accepted payment types and store in

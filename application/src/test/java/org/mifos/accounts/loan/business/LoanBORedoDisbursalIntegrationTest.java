@@ -138,14 +138,14 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         if (center != null) {
             center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
         }
-        TestObjectFactory.cleanUp(loanBO);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        loanBO = null;
+        group = null;
+        center = null;
         if (null != fee) {
             fee = (FeeBO) StaticHibernateUtil.getSessionTL().get(FeeBO.class, fee.getFeeId());
-            TestObjectFactory.cleanUp(fee);
+            fee = null;
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     public void testDummy() {

@@ -20,10 +20,7 @@
 
 package org.mifos.customers.surveys.struts.tag;
 
-import java.sql.Statement;
-
 import junit.framework.Assert;
-
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
@@ -49,9 +46,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        Statement stmt = session.connection().createStatement();
-        stmt.execute("truncate questions");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -64,7 +59,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "freetext answer", false);
         String markup = tag.getQuestionMarkup(result);
         String expectedMarkup = "<textarea class=\"surveyform freetext fontnormal8pt\" "
-                + "cols=\"70\" rows=\"10\" name=\"value(response_1)\">freetext answer</textarea>";
+                + "cols=\"70\" rows=\"10\" name=\"value(response_"+question.getQuestionId()+")\">freetext answer</textarea>";
        Assert.assertEquals(expectedMarkup, markup);
     }
 

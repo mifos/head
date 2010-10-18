@@ -20,11 +20,7 @@
 
 package org.mifos.customers.struts.action;
 
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -49,6 +45,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+import java.util.List;
 
 public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -83,10 +82,10 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(account);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        account = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         userContext = null;
         super.tearDown();
     }
@@ -145,7 +144,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(personnelList);
        Assert.assertEquals(1, personnelList.size());
        Assert.assertEquals(officeBO.getOfficeName(), SessionUtils.getAttribute(CustomerSearchConstants.OFFICE, request));
-        TestObjectFactory.cleanUp(personnelBO);
+
     }
 
     public void testLoadMainSearchLoBoUser() throws Exception {

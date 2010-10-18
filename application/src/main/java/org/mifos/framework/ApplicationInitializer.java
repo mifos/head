@@ -42,6 +42,7 @@ import org.mifos.framework.exceptions.HibernateStartUpException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.XMLReaderException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
@@ -130,6 +131,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             synchronized (ApplicationInitializer.class) {
                 if (servletContext != null) {
                     dbUpgrade(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext));
+
                 }
                 setAttributesOnContext(servletContext);
             }
@@ -197,7 +199,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         ProcessFlowRules.init();
         initializeSecurity();
 
-        FinancialInitializer.initialize();
+        FinancialInitializer.initialize(HibernateUtil.getInstance());
         EntityMasterData.getInstance().init();
         initializeEntityMaster();
     }

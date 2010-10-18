@@ -27,14 +27,9 @@ import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.hibernate.helper.DatabaseDependentTest;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Flow;
-import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestCaseInitializer;
-import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.service.test.TestMode;
 import servletunit.struts.MockStrutsTestCase;
 
@@ -88,7 +83,8 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
             setStrutsConfig();
             strutsConfigSet = true;
         }
-        getActionServlet().getServletContext().setAttribute(ShutdownManager.class.getName(), new ShutdownManager());
+        DatabaseDependentTest.before();
+        getActionServlet().getServletContext().setAttribute(ShutdownManager.class.getName(), new ShutdownManager());        
     }
 
     protected void addRequestDateParameter(String param, String dateStr) throws InvalidDateException {
@@ -127,9 +123,11 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         getActionServlet().getServletContext().removeAttribute(ShutdownManager.class.getName());
         doCleanUp(request);
         doCleanUp(request.getSession());
-        TestObjectFactory.cleanUpTestObjects();
         diableCustomWorkingDays();
+        DatabaseDependentTest.after();
+        TestObjectFactory.cleanUpTestObjects();
         super.tearDown();
+        TestUtils.dereferenceObjects(this);
     }
 
     protected void doCleanUp(HttpSession session) {

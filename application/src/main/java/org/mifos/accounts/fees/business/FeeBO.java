@@ -204,7 +204,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
     public void update() throws FeeException {
         try {
             setUpdateDetails();
-            new FeePersistence().createOrUpdate(this);
+            getFeePersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new FeeException(FeeConstants.FEE_UPDATE_ERROR, e);
         }
@@ -214,10 +214,14 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
     public void save() throws FeeException {
         try {
-            new FeePersistence().createOrUpdate(this);
+            getFeePersistence().createOrUpdate(this);
         } catch (PersistenceException he) {
             throw new FeeException(FeeConstants.FEE_CREATE_ERROR, he);
         }
+    }
+
+    protected FeePersistence getFeePersistence() {
+        return new FeePersistence();
     }
 
     public boolean isActive() {

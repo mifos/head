@@ -20,21 +20,7 @@
 
 package org.mifos.framework;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.StringReader;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.joda.time.DateMidnight;
@@ -55,6 +41,19 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.util.ReflectionUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.StringReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.util.*;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class TestUtils {
 
@@ -113,7 +112,7 @@ public class TestUtils {
 
     /**
      * Corresponds to the locale one gets from
-     *  TestObjectFactory#getUserContext()
+     * TestObjectFactory#getUserContext()
      */
     public static Locale ukLocale() {
         return new Locale("EN", "GB");
@@ -186,6 +185,7 @@ public class TestUtils {
     /**
      * x != notx <br/><br/>
      * x = y = z (but different objects)
+     *
      * @param x
      * @param notx
      * @param y
@@ -213,7 +213,6 @@ public class TestUtils {
 
     /**
      * x.equals(WrongType) must return false;
-     *
      */
     private static void assertPassIncompatibleType_isFalse(Object x) {
         Assert.assertFalse("Passing incompatible object to equals should return false", x.equals("string"));
@@ -221,7 +220,6 @@ public class TestUtils {
 
     /**
      * x.equals(null) must return false;
-     *
      */
     private static void assertNullReference_isFalse(Object x) {
         Assert.assertFalse("Passing null to equals should return false", x.equals(null));
@@ -287,7 +285,6 @@ public class TestUtils {
     /**
      * A more optimal implementation of hashcode ensures that if the objects are unequal different integers are
      * produced.
-     *
      */
     private static void assertHashcode_twoUnEqualObjects_produceDifferentNumber(Object x, Object notx) {
 
@@ -298,7 +295,7 @@ public class TestUtils {
     }
 
     public static DateTime nearestDateMatchingPeriodStartingOn(DateTime inclusiveOf, MeetingBO period) {
-        ScheduledEvent scheduledEvent =  ScheduledEventFactory.createScheduledEventFrom(period);
+        ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(period);
         return scheduledEvent.nearestMatchingDateBeginningAt(inclusiveOf);
     }
 
@@ -329,5 +326,28 @@ public class TestUtils {
                 assertThat(scheduledDate.dayOfWeek().get(), is(WeekDay.getJodaDayOfWeekThatMatchesMifosWeekDay(expectedDayOfWeek.getValue())));
             }
         }
+    }
+
+    public static void dereferenceObjects(final Object testCase) {
+        ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
+            @Override
+            public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
+                field.setAccessible(true);
+                try {
+                    if (Modifier.isStatic(field.getModifiers()) || field.getType().isPrimitive()) return;
+                    if (field.get(testCase) instanceof Object) {
+                        field.set(testCase, null);
+                    }
+                }
+                finally {
+                    field.setAccessible(false);
+                }
+            }
+        }, new ReflectionUtils.FieldFilter() {
+            @Override
+            public boolean matches(Field field) {
+                return field.getDeclaringClass().equals(testCase.getClass());
+            }
+        });
     }
 }

@@ -20,38 +20,15 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
-import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
-import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.*;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.util.helpers.*;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -63,14 +40,19 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
-import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -94,9 +76,8 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.removeObject(loanOffering);
-        TestObjectFactory.cleanUp(fee);
-        StaticHibernateUtil.closeSession();
+        fee = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -489,7 +470,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyActionErrors(new String[] { ProductDefinitionConstants.ERRORFEEFREQUENCY });
         verifyInputForward();
-        TestObjectFactory.cleanUp(fee);
+        fee = null;
     }
 
     public void testPreview() throws Exception {
@@ -699,7 +680,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class,
                 (Short) request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
-        TestObjectFactory.cleanUp(fee);
+        fee = null;
     }
 
     public void testManage() throws Exception {
@@ -990,7 +971,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.update_success.toString());
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
        Assert.assertEquals("Loan Product", product.getPrdOfferingName());
        Assert.assertEquals("LOAP", product.getPrdOfferingShortName());
@@ -1008,12 +989,12 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
         TestObjectFactory.removeObject(product);
-        TestObjectFactory.cleanUp(fee);
+        fee = null;
     }
 
     public void testGet() throws PageExpiredException {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "get");
         addRequestParameter("prdOfferingId", loanOffering.getPrdOfferingId().toString());
@@ -1071,13 +1052,13 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(loanOffering1.getInterestGLcode().getGlcode());
         Assert.assertNotNull(loanOffering1.getLoanOfferingFees());
         Assert.assertNotNull(loanOffering1.getLoanOfferingFunds());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     public void testViewAllLoanProducts() throws PageExpiredException {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Offering1", "LOA1");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "viewAllLoanProducts");
         actionPerform();
@@ -1097,7 +1078,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
             Assert.assertNotNull(loanOfferingBO.getPrdOfferingId());
             Assert.assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         TestObjectFactory.removeObject(loanOffering1);
 
     }

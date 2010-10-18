@@ -30,9 +30,11 @@ import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.hibernate.helper.NoActionHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -44,8 +46,7 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
-
-
+@Ignore
 public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
 
     private static java.sql.Connection connection;
@@ -59,14 +60,13 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @AfterClass
-     public static void afterClass() throws Exception {
-            // Cleaning the database using FK check disabled connection
-            // If any one of the test fails or throws error it could lead to
-            // multiple failures in other tests during test build
-            TestDatabase.createMySQLTestDatabase();
-            FinancialInitializer.initialize();
-            StaticHibernateUtil.flushAndCloseSession();
-        }
+    public static void afterClass() throws Exception {
+        // Cleaning the database using FK check disabled connection
+        // If any one of the test fails or throws error it could lead to
+        // multiple failures in other tests during test build
+        FinancialInitializer.initialize(new NoActionHibernateUtil());
+        StaticHibernateUtil.flushSession();
+    }
 
     /**
      * Demonstrate the simplest possible non-sequential database upgrade works. For example, upgrading a schema from
@@ -113,7 +113,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
         connection.createStatement().execute("INSERT INTO foo VALUES(1, 'BAR')");
 
         connection.createStatement().execute("INSERT INTO foo VALUES(2, 'BAZ')");
-        connection.commit();
+//        connection.commit();
     }
 
     private void loadNonSeqDatabaseSchema() throws Exception {
@@ -126,7 +126,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
 
         connection.createStatement().execute(
                 "create table applied_upgrades(" + "upgrade_id integer)" + "engine=innodb character set utf8;");
-        connection.commit();
+//        connection.commit();
     }
 
     @Test
@@ -136,7 +136,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
         connection.createStatement().execute(
                 "create table baz ( " + "baz_id integer" + ") ENGINE=InnoDB CHARACTER SET utf8 ");
         connection.createStatement().execute("INSERT INTO baz VALUES(1202)");
-        connection.commit();
+//        connection.commit();
         IDataSet dump1 = new DatabaseConnection(connection).createDataSet();
         ITable expected = dump1.getTable("baz");
 
@@ -150,11 +150,6 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
 
         IDataSet dump2 = new DatabaseConnection(connection).createDataSet();
         Assertion.assertEquals(expected, dump2.getTable("baz"));
-    }
-
-    @Test
-    public void testMergedUpgrade() throws Exception {
-
     }
 
     @Test
@@ -179,7 +174,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
         connection.createStatement().execute("drop table if exists foo");
         connection.createStatement().execute("drop table if exists bar");
         connection.createStatement().execute("drop table if exists baz");
-        connection.commit();
+//        connection.commit();
 
         // load dummy schema containing database_version & applied_upgrades tables
         connection.createStatement().execute(
@@ -190,7 +185,7 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
 
         // insert database version
         connection.createStatement().execute("insert into database_version values(253)");
-        connection.commit();
+//        connection.commit();
 
         SortedMap<Integer, String> availableUpgrades = new TreeMap<Integer, String>();
         availableUpgrades.put(1275913405, DatabaseMigrator.CLASS_UPGRADE_TYPE);

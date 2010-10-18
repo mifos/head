@@ -20,19 +20,7 @@
 
 package org.mifos.customers.surveys.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -80,6 +68,20 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -162,9 +164,9 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("value(response_" + surveyQuestion3Id + "_DD)", "14");
         addRequestParameter("value(response_" + surveyQuestion3Id + "_MM)", "3");
         addRequestParameter("value(response_" + surveyQuestion3Id + "_YY)", "2006");
-        addRequestParameter("value(response_" + survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
+        addRequestParameter("value(response_" + survey.getQuestions().get(0).getSurveyQuestionId() + ")",
                 "answer 1");
-        addRequestParameter("value(response_" + survey.getQuestions().get(1).getQuestion().getQuestionId() + ")", "2");
+        addRequestParameter("value(response_" + survey.getQuestions().get(1).getSurveyQuestionId() + ")", "2");
         addRequestParameter("value(customerId)", clientId);
         addRequestParameter("value(officerName)", officerName);
         addRequestParameter("value(dateSurveyed_DD)", "13");
@@ -280,7 +282,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
         survey.addQuestion(question1, true);
         survey.addQuestion(question2, true);
-        survey.addQuestion(question3, true);
+        SurveyQuestion surveyQuestion3 = survey.addQuestion(question3, true);
         survey.addQuestion(question4, true);
 
         surveysPersistence.createOrUpdate(survey);
@@ -309,14 +311,14 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         InstanceStatus status = InstanceStatus.COMPLETED;
 
         int question3Id = question3.getQuestionId();
-        addRequestParameter("value(response_" + question3Id + "_DD)", "14");
-        addRequestParameter("value(response_" + question3Id + "_MM)", "30"); // an
+        addRequestParameter("value(response_" + surveyQuestion3.getSurveyQuestionId() + "_DD)", "14");
+        addRequestParameter("value(response_" + surveyQuestion3.getSurveyQuestionId() + "_MM)", "30"); // an
         // invalid
         // month
-        addRequestParameter("value(response_" + question3Id + "_YY)", "2006");
-        addRequestParameter("value(response_" + survey.getQuestions().get(0).getQuestion().getQuestionId() + ")",
+        addRequestParameter("value(response_" + surveyQuestion3.getSurveyQuestionId() + "_YY)", "2006");
+        addRequestParameter("value(response_" + survey.getQuestions().get(0).getSurveyQuestionId() + ")",
                 "answer 1");
-        addRequestParameter("value(response_" + survey.getQuestions().get(1).getQuestion().getQuestionId() + ")",
+        addRequestParameter("value(response_" + survey.getQuestions().get(1).getSurveyQuestionId() + ")",
                 "notanumber"); // this field should be a number
         addRequestParameter("value(customerId)", clientId);
         addRequestParameter("value(officerName)", officerName);
@@ -543,7 +545,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
         setRequestPathInfo("/surveyInstanceAction");
         addRequestParameter("method", "get");
-        addRequestParameter("value(instanceId)", "1");
+        addRequestParameter("value(instanceId)", Integer.toString(getSurveyInstanceId()));
         actionPerform();
         verifyNoActionErrors();
         SurveyInstance retrievedInstance = (SurveyInstance) request.getAttribute(SurveysConstants.KEY_INSTANCE);
@@ -556,8 +558,19 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(6.2, ((PPISurveyInstance) retrievedInstance).getTopHalfBelowPovertyLinePercent(), DELTA);
     }
 
-    public void testChooseSurveyForClient() throws Exception {
+    private int getSurveyInstanceId() throws SQLException {
+        int id = 0;
+        Connection connection = StaticHibernateUtil.getSessionTL().connection();
+        ResultSet resultSet = connection.createStatement().executeQuery("select max(instance_id) from survey_instance");
+        resultSet.next();
+        id = resultSet.getInt(1);
+        connection.close();
+        resultSet.close();
+        return id;
+    }
 
+    public void testChooseSurveyForClient() throws Exception {
+        request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
         MeetingBO weeklyMeeting = null;
         CenterBO center = null;
         GroupBO group = null;
@@ -628,7 +641,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
         LoanBO loan = createLoan();
         String globalAccountNum = loan.getGlobalAccountNum();
-        Assert.assertEquals("000100000000002", globalAccountNum);
+        Assert.assertNotNull(globalAccountNum);
 
         setRequestPathInfo("/surveyInstanceAction");
         addRequestParameter("method", "choosesurvey");

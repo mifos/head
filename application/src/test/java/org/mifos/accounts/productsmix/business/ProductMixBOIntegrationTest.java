@@ -49,8 +49,8 @@ public class ProductMixBOIntegrationTest extends MifosIntegrationTestCase {
     public void tearDown() throws Exception {
 
         TestObjectFactory.removeObject(prdMix);
-        TestObjectFactory.removeObject(savingsOffering);
-        StaticHibernateUtil.closeSession();
+        savingsOffering = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test

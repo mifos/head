@@ -20,11 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.hibernate.Session;
 import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -42,6 +38,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+import java.util.List;
 
 public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -82,10 +81,10 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(loanBO);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        loanBO = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -116,7 +115,7 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         CustomerAccountBO closedAccount = group.getCustomerAccount();
         Assert.assertEquals(AccountState.CUSTOMER_ACCOUNT_ACTIVE, closedAccount.getState());
         Session session = StaticHibernateUtil.getSessionTL();
-        session.beginTransaction();
+//        session.beginTransaction();
         loanBO = (LoanBO) session.get(LoanBO.class, loanBO.getAccountId());
         List<TransactionHistoryDto> history = loanBO.getTransactionHistoryView();
         for (TransactionHistoryDto entry : history) {

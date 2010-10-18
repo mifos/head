@@ -20,13 +20,6 @@
 
 package org.mifos.reports.persistence;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -39,17 +32,13 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
-import org.mifos.reports.business.ReportsBO;
-import org.mifos.reports.business.ReportsCategoryBO;
-import org.mifos.reports.business.ReportsDataSource;
-import org.mifos.reports.business.ReportsJasperMap;
-import org.mifos.reports.business.ReportsParams;
-import org.mifos.reports.business.ReportsParamsMap;
-import org.mifos.reports.business.ReportsParamsMapValue;
-import org.mifos.reports.business.ReportsParamsValue;
+import org.mifos.reports.business.*;
 import org.mifos.reports.exceptions.ReportException;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
+
+import java.sql.Connection;
+import java.util.*;
 
 public class ReportsPersistence extends Persistence {
 
@@ -88,12 +77,12 @@ public class ReportsPersistence extends Persistence {
         Transaction trxn = null;
         try {
             session = StaticHibernateUtil.getSessionTL();
-            trxn = session.beginTransaction();
+            StaticHibernateUtil.startTransaction();
             session.save(reportsParams);
             session.flush();
-            trxn.commit();
+            StaticHibernateUtil.commitTransaction();
         } catch (HibernateProcessException hpe) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ApplicationException(hpe);
         } catch (HibernateException hpe) {
             trxn.rollback();
@@ -109,22 +98,21 @@ public class ReportsPersistence extends Persistence {
 
     public void deleteReportParams(ReportsParamsValue reportsParams) throws ApplicationException, SystemException {
         Session session = null;
-        Transaction trxn = null;
         try {
             session = StaticHibernateUtil.getSessionTL();
-            trxn = session.beginTransaction();
+            StaticHibernateUtil.startTransaction();
             session.delete(reportsParams);
             session.flush();
-            trxn.commit();
+            StaticHibernateUtil.commitTransaction();
         } catch (HibernateProcessException hpe) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ApplicationException(hpe);
         } catch (HibernateException e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
 
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } catch (Exception e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
             StaticHibernateUtil.closeSession();
@@ -139,22 +127,21 @@ public class ReportsPersistence extends Persistence {
     public void createReportsDataSource(ReportsDataSource reportsDataSource) throws ApplicationException,
             SystemException {
         Session session = null;
-        Transaction trxn = null;
         try {
             session = StaticHibernateUtil.getSessionTL();
-            trxn = session.beginTransaction();
+            StaticHibernateUtil.startTransaction();
             session.save(reportsDataSource);
             session.flush();
-            trxn.commit();
+            StaticHibernateUtil.commitTransaction();
         } catch (HibernateProcessException hpe) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ApplicationException(hpe);
         } catch (HibernateException e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
 
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } catch (Exception e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
             StaticHibernateUtil.closeSession();
@@ -164,22 +151,21 @@ public class ReportsPersistence extends Persistence {
     public void deleteReportsDataSource(ReportsDataSource reportsDataSource) throws ApplicationException,
             SystemException {
         Session session = null;
-        Transaction trxn = null;
         try {
             session = StaticHibernateUtil.getSessionTL();
-            trxn = session.beginTransaction();
+            StaticHibernateUtil.startTransaction();
             session.delete(reportsDataSource);
             session.flush();
-            trxn.commit();
+            StaticHibernateUtil.commitTransaction();
         } catch (HibernateProcessException hpe) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ApplicationException(hpe);
         } catch (HibernateException e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
 
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } catch (Exception e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
             StaticHibernateUtil.closeSession();
@@ -244,22 +230,20 @@ public class ReportsPersistence extends Persistence {
     public void createReportsParamsMap(ReportsParamsMapValue reportsParamsMapValue) throws ApplicationException,
             SystemException {
         Session session = null;
-        Transaction trxn = null;
         try {
             session = StaticHibernateUtil.getSessionTL();
-            trxn = session.beginTransaction();
+            StaticHibernateUtil.startTransaction();
             session.save(reportsParamsMapValue);
             session.flush();
-            trxn.commit();
+            StaticHibernateUtil.commitTransaction();
         } catch (HibernateProcessException hpe) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ApplicationException(hpe);
         } catch (HibernateException e) {
-            trxn.rollback();
-
+            StaticHibernateUtil.rollbackTransaction();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } catch (Exception e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
             StaticHibernateUtil.closeSession();
@@ -272,22 +256,21 @@ public class ReportsPersistence extends Persistence {
     public void deleteReportsParamsMap(ReportsParamsMapValue reportsParamsMapValue) throws ApplicationException,
             SystemException {
         Session session = null;
-        Transaction trxn = null;
         try {
             session = StaticHibernateUtil.getSessionTL();
-            trxn = session.beginTransaction();
+            StaticHibernateUtil.startTransaction();
             session.delete(reportsParamsMapValue);
             session.flush();
-            trxn.commit();
+            StaticHibernateUtil.commitTransaction();
         } catch (HibernateProcessException hpe) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ApplicationException(hpe);
         } catch (HibernateException e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
 
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } catch (Exception e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
             StaticHibernateUtil.closeSession();
@@ -299,21 +282,20 @@ public class ReportsPersistence extends Persistence {
      */
     public void updateReportsJasperMap(ReportsJasperMap reportsJasperMap) throws ApplicationException, SystemException {
         Session session = null;
-        Transaction trxn = null;
         try {
             session = StaticHibernateUtil.getSessionTL();
-            trxn = session.beginTransaction();
+            StaticHibernateUtil.startTransaction();
             session.update(reportsJasperMap);
             session.flush();
-            trxn.commit();
+            StaticHibernateUtil.commitTransaction();
         } catch (HibernateProcessException e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ApplicationException(e);
         } catch (HibernateException e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } catch (Exception e) {
-            trxn.rollback();
+            StaticHibernateUtil.rollbackTransaction();
             throw new ReportException(ReportsConstants.CREATE_FAILED_EXCEPTION, e);
         } finally {
             StaticHibernateUtil.closeSession();

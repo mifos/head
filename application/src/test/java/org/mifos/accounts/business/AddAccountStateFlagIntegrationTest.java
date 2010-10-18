@@ -48,12 +48,12 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
     public void setUp() throws SQLException {
         session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
-        connection.setAutoCommit(true);
+//        connection.setAutoCommit(true);
     }
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         connection = null;
         session = null;
         TestDatabase.resetMySQLDatabase();

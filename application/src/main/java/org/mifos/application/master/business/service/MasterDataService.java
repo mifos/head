@@ -42,10 +42,29 @@ import org.mifos.security.util.UserContext;
 
 public class MasterDataService implements BusinessService {
 
-    private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
-    private final OfficePersistence officePersistence = new OfficePersistence();
-    private final CustomerPersistence customerPersistence = new CustomerPersistence();
-    private final MasterPersistence masterPersistence = new MasterPersistence();
+    private final PersonnelPersistence personnelPersistence = getPersonnelPersistence();
+
+    protected PersonnelPersistence getPersonnelPersistence() {
+        return new PersonnelPersistence();
+    }
+
+    private final OfficePersistence officePersistence = getOfficePersistence();
+
+    protected OfficePersistence getOfficePersistence() {
+        return new OfficePersistence();
+    }
+
+    private final CustomerPersistence customerPersistence = getCustomerPersistence();
+
+    protected CustomerPersistence getCustomerPersistence() {
+        return new CustomerPersistence();
+    }
+
+    private final MasterPersistence masterPersistence = getMasterPersistence();
+
+    MasterPersistence getMasterPersistence() {
+        return new MasterPersistence();
+    }
 
     @Override
     public AbstractBusinessObject getBusinessObject(UserContext userContext) {
@@ -87,7 +106,7 @@ public class MasterDataService implements BusinessService {
     public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(EntityType entityType)
             throws ServiceException {
         try {
-            return new MasterPersistence().retrieveCustomFieldsDefinition(entityType);
+            return masterPersistence.retrieveCustomFieldsDefinition(entityType);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -95,7 +114,7 @@ public class MasterDataService implements BusinessService {
 
     public String retrieveMasterEntities(Integer entityId, Short localeId) throws ServiceException {
         try {
-            return new MasterPersistence().retrieveMasterEntities(entityId, localeId);
+            return masterPersistence.retrieveMasterEntities(entityId, localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -103,7 +122,7 @@ public class MasterDataService implements BusinessService {
 
     public List<ValueListElement> retrieveMasterEntities(String entityName, Short localeId) throws ServiceException {
         try {
-            return new MasterPersistence().retrieveMasterEntities(entityName, localeId);
+            return masterPersistence.retrieveMasterEntities(entityName, localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -112,7 +131,7 @@ public class MasterDataService implements BusinessService {
     @SuppressWarnings("unchecked")
     public MasterDataEntity getMasterDataEntity(Class clazz, Short id) throws ServiceException {
         try {
-            return new MasterPersistence().getMasterDataEntity(clazz, id);
+            return masterPersistence.getMasterDataEntity(clazz, id);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -120,7 +139,7 @@ public class MasterDataService implements BusinessService {
 
     public <T extends MasterDataEntity>  T retrieveMasterEntity(Class<T> entityType, Short entityId, Short localeId)
       throws PersistenceException {
-        return new MasterPersistence().retrieveMasterEntity(entityType, entityId, localeId);
+        return masterPersistence.retrieveMasterEntity(entityType, entityId, localeId);
     }
 
     public <T extends MasterDataEntity>  List<T> retrieveMasterEntities(Class<T> entityType, Short localeId) throws ServiceException {

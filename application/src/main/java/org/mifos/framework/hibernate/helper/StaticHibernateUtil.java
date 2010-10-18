@@ -26,11 +26,12 @@ import org.hibernate.Transaction;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 
+import javax.jws.soap.SOAPBinding;
+import java.sql.Connection;
+
 public class StaticHibernateUtil {
 
     private static HibernateUtil hibernateUtil;
-
-    private static boolean commitFalg = true;
 
     public static void setHibernateUtil(HibernateUtil hibernateUtil) {
         StaticHibernateUtil.hibernateUtil = hibernateUtil;
@@ -40,7 +41,13 @@ public class StaticHibernateUtil {
      * This method must be called before using Hibernate!
      */
     public static void initialize() throws HibernateStartUpException {
-        hibernateUtil = HibernateUtil.getInstance();
+        if(hibernateUtil == null){
+            hibernateUtil = HibernateUtil.getInstance();
+        }
+    }
+
+    public static HibernateUtil getHibernateUtil() {
+        return hibernateUtil;
     }
 
     public static SessionFactory getSessionFactory() {
@@ -77,19 +84,7 @@ public class StaticHibernateUtil {
     }
 
     public static void commitTransaction() {
-        if (commitFalg) {
-            hibernateUtil.commitTransaction();
-        }
-    }
-
-    public static void enableCommits() {
-        commitFalg = true;
-
-    }
-
-    public static void disableCommits() {
-        commitFalg = false;
-
+        hibernateUtil.commitTransaction();
     }
 
     public static void rollbackTransaction() {
@@ -98,5 +93,9 @@ public class StaticHibernateUtil {
 
     public static void shutdown() {
         hibernateUtil.shutdown();
+    }
+
+    public static Connection getConnection() {
+        return hibernateUtil.getConnection();
     }
 }

@@ -44,8 +44,8 @@ public class TestCaseInitializer {
 
     private static Boolean initialized = false;
     
-    public synchronized void initialize() throws Exception {
-        if (initialized == false) {
+    public void initialize() throws Exception {
+        if (!initialized) {
             initializeDB();
             initialized = true;
         }
@@ -59,7 +59,7 @@ public class TestCaseInitializer {
 
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
-        FinancialInitializer.initialize();
+        FinancialInitializer.initialize(StaticHibernateUtil.getHibernateUtil());
         ActivityMapper.getInstance().init();
         AuthorizationManager.getInstance().init();
         HierarchyManager.getInstance().init();
@@ -67,5 +67,6 @@ public class TestCaseInitializer {
         MifosConfiguration.getInstance().init();
         AuditConfigurtion.init(Localization.getInstance().getMainLocale());
         AccountingRules.init();
+        StaticHibernateUtil.commitTransaction();
     }
 }

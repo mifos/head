@@ -294,12 +294,16 @@ public class SavingsOfferingBO extends PrdOfferingBO {
     public void save() throws ProductDefinitionException {
         logger.debug("creating the saving offering ");
         try {
-            new SavingsPrdPersistence().createOrUpdate(this);
+            getSavingsPrdPersistence().createOrUpdate(this);
 
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
         logger.debug("creating the saving offering Done : " + getPrdOfferingName());
+    }
+
+    protected SavingsPrdPersistence getSavingsPrdPersistence() {
+        return new SavingsPrdPersistence();
     }
 
     @Override
@@ -334,7 +338,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         this.maxAmntWithdrawl = maxAmntWithdrawl;
         this.minAmntForInt = minAmntForInt;
         try {
-            new SavingsPrdPersistence().createOrUpdate(this);
+            getSavingsPrdPersistence().createOrUpdate(this);
 
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);

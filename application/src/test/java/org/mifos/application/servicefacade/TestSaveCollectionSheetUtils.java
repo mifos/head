@@ -20,14 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
@@ -40,11 +32,7 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.collectionsheet.persistence.CenterBuilder;
-import org.mifos.application.collectionsheet.persistence.ClientBuilder;
-import org.mifos.application.collectionsheet.persistence.FeeBuilder;
-import org.mifos.application.collectionsheet.persistence.GroupBuilder;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.collectionsheet.persistence.*;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -61,6 +49,14 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 /**
  * Class contains utility methods for setting up, processing and configuring a sample collection sheet hierarchy for
@@ -138,7 +134,7 @@ public class TestSaveCollectionSheetUtils {
         if (loanAccountCancelled) {
             loan.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_OTHER.getValue(), "Loan Cancelled");
             loan.update();
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         }
 
         return saveCollectionSheet;
@@ -167,6 +163,7 @@ public class TestSaveCollectionSheetUtils {
         center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).with(weeklyMeeting).withName(
                 "Center").with(sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
+        
 
         group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withParentCustomer(center).build();
@@ -199,7 +196,6 @@ public class TestSaveCollectionSheetUtils {
 
         loan.save();
 
-        StaticHibernateUtil.commitTransaction();
     }
 
     public CenterBO getCenter() {
@@ -243,13 +239,13 @@ public class TestSaveCollectionSheetUtils {
             anotherCenter = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class,
                     anotherCenter.getCustomerId());
         }
-        TestObjectFactory.cleanUp(loan);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUp(anotherClient);
-        TestObjectFactory.cleanUp(anotherGroup);
-        TestObjectFactory.cleanUp(anotherCenter);
+        loan = null;
+        client = null;
+        group = null;
+        center = null;
+        anotherClient = null;
+        anotherGroup = null;
+        anotherCenter = null;
 
     }
 

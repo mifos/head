@@ -115,7 +115,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
         StaticHibernateUtil.startTransaction();
         holidayDao.save(futureHoliday);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         holidays = holidayDao.findAllHolidaysThisYearAndNext(headOffice.getOfficeId());
         assertFalse(holidays.isEmpty());

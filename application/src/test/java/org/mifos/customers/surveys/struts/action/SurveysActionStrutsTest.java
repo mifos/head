@@ -64,8 +64,7 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         TestDatabase.resetMySQLDatabase();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.flushAndCloseSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {

@@ -20,20 +20,7 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,6 +49,17 @@ import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
 public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler = null;
@@ -89,12 +87,12 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(loanAccount);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
         mifosScheduler.shutdown();
         mifosScheduler = null;
-        StaticHibernateUtil.closeSession();
+        loanAccount = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -123,7 +121,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, currentdate, loanOffering);
         setDisbursementDateAsOldDate(loanAccount);
         loanAccount.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return loanAccount;
     }
 

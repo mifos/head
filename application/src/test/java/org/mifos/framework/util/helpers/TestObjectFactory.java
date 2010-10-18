@@ -29,24 +29,9 @@ import org.hibernate.Transaction;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.business.AccountTestUtils;
-import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.business.*;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.CategoryTypeEntity;
-import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
-import org.mifos.accounts.fees.business.FeePaymentEntity;
-import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.business.*;
 import org.mifos.accounts.fees.servicefacade.FeeFormulaDto;
 import org.mifos.accounts.fees.servicefacade.FeeStatusDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -57,11 +42,7 @@ import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanBOIntegrationTest;
-import org.mifos.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
+import org.mifos.accounts.loan.business.*;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
@@ -79,34 +60,16 @@ import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.*;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.accounts.util.helpers.CustomerAccountPaymentData;
-import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryAccountFeeActionDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryCustomerAccountInstallmentDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
+import org.mifos.accounts.util.helpers.*;
+import org.mifos.application.collectionsheet.business.*;
 import org.mifos.application.holiday.business.Holiday;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.FundCodeEntity;
-import org.mifos.application.master.business.InterestTypesEntity;
-import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.*;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -117,25 +80,14 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.CustomerPositionEntity;
-import org.mifos.customers.business.CustomerScheduleEntity;
-import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.business.*;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CheckListDetailEntity;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.client.business.ClientAttendanceBO;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.business.ClientNameDetailDto;
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
-import org.mifos.customers.client.business.NameType;
+import org.mifos.customers.client.business.*;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.GroupTemplate;
@@ -301,7 +253,7 @@ public class TestObjectFactory {
                     new OfficePersistence().getOffice(officeId), meeting, new PersonnelPersistence()
                             .getPersonnel(personnelId), new CustomerPersistence());
             new CenterPersistence().saveCenter(center);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -315,7 +267,7 @@ public class TestObjectFactory {
         try {
             prdmix = new ProductMixBO(prdOffering, prdOfferingNotAllowedId);
             prdmix.save();
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -390,7 +342,7 @@ public class TestObjectFactory {
                     trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
                     parentCustomer);
             new GroupPersistence().saveGroup(group);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -427,7 +379,7 @@ public class TestObjectFactory {
                     trainedDate, address, customFields, fees, new PersonnelPersistence().getPersonnel(formedById),
                     new OfficePersistence().getOffice(officeId), meeting, loanOfficer);
             new GroupPersistence().saveGroup(group);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -461,7 +413,7 @@ public class TestObjectFactory {
         } catch (PersistenceException e) {
             throw new RuntimeException(e);
         }
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         addObject(client);
         return client;
     }
@@ -487,7 +439,7 @@ public class TestObjectFactory {
                             .getCurrentJavaDateTime(), null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto,
                     spouseNameDetailView, clientPersonalDetailDto, null);
             new ClientPersistence().saveClient(client);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -543,7 +495,7 @@ public class TestObjectFactory {
             }
 
             new ClientPersistence().saveClient(client);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -802,7 +754,7 @@ public class TestObjectFactory {
         } catch (AccountException e) {
             throw new RuntimeException(e);
         }
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }
 
@@ -814,7 +766,7 @@ public class TestObjectFactory {
         } catch (AccountException e) {
             throw new RuntimeException(e);
         }
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }
 
@@ -826,7 +778,7 @@ public class TestObjectFactory {
         } catch (AccountException e) {
             throw new RuntimeException(e);
         }
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }
 
@@ -912,7 +864,7 @@ public class TestObjectFactory {
                     new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, new Money(currency, "200.0"));
             AccountTestUtils.addAccountActionDate(actionDate, savings);
         }
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
     }
 
@@ -934,7 +886,7 @@ public class TestObjectFactory {
                 .getRecommendedAmount(), getCustomFieldView());
         savings.save();
         SavingBOTestUtils.setActivationDate(savings, new DateTimeService().getCurrentJavaDateTime());
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return (SavingsBO) addObject(getObject(SavingsBO.class, savings.getAccountId()));
     }
 
@@ -1258,50 +1210,49 @@ public class TestObjectFactory {
         return (MeetingBO) addObject(testObjectPersistence.persist(meeting));
     }
 
-    public static void cleanUp(Holiday holiday) {
-        if (null != holiday) {
-            deleteHoliday(holiday);
-        }
-    }
+//    public static void cleanUp(Holiday holiday) {
+//        if (null != holiday) {
+//            deleteHoliday(holiday);
+//        }
+//    }
 
-    public static void cleanUp(CustomerBO customer) {
-        if (null != customer) {
-            deleteCustomer(customer);
-            customer = null;
-        }
-    }
+//    public static void cleanUp(CustomerBO customer) {
+//        if (null != customer) {
+//            deleteCustomer(customer);
+//            customer = null;
+//        }
+//    }
 
-    public static void cleanUp(List<CustomerBO> customerList) {
-        if (null != customerList) {
-            deleteCustomers(customerList);
-            customerList = null;
-        }
-    }
+//    public static void cleanUp(List<CustomerBO> customerList) {
+//        if (null != customerList) {
+//            deleteCustomers(customerList);
+//            customerList = null;
+//        }
+//    }
 
-    public static void cleanUp(FeeBO fee) {
-        if (null != fee) {
-            deleteFee(fee);
-            fee = null;
-        }
-    }
+//    public static void cleanUp(FeeBO fee) {
+//        if (null != fee) {
+//            deleteFee(fee);
+//            fee = null;
+//        }
+//    }
 
-    public static void cleanUp(AccountBO account) {
-        if (null != account) {
-            deleteAccount(account, null);
-            account = null;
-        }
-    }
+//    public static void cleanUp(AccountBO account) {
+//        if (null != account) {
+//            deleteAccount(account, null);
+//            account = null;
+//        }
+//    }
 
-    public static void cleanUpAccount(final Integer accountId) {
-        if (null != accountId) {
-            Session session = StaticHibernateUtil.getSessionTL();
-            Transaction transaction = session.beginTransaction();
-            AccountBO account = (AccountBO) session.get(AccountBO.class, accountId);
-            deleteAccount(account, session);
-            transaction.commit();
-            session.close();
-        }
-    }
+//    public static void cleanUpAccount(final Integer accountId) {
+//        if (null != accountId) {
+//            Session session = StaticHibernateUtil.getSessionTL();
+////            Transaction transaction = session.beginTransaction();
+//            AccountBO account = (AccountBO) session.get(AccountBO.class, accountId);
+//            deleteAccount(account, session);
+//            session.flush();
+//        }
+//    }
 
     private static void deleteFee(final FeeBO fee) {
         Session session = StaticHibernateUtil.getSessionTL();
@@ -1310,7 +1261,7 @@ public class TestObjectFactory {
             session.delete(fee.getFeeFrequency().getFeeMeetingFrequency());
         }
         session.delete(fee);
-        transaction.commit();
+        session.flush();
     }
 
     private static void deleteFees(final List<FeeBO> feeList) {
@@ -1404,7 +1355,6 @@ public class TestObjectFactory {
         Transaction transaction = null;
         if (null == session) {
             session = StaticHibernateUtil.getSessionTL();
-            transaction = StaticHibernateUtil.startTransaction();
             newSession = true;
         }
 
@@ -1421,9 +1371,7 @@ public class TestObjectFactory {
         deleteSpecificAccount(account, session);
         deleteFees(feeList);
 
-        if (newSession) {
-            transaction.commit();
-        }
+        session.flush();
     }
 
     private static void deleteAccountPayment(final AccountPaymentEntity accountPayment, final Session session) {
@@ -1460,11 +1408,11 @@ public class TestObjectFactory {
             }
             Transaction transaction = StaticHibernateUtil.startTransaction();
             deleteCustomerWithoutFee(customer);
-            transaction.commit();
+            session.flush();
         }
         Transaction transaction = StaticHibernateUtil.startTransaction();
         deleteFees(feeList);
-        transaction.commit();
+        StaticHibernateUtil.flushSession();
     }
 
     private static void deleteCustomerWithoutFee(final CustomerBO customer) {
@@ -1502,7 +1450,7 @@ public class TestObjectFactory {
         }
         session.delete(customer);
         deleteFees(feeList);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     private static void deleteClientOfferings(final CustomerBO customer) {
@@ -1583,27 +1531,27 @@ public class TestObjectFactory {
     }
 
     // FIXME: why is this here?
-    private static final ThreadLocal<TestObjectsHolder> threadLocal = new ThreadLocal<TestObjectsHolder>();
+//    private static final ThreadLocal<TestObjectsHolder> threadLocal = new ThreadLocal<TestObjectsHolder>();
 
     public static Object addObject(final Object obj) {
-        TestObjectsHolder holder = threadLocal.get();
-        if (holder == null) {
-            holder = new TestObjectsHolder();
-            threadLocal.set(holder);
-        }
-        holder.addObject(obj);
+//        TestObjectsHolder holder = threadLocal.get();
+//        if (holder == null) {
+//            holder = new TestObjectsHolder();
+//            threadLocal.set(holder);
+//        }
+//        holder.addObject(obj);
 
         return obj;
     }
 
     public static void cleanUpTestObjects() {
-        TestObjectsHolder holder = threadLocal.get();
-        if (holder != null) {
-            holder.removeObjects();
-        }
-
-        holder = null;
-        threadLocal.set(null);
+//        TestObjectsHolder holder = threadLocal.get();
+//        if (holder != null) {
+//            holder.removeObjects();
+//        }
+//
+//        holder = null;
+//        threadLocal.set(null);
 
     }
 
@@ -1657,7 +1605,7 @@ public class TestObjectFactory {
         CustomerCheckListBO customerChecklist = new CustomerCheckListBO(customerLevelEntity, customerStatusEntity,
                 "productchecklist", checklistStatus, details, TEST_LOCALE, PersonnelConstants.SYSTEM_USER);
         customerChecklist.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return customerChecklist;
     }
 
@@ -1671,16 +1619,16 @@ public class TestObjectFactory {
         AccountCheckListBO accountChecklist = new AccountCheckListBO(productTypeEntity, accountStateEntity,
                 "productchecklist", checklistStatus, details, TEST_LOCALE, PersonnelConstants.SYSTEM_USER);
         accountChecklist.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return accountChecklist;
     }
 
-    public static void cleanUp(CheckListBO checkListBO) {
-        if (null != checkListBO) {
-            deleteChecklist(checkListBO);
-            checkListBO = null;
-        }
-    }
+//    public static void cleanUp(CheckListBO checkListBO) {
+//        if (null != checkListBO) {
+//            deleteChecklist(checkListBO);
+//            checkListBO = null;
+//        }
+//    }
 
     public static void deleteChecklist(final CheckListBO checkListBO) {
         Session session = StaticHibernateUtil.getSessionTL();
@@ -1694,38 +1642,38 @@ public class TestObjectFactory {
             }
         }
         session.delete(checkListBO);
-        transaction.commit();
+        session.flush();
 
     }
 
-    public static void cleanUp(ReportsCategoryBO reportsCategoryBO) {
-        if (null != reportsCategoryBO) {
-            deleteReportCategory(reportsCategoryBO);
-            reportsCategoryBO = null;
-        }
-    }
+//    public static void cleanUp(ReportsCategoryBO reportsCategoryBO) {
+//        if (null != reportsCategoryBO) {
+//            deleteReportCategory(reportsCategoryBO);
+//            reportsCategoryBO = null;
+//        }
+//    }
 
     public static void deleteReportCategory(final ReportsCategoryBO reportsCategoryBO) {
 
         Session session = StaticHibernateUtil.getSessionTL();
         Transaction transaction = StaticHibernateUtil.startTransaction();
         session.delete(reportsCategoryBO);
-        transaction.commit();
+        session.flush();
     }
 
-    public static void cleanUp(ReportsBO reportsBO) {
-        if (null != reportsBO) {
-            deleteReportCategory(reportsBO);
-            reportsBO = null;
-        }
-    }
+//    public static void cleanUp(ReportsBO reportsBO) {
+//        if (null != reportsBO) {
+//            deleteReportCategory(reportsBO);
+//            reportsBO = null;
+//        }
+//    }
 
     public static void deleteReportCategory(final ReportsBO reportsBO) {
 
         Session session = StaticHibernateUtil.getSessionTL();
         Transaction transaction = StaticHibernateUtil.startTransaction();
         session.delete(reportsBO);
-        transaction.commit();
+        session.flush();
     }
 
     public static LoanBO createLoanAccountWithDisbursement(final String globalNum, final CustomerBO customer,
@@ -1740,7 +1688,7 @@ public class TestObjectFactory {
             throw new RuntimeException(e);
         }
 
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return (LoanBO) addObject(getObject(LoanBO.class, loan.getAccountId()));
     }
 
@@ -1799,17 +1747,15 @@ public class TestObjectFactory {
         }
         session.delete(account);
 
-        if (newSession) {
-            transaction.commit();
-        }
+        session.flush();
     }
 
-    public static void cleanUpWithoutDeletingProduct(AccountBO account) {
-        if (null != account) {
-            deleteAccountWithoutDeletetingProduct(account, null);
-            account = null;
-        }
-    }
+//    public static void cleanUpWithoutDeletingProduct(AccountBO account) {
+//        if (null != account) {
+//            deleteAccountWithoutDeletetingProduct(account, null);
+//            account = null;
+//        }
+//    }
 
     public static PaymentData getCustomerAccountPaymentDataView(final List<AccountActionDateEntity> accountActions,
                                                                 final Money totalAmount, final CustomerBO customer, final PersonnelBO personnel, final String receiptNum,
@@ -1857,7 +1803,7 @@ public class TestObjectFactory {
                 }
             }
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         return dueActionDates;
     }
 
@@ -1962,19 +1908,19 @@ public class TestObjectFactory {
         OfficeBO officeBO = new OfficeBO(TestUtils.makeUserWithLocales(), level, parentOffice, null, officeName,
                 shortName, null, OperationMode.REMOTE_SERVER);
         officeBO.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return (OfficeBO) addObject(officeBO);
     }
 
-    public static void cleanUp(final OfficeBO office) {
-        if (office != null) {
-            Session session = StaticHibernateUtil.getSessionTL();
-            Transaction transaction = StaticHibernateUtil.startTransaction();
-            session.lock(office, LockMode.NONE);
-            session.delete(office);
-            transaction.commit();
-        }
-    }
+//    public static void cleanUp(final OfficeBO office) {
+//        if (office != null) {
+//            Session session = StaticHibernateUtil.getSessionTL();
+//            Transaction transaction = StaticHibernateUtil.startTransaction();
+//            session.lock(office, LockMode.NONE);
+//            session.delete(office);
+//            session.flush();
+//        }
+//    }
 
     public static void removeCustomerFromPosition(final CustomerBO customer) throws CustomerException {
         if (customer != null) {
@@ -1982,19 +1928,19 @@ public class TestObjectFactory {
                 customerPositionEntity.setCustomer(null);
             }
             customer.update();
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         }
     }
 
-    public static void cleanUp(final PersonnelBO personnel) {
-        if (personnel != null) {
-            Session session = StaticHibernateUtil.getSessionTL();
-            Transaction transaction = StaticHibernateUtil.startTransaction();
-            session.lock(personnel, LockMode.NONE);
-            session.delete(personnel);
-            transaction.commit();
-        }
-    }
+//    public static void cleanUp(final PersonnelBO personnel) {
+//        if (personnel != null) {
+//            Session session = StaticHibernateUtil.getSessionTL();
+//            Transaction transaction = StaticHibernateUtil.startTransaction();
+//            session.lock(personnel, LockMode.NONE);
+//            session.delete(personnel);
+//            session.flush();
+//        }
+//    }
 
     public static PersonnelBO createPersonnel(final PersonnelLevel level, final OfficeBO office, final Integer title,
                                               final Short preferredLocale, final String password, final String userName, final String emailId,
@@ -2006,55 +1952,52 @@ public class TestObjectFactory {
                 dateOfJoiningBranch, address, Short.valueOf("1"));
 
         personnelBO.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return personnelBO;
     }
 
     public static void simulateInvalidConnection() {
-        StaticHibernateUtil.getSessionTL().close();
+//        StaticHibernateUtil.getSessionTL().disconnect();
+//        StaticHibernateUtil.getSessionTL().close();
     }
 
-    public static void cleanUp(final RoleBO roleBO) {
-        if (roleBO != null) {
-            Session session = StaticHibernateUtil.getSessionTL();
-            Transaction transaction = StaticHibernateUtil.startTransaction();
-            session.lock(roleBO, LockMode.NONE);
-            session.delete(roleBO);
-            transaction.commit();
-        }
-    }
+//    public static void cleanUp(final RoleBO roleBO) {
+//        if (roleBO != null) {
+//            Session session = StaticHibernateUtil.getSessionTL();
+//            Transaction transaction = StaticHibernateUtil.startTransaction();
+//            session.lock(roleBO, LockMode.NONE);
+//            session.delete(roleBO);
+//            session.flush();
+//        }
+//    }
 
     public static RoleBO createRole(final UserContext context, final String roleName,
                                     final List<ActivityEntity> activities) throws Exception {
         RoleBO roleBO = new RoleBO(context, roleName, activities);
         roleBO.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return roleBO;
     }
 
-    public static void cleanUp(final FundBO fundBO) {
-        if (fundBO != null) {
-            Session session = StaticHibernateUtil.getSessionTL();
-            Transaction transaction = StaticHibernateUtil.startTransaction();
-            session.lock(fundBO, LockMode.NONE);
-            session.delete(fundBO);
-            transaction.commit();
-        }
-    }
+//    public static void cleanUp(final FundBO fundBO) {
+//        if (fundBO != null) {
+//            Session session = StaticHibernateUtil.getSessionTL();
+//            Transaction transaction = StaticHibernateUtil.startTransaction();
+//            session.lock(fundBO, LockMode.NONE);
+//            session.delete(fundBO);
+//            session.flush();
+//        }
+//    }
 
     public static FundBO createFund(final FundCodeEntity fundCode, final String fundName) throws Exception {
         FundBO fundBO = new FundBO(fundCode, fundName);
 
         try {
-            StaticHibernateUtil.startTransaction();
             DependencyInjectedServiceLocator.locateFundDao().save(fundBO);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
             return fundBO;
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e.getMessage(), e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -2067,14 +2010,14 @@ public class TestObjectFactory {
     }
 
     public static void cleanUpChangeLog() {
-        Session session = StaticHibernateUtil.getSessionTL();
-        StaticHibernateUtil.startTransaction();
-        List<AuditLog> auditLogList = session
-                .createQuery("from org.mifos.framework.components.audit.business.AuditLog").list();
-        for (AuditLog auditLog : auditLogList) {
-            session.delete(auditLog);
-        }
-        StaticHibernateUtil.commitTransaction();
+//        Session session = StaticHibernateUtil.getSessionTL();
+//        StaticHibernateUtil.startTransaction();
+//        List<AuditLog> auditLogList = session
+//                .createQuery("from org.mifos.framework.components.audit.business.AuditLog").list();
+//        for (AuditLog auditLog : auditLogList) {
+//            session.delete(auditLog);
+//        }
+//        StaticHibernateUtil.flushSession();
     }
 
     public static List<AuditLog> getChangeLog(final EntityType type, final Integer entityId) {
@@ -2083,13 +2026,13 @@ public class TestObjectFactory {
                         + type.getValue() + " and al.entityId=" + entityId).list();
     }
 
-    public static void cleanUp(final AuditLog auditLog) {
-        Session session = StaticHibernateUtil.getSessionTL();
-        Transaction transaction = StaticHibernateUtil.startTransaction();
-        session.lock(auditLog, LockMode.NONE);
-        session.delete(auditLog);
-        transaction.commit();
-    }
+//    public static void cleanUp(final AuditLog auditLog) {
+//        Session session = StaticHibernateUtil.getSessionTL();
+//        Transaction transaction = StaticHibernateUtil.startTransaction();
+//        session.lock(auditLog, LockMode.NONE);
+//        session.delete(auditLog);
+//        session.flush();
+//    }
 
     public static Calendar getCalendar(final Date date) {
         Calendar dateCalendar = new GregorianCalendar();
@@ -2150,33 +2093,33 @@ public class TestObjectFactory {
                 InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
     }
 
-    public static void cleanUp(SavingsOfferingBO savingPrdBO) {
-        if (null != savingPrdBO) {
-            deleteSavingProduct(savingPrdBO);
-            savingPrdBO = null;
-        }
-    }
+//    public static void cleanUp(SavingsOfferingBO savingPrdBO) {
+//        if (null != savingPrdBO) {
+//            deleteSavingProduct(savingPrdBO);
+//            savingPrdBO = null;
+//        }
+//    }
 
-    public static void cleanUp(MeetingBO meeting) {
-        if (null != meeting) {
-            deleteMeeting(meeting);
-            meeting = null;
-        }
-    }
+//    public static void cleanUp(MeetingBO meeting) {
+//        if (null != meeting) {
+//            deleteMeeting(meeting);
+//            meeting = null;
+//        }
+//    }
 
-    public static void cleanUp(ProductMixBO prdmix) {
-        if (null != prdmix) {
-            deleteProductMix(prdmix);
-            prdmix = null;
-        }
-    }
+//    public static void cleanUp(ProductMixBO prdmix) {
+//        if (null != prdmix) {
+//            deleteProductMix(prdmix);
+//            prdmix = null;
+//        }
+//    }
 
     private static void deleteProductMix(final ProductMixBO prdmix) {
         Session session = StaticHibernateUtil.getSessionTL();
         session.lock(prdmix, LockMode.UPGRADE);
         Transaction transaction = StaticHibernateUtil.startTransaction();
         session.delete(prdmix);
-        transaction.commit();
+        session.flush();
     }
 
     private static void deleteSavingProduct(final SavingsOfferingBO savingPrdBO) {
@@ -2184,7 +2127,7 @@ public class TestObjectFactory {
         session.lock(savingPrdBO, LockMode.UPGRADE);
         Transaction transaction = StaticHibernateUtil.startTransaction();
         session.delete(savingPrdBO);
-        transaction.commit();
+        session.flush();
     }
 
     private static void deleteMeeting(MeetingBO meeting) {
@@ -2192,7 +2135,7 @@ public class TestObjectFactory {
         Transaction transaction = StaticHibernateUtil.startTransaction();
         meeting = (MeetingBO) session.load(MeetingBO.class, meeting.getMeetingId());
         session.delete(meeting);
-        transaction.commit();
+        session.flush();
     }
 
     public static ProductMixBO createAllowedProductsMix(final SavingsOfferingBO saving1, final SavingsOfferingBO saving2) {
@@ -2200,7 +2143,7 @@ public class TestObjectFactory {
         try {
             prdmix = new ProductMixBO(saving1, saving2);
             addObject(testObjectPersistence.persist(prdmix));
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -72,13 +72,13 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(group1);
-        TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUp(center1);
-        TestObjectFactory.cleanUp(office);
-        StaticHibernateUtil.closeSession();
+        client = null;
+        group = null;
+        group1 = null;
+        center = null;
+        center1 = null;
+        office = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -91,7 +91,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //
 //    public void testSuccessfulPreview_transferToBranch() throws Exception {
 //        loadOffices();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //        setRequestPathInfo("/groupTransferAction.do");
 //        addRequestParameter("method", "previewBranchTransfer");
 //        addRequestParameter("officeId", group.getOffice().getOfficeId().toString());
@@ -106,7 +106,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //
 //    public void testFailure_transferToBranch() throws Exception {
 //        loadOffices();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //        setRequestPathInfo("/groupTransferAction.do");
 //        addRequestParameter("method", "previewBranchTransfer");
 //        addRequestParameter("officeId", group.getOffice().getOfficeId().toString());
@@ -127,7 +127,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //        TestObjectFactory.cleanUpChangeLog();
 //        office = createOffice();
 //        loadOffices();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //        setRequestPathInfo("/groupTransferAction.do");
 //        addRequestParameter("method", "previewBranchTransfer");
 //        addRequestParameter("officeId", office.getOfficeId().toString());
@@ -179,7 +179,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //
 //    public void testSuccessfulPreview_transferToCenter() throws Exception {
 //        loadParents();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //
 //        setRequestPathInfo("/groupTransferAction.do");
 //        addRequestParameter("method", "previewParentTransfer");
@@ -195,7 +195,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //
 //    public void testFailure_transferToCenter() throws Exception {
 //        loadParents();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //
 //        setRequestPathInfo("/groupTransferAction.do");
 //        addRequestParameter("method", "previewParentTransfer");
@@ -220,7 +220,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //    public void testSuccessful_transferToCenter() throws Exception {
 //        TestObjectFactory.cleanUpChangeLog();
 //        loadParents();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //
 //        setRequestPathInfo("/groupTransferAction.do");
 //        addRequestParameter("method", "previewParentTransfer");
@@ -235,7 +235,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //        actionPerform();
 //        verifyNoActionErrors();
 //        verifyNoActionMessages();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //
 //        group = TestObjectFactory.getGroup(group.getCustomerId());
 //        center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -267,7 +267,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //    public void testSuccessful_removeGroupMemberShip() throws Exception {
 //        TestObjectFactory.cleanUpChangeLog();
 //        loadParents();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //
 //        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
 //
@@ -290,7 +290,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //    public void testSuccessful_LoadGrpMemberShip() throws Exception {
 //        TestObjectFactory.cleanUpChangeLog();
 //        loadParents();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
 //        SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 //        MeetingBO meeting = createWeeklyMeeting(WeekDay.MONDAY, Short.valueOf("1"), new Date());
@@ -321,7 +321,7 @@ public class GroupTransferActionStrutsTest extends MifosMockStrutsTestCase {
 //
 //    public void testCancel() throws Exception {
 //        loadOffices();
-//        StaticHibernateUtil.closeSession();
+//        StaticHibernateUtil.flushSession();
 //        setRequestPathInfo("/groupTransferAction.do");
 //        addRequestParameter("method", "cancel");
 //

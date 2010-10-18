@@ -20,16 +20,6 @@
 
 package org.mifos.application.collectionsheet.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Assert;
@@ -50,12 +40,7 @@ import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
-import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
-import org.mifos.application.servicefacade.CollectionSheetCustomerLoanDto;
-import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
-import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
-import org.mifos.application.servicefacade.CustomerHierarchyParams;
+import org.mifos.application.servicefacade.*;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -64,6 +49,16 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 /**
  *
@@ -129,9 +124,13 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
 
     @After
     public void tearDown() throws Exception {
-
+        savingsAccount = null;
+        savingsAccount2 = null;
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount, savingsAccount2);
-        TestObjectFactory.cleanUp(loan);
+        loan = null;
+        client = null;
+        center = null;
+        weeklyMeeting = null;
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
     }
 

@@ -20,11 +20,7 @@
 
 package org.mifos.accounts.savings.business.service;
 
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +45,9 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.util.Date;
+import java.util.List;
+
 public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     private SavingsBusinessService service;
@@ -72,12 +71,12 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(savings);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        TestObjectFactory.removeObject(savingsOffering1);
+        savings = null;
+        group = null;
+        center = null;
+        savingsOffering1 = null;
         TestObjectFactory.removeObject(savingsOffering2);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -98,39 +97,6 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
     }
 
     @Test
-    public void testGetSavingProductsForInvalidConnection() {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "a1lt", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.getSavingProducts(null, group.getCustomerLevel(), CustomerLevel.GROUP.getValue());
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    @Test
-    public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.retrieveCustomFieldsDefinition();
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-    }
-
-    @Test
     public void testFindById() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -139,25 +105,6 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         savings = createSavingsAccount("FFFF", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
         SavingsBO savings1 = service.findById(savings.getAccountId());
         Assert.assertNotNull(savings1);
-    }
-
-    @Test
-    public void testFindByIdForInvalidConnection() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = createSavingsAccount("FFFF", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.findById(savings.getAccountId());
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
     }
 
     @Test
@@ -170,24 +117,6 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         SavingsBO savings1 = service.findBySystemId(savings.getGlobalAccountNum());
 
         Assert.assertEquals(savings.getAccountId(), savings1.getAccountId());
-    }
-
-    @Test
-    public void testFindBySystemIdForInvalidConnection() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = createSavingsAccount("YYYY", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.findBySystemId("YYYY");
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
     }
 
     @Test
@@ -204,29 +133,6 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
                 startDate, savingsOffering);
         List<SavingsBO> savingsAccounts = service.getAllClosedAccounts(center.getCustomerId());
         Assert.assertEquals(1, savingsAccounts.size());
-    }
-
-    @Test
-    public void testGetAllClosedAccountsForInvalidConnection() throws Exception {
-        createInitialObjects();
-        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-
-        Date startDate = new Date(System.currentTimeMillis());
-        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", ApplicableTo.GROUPS, new Date(System
-                .currentTimeMillis()), PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 1.2,
-                200.0, 200.0, SavingsType.VOLUNTARY, InterestCalcType.MINIMUM_BALANCE, meetingIntCalc, meetingIntPost);
-        savings = TestObjectFactory.createSavingsAccount("432434", center, AccountState.SAVINGS_CLOSED.getValue(),
-                startDate, savingsOffering);
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.getAllClosedAccounts(center.getCustomerId());
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
     }
 
     @Test

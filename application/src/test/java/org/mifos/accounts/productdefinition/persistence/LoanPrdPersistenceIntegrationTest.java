@@ -20,11 +20,7 @@
 
 package org.mifos.accounts.productdefinition.persistence;
 
-import java.sql.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -37,6 +33,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import java.sql.Date;
+import java.util.List;
+
 public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private LoanOfferingBO loanOffering1;
@@ -48,7 +47,7 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
         TestObjectFactory.removeObject(loanOffering1);
         TestObjectFactory.removeObject(loanOffering2);
         TestObjectFactory.removeObject(loanOffering3);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -74,7 +73,7 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
     @Test
     public void testGetLoanOffering() throws PersistenceException {
         loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         loanOffering1 = new LoanPrdPersistence().getLoanOffering(loanOffering1.getPrdOfferingId());
         Assert.assertNotNull(loanOffering1);
@@ -85,7 +84,7 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
     @Test
     public void testGetLoanOfferingWithLocaleId() throws PersistenceException {
         loanOffering1 = createLoanOfferingBO("Loan Offering", "Loan");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         short localeId = 1;
         loanOffering1 = new LoanPrdPersistence().getLoanOffering(loanOffering1.getPrdOfferingId(), localeId);
@@ -107,7 +106,7 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
         loanOffering1 = createLoanOfferingBO(loanPrdNamesSortedByName[1], "Loa1");
         loanOffering2 = createLoanOfferingBO(loanPrdNamesSortedByName[2], "Loa2");
         loanOffering3 = createLoanOfferingBO(loanPrdNamesSortedByName[0], "Loa3");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         List<LoanOfferingBO> loanOfferings = new LoanPrdPersistence().getAllLoanOfferings((short) 1);
         Assert.assertNotNull(loanOfferings);
@@ -118,7 +117,7 @@ public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase 
             Assert.assertNotNull(loanOfferingBO.getPrdOfferingId());
             Assert.assertNotNull(loanOfferingBO.getPrdStatus().getPrdState().getName());
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private LoanOfferingBO createLoanOfferingBO(String prdOfferingName, String shortName) {

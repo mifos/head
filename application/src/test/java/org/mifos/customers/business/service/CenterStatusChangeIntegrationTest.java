@@ -53,6 +53,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -155,8 +156,8 @@ public class CenterStatusChangeIntegrationTest extends MifosIntegrationTestCase 
 
         // exercise test
         customerService.updateCenterStatus(existingCenter, CustomerStatus.CENTER_INACTIVE, customerStatusFlag, customerNote);
-
         // verification
+        StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CENTER, existingCenter.getCustomerId());
         assertThat(auditLogList.size(), is(1));
         assertThat(auditLogList.get(0).getEntityTypeAsEnum(), is(EntityType.CENTER));
@@ -255,7 +256,6 @@ public class CenterStatusChangeIntegrationTest extends MifosIntegrationTestCase 
         loanOfficer.update(newStatus, personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD",
                 "rajendersaini@yahoo.com", null, null, name, Integer.valueOf("1"), Integer.valueOf("1"), address, Short
                         .valueOf("1"));
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
     }
 }

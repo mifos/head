@@ -20,13 +20,7 @@
 
 package org.mifos.framework.components.audit.util;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -41,9 +35,15 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
+import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
 
 public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
 
@@ -68,10 +68,10 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
                 .getNoOfInstallments(), newDate, (short) 2, TestObjectFactory.SAMPLE_BUSINESS_ACTIVITY_2, "Added note",
                 null, null, false, null, null);
 
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-
+        StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOAN, accountBO.getAccountId());
        Assert.assertEquals(1, auditLogList.size());
        Assert.assertEquals(EntityType.LOAN.getValue(), auditLogList.get(0).getEntityType());
@@ -86,9 +86,9 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
             }
         }
         TestObjectFactory.cleanUpChangeLog();
-        TestObjectFactory.cleanUp(accountBO);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        accountBO = null;
+        group = null;
+        center = null;
     }
 
     @Test

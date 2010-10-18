@@ -61,14 +61,15 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
     public void testUpdateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk() throws Exception {
         createGroup();
+        StaticHibernateUtil.flushAndClearSession();
         double portfolioAtRisk = 0.567;
         Integer groupId = group.getCustomerId();
         boolean result = getGroupPersistence().updateGroupInfoAndGroupPerformanceHistoryForPortfolioAtRisk(
@@ -122,7 +123,7 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
         center = createCenter();
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,
                 center);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
     }
 
@@ -130,7 +131,7 @@ public class GroupPersistenceIntegrationTest extends MifosIntegrationTestCase {
         center = createCenter();
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_ON_HOLD_test", CustomerStatus.GROUP_HOLD,
                 center);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
     }
 

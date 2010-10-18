@@ -108,7 +108,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         permPersistence.delete(activityEntity);
         permPersistence.delete(anLookUp);
 
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     public void testLoadProductInstance() {

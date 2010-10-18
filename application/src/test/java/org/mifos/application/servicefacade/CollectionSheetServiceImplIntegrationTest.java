@@ -66,7 +66,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
         }
 
         new DateTimeService().resetToCurrentSystemDateTime();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     CenterBO center;

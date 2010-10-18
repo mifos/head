@@ -21,13 +21,11 @@
 package org.mifos.config.business;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegrationTestCase {
 
@@ -40,8 +38,7 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
     @Test
     public void testGetConfigurationKeyValueInteger() throws Exception {
         configurationPersistence.addConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE);
-        StaticHibernateUtil.commitTransaction();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         ConfigurationKeyValueInteger keyValue = configurationPersistence.getConfigurationKeyValueInteger(TEST_KEY);
         Assert.assertEquals(keyValue.getKey(), TEST_KEY);
@@ -49,7 +46,7 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
         Assert.assertEquals(TEST_VALUE, configurationPersistence.getConfigurationValueInteger(TEST_KEY));
 
         configurationPersistence.delete(keyValue);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -67,21 +64,18 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
     @Test
     public void testAddDupliateKey() throws Exception {
         configurationPersistence.addConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE);
-        StaticHibernateUtil.commitTransaction();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         try {
             configurationPersistence.addConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE_2);
             Assert.fail("Expected PersistenceException for violating uniqueness constraint on the key.");
         } catch (PersistenceException e) {
             Assert.assertTrue(e.getMessage().contains("could not insert"));
-            StaticHibernateUtil.rollbackTransaction();
-            StaticHibernateUtil.closeSession();
         }
 
+        StaticHibernateUtil.getSessionTL().clear();
         configurationPersistence.deleteConfigurationKeyValueInteger(TEST_KEY);
-        StaticHibernateUtil.commitTransaction();
-
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -97,19 +91,17 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
     @Test
     public void testUpdateConfigurationKeyValueInteger() throws Exception {
         configurationPersistence.addConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE);
-        StaticHibernateUtil.commitTransaction();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         configurationPersistence.updateConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE_2);
-        StaticHibernateUtil.commitTransaction();
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushSession();
 
         ConfigurationKeyValueInteger keyValue = configurationPersistence.getConfigurationKeyValueInteger(TEST_KEY);
         Assert.assertEquals(keyValue.getKey(), TEST_KEY);
         Assert.assertEquals(keyValue.getValue(), TEST_VALUE_2);
 
         configurationPersistence.deleteConfigurationKeyValueInteger(TEST_KEY);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
     }
 }

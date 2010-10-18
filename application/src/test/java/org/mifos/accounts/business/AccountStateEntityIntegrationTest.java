@@ -46,7 +46,7 @@ public class AccountStateEntityIntegrationTest extends MifosIntegrationTestCase 
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         session = null;
     }
 

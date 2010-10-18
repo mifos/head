@@ -20,12 +20,7 @@
 
 package org.mifos.framework.components.taggenerator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +44,10 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
@@ -78,11 +77,11 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
     @After
     public void tearDown() throws Exception {
         branchOffice = null;
-        TestObjectFactory.cleanUp(savings);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUp(personnel);
-        StaticHibernateUtil.closeSession();
+        savings = null;
+        group = null;
+        center = null;
+        personnel = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -190,8 +189,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
                         .valueOf("1"), date, date, address, userContext.getId());
         personnel.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         return personnel;
     }

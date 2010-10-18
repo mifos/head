@@ -20,14 +20,7 @@
 
 package org.mifos.customers.personnel.struts.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -41,6 +34,8 @@ import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -61,8 +56,8 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.screen.PersonnelInformationDto;
+
+import java.util.*;
 
 public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     public PersonActionStrutsTest() throws Exception {
@@ -113,9 +108,9 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         userContext = null;
-        TestObjectFactory.cleanUp(personnel);
-        TestObjectFactory.cleanUp(createdBranchOffice);
-        StaticHibernateUtil.closeSession();
+        personnel = null;
+        createdBranchOffice = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -289,6 +284,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         addActionAndMethod(Methods.manage.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
         verifyNoActionErrors();
         verifyNoActionMessages();
@@ -307,6 +303,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         addActionAndMethod(Methods.manage.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
         verifyNoActionErrors();
         verifyNoActionMessages();
@@ -405,8 +402,8 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"),
                 Integer.valueOf("1"), date, date, address, userContext.getId());
         personnel.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
+        StaticHibernateUtil.flushSession();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
     }

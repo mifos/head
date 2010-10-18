@@ -20,10 +20,7 @@
 
 package org.mifos.security.rolesandpermission.struts;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -41,6 +38,8 @@ import org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissions
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
 
 public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -69,7 +68,8 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(role);
+        role = null;
+//        TestObjectFactory.cleanUp(role);
         super.tearDown();
     }
 

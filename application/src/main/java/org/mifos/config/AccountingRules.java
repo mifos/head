@@ -176,7 +176,7 @@ public class AccountingRules {
             return getDigitsAfterDecimal();
         }
         if (!getAdditionalCurrencyCodes().contains(code)) {
-            throw new IllegalArgumentException("Currency not configured. " + currency);
+            throw new IllegalArgumentException(String.format("Currency not configured. %s. Default currency is: %s", currency, getDefaultCurrencyCode()));
         }
         return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL + "." + code,
                 getDigitsAfterDecimal());

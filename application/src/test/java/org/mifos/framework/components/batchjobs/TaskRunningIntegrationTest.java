@@ -1,16 +1,6 @@
 package org.mifos.framework.components.batchjobs;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,6 +11,14 @@ import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.core.io.ClassPathResource;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.List;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
 public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;

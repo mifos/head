@@ -77,7 +77,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public QueryResult searchGroupClient(String searchString, Short userId) throws ServiceException {
         try {
-            return new CustomerPersistence().searchGroupClient(searchString, userId);
+            return customerPersistence.searchGroupClient(searchString, userId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         } catch (ConfigurationException ce) {
@@ -88,7 +88,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public QueryResult searchCustForSavings(String searchString, Short userId) throws ServiceException {
         try {
-            return new CustomerPersistence().searchCustForSavings(searchString, userId);
+            return customerPersistence.searchCustForSavings(searchString, userId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -97,7 +97,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public CustomerBO getCustomer(Integer customerId) throws ServiceException {
         try {
-            return new CustomerPersistence().getCustomer(customerId);
+            return customerPersistence.getCustomer(customerId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -105,7 +105,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public CustomerBO findBySystemId(String globalCustNum) throws ServiceException {
         try {
-            return new CustomerPersistence().findBySystemId(globalCustNum);
+            return customerPersistence.findBySystemId(globalCustNum);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -114,7 +114,7 @@ public class CustomerBusinessService implements BusinessService {
     public List<CustomerRecentActivityDto> getRecentActivityView(Integer customerId) throws ServiceException {
         CustomerBO customerBO;
         try {
-            customerBO = new CustomerPersistence().getCustomer(customerId);
+            customerBO = customerPersistence.getCustomer(customerId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -147,7 +147,7 @@ public class CustomerBusinessService implements BusinessService {
             throws ServiceException {
 
         try {
-            return new CustomerPersistence().search(searchString, officeId, userId, userOfficeId);
+            return customerPersistence.search(searchString, officeId, userId, userOfficeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -156,7 +156,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId) throws ServiceException {
         try {
-            return new CustomerPersistence().getStatusChecklist(statusId, customerLevelId);
+            return customerPersistence.getStatusChecklist(statusId, customerLevelId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -164,7 +164,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public List<CustomerStatusEntity> retrieveAllCustomerStatusList(Short levelId) throws ServiceException {
         try {
-            return new CustomerPersistence().retrieveAllCustomerStatusList(levelId);
+            return customerPersistence.retrieveAllCustomerStatusList(levelId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -201,7 +201,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public QueryResult getAllCustomerNotes(Integer customerId) throws ServiceException {
         try {
-            return new CustomerPersistence().getAllCustomerNotes(customerId);
+            return customerPersistence.getAllCustomerNotes(customerId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -209,7 +209,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public CustomerPictureEntity retrievePicture(Integer customerId) throws ServiceException {
         try {
-            return new CustomerPersistence().retrievePicture(customerId);
+            return customerPersistence.retrievePicture(customerId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -217,7 +217,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public List<AccountBO> getAllClosedAccount(Integer customerId, Short accountTypeId) throws ServiceException {
         try {
-            return new CustomerPersistence().getAllClosedAccount(customerId, accountTypeId);
+            return customerPersistence.getAllClosedAccount(customerId, accountTypeId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -225,7 +225,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public List<CustomerBO> getActiveCentersUnderUser(PersonnelBO personnel) throws ServiceException {
         try {
-            return new CustomerPersistence().getActiveCentersUnderUser(personnel);
+            return customerPersistence.getActiveCentersUnderUser(personnel);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -245,7 +245,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public List<CustomerBO> getGroupsUnderUser(PersonnelBO personnel) throws ServiceException {
         try {
-            return new CustomerPersistence().getGroupsUnderUser(personnel);
+            return customerPersistence.getGroupsUnderUser(personnel);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -411,7 +411,7 @@ public class CustomerBusinessService implements BusinessService {
 
     public List<CustomerBO> getCustomersByLevelId(Short customerLevelId) throws ServiceException {
         try {
-            return new CustomerPersistence().getCustomersByLevelId(customerLevelId);
+            return customerPersistence.getCustomersByLevelId(customerLevelId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }

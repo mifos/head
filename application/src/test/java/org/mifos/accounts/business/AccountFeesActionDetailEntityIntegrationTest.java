@@ -92,7 +92,7 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
 
     @Test
     public void testWaiveCharges() {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
 
         CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group.getCustomerAccount()
@@ -104,7 +104,7 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
            Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
         }
        Assert.assertEquals(new Money(getCurrency(), "100"), chargeWaived);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
         accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
@@ -122,14 +122,18 @@ public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrati
 
     @After
     public void tearDown() throws Exception {
-        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
-        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
-        TestObjectFactory.cleanUp(accountBO);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        accountBO = null;
+        group = null;
+        center = null;
 
-        StaticHibernateUtil.closeSession();
+//        accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
+//        group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
+//        center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
+//        accountBO = null;
+//        group = null;
+//        center = null;
+
+        StaticHibernateUtil.flushSession();
 
     }
 

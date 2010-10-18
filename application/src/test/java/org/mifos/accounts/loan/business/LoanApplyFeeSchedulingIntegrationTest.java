@@ -20,22 +20,7 @@
 
 package org.mifos.accounts.loan.business;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -70,6 +55,11 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.*;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 /**
  * FIXME - completely rewrite/remove these tests
@@ -108,18 +98,18 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
             if (center != null) {
                 center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
             }
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(badAccountBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            accountBO = null;
+            badAccountBO = null;
+            client = null;
+            group = null;
+            center = null;
             deleteHolidays();
 //            new OfficePersistence().getOffice((short)1).getHolidays().clear();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         } finally {
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
             new DateTimeService().resetToCurrentSystemDateTime();
             new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 0);
         }
@@ -154,8 +144,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
             loanBO.setUserContext(uc);
             loanBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
                     .getAmountDoubleValue());
-            StaticHibernateUtil.commitTransaction();
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
 
             Map<String, String> fees1 = new HashMap<String, String>();
             fees1.put("Mainatnence Fee", "100.0");
@@ -235,8 +224,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
             loanBO.setUserContext(uc);
             loanBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
                     .getAmountDoubleValue());
-            StaticHibernateUtil.commitTransaction();
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
 
             Map<String, String> fees1 = new HashMap<String, String>();
             fees1.put("Mainatnence Fee", "100.0");
@@ -544,8 +532,6 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
         if (holidayBOToDelete != null) {
             StaticHibernateUtil.getSessionTL().delete(holidayBOToDelete);
         }
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
-
-
 }

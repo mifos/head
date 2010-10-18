@@ -38,6 +38,12 @@ import org.mifos.customers.util.helpers.Param;
 import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class is intended to be replaced by <b>SessionPersistence</b> which
@@ -49,7 +55,7 @@ public abstract class Persistence {
     private static final Logger logger = LoggerFactory.getLogger(Persistence.class);
 
     public HibernateUtil getHibernateUtil() {
-        return HibernateUtil.getInstance();
+        return StaticHibernateUtil.getHibernateUtil();
     }
 
     /**

@@ -97,7 +97,7 @@ public class TestObjectPersistence {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.save(obj);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return obj;
 
     }
@@ -140,7 +140,7 @@ public class TestObjectPersistence {
     public LoanBO getLoanAccount(LoanBO loan) {
         Session session = StaticHibernateUtil.getSessionTL();
         session.save(loan);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return loan;
     }
 
@@ -153,19 +153,18 @@ public class TestObjectPersistence {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.delete(obj);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     public void update(AbstractEntity obj) {
         Session session = StaticHibernateUtil.getSessionTL();
         StaticHibernateUtil.startTransaction();
         session.saveOrUpdate(obj);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     public void flushandCloseSession() {
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     public <T> T getObject(Class<T> clazz, Integer pk) {

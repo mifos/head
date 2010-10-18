@@ -49,7 +49,7 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         session = null;
         //super.tearDown();
     }
@@ -81,7 +81,6 @@ public class AccountActionEntityIntegrationTest extends MifosIntegrationTestCase
        Assert.assertEquals("Payment", MessageLookup.getInstance().lookup(lookUpValue));
 
        Assert.assertEquals("Payment", action.getName());
-        session.close();
     }
 
     @Test

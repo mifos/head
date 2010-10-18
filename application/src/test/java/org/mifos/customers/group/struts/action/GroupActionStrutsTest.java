@@ -123,12 +123,12 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(loanBO);
-        TestObjectFactory.cleanUp(savingsBO);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        loanBO = null;
+        savingsBO = null;
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushAndClearSession();
         userContext = null;
         super.tearDown();
     }
@@ -160,7 +160,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     public void testLoad_FeeDifferentFrequecny() throws Exception {
         createCenterWithoutFee();
         List<FeeDto> fees = getFees(RecurrenceType.MONTHLY);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
@@ -185,7 +185,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testLoad_FeeSameFrequecny() throws Exception {
         createCenterWithoutFee();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         List<FeeDto> fees = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
@@ -211,7 +211,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testLoadMeeting() throws Exception {
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
@@ -229,7 +229,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testPreviewFailure_With_Name_Null() throws Exception {
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
@@ -245,7 +245,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testPreviewFailure_TrainedWithoutTrainedDate() throws Exception {
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
@@ -280,7 +280,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testFailurePreview_WithoutMandatoryCustomField_IfAny() throws Exception {
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("centerSystemId", center.getGlobalCustNum());
@@ -321,7 +321,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     public void testFailurePreview_WithDuplicateFee() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
@@ -346,7 +346,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
@@ -369,7 +369,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulPreview() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
@@ -400,7 +400,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         removeFees(feesToRemove);
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, request));
         center = TestObjectFactory.getCenter(center.getCustomerId());
@@ -423,7 +423,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testSuccessfulCreate_UnderCenter() throws Exception {
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
@@ -463,7 +463,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testSuccessfulCreate_UnderBranch() throws Exception {
         createParentCustomer();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "load");
@@ -548,8 +548,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         savingsBO = getSavingsAccount("fsaf6", "ads6");
         loanBO = getLoanAccount();
         group.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "get");
@@ -580,7 +579,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
             break;
         }
         TestObjectFactory.removeCustomerFromPosition(group);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
         group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
         client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
@@ -971,7 +970,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     private void createGroupWithCenter() throws Exception {
         createParentCustomer();
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     private void createParentCustomer() {
@@ -984,14 +983,14 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = new CenterBO(userContext, "MyCenter", null, null, null, "1234", null, TestObjectFactory
                 .getBranchOffice(), meeting, TestObjectFactory.getTestUser(), new CustomerPersistence());
         new CenterPersistence().saveCenter(center);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     private void createCustomers() {
         createParentCustomer();
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     private LoanBO getLoanAccount() {
@@ -1013,14 +1012,13 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
                 FeeCategory.GROUP, "200", frequency, Short.valueOf("2"));
         fees.add(new FeeDto(TestObjectFactory.getContext(), fee1));
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         return fees;
     }
 
     private void removeFees(List<FeeDto> feesToRemove) {
-        for (FeeDto fee : feesToRemove) {
-            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
-        }
+//        for (FeeDto fee : feesToRemove) {
+//            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
+//        }
     }
 }

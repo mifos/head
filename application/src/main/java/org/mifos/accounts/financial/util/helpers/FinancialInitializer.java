@@ -27,6 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
@@ -37,28 +38,26 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.config.ChartOfAccountsConfig;
 import org.mifos.config.GLAccount;
 import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class FinancialInitializer {
     private static final Logger logger = LoggerFactory.getLogger(FinancialInitializer.class);
 
-    public static void initialize() throws FinancialException {
+    public static void initialize(HibernateUtil hibernateUtil) throws FinancialException {
 
         try {
-            StaticHibernateUtil.getSessionTL();
-            StaticHibernateUtil.startTransaction();
+            hibernateUtil.startTransaction();
             initalizeFinancialAction();
             loadCOA();
-            StaticHibernateUtil.commitTransaction();
+            hibernateUtil.commitTransaction();
 
             // necessary or cacheCOA() doesn't work correctly. Is that because
             // the commitTransaction() isn't clearing the session?
-            StaticHibernateUtil.getSessionTL().clear();
-
-
+            hibernateUtil.clearSession();
             cacheCOA();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
+            hibernateUtil.rollbackTransaction();
             throw new FinancialException(FinancialExceptionConstants.ACTIONNOTFOUND, e);
         }
     }

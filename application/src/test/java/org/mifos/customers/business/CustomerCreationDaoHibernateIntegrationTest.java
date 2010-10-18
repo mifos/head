@@ -87,7 +87,7 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(center);
+        center = null;
     }
 
     @Test
@@ -110,7 +110,7 @@ public class CustomerCreationDaoHibernateIntegrationTest extends MifosIntegratio
 
         StaticHibernateUtil.startTransaction();
         customerDao.save(center);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         assertThat(center.getCustomerAccount(), is(notNullValue()));
         assertThat(center.getGlobalCustNum(), is(nullValue()));

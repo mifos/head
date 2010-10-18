@@ -20,9 +20,6 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fund.business.FundBO;
@@ -63,6 +60,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  */
@@ -96,6 +96,7 @@ public class IntegrationTestObjectMother {
         if (sampleBranchOffice == null) {
             try {
                 sampleBranchOffice = officePersistence.getOffice(SAMPLE_BRANCH_OFFICE);
+                StaticHibernateUtil.flushAndClearSession();
             } catch (PersistenceException e) {
                 throw new IllegalStateException("Office with id [" + SAMPLE_BRANCH_OFFICE + "]. "
                         + INTEGRATION_TEST_DATA_MISSING_MESSAGE);
@@ -108,6 +109,7 @@ public class IntegrationTestObjectMother {
         if (testUser == null) {
             try {
                 testUser = personnelPersistence.getPersonnel(DEFAULT_INTEGRATION_TEST_USER);
+                StaticHibernateUtil.flushAndClearSession();
             } catch (PersistenceException e) {
                 throw new IllegalStateException("PersonnelBO with id [" + DEFAULT_INTEGRATION_TEST_USER + "]. "
                         + INTEGRATION_TEST_DATA_MISSING_MESSAGE);
@@ -132,118 +134,91 @@ public class IntegrationTestObjectMother {
 
     public static void saveMeeting(final MeetingBO meeting) {
         try {
-            StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(meeting);
-            StaticHibernateUtil.commitTransaction();
-            StaticHibernateUtil.flushAndClearSession();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         }
     }
 
     public static void saveCustomer(final CustomerBO center) {
         try {
-            StaticHibernateUtil.startTransaction();
+//            StaticHibernateUtil.startTransaction();
             customerPersistence.saveCustomer(center);
-            StaticHibernateUtil.commitTransaction();
-            StaticHibernateUtil.flushAndClearSession();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
-    public static void cleanMeeting(MeetingBO weeklyMeeting) {
-        try {
-            TestObjectFactory.cleanUp(weeklyMeeting);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    public static void cleanCustomerHierarchyWithMultipleClientsMeetingsAndFees(final ClientBO activeClient,
-            final ClientBO inActiveClient, final GroupBO group, final CustomerBO center, final MeetingBO weeklyMeeting) {
-        try {
-            TestObjectFactory.cleanUp(activeClient);
-            TestObjectFactory.cleanUp(inActiveClient);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
-            TestObjectFactory.cleanUp(weeklyMeeting);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
+    //    public static void cleanCustomerHierarchyWithMultipleClientsMeetingsAndFees(final ClientBO activeClient,
+//            final ClientBO inActiveClient, final GroupBO group, final CustomerBO center, final MeetingBO weeklyMeeting) {
+//        try {
+//            TestObjectFactory.cleanUp(activeClient);
+//            TestObjectFactory.cleanUp(inActiveClient);
+//            group = null;
+//            center = null;
+//            TestObjectFactory.cleanUp(weeklyMeeting);
+//        } finally {
+//            StaticHibernateUtil.flushSession();
+//        }
+//    }
 
     public static void cleanCustomerHierarchyWithMeeting(final ClientBO client, final GroupBO group,
             final CustomerBO center, final MeetingBO weeklyMeeting) {
         try {
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
-            TestObjectFactory.cleanUp(weeklyMeeting);
+//            client = null;
+//            group = null;
+//            center = null;
+//            TestObjectFactory.cleanUp(weeklyMeeting);
         } finally {
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
         }
     }
 
     public static void saveSavingsProductAndAssociatedSavingsAccounts(final SavingsOfferingBO savingsProduct,
             final SavingsBO... relatedSavingsAccounts) {
         try {
-            StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(savingsProduct);
             for (SavingsBO savingAccount : relatedSavingsAccounts) {
                 customerPersistence.createOrUpdate(savingAccount);
             }
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void cleanSavingsProductAndAssociatedSavingsAccounts(final SavingsBO... savingsAccount) {
 
         try {
-            for (SavingsBO savingsBO : savingsAccount) {
-                TestObjectFactory.cleanUp(savingsBO);
-            }
+//            for (SavingsBO savingsBO : savingsAccount) {
+//                savingsBO = null;
+//            }
         } finally {
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
         }
     }
 
     public static void saveLoanProducts(final LoanOfferingBO... loanProducts) {
         try {
-            StaticHibernateUtil.startTransaction();
             for (LoanOfferingBO loanProduct : loanProducts) {
                 customerPersistence.createOrUpdate(loanProduct);
             }
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void saveSavingsProducts(final SavingsOfferingBO... savingsProducts) {
         try {
-            StaticHibernateUtil.startTransaction();
             for (SavingsOfferingBO savingsProduct : savingsProducts) {
                 customerPersistence.createOrUpdate(savingsProduct);
             }
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -255,6 +230,7 @@ public class IntegrationTestObjectMother {
 
         try {
             customerService.createCenter(center, meeting, accountFees);
+            StaticHibernateUtil.flushAndClearSession();
         } catch (ApplicationException e) {
             throw new RuntimeException(e);
         }
@@ -360,65 +336,48 @@ public class IntegrationTestObjectMother {
 
     public static void saveFee(AmountFeeBO fee) {
         try {
-            StaticHibernateUtil.startTransaction();
+//            StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(fee);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void createProduct(PrdOfferingBO product) {
         try {
-            StaticHibernateUtil.startTransaction();
+//            StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(product);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void saveLoanAccount(LoanBO loanAccount) {
         try {
-            StaticHibernateUtil.startTransaction();
             loanAccount.save();
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void saveSavingsAccount(SavingsBO savingsAccount) {
         try {
-            StaticHibernateUtil.startTransaction();
             savingsAccount.save();
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void update(CustomerBO customer) {
         try {
             new CustomerPersistence().createOrUpdate(customer);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
           } catch (Exception e) {
-              StaticHibernateUtil.rollbackTransaction();
               throw new RuntimeException(e);
-          } finally {
-              StaticHibernateUtil.closeSession();
           }
     }
 
@@ -428,26 +387,19 @@ public class IntegrationTestObjectMother {
     @Deprecated
     public static void saveHoliday (Holiday holiday) {
         try {
-            StaticHibernateUtil.startTransaction();
+//            StaticHibernateUtil.startTransaction();
             genericDao.createOrUpdate(holiday);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void createPersonnel(PersonnelBO personnel) {
         try {
             personnel.save();
-            StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -465,55 +417,40 @@ public class IntegrationTestObjectMother {
 
     public static void createOffice(OfficeBO office) {
         try {
-            StaticHibernateUtil.startTransaction();
+//            StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(office);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void createOffice(OfficeBuilder officeBuilder) {
         try {
-            StaticHibernateUtil.startTransaction();
+//            StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(officeBuilder.build());
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static FundBO createFund(FundBO fund) throws Exception {
-
         try {
-            StaticHibernateUtil.startTransaction();
             fundDao.save(fund);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
             return fund;
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e.getMessage(), e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
     public static void createFundCode(FundCodeEntity fundCode) {
         try {
-            StaticHibernateUtil.startTransaction();
             customerPersistence.createOrUpdate(fundCode);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
-            StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 

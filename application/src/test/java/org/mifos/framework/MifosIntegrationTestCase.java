@@ -20,15 +20,7 @@
 
 package org.mifos.framework;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.sql.Connection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import junit.framework.ComparisonFailure;
-
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.FilteredDataSet;
@@ -49,6 +41,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.DatabaseDependentTest;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.framework.util.StandardTestingService;
@@ -60,6 +53,11 @@ import org.mifos.service.test.TestMode;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Log4jConfigurer;
+
+import java.io.FileOutputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  *  All classes extending this class must be names as <b>*IntegrationTest.java</b> to support maven-surefire-plugin autofind
@@ -78,8 +76,6 @@ public class MifosIntegrationTestCase {
 
     private static IDataSet latestDataDump;
 
-    protected static boolean verifyDatabaseState;
-
     protected static ExcludeTableFilter excludeTables = new ExcludeTableFilter();
 
     private static String savedFiscalCalendarRulesWorkingDays;
@@ -87,8 +83,6 @@ public class MifosIntegrationTestCase {
     @BeforeClass
     public static void init() throws Exception {
         Log4jConfigurer.initLogging(new ConfigurationLocator().getFilePath(FilePaths.LOG_CONFIGURATION_FILE));
-
-        verifyDatabaseState = false;
         excludeTables.excludeTable("config_key_value_integer");
         excludeTables.excludeTable("personnel");
         excludeTables.excludeTable("meeting");
@@ -104,35 +98,15 @@ public class MifosIntegrationTestCase {
     @Before
     public void before() throws Exception {
         new TestCaseInitializer().initialize();
-
-        if (verifyDatabaseState) {
-            Connection connection = StaticHibernateUtil.getSessionTL().connection();
-            connection.setAutoCommit(false);
-            DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
-
-            latestDataDump = new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
-            String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
-            FlatXmlDataSet.write(latestDataDump, new FileOutputStream(tmpDir + "latestDataDump.xml"));
-            FlatXmlDataSetBuilder fxmlBuilder = new FlatXmlDataSetBuilder();
-            latestDataDump = fxmlBuilder.build(new File(tmpDir + "latestDataDump.xml"));
-        }
+        Money.setDefaultCurrency(TestUtils.RUPEE);
+        DatabaseDependentTest.before();
     }
 
     @After
     public void after() throws Exception {
-        if (verifyDatabaseState) {
-            Connection connection = StaticHibernateUtil.getSessionTL().connection();
-            connection.setAutoCommit(false);
-            DatabaseConnection dbUnitConnection = new DatabaseConnection(connection);
-            IDataSet upgradeDataDump = new FilteredDataSet(excludeTables, dbUnitConnection.createDataSet());
-            String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
-            FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(tmpDir + "upgradeDataDump.xml"));
-            FlatXmlDataSetBuilder fxmlBuilder = new FlatXmlDataSetBuilder();
-            upgradeDataDump = fxmlBuilder.build(new File(tmpDir + "upgradeDataDump.xml"));
-
-            Assertion.assertEquals(latestDataDump, upgradeDataDump);
-        }
         diableCustomWorkingDays();
+        TestUtils.dereferenceObjects(this);
+        DatabaseDependentTest.after();
     }
 
     private Statistics statisticsService;

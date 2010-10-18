@@ -45,10 +45,10 @@ public class ProductMixPersistenceIntegrationTest extends MifosIntegrationTestCa
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(prdmix);
-        TestObjectFactory.cleanUp(saving1);
-        TestObjectFactory.cleanUp(saving2);
-        StaticHibernateUtil.closeSession();
+        prdmix = null;
+        saving1 = null;
+        saving2 = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test

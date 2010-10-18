@@ -83,12 +83,12 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         if (center != null) {
             center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
         }
-        TestObjectFactory.cleanUp(loan);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        loan = null;
+        client = null;
+        group = null;
+        center = null;
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private void createInitialCustomers() {
@@ -123,8 +123,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
         loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group.getPersonnel(), new Date(), Short.valueOf("1"));
         long numberOfTransactions = getStatisticsService().getSuccessfulTransactionCount() - transactionCount;
        Assert.assertTrue("numberOfTransactions=" + numberOfTransactions + " should be: " + 0, numberOfTransactions == 0);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private LoanBO retrieveLoanAccount() {
@@ -141,24 +140,21 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
                 TestUtils.createMoney(200), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
         loan.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private void reverseLoan() throws AccountException {
         loan = retrieveLoanAccount();
         loan.setUserContext(userContext);
         loan.reverseLoanDisbursal(group.getPersonnel(), "Loan Disbursal");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private void adjustLastPayment() throws AccountException {
         loan = retrieveLoanAccount();
         loan.setUserContext(userContext);
         loan.adjustPmnt("loan account has been adjusted by test code");
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     /*
@@ -207,7 +203,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      * loan.getAccountNotes().size());Assert.assertEquals(loan.getLoanAmount(),
      * loan.getLoanSummary() .getPrincipalDue());Assert.assertEquals(new Money(getCurrency()),
      * loan.getLoanSummary().getTotalAmntPaid());
-     * StaticHibernateUtil.closeSession(); }
+     * StaticHibernateUtil.flushSession(); }
      */
 
     /*
@@ -247,7 +243,7 @@ public class LoanBOForReversalIntegrationTest extends MifosIntegrationTestCase {
      * loan.getAccountNotes().size());Assert.assertEquals(loan.getLoanAmount(),
      * loan.getLoanSummary() .getPrincipalDue());Assert.assertEquals(new Money(getCurrency()),
      * loan.getLoanSummary().getTotalAmntPaid());
-     * StaticHibernateUtil.closeSession(); }
+     * StaticHibernateUtil.flushSession(); }
      */
 
 }

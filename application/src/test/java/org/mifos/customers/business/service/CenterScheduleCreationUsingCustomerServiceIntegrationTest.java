@@ -159,8 +159,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
         // setup
         saveHoliday(date(2010, 4, 19), date(2010, 4, 23), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -189,8 +188,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
         // setup
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(3).plusDays(4), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -219,8 +217,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
         // setup
         saveHoliday(date(2010, 4, 19), date(2010, 4, 23), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -234,8 +231,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
         // exercise test
         customerService.createCenter(center, weeklyMeeting, noAccountFees);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         validateDates(center.getGlobalCustNum(), startDate, startDate.plusWeeks(1), startDate.plusWeeks(3), startDate.plusWeeks(3),
                 startDate.plusWeeks(4), startDate.plusWeeks(5), startDate.plusWeeks(6), startDate.plusWeeks(7),
@@ -251,8 +247,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
         // setup
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(3).plusDays(4), RepaymentRuleTypes.NEXT_MEETING_OR_REPAYMENT);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -336,8 +331,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
         // setup
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(2), RepaymentRuleTypes.NEXT_WORKING_DAY);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -366,8 +360,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
         // setup
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(2).plusDays(4), RepaymentRuleTypes.NEXT_WORKING_DAY);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly()
                                                       .every(1)
                                                       .startingToday()
@@ -507,8 +500,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
         IntegrationTestObjectMother.saveFee(oneTimeFeeForCenterOnly);
 
         saveHoliday(startDate.plusWeeks(2), startDate.plusWeeks(3).plusDays(4), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         CenterBO center = new CenterBuilder().with(weeklyMeeting)
                                             .withName("Center-IntegrationTest")
                                             .with(sampleBranchOffice())
@@ -621,8 +613,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
 
         // setup
         saveHoliday(startDate.plusWeeks(4), startDate.plusWeeks(4).plusDays(3), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         MeetingBO biWeeklyMeeting = new MeetingBuilder().customerMeeting()
                                                       .weekly()
                                                       .every(2)
@@ -654,8 +645,7 @@ public class CenterScheduleCreationUsingCustomerServiceIntegrationTest extends M
         // setup
         saveHoliday(startDate.plusWeeks(4), startDate.plusWeeks(4).plusDays(3), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
         saveHoliday(startDate.plusWeeks(8), startDate.plusWeeks(8).plusDays(3), RepaymentRuleTypes.REPAYMENT_MORATORIUM);
-        StaticHibernateUtil.getSessionTL().flush();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         MeetingBO biWeeklyMeeting = new MeetingBuilder().customerMeeting()
                                                       .weekly()
                                                       .every(2)

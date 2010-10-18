@@ -77,7 +77,7 @@ public class FundDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
         // exercise test
         StaticHibernateUtil.startTransaction();
         fundDao.save(newfund);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         assertThat(newfund.getFundId(), is(notNullValue()));
     }
@@ -87,7 +87,7 @@ public class FundDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.startTransaction();
         fundDao.update(fund, "newFundName");
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         assertThat(fund.getFundName(), is("newFundName"));
     }

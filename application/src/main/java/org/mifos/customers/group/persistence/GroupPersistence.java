@@ -20,13 +20,6 @@
 
 package org.mifos.customers.group.persistence;
 
-import java.sql.Connection;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.service.CustomerService;
@@ -50,6 +43,13 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
+
+import java.sql.Connection;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @deprecated - use {@link CustomerDao}
@@ -157,7 +157,7 @@ public class GroupPersistence extends Persistence {
         Connection connection = null;
 
         try {
-            connection = StaticHibernateUtil.getSessionTL().connection();
+            connection = StaticHibernateUtil.getConnection();
             connection.setAutoCommit(false);
             Statement statement = connection.createStatement();
             short userId = 1; // this is bach job, so no user

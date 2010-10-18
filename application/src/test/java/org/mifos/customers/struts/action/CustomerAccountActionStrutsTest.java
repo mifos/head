@@ -73,10 +73,10 @@ public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

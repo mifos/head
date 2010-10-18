@@ -20,13 +20,6 @@
 
 package org.mifos.accounts.fees.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-
-import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -46,9 +39,18 @@ import org.mifos.application.collectionsheet.persistence.FeeBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 
 public class FeeDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
@@ -89,6 +91,7 @@ public class FeeDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
                         .with(sampleBranchOffice())
                         .build();
         IntegrationTestObjectMother.saveFee(weeklyOneTimeForLoans);
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     @Test

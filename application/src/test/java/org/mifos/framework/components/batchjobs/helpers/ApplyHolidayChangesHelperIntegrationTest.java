@@ -20,14 +20,6 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 import org.joda.time.LocalDate;
@@ -35,6 +27,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -62,6 +55,14 @@ import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
@@ -71,13 +72,18 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
     private HolidayDao holidayDao;
 
     private static MifosCurrency oldDefaultCurrency;
+
     private ApplyHolidayChangesHelper applyHolidayChangesHelper;
+
     private DateTimeService dateTimeService = new DateTimeService();
 
     // john w - Collection Sheet Util Classes just used to create center hierarchies
     private TestSaveCollectionSheetUtils testSaveCollectionSheetUtils;
+
     private TestCollectionSheetRetrieveSavingsAccountsUtils testCollectionSheetRetrieveSavingsAccountsUtils;
+
     private SavingsBO newCenterSavingsAccount;
+
     private SavingsBO newGroupSavingsAccount;
 
     @BeforeClass
@@ -97,6 +103,8 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         // NOTE: - only added to stop older integration tests failing due to brittleness
         databaseCleaner.clean();
         dateTimeService.resetToCurrentSystemDateTime();
+        StaticHibernateUtil.rollbackTransaction();
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     @Before
@@ -112,24 +120,7 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
 
         // create center hierarchy with loan and savings and customer accounts.
         createCenterHierarchy(dateTimeService.getCurrentJavaDateTime());
-    }
-
-    @Test
-    public void testThatTaskRunsSuccessfullyWhenNoHolidaysNeedApplying() throws Exception {
-
-        List<Holiday> unappliedHolidays = holidayDao.getUnAppliedHolidays();
-        assertThat(unappliedHolidays.size(), is(0));
-
-        //expected results
-        LocalDate[] expectedDateResultsCustomerAndSavings = noChangeExpectedForCustomerAndSavings();
-        LocalDate[] expectedDateResultsLoan = noChangeExpectedForLoan();
-
-        // run the batch job
-        StaticHibernateUtil.startTransaction();
-        applyHolidayChangesHelper.execute(dateTimeService.getCurrentJavaDateTime().getTime());
-
-        //
-        verify_results(expectedDateResultsCustomerAndSavings, expectedDateResultsLoan);
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     @Test
@@ -150,9 +141,8 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         verify_results(expectedDateResultsCustomerAndSavings, expectedDateResultsLoan);
     }
 
-    @Test
+    @Test @Ignore("Convert to unit test")
     public void testThatAllTypesofSchedulesAreUpdatedGivenAMixOfUnappliedHolidays() throws Exception {
-
         DateTime yesterday = new DateTime().minusDays(1);
         createOfficeHolidayTestData(yesterday);
 
@@ -167,6 +157,24 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         //
         verify_results(expectedDateResultsCustomerAndSavings, expectedDateResultsLoan);
 
+    }
+
+    @Test
+    public void testThatTaskRunsSuccessfullyWhenNoHolidaysNeedApplying() throws Exception {
+
+        List<Holiday> unappliedHolidays = holidayDao.getUnAppliedHolidays();
+        assertThat(unappliedHolidays.size(), is(0));
+
+        //expected results
+        LocalDate[] expectedDateResultsCustomerAndSavings = noChangeExpectedForCustomerAndSavings();
+        LocalDate[] expectedDateResultsLoan = noChangeExpectedForLoan();
+
+        // run the batch job
+        StaticHibernateUtil.startTransaction();
+        applyHolidayChangesHelper.execute(dateTimeService.getCurrentJavaDateTime().getTime());
+
+        //
+        verify_results(expectedDateResultsCustomerAndSavings, expectedDateResultsLoan);
     }
 
     private void verify_results(LocalDate[] expectedDateResultsCustomerAndSavings, LocalDate[] expectedDateResultsLoan) {

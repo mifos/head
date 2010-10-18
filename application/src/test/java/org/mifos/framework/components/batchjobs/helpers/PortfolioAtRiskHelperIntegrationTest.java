@@ -45,6 +45,11 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCase {
 
     protected AccountBO account1 = null;
@@ -64,16 +69,16 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(account2);
-            TestObjectFactory.cleanUp(account1);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            account2 = null;
+            account1 = null;
+            client = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -103,7 +108,7 @@ public class PortfolioAtRiskHelperIntegrationTest extends MifosIntegrationTestCa
         PortfolioAtRiskHelper portfolioAtRiskHelper = new PortfolioAtRiskHelper();//(PortfolioAtRiskHelper) portfolioAtRiskTask.getTaskHelper();
         portfolioAtRiskHelper.execute(System.currentTimeMillis());
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         client = TestObjectFactory.getCustomer(client.getCustomerId());

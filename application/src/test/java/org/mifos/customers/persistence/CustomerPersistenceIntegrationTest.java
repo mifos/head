@@ -20,15 +20,7 @@
 
 package org.mifos.customers.persistence;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.sql.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,13 +52,7 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
-import org.mifos.customers.business.CustomerAccountBO;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerBOTestUtils;
-import org.mifos.customers.business.CustomerDto;
-import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.CustomerSearchDto;
-import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.business.*;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.checklist.business.CheckListBO;
@@ -94,6 +80,13 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.sql.Date;
+import java.util.List;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private MeetingBO meeting;
@@ -120,23 +113,20 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(centerSavingsAccount);
-            TestObjectFactory.cleanUp(groupSavingsAccount);
-            TestObjectFactory.cleanUp(clientSavingsAccount);
-            TestObjectFactory.cleanUp(groupAccount);
-            TestObjectFactory.cleanUp(clientAccount);
-            TestObjectFactory.cleanUp(account);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group2);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            centerSavingsAccount = null;
+            groupSavingsAccount = null;
+            clientSavingsAccount = null;
+            groupAccount = null;
+            clientAccount = null;
+            account = null;
+            client = null;
+            group2 = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
             // Throwing from tearDown will tend to mask the real failure.
             e.printStackTrace();
         }
-        StaticHibernateUtil.rollbackTransaction();
-        StaticHibernateUtil.closeSession();
-
     }
 
     @Test
@@ -151,9 +141,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         Money amount = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
         Assert.assertEquals(new Money(TestUtils.RUPEE, "600"), amount);
-
-        TestObjectFactory.cleanUp(clientAccount1);
-        TestObjectFactory.cleanUp(clientAccount2);
     }
 
     /*
@@ -190,8 +177,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
             configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
         }
 
-        TestObjectFactory.cleanUp(clientAccount1);
-        TestObjectFactory.cleanUp(clientAccount2);
     }
 
     /*
@@ -228,10 +213,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         } finally {
             configMgr.clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
         }
-
-        TestObjectFactory.cleanUp(account1);
-        TestObjectFactory.cleanUp(account2);
-        TestObjectFactory.cleanUp(group1);
     }
 
     @Test
@@ -252,12 +233,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         Money amount2 = customerPersistence.getTotalAmountForGroup(group1.getCustomerId(),
                 AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
         Assert.assertEquals(new Money(getCurrency(), "600"), amount2);
-
-        TestObjectFactory.cleanUp(account1);
-        TestObjectFactory.cleanUp(account2);
-        TestObjectFactory.cleanUp(account3);
-        TestObjectFactory.cleanUp(account4);
-        TestObjectFactory.cleanUp(group1);
     }
 
     @Test
@@ -281,10 +256,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         Money amount2 = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
                 AccountState.LOAN_ACTIVE_IN_BAD_STANDING, group.getSearchId() + ".%");
         Assert.assertEquals(new Money(getCurrency(), "600"), amount2);
-
-        TestObjectFactory.cleanUp(clientAccount1);
-        TestObjectFactory.cleanUp(clientAccount2);
-
     }
 
     @Test
@@ -312,11 +283,11 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         Assert.assertEquals(newGroup.getSearchId(), groupInfos.get(1).getSearchId());
         Assert.assertEquals(newGroup.getOffice().getOfficeId(), groupInfos.get(1).getBranchId());
         Assert.assertEquals(newGroup.getCustomerId(), groupInfos.get(1).getGroupId());
-        TestObjectFactory.cleanUp(newGroup);
-        TestObjectFactory.cleanUp(newGroup2);
-        TestObjectFactory.cleanUp(newGroup3);
-        TestObjectFactory.cleanUp(newGroup4);
-        TestObjectFactory.cleanUp(newGroup5);
+//        TestObjectFactory.cleanUp(newGroup);
+//        TestObjectFactory.cleanUp(newGroup2);
+//        TestObjectFactory.cleanUp(newGroup3);
+//        TestObjectFactory.cleanUp(newGroup4);
+//        TestObjectFactory.cleanUp(newGroup5);
 
     }
 
@@ -382,9 +353,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 Assert.assertTrue(true);
             }
         }
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client4);
+//        TestObjectFactory.cleanUp(client2);
+//        TestObjectFactory.cleanUp(client3);
+//        TestObjectFactory.cleanUp(client4);
     }
 
     @Test
@@ -409,9 +380,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 Assert.assertTrue(true);
             }
         }
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client4);
+//        TestObjectFactory.cleanUp(client2);
+//        TestObjectFactory.cleanUp(client3);
+//        TestObjectFactory.cleanUp(client4);
     }
 
     @Test
@@ -433,9 +404,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 Assert.assertTrue(true);
             }
         }
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client4);
+//        TestObjectFactory.cleanUp(client2);
+//        TestObjectFactory.cleanUp(client3);
+//        TestObjectFactory.cleanUp(client4);
     }
 
     @Test
@@ -457,9 +428,9 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 Assert.assertTrue(true);
             }
         }
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client4);
+//        TestObjectFactory.cleanUp(client2);
+//        TestObjectFactory.cleanUp(client3);
+//        TestObjectFactory.cleanUp(client4);
     }
 
     @Test
@@ -546,15 +517,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         List<AccountBO> loansForClient = customerPersistence.retrieveAccountsUnderCustomer(client.getSearchId(), Short
                 .valueOf("3"), Short.valueOf("1"));
         Assert.assertEquals(1, loansForClient.size());
-
-        TestObjectFactory.cleanUp(account4);
-        TestObjectFactory.cleanUp(account3);
-        TestObjectFactory.cleanUp(account2);
-        TestObjectFactory.cleanUp(account1);
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(group1);
-        TestObjectFactory.cleanUp(center1);
     }
 
     @Test
@@ -584,17 +546,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         List<AccountBO> savingsForClient = customerPersistence.retrieveAccountsUnderCustomer(client.getSearchId(),
                 Short.valueOf("3"), Short.valueOf("2"));
         Assert.assertEquals(1, savingsForClient.size());
-
-        TestObjectFactory.cleanUp(account3);
-        TestObjectFactory.cleanUp(account2);
-        TestObjectFactory.cleanUp(account1);
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(account4);
-        TestObjectFactory.cleanUp(account5);
-        TestObjectFactory.cleanUp(group1);
-        TestObjectFactory.cleanUp(account6);
-        TestObjectFactory.cleanUp(center1);
     }
 
     @Test
@@ -615,10 +566,10 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 .valueOf("3"), CustomerLevel.GROUP.getValue());
         Assert.assertEquals(1, customerList2.size());
 
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(group1);
-        TestObjectFactory.cleanUp(center1);
+//        TestObjectFactory.cleanUp(client3);
+//        TestObjectFactory.cleanUp(client2);
+        group1 = null;
+        center1 = null;
     }
 
     @Test
@@ -647,9 +598,6 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
                 new Short(checklistClient.getChecklistId()));
         checklistGroup = (CustomerCheckListBO) StaticHibernateUtil.getSessionTL().get(CheckListBO.class,
                 new Short(checklistGroup.getChecklistId()));
-        TestObjectFactory.cleanUp(checklistCenter);
-        TestObjectFactory.cleanUp(checklistClient);
-        TestObjectFactory.cleanUp(checklistGroup);
 
     }
 

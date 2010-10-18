@@ -20,66 +20,24 @@
 
 package org.mifos.accounts.savings.business;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD;
-import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_POSTING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.DAILY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_DAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.joda.time.Days;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountActionEntity;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountCustomFieldEntity;
-import org.mifos.accounts.business.AccountNotesEntity;
-import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.business.AccountStateFlagEntity;
-import org.mifos.accounts.business.AccountStateMachines;
-import org.mifos.accounts.business.AccountTestUtils;
-import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.business.*;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.*;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStates;
-import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.accounts.util.helpers.PaymentData;
-import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.accounts.util.helpers.*;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.MifosCurrency;
@@ -112,6 +70,13 @@ import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.sql.Timestamp;
+import java.util.*;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.*;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.*;
+import static org.mifos.framework.util.helpers.TestObjectFactory.*;
+
 public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     private UserContext userContext;
@@ -139,24 +104,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void setUp() throws Exception {
         enableCustomWorkingDays();
-        StaticHibernateUtil.disableCommits();
         userContext = TestUtils.makeUser();
         createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
         currency = Configuration.getInstance().getSystemConfig().getCurrency();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        StaticHibernateUtil.enableCommits();
-        StaticHibernateUtil.rollbackTransaction();
-        StaticHibernateUtil.closeSession();
-        userContext = null;
-        group = null;
-        center = null;
-        client1 = null;
-        client2 = null;
-        savings = null;
-        savingsOffering = null;
     }
 
     @Test

@@ -693,7 +693,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         setFunds(funds);
         setFees(fees);
         try {
-            new LoanPrdPersistence().createOrUpdate(this);
+            getLoanPrdPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }
@@ -773,6 +773,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 }
             }
         }
+    }
+
+    protected LoanPrdPersistence getLoanPrdPersistence() {
+        return new LoanPrdPersistence();
     }
 
     private void validate(final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,

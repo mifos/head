@@ -259,10 +259,12 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.5</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
+            <version>3.0.2.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -832,11 +834,62 @@
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <!-- override exclude integration test classes    -->
                             <excludes>
-                                <exclude>none</exclude>
+                                <exclude>**/*LoanArrearsTaskIntegrationTest.java</exclude>
+                                <exclude>**/*TaskRunningIntegrationTest.java</exclude>
+                                <exclude>**/*ProductStatusHelperIntegrationTest.java</exclude>
+                                <exclude>**/*BatchJobCatchUpIntegrationTest.java</exclude>
+                                <exclude>**/*LatestTestAfterCheckpointIntegrationTest.java</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
+                            </includes>
+                            <systemProperties>
+                                <mifos.mode>integration</mifos.mode>
+                            </systemProperties>
+                            <argLine>${maven.surefire.memory}</argLine>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>integration-test-struts</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <testNGArtifactName>null</testNGArtifactName>
+                            <printSummary>true</printSummary>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <!-- override exclude integration test classes    -->
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
+                            <includes>
                                 <include>**/*StrutsTest.java</include>
+                            </includes>
+                            <systemProperties>
+                                <mifos.mode>integration</mifos.mode>
+                            </systemProperties>
+                            <argLine>${maven.surefire.memory}</argLine>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>integration-test-dbupgrade</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <testNGArtifactName>null</testNGArtifactName>
+                            <printSummary>true</printSummary>
+                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
+                            <!-- override exclude integration test classes    -->
+                            <excludes>
+                                <exclude>none</exclude>
+                            </excludes>
+                            <includes>
+                                <include>**/*LatestTestAfterCheckpointIntegrationTest.java</include>
                             </includes>
                             <systemProperties>
                                 <mifos.mode>integration</mifos.mode>

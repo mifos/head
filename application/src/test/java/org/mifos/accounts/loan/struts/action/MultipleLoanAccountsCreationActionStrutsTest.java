@@ -101,15 +101,15 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
     @Override
     protected void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            accountBO = null;
+            client = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -408,7 +408,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
        Assert.assertEquals(Short.valueOf("1"), loan.getGracePeriodDuration());
        Assert.assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        TestObjectFactory.cleanUp(loan);
+        loan = null;
     }
 
     public void testCreateWithoutPermission() throws Exception {

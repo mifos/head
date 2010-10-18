@@ -20,11 +20,7 @@
 
 package org.mifos.customers.struts.action;
 
-import java.sql.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -34,13 +30,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerBOTestUtils;
-import org.mifos.customers.business.CustomerFlagDetailEntity;
-import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.CustomerPositionEntity;
-import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.business.PositionEntity;
+import org.mifos.customers.business.*;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -63,6 +53,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.sql.Date;
+import java.util.List;
+
 public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     public EditCustomerStatusActionStrutsTest() throws Exception {
@@ -74,7 +67,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     private CustomerBO center;
     private LoanBO loanBO;
     private String flowKey;
-    private OfficeBO office;
+    private OfficeBO office;         
 
     @Override
     protected void setStrutsConfig() {
@@ -326,9 +319,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.previousStatus_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        client = null;
+        group = null;
+        center = null;
     }
 
     public void testCancel() {
@@ -424,7 +417,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         CustomerBOTestUtils.setCustomerStatus(client,
                 new CustomerStatusEntity(CustomerStatus.CLIENT_PARTIAL.getValue()));
         client.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
 
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -499,8 +492,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         createInitialObjects();
         loanBO = getLoanAccount(client, "dsafdsfds", "12ed");
         client.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
@@ -529,12 +521,12 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         verifyActionErrors(new String[] { CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION });
         verifyForward(ActionForwards.updateStatus_failure.toString());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
-        TestObjectFactory.cleanUp(loanBO);
+        loanBO = null;
         cleanInitialObjects();
     }
 
@@ -546,7 +538,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
                 .valueOf("1")), client, client.getParentCustomer());
         group.addCustomerPosition(customerPositionEntity);
         group.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
 
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.loadStatus.toString());
@@ -818,8 +810,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         createInitialObjects();
         loanBO = getLoanAccount(group, "dsafdsfsdgfdg", "23vf");
         group.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_OTHER);
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.updateStatus.toString());
@@ -827,12 +818,12 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         actionPerform();
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         verifyActionErrors(new String[] { CustomerConstants.CUSTOMER_HAS_ACTIVE_ACCOUNTS_EXCEPTION });
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
-        TestObjectFactory.cleanUp(loanBO);
+        loanBO = null;
         cleanInitialObjects();
     }
 
@@ -952,9 +943,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     private void cleanInitialObjects() {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        client = null;
+        group = null;
+        center = null;
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExist(CustomerStatus groupStatus, CustomerStatus clientStatus) {
@@ -965,8 +956,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     private void cleanInitialObjectsWhenCenterHierarchyNotExist() {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
+        client = null;
+        group = null;
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExistWithNoLO(CustomerStatus groupStatus,
@@ -983,8 +974,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     private void cleanObjectsForClient() {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(office);
+        client = null;
+        office = null;
     }
 
     private void createClientWithoutMeeting(String name) throws Exception {
@@ -1003,9 +994,9 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     private void cleanInitialObjectsOfficeInactive() {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(office);
+        client = null;
+        group = null;
+        office = null;
     }
 
     private void createInitialObjectsWhenCenterHierarchyNotExistWithNoMeeting(CustomerStatus groupStatus,

@@ -80,10 +80,10 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(accountBO);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        accountBO = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

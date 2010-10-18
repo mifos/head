@@ -41,7 +41,7 @@ public class ProductCategoryBusinessService implements BusinessService {
 
     public List<ProductTypeEntity> getProductTypes() throws ServiceException {
         try {
-            return new ProductCategoryPersistence().getProductTypes();
+            return getProductCategoryPersistence().getProductTypes();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -49,7 +49,7 @@ public class ProductCategoryBusinessService implements BusinessService {
 
     public ProductTypeEntity getProductType(Short id) throws ServiceException {
         try {
-            return new ProductCategoryPersistence().getProductTypes(id);
+            return getProductCategoryPersistence().getProductTypes(id);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -57,15 +57,19 @@ public class ProductCategoryBusinessService implements BusinessService {
 
     public ProductCategoryBO findByGlobalNum(String globalNum) throws ServiceException {
         try {
-            return new ProductCategoryPersistence().findByGlobalNum(globalNum);
+            return getProductCategoryPersistence().findByGlobalNum(globalNum);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
     }
 
+    protected ProductCategoryPersistence getProductCategoryPersistence() {
+        return new ProductCategoryPersistence();
+    }
+
     public List<PrdCategoryStatusEntity> getProductCategoryStatusList() throws ServiceException {
         try {
-            return new ProductCategoryPersistence().getProductCategoryStatusList();
+            return getProductCategoryPersistence().getProductCategoryStatusList();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -73,7 +77,7 @@ public class ProductCategoryBusinessService implements BusinessService {
 
     public List<ProductCategoryBO> getAllCategories() throws ServiceException {
         try {
-            return new ProductCategoryPersistence().getAllCategories();
+            return getProductCategoryPersistence().getAllCategories();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

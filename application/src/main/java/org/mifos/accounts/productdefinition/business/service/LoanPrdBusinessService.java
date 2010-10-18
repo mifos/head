@@ -55,11 +55,15 @@ public class LoanPrdBusinessService implements BusinessService {
 
     public List<ProductCategoryBO> getActiveLoanProductCategories() throws ServiceException {
         try {
-            return new PrdOfferingPersistence().getApplicableProductCategories(ProductType.LOAN,
+            return getPrdOfferingPersistence().getApplicableProductCategories(ProductType.LOAN,
                     PrdCategoryStatus.ACTIVE);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
+    }
+
+    protected PrdOfferingPersistence getPrdOfferingPersistence() {
+        return new PrdOfferingPersistence();
     }
 
     /**
@@ -68,7 +72,7 @@ public class LoanPrdBusinessService implements BusinessService {
     @Deprecated
     public List<? extends MasterDataEntity> getLoanApplicableCustomerTypes(final Short localeId) throws ServiceException {
         try {
-            List<PrdApplicableMasterEntity> applList = new MasterPersistence().retrieveMasterEntities(PrdApplicableMasterEntity.class, localeId);
+            List<PrdApplicableMasterEntity> applList = getMasterPersistence().retrieveMasterEntities(PrdApplicableMasterEntity.class, localeId);
             if (applList != null) {
                 for (Iterator<PrdApplicableMasterEntity> iter = applList.iterator(); iter.hasNext();) {
                     MasterDataEntity masterData = iter.next();
@@ -83,9 +87,13 @@ public class LoanPrdBusinessService implements BusinessService {
         }
     }
 
+    protected MasterPersistence getMasterPersistence() {
+        return new MasterPersistence();
+    }
+
     public LoanOfferingBO getLoanOffering(final Short prdofferingId) throws ServiceException {
         try {
-            return new LoanPrdPersistence().getLoanOffering(prdofferingId);
+            return getLoanPrdPersistence().getLoanOffering(prdofferingId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -93,7 +101,7 @@ public class LoanPrdBusinessService implements BusinessService {
 
     public List<PrdStatusEntity> getApplicablePrdStatus(final Short localeId) throws ServiceException {
         try {
-            return new PrdOfferingPersistence().getApplicablePrdStatus(ProductType.LOAN, localeId);
+            return getPrdOfferingPersistence().getApplicablePrdStatus(ProductType.LOAN, localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -101,7 +109,7 @@ public class LoanPrdBusinessService implements BusinessService {
 
     public LoanOfferingBO getLoanOffering(final Short loanOfferingId, final Short localeId) throws ServiceException {
         try {
-            return new LoanPrdPersistence().getLoanOffering(loanOfferingId, localeId);
+            return getLoanPrdPersistence().getLoanOffering(loanOfferingId, localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -109,10 +117,14 @@ public class LoanPrdBusinessService implements BusinessService {
 
     public List<LoanOfferingBO> getAllLoanOfferings(final Short localeId) throws ServiceException {
         try {
-            return new LoanPrdPersistence().getAllLoanOfferings(localeId);
+            return getLoanPrdPersistence().getAllLoanOfferings(localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
+    }
+
+    protected LoanPrdPersistence getLoanPrdPersistence() {
+        return new LoanPrdPersistence();
     }
 
     /**
@@ -121,7 +133,7 @@ public class LoanPrdBusinessService implements BusinessService {
     @Deprecated
     public List<LoanOfferingBO> getApplicablePrdOfferings(final CustomerLevelEntity customerLevel) throws ServiceException {
         try {
-            return new LoanPrdPersistence().getApplicablePrdOfferings(customerLevel);
+            return getLoanPrdPersistence().getApplicablePrdOfferings(customerLevel);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

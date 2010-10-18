@@ -85,8 +85,8 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private Upgrade upgradeAndCheck() throws IOException, SQLException, ApplicationException {
-        Connection connection = session.connection();
-        connection.setAutoCommit(true);
+//        Connection connection = session.connection();
+//        connection.setAutoCommit(true);
         short newId = 17032;
         AddActivity upgrade = new AddActivity(newId, SecurityConstants.LOAN_MANAGEMENT,
                 TEST_LOCALE, "Can use the executive washroom");
@@ -134,7 +134,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testConstructorTest() throws Exception {
         Connection conn =session.connection();
-        conn.setAutoCommit(true);
+//        conn.setAutoCommit(true);
         short newId = 30000;
         AddActivity upgrade = null;
         String invalidKey = "NewActivity";

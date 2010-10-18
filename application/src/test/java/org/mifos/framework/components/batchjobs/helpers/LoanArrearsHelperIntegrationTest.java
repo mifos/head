@@ -68,11 +68,11 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(loanAccount);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        loanAccount = null;
+        group = null;
+        center = null;
         loanArrearHelper = null;
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -91,7 +91,7 @@ public class LoanArrearsHelperIntegrationTest extends MifosIntegrationTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, currentdate, loanOffering);
         setDisbursementDateAsOldDate(loanAccount);
         loanAccount.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return loanAccount;
     }
 

@@ -20,11 +20,7 @@
 
 package org.mifos.application.importexport.persistence;
 
-import java.sql.Connection;
-import java.sql.Timestamp;
-
 import junit.framework.Assert;
-
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,13 +30,13 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import java.sql.Timestamp;
+
 public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
         StaticHibernateUtil.flushAndClearSession();
-        Connection connection = StaticHibernateUtil.getSessionTL().connection();
-        connection.createStatement().execute("truncate table imported_transactions_files");
     }
 
     @Test
@@ -53,7 +49,7 @@ public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTe
         ImportedFilesDao importedFilesDao = new HibernateImportedFilesDao();
         StaticHibernateUtil.startTransaction();
         importedFilesDao.saveImportedFile(expected);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         ImportedFilesEntity actual = importedFilesDao.findImportedFileByName(fileName);
         Assert.assertEquals(fileName, actual.getFileName());
         Assert.assertEquals(personnelId, actual.getSubmittedBy().getPersonnelId());
@@ -70,13 +66,12 @@ public class HibernateImportedFilesDaoIntegrationTest extends MifosIntegrationTe
         ImportedFilesDao importedFilesDao = new HibernateImportedFilesDao();
         StaticHibernateUtil.startTransaction();
         importedFilesDao.saveImportedFile(expected);
-        StaticHibernateUtil.commitTransaction();
         StaticHibernateUtil.flushAndClearSession();
         ImportedFilesEntity shouldViolateConstraint = new ImportedFilesEntity(fileName, timeStamp, personnelBO);
         try {
             StaticHibernateUtil.startTransaction();
             importedFilesDao.saveImportedFile(shouldViolateConstraint);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
             Assert.fail("expected ConstraintViolationException");
         } catch (ConstraintViolationException e) {
         }

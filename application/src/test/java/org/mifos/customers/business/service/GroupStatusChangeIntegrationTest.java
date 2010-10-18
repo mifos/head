@@ -20,12 +20,6 @@
 
 package org.mifos.customers.business.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.util.List;
-import java.util.Locale;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -52,6 +46,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -60,6 +55,12 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Locale;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class GroupStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 
@@ -96,7 +97,7 @@ public class GroupStatusChangeIntegrationTest extends MifosIntegrationTestCase {
     public void cleanDatabaseTablesAfterTest() {
         // NOTE: - only added to stop older integration tests failing due to brittleness
         databaseCleaner.clean();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Before
@@ -140,7 +141,7 @@ public class GroupStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 
         // exercise test
         customerService.updateGroupStatus(existingActiveGroup, existingActiveGroup.getStatus(), CustomerStatus.GROUP_CANCELLED, customerStatusFlag, customerNote);
-
+        StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         // verification
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.GROUP, existingActiveGroup.getCustomerId());
         assertThat(auditLogList.size(), is(1));

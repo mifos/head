@@ -20,19 +20,12 @@
 
 package org.mifos.application.servicefacade;
 
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.application.collectionsheet.persistence.CenterBuilder;
-import org.mifos.application.collectionsheet.persistence.ClientBuilder;
-import org.mifos.application.collectionsheet.persistence.GroupBuilder;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
+import org.mifos.application.collectionsheet.persistence.*;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
@@ -43,7 +36,9 @@ import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
-import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 /**
  * Class contains utility methods for setting up, processing and configuring a sample collection sheet hierarchy for
@@ -249,16 +244,16 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
         if (center != null) {
             center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
         }
-        TestObjectFactory.cleanUp(clientOfGroupPerIndividualSavingsAccount);
-        TestObjectFactory.cleanUp(groupPerIndividualSavingsAccount);
-        TestObjectFactory.cleanUp(clientOfGroupCompleteGroupSavingsAccount);
-        TestObjectFactory.cleanUp(groupCompleteGroupSavingsAccount);
-        TestObjectFactory.cleanUp(centerSavingsAccount);
-        TestObjectFactory.cleanUp(clientOfGroupPerIndividual);
-        TestObjectFactory.cleanUp(clientOfGroupCompleteGroup);
-        TestObjectFactory.cleanUp(groupPerIndividual);
-        TestObjectFactory.cleanUp(groupCompleteGroup);
-        TestObjectFactory.cleanUp(center);
+        clientOfGroupPerIndividualSavingsAccount = null;
+        groupPerIndividualSavingsAccount = null;
+        clientOfGroupCompleteGroupSavingsAccount = null;
+        groupCompleteGroupSavingsAccount = null;
+        centerSavingsAccount = null;
+        clientOfGroupPerIndividual = null;
+        clientOfGroupCompleteGroup = null;
+        groupPerIndividual = null;
+        groupCompleteGroup = null;
+        center = null;
     }
 
     /*

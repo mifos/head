@@ -20,14 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.util.Date;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -48,6 +41,12 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -87,11 +86,15 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
     @Override
     protected void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(loan);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
-            StaticHibernateUtil.closeSession();
+            loan = null;
+            client = null;
+            group = null;
+            center = null;
+            loan = null;
+//            client = null;
+//            group = null;
+//            center = null;
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             /*
              * throwing exceptions here will often mask whatever the real
@@ -154,7 +157,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         Assert.assertNotNull(SessionUtils.getAttribute(Constants.BUSINESS_KEY, request));
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_LIST, request));
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.PAYMENTS_SIZE, request));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     public void testPreviewWithoutNotes() throws AccountException, NumberFormatException, PersistenceException {
@@ -166,7 +169,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         addRequestParameter("searchString", loan.getGlobalAccountNum());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/reverseloandisbaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -185,7 +188,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         addRequestParameter("searchString", loan.getGlobalAccountNum());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/reverseloandisbaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("note", "0123456789012345678901234567890123456789"
@@ -213,7 +216,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         addRequestParameter("searchString", loan.getGlobalAccountNum());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/reverseloandisbaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("note", "0123456789012345678901234567890123456789");
@@ -231,7 +234,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         addRequestParameter("searchString", loan.getGlobalAccountNum());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/reverseloandisbaction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("note", "0123456789012345678901234567890123456789");
@@ -243,7 +246,7 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
         performNoErrors();
         verifyForward(ActionForwards.update_success.toString());
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loan.getAccountId());
     }
 
@@ -304,7 +307,6 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
     private void disburseLoan() throws AccountException, NumberFormatException, PersistenceException {
         loan.setUserContext(userContext);
         loan.disburseLoan("4534", new Date(), Short.valueOf("1"), group.getPersonnel(), new Date(), Short.valueOf("1"));
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 }

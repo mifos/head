@@ -20,11 +20,7 @@
 
 package org.mifos.reports.struts.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.upload.FormFile;
@@ -34,8 +30,8 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.DatabaseMigrator;
+import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.MockFormFile;
 import org.mifos.reports.business.ReportsBO;
@@ -54,6 +50,9 @@ import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -152,9 +151,8 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
             activity.upgrade(StaticHibernateUtil.getSessionTL().connection());
 
         } catch (Exception e) {
-            StaticHibernateUtil.startTransaction();
             new RolesPermissionsPersistence().delete(request.getAttribute("report"));
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
             throw e;
         }
 
@@ -237,7 +235,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(report);
         ReportsPersistence rp = new ReportsPersistence();
         ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(ReportsJasperMap.class, report
-                .getReportId());
+                .getReportsJasperMap().getReportId());
         Assert.assertNotNull(jasper);
 
         verifyNoActionErrors();
@@ -277,14 +275,14 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
 
         ReportsBO newReport = persistence.getReport(report.getReportId());
-        ReportsJasperMap jasper = (ReportsJasperMap) persistence.getPersistentObject(ReportsJasperMap.class, report
-                .getReportId());
 
-       Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit", newReport.getReportName());
-       Assert.assertEquals(2, newReport.getReportsCategoryBO().getReportCategoryId().shortValue());
-       Assert.assertEquals(0, newReport.getIsActive().shortValue());
-       Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", newReport.getReportsJasperMap().getReportJasper());
-       Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", jasper.getReportJasper());
+        Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit", newReport.getReportName());
+        Assert.assertEquals(2, newReport.getReportsCategoryBO().getReportCategoryId().shortValue());
+        Assert.assertEquals(0, newReport.getIsActive().shortValue());
+        Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", newReport.getReportsJasperMap().getReportJasper());
+        ReportsJasperMap jasper = (ReportsJasperMap) persistence.getPersistentObject(ReportsJasperMap.class, report
+                .getReportsJasperMap().getReportId());
+        Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", jasper.getReportJasper());
 
         removeReport(newReport.getReportId());
 
@@ -346,7 +344,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         permPersistence.delete(activityEntity);
         permPersistence.delete(anLookUp);
 
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
 }

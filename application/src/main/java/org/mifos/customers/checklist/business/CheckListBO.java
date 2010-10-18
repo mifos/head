@@ -123,10 +123,14 @@ public abstract class CheckListBO extends AbstractBusinessObject {
 
     public void save() throws CheckListException {
         try {
-            new CheckListPersistence().createOrUpdate(this);
+            getCheckListPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new CheckListException(e);
         }
+    }
+
+    protected CheckListPersistence getCheckListPersistence() {
+        return new CheckListPersistence();
     }
 
     private void setCheckListDetails(List<String> details, Short locale) {
@@ -163,7 +167,7 @@ public abstract class CheckListBO extends AbstractBusinessObject {
     protected void validateCheckListState(Short masterTypeId, Short stateId, boolean isCustomer)
             throws CheckListException {
         try {
-            Long records = new CheckListPersistence().isValidCheckListState(masterTypeId, stateId, isCustomer);
+            Long records = getCheckListPersistence().isValidCheckListState(masterTypeId, stateId, isCustomer);
             if (records.intValue() != 0) {
                 throw new CheckListException(CheckListConstants.EXCEPTION_STATE_ALREADY_EXIST);
             }

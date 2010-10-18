@@ -72,7 +72,7 @@ public class CustomFieldsBackfillerIntegrationTest extends MifosIntegrationTestC
         session.delete(customField);
 
         // clean up customer/client
-        TestObjectFactory.cleanUp(client);
+        client = null;
     }
 
     private void createCustomField() throws Exception {

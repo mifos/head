@@ -175,16 +175,8 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
         assertSameCollections(generatedClientSummaryReport, retrievedBranchReportClientSummaries);
     }
 
-    @After
-    public void tearDown() throws Exception {
-        transaction.rollback();
-    }
-
-    @Override
     @Before
     public void setUp() throws Exception {
-
         session = StaticHibernateUtil.getSessionTL();
-        transaction = session.beginTransaction();
     }
 }

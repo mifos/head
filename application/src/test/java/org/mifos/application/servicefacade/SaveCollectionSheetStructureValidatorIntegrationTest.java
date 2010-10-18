@@ -71,7 +71,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
             TestDatabase.resetMySQLDatabase();
         }
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -233,7 +233,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
                 "close client savings account", TestObjectFactory.getPersonnel(userContext.getId()), clientSavings);
         clientSavings.setUserContext(userContext);
         clientSavings.closeAccount(payment, notes, clientSavings.getCustomer());
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         // Save collection sheet and test for errors returned
         verifyInvalidReason(saveCollectionSheet, InvalidSaveCollectionSheetReason.INVALID_SAVINGS_ACCOUNT_STATUS);

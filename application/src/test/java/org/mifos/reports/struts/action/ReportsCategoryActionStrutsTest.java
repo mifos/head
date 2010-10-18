@@ -85,9 +85,10 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("create_success");
         verifyForwardPath("/reportsCategoryAction.do?method=viewReportsCategory");
         verifyNoActionErrors();
+        shouldForwardToDefineNewCategoryPageIfCategoryNameExisted();
     }
 
-    public void testShouldForwardToDefineNewCategoryPageIfCategoryNameExisted() {
+    private void shouldForwardToDefineNewCategoryPageIfCategoryNameExisted() {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("categoryName", "Haha");

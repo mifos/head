@@ -73,7 +73,7 @@ public class ProcessFlowRulesIntegrationTest extends MifosIntegrationTestCase {
                 CustomerStatus.CLIENT_PENDING.getValue());
        Assert.assertTrue(cse.getIsOptional());
         cse.setIsOptional(false);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         Assert.assertFalse(cse.getIsOptional());
        Assert.assertTrue(ProcessFlowRules.isClientPendingApprovalStateEnabled());
         ProcessFlowRules.init();

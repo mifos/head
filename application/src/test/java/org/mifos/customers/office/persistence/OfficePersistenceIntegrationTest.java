@@ -57,7 +57,7 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private OfficePersistence getOfficePersistence() {
@@ -67,16 +67,12 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testCreateOffice() throws Exception {
         long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
-        try {
             UserContext userContext = TestUtils.makeUser();
             OfficeTemplate template = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
             OfficeBO office = getOfficePersistence().createOffice(userContext, template);
 
             Assert.assertNotNull(office.getOfficeId());
             Assert.assertTrue(office.isActive());
-        } finally {
-            StaticHibernateUtil.rollbackTransaction();
-        }
         Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
 
@@ -91,8 +87,6 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
         } catch (ValidationException e) {
             // This is what we're expecting here.
             Assert.assertTrue(e.getMessage().equals(OfficeConstants.PARENTOFFICE));
-        } finally {
-            StaticHibernateUtil.rollbackTransaction();
         }
     }
 
@@ -196,7 +190,6 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(2, officeList.size());
         Assert.assertEquals(branchOffice.getOfficeName(), officeList.get(0).getOfficeName());
         Assert.assertEquals("TestBranchOffice", officeList.get(1).getOfficeName());
-        TestObjectFactory.cleanUp(branchOffice);
     }
 
     @Test

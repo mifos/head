@@ -83,7 +83,7 @@ public class SavingsPrdActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         TestObjectFactory.removeObject(product);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
 
     }

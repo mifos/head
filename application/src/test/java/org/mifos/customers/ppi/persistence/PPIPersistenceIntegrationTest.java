@@ -20,15 +20,7 @@
 
 package org.mifos.customers.ppi.persistence;
 
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +49,13 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private static final double DELTA = 0.00000001;
     private PPIPersistence persistence;
@@ -68,9 +67,7 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        Statement stmt = StaticHibernateUtil.getSessionTL().connection().createStatement();
-        stmt.execute("truncate ppi_survey");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -112,8 +109,8 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testGetPPISurvey() throws Exception {
         TestDatabase.resetMySQLDatabase();
-        createSurveyWithLikelihoods("surveyName");
-       Assert.assertEquals("surveyName", persistence.getPPISurvey(1).getName());
+        int surveyWithLikelihoods = createSurveyWithLikelihoods("surveyName");
+        Assert.assertEquals("surveyName", persistence.getPPISurvey(surveyWithLikelihoods).getName());
     }
 
     @Test
@@ -124,10 +121,11 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
         int instanceId = createSurveyInstance(survey);
 
         PPISurveyInstance retrievedInstance = (PPISurveyInstance) persistence.getInstance(instanceId);
-       Assert.assertEquals("surveyName", retrievedInstance.getSurvey().getName());
-       Assert.assertEquals(5, retrievedInstance.getScore());
-       Assert.assertEquals(80.0, retrievedInstance.getBottomHalfBelowPovertyLinePercent(), DELTA);
-       Assert.assertEquals(20.0, retrievedInstance.getTopHalfBelowPovertyLinePercent(), DELTA);
+        Assert.assertEquals("surveyName", retrievedInstance.getSurvey().getName());
+        Assert.assertEquals(5, retrievedInstance.getScore());
+        Assert.assertEquals(80.0, retrievedInstance.getBottomHalfBelowPovertyLinePercent(), DELTA);
+        Assert.assertEquals(20.0, retrievedInstance.getTopHalfBelowPovertyLinePercent(), DELTA);
+        StaticHibernateUtil.getSessionTL().clear();
     }
 
     private int createSurveyInstance(PPISurvey survey) throws Exception {
@@ -153,12 +151,12 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
         Date date = new Date();
         return new PersonnelBO(PersonnelLevel.LOAN_OFFICER, office, Integer.valueOf("1"),
                 TestObjectFactory.TEST_LOCALE, "PASSWORD", "officer" + System.currentTimeMillis(), "officer@mifos.org",
-                null, customFieldDto, name, "govId" + "ppiSurvey", date, Integer.valueOf("1"), Integer.valueOf("1"),
+                null, customFieldDto, name, "govId" + "ppiSurvey"+System.currentTimeMillis(), date, Integer.valueOf("1"), Integer.valueOf("1"),
                 date, date, address, PersonnelConstants.SYSTEM_USER);
     }
 
     private SurveyResponse createSurveyResponse(SurveyInstance instance) throws Exception {
-        Question question = new Question("shortName", "questionText", AnswerType.CHOICE);
+        Question question = new Question("shortName"+System.currentTimeMillis(), "questionText", AnswerType.CHOICE);
         PPIChoice choice1 = new PPIChoice("choice1");
         choice1.setPoints(5);
         PPIChoice choice2 = new PPIChoice("choice2");

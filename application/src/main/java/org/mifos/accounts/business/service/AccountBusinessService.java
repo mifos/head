@@ -78,7 +78,7 @@ public class AccountBusinessService implements BusinessService {
 
     public AccountBO findBySystemId(String accountGlobalNum) throws ServiceException {
         try {
-            return new AccountPersistence().findBySystemId(accountGlobalNum);
+            return getAccountPersistence().findBySystemId(accountGlobalNum);
         } catch (PersistenceException e) {
             throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
                     new Object[] { accountGlobalNum });
@@ -92,7 +92,7 @@ public class AccountBusinessService implements BusinessService {
 
     public AccountBO getAccount(Integer accountId) throws ServiceException {
         try {
-            return new AccountPersistence().getAccount(accountId);
+            return getAccountPersistence().getAccount(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -112,7 +112,7 @@ public class AccountBusinessService implements BusinessService {
 
     public QueryResult getAllAccountNotes(Integer accountId) throws ServiceException {
         try {
-            return new AccountPersistence().getAllAccountNotes(accountId);
+            return getAccountPersistence().getAllAccountNotes(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -120,7 +120,7 @@ public class AccountBusinessService implements BusinessService {
 
     public List<AccountStateEntity> retrieveAllAccountStateList(AccountTypes accountTypes) throws ServiceException {
         try {
-            return new AccountPersistence().retrieveAllAccountStateList(accountTypes.getValue());
+            return getAccountPersistence().retrieveAllAccountStateList(accountTypes.getValue());
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -129,7 +129,7 @@ public class AccountBusinessService implements BusinessService {
     public List<AccountStateEntity> retrieveAllActiveAccountStateList(AccountTypes accountTypes)
             throws ServiceException {
         try {
-            return new AccountPersistence().retrieveAllActiveAccountStateList(accountTypes.getValue());
+            return getAccountPersistence().retrieveAllActiveAccountStateList(accountTypes.getValue());
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -138,7 +138,7 @@ public class AccountBusinessService implements BusinessService {
     public List<AccountCheckListBO> getStatusChecklist(Short accountStatusId, Short accountTypeId)
             throws ServiceException {
         try {
-            return new AccountPersistence().getStatusChecklist(accountStatusId, accountTypeId);
+            return getAccountPersistence().getStatusChecklist(accountStatusId, accountTypeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -148,17 +148,17 @@ public class AccountBusinessService implements BusinessService {
             throws ServiceException {
         List<ApplicableCharge> applicableChargeList = null;
         try {
-            AccountBO account = new AccountPersistence().getAccount(accountId);
+            AccountBO account = getAccountPersistence().getAccount(accountId);
             FeeCategory categoryType = getCategoryType(account.getCustomer());
 
             if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
-                applicableChargeList = getLoanApplicableCharges(new AccountPersistence().getAllApplicableFees(
+                applicableChargeList = getLoanApplicableCharges(getAccountPersistence().getAllApplicableFees(
                         accountId, FeeCategory.LOAN), userContext, (LoanBO) account);
             } else if (account.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
                 if (account.getCustomer().getCustomerMeeting() == null) {
                     throw new ServiceException(AccountExceptionConstants.APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION);
                 }
-                applicableChargeList = getCustomerApplicableCharges(new AccountPersistence().getAllApplicableFees(
+                applicableChargeList = getCustomerApplicableCharges(getAccountPersistence().getAllApplicableFees(
                         accountId, categoryType), userContext, ((CustomerAccountBO) account).getCustomer()
                         .getCustomerMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId());
             }
@@ -395,18 +395,22 @@ public class AccountBusinessService implements BusinessService {
             throws ServiceException {
 
         try {
-            List<CustomFieldDefinitionEntity> customFields = new AccountPersistence()
+            List<CustomFieldDefinitionEntity> customFields = getAccountPersistence()
                     .retrieveCustomFieldsDefinition(entityType.getValue());
-            new AccountPersistence().initialize(customFields);
+            getAccountPersistence().initialize(customFields);
             return customFields;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
     }
 
+    private AccountPersistence getAccountPersistence() {
+        return new AccountPersistence();
+    }
+
     public List<CustomerBO> getCoSigningClientsForGlim(Integer accountId) throws ServiceException {
         try {
-            return new AccountPersistence().getCoSigningClientsForGlim(accountId);
+            return getAccountPersistence().getCoSigningClientsForGlim(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

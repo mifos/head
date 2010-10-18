@@ -51,11 +51,10 @@ public class LoanRepayTagIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(accountBO);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        accountBO = null;
+        client = null;
+        group = null;
+        center = null;
     }
 
     @Before
@@ -85,7 +84,7 @@ public class LoanRepayTagIntegrationTest extends MifosIntegrationTestCase {
     public void ignore_testcreateRunningBalanceRow() {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
-        StaticHibernateUtil.flushAndCloseSession();
+        StaticHibernateUtil.flushSession();
 
         accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());

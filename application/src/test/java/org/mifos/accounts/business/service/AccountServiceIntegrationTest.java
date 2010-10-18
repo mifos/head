@@ -20,31 +20,11 @@
 
 package org.mifos.accounts.business.service;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountActionEntity;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.business.AccountStateMachines;
-import org.mifos.accounts.business.AccountTestUtils;
-import org.mifos.accounts.business.TransactionHistoryDto;
+import org.mifos.accounts.business.*;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -57,12 +37,7 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.accounts.util.helpers.ApplicableCharge;
-import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.accounts.util.helpers.*;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.EntityType;
@@ -80,6 +55,13 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.sql.Date;
+import java.util.*;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -104,17 +86,20 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(savingsBO);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            accountBO = null;
+            savingsBO = null;
+            group = null;
+            center = null;
+//            accountBO = null;
+//            savingsBO = null;
+//            group = null;
+//            center = null;
             accountPersistence = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
-        StaticHibernateUtil.closeSession();
-        }
+    }
 
     @Test
     public void testGetTrxnHistory() throws Exception {
@@ -196,6 +181,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
+        StaticHibernateUtil.flushAndClearSession();
         UserContext uc = TestUtils.makeUser();
         List<ApplicableCharge> applicableChargeList = accountBusinessService.getAppllicableFees(accountBO
                 .getAccountId(), uc);
@@ -230,6 +216,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
+        StaticHibernateUtil.flushAndClearSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         UserContext uc = TestUtils.makeUser();
         List<ApplicableCharge> applicableChargeList = accountBusinessService.getAppllicableFees(accountBO
@@ -264,6 +251,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         CustomerAccountBO customerAccountBO = getCustomerAccountWithAllTypesOfFees();
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
+        StaticHibernateUtil.flushAndClearSession();
         UserContext uc = TestUtils.makeUser();
         List<ApplicableCharge> applicableChargeList = accountBusinessService.getAppllicableFees(customerAccountBO
                 .getAccountId(), uc);
@@ -317,7 +305,6 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         String flagNameForLoan = service.getFlagName(Short.valueOf("1"), AccountStateFlag.LOAN_REJECTED,
                 AccountTypes.LOAN_ACCOUNT);
         Assert.assertNotNull(flagNameForLoan);
-        StaticHibernateUtil.closeSession();
     }
 
     @Test
@@ -334,20 +321,6 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         List<AccountStateEntity> statusListForLoan = service.getStatusList(new AccountStateEntity(
                 AccountState.LOAN_PARTIAL_APPLICATION), AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
         Assert.assertEquals(2, statusListForLoan.size());
-        StaticHibernateUtil.closeSession();
-    }
-
-    @Test
-    public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.retrieveCustomFieldsDefinition(EntityType.LOAN);
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertEquals("exception.framework.ApplicationException", e.getKey());
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
     }
 
     private AccountBO getLoanAccount() {

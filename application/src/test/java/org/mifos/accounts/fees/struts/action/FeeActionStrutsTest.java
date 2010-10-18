@@ -20,22 +20,13 @@
 
 package org.mifos.accounts.fees.struts.action;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeeConstants;
-import org.mifos.accounts.fees.util.helpers.FeeFormula;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
-import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.fees.util.helpers.*;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -52,6 +43,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
 
 public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -89,11 +82,11 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(fee);
-            TestObjectFactory.cleanUp(fee1);
-            TestObjectFactory.cleanUp(fee2);
-            TestObjectFactory.cleanUp(fee3);
-            StaticHibernateUtil.closeSession();
+            fee = null;
+            fee1 = null;
+            fee2 = null;
+            fee3 = null;
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
@@ -700,8 +693,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
                 FeePayment.UPFRONT, null);
         fee3.updateStatus(FeeStatus.INACTIVE);
 
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "viewAll");
 

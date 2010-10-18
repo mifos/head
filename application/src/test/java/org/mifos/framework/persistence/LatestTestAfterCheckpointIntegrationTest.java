@@ -25,18 +25,16 @@ import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,30 +60,20 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
 
     @BeforeClass
     public static void beforeClass() throws Exception {
+        StaticHibernateUtil.setHibernateUtil(HibernateUtil.getInstance());
         StaticHibernateUtil.initialize();
     }
 
     @Before
     public void setUp() throws Exception {
+        StaticHibernateUtil.setHibernateUtil(HibernateUtil.getInstance());
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
         dbUnitConnection = new DatabaseConnection(connection);
-        dropLatestDatabase();
-    }
-
-    @AfterClass
-    public static void afterClass() throws Exception {
-        // Cleaning the database using FK check disabled connection
-        // If any one of the test fails or throws error it could lead to
-        // multiple failures in other tests during test build
-        TestDatabase.createMySQLTestDatabase();
-        FinancialInitializer.initialize();
-        StaticHibernateUtil.flushAndCloseSession();
     }
 
     @Test
     public void testSimple() throws Exception {
-
         loadLatest();
         IDataSet latestDump = dbUnitConnection.createDataSet();
         connection.createStatement().execute("drop table database_upgrade_test");
@@ -99,6 +87,8 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
     public void testRealSchemaFromCheckpoint() throws Exception {
         String tmpDir = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
 
+        dropLatestDatabase();
+        String blankDB = TestDatabase.getAllTablesStructureDump();
         createLatestDatabaseWithLatestData();
 
         // FIXME for some reason the comparison of DatabaseDataSet (IDataSet) doesn't expose the difference at assert in
@@ -108,8 +98,14 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
         latestDataDump = new FlatXmlDataSet(new File(tmpDir + "latestDataDump.xml"));
         final String latestSchemaDump = TestDatabase.getAllTablesStructureDump();
         new FileOutputStream(tmpDir + "latestSchemaDump").write(latestSchemaDump.getBytes());
-        dropLatestDatabase();
 
+        dropLatestDatabase();
+        String cleanedDB = TestDatabase.getAllTablesStructureDump();
+        /**
+         * The idea here is to figure out whether we are dropping tables in the right order to deal with foreign keys. I'm
+         * not sure we fully succeed, however.
+         */
+        Assert.assertEquals(blankDB, cleanedDB);
         createLatestCheckPointDatabaseWithLatestData();
 
         DatabaseMigrator migrator = new DatabaseMigrator(connection);
@@ -126,29 +122,8 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
     }
 
     @Test
-    public void testDropTables() throws Exception {
-        String blankDB = TestDatabase.getAllTablesStructureDump();
-        createLatestDatabase();
-        dropLatestDatabase();
-        String cleanedDB = TestDatabase.getAllTablesStructureDump();
-        Assert.assertEquals(blankDB, cleanedDB);
-    }
-
-    /**
-     * The idea here is to figure out whether we are dropping tables in the right order to deal with foreign keys. I'm
-     * not sure we fully succeed, however.
-     */
-    @Test
-    public void testDropTablesWithData() throws Exception {
-        String blankDB = TestDatabase.getAllTablesStructureDump();
-        createLatestDatabaseWithLatestData();
-        dropLatestDatabase();
-        String cleanedDB = TestDatabase.getAllTablesStructureDump();
-        Assert.assertEquals(blankDB, cleanedDB);
-    }
-
-    @Test
     public void testAfterLookupValuesAfterCheckpoint() throws Exception {
+        dropLatestDatabase();
         createLatestCheckPointDatabaseWithLatestData();
         int nextLookupId = largestLookupId() + 1;
         connection.createStatement().execute(
@@ -176,16 +151,6 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
         Assert.assertEquals("Martian", rs.getString("lookup_value"));
         rs.close();
 
-    }
-
-    private void assertNoHardcodedValues(SqlUpgrade upgrade, int version) throws Exception {
-        String[] sqlStatements = SqlExecutor.readFile((InputStream) upgrade.sql().getContent());
-        for (String sqlStatement : sqlStatements) {
-            Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup values", HardcodedValues
-                    .checkLookupValue(sqlStatement));
-            Assert.assertTrue("Upgrade " + version + " contains hard-coded lookup value locales", HardcodedValues
-                    .checkLookupValueLocale(sqlStatement));
-        }
     }
 
     private int largestLookupId() throws SQLException {

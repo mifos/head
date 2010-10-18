@@ -41,7 +41,11 @@ import org.mifos.security.util.UserContext;
 @Deprecated
 public class OfficeBusinessService implements BusinessService {
 
-    private OfficePersistence officePersistence = new OfficePersistence();
+    private OfficePersistence officePersistence = getOfficePersistence();
+
+    protected OfficePersistence getOfficePersistence() {
+        return new OfficePersistence();
+    }
 
     @Override
     public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {

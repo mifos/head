@@ -84,6 +84,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
@@ -153,6 +154,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private boolean isFileNameConsoleOutputEnabled = false;
 
     private LoanDaoLegacyImpl loanDao;
+    private static int random = 0;
 
     @Before
     public void setUp() throws Exception {
@@ -186,13 +188,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         if (center != null) {
             center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
         }
-        TestObjectFactory.cleanUp(accountBO);
-        TestObjectFactory.cleanUp(badAccountBO);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        accountBO = null;
+        badAccountBO = null;
+        client = null;
+        group = null;
+        center = null;
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         // Money.setUsingNewMoney(false);
         // LoanBO.setUsingNewLoanSchedulingMethod(false);
         AccountingRules.setInitialRoundOffMultiple(savedInitialRoundOffMultiple);
@@ -485,7 +487,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan"+System.currentTimeMillis(), "L"+ ++random, ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
@@ -880,7 +882,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan"+System.currentTimeMillis(), "L"+ ++random, ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
@@ -945,7 +947,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan"+System.currentTimeMillis(), "L"+ ++random, ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
@@ -1580,10 +1582,9 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
-
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan"+System.currentTimeMillis(), "L"+ ++random, ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");

@@ -53,7 +53,7 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
             TestDatabase.resetMySQLDatabase();
         }
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test

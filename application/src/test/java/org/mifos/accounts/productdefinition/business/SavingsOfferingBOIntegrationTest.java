@@ -20,26 +20,13 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
-import org.mifos.accounts.productdefinition.util.helpers.ProductType;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.*;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -48,9 +35,16 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
 
 public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -66,8 +60,8 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.removeObject(savingsProduct);
-        TestObjectFactory.removeObject(savingsOffering1);
+        savingsProduct = null;
+        savingsOffering1 = null;
      }
 
     @Test
@@ -93,8 +87,8 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         savingsProduct.update(Short.valueOf("1"), newName, newShortName, productCategory, prdApplicableMaster,
                 startDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType, intCalcMeeting,
                 intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
+        StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
 
@@ -429,36 +423,6 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testCreateSavingsOfferingForInvalidConnection() throws Exception {
-        PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
-        SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
-
-        InterestCalcTypeEntity intCalType = new InterestCalcTypeEntity(InterestCalcType.AVERAGE_BALANCE);
-        MeetingBO intCalcMeeting = getMeeting();
-        MeetingBO intPostMeeting = getMeeting();
-        GLCodeEntity depglCodeEntity = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
-                (short) 7);
-        GLCodeEntity intglCodeEntity = (GLCodeEntity) StaticHibernateUtil.getSessionTL().get(GLCodeEntity.class,
-                (short) 7);
-        ProductCategoryBO productCategory = (ProductCategoryBO) TestObjectFactory.getObject(ProductCategoryBO.class,
-                (short) 2);
-        Date startDate = offSetCurrentDate(0);
-        Date endDate = offSetCurrentDate(7);
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            savingsProduct = new SavingsOfferingBO(TestUtils.makeUser(), "Savings Offering", "Savi", productCategory,
-                    prdApplicableMaster, startDate, endDate, "dssf", null, savingsType, intCalType, intCalcMeeting,
-                    intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency()), new Money(getCurrency()), 10.0, depglCodeEntity, intglCodeEntity);
-            savingsProduct.save();
-            Assert.fail();
-        } catch (Exception e) {
-           Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    @Test
     public void testCreateSavingsOffering() throws SystemException, ProductDefinitionException {
         PrdApplicableMasterEntity prdApplicableMaster = new PrdApplicableMasterEntity(ApplicableTo.CLIENTS);
         SavingsTypeEntity savingsType = new SavingsTypeEntity(SavingsType.MANDATORY);
@@ -478,7 +442,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 prdApplicableMaster, startDate, endDate, "dssf", null, savingsType, intCalType, intCalcMeeting,
                 intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency()), new Money(getCurrency()), 10.0, depglCodeEntity, intglCodeEntity);
         savingsProduct.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
@@ -585,8 +549,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         savingsProduct.update(Short.valueOf("1"), newName, "S1", productCategory, prdApplicableMaster, savingsProduct
                 .getStartDate(), endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType,
                 intCalcMeeting, intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
        Assert.assertEquals(reduceCurrentDate(1), savingsProduct.getStartDate());
@@ -697,8 +660,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         savingsProduct.update(Short.valueOf("1"), newName, "S1", productCategory, prdApplicableMaster, newStartDate,
                 endDate, "Desc", PrdStatus.SAVINGS_ACTIVE, null, savingsType, intCalType, intCalcMeeting,
                 intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
        Assert.assertEquals(newStartDate, savingsProduct.getStartDate());
@@ -726,8 +688,7 @@ public class SavingsOfferingBOIntegrationTest extends MifosIntegrationTestCase {
         savingsProduct.update(Short.valueOf("1"), newName, newShortName, productCategory, prdApplicableMaster,
                 startDate, endDate, "Desc", PrdStatus.SAVINGS_INACTIVE, null, savingsType, intCalType, intCalcMeeting,
                 intPostMeeting, new Money(getCurrency(), "10"), new Money(getCurrency(), "100"), new Money(getCurrency(), "1"), 10.0);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savingsProduct = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsProduct
                 .getPrdOfferingId());
        Assert.assertEquals(newName, savingsProduct.getPrdOfferingName());

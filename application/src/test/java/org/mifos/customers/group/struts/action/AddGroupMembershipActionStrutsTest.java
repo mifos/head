@@ -91,11 +91,11 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUp(office);
-        StaticHibernateUtil.closeSession();
+        client = null;
+        group = null;
+        center = null;
+        office = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -182,8 +182,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
                 meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
                 clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);

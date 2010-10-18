@@ -97,12 +97,12 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         office = null;
         branchOffice = null;
         name = null;
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUp(personnel);
-        TestObjectFactory.cleanUp(createdBranchOffice);
-        StaticHibernateUtil.closeSession();
+        client = null;
+        group = null;
+        center = null;
+        personnel = null;
+        createdBranchOffice = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -110,17 +110,13 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         UserContext userContext = TestUtils.makeUser();
         OfficeTemplate officeTemplate = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
         long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
-        try {
-            OfficeBO office = officePersistence.createOffice(userContext, officeTemplate);
-            PersonnelTemplate template = PersonnelTemplateImpl.createNonUniquePersonnelTemplate(office.getOfficeId());
-            PersonnelBO personnel = personnelPersistence.createPersonnel(userContext, template);
+        OfficeBO office = officePersistence.createOffice(userContext, officeTemplate);
+        PersonnelTemplate template = PersonnelTemplateImpl.createNonUniquePersonnelTemplate(office.getOfficeId());
+        PersonnelBO personnel = personnelPersistence.createPersonnel(userContext, template);
 
-            Assert.assertNotNull(personnel.getPersonnelId());
-            Assert.assertTrue(personnel.isActive());
-            Assert.assertFalse(personnel.isPasswordChanged());
-        } finally {
-            StaticHibernateUtil.rollbackTransaction();
-        }
+        Assert.assertNotNull(personnel.getPersonnelId());
+        Assert.assertTrue(personnel.isActive());
+        Assert.assertFalse(personnel.isPasswordChanged());
         Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
 
@@ -134,8 +130,6 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
             Assert.fail("Should not have been able to create personnel " + personnel.getDisplayName());
         } catch (ValidationException e) {
             Assert.assertTrue(e.getMessage().equals(PersonnelConstants.OFFICE));
-        } finally {
-            StaticHibernateUtil.rollbackTransaction();
         }
         Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
@@ -199,7 +193,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     public void testGetAllCustomerUnderLO() throws Exception {
         createCustomers(CustomerStatus.GROUP_CLOSED, CustomerStatus.CLIENT_CANCELLED);
         Assert.assertTrue(personnelPersistence.getAllChildrenForLoanOfficer(Short.valueOf("1"), Short.valueOf("3")));
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         CustomerStatusFlag customerStatusFlag = null;
         CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), center.getPersonnel(), center);
@@ -215,7 +209,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         office = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
                 createdBranchOffice.getOfficeId());
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
@@ -225,8 +219,8 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         PersonnelNotesEntity personnelNotes = new PersonnelNotesEntity("Personnel notes created",
                 new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER), personnel);
         personnel.addNotes(PersonnelConstants.SYSTEM_USER, personnelNotes);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
+        StaticHibernateUtil.flushSession();
         client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
         group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
         center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
@@ -319,12 +313,12 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     }
 
     private PersonnelBO createPersonnelWithName(final OfficeBO office, final PersonnelLevel personnelLevel,
-            final Name personnelName) throws Exception {
+                                                final Name personnelName) throws Exception {
         return create(personnelLevel, personnelName, PersonnelConstants.SYSTEM_USER, office);
     }
 
     private PersonnelBO create(final PersonnelLevel personnelLevel, final Name name, final Short createdBy,
-            final OfficeBO office) throws Exception {
+                               final OfficeBO office) throws Exception {
         List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
         customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC.getValue()));
         Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
@@ -333,8 +327,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
                         .valueOf("1"), date, date, address, createdBy);
         personnel.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         return personnel;
     }

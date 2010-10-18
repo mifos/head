@@ -31,11 +31,9 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 public class UpgradeIntegrationTest extends MifosIntegrationTestCase {
 
-    private Connection connection;
 
     @Before
     public void setUp() {
-        connection = StaticHibernateUtil.getSessionTL().connection();
     }
 
 

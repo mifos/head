@@ -45,7 +45,7 @@ public class SavingsPrdBusinessService implements BusinessService {
 
     public SavingsOfferingBO getSavingsProduct(Short prdOfferingId) throws ServiceException {
         try {
-            return new SavingsPrdPersistence().getSavingsProduct(prdOfferingId);
+            return getSavingsPersistence().getSavingsProduct(prdOfferingId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -53,16 +53,25 @@ public class SavingsPrdBusinessService implements BusinessService {
 
     public List<ProductCategoryBO> getActiveSavingsProductCategories() throws ServiceException {
         try {
-            return new PrdOfferingPersistence().getApplicableProductCategories(ProductType.SAVINGS,
+            return getPrdOfferingPersistence().getApplicableProductCategories(ProductType.SAVINGS,
                     PrdCategoryStatus.ACTIVE);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
     }
 
+    private List<ProductCategoryBO> x() throws PersistenceException {
+        return getPrdOfferingPersistence().getApplicableProductCategories(ProductType.SAVINGS,
+                PrdCategoryStatus.ACTIVE);
+    }
+
+    protected PrdOfferingPersistence getPrdOfferingPersistence() {
+        return new PrdOfferingPersistence();
+    }
+
     public List<RecurrenceTypeEntity> getSavingsApplicableRecurrenceTypes() throws ServiceException {
         try {
-            return new SavingsPrdPersistence().getSavingsApplicableRecurrenceTypes();
+            return getSavingsPersistence().getSavingsApplicableRecurrenceTypes();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -70,15 +79,19 @@ public class SavingsPrdBusinessService implements BusinessService {
 
     public List<SavingsOfferingBO> getAllSavingsProducts() throws ServiceException {
         try {
-            return new SavingsPrdPersistence().getAllSavingsProducts();
+            return getSavingsPersistence().getAllSavingsProducts();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
     }
 
+    protected SavingsPrdPersistence getSavingsPersistence() {
+        return new SavingsPrdPersistence();
+    }
+
     public List<PrdStatusEntity> getApplicablePrdStatus(Short localeId) throws ServiceException {
         try {
-            return new PrdOfferingPersistence().getApplicablePrdStatus(ProductType.SAVINGS, localeId);
+            return getPrdOfferingPersistence().getApplicablePrdStatus(ProductType.SAVINGS, localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

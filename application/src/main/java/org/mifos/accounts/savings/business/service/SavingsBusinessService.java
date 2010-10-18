@@ -41,7 +41,11 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
 public class SavingsBusinessService implements BusinessService {
-    private SavingsPersistence savingsPersistence = new SavingsPersistence();
+    private SavingsPersistence savingsPersistence = getSavingsPersistence();
+
+    protected SavingsPersistence getSavingsPersistence() {
+        return new SavingsPersistence();
+    }
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsBusinessService.class);
 

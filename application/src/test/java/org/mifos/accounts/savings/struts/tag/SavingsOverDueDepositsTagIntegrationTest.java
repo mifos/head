@@ -51,10 +51,10 @@ public class SavingsOverDueDepositsTagIntegrationTest extends MifosIntegrationTe
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(savings);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        savings = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test

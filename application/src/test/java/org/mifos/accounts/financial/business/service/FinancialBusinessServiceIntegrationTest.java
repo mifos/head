@@ -20,20 +20,11 @@
 
 package org.mifos.accounts.financial.business.service;
 
-import java.sql.Date;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountFeesActionDetailEntity;
-import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountTestUtils;
-import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.business.FeesTrxnDetailEntity;
+import org.mifos.accounts.business.*;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -68,6 +59,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.sql.Date;
+import java.util.Set;
+
 public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     protected LoanBO loan = null;
@@ -90,15 +84,15 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(loan);
-            TestObjectFactory.cleanUp(savings);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            loan = null;
+            savings = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
             TestDatabase.resetMySQLDatabase();
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
     }
 
@@ -219,8 +213,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
         SavingBOTestUtils.setBalance(savings, balanceAmount);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
@@ -235,8 +228,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         financialBusinessService.buildAccountingEntries(accountTrxn);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
@@ -282,8 +274,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         AccountTestUtils.addAccountPayment(payment, savings);
         SavingBOTestUtils.setBalance(savings, balanceAmount);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
@@ -298,8 +289,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
         FinancialBusinessService financialBusinessService = new FinancialBusinessService();
         financialBusinessService.buildAccountingEntries(accountTrxn);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = savingsPersistence.findById(savings.getAccountId());
         savings.setUserContext(userContext);
