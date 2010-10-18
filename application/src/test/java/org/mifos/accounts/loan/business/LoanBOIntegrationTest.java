@@ -1165,7 +1165,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 null, null, false, null, fund);
         StaticHibernateUtil.flushAndClearSession();
         StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
-        
+
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 
@@ -5560,7 +5560,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     /****************************************
      * These tests validate new schedule-generating code
      ****************************************/
-    @Ignore
     @Test
     public void testScheduleWeeklyLoanNoFeesNoHoliday() throws Exception {
         DateTimeService dateTimeService = new DateTimeService();
