@@ -20,18 +20,15 @@
 
 package org.mifos.reports.business;
 
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-
-import java.util.Locale;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
 import org.junit.Ignore;
 import org.mifos.reports.business.validator.Errors;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
+
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 
 @Ignore
 public class JdbcBranchCashConfirmationReportParameterFormTest extends TestCase {
@@ -50,7 +47,7 @@ public class JdbcBranchCashConfirmationReportParameterFormTest extends TestCase 
 
         JdbcBranchCashConfirmationReportParameterForm form = new JdbcBranchCashConfirmationReportParameterForm("-2",
                 "262008");
-        Errors errors = new Errors(Locale.ENGLISH);
+        Errors errors = new Errors();
         String branchInvalidErrorCode = getErrorCode(errors, ReportValidationConstants.BRANCH_ID_PARAM);
         String dateInvalidErrorCode = getErrorCode(errors,
                 ReportValidationConstants.RUN_DATE_PARAM_FOR_CASH_CONF_REPORT);

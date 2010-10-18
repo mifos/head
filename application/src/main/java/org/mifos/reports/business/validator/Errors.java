@@ -22,30 +22,16 @@ package org.mifos.reports.business.validator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-
-import org.mifos.application.master.MessageLookup;
 
 public class Errors {
     List<ErrorEntry> errors;
-    private final Locale locale;
 
-    public Errors(Locale locale) {
-        this.locale = locale;
+    public Errors() {
         errors = new ArrayList<ErrorEntry>();
     }
 
     public void rejectValue(String fieldName, String errorCode) {
         errors.add(new ErrorEntry(fieldName, errorCode));
-    }
-
-    public List<String> getAllErrorMessages() {
-        List<String> errorMessages = new ArrayList<String>();
-        for (ErrorEntry entry : errors) {
-            errorMessages.add(MessageLookup.getInstance().lookup(entry.errorCode, locale));
-
-        }
-        return errorMessages;
     }
 
     public boolean hasErrors() {
