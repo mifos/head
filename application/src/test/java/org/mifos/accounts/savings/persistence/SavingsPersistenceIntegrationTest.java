@@ -278,49 +278,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     }
 
     @Test
-    public void testGetAccountsPendingForIntCalc() throws Exception {
-        SavingsTestHelper helper = new SavingsTestHelper();
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-
-        savingsOffering = TestObjectFactory.createSavingsProduct("prd1", "sagf", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savingsOffering1 = TestObjectFactory.createSavingsProduct("prd2", "q14f", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savingsOffering2 = TestObjectFactory.createSavingsProduct("prd3", "z1as", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = helper.createSavingsAccount("000100000000021", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-        savings.setUserContext(TestObjectFactory.getContext());
-        savings.changeStatus(AccountState.SAVINGS_INACTIVE.getValue(), null, "");
-
-        savings1 = helper.createSavingsAccount("000100000000022", savingsOffering1, group,
-                AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-        savings2 = helper.createSavingsAccount("000100000000023", savingsOffering2, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        SavingBOTestUtils.setNextIntCalcDate(savings, helper.getDate("30/06/2006"));
-        SavingBOTestUtils.setNextIntCalcDate(savings1, helper.getDate("30/06/2006"));
-        SavingBOTestUtils.setNextIntCalcDate(savings2, helper.getDate("31/07/2006"));
-
-        savings.update();
-        savings1.update();
-        savings2.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
-        List<Integer> savingsList = savingsPersistence.retreiveAccountsPendingForIntCalc(helper.getDate("01/07/2006"));
-        Assert.assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
-        Assert.assertEquals(savings.getAccountId(), savingsList.get(0));
-
-        // retrieve objects to remove
-        savings = savingsPersistence.findById(savings.getAccountId());
-        savings1 = savingsPersistence.findById(savings1.getAccountId());
-        savings2 = savingsPersistence.findById(savings2.getAccountId());
-        group = savings.getCustomer();
-        center = group.getParentCustomer();
-    }
-
-    @Test
     public void testGetMissedDeposits() throws Exception {
         SavingsTestHelper helper = new SavingsTestHelper();
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());

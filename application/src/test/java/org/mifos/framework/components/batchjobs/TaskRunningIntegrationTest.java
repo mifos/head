@@ -53,7 +53,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
         Thread.sleep(3000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<String> executedJobs = explorer.getJobNames();
-        Assert.assertEquals(9, executedJobs.size());
+        Assert.assertEquals(8, executedJobs.size());
         List<String> jobNames = mifosScheduler.getTaskNames();
         for(String jobName : jobNames) {
             Assert.assertTrue(executedJobs.contains(jobName));
@@ -79,7 +79,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
         Thread.sleep(3000);
         JobExplorer explorer = mifosScheduler.getBatchJobExplorer();
         List<String> executedJobs = explorer.getJobNames();
-        Assert.assertEquals(9, executedJobs.size());
+        Assert.assertEquals(8, executedJobs.size());
         List<String> jobNames = mifosScheduler.getTaskNames();
         for(String jobName : jobNames) {
             Assert.assertTrue(executedJobs.contains(jobName));

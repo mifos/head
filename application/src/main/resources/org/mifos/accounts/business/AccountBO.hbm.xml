@@ -354,10 +354,6 @@
 			where account.customer.customerLevel.id=:CUSTOMER_LEVEL_ID]]>
 	</query>
 
-	<query name="accounts.retrieveSavingsAccountsIntCalc">
-		<![CDATA[select savings.accountId from org.mifos.accounts.savings.business.SavingsBO savings
-			where  savings.nextIntCalcDate < date(:currentDate) and savings.accountState.id in (16,18)) ]]>
-	</query>
 	<query name="accounts.retrieveSavingsAccountsIntPost">
 		<![CDATA[select savings.accountId from org.mifos.accounts.savings.business.SavingsBO savings
 			where  savings.nextIntPostDate < date(:currentDate) and savings.accountState.id in (16,18)) ]]>
