@@ -44,7 +44,7 @@ public class BranchReportParamValidator extends AbstractReportParameterValidator
             return;
         }
         if (!branchReportService.isReportDataPresentForRundateAndBranchId(form.getBranchId(), form.getRunDate())) {
-            errors.rejectValue(ReportValidationConstants.RUN_DATE_PARAM,
+            errors.addError(ReportValidationConstants.RUN_DATE_PARAM,
                     ReportValidationConstants.BRANCH_REPORT_NO_DATA_FOUND_MSG);
         }
     }

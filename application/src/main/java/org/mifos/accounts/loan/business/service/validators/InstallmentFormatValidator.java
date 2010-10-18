@@ -1,9 +1,11 @@
 package org.mifos.accounts.loan.business.service.validators;
 
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.platform.validations.ValidationException;
+import org.mifos.platform.validations.ErrorEntry;
+
+import java.util.List;
 
 public interface InstallmentFormatValidator {
-    void validateDueDateFormat(RepaymentScheduleInstallment installment) throws ValidationException;
-    void validateTotalAmountFormat(RepaymentScheduleInstallment installment) throws ValidationException;
+    List<ErrorEntry> validateDueDateFormat(RepaymentScheduleInstallment installment);
+    List<ErrorEntry> validateTotalAmountFormat(RepaymentScheduleInstallment installment);
 }

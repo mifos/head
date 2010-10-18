@@ -1,11 +1,11 @@
 package org.mifos.accounts.loan.business.service.validators;
 
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.platform.validations.ValidationException;
+import org.mifos.platform.validations.ErrorEntry;
 
 import java.util.List;
 
 public interface ListOfInstallmentsValidator {
-    void validateDuplicateDueDates(List<RepaymentScheduleInstallment> installments) throws ValidationException;
-    void validateOrderingOfDueDates(List<RepaymentScheduleInstallment> installments) throws ValidationException;
+    List<ErrorEntry> validateDuplicateDueDates(List<RepaymentScheduleInstallment> installments);
+    List<ErrorEntry> validateOrderingOfDueDates(List<RepaymentScheduleInstallment> installments);
 }

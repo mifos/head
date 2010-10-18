@@ -45,7 +45,7 @@ public class DetailedAgingPortfolioReportParametersTest extends TestCase {
         DetailedAgingPortfolioReportParameters reportParameters = new DetailedAgingPortfolioReportParameters(
                 DetailedAgingPortfolioReportParameters.INVALID_ID, DetailedAgingPortfolioReportParameters.VALID_ID,
                 DetailedAgingPortfolioReportParameters.VALID_ID);
-        errorsMock.rejectValue(ReportValidationConstants.BRANCH_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.BRANCH_ID_PARAM,
                 ReportValidationConstants.BRANCH_ID_INVALID_MSG);
         replay(errorsMock);
         reportParameters.validate(errorsMock);
@@ -56,7 +56,7 @@ public class DetailedAgingPortfolioReportParametersTest extends TestCase {
         DetailedAgingPortfolioReportParameters reportParameters = new DetailedAgingPortfolioReportParameters(
                 DetailedAgingPortfolioReportParameters.VALID_ID, DetailedAgingPortfolioReportParameters.INVALID_ID,
                 DetailedAgingPortfolioReportParameters.VALID_ID);
-        errorsMock.rejectValue(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.LOAN_OFFICER_ID_PARAM,
                 ReportValidationConstants.LOAN_OFFICER_ID_INVALID_MSG);
         replay(errorsMock);
         reportParameters.validate(errorsMock);
@@ -67,7 +67,7 @@ public class DetailedAgingPortfolioReportParametersTest extends TestCase {
         DetailedAgingPortfolioReportParameters reportParameters = new DetailedAgingPortfolioReportParameters(
                 DetailedAgingPortfolioReportParameters.VALID_ID, DetailedAgingPortfolioReportParameters.VALID_ID,
                 DetailedAgingPortfolioReportParameters.INVALID_ID);
-        errorsMock.rejectValue(ReportValidationConstants.LOAN_PRODUCT_ID_PARAM,
+        errorsMock.addError(ReportValidationConstants.LOAN_PRODUCT_ID_PARAM,
                 ReportValidationConstants.LOAN_PRODUCT_ID_INVALID_MSG);
         replay(errorsMock);
         reportParameters.validate(errorsMock);

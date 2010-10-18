@@ -74,8 +74,8 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.questionnaire.struts.CashFlowAdaptor;
 import org.mifos.application.questionnaire.struts.CashFlowCaptor;
-import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.CashFlowServiceLocator;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
@@ -110,9 +110,10 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.cashflow.CashFlowService;
-import org.mifos.platform.validations.ValidationException;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.validations.ErrorEntry;
+import org.mifos.platform.validations.Errors;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
@@ -472,6 +473,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                     ActionForwards.validateInstallments_failure;
         return mapping.findForward(forward.name());
     }
+
     private boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
         boolean result = true;
         UserContext userContext = getUserContext(request);
@@ -1655,23 +1657,21 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private ActionErrors validateInstallmentSchedule(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
                                                      List<RepaymentScheduleInstallment> installments) {
-        ActionErrors actionErrors = new ActionErrors();
-        try {
-            FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
-            InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
-            installmentsValidator.validate(installments, installmentValidationContext);
-        } catch (ValidationException e) {
-            populateActionErrors(actionErrors, e);
-        }
-        return actionErrors;
+        FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
+        InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
+        Errors errors = installmentsValidator.validate(installments, installmentValidationContext);
+        return getActionErrors(errors);
     }
 
-    private void populateActionErrors(ActionErrors actionErrors, ValidationException parentException) {
-        if (parentException.hasChildExceptions()) {
-            for (ValidationException childException : parentException.getChildExceptions()) {
-                actionErrors.add(childException.getKey(), new ActionMessage(childException.getKey(), childException.getIdentifier()));
+    private ActionErrors getActionErrors(Errors errors) {
+        ActionErrors actionErrors = new ActionErrors();
+        if (errors.hasErrors()) {
+            for (ErrorEntry errorEntry : errors.getErrorEntries()) {
+                ActionMessage actionMessage = new ActionMessage(errorEntry.getErrorCode(), errorEntry.getFieldName());
+                actionErrors.add(errorEntry.getErrorCode(), actionMessage);
             }
         }
+        return actionErrors;
     }
 
     private DateTime lastInstallmentDueDate(LoanCreationLoanScheduleDetailsDto loanCreationLoanScheduleDetailsDto) {

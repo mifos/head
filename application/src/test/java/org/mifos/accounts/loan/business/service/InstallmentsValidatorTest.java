@@ -14,6 +14,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.platform.validations.Errors;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -23,6 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.CollectionUtils.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -62,7 +65,7 @@ public class InstallmentsValidatorTest {
         RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withInstallment(3).withDueDateValue("08-Nov-2010").build();
 
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
-        installmentsValidator.validate(installments, getValidationContext(null));
+        Errors errors = installmentsValidator.validate(installments, getValidationContext(null));
         for (RepaymentScheduleInstallment installment : installments) {
             Mockito.verify(installmentFormatValidator).validateDueDateFormat(installment);
             Mockito.verify(installmentFormatValidator).validateTotalAmountFormat(installment);
@@ -73,10 +76,11 @@ public class InstallmentsValidatorTest {
         Mockito.verify(installmentRulesValidator).validateForDisbursementDate(eq(installments), any(Date.class));
         Mockito.verify(installmentRulesValidator).validateForVariableInstallments(eq(installments), any(VariableInstallmentDetailsBO.class));
         Mockito.verify(installmentRulesValidator).validateForHolidays(eq(installments), any(FiscalCalendarRules.class));
+        assertThat(errors.hasErrors(), is(false));
     }
 
     private InstallmentValidationContext getValidationContext(Date disbursementDate) {
-        return new InstallmentValidationContext(disbursementDate, new VariableInstallmentDetailsBO(), 
-                                    new FiscalCalendarRules());
+        return new InstallmentValidationContext(disbursementDate, new VariableInstallmentDetailsBO(),
+                new FiscalCalendarRules());
     }
 }

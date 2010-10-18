@@ -55,7 +55,7 @@ public class DetailedAgingPortfolioReportParameters extends AbstractReportParame
 
     private void addErrorIfInvalid(Errors errors, String parameter, String fieldName, String errorCode) {
         if (!NumberUtils.isDigits(parameter) || Integer.valueOf(INVALID_ID).equals(Integer.valueOf(parameter))) {
-            errors.rejectValue(fieldName, errorCode);
+            errors.addError(fieldName, errorCode);
         }
     }
 

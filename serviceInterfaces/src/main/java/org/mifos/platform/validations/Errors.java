@@ -30,8 +30,8 @@ public class Errors {
         errorEntries = new ArrayList<ErrorEntry>();
     }
 
-    public void rejectValue(String fieldName, String errorCode) {
-        errorEntries.add(new ErrorEntry(fieldName, errorCode));
+    public void addError(String fieldName, String errorCode) {
+        errorEntries.add(new ErrorEntry(errorCode, fieldName));
     }
 
     public boolean hasErrors() {
@@ -51,5 +51,9 @@ public class Errors {
             }
         }
         return result;
+    }
+
+    public void addErrors(List<ErrorEntry> errorEntries) {
+        this.errorEntries.addAll(errorEntries);
     }
 }
