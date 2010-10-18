@@ -22,7 +22,7 @@
         <div class="prepend-3  span-21 last">
         	<div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.category" /]</span><span class="span-4">&nbsp;
    					<select name="select">
-      					<option >[@spring.message "--select--"/]</option>
+      					<option >[@spring.message "--Select--"/]</option>
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.personnel"/]</option>
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.office"/]</option>
                         <option >[@spring.message "datadisplayandrules.viewadditionalfields.client"/]</option>
@@ -40,7 +40,7 @@
   			</div>
             <div class="span-20 "><span class="span-3 rightAlign"><span class="red">* </span>[@spring.message "datadisplayandrules.defineAdditionalFields.dataType" /]</span><span class="span-5">&nbsp;
    					<select name="select">
-      					<option >[@spring.message "--select--"/]</option>
+      					<option >[@spring.message "--Select--"/]</option>
                         <option >[@spring.message "datadisplayandrules.defineAdditionalFields.numeric"/]</option>
                         <option >[@spring.message "datadisplayandrules.defineAdditionalFields.text"/]</option>
 				    </select></span>
