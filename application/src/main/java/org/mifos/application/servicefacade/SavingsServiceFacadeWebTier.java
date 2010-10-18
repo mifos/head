@@ -365,6 +365,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
      * If any interest calculation is different the value of previously posted interest, an interest posting is done
      * with the difference.
      */
+    @Override
     public void batchRecalculateInterestToBePostedForSavingsAccount(LocalDate dateBatchJobIsScheduled) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -381,37 +382,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
             savingsAccount.updateDetails(userContext);
 
-            InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
-
-            LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
-            LocalDate startOfYearOfPostingDate = new LocalDate(new DateTime().withDate(interestPostingDate.getYear(), 1, 1));
-
-            if (!postingSchedule.isAMatchingDate(startOfYearOfPostingDate, interestPostingDate)) {
-
-                LocalDate nextPostingDate = postingSchedule.nextMatchingDateAfter(startOfYearOfPostingDate, interestPostingDate);
-
-                savingsAccount.updatePostingDetails(nextPostingDate);
-
-                StringBuilder infoMessage = new StringBuilder().append("account id: ").append(savingsId)
-                                                               .append(" Invalid posting date: ").append(interestPostingDate)
-                                                               .append(" updated to:").append(nextPostingDate);
-                logger.info(infoMessage.toString());
-            } else {
-
-                List<InterestPostingPeriodResult> postingResults = recalculateSavingsAccountInterest(savingsAccount, postingSchedule, interestPostingDate);
-
-                for (InterestPostingPeriodResult interestPostingPeriodResult : postingResults) {
-                    if (interestPostingPeriodResult.isTotalCalculatedInterestIsDifferent()) {
-                        interestPosted = true;
-                        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult);
-
-                        StringBuilder postingInfoMessage = new StringBuilder().append("account id: ").append(savingsId)
-                                                                              .append("posting interest: ").append(interestPostingPeriodResult);
-
-                        logger.info(postingInfoMessage.toString());
-                    }
-                }
-            }
+            interestPosted = postCurrentAndRecalculatePreviousInterest(savingsAccount);
 
             try {
                 this.transactionHelper.startTransaction();
@@ -427,6 +398,43 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 this.transactionHelper.closeSession();
             }
         }
+    }
+
+    private boolean postCurrentAndRecalculatePreviousInterest(SavingsBO savingsAccount) {
+        Boolean interestPosted = false;
+
+        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+
+        LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
+        LocalDate startOfYearOfPostingDate = new LocalDate(new DateTime().withDate(interestPostingDate.getYear(), 1, 1));
+
+        if (!postingSchedule.isAMatchingDate(startOfYearOfPostingDate, interestPostingDate)) {
+
+            LocalDate nextPostingDate = postingSchedule.nextMatchingDateAfter(startOfYearOfPostingDate, interestPostingDate);
+
+            savingsAccount.updatePostingDetails(nextPostingDate);
+
+            StringBuilder infoMessage = new StringBuilder().append("account id: ").append(savingsAccount.getAccountId())
+                                                           .append(" Invalid posting date: ").append(interestPostingDate)
+                                                           .append(" updated to:").append(nextPostingDate);
+            logger.info(infoMessage.toString());
+        } else {
+
+            List<InterestPostingPeriodResult> postingResults = recalculateSavingsAccountInterest(savingsAccount, postingSchedule, interestPostingDate);
+
+            for (InterestPostingPeriodResult interestPostingPeriodResult : postingResults) {
+                if (interestPostingPeriodResult.isTotalCalculatedInterestIsDifferent()) {
+                    interestPosted = true;
+                    savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult);
+
+                    StringBuilder postingInfoMessage = new StringBuilder().append("account id: ").append(savingsAccount.getAccountId())
+                                                                          .append("posting interest: ").append(interestPostingPeriodResult);
+
+                    logger.info(postingInfoMessage.toString());
+                }
+            }
+        }
+        return interestPosted;
     }
 
     private List<InterestPostingPeriodResult> recalculateSavingsAccountInterest(SavingsBO savingsAccount, InterestScheduledEvent postingSchedule, LocalDate endDateOfLastPeriod) {
