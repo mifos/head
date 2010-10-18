@@ -414,4 +414,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         freqOfPostIntcalc.setPrdOffering(this);
         setFreqOfPostIntcalc(freqOfPostIntcalc);
     }
+
+    public boolean isMaxWithdrawalAmountExceeded(Money amountAdjustedTo) {
+        return amountAdjustedTo.isGreaterThan(this.maxAmntWithdrawl);
+    }
 }

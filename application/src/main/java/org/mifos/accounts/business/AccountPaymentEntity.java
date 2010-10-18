@@ -202,4 +202,28 @@ public class AccountPaymentEntity extends AbstractEntity {
     public void setAccount(AccountBO account) {
         this.account = account;
     }
+
+    public boolean isSavingsDepositOrWithdrawal() {
+        return isSavingsDeposit() || isSavingsWithdrawal();
+    }
+
+    public boolean isSavingsDeposit() {
+        boolean savingsDeposit = false;
+        for (AccountTrxnEntity transaction : this.accountTrxns) {
+            if (transaction.isSavingsDeposit()) {
+                savingsDeposit = true;
+            }
+        }
+        return savingsDeposit;
+    }
+
+    public boolean isSavingsWithdrawal() {
+        boolean savingsWithdrawal = false;
+        for (AccountTrxnEntity transaction : this.accountTrxns) {
+            if (transaction.isSavingsWithdrawal()) {
+                savingsWithdrawal = true;
+            }
+        }
+        return savingsWithdrawal;
+    }
 }

@@ -1311,52 +1311,67 @@ public class SavingsBO extends AccountBO {
     }
 
     public boolean isAdjustPossibleOnLastTrxn(final Money amountAdjustedTo) {
-        if (!(this.isActive() || this.isInActive())) {
-            return false;
-        }
 
-        AccountPaymentEntity accountPayment = getLastPmnt();
-        if (accountPayment != null
-                && getLastPmntAmnt() != 0
-                && (helper.getPaymentActionType(accountPayment).equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()) ||
-                    helper.getPaymentActionType(accountPayment).equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue()))) {
+        boolean adjustmentIsPossible = false;
 
-            if (accountPayment.getAmount().equals(amountAdjustedTo)) {
-                logger.debug("Either Amount to be adjusted is same as last user payment amount, or last payment is not withdrawal or deposit, therefore adjustment is not possible.");
-                return false;
-            }
+        if (this.isActive() || this.isInActive()) {
 
-            return adjustmentCheckForWithdrawal(accountPayment, amountAdjustedTo) && adjustmentCheckForBalance(accountPayment, amountAdjustedTo);
-        }
-        return false;
-    }
+            AccountPaymentEntity accountPayment = getLastPmnt();
+            if (lastPaymentIsGreaterThanZero(accountPayment) && lastPaymentIsADepositOrWithdrawal(accountPayment)) {
 
-    private boolean adjustmentCheckForWithdrawal(final AccountPaymentEntity accountPayment, final Money amountAdjustedTo) {
-        Money maxWithdrawAmount = getSavingsOffering().getMaxAmntWithdrawl();
-        if (helper.getPaymentActionType(accountPayment).equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())
-                && maxWithdrawAmount != null && maxWithdrawAmount.isNonZero()
-                && amountAdjustedTo.isGreaterThan(maxWithdrawAmount)) {
-            logger.debug("Amount is more than withdrawal limit");
-            return false;
-        }
-        return true;
-    }
+                if (accountPayment.getAmount().equals(amountAdjustedTo)) {
+                    adjustmentIsPossible = false;
+                } else {
+                    adjustmentIsPossible = true;
+                }
 
-    private boolean adjustmentCheckForBalance(final AccountPaymentEntity accountPayment, final Money amountAdjustedTo) {
-        Money balanceAfterAdjust = getSavingsBalance();
-        for (AccountTrxnEntity accntTrxn : accountPayment.getAccountTrxns()) {
-            SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) accntTrxn;
-            if (helper.getPaymentActionType(accountPayment).equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())
-                    && amountAdjustedTo.isGreaterThan(savingsTrxn.getWithdrawlAmount())) {
-                balanceAfterAdjust = balanceAfterAdjust.subtract(amountAdjustedTo.subtract(savingsTrxn
-                        .getWithdrawlAmount()));
-                if (balanceAfterAdjust.isLessThanZero()) {
-                    logger.debug("After adjustment balance is becoming -ve, therefore adjustment is not possible.");
-                    return false;
+                if (adjustmentIsPossible &&
+                        withdrawalAdjustmentIsValid(accountPayment, amountAdjustedTo) &&
+                        withdrawalAdjustmentDoesNotMakeBalanceNegative(accountPayment, amountAdjustedTo)) {
+                    adjustmentIsPossible = true;
+                } else {
+                    adjustmentIsPossible = false;
                 }
             }
         }
-        return true;
+
+        return adjustmentIsPossible;
+    }
+
+    private boolean lastPaymentIsADepositOrWithdrawal(AccountPaymentEntity accountPayment) {
+        return accountPayment.isSavingsDepositOrWithdrawal();
+    }
+
+    private boolean lastPaymentIsGreaterThanZero(AccountPaymentEntity accountPayment) {
+        return accountPayment != null && accountPayment.getAmount().isGreaterThanZero();
+    }
+
+    private boolean withdrawalAdjustmentIsValid(final AccountPaymentEntity accountPayment, final Money withdrawalAmount) {
+        boolean withdrawalAdjustmentIsValid = true;
+
+        if (accountPayment.isSavingsWithdrawal() && withdrawalAmount != null && withdrawalAmount.isNonZero() &&
+                this.savingsOffering.isMaxWithdrawalAmountExceeded(withdrawalAmount)) {
+            withdrawalAdjustmentIsValid = false;
+        }
+        return withdrawalAdjustmentIsValid;
+    }
+
+    private boolean withdrawalAdjustmentDoesNotMakeBalanceNegative(final AccountPaymentEntity accountPayment, final Money amountAdjustedTo) {
+
+        boolean balanceIsPositive = true;
+        Money balanceAfterAdjust = this.savingsBalance;
+
+        for (AccountTrxnEntity accntTrxn : accountPayment.getAccountTrxns()) {
+            SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) accntTrxn;
+
+            if (accountPayment.isSavingsWithdrawal() && amountAdjustedTo.isGreaterThan(savingsTrxn.getWithdrawlAmount())) {
+                balanceAfterAdjust = balanceAfterAdjust.subtract(amountAdjustedTo.subtract(savingsTrxn.getWithdrawlAmount()));
+                if (balanceAfterAdjust.isLessThanZero()) {
+                    balanceIsPositive = false;
+                }
+            }
+        }
+        return balanceIsPositive;
     }
 
     public AccountNotesEntity createAccountNotes(final String comment) throws AccountException {

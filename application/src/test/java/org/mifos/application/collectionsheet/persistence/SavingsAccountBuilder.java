@@ -84,6 +84,7 @@ public class SavingsAccountBuilder {
     private Money interestToBePosted = TestUtils.createMoney("0");
 
     private List<AccountPaymentEntity> deposits = new ArrayList<AccountPaymentEntity>();
+    private List<AccountPaymentEntity> withdrawals = new ArrayList<AccountPaymentEntity>();
 
     public SavingsBO build() {
 
@@ -101,6 +102,15 @@ public class SavingsAccountBuilder {
                 savingsAccount.deposit(depositPayment, customer);
             } catch (AccountException e) {
                 throw new MifosRuntimeException("builder failed to apply deposits.", e);
+            }
+        }
+
+        for (AccountPaymentEntity withdrawal : withdrawals) {
+            try {
+                withdrawal.setAccount(savingsAccount);
+                savingsAccount.withdraw(withdrawal, customer);
+            } catch (AccountException e) {
+                throw new MifosRuntimeException("builder failed to apply withdrawals.", e);
             }
         }
 
@@ -227,6 +237,17 @@ public class SavingsAccountBuilder {
         Date paymentDate = new DateTime().toDate();
         AccountPaymentEntity deposit = new AccountPaymentEntity(null, amount, receiptNumber, receiptDate, paymentType, paymentDate);
         this.deposits.add(deposit);
+        return this;
+    }
+
+    public SavingsAccountBuilder withWithdrawalOf(String withdrawalAmount) {
+        Money amount = TestUtils.createMoney(withdrawalAmount);
+        String receiptNumber = null;
+        Date receiptDate = null;
+        PaymentTypeEntity paymentType = new PaymentTypeEntity(PaymentTypes.CASH.getValue());
+        Date paymentDate = new DateTime().toDate();
+        AccountPaymentEntity deposit = new AccountPaymentEntity(null, amount, receiptNumber, receiptDate, paymentType, paymentDate);
+        this.withdrawals.add(deposit);
         return this;
     }
 }

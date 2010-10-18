@@ -41,10 +41,8 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.persistence.ClientBuilder;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -82,18 +80,24 @@ public class SavingsAdjustmentTest {
 
         Map<FinancialActionConstants, String> actionToCreditAccount = new HashMap<FinancialActionConstants, String>();
         actionToCreditAccount.put(FinancialActionConstants.MANDATORYDEPOSIT, glcode);
+        actionToCreditAccount.put(FinancialActionConstants.MANDATORYWITHDRAWAL, glcode);
 
         FinancialRules.getInstance().setActionToCreditAccount(actionToCreditAccount);
 
         Map<FinancialActionConstants, String> actionToDebitAccount = new HashMap<FinancialActionConstants, String>();
         actionToDebitAccount.put(FinancialActionConstants.MANDATORYDEPOSIT, glcode);
+        actionToDebitAccount.put(FinancialActionConstants.MANDATORYWITHDRAWAL, glcode);
 
         FinancialRules.getInstance().setActionToDebitAccount(actionToDebitAccount);
 
-        FinancialActionTypeEntity financialAction = new FinancialActionTypeEntity();
-        financialAction.setId(FinancialActionConstants.MANDATORYDEPOSIT.getValue());
+        FinancialActionTypeEntity depositAction = new FinancialActionTypeEntity();
+        depositAction.setId(FinancialActionConstants.MANDATORYDEPOSIT.getValue());
 
-        FinancialActionCache.addToCache(financialAction);
+        FinancialActionTypeEntity withdrawalAction = new FinancialActionTypeEntity();
+        withdrawalAction.setId(FinancialActionConstants.MANDATORYWITHDRAWAL.getValue());
+
+        FinancialActionCache.addToCache(depositAction);
+        FinancialActionCache.addToCache(withdrawalAction);
     }
 
     @Before
@@ -101,16 +105,9 @@ public class SavingsAdjustmentTest {
 
         client = new ClientBuilder().active().buildForUnitTests();
 
-//        loggedInUser = new PersonnelBuilder().build();
-
-        MeetingBO interestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
-                                                                          .monthly().every(1)
-                                                                          .build();
-
         savingsProduct = new SavingsProductBuilder().mandatory()
                                                                         .withMandatoryAmount("33.0")
                                                                         .appliesToClientsOnly()
-                                                                        .withInterestPostingSchedule(interestPostingMeeting)
                                                                         .buildForUnitTests();
     }
 
@@ -161,6 +158,102 @@ public class SavingsAdjustmentTest {
 
         // exercise test
         boolean result = savingsAccount.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
+
+        // verification
+        assertTrue(result);
+    }
+
+    @Test
+    public void cannotAdjustLastTransactionToSameMonetaryAmount() {
+
+        Money amountAdjustedTo = TestUtils.createMoney("15");
+        savingsAccount = new SavingsAccountBuilder().mandatory()
+                                                    .active()
+                                                    .withSavingsProduct(savingsProduct)
+                                                    .withCustomer(client)
+                                                    .withDepositOf("15")
+                                                    .build();
+
+        // exercise test
+        boolean result = savingsAccount.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
+
+        // verification
+        assertFalse(result);
+    }
+
+    @Test
+    public void cannotAdjustLastTransactionWhenItsAWithdrawalThatExceedsAccountBalance() {
+
+        savingsProduct = new SavingsProductBuilder().mandatory()
+                                                    .withMandatoryAmount("33.0")
+                                                    .withMaxWithdrawalAmount(TestUtils.createMoney("600"))
+                                                    .appliesToClientsOnly()
+                                                    .buildForUnitTests();
+
+        savingsAccount = new SavingsAccountBuilder().mandatory()
+                                                    .active()
+                                                    .withSavingsProduct(savingsProduct)
+                                                    .withCustomer(client)
+                                                    .withBalanceOf(TestUtils.createMoney("100"))
+                                                    .withWithdrawalOf("15")
+                                                    .build();
+
+        Money amountGreaterThanSavingsBalance = savingsAccount.getSavingsBalance().add(TestUtils.createMoney("20"));
+
+        // exercise test
+        boolean result = savingsAccount.isAdjustPossibleOnLastTrxn(amountGreaterThanSavingsBalance);
+
+        // verification
+        assertFalse(result);
+    }
+
+    @Test
+    public void cannotAdjustLastTransactionWhenItsAWithdrawalThatExceedsSavingsProductMaxWithdrawalAmount() {
+
+        savingsProduct = new SavingsProductBuilder().mandatory()
+                                                    .withMandatoryAmount("33.0")
+                                                    .withMaxWithdrawalAmount(TestUtils.createMoney("50"))
+                                                    .appliesToClientsOnly()
+                                                    .buildForUnitTests();
+
+        savingsAccount = new SavingsAccountBuilder().mandatory()
+                                                    .active()
+                                                    .withSavingsProduct(savingsProduct)
+                                                    .withCustomer(client)
+                                                    .withBalanceOf(TestUtils.createMoney("100"))
+                                                    .withWithdrawalOf("15")
+                                                    .build();
+
+        Money withdrawalAdjustment = TestUtils.createMoney("60");
+
+        // exercise test
+        boolean result = savingsAccount.isAdjustPossibleOnLastTrxn(withdrawalAdjustment);
+
+        // verification
+        assertFalse(result);
+    }
+
+    @Test
+    public void canAdjustLastTransactionThatIsAWithdrawal() {
+
+        savingsProduct = new SavingsProductBuilder().mandatory()
+                                                    .withMandatoryAmount("33.0")
+                                                    .withMaxWithdrawalAmount(TestUtils.createMoney("50"))
+                                                    .appliesToClientsOnly()
+                                                    .buildForUnitTests();
+
+        savingsAccount = new SavingsAccountBuilder().mandatory()
+                                                    .active()
+                                                    .withSavingsProduct(savingsProduct)
+                                                    .withCustomer(client)
+                                                    .withBalanceOf(TestUtils.createMoney("100"))
+                                                    .withWithdrawalOf("15")
+                                                    .build();
+
+        Money withdrawalAdjustment = TestUtils.createMoney("20");
+
+        // exercise test
+        boolean result = savingsAccount.isAdjustPossibleOnLastTrxn(withdrawalAdjustment);
 
         // verification
         assertTrue(result);
