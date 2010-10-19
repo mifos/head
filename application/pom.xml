@@ -887,8 +887,7 @@
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <!-- override exclude integration test classes    -->
                             <excludes>
-                                <exclude>**/*IntegrationTest.java</exclude>
-                                <exclude>**/*StrutsTest.java</exclude>
+                                <exclude>none</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*LatestTestAfterCheckpointIntegrationTest.java</include>
