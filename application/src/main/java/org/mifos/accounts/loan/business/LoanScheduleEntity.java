@@ -456,6 +456,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     public RepaymentScheduleInstallment toDto(Locale userLocale) {
         return new RepaymentScheduleInstallment(this.installmentId,
-                this.actionDate, this.principal, this.interest, this.getTotalFeeDue(), this.miscFee, this.miscPenalty, userLocale);
+                this.actionDate, this.principal, this.interest,
+                this.getTotalFeeDue(), this.miscFee, this.miscPenalty, userLocale);
     }
 }

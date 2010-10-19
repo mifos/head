@@ -20,10 +20,10 @@
 
 package org.mifos.application.servicefacade;
 
-import java.util.List;
-
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+
+import java.util.List;
 
 public class LoanCreationLoanScheduleDetailsDto {
 
@@ -34,7 +34,10 @@ public class LoanCreationLoanScheduleDetailsDto {
     private final List<RepaymentScheduleInstallment> installments;
     private final List<PaymentDataHtmlBean> paymentDataBeans;
 
-    public LoanCreationLoanScheduleDetailsDto(boolean isGroup, boolean isGlimApplicable, double glimLoanAmount, boolean isLoanPendingApprovalDefined, List<RepaymentScheduleInstallment> installments, List<PaymentDataHtmlBean> paymentDataBeans) {
+    public LoanCreationLoanScheduleDetailsDto(boolean isGroup, boolean isGlimApplicable, double glimLoanAmount, 
+                                              boolean isLoanPendingApprovalDefined,
+                                              List<RepaymentScheduleInstallment> installments,
+                                              List<PaymentDataHtmlBean> paymentDataBeans) {
         this.isGroup = isGroup;
         this.isGlimApplicable = isGlimApplicable;
         this.glimLoanAmount = glimLoanAmount;
