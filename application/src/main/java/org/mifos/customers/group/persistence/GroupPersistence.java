@@ -90,7 +90,7 @@ public class GroupPersistence extends Persistence {
             queryInputs.setAliasNames(aliasNames);
         }
         paramList.add(typeNameValue("String", "SEARCH_ID", officeSearchId + "%"));
-        paramList.add(typeNameValue("String", "SEARCH_STRING", searchString + "%"));
+        paramList.add(typeNameValue("String", "SEARCH_STRING", "%" + searchString + "%"));
         paramList.add(typeNameValue("Short", "LEVEL_ID", CustomerLevel.GROUP.getValue()));
         paramList.add(typeNameValue("Short", "USER_ID", userId));
         paramList.add(typeNameValue("Short", "USER_LEVEL_ID", personnel.getLevelEnum().getValue()));

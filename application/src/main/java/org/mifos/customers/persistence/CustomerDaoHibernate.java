@@ -373,7 +373,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         namedQuery[1] = NamedQueryConstants.CENTER_SEARCH;
 
         paramList.add(typeNameValue("String", "SEARCH_ID", officeSearchId + "%"));
-        paramList.add(typeNameValue("String", "CENTER_NAME", searchString + "%"));
+        paramList.add(typeNameValue("String", "CENTER_NAME", "%" + searchString + "%"));
         paramList.add(typeNameValue("Short", "LEVEL_ID", CustomerLevel.CENTER.getValue()));
         paramList.add(typeNameValue("Short", "STATUS_ID", CustomerStatus.CENTER_ACTIVE.getValue()));
         paramList.add(typeNameValue("Short", "USER_ID", user.getPersonnelId()));

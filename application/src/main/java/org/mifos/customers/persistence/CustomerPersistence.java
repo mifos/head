@@ -403,7 +403,7 @@ public class CustomerPersistence extends Persistence {
                     .getSearchId()
                     + "%"));
         }
-        paramList.add(typeNameValue("String", "SEARCH_STRING", searchString + "%"));
+        paramList.add(typeNameValue("String", "SEARCH_STRING", "%" + searchString + "%"));
         if (searchString.contains(" ")) {
             paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString
                     .substring(0, searchString.indexOf(" "))));
