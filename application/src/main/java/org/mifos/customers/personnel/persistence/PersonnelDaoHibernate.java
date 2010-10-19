@@ -166,6 +166,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -173,6 +174,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator<PersonnelCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();

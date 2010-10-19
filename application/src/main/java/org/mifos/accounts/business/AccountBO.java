@@ -837,8 +837,7 @@ public class AccountBO extends AbstractBusinessObject {
     public AccountActionDateEntity getAccountActionDate(final Short installmentId, final Integer customerId) {
         if (null != accountActionDates && accountActionDates.size() > 0) {
             for (AccountActionDateEntity accntActionDate : accountActionDates) {
-                if (accntActionDate.getInstallmentId().equals(installmentId)
-                        && accntActionDate.getCustomer().getCustomerId().equals(customerId)) {
+                if (accntActionDate.getInstallmentId().equals(installmentId) && accntActionDate.getCustomer().getCustomerId() == customerId) {
                     return accntActionDate;
                 }
             }

@@ -1029,7 +1029,7 @@ public class SavingsBO extends AccountBO {
                 buildFinancialEntries(adjustedPaymentTransactions);
             }
         } catch (AccountException e) {
-            throw new BusinessRuleException(e.getKey());
+            throw new BusinessRuleException(e.getKey(), e);
         }
 
         goActiveDueToDepositOrWithdrawalOnAccount(updatedBy);
@@ -1090,8 +1090,7 @@ public class SavingsBO extends AccountBO {
         SavingsActivityEntity adjustment = SavingsActivityEntity.savingsAdjustment(this, updatedBy, this.savingsBalance, lastPayment.getAmount(), adjustedOn);
         savingsActivityDetails.add(adjustment);
 
-        List<AccountTrxnEntity> reversedTransactions = lastPayment.reversalAdjustment(updatedBy, adjustmentNote);
-        return reversedTransactions;
+        return lastPayment.reversalAdjustment(updatedBy, adjustmentNote);
     }
 
     private AccountActionTypes findFirstDepositOrWithdrawalTransaction(AccountPaymentEntity lastPayment) {
@@ -1107,8 +1106,9 @@ public class SavingsBO extends AccountBO {
     private List<AccountActionDateEntity> getAccountActions(final Date dueDate, final Integer customerId) {
         List<AccountActionDateEntity> accountActions = new ArrayList<AccountActionDateEntity>();
         for (AccountActionDateEntity accountAction : getAccountActionDates()) {
-            if (accountAction.getActionDate().compareTo(dueDate) <= 0 && !accountAction.isPaid()
-                    && accountAction.getCustomer().getCustomerId().equals(customerId)) {
+            if (accountAction.getActionDate().compareTo(dueDate) <= 0 &&
+                    !accountAction.isPaid() &&
+                    accountAction.getCustomer().getCustomerId() == customerId) {
                 accountActions.add(accountAction);
             }
         }
@@ -1290,17 +1290,18 @@ public class SavingsBO extends AccountBO {
 
     private void adjustForDeposit(final AccountTrxnEntity accntTrxn) {
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) accntTrxn;
+        Money depositAmount = savingsTrxn.getDepositAmount();
+
         Short installmentId = savingsTrxn.getInstallmentId();
-        setSavingsBalance(getSavingsBalance().subtract(savingsTrxn.getDepositAmount()));
-        SavingsScheduleEntity accntActionDate = (SavingsScheduleEntity) getAccountActionDate(installmentId, accntTrxn
-                .getCustomer().getCustomerId());
+        this.savingsBalance = this.savingsBalance.subtract(depositAmount);
+
+        SavingsScheduleEntity accntActionDate = (SavingsScheduleEntity) getAccountActionDate(installmentId, accntTrxn.getCustomer().getCustomerId());
         if (accntActionDate != null) {
-            accntActionDate.setDepositPaid(accntActionDate.getDepositPaid().subtract(savingsTrxn.getDepositAmount()));
+            accntActionDate.setDepositPaid(accntActionDate.getDepositPaid().subtract(depositAmount));
             accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
             accntActionDate.setPaymentDate(null);
         }
-        getSavingsPerformance().setTotalDeposits(
-                getSavingsPerformance().getTotalDeposits().subtract(savingsTrxn.getDepositAmount()));
+        this.savingsPerformance.setTotalDeposits(this.savingsPerformance.getTotalDeposits().subtract(depositAmount));
     }
 
     private void adjustForWithdrawal(final AccountTrxnEntity accntTrxn) {
