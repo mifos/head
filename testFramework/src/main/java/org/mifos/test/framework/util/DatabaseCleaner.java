@@ -121,5 +121,7 @@ public class DatabaseCleaner {
         template.execute("update custom_field_definition set mandatory_flag = 0 where entity_type in (1, 12, 20)");
         template.execute("delete from fund where fund_id > 5");
         template.execute("delete from fund_code where fundcode_id > 5");
+
+        template.execute("delete from personnel where personnel_id > 3");
     }
 }

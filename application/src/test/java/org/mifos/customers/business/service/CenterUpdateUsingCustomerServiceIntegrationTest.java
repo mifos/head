@@ -20,7 +20,7 @@
 
 package org.mifos.customers.business.service;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
@@ -38,7 +38,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
@@ -62,15 +61,12 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * I test the update of {@link CenterBO}'s using the {@link CustomerService} implementation.
@@ -139,7 +135,7 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegr
                                             .build();
         IntegrationTestObjectMother.createCenter(center, center.getCustomerMeetingValue());
 
-        otherLoanOfficer = new PersonnelBuilder().withDisplayName("otherLoanOfficer").with(existingBranch).build();
+        otherLoanOfficer = new PersonnelBuilder().withUsername("CenterUpdateUsingCustomerServiceIntegrationTest").withDisplayName("otherLoanOfficer").with(existingBranch).build();
         IntegrationTestObjectMother.createPersonnel(otherLoanOfficer);
     }
 
