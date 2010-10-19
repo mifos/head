@@ -54,7 +54,7 @@
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
-                        <version>1.0</version>
+                        <version>1.0.3</version>
                         <configuration>
                             <container>
                                 <zipUrlInstaller>
@@ -67,6 +67,7 @@
                                 <home>${java.io.tmpdir}/${user.name}-cargo/conf</home>
                                 <properties>
                                     <cargo.jvmargs>-Xms1024m -Xmx1024m -XX:MaxPermSize=128m</cargo.jvmargs>
+                                    <cargo.maven.skip>${maven.test.skip}</cargo.maven.skip>
                                 </properties>
                             </configuration>
                         </configuration>
