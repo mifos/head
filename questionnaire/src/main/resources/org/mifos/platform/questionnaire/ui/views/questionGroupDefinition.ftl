@@ -161,7 +161,7 @@
         <input type="submit" id="_eventId_moveSectionDown" name="_eventId_moveSectionDown" value="" style="visibility:hidden"/>
     </div>
     <div class="button_footer">
-        <div class="button_container">
+        <div class="button_container buttonsSubmitCancel">
              <input type="submit" name="_eventId_defineQuestionGroup" id="_eventId_defineQuestionGroup" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
              &nbsp;
              <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>

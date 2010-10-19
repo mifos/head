@@ -91,7 +91,8 @@ html, body { height: 100% }
     padding-bottom:4px;
     padding-left:10px;
     padding-top:3px;
-    font-size:10px;
+    font-size:8pt;
+    height:13px;
 }
 .side_bar h3 {
 	background-color:#FF9600;

@@ -20,23 +20,27 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-    <span id="page.id" title="view_questions"></span>
+<span id="page.id" title="view_questions"></span>
+<div class=" content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+[@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
-        <h1>
-            [@spring.message "questionnaire.view.questions"/]
-        </h1>
+        <p class="font15 orangeheading margin5top10bottom">
+        [@spring.message "questionnaire.view.questions"/]
+        </p>
+
         <p>
-            [@spring.message "questionnaire.create.question.prompt"/]
+        [@spring.message "questionnaire.create.question.prompt"/]
             <a href="createQuestion.ftl">[@spring.message "questionnaire.create.question.link"/]</a>
         </p>
         <ul class="questions">
             [#list questions as question]
-            <li>
-                <a href="viewAndEditQuestion.ftl?questionId=${question.id}" id="questionId_${question.id}">${question.title}</a>
-            </li>
+                <li>
+                    <a href="viewAndEditQuestion.ftl?questionId=${question.id}"
+                       id="questionId_${question.id}">${question.title}</a>
+                </li>
             [/#list]
         </ul>
     </div>
+</div>
 [/@adminLeftPaneLayout]
