@@ -4367,6 +4367,7 @@ create table question_group_instance(
     completed_status smallint not null,
     created_by integer not null,
     version_id integer not null,
+    event_source_id integer not null,
     primary key (id),
     foreign key (question_group_id) references question_group(id)
 ) engine=innodb character set utf8;

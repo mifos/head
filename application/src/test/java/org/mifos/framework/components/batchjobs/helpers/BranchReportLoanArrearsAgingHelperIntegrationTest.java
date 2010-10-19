@@ -102,6 +102,7 @@ public class BranchReportLoanArrearsAgingHelperIntegrationTest extends BranchRep
                 loanArrears.getAmountAging());
     }
 
+    @Override
     @Before
     public void setUp() throws Exception {
         branchReportServiceMock = createMock(BranchReportService.class);

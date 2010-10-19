@@ -106,13 +106,18 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
+    public Integer getEventSourceId(String event, String source) {
+        return questionnaireService.getEventSourceId(event, source);
+    }
+
+    @Override
     public void saveResponses(QuestionGroupDetails questionGroupDetails) {
         questionnaireService.saveResponses(questionGroupDetails);
         if (auditLogService != null) {
             int creatorId = questionGroupDetails.getCreatorId();
             int entityId = questionGroupDetails.getEntityId();
             for (QuestionGroupDetail questionGroupDetail : questionGroupDetails.getDetails()) {
-                EventSourceDto eventSourceDto = questionGroupDetail.getEventSource();
+                EventSourceDto eventSourceDto = questionnaireService.getEventSource(questionGroupDetails.getEventSourceId());
                 String source = eventSourceDto.getSource();
                 String event = eventSourceDto.getEvent();
 

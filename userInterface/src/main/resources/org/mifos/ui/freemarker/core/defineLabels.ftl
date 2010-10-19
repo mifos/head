@@ -24,22 +24,19 @@
   <div class=" content">
   <span id="page.id" title="definelabels" />
   
-    <div class="bluedivs paddingLeft">
-    	<a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "datadisplayandrules.defineLabels"/]</span>
-	</div>
+    [@mifos.crumbs breadcrumbs /]
   
   	<form method="post" action="defineLabels.ftl" name="formname">  	
-    <div class="span-16">  		
-        <div class="clear">&nbsp;</div>
+    <div class="margin15lefttop">
         <div class="fontBold"><span class="orangeheading">[@spring.message "datadisplayandrules.defineLabels"/]</span></div>
         <div class="allErrorsDiv">
 	        [@mifosmacros.showAllErrors "formBean.*"/]
         </div>
   		
-		<p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.officeHierarchy"/] </p>
+		<p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.officeHierarchy"/] </p>
         
-        <div class="span-16 last marginLeft12em">
-        	<div class="span-16">
+        <div class="span-16 last width80prc marginLeft20prc ">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.headoffice"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.headOffice" /]
@@ -47,7 +44,7 @@
     				</span>
   			</div>
   			
-			<div class="span-16">
+			<div class="span-16 width80prc ">
 					<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.regionaloffice"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.regionalOffice" /]
@@ -55,7 +52,7 @@
     				</span>
   			</div>
   			
-			<div class="span-16">
+			<div class="span-16 width80prc ">
 					<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.subregionaloffice"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.subRegionalOffice" /]
@@ -63,7 +60,7 @@
     				</span>
   			</div>
 
-			<div class="span-16">
+			<div class="span-16 width80prc ">
 					<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.areaoffice"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.areaOffice" /]
@@ -71,7 +68,7 @@
     				</span>
   			</div>  			
 
-			<div class="span-16">
+			<div class="span-16 width80prc ">
 					<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.branchoffice"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.branchOffice" /]
@@ -80,9 +77,9 @@
   			</div>  
         </div>
         
-        <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.clients"/]</p>
-        <div class="span-16 last marginLeft12em">
-        	<div class="span-16">
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.clients"/]</p>
+        <div class="span-16 last width80prc marginLeft20prc ">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.client"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.client" /]
@@ -90,7 +87,7 @@
     				</span>
   			</div>
   			
-			<div class="span-16">
+			<div class="span-16 width80prc ">
 				    <span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.group"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.group" /]
@@ -98,7 +95,7 @@
     				</span>
   			</div>
         
-        	<div class="span-16">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.center"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.center" /]
@@ -107,11 +104,11 @@
   			</div>
         </div>
         
-        <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.productTypes"/]</p>
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.productTypes"/]</p>
         
-        <div class="span-16 last marginLeft12em">
+        <div class="span-16 last width80prc marginLeft20prc ">
         
-        	<div class="span-16">
+        	<div class="span-16 width80prc ">
    					<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.loans"/]</span>     			
     				<span class="span-3">
     				    [@spring.bind "formBean.loans" /]
@@ -119,7 +116,7 @@
     				</span>
   			</div>
         
-            <div class="span-16">
+            <div class="span-16 width80prc ">
             		<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.savings"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.savings" /]
@@ -128,9 +125,9 @@
   			</div>
         </div>
         
-        <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.personalInformation"/] </p>
-        <div class="span-16 last marginLeft12em">
-  			<div class="span-16">
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.personalInformation"/] </p>
+        <div class="span-16 last width80prc marginLeft20prc ">
+  			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.ethnicity"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.ethnicity" /]
@@ -138,7 +135,7 @@
     				</span>
   			</div>
   			
-  			<div class="span-16">
+  			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.citizenship"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.citizenship" /]
@@ -146,7 +143,7 @@
     				</span>
   			</div>
   			
-  			<div class="span-16">
+  			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.handicapped"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.handicapped" /]
@@ -154,7 +151,7 @@
     				</span>
   			</div>
   			
-			<div class="span-16">
+			<div class="span-16 width80prc ">
        				<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.governmentID"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.govtId" /]
@@ -163,9 +160,9 @@
   			</div>
         </div>
         
-        <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.address"/]</p>
-        <div class="span-16 last marginLeft12em">
-        	<div class="span-16">
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.address"/]</p>
+        <div class="span-16 last width80prc marginLeft20prc ">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.address1"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.address1" /]
@@ -173,7 +170,7 @@
     				</span>
   			</div>
 
-        	<div class="span-16">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.address2"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.address2" /]
@@ -181,7 +178,7 @@
     				</span>
   			</div>
   			
-  			<div class="span-16">
+  			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.address3"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.address3" /]
@@ -189,7 +186,7 @@
     				</span>
   			</div>        
 
-            <div class="span-16">
+            <div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.state"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.state" /]
@@ -197,7 +194,7 @@
     				</span>
   			</div>
   			
-			<div class="span-16">
+			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.postalcode"/]</span>			
     				<span class="span-3">
     				    [@spring.bind "formBean.postalCode" /]
@@ -206,10 +203,10 @@
   			</div>
         </div>
         
-        <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.statuses"/]</p>
-        <div class="span-16 last marginLeft12em">
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.statuses"/]</p>
+        <div class="span-16 last width80prc marginLeft20prc ">
         
-        	<div class="span-16">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.partialApplication"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.partialApplication" /]
@@ -217,7 +214,7 @@
     				</span>
   			</div>
   			
-			<div class="span-16">
+			<div class="span-16 width80prc ">
 					<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.pendingApproval"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.pendingApproval" /]
@@ -225,7 +222,7 @@
     				</span>
   			</div>
   			
-			<div class="span-16">
+			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.approved"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.approved" /]
@@ -233,7 +230,7 @@
     				</span>
   			</div>
 
-			<div class="span-16">
+			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.cancel"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.cancel" /]
@@ -241,7 +238,7 @@
     				</span>
   			</div>
  
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.closed"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.closed" /]
@@ -249,7 +246,7 @@
     				</span>
   			</div>
 
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.onhold"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.onhold" /]
@@ -257,7 +254,7 @@
     				</span>
   			</div>
   			
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.active"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.active" /]
@@ -265,7 +262,7 @@
     				</span>
   			</div>
 
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.inactive"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.inActive" /]
@@ -273,7 +270,7 @@
     				</span>
   			</div>
   			
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.activeingoodstanding"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.activeInGoodStanding" /]
@@ -281,7 +278,7 @@
     				</span>
   			</div>
 
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.activeinbadstanding"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.activeInBadStanding" /]
@@ -289,7 +286,7 @@
     				</span>
   			</div>
 
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.closed-obligationmet"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.closedObligationMet" /]
@@ -297,7 +294,7 @@
     				</span>
   			</div>
   			
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.closed-rescheduled"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.closedRescheduled" /]
@@ -305,7 +302,7 @@
     				</span>
   			</div>
   			
- 			<div class="span-16">
+ 			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.closed-writtenoff"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.closedWrittenOff" /]
@@ -314,9 +311,9 @@
   			</div>
         </div>
         
-        <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.gracetypes"/]</p>
-        <div class="span-16 last marginLeft12em">
-        	<div class="span-16">
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.gracetypes"/]</p>
+        <div class="span-16 last width80prc marginLeft20prc ">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.none"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.none" /]
@@ -324,7 +321,7 @@
     				</span>
   			</div>
         	
-        	<div class="span-16">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.graceonallrepayments"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.graceOnAllRepayments" /]
@@ -332,7 +329,7 @@
     				</span>
   			</div>
         	
-        	<div class="span-16">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.principalonlygrace"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.principalOnlyGrace" /]
@@ -341,9 +338,9 @@
   			</div>
         </div>
         
-        <p class="fontBold">[@spring.message "datadisplayandrules.defineLabels.miscellaneous"/] </p>
-        <div class="span-16 last marginLeft12em">
-        	<div class="span-16">
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.miscellaneous"/] </p>
+        <div class="span-16 last width80prc marginLeft20prc ">
+        	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.interest"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.interest" /]
@@ -351,7 +348,7 @@
     				</span>
   			</div>
         
-            <div class="span-16">
+            <div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.externalID"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.externalId" /]
@@ -359,7 +356,7 @@
     				</span>
   			</div>
 
-            <div class="span-16">
+            <div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.bulkentry"/]</span>
     				<span class="span-3">
     				    [@spring.bind "formBean.bulkEntry" /]
@@ -369,16 +366,12 @@
         </div>
         
         <div class="clear">&nbsp;</div>
-        <hr />
-        <div class="span-20 last">
-        
-        
-        <div class="prepend-7">
+
+        <div class="buttonsSubmitCancel">
              <input class="buttn"  type="submit" id="definelabels.button.submit" name="submit" value="[@spring.message "submit"/]"/>
             <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
         </div>
-        
-        </div>
+
 	</div>
    	</form> 
   </div>

@@ -44,9 +44,8 @@ public class MifosSchedulerTest {
         MifosScheduler mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/schedulerTestTask.xml");
         List<String> taskNames = mifosScheduler.getTaskNames();
 
-        Assert.assertEquals(9, taskNames.size());
+        Assert.assertEquals(8, taskNames.size());
         Assert.assertTrue(taskNames.contains("ProductStatusJob"));
-        Assert.assertTrue(taskNames.contains("SavingsIntCalcTaskJob"));
         Assert.assertTrue(taskNames.contains("SavingsIntPostingTaskJob"));
         Assert.assertTrue(taskNames.contains("LoanArrearsAndPortfolioAtRiskTaskJob"));
         Assert.assertTrue(taskNames.contains("ApplyCustomerFeeChangesTaskJob"));

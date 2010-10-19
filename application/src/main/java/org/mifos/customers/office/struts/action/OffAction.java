@@ -20,30 +20,16 @@
 
 package org.mifos.customers.office.struts.action;
 
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
-import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.office.business.OfficeBO;
@@ -67,17 +53,24 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class OffAction extends BaseAction {
 
@@ -410,14 +403,6 @@ public class OffAction extends BaseAction {
         return createGroupQuestionnaire.editResponses(mapping, request, (OffActionForm) form);
     }
 
-    private QuestionnaireFlowAdapter createGroupQuestionnaire =
-        new QuestionnaireFlowAdapter("Create", "Office",
-                ActionForwards.preview_success,
-                "custSearchAction.do?method=loadMainSearch",
-                new QuestionnaireServiceFacadeLocator() {
-                    @Override
-                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                    }
-                });
+    private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Office",
+            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", new DefaultQuestionnaireServiceFacadeLocator());
 }

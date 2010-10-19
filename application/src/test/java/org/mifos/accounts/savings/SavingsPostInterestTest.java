@@ -62,9 +62,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-/**
- *
- */
 @RunWith(MockitoJUnitRunner.class)
 public class SavingsPostInterestTest {
 

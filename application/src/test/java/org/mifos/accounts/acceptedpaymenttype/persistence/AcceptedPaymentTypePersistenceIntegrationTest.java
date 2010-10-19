@@ -44,12 +44,14 @@ public class AcceptedPaymentTypePersistenceIntegrationTest extends AccountIntegr
     private List<TransactionAcceptedPaymentTypes> allAcceptedPaymentTypes = null;
     private Short DEFAULT_LOCALE_ID = 1;
 
+    @Override
     @Before
     public void setUp() throws Exception {
         StaticHibernateUtil.startTransaction();
         acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
     }
 
+    @Override
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.rollbackTransaction();

@@ -132,7 +132,7 @@ public class LoanScheduleGenerationIntegrationTest extends MifosIntegrationTestC
         new DateTimeService().resetToCurrentSystemDateTime();
     }
 
-    @Test
+    @Test @Ignore
     public void testNewWeeklyGroupLoanNoFeesNoHoliday() throws Exception {
 
         LoanBO loan = createWeeklyGroupLoanWithDisbursementDateWithOccurrences(date(2010, 10, 15), 9); //Meets on Fridays

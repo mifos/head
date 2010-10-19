@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings;
+package org.mifos.accounts.savings.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;

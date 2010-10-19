@@ -121,14 +121,6 @@ public class SavingsPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<Integer> retreiveAccountsPendingForIntCalc(Date currentDate) throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("currentDate", currentDate);
-        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_INT_CALC,
-                queryParameters);
-        return queryResult;
-    }
-
     public int getMissedDeposits(Integer accountId, Date currentDate) throws PersistenceException {
         Integer count = 0;
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();

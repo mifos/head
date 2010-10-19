@@ -63,6 +63,8 @@ import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.questionnaire.QuestionResponsePage;
 
+import java.util.Arrays;
+
 /**
  * Holds methods common to most loan tests.
  *
@@ -206,6 +208,17 @@ public class LoanTestHelper {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
         formParameters.setInterestWaiver(interestWaiver);
         EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitInterestWaiverChanges(formParameters);
+        loanProductDetailsPage = editLoanProductPreviewPage.submit();
+    }
+
+    public void editLoanProduct(String loanProduct, String... questionGroup) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewLoanProductsPage viewLoanProducts = adminPage.navigateToViewLoanProducts();
+        LoanProductDetailsPage loanProductDetailsPage = viewLoanProducts.viewLoanProductDetails(loanProduct);
+        EditLoanProductPage editLoanProductPage = loanProductDetailsPage.editLoanProduct();
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
+        formParameters.setQuestionGroups(Arrays.asList(questionGroup));
+        EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitQuestionGroupChanges(formParameters);
         loanProductDetailsPage = editLoanProductPreviewPage.submit();
     }
 

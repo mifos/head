@@ -19,7 +19,7 @@ public class QuestionGroupHelper {
         this.navigationHelper = navigationHelper;
     }
 
-    void createQuestionGroup(String questionGroupTitle, String question1, String question2, String appliesTo) {
+    public void createQuestionGroup(String questionGroupTitle, String question1, String question2, String appliesTo) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage().verifyPage();
         createQuestionPage.addQuestion(getCreateQuestionParams(question1, CreateClientLoanAccountTest.DATE, null));

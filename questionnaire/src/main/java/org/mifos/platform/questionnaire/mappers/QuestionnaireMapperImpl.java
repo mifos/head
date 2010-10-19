@@ -198,7 +198,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setState(QuestionGroupState.getQuestionGroupStateAsEnum(questionGroupDetail.isActive()));
         questionGroup.setDateOfCreation(getCurrentDateTime());
         questionGroup.setSections(mapToSections(questionGroupDetail));
-        questionGroup.setEventSources(mapToEventSources(questionGroupDetail.getEventSource()));
+        questionGroup.setEventSources(mapEventSourceDtoToEntity(questionGroupDetail.getEventSources()));
         questionGroup.setEditable(questionGroupDetail.isEditable());
         return questionGroup;
     }
@@ -207,11 +207,13 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return questionGroupDetail.isNewQuestionGroup() ? new QuestionGroup() : questionGroupDao.getDetails(questionGroupDetail.getId());
     }
 
-    private Set<EventSourceEntity> mapToEventSources(EventSourceDto eventSourceDto) {
+    private Set<EventSourceEntity> mapEventSourceDtoToEntity(List<EventSourceDto> eventSourceDtos) {
         Set<EventSourceEntity> eventSources = new HashSet<EventSourceEntity>();
-        List list = eventSourceDao.retrieveByEventAndSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
-        for (Object obj : list) {
-            eventSources.add((EventSourceEntity) obj);
+        for (EventSourceDto eventSourceDto : eventSourceDtos) {
+            List list = eventSourceDao.retrieveByEventAndSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
+            for (Object obj : list) {
+                eventSources.add((EventSourceEntity) obj);
+            }
         }
         return eventSources;
     }
@@ -281,18 +283,22 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Override
     public QuestionGroupDetail mapToQuestionGroupDetail(QuestionGroup questionGroup) {
         List<SectionDetail> sectionDetails = mapToSectionDetails(questionGroup.getSections());
-        EventSourceDto eventSourceDto = mapToEventSource(questionGroup.getEventSources());
+        List<EventSourceDto> eventSourceDtos = mapToEventSource(questionGroup.getEventSources());
         return new QuestionGroupDetail(questionGroup.getId(), questionGroup.getTitle(),
-                eventSourceDto, sectionDetails, questionGroup.isEditable(),
+                eventSourceDtos, sectionDetails, questionGroup.isEditable(),
                 QuestionGroupState.ACTIVE.equals(questionGroup.getState()));
     }
 
-    private EventSourceDto mapToEventSource(Set<EventSourceEntity> eventSources) {
+    private List<EventSourceDto> mapToEventSource(Set<EventSourceEntity> eventSources) {
         if (eventSources == null || eventSources.isEmpty()) {
             return null;
         }
-        EventSourceEntity eventSourceEntity = eventSources.toArray(new EventSourceEntity[eventSources.size()])[0];
-        return new EventSourceDto(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription());
+        List<EventSourceDto> eventSourceDtos = new ArrayList<EventSourceDto>();
+        for (EventSourceEntity eventSourceEntity : eventSources) {
+            eventSourceDtos.add(new EventSourceDto(eventSourceEntity.getEvent().getName(), eventSourceEntity.getSource().getEntityType(), eventSourceEntity.getDescription()));
+        }
+
+        return eventSourceDtos;
     }
 
     private List<SectionDetail> mapToSectionDetails(List<Section> sections) {
@@ -364,7 +370,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         List<QuestionGroupInstance> questionGroupInstances = new ArrayList<QuestionGroupInstance>();
         for (QuestionGroupDetail questionGroupDetail : questionGroupDetails.getDetails()) {
             questionGroupInstances.add(mapToQuestionGroupInstance(questionGroupDetails.getCreatorId(),
-                    questionGroupDetails.getEntityId(), questionGroupDetail));
+                    questionGroupDetails.getEntityId(), questionGroupDetails.getEventSourceId(), questionGroupDetail));
         }
         return questionGroupInstances;
     }
@@ -412,7 +418,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setEditable(questionGroupDto.isEditable());
         questionGroup.setDateOfCreation(getCurrentDateTime());
         questionGroup.setPpi(questionGroupDto.isPpi());
-        questionGroup.setEventSources(mapToEventSources(questionGroupDto.getEventSourceDto()));
+        questionGroup.setEventSources(mapEventSourceDtoToEntity(questionGroupDto.getEventSourceDtos()));
         questionGroup.setTitle(questionGroupDto.getTitle());
         questionGroup.setState(QuestionGroupState.ACTIVE);
         questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));
@@ -424,6 +430,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
         questionGroupInstance.setCompletedStatus(questionGroupInstanceDto.isCompleted());
         questionGroupInstance.setCreatorId(questionGroupInstanceDto.getCreatorId());
+        questionGroupInstance.setEventSourceId(questionGroupInstanceDto.getEventSourceId());
         questionGroupInstance.setDateConducted(questionGroupInstanceDto.getDateConducted());
         questionGroupInstance.setEntityId(questionGroupInstanceDto.getEntityId());
         questionGroupInstance.setVersionNum(questionGroupInstanceDto.getVersion());
@@ -535,7 +542,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return selectionDetail;
     }
 
-    private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, QuestionGroupDetail questionGroupDetail) {
+    private QuestionGroupInstance mapToQuestionGroupInstance(int creatorId, int entityId, int eventSourceId, QuestionGroupDetail questionGroupDetail) {
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
         questionGroupInstance.setDateConducted(getCurrentDateTime());
         questionGroupInstance.setCompletedStatus(1);
@@ -543,6 +550,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroupInstance.setVersionNum(
                 nextQuestionGroupInstanceVersion(entityId, questionGroupId));
         questionGroupInstance.setCreatorId(creatorId);
+        questionGroupInstance.setEventSourceId(eventSourceId);
         questionGroupInstance.setEntityId(entityId);
         questionGroupInstance.setQuestionGroup(questionGroupDao.getDetails(questionGroupId));
         questionGroupInstance.setQuestionGroupResponses(mapToQuestionGroupResponses(questionGroupDetail, questionGroupInstance));

@@ -20,36 +20,45 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-   <!--  Main Content Begins-->
-<span id="page.id" title="viewProductCategories" /> 
+<!--  Main Content Begins-->
+<span id="page.id" title="viewProductCategories"/>
 <div class="content">
-  		[@mifos.crumbs breadcrumbs/]
-  		<p class="font15 orangeheading">[@spring.message "manageProducts.viewProductCategories.viewproductcategories" /]</p>
- 		<p>[@spring.message "manageProducts.viewProductCategories.clickonacategorybelowtoviewdetailsandmakechangesor"/] <a href="defineNewCategory.ftl">[@spring.message "admin.definenewreportcategory"/]</a></p>
- 		<div class="span-22 marginLeft30"> 		
- 			<span class="fontBold">[@spring.message "manageProducts.viewProductCategories.loans"/]</span>
-    			<ul>
-        			[#list dto.productCategoryTypeList as typeList]      		      	
-    					[#list dto.productCategoryDtoList as dtoList]    			
-    						[#if typeList.productName == "Loan-Loan" && typeList_index == dtoList_index]
-    							<li type="circle"><a href="viewProductCategoryDetails.ftl?globalPrdCategoryNum=${dtoList.globalProductCategoryNumber}">${dtoList.productCategoryName}</a></li>
-    						[/#if]
-    					[/#list]      			      		
-      				[/#list]
-      			</ul>
-   		</div>
-    	<div class="span-22 marginLeft30">
-      		<span class="fontBold">[@spring.message "manageProducts.viewProductCategories.savings"/]</span>
-    			<ul>
-        			[#list dto.productCategoryTypeList as typeList]      		      	
-    					[#list dto.productCategoryDtoList as dtoList]    			
-    						[#if typeList.productName=="Savings-Savings" && typeList_index==dtoList_index]
-    							<li type="circle"><a href="viewProductCategoryDetails.ftl?globalPrdCategoryNum=${dtoList.globalProductCategoryNumber}">${dtoList.productCategoryName}</a></li>
-    						[/#if]
-    					[/#list]      			      		
-      				[/#list]    
-        		</ul>	
-    		</div>    	
-  </div><!--Main Content Ends -->
- 
+[@mifos.crumbs breadcrumbs/]
+    <div style="margin-left:15px; margin-top:15px;">
+        <p class="font15 orangeheading margin5topbottom">[@spring.message "manageProducts.viewProductCategories.viewproductcategories" /]</p>
+
+        <p class="margin5top10bottom">[@spring.message "manageProducts.viewProductCategories.clickonacategorybelowtoviewdetailsandmakechangesor"/]
+            <a href="defineNewCategory.ftl">[@spring.message "admin.definenewproductcategory"/]</a></p>
+
+        <div class="lineheight1p2">
+            <span class="fontBold">[@spring.message "manageProducts.viewProductCategories.loans"/]</span>
+            <ul>
+                [#list dto.productCategoryTypeList as typeList]
+                    [#list dto.productCategoryDtoList as dtoList]
+                        [#if typeList.productName == "Loan-Loan" && typeList_index == dtoList_index]
+                            <li type="circle"><a
+                                    href="viewProductCategoryDetails.ftl?globalPrdCategoryNum=${dtoList.globalProductCategoryNumber}">${dtoList.productCategoryName}</a>
+                            </li>
+                        [/#if]
+                    [/#list]
+                [/#list]
+            </ul>
+        </div>
+        <div class="lineheight1p2">
+            <span class="fontBold">[@spring.message "manageProducts.viewProductCategories.savings"/]</span>
+            <ul>
+                [#list dto.productCategoryTypeList as typeList]
+                    [#list dto.productCategoryDtoList as dtoList]
+                        [#if typeList.productName=="Savings-Savings" && typeList_index==dtoList_index]
+                            <li type="circle"><a
+                                    href="viewProductCategoryDetails.ftl?globalPrdCategoryNum=${dtoList.globalProductCategoryNumber}">${dtoList.productCategoryName}</a>
+                            </li>
+                        [/#if]
+                    [/#list]
+                [/#list]
+            </ul>
+        </div>
+    </div>
+</div><!--Main Content Ends -->
+
 [/@adminLeftPaneLayout]

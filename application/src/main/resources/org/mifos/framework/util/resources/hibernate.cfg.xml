@@ -155,6 +155,7 @@
 
 		<mapping resource="org/mifos/accounts/business/AccountStatusChangeHistoryEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/business/AccountFlagMapping.hbm.xml" />
+        <mapping resource="org/mifos/accounts/productdefinition/business/QuestionGroupReference.hbm.xml" />
 
 		<!-- Mapping files for Reports -->
 		<mapping resource="org/mifos/reports/business/ReportsBO.hbm.xml" />

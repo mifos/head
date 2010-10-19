@@ -684,6 +684,7 @@ public class AccountBO extends AbstractBusinessObject {
                 reschedule();
             }
 
+            // FIXME - keithw - move to savings account so savings doesnt have to use changeStatus for loans also.
             if (newStatusId.equals(AccountState.SAVINGS_INACTIVE.getValue())) {
                 ((SavingsBO) this).removeRecommendedAmountOnFutureInstallments();
             }
@@ -1564,12 +1565,6 @@ public class AccountBO extends AbstractBusinessObject {
         }
 
         return installmentIdList;
-    }
-
-    protected List<AccountTrxnEntity> reversalAdjustment(final String adjustmentComment,
-            final AccountPaymentEntity lastPayment) throws AccountException {
-        return lastPayment.reversalAdjustment(getLoggedInUser(), adjustmentComment);
-
     }
 
     private void setFinancialEntries(final FinancialTransactionBO financialTrxn,

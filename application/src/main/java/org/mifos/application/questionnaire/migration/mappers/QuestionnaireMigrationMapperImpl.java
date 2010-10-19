@@ -59,6 +59,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Arrays;
 
 import static java.lang.String.format;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_EVENT_FOR_CUSTOM_FIELDS;
@@ -139,17 +140,18 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         questionGroupDto.setTitle(survey.getName());
         questionGroupDto.setEditable(false);
         questionGroupDto.setPpi(false);
-        questionGroupDto.setEventSourceDto(mapEventSourceForSurvey(survey));
+        questionGroupDto.setEventSourceDtos(Arrays.asList(mapEventSourceForSurvey(survey)));
         questionGroupDto.addSection(mapToSectionForSurvey(survey.getQuestions()));
         return questionGroupDto;
     }
 
     @Override
-    public QuestionGroupInstanceDto map(SurveyInstance surveyInstance, Integer questionGroupId) {
+    public QuestionGroupInstanceDto map(SurveyInstance surveyInstance, Integer questionGroupId, Integer eventSourceId) {
         QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
         questionGroupInstanceDto.setDateConducted(surveyInstance.getDateConducted());
         questionGroupInstanceDto.setCompleted(surveyInstance.getCompletedStatus());
         questionGroupInstanceDto.setCreatorId(Integer.valueOf(surveyInstance.getCreator().getPersonnelId()));
+        questionGroupInstanceDto.setEventSourceId(eventSourceId);
         questionGroupInstanceDto.setEntityId(mapToEntityId(surveyInstance));
         questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
         questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
@@ -158,12 +160,13 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+    public QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, Integer eventSourceId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
         QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
         CustomerBO customer = customerResponses.get(0).getCustomer();
         questionGroupInstanceDto.setDateConducted(mapToDateConducted(customer.getCreatedDate(), customer.getUpdatedDate()));
         questionGroupInstanceDto.setCompleted(true);
         questionGroupInstanceDto.setCreatorId(mapToCreatorId(customer.getCreatedBy(), customer.getUpdatedBy()));
+        questionGroupInstanceDto.setEventSourceId(eventSourceId);
         questionGroupInstanceDto.setEntityId(customer.getCustomerId());
         questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
         questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
@@ -172,12 +175,13 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+    public QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, Integer eventSourceId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap) {
         QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
         AccountBO account = accountResponses.get(0).getAccount();
         questionGroupInstanceDto.setDateConducted(mapToDateConducted(account.getCreatedDate(), account.getUpdatedDate()));
         questionGroupInstanceDto.setCompleted(true);
         questionGroupInstanceDto.setCreatorId(mapToCreatorId(account.getCreatedBy(), account.getUpdatedBy()));
+        questionGroupInstanceDto.setEventSourceId(eventSourceId);
         questionGroupInstanceDto.setEntityId(account.getAccountId());
         questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
         questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
@@ -186,12 +190,13 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupInstanceDto mapForOffice(Integer questionGroupId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+    public QuestionGroupInstanceDto mapForOffice(Integer questionGroupId, Integer eventSourceId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap) {
         QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
         OfficeBO office = officeResponses.get(0).getOffice();
         questionGroupInstanceDto.setDateConducted(mapToDateConducted(office.getCreatedDate(), office.getUpdatedDate()));
         questionGroupInstanceDto.setCompleted(true);
         questionGroupInstanceDto.setCreatorId(mapToCreatorId(office.getCreatedBy(), office.getUpdatedBy()));
+        questionGroupInstanceDto.setEventSourceId(eventSourceId);
         questionGroupInstanceDto.setEntityId(office.getOfficeId().intValue());
         questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
         questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
@@ -200,12 +205,13 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupInstanceDto mapForPersonnel(Integer questionGroupId, List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+    public QuestionGroupInstanceDto mapForPersonnel(Integer questionGroupId, Integer eventSourceId, List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap) {
         QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
         PersonnelBO personnel = personnelResponses.get(0).getPersonnel();
         questionGroupInstanceDto.setDateConducted(mapToDateConducted(personnel.getCreatedDate(), personnel.getUpdatedDate()));
         questionGroupInstanceDto.setCompleted(true);
         questionGroupInstanceDto.setCreatorId(mapToCreatorId(personnel.getCreatedBy(), personnel.getUpdatedBy()));
+        questionGroupInstanceDto.setEventSourceId(eventSourceId);
         questionGroupInstanceDto.setEntityId(personnel.getPersonnelId().intValue());
         questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
         questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
@@ -404,7 +410,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         questionGroupDto.setEditable(false);
         questionGroupDto.setPpi(false);
         EventSourceDto eventSourceDto = mapEventSourceForCustomField(entityType);
-        questionGroupDto.setEventSourceDto(eventSourceDto);
+        questionGroupDto.setEventSourceDtos(Arrays.asList(eventSourceDto));
         questionGroupDto.setTitle(format(QUESTION_GROUP_TITLE_FOR_ADDITIONAL_FIELDS, eventSourceDto));
         return questionGroupDto;
     }

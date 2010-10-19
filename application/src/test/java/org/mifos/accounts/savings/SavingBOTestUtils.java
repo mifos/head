@@ -18,11 +18,13 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings.business;
+package org.mifos.accounts.savings;
 
 import java.util.Date;
 
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingBOTestUtils {

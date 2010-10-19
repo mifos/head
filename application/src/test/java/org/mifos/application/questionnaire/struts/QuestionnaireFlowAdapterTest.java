@@ -1,30 +1,30 @@
 package org.mifos.application.questionnaire.struts;
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 import junit.framework.Assert;
-
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -75,20 +75,20 @@ public class QuestionnaireFlowAdapterTest {
                 "custSearchAction.do?method=loadMainSearch", serviceLocator);
         List<QuestionGroupDetail> applicableGroups = getQuestionGroups();
 
-        Mockito.when(mapping.findForward("captureQuestionResponses")).thenReturn(captureResponseActFwd);
-        Mockito.when(mapping.findForward("schedulePreview_success")).thenReturn(schedulePreview_successFwd);
-        Mockito.when(serviceLocator.getService(request)).thenReturn(questionnaireServiceFacade);
-        Mockito.when(request.getRequestURI()).thenReturn("/mifos/loanAccountAction.do");
-        Mockito.when(request.getContextPath()).thenReturn("/mifos");
-        Mockito.when(questionnaireServiceFacade.getQuestionGroups("Create", "Loan")).thenReturn(applicableGroups);
+        when(mapping.findForward("captureQuestionResponses")).thenReturn(captureResponseActFwd);
+        when(mapping.findForward("schedulePreview_success")).thenReturn(schedulePreview_successFwd);
+        when(serviceLocator.getService(request)).thenReturn(questionnaireServiceFacade);
+        when(request.getRequestURI()).thenReturn("/mifos/loanAccountAction.do");
+        when(request.getContextPath()).thenReturn("/mifos");
+        when(questionnaireServiceFacade.getQuestionGroups("Create", "Loan")).thenReturn(applicableGroups);
 
         ActionForward fwdTo = createLoanQuestionnaire.fetchAppliedQuestions(mapping, questionForm, request, ActionForwards.schedulePreview_success);
         Assert.assertEquals(captureResponseActFwd, fwdTo);
         //Assert.assertEquals(applicableGroups, questionForm.getQuestionGroups());
-        Mockito.verify(questionForm).setQuestionGroups(applicableGroups);
-        Mockito.verify(request).setAttribute("questionsHostForm", questionForm);
-        Mockito.verify(request).setAttribute("origFlowRequestURI", "/loanAccountAction.do");
-        Mockito.verify(request).setAttribute("cancelToURL", "custSearchAction.do?method=loadMainSearch");
+        verify(questionForm).setQuestionGroups(applicableGroups);
+        verify(request).setAttribute("questionsHostForm", questionForm);
+        verify(request).setAttribute("origFlowRequestURI", "/loanAccountAction.do");
+        verify(request).setAttribute("cancelToURL", "custSearchAction.do?method=loadMainSearch");
     }
 
     private List<QuestionGroupDetail> getQuestionGroups() {
@@ -99,7 +99,7 @@ public class QuestionnaireFlowAdapterTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(String title, String event, String source, List<SectionDetail> sections) {
-        return new QuestionGroupDetail(1, title, new EventSourceDto(event, source, null), sections, true);
+        return new QuestionGroupDetail(1, title, Arrays.asList(new EventSourceDto(event, source, null)), sections, true);
     }
 
     private SectionDetail getSectionDetailWithQuestions(String sectionName, List<QuestionDetail> questionDetails,

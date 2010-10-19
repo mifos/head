@@ -1116,6 +1116,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return "{" + customerId + ", " + displayName + "}";
     }
 
+    public boolean isCenter() {
+        return getCustomerLevel().isCenter();
+    }
+
     public boolean isGroup() {
         return getCustomerLevel().isGroup();
     }

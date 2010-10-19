@@ -18,16 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.components.batchjobs.helpers;
+package org.mifos.dto.domain;
 
-import org.mifos.framework.components.batchjobs.MifosBatchJob;
-import org.mifos.framework.components.batchjobs.TaskHelper;
+import org.joda.time.LocalDate;
 
-public class SavingsIntCalcTask extends MifosBatchJob {
+public class SavingsAccountClosureDto {
 
-    @Override
-    public TaskHelper getTaskHelper() {
-        return new SavingsIntCalcHelper();
+    private final LocalDate closureDate;
+    private final String balance;
+    private final String interestAmountAtClosure;
+
+    public SavingsAccountClosureDto(LocalDate closureDate, String balance, String interestAmountAtClosure) {
+        this.closureDate = closureDate;
+        this.balance = balance;
+        this.interestAmountAtClosure = interestAmountAtClosure;
     }
 
+    public String getBalance() {
+        return this.balance;
+    }
+
+    public LocalDate getClosureDate() {
+        return this.closureDate;
+    }
+
+    public String getInterestAmountAtClosure() {
+        return this.interestAmountAtClosure;
+    }
 }

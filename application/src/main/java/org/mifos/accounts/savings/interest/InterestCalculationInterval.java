@@ -20,40 +20,36 @@
 
 package org.mifos.accounts.savings.interest;
 
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 public class InterestCalculationInterval {
 
-    private final Interval interval;
+    private final LocalDate startDate;
+    private final LocalDate endDate;
 
     public InterestCalculationInterval(LocalDate startDate, LocalDate endDate) {
-        this.interval = new Interval(startDate.toDateTimeAtStartOfDay(), endDate.toDateTimeAtStartOfDay());
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
-    public InterestCalculationInterval(Interval interval) {
-        this.interval = interval;
+    /**
+     * checks that <code>date</code> occurs within the {@link InterestCalculationInterval} with startDate and endDate inclusive.
+     */
+    public boolean contains(LocalDate date) {
+        return (date.isEqual(this.startDate) || date.isAfter(this.startDate)) && (date.isEqual(this.endDate) || date.isBefore(endDate));
     }
 
     public LocalDate getStartDate() {
-        return interval.getStart().toLocalDate();
+        return this.startDate;
     }
 
     public LocalDate getEndDate() {
-        return interval.getEnd().toLocalDate();
-    }
-
-    public Interval getInterval() {
-        return interval;
-    }
-
-    public boolean dateFallsWithin(LocalDate date) {
-        return interval.contains(date.toDateTimeAtStartOfDay()) || interval.getEnd().isEqual(date.toDateTimeAtStartOfDay());
+        return this.endDate;
     }
 
     @Override
     public String toString() {
-        return new StringBuilder().append('[').append(interval.getStart().toLocalDate()).append(" - ")
-                .append(interval.getEnd().toLocalDate()).append(']').toString();
+        return new StringBuilder().append('[').append(this.startDate).append(" - ")
+                .append(this.endDate).append(']').toString();
     }
 }

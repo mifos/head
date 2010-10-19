@@ -80,7 +80,15 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
         validateQuestionGroupTitle(questionGroupDetail);
         validateQuestionGroupSections(questionGroupDetail.getSectionDetails());
-        validateForEventSource(questionGroupDetail.getEventSource());
+        List<EventSourceDto> eventSourceDtos = questionGroupDetail.getEventSources();
+        if (eventSourceDtos == null || eventSourceDtos.size() == 0) {
+            throw new SystemException(INVALID_EVENT_SOURCE);
+        }
+        else {
+            for (EventSourceDto eventSourceDto : eventSourceDtos) {
+                validateForEventSource(eventSourceDto);
+            }
+        }
     }
 
     @Override
@@ -109,7 +117,15 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     public void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestionGroupTitle(questionGroupDto, parentException);
-        validateEventSource(questionGroupDto.getEventSourceDto(), parentException);
+        List<EventSourceDto> eventSourceDtos = questionGroupDto.getEventSourceDtos();
+        if (eventSourceDtos == null || eventSourceDtos.size() == 0) {
+            throw new SystemException(INVALID_EVENT_SOURCE);
+        }
+        else {
+            for (EventSourceDto eventSourceDto : eventSourceDtos) {
+                validateEventSource(eventSourceDto, parentException);
+            }
+        }
         validateSections(questionGroupDto.getSections(), parentException);
         if (parentException.containsChildExceptions()) {
             throw parentException;
@@ -170,7 +186,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         } else {
             if (QuestionType.INVALID == question.getType()) {
-                parentException.addChildException(new ValidationException(QUESTION_TYPE_NOT_PROVIDED));
+                parentException.addChildException(new ValidationException(ANSWER_TYPE_NOT_PROVIDED));
             } else if (question.isTypeWithChoices()) {
                 validateChoices(question, parentException);
             } else if (QuestionType.NUMERIC == question.getType()) {
@@ -566,7 +582,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     private void validateQuestionType(QuestionDetail questionDetail) throws SystemException {
         if (QuestionType.INVALID == questionDetail.getType()) {
-            throw new SystemException(QUESTION_TYPE_NOT_PROVIDED);
+            throw new SystemException(ANSWER_TYPE_NOT_PROVIDED);
         }
         if (QuestionType.NUMERIC == questionDetail.getType()) {
             validateForNumericQuestionType(questionDetail.getNumericMin(), questionDetail.getNumericMax());

@@ -46,7 +46,7 @@ public class AccountPaymentEntity extends AbstractEntity {
     private static final Logger logger = LoggerFactory.getLogger(AccountPaymentEntity.class);
 
     private final Integer paymentId = null;
-    private final AccountBO account;
+    private AccountBO account;
     private final PaymentTypeEntity paymentType;
     private final String receiptNumber;
     private final String voucherNumber;
@@ -153,14 +153,13 @@ public class AccountPaymentEntity extends AbstractEntity {
      * Create reverse entries of all the transactions associated with this
      * payment and adds them to the set of transactions associated.
      */
-    List<AccountTrxnEntity> reversalAdjustment(final PersonnelBO personnel, final String adjustmentComment) throws AccountException {
+    public List<AccountTrxnEntity> reversalAdjustment(final PersonnelBO personnel, final String adjustmentComment) throws AccountException {
         List<AccountTrxnEntity> newlyAddedTrxns = null;
         this.setAmount(getAmount().subtract(getAmount()));
-        logger.debug("The amount in account payment is " + getAmount());
 
         if (null != getAccountTrxns() && getAccountTrxns().size() > 0) {
             newlyAddedTrxns = new ArrayList<AccountTrxnEntity>();
-            logger.debug("The number of transactions before adjustment are " + getAccountTrxns().size());
+
             Set<AccountTrxnEntity> reverseAccntTrxns = generateReverseAccountTransactions(personnel, adjustmentComment);
 
             for (AccountTrxnEntity reverseAccntTrxn : reverseAccntTrxns) {
@@ -170,8 +169,6 @@ public class AccountPaymentEntity extends AbstractEntity {
             newlyAddedTrxns.addAll(reverseAccntTrxns);
         }
 
-        logger.debug("After adding adjustment transactions the total no of transactions are "
-                + getAccountTrxns().size());
         return newlyAddedTrxns;
     }
 
@@ -200,5 +197,33 @@ public class AccountPaymentEntity extends AbstractEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void setAccount(AccountBO account) {
+        this.account = account;
+    }
+
+    public boolean isSavingsDepositOrWithdrawal() {
+        return isSavingsDeposit() || isSavingsWithdrawal();
+    }
+
+    public boolean isSavingsDeposit() {
+        boolean savingsDeposit = false;
+        for (AccountTrxnEntity transaction : this.accountTrxns) {
+            if (transaction.isSavingsDeposit()) {
+                savingsDeposit = true;
+            }
+        }
+        return savingsDeposit;
+    }
+
+    public boolean isSavingsWithdrawal() {
+        boolean savingsWithdrawal = false;
+        for (AccountTrxnEntity transaction : this.accountTrxns) {
+            if (transaction.isSavingsWithdrawal()) {
+                savingsWithdrawal = true;
+            }
+        }
+        return savingsWithdrawal;
     }
 }

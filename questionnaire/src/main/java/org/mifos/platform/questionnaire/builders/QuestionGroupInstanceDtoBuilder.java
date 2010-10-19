@@ -52,6 +52,11 @@ public class QuestionGroupInstanceDtoBuilder {
         return this;
     }
 
+    public QuestionGroupInstanceDtoBuilder withEventSource(Integer eventSource) {
+        this.questionGroupInstanceDto.setEventSourceId(eventSource);
+        return this;
+    }
+
     public QuestionGroupInstanceDtoBuilder withVersion(Integer version) {
         this.questionGroupInstanceDto.setVersion(version);
         return this;

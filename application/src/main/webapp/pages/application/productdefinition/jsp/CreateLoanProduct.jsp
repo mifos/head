@@ -379,7 +379,7 @@ explanation of the license and how it is applied.
                                             value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SrcQGList')}" />
                                         <c:set var="SelectedQGList" scope="request"
                                             value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'SelectedQGList')}" />
-                                        <mifos:MifosSelect property="loanOfferingQGs"
+                                        <mifos:MifosSelect name="loanOfferingQGs" property="loanOfferingQGs"
                                             input="SrcQGList" output="SelectedQGList"
                                             property1="id" property2="title" multiple="true">
                                         </mifos:MifosSelect></td>

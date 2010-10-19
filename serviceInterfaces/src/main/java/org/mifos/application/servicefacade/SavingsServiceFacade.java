@@ -20,8 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
@@ -38,9 +38,12 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
+    @PreAuthorize("isFullyAuthenticated()")
     void batchRecalculateInterestToBePostedForSavingsAccount(LocalDate dateBatchJobIsScheduled);
 
-    void batchPostInterestToSavingsAccount(LocalDate dateOfBatchJob);
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate);
 
-    void calculateInterestForPostingInterval(Long savingsId, Interval postingInterval);
+    @PreAuthorize("isFullyAuthenticated()")
+    void closeSavingsAccount(Long savingsId, String notes, SavingsWithdrawalDto closeAccount);
 }

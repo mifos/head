@@ -12,6 +12,7 @@
         <property name="dateConducted" column="date_conducted" type="date" />
         <property name="completedStatus" column="completed_status" type="integer"/>
         <property name="creatorId" column="created_by" access="field" type="integer" />
+        <property name="eventSourceId" column="event_source_id" access="field" type="integer" />
         <property name="versionNum" column="version_id" access="field" type="integer" />
         <bag name="questionGroupResponses" table="question_group_response" cascade="all" inverse="true" >
             <key column="question_group_instance_id" />
@@ -27,8 +28,7 @@
     </query>
     <query name="QuestionGroupInstance.retrieveQuestionGroupInstancesByEntityIdAndEventSourceId">
               <![CDATA[from QuestionGroupInstance as instance where instance.entityId = :ENTITY_ID and
-                        instance.questionGroup.id in (select questionGroup.id from QuestionGroup as questionGroup
-                        join questionGroup.eventSources eventSource where eventSource.id = :EVENT_SOURCE_ID)
+                        instance.eventSourceId = :EVENT_SOURCE_ID
                         order by instance.dateConducted desc, instance.questionGroup.title
               ]]>
     </query>
@@ -43,6 +43,7 @@
                         question_group_instance.date_conducted,
                         question_group_instance.completed_status,
                         question_group_instance.created_by,
+                        question_group_instance.event_source_id,
                         question_group_instance.version_id
                     from question_group_instance join
                     (
@@ -51,12 +52,12 @@
                         from
                             question_group_instance
                             join question_group on (question_group_instance.question_group_id = question_group.id and entity_id = :ENTITY_ID)
-                            join question_group_event_sources on (question_group.id = question_group_event_sources.question_group_id
-                                and event_source_id = :EVENT_SOURCE_ID)
+                        where question_group_instance.event_source_id = :EVENT_SOURCE_ID
                         group by question_group.title, question_group.id
                     )t
                     join question_group on (question_group_instance.question_group_id = question_group.id and question_group.id=t.id)
                     where entity_id = :ENTITY_ID and
+                    question_group_instance.event_source_id = :EVENT_SOURCE_ID and
                     question_group_instance.version_id = t.version_id
                     order by question_group_instance.date_conducted desc, question_group.title
               ]]>

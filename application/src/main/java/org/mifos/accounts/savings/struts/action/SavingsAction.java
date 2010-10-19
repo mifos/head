@@ -20,21 +20,8 @@
 
 package org.mifos.accounts.savings.struts.action;
 
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -64,6 +51,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -90,7 +78,18 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class SavingsAction extends AccountAppAction {
 
@@ -101,6 +100,11 @@ public class SavingsAction extends AccountAppAction {
     private SavingsPrdBusinessService savingsPrdService;
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsAction.class);
+
+    private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
+
+    private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Savings",
+            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("savingsAction");
@@ -324,11 +328,10 @@ public class SavingsAction extends AccountAppAction {
         return mapping.findForward("get_success");
     }
     private void setQuestionGroupInstances(HttpServletRequest request, SavingsBO savingsBO) throws PageExpiredException {
-        QuestionnaireServiceFacade questionnaireServiceFacade = MifosServiceFactory.getQuestionnaireServiceFacade(request);
-        if (questionnaireServiceFacade == null) {
-            return;
+        QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
+        if (questionnaireServiceFacade != null) {
+            setQuestionGroupInstances(questionnaireServiceFacade, request, savingsBO.getAccountId());
         }
-        setQuestionGroupInstances(questionnaireServiceFacade, request, savingsBO.getAccountId());
     }
 
     // Intentionally made public to aid testing !
@@ -603,17 +606,4 @@ public class SavingsAction extends AccountAppAction {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createGroupQuestionnaire.editResponses(mapping, request, (SavingsActionForm) form);
     }
-
-    private QuestionnaireFlowAdapter createGroupQuestionnaire =
-        new QuestionnaireFlowAdapter("Create", "Savings",
-                ActionForwards.preview_success,
-                "custSearchAction.do?method=loadMainSearch",
-                new QuestionnaireServiceFacadeLocator() {
-                    @Override
-                    public QuestionnaireServiceFacade getService(HttpServletRequest request) {
-                        return MifosServiceFactory.getQuestionnaireServiceFacade(request);
-                    }
-                });
-
-
 }

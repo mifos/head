@@ -41,6 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
@@ -55,7 +56,7 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_QUESTIO
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TYPE_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.ANSWER_TYPE_NOT_PROVIDED;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -106,7 +107,7 @@ public class QuestionnaireValidatorTest {
             questionnaireValidator.validateForDefineQuestion(new QuestionDetail("Title 123", QuestionType.INVALID));
             fail("Should have thrown the validation exception");
         } catch (SystemException e) {
-            assertEquals(QUESTION_TYPE_NOT_PROVIDED, e.getKey());
+            assertEquals(ANSWER_TYPE_NOT_PROVIDED, e.getKey());
         }
     }
 
@@ -363,7 +364,7 @@ public class QuestionnaireValidatorTest {
     }
 
     private QuestionGroupDetail getQuestionGroupDetail(int id, String title, String event, String source, List<SectionDetail> sectionDetails) {
-        return new QuestionGroupDetail(id, title, getEventSource(event, source), sectionDetails, false);
+        return new QuestionGroupDetail(id, title, Arrays.asList(getEventSource(event, source)), sectionDetails, false);
     }
 
     private SectionDetail getSection(String name) {

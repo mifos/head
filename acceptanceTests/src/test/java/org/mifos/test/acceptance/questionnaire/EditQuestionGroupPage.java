@@ -27,6 +27,7 @@ public class EditQuestionGroupPage extends CreateQuestionGroupPage {
         super(selenium);
     }
 
+    @Override
     public EditQuestionGroupPage verifyPage() {
         verifyPage("editQuestionGroup");
         return this;

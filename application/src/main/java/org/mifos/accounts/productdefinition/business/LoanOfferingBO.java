@@ -20,28 +20,6 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.ERRORFEEFREQUENCY;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
-import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALL_UNKNOWN;
-import static org.mifos.framework.util.CollectionUtils.find;
-import static org.mifos.framework.util.CollectionUtils.first;
-import static org.mifos.framework.util.CollectionUtils.last;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -79,6 +57,28 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.DECLINEINTERESTDISBURSEMENTDEDUCTION;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.ERRORFEEFREQUENCY;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLASTLOAN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTFROMLOANCYCLE;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.LOANAMOUNTTYPE_UNKNOWN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLASTLOAN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLFROMLOANCYCLLE;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN;
+import static org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants.NOOFINSTALL_UNKNOWN;
+import static org.mifos.framework.util.CollectionUtils.find;
+import static org.mifos.framework.util.CollectionUtils.first;
+import static org.mifos.framework.util.CollectionUtils.last;
 
 /**
  * A loan product is a set of rules (interest rate, number of installments, maximum amount, etc) which describes a
@@ -657,36 +657,10 @@ public class LoanOfferingBO extends PrdOfferingBO {
         setWaiverInterest(waiverInterest);
         setIntDedDisbursement(intDedDisbursement);
         setPrinDueLastInst(prinDueLastInst);
-        if (this.loanOfferingMeeting.getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().equals(
-                recurrenceType.getValue())) {
-            this.loanOfferingMeeting.getMeeting().getMeetingDetails().setRecurAfter(recurAfter);
-        } else {
-            try {
-                this.loanOfferingMeeting.setMeeting(new MeetingBO(recurrenceType, recurAfter, startDate,
-                        MeetingType.LOAN_INSTALLMENT));
-            } catch (MeetingException e) {
-                throw new ProductDefinitionException(e);
-            }
-        }
+        setMeetingDetails(startDate, recurAfter, recurrenceType);
 
-        if (this.loanOfferingFunds != null) {
-            this.loanOfferingFunds.clear();
-            if (funds != null && funds.size() > 0) {
-                for (FundBO fund : funds) {
-                    addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
-                }
-            }
-        }
-        if (this.loanOfferingFees != null) {
-            this.loanOfferingFees.clear();
-            if (fees != null && fees.size() > 0) {
-                for (FeeBO fee : fees) {
-                    if (isFrequencyMatchingOfferingFrequency(fee, this.loanOfferingMeeting.getMeeting())) {
-                        addPrdOfferingFee(new LoanOfferingFeesEntity(this, fee));
-                    }
-                }
-            }
-        }
+        setFunds(funds);
+        setFees(fees);
         try {
             new LoanPrdPersistence().createOrUpdate(this);
         } catch (PersistenceException e) {
@@ -702,8 +676,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
                        final Short gracePeriodDuration, final Double maxInterestRate, final Double minInterestRate,
                        final Double defInterestRate, final boolean loanCounter, final boolean intDedDisbursement,
                        final boolean prinDueLastInst, final List<FundBO> funds, final List<FeeBO> fees, final Short recurAfter,
-                       final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm, boolean waiverInterest)
-            throws ProductDefinitionException {
+                       final RecurrenceType recurrenceType, final LoanPrdActionForm loanPrdActionForm, boolean waiverInterest,
+                       Set<QuestionGroupReference> questionGroups) throws ProductDefinitionException {
         logger.debug("Updating loan Offering :" + prdOfferingName);
         super.update(userId, prdOfferingName, prdOfferingShortName, prdCategory, prdApplicableMaster, startDate,
                 endDate, description, status);
@@ -720,6 +694,19 @@ public class LoanOfferingBO extends PrdOfferingBO {
         setIntDedDisbursement(intDedDisbursement);
         setPrinDueLastInst(prinDueLastInst);
         populateLoanAmountAndInstall(loanPrdActionForm);
+        setMeetingDetails(startDate, recurAfter, recurrenceType);
+        setFunds(funds);
+        setFees(fees);
+        mergeQuestionGroups(questionGroups);
+        try {
+            new LoanPrdPersistence().createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new ProductDefinitionException(e);
+        }
+        logger.debug("Loan Offering updated:" + prdOfferingName);
+    }
+
+    private void setMeetingDetails(Date startDate, Short recurAfter, RecurrenceType recurrenceType) throws ProductDefinitionException {
         if (this.loanOfferingMeeting.getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId().equals(
                 recurrenceType.getValue())) {
             this.loanOfferingMeeting.getMeeting().getMeetingDetails().setRecurAfter(recurAfter);
@@ -731,15 +718,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 throw new ProductDefinitionException(e);
             }
         }
+    }
 
-        if (this.loanOfferingFunds != null) {
-            this.loanOfferingFunds.clear();
-            if (funds != null && funds.size() > 0) {
-                for (FundBO fund : funds) {
-                    addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
-                }
-            }
-        }
+    private void setFees(List<FeeBO> fees) throws ProductDefinitionException {
         if (this.loanOfferingFees != null) {
             this.loanOfferingFees.clear();
             if (fees != null && fees.size() > 0) {
@@ -750,12 +731,17 @@ public class LoanOfferingBO extends PrdOfferingBO {
                 }
             }
         }
-        try {
-            new LoanPrdPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new ProductDefinitionException(e);
+    }
+
+    private void setFunds(List<FundBO> funds) {
+        if (this.loanOfferingFunds != null) {
+            this.loanOfferingFunds.clear();
+            if (funds != null && funds.size() > 0) {
+                for (FundBO fund : funds) {
+                    addLoanOfferingFund(new LoanOfferingFundEntity(fund, this));
+                }
+            }
         }
-        logger.debug("Loan Offering updated:" + prdOfferingName);
     }
 
     private void validate(final GracePeriodTypeEntity gracePeriodType, final Short gracePeriodDuration,

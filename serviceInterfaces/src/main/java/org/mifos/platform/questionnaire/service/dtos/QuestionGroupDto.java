@@ -35,8 +35,8 @@ public class QuestionGroupDto implements Serializable {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "SE_BAD_FIELD")
     @XStreamImplicit(itemFieldName = "section")
     private List<SectionDto> sections;
-    @XStreamAlias("eventSource")    
-    private EventSourceDto eventSourceDto;
+    @XStreamImplicit(itemFieldName = "eventSource")    
+    private List<EventSourceDto> eventSourceDtos;
     private boolean editable;
     private boolean ppi;
 
@@ -52,8 +52,8 @@ public class QuestionGroupDto implements Serializable {
         return sections;
     }
 
-    public EventSourceDto getEventSourceDto() {
-        return eventSourceDto;
+    public List<EventSourceDto> getEventSourceDtos() {
+        return eventSourceDtos;
     }
 
     public void setTitle(String title) {
@@ -68,8 +68,8 @@ public class QuestionGroupDto implements Serializable {
         this.sections = sections;
     }
 
-    public void setEventSourceDto(EventSourceDto eventSourceDto) {
-        this.eventSourceDto = eventSourceDto;
+    public void setEventSourceDtos(List<EventSourceDto> eventSourceDtos) {
+        this.eventSourceDtos = eventSourceDtos;
     }
 
     public boolean isEditable() {
