@@ -839,6 +839,7 @@
                                 <exclude>**/*ProductStatusHelperIntegrationTest.java</exclude>
                                 <exclude>**/*BatchJobCatchUpIntegrationTest.java</exclude>
                                 <exclude>**/*LatestTestAfterCheckpointIntegrationTest.java</exclude>
+                                <exclude>**/*StrutsTest.java</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
@@ -862,7 +863,7 @@
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <!-- override exclude integration test classes    -->
                             <excludes>
-                                <exclude>none</exclude>
+                                <exclude>**/*IntegrationTest.java</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*StrutsTest.java</include>
@@ -886,7 +887,8 @@
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <!-- override exclude integration test classes    -->
                             <excludes>
-                                <exclude>none</exclude>
+                                <exclude>**/*IntegrationTest.java</exclude>
+                                <exclude>**/*StrutsTest.java</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*LatestTestAfterCheckpointIntegrationTest.java</include>
