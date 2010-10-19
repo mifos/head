@@ -20,18 +20,7 @@
 
 package org.mifos.accounts.loan.persistence;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +45,16 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -90,16 +89,16 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void tearDown() throws Exception {
 
         try {
-            TestObjectFactory.cleanUp(loanAccount);
-            TestObjectFactory.cleanUp(badAccount);
-            TestObjectFactory.cleanUp(goodAccount);
-            TestObjectFactory.cleanUp(loanAccountForDisbursement);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            loanAccount = null;
+            badAccount = null;
+            goodAccount = null;
+            loanAccountForDisbursement = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
 
         } finally {
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
         }
     }
 
@@ -116,7 +115,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         String externalId = "ABC";
         StaticHibernateUtil.startTransaction();
         loanAccount.setExternalId(externalId);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         LoanPersistence loanPersistance = new LoanPersistence();
         LoanBO loanBO = loanPersistance.findByExternalId(loanAccount.getExternalId());
@@ -206,7 +205,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private void disburseLoan(final Date startDate) throws Exception {
         ((LoanBO) loanAccountForDisbursement).disburseLoan("1234", startDate, Short.valueOf("1"),
                 loanAccountForDisbursement.getPersonnel(), startDate, Short.valueOf("1"));
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     private AccountBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType) {

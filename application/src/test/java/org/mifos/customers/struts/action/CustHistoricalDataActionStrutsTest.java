@@ -80,10 +80,10 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
 
     @Override
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -108,7 +108,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         Date mfiDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
         group.updateHistoricalData(customerHistoricalDataEntity);
         group.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
        Assert.assertEquals(mfiDate, new Date(group.getMfiJoiningDate().getTime()));
         setRequestPathInfo("/custHistoricalDataAction.do");
         addRequestParameter("method", "getHistoricalData");
@@ -235,7 +235,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(group);
         group.updateHistoricalData(customerHistoricalDataEntity);
         group.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
         setRequestPathInfo("/custHistoricalDataAction.do");

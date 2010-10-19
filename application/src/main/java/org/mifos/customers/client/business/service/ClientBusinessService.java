@@ -41,15 +41,19 @@ public class ClientBusinessService implements BusinessService {
 
     public ClientBO getClient(final Integer customerId) throws ServiceException {
         try {
-            return new ClientPersistence().getClient(customerId);
+            return getClientPersistence().getClient(customerId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
     }
 
+    protected ClientPersistence getClientPersistence() {
+        return new ClientPersistence();
+    }
+
     public List<ClientBO> getActiveClientsUnderParent(final String searchId, final Short officeId) throws ServiceException {
         try {
-            return new ClientPersistence().getActiveClientsUnderParent(searchId, officeId);
+            return getClientPersistence().getActiveClientsUnderParent(searchId, officeId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -64,7 +68,7 @@ public class ClientBusinessService implements BusinessService {
     @Deprecated
     public List<ClientBO> getActiveClientsUnderGroup(final Integer groupId) throws ServiceException {
         try {
-            return new ClientPersistence().getActiveClientsUnderGroup(groupId);
+            return getClientPersistence().getActiveClientsUnderGroup(groupId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
 

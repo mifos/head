@@ -96,7 +96,7 @@ public class ApplicationConfigurationPersistenceIntegrationTest extends MifosInt
      * // System.out.println(entity.getEntityType() + "." + lookupValue.getLookUpName() + " = " +
      * locale.getLookUpValue()); // } // } // } // }
      *
-     * } finally { StaticHibernateUtil.closeSession(); }
+     * } finally { StaticHibernateUtil.flushSession(); }
      *
      * }
      */

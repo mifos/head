@@ -89,14 +89,14 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
     @Override
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            client = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

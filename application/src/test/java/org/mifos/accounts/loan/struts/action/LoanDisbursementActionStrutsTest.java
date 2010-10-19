@@ -20,13 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 import junit.framework.Assert;
-
 import org.junit.Ignore;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
@@ -43,6 +37,11 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 @Ignore
 public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
@@ -91,14 +90,14 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(loanBO);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUp(secondLoanBO);
-        TestObjectFactory.cleanUp(group2);
-        TestObjectFactory.cleanUp(center2);
+        loanBO = null;
+        group = null;
+        center = null;
+        secondLoanBO = null;
+        group2 = null;
+        center2 = null;
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

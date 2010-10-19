@@ -20,11 +20,7 @@
 
 package org.mifos.customers.struts.action;
 
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -47,6 +43,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+import java.util.List;
 
 public class CustActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -102,16 +101,16 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(loan1);
-        TestObjectFactory.cleanUp(savings1);
-        TestObjectFactory.cleanUp(loan2);
-        TestObjectFactory.cleanUp(savings2);
-        TestObjectFactory.cleanUp(loan3);
-        TestObjectFactory.cleanUp(savings3);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        loan1 = null;
+        loan2 = null;
+        loan3 = null;
+        savings1 = null;
+        savings2 = null;
+        savings3 = null;
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         userContext = null;
         super.tearDown();
     }
@@ -208,7 +207,7 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
         loan1.update();
         loan1.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_OTHER.getValue(),
                 "status changed for loan");
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         savings2 = getSavingsAccount(group, "fsaf65", "ads5");
         loan2 = getLoanAccount(client, "rtwetrtwert", "5rre");
         savings3 = getSavingsAccount(center, "fsaf26", "ads2");

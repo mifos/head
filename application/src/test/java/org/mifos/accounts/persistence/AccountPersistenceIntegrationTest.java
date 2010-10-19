@@ -100,11 +100,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
             Assert.fail();
         } catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("An account already exists with glcode"));
-        } finally {
-            StaticHibernateUtil.rollbackTransaction();
-            StaticHibernateUtil.closeSession();
         }
-
     }
 
     @Test
@@ -113,14 +109,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         String glCode = "999999";
         String parentGlCode = ASSETS_GL_ACCOUNT_CODE;
 
-        try {
-            COABO coa = accountPersistence.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
-            Assert.assertEquals(coa.getAccountId(), accountPersistence.getAccountIdFromGlCode(glCode));
-        } finally {
-            StaticHibernateUtil.rollbackTransaction();
-            StaticHibernateUtil.closeSession();
-        }
-
+        COABO coa = accountPersistence.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
+        Assert.assertEquals(coa.getAccountId(), accountPersistence.getAccountIdFromGlCode(glCode));
     }
 
     /**
@@ -311,7 +301,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         holidays.add((HolidayBO) holiday);
         sampleBranch.setHolidays(holidays);
         new OfficePersistence().createOrUpdate(sampleBranch);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
 
         List<Object[]> AccountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinAHoliday(
@@ -339,7 +329,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         holidays.add((HolidayBO) holiday);
         sampleBranch.setHolidays(holidays);
         new OfficePersistence().createOrUpdate(sampleBranch);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
 
         List<Object[]> AccountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday(
@@ -405,7 +395,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     @Test
     public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnThreeCustomerAccounts()
-                    throws Exception {
+            throws Exception {
 
         // Superclass creates a center, a group, and a client that start meeting today
         // They should have 10 current or future meeting dates
@@ -421,7 +411,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     @Test
     public void testGetActiveCustomerAndSavingsAccountIdsForGenerateMeetingTaskShouldReturnThreeCustomerAccountsAndOneSavingsAccount()
-                    throws Exception {
+            throws Exception {
 
         // Superclass creates a center, a group, and a client that start meeting today
         // They should have 10 current or future meeting dates
@@ -439,9 +429,11 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         assertThat(accountIds.contains(savingsBO.getAccountId()), is(true));
     }
 
-    /*********************
+    /**
+     * ******************
      * Helper methods
-     ********************/
+     * ******************
+     */
 
     private SavingsBO createSavingsAccount() throws Exception {
         return TestObjectFactory.createSavingsAccount("12345678910", group, AccountState.SAVINGS_ACTIVE, new Date(),

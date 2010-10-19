@@ -69,12 +69,6 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         defaultPaymentType = paymentTypeDtos.get(0);
     }
 
-    @Override
-    @After
-    public void tearDown() throws Exception {
-        super.tearDown();
-        StaticHibernateUtil.rollbackTransaction();
-    }
 
     @Test
     public void testMakePayment() throws Exception {
@@ -145,7 +139,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         String externalId = "ABC";
         groupLoan.setExternalId(externalId);
         groupLoan.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         standardAccountService.setAccountPersistence(new AccountPersistence());
         standardAccountService.setLoanPersistence(new LoanPersistence());

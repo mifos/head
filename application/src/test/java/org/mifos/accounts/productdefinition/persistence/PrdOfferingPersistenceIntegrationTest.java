@@ -71,7 +71,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
         TestObjectFactory.removeObject(prdmix2);
         TestObjectFactory.removeObject(loanOffering);
         TestObjectFactory.removeObject(loanOffering2);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -97,7 +97,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("Eddikhar", "Edkh");
         Assert.assertNotNull(new PrdOfferingPersistence().getAllowedPrdOfferingsByType(savingsOffering.getPrdOfferingId()
                 .toString(), ProductType.SAVINGS.getValue().toString()));
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
     }
 
     @Test
@@ -105,14 +105,14 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("Eddikhar", "Edkh");
         Assert.assertNotNull(new PrdOfferingPersistence().getAllowedPrdOfferingsForMixProduct(savingsOffering
                 .getPrdOfferingId().toString(), ProductType.SAVINGS.getValue().toString()));
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
     }
 
     @Test
     public void testGetMaxPrdOfferingWithProduct() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("fsaf6", "ads6");
         Assert.assertNotNull(new PrdOfferingPersistence().getMaxPrdOffering());
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
     }
 
     @Test
@@ -132,7 +132,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
     public void testGetPrdOfferingNameCountWithDifferentName() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("fsaf6", "ads6");
        Assert.assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence().getProductOfferingNameCount("Savings product"));
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
 
     }
 
@@ -140,7 +140,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
     public void testGetPrdOfferingNameCountWithSameName() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("Savings product", "ads6");
        Assert.assertEquals(Integer.valueOf("1"), new PrdOfferingPersistence().getProductOfferingNameCount("Savings product"));
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
 
     }
 
@@ -153,7 +153,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
     public void testGetPrdOfferingShortNameCountWithDifferentName() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("fsaf6", "ads6");
        Assert.assertEquals(Integer.valueOf("0"), new PrdOfferingPersistence().getProductOfferingShortNameCount("SAVP"));
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
 
     }
 
@@ -161,7 +161,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
     public void testGetPrdOfferingShortNameCountWithSameName() throws PersistenceException {
         SavingsOfferingBO savingsOffering = new SavingsTestHelper().createSavingsOffering("Savings product", "SAVP");
        Assert.assertEquals(Integer.valueOf("1"), new PrdOfferingPersistence().getProductOfferingShortNameCount("SAVP"));
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
 
     }
 
@@ -175,7 +175,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
     public void testGetApplicablePrdStatus() throws PersistenceException {
         List<PrdStatusEntity> prdStatusList = new PrdOfferingPersistence().getApplicablePrdStatus(ProductType.LOAN,
                 (short) 1);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
        Assert.assertEquals(2, prdStatusList.size());
         for (PrdStatusEntity prdStatus : prdStatusList) {
             if (prdStatus.getPrdState().equals("1")) {
@@ -196,7 +196,7 @@ public class PrdOfferingPersistenceIntegrationTest extends MifosIntegrationTestC
        Assert.assertTrue("Products Mix should be in alphabitical order:",
                 (persistence.getPrdOfferingMix().get(0).getPrdOfferingName().compareToIgnoreCase(persistence
                         .getPrdOfferingMix().get(1).getPrdOfferingName())) < 0);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
     }
 

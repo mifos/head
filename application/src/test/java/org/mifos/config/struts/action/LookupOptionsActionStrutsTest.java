@@ -20,11 +20,7 @@
 
 package org.mifos.config.struts.action;
 
-import java.util.List;
-import java.util.ResourceBundle;
-
 import junit.framework.Assert;
-
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -45,6 +41,9 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
+import java.util.ResourceBundle;
 
 public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -89,7 +88,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -318,15 +317,13 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
                 verifyNoActionMessages();
                 verifyForward(ActionForwards.update_success.toString());
             }
-            StaticHibernateUtil.flushAndCloseSession();
-            StaticHibernateUtil.getSessionTL();
+            StaticHibernateUtil.flushAndClearSession();
 
             StaticHibernateUtil.startTransaction();
 
             verifyOneListAndRestoreOriginalValues(configurationNameSet[listIndex][MASTER_CONSTANT],
                     configurationNameSet[listIndex][CONFIG_CONSTANT], configurationNameSet[listIndex][LIST_NAME],
                     originalValue);
-            StaticHibernateUtil.commitTransaction();
         }
 
     }

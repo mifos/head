@@ -20,23 +20,7 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -69,9 +53,25 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -104,9 +104,9 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
     @After
     public void tearDown() throws Exception {
         TestObjectFactory.removeObject(product);
-        TestObjectFactory.cleanUp(periodicFee);
-        TestObjectFactory.cleanUp(oneTimeFee);
-        StaticHibernateUtil.closeSession();
+        periodicFee = null;
+        oneTimeFee = null;
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     @Test
@@ -125,9 +125,8 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 false, true, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
                         new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
+        StaticHibernateUtil.flushAndClearSession();
+        StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
         fees = new ArrayList<FeeBO>();
         oneTimeFee = TestObjectFactory.createOneTimeAmountFee("Loan One time", FeeCategory.LOAN, "100",
@@ -139,9 +138,8 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 true, false, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
                         new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
+        StaticHibernateUtil.flushAndClearSession();
+        StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOANPRODUCT, new Integer(product
@@ -183,8 +181,8 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, 12.0, 2.0, 12.0, false,
                 true, true, null, fees, (short) 2, RecurrenceType.MONTHLY, populateLoanPrdActionForm("1", "1",
                         new Double("3000"), new Double("1000"), new Double("1000"), "12", "1", "2"), waiverInterest, null);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
+        StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.LOANPRODUCT, new Integer(product
@@ -588,8 +586,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 ProductDefinitionConstants.LOANAMOUNTSAMEFORALLLOAN.toString(),
                 ProductDefinitionConstants.NOOFINSTALLSAMEFORALLLOAN.toString(), waiverInterest);
         product.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
        Assert.assertEquals("Loan Offering", product.getPrdOfferingName());
@@ -687,7 +684,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                 new Money(getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false, false,
                 false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
        Assert.assertEquals(PrdStatus.LOAN_ACTIVE, product.getStatus());
 
@@ -787,25 +784,6 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                     false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
             Assert.fail();
         } catch (ProductDefinitionException e) {
-        }
-    }
-
-    @Test
-    public void testupdateloanOfferingInvalidConnection() throws SystemException, ApplicationException {
-        createIntitalObjects();
-        Date startDate = offSetCurrentDate(0);
-        product = createLoanOfferingBO("Loan Product", "LOAP");
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            product.update((short) 1, "Loan Product", "LOAN", productCategory, prdApplicableMaster, startDate, null,
-                    "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, null, new Money(
-                            getCurrency(), "1000"), new Money(getCurrency(), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
-            Assert.fail();
-        } catch (ProductDefinitionException e) {
-           Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
         }
     }
 
@@ -915,7 +893,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                 new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1, (short) 2, false, true,
                 false, null, null, (short) 2, RecurrenceType.WEEKLY, waiverInterest);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
         Assert.assertNotNull(product.getGracePeriodType());
@@ -990,8 +968,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, interestTypes, (short) 0, new Money(getCurrency(), "3000"),
                 new Money(getCurrency(), "1000"), new Money(getCurrency(), "1000"), 12.0, 2.0, 12.0, (short) 12, (short) 1, (short) 2, false, true,
                 false, null, fees, (short) 2, RecurrenceType.MONTHLY, waiverInterest);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
        Assert.assertEquals("Loan Product", product.getPrdOfferingName());
@@ -1139,8 +1116,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                 populateNoOfInstallSameForAllLoan("1", "12", "1", "2", populateLoanAmountSameForAllLoan("1",
                         new Double("3000"), new Double("1000"), new Double("2000"), loanPrdActionForm)), waiverInterest);
         product.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
        Assert.assertEquals("Loan Offering", product.getPrdOfferingName());
@@ -1208,8 +1184,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                                 new Double("7000"), new Double("6000"), new Double("6000"), new Double("8000"),
                                 new Double("7000"), loanPrdActionForm)), waiverInterest);
         product.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
        Assert.assertEquals("Loan Offering", product.getPrdOfferingName());
@@ -1339,8 +1314,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                                 new Double("5000"), new Double("7000"), new Double("6000"), new Double("6000"),
                                 new Double("8000"), new Double("7000"), loanPrdActionForm)), waiverInterest);
         product.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         product = (LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, product.getPrdOfferingId());
 
        Assert.assertEquals("Loan Offering", product.getPrdOfferingName());

@@ -20,12 +20,7 @@
 
 package org.mifos.customers.client.business;
 
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,6 +62,10 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     private AccountBO accountBO;
@@ -92,19 +91,18 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(group1);
-            TestObjectFactory.cleanUp(center);
-            TestObjectFactory.cleanUp(center1);
-            TestObjectFactory.cleanUp(office);
-            TestObjectFactory.removeObject(savingsOffering1);
-            TestObjectFactory.removeObject(savingsOffering2);
+            accountBO = null;
+            client = null;
+            group = null;
+            group1 = null;
+            center = null;
+            center1 = null;
+            office = null;
+            savingsOffering1 = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -115,8 +113,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         client.setPovertyLikelihoodPercent(pct);
         client.getCustomerDetail().setHandicappedDetails(hd);
         new ClientPersistence().createOrUpdate(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         ClientBO retrievedClient = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class,
                 client.getCustomerId());
         Assert.assertEquals(hd, retrievedClient.getCustomerDetail().getHandicappedDetails());
@@ -170,7 +167,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 new java.util.Date(), savingsOffering, TestObjectFactory.getContext());
         Assert.assertEquals(0, accountBO.getAccountActionDates().size());
         client = createClient(CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         Assert.assertEquals(1, accountBO.getAccountCustomFields().size());
@@ -230,8 +227,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
                 clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         client = new ClientPersistence().getClient(client.getCustomerId());
         Assert.assertEquals(offerings.size(), client.getOfferingsAssociatedInCreate().size());
@@ -303,8 +299,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView, clientPersonalDetailDto,
                 null);
         new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals(name, client.getDisplayName());
         Assert.assertEquals(povertyStatus, client.getCustomerDetail().getPovertyStatus());
@@ -315,7 +310,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
     public void testSuccessfulCreateInActiveState_WithAssociatedSavingsOffering() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("offering1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
         selectedOfferings.add(savingsOffering1);
 
@@ -333,8 +328,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 null, null, null, null, YesNoFlag.NO.getValue(), clientNameDetailDto, spouseNameDetailView,
                 clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals(name, client.getDisplayName());
         Assert.assertEquals(1, client.getOfferingsAssociatedInCreate().size());
@@ -347,7 +341,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 Assert.assertTrue(true);
             }
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         savingsOffering1 = null;
     }
@@ -367,8 +361,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,
                 clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals(name, client.getDisplayName());
         Assert.assertEquals(client.getOffice().getOfficeId(), group.getOffice().getOfficeId());
@@ -477,8 +470,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 personnel, null, null, null, null, YesNoFlag.YES.getValue(), clientNameDetailDto,
                 spouseNameDetailView, clientPersonalDetailDto, null);
         new ClientPersistence().saveClient(client);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertEquals(displayName, client.getDisplayName());
         Assert.assertEquals(firstName, client.getFirstName());
@@ -514,8 +506,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertNull(client.getActiveCustomerMovement());
 
         client.transferToBranch(office);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         client = TestObjectFactory.getClient(client.getCustomerId());
         Assert.assertNotNull(client.getActiveCustomerMovement());
@@ -531,8 +522,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         OfficeBO oldOffice = client.getOffice();
 
         client.transferToBranch(office);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         client = TestObjectFactory.getClient(client.getCustomerId());
         client.setUserContext(TestUtils.makeUser());
@@ -542,8 +532,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(office.getOfficeId(), client.getOffice().getOfficeId());
 
         client.transferToBranch(oldOffice);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         client = TestObjectFactory.getClient(client.getCustomerId());
         currentMovement = client.getActiveCustomerMovement();
@@ -567,14 +556,14 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
                 .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
         client = TestObjectFactory.createClient("client_to_transfer", getMeeting(), CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private void createObjectsForClient(String name, CustomerStatus status) throws Exception {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
                 .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
         client = TestObjectFactory.createClient(name, getMeeting(), status);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private List<FeeDto> getFees() {
@@ -585,14 +574,14 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
                 FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
         fees.add(new FeeDto(TestObjectFactory.getContext(), fee1));
         fees.add(new FeeDto(TestObjectFactory.getContext(), fee2));
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return fees;
     }
 
     private void removeFees(List<FeeDto> feesToRemove) {
-        for (FeeDto fee : feesToRemove) {
-            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
-        }
+//        for (FeeDto fee : feesToRemove) {
+//            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
+//        }
     }
 
     private List<CustomFieldDto> getCustomFields() {
@@ -608,7 +597,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = createClient(CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private ClientBO createClient(CustomerStatus clientStatus) {
@@ -619,7 +608,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", groupStatus, center);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private MeetingBO getMeeting() throws Exception {

@@ -20,27 +20,10 @@
 
 package org.mifos.customers.surveys.struts.action;
 
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
-import org.apache.struts.action.ActionMessages;
+import org.apache.struts.action.*;
 import org.hibernate.ObjectNotFoundException;
-import org.hibernate.Transaction;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -73,14 +56,7 @@ import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.formulaic.DateComponentValidator;
-import org.mifos.framework.formulaic.EnumValidator;
-import org.mifos.framework.formulaic.ErrorType;
-import org.mifos.framework.formulaic.IntValidator;
-import org.mifos.framework.formulaic.IsInstanceValidator;
-import org.mifos.framework.formulaic.Schema;
-import org.mifos.framework.formulaic.SchemaValidationError;
-import org.mifos.framework.formulaic.ValidationError;
+import org.mifos.framework.formulaic.*;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
@@ -90,6 +66,10 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 public class SurveyInstanceAction extends BaseAction {
 
@@ -241,12 +221,12 @@ public class SurveyInstanceAction extends BaseAction {
         if (instance != null) { // if a valid instanceId was provided
             SurveyType type = SurveyType.fromString(actionForm.getValue("surveyType"));
             String redirectUrl = getRedirectUrl(type, getGlobalNum(instance));
-            Transaction tx = persistence.getSession().beginTransaction();
+            StaticHibernateUtil.startTransaction();
             try {
                 persistence.delete(instance);
-                tx.commit();
+                StaticHibernateUtil.commitTransaction();
             } catch (PersistenceException ex) {
-                tx.rollback();
+                StaticHibernateUtil.rollbackTransaction();
                 throw ex;
             }
             response.sendRedirect(redirectUrl);

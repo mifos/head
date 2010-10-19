@@ -20,12 +20,7 @@
 
 package org.mifos.customers.personnel.struts.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -45,6 +40,10 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -77,9 +76,9 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         userContext = null;
-        TestObjectFactory.cleanUp(personnel);
-        TestObjectFactory.cleanUp(createdBranchOffice);
-        StaticHibernateUtil.closeSession();
+        personnel = null;
+        createdBranchOffice = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -191,12 +190,13 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         setRequestPathInfo("/PersonAction.do");
         addRequestParameter("method", Methods.get.toString());
 
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
 
         setRequestPathInfo("/personnelNoteAction.do");
@@ -209,7 +209,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         personnel = (PersonnelBO) TestObjectFactory.getObject(PersonnelBO.class, personnel.getPersonnelId());
 
@@ -225,8 +225,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
                         .valueOf("1"), date, date, address, userContext.getId());
         personnel.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
     }

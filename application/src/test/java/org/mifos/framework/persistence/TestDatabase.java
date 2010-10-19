@@ -20,8 +20,9 @@
 
 package org.mifos.framework.persistence;
 
-import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
+import org.springframework.beans.factory.FactoryBean;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -29,11 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import javax.sql.DataSource;
-
-import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.springframework.beans.factory.FactoryBean;
+import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
 public class TestDatabase implements FactoryBean<TestDatabase> {
 
@@ -67,36 +64,6 @@ public class TestDatabase implements FactoryBean<TestDatabase> {
         this.integrationDataSource = integrationDataSource;
     }
 
-    /**
-     * This method was added to work around integration test inter- and intra-dependencies. Once these dependencies in
-     * main code are eliminated, we should be able to use Spring managed testing environment (transaction) this method
-     * should be eliminated as well.
-     */
-    public static void resetMySQLDatabase() throws Exception {
-        StaticHibernateUtil.flushAndClearSession();
-        executeScript("truncate_tables.sql", getJDBCConnection());
-        insertTestData();
-
-        // If the database is ever blown away, we must re-populate chart of
-        // accounts data since some unit tests rely on its presence. It must
-        // be created via this method since adding it via an sql script would
-        // invalidate *other* unit tests that assume this method has been
-        // called.
-        FinancialInitializer.initialize();
-    }
-
-    public static void createMySQLTestDatabase() throws Exception {
-        dropMySQLDatabase();
-        executeScript("latest-schema.sql", getJDBCConnection());
-        insertTestData();
-    }
-
-    public static void insertTestData() throws Exception {
-        executeScript("latest-data.sql", getJDBCConnection());
-        executeScript("custom_data.sql", getJDBCConnection());
-        executeScript("testdbinsertionscript.sql", getJDBCConnection());
-    }
-
     /*
      * public static void createNotMappedTables() throws Exception { Connection connection = getJDBCConnection(); String
      * sql =
@@ -116,9 +83,9 @@ public class TestDatabase implements FactoryBean<TestDatabase> {
      * @throws Exception
      */
     public static String getAllTablesStructureDump() throws Exception {
+        StringBuilder sb = new StringBuilder();
         Connection connection = getJDBCConnection();
         ResultSet rs = connection.createStatement().executeQuery("SHOW TABLES");
-        StringBuilder sb = new StringBuilder();
         while (rs.next()) {
             getCreateTableDump(rs.getString(1), connection, sb);
         }

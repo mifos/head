@@ -48,8 +48,12 @@ public class PersonnelBusinessService implements BusinessService {
     private PersonnelPersistence personnelPersistence;
 
     public PersonnelBusinessService() {
-        personnelPersistence = new PersonnelPersistence();
-        rolesPermissionsPersistence = new RolesPermissionsPersistence();
+        this(new PersonnelPersistence(), new RolesPermissionsPersistence());
+    }
+    public PersonnelBusinessService(PersonnelPersistence personnelPersistence,
+                                    RolesPermissionsPersistence rolesPermissionsPersistence) {
+        this.personnelPersistence = personnelPersistence;
+        this.rolesPermissionsPersistence = rolesPermissionsPersistence;
         applicationConfiguration = ConfigurationManager.getInstance();
     }
 
@@ -70,11 +74,15 @@ public class PersonnelBusinessService implements BusinessService {
 
     public OfficeBO getOffice(Short officeId) throws ServiceException {
         try {
-            return new OfficePersistence().getOffice(officeId);
+            return getOfficePersistence().getOffice(officeId);
         } catch (PersistenceException e) {
 
             throw new ServiceException(e);
         }
+    }
+
+    protected OfficePersistence getOfficePersistence() {
+        return new OfficePersistence();
     }
 
     public List<RoleBO> getRoles() throws ServiceException {
@@ -112,7 +120,7 @@ public class PersonnelBusinessService implements BusinessService {
     public PersonnelBO getPersonnel(String personnelName) throws ServiceException {
         PersonnelBO personnel = null;
         try {
-            personnel = new PersonnelPersistence().getPersonnelByUserName(personnelName);
+            personnel = personnelPersistence.getPersonnelByUserName(personnelName);
             if (personnel == null) {
                 throw new ServiceException(LoginConstants.KEYINVALIDUSER);
             }
@@ -122,10 +130,10 @@ public class PersonnelBusinessService implements BusinessService {
         return personnel;
     }
 
-    public QueryResult search(String searchString, Short officeId, Short userId) throws ServiceException {
+    public QueryResult search(String searchString, Short userId) throws ServiceException {
 
         try {
-            return new PersonnelPersistence().search(searchString, userId);
+            return personnelPersistence.search(searchString, userId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -141,7 +149,7 @@ public class PersonnelBusinessService implements BusinessService {
 
     public List<PersonnelBO> getActiveLoanOfficersUnderOffice(Short officeId) throws ServiceException {
         try {
-            return new PersonnelPersistence().getActiveLoanOfficersUnderOffice(officeId);
+            return personnelPersistence.getActiveLoanOfficersUnderOffice(officeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

@@ -67,7 +67,7 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForwardPath("/pages/application/reports/jsp/birtReport.jsp");
         // FIXME This test leave CUSTOMER table in dirty state
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     public void testGetSecurityShouldGetReportSecurityConstantsCorrespondingReportId() {

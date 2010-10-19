@@ -19,13 +19,6 @@
  */
 package org.mifos.accounts.savings.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Assert;
@@ -35,12 +28,7 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.application.collectionsheet.persistence.CenterBuilder;
-import org.mifos.application.collectionsheet.persistence.ClientBuilder;
-import org.mifos.application.collectionsheet.persistence.FeeBuilder;
-import org.mifos.application.collectionsheet.persistence.GroupBuilder;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
+import org.mifos.application.collectionsheet.persistence.*;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
@@ -51,6 +39,13 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
+
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 /**
  * I test integration of {@link SavingsDaoHibernate}, hibernate mapping
@@ -124,6 +119,14 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(savingsAccount);
         IntegrationTestObjectMother.cleanSavingsProductAndAssociatedSavingsAccounts(secondSavingsAccount);
         IntegrationTestObjectMother.cleanCustomerHierarchyWithMeeting(client, group, center, weeklyMeeting);
+        savingsAccount = null;
+        secondSavingsAccount = null;
+        client = null;
+        group = null;
+        center = null;
+        weeklyMeeting = null;
+//            TestObjectFactory.cleanUp(weeklyMeeting);
+
     }
 
     @Test

@@ -88,15 +88,15 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
             accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
             group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
             center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            accountBO = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -137,7 +137,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         applyPayments();
 
@@ -172,7 +172,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         applyPayments();
         StaticHibernateUtil.flushAndClearSession();

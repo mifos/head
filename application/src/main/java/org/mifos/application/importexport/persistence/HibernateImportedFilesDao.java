@@ -20,19 +20,20 @@
 
 package org.mifos.application.importexport.persistence;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class HibernateImportedFilesDao extends Persistence implements ImportedFilesDao {
 
     @Override
     public void saveImportedFile(ImportedFilesEntity importedFile) throws Exception {
-        Session session = getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         session.save(importedFile);
     }
 

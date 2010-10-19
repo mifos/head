@@ -20,13 +20,7 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -57,6 +51,11 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Set;
 
 public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationTestCase {
 
@@ -90,21 +89,26 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(account2);
-            TestObjectFactory.cleanUp(account1);
-            TestObjectFactory.cleanUp(client1);
-            TestObjectFactory.cleanUp(client2);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(group1);
-            TestObjectFactory.cleanUp(center);
-            TestObjectFactory.cleanUp(center1);
-            TestObjectFactory.cleanUp(officeBO);
+            client1 = null;
+            client2 = null;
+            account1 = null;
+            account2 = null;
+
+//            account2 = null;
+//            account1 = null;
+//            TestObjectFactory.cleanUp(client1);
+//            TestObjectFactory.cleanUp(client2);
+            client = null;
+            group = null;
+            group1 = null;
+            center = null;
+            center1 = null;
+            officeBO = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private void createInitialObject() {
@@ -121,6 +125,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
                 PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, InterestType.FLAT, meeting);
         account2 = TestObjectFactory.createLoanAccount("42427777341", client,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     private void createPayment(LoanBO loan, Money amountPaid) throws Exception {
@@ -174,7 +179,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         group = TestObjectFactory.getGroup(group.getCustomerId());
         double portfolioAtRisk = PortfolioAtRiskCalculation.generatePortfolioAtRiskForTask(group.getCustomerId(), group
                 .getOffice().getOfficeId(), group.getSearchId() + ".%");
-       Assert.assertEquals(1.0, portfolioAtRisk, DELTA);
+        Assert.assertEquals(1.0, portfolioAtRisk, DELTA);
 
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());

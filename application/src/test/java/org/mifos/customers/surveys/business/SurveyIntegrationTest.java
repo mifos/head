@@ -78,8 +78,8 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
-        TestDatabase.resetMySQLDatabase();
+        StaticHibernateUtil.flushSession();
+
     }
 
     @Test
@@ -150,7 +150,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.startTransaction();
         MeetingBO meeting = TestObjectFactory.getTypicalMeeting();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         CenterBO center = TestObjectFactory.createWeeklyFeeCenter("centerName", meeting);
         meeting.setMeetingPlace("somewhere");
@@ -162,7 +162,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         instance3.setCreator(instance1.getCreator());
         surveysPersistence.createOrUpdate(instance2);
         surveysPersistence.createOrUpdate(instance3);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         List<SurveyInstance> retrievedInstances = surveysPersistence.retrieveInstancesByCustomer(instance1
                 .getCustomer());
@@ -268,7 +268,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         List result = StaticHibernateUtil.getSessionTL().createQuery("from " + Survey.class.getName()).list();
        Assert.assertEquals(1, result.size());
         Survey read_survey = (Survey) result.get(0);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
        Assert.assertEquals("testsurvey", read_survey.getName());
        Assert.assertEquals(SurveyState.ACTIVE, read_survey.getStateAsEnum());
@@ -364,7 +364,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         instance.setCustomer(client);
         instance.setDateConducted(DateUtils.getCurrentDateWithoutTimeStamp());
         new SurveysPersistence().createOrUpdate(instance);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return instance;
     }
 

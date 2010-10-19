@@ -19,15 +19,16 @@
  */
 package org.mifos.application.servicefacade;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.config.GeneralConfig;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Loads Collection Sheet data into Hibernate session cache.
@@ -123,7 +124,7 @@ public class SaveCollectionSheetSessionCache {
     private List<Object> submitSavePreFetch(final String queryName, final Short branchId, final String searchId,
             final List<Integer> accountIds) {
 
-        Session session = customerPersistence.getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         Query query = session.getNamedQuery(queryName);
         query.setParameter("BRANCH_ID", branchId);
         query.setParameter("SEARCH_ID", searchId);

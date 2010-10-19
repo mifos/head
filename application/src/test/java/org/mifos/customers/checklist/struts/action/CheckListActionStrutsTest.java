@@ -20,10 +20,7 @@
 
 package org.mifos.customers.checklist.struts.action;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -44,6 +41,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
 
 public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -67,7 +66,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -92,11 +91,6 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.CENTER_CHECKLIST, request)).size());
        Assert.assertEquals(1, ((List) SessionUtils.getAttribute(CheckListConstants.GROUP_CHECKLIST, request)).size());
        Assert.assertEquals(0, ((List) SessionUtils.getAttribute(CheckListConstants.CLIENT_CHECKLIST, request)).size());
-
-        TestObjectFactory.cleanUp(checkList1);
-        TestObjectFactory.cleanUp(checkList2);
-        TestObjectFactory.cleanUp(checkList3);
-        TestObjectFactory.cleanUp(checkList4);
     }
 
     public void testGetForCustomerChecklist() throws Exception {
@@ -115,8 +109,6 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
                 request));
         Assert.assertNotNull(SessionUtils.getAttribute(CheckListConstants.CREATED_BY_NAME, request));
 
-        TestObjectFactory.cleanUp(checkList);
-
     }
 
     public void testGetForAccountChecklist() throws Exception {
@@ -134,8 +126,6 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(CheckListType.ACCOUNT_CHECKLIST.getValue(), SessionUtils.getAttribute(CheckListConstants.TYPE,
                 request));
         Assert.assertNotNull(SessionUtils.getAttribute(CheckListConstants.CREATED_BY_NAME, request));
-
-        TestObjectFactory.cleanUp(checkList);
 
     }
 
@@ -220,7 +210,6 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
            Assert.assertEquals("13", checkList.getCustomerStatus().getId().toString());
            Assert.assertEquals("1", checkList.getChecklistStatus().toString());
            Assert.assertEquals(1, checkList.getChecklistDetails().size());
-            TestObjectFactory.cleanUp(checkList);
         }
     }
 
@@ -245,7 +234,6 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
            Assert.assertEquals("1", checkList.getProductTypeEntity().getProductTypeID().toString());
            Assert.assertEquals("1", checkList.getChecklistStatus().toString());
            Assert.assertEquals(1, checkList.getChecklistDetails().size());
-            TestObjectFactory.cleanUp(checkList);
         }
     }
 
@@ -261,86 +249,91 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
     public void testManage_customerCenter() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "manage");
         addRequestParameter("checkListId", checkList.getChecklistId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
-        TestObjectFactory.cleanUp(checkList);
+        checkList = null;
     }
 
     public void testManage_customerGroup() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.GROUP.getValue(),
                 CustomerStatus.GROUP_ACTIVE.getValue(), (short) 1);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "manage");
         addRequestParameter("checkListId", checkList.getChecklistId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
-        TestObjectFactory.cleanUp(checkList);
+        checkList = null;
     }
 
     public void testManage_customerClient() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CLIENT.getValue(),
                 CustomerStatus.CLIENT_ACTIVE.getValue(), (short) 1);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "manage");
         addRequestParameter("checkListId", checkList.getChecklistId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
-        TestObjectFactory.cleanUp(checkList);
+        checkList = null;
     }
 
     public void testManage_accountLoan() throws Exception {
         CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "manage");
         addRequestParameter("checkListId", checkList.getChecklistId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, checkList.getChecklistId());
-        TestObjectFactory.cleanUp(checkList);
+        checkList = null;
     }
 
     public void testManage_accountSaving() throws Exception {
         CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.SAVINGS.getValue(),
                 AccountState.SAVINGS_ACTIVE, (short) 1);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "manage");
         addRequestParameter("checkListId", checkList.getChecklistId().toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
         verifyNoActionErrors();
         verifyForward(ActionForwards.manage_success.toString());
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, checkList.getChecklistId());
-        TestObjectFactory.cleanUp(checkList);
+        checkList = null;
     }
 
     public void testGetEditStates() throws Exception {
@@ -400,7 +393,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
     public void testUpdate_customer() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
 
         setRequestPathInfo("/chkListAction");
@@ -419,16 +412,16 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward(ActionForwards.update_success.toString());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(CustomerCheckListBO.class, checkList.getChecklistId());
        Assert.assertEquals(1, checkList.getChecklistDetails().size());
-        TestObjectFactory.cleanUp(checkList);
+        checkList = null;
     }
 
     public void testUpdate_product() throws Exception {
         CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, checkList.getChecklistId());
 
         setRequestPathInfo("/chkListAction");
@@ -448,10 +441,10 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyForward(ActionForwards.update_success.toString());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         checkList = (CheckListBO) TestObjectFactory.getObject(AccountCheckListBO.class, checkList.getChecklistId());
        Assert.assertEquals(1, checkList.getChecklistDetails().size());
-        TestObjectFactory.cleanUp(checkList);
+        checkList = null;
     }
 
     public void testCancelManage() {

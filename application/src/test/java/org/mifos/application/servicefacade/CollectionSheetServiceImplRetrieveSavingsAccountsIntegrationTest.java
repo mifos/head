@@ -20,14 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Assert;
@@ -50,6 +42,14 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest extends MifosIntegrationTestCase {
 
     @BeforeClass
@@ -68,7 +68,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
     @After
     public void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @Test
@@ -108,7 +108,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         clientSavings.setUserContext(userContext);
         clientSavings.closeAccount(payment, notes, clientSavings.getCustomer());
 
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
         CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(
                 collectionSheetRetrieveSavingsAccountsUtils.getCenter().getCustomerId(), new LocalDate());
@@ -171,6 +171,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
         CollectionSheetDto collectionSheet = collectionSheetRetrieveSavingsAccountsUtils
                 .createSampleCollectionSheetDto();
+        StaticHibernateUtil.flushAndClearSession();
 
         // process
         List<CollectionSheetCustomerDto> customersAfterProcessing = convertSaveRetrieveVerifyAndReturnProcessedCollectionSheetCustomers(collectionSheet);
@@ -200,7 +201,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
         CollectionSheetDto collectionSheet = collectionSheetRetrieveSavingsAccountsUtils
                 .createSampleCollectionSheetDto();
-
+        StaticHibernateUtil.flushAndClearSession();
         // pay 0.5 of the 2.0 voluntary group complete_group savings account amount due
         collectionSheet.getCollectionSheetCustomer().get(1).getCollectionSheetCustomerSaving().get(0)
                 .setDepositDue(new BigDecimal("0.5"));
@@ -218,7 +219,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
         CollectionSheetDto collectionSheet = collectionSheetRetrieveSavingsAccountsUtils
                 .createSampleCollectionSheetDto();
-
+        StaticHibernateUtil.flushAndClearSession();
         // pay 0.2 of the 1.0 mandatory client individual savings amount due (derived from center mandatory savings
         // account)
         collectionSheet.getCollectionSheetCustomer().get(2).getIndividualSavingAccounts().get(0)
@@ -237,7 +238,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
         CollectionSheetDto collectionSheet = collectionSheetRetrieveSavingsAccountsUtils
                 .createSampleCollectionSheetDto();
-
+        StaticHibernateUtil.flushAndClearSession();
         // Find the client's group individual account
         Integer groupPerIndividualAccountId = collectionSheet.getCollectionSheetCustomer().get(3)
                 .getCollectionSheetCustomerSaving().get(0).getAccountId();

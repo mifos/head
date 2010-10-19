@@ -93,11 +93,11 @@ public class LoanSummaryEntityIntegrationTest extends MifosIntegrationTestCase {
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
         center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
-        TestObjectFactory.cleanUp(accountBO);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        accountBO = null;
+        group = null;
+        center = null;
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
 }

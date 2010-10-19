@@ -1,14 +1,14 @@
 package org.mifos.application.admin.system.persistence;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Session;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
-import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 
 public class AppliedUpgradesDaoHibernate implements AppliedUpgradesDao {
 
@@ -22,7 +22,7 @@ public class AppliedUpgradesDaoHibernate implements AppliedUpgradesDao {
 
     @Override
     public List<Integer> getAppliedUpgrades() {
-        Session session =  ((GenericDaoHibernate)genericDao).getHibernateUtil().getSessionTL();
+        Session session =  StaticHibernateUtil.getSessionTL();
         List<Integer> upgrades = new ArrayList<Integer>();
         try {
             ResultSet rs = session.connection().createStatement().executeQuery(

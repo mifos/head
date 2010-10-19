@@ -20,23 +20,14 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.*;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -53,6 +44,10 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 
@@ -72,20 +67,21 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(savings);
-        TestObjectFactory.cleanUp(client1);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        savings = null;
+        client1 = null;
+        client2 = null;
+//        TestObjectFactory.cleanUp(client1);
+//        TestObjectFactory.cleanUp(client2);
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     @Test
     public void testExecuteForCustomerAccount() throws Exception {
         StaticHibernateUtil.startTransaction();
         createCenter();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         StaticHibernateUtil.startTransaction();
         center = TestObjectFactory.getCustomer(center.getCustomerId());
@@ -93,8 +89,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         int noOfInstallments = center.getCustomerAccount().getAccountActionDates().size();
         new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
 
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
 
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         Assert.assertEquals(noOfInstallments + 10, center.getCustomerAccount().getAccountActionDates().size());
@@ -193,7 +188,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         TestObjectFactory.flushandCloseSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         new GenerateMeetingsForCustomerAndSavingsTask().getTaskHelper().execute(System.currentTimeMillis());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());

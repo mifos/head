@@ -43,7 +43,7 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -91,8 +91,8 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
         List<AccountCheckListBO> checkLists = new CheckListPersistence().retreiveAllAccountCheckLists();
         Assert.assertNotNull(checkLists);
         Assert.assertEquals(1, checkLists.size());
-        TestObjectFactory.cleanUp(checkList);
-        TestObjectFactory.cleanUp(checkList1);
+        checkList = null;
+        checkList1 = null;
     }
 
     @Test
@@ -104,8 +104,8 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
         List<CustomerCheckListBO> checkLists = new CheckListPersistence().retreiveAllCustomerCheckLists();
         Assert.assertNotNull(checkLists);
         Assert.assertEquals(1, checkLists.size());
-        TestObjectFactory.cleanUp(checkList);
-        TestObjectFactory.cleanUp(checkList1);
+        checkList = null;
+        checkList1 = null;
     }
 
     @Test

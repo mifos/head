@@ -22,13 +22,21 @@ package org.mifos.accounts.business;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 import junit.framework.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mockito.Mockito;
+import org.springframework.test.annotation.ExpectedException;
 
 import java.util.ArrayList;
 
@@ -39,6 +47,10 @@ import java.util.ArrayList;
 
 public class AccountBOTest {
 
+    @Before
+    public void setUp(){
+        initMocks(this);
+    }
     @Test
     public void testSetAndGetExternalId() {
         int accountId = 1;
@@ -63,9 +75,9 @@ public class AccountBOTest {
         accountPayments.add(accountPaymentEntity3);
 
         account.setAccountPayments(accountPayments);
-        Mockito.when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
-        Mockito.when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"2"));
-        Mockito.when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"3"));
+        when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+        when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"2"));
+        when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"3"));
 
         Assert.assertSame(accountPaymentEntity2,account.getLastPmntToBeAdjusted());
     }
@@ -98,11 +110,29 @@ public class AccountBOTest {
         accountPayments.add(accountPaymentEntity3);
 
         account.setAccountPayments(accountPayments);
-        Mockito.when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
-        Mockito.when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
-        Mockito.when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+        when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+        when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+        when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
 
         Assert.assertNull(account.getLastPmntToBeAdjusted());
 
+    }
+
+    @Test
+    @ExpectedException(value = AccountException.class)
+    public void testInvalidConnectionThrowsExceptionInUpdate() throws PersistenceException {
+        final AccountPersistence accountPersistence = mock(AccountPersistence.class);
+        AccountBO accountBO = new AccountBO(){
+            @Override
+            public AccountPersistence getAccountPersistence() {
+                return accountPersistence;
+            }
+        };
+        try {
+            when(accountPersistence.createOrUpdate(accountBO)).thenThrow(new PersistenceException("some exception"));
+            accountBO.update();
+            Assert.fail("should fail because of invalid session");
+        } catch (AccountException e) {
+        }
     }
 }

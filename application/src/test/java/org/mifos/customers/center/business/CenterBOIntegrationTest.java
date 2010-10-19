@@ -79,7 +79,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @Test
@@ -103,8 +103,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         center = new CenterBO(TestUtils.makeUser(), name, null, null, null, null, null, officeBo, meeting, personnelBo,
                 new CustomerPersistence());
         new CenterPersistence().saveCenter(center);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
        Assert.assertEquals(name, center.getDisplayName());
        Assert.assertEquals(officeId, center.getOffice().getOfficeId());
@@ -117,34 +116,11 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         center = new CenterBO(TestUtils.makeUser(), name, null, getCustomFields(), null, null, null, officeBo, meeting,
                 personnelBo, new CustomerPersistence());
         new CenterPersistence().saveCenter(center);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
        Assert.assertEquals(name, center.getDisplayName());
        Assert.assertEquals(officeId, center.getOffice().getOfficeId());
        Assert.assertEquals(2, center.getCustomFields().size());
-    }
-
-    @Test
-    public void testFailureDuplicateName() throws Exception {
-        String name = "Center";
-        center = TestObjectFactory.createWeeklyFeeCenter(name, getMeeting());
-        StaticHibernateUtil.closeSession();
-
-        String externalId = "12345";
-        Date mfiJoiningDate = getDate("11/12/2005");
-        meeting = getMeeting();
-        UserContext userContext = TestUtils.makeUser();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            center = new CenterBO(userContext, name, null, null, null, externalId, mfiJoiningDate, officeBo, meeting,
-                    personnelBo, new CustomerPersistence());
-            Assert.fail();
-        } catch (CustomerException e) {
-           Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
     }
 
     @Test
@@ -158,8 +134,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
                 new OfficePersistence().getOffice(officeId), meeting, new PersonnelPersistence()
                         .getPersonnel(personnelId), new CustomerPersistence());
         new CenterPersistence().saveCenter(center);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
        Assert.assertEquals(name, center.getDisplayName());
        Assert.assertEquals(externalId, center.getExternalId());
@@ -212,7 +187,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
         CenterBO sameBranch = new CenterBO(TestUtils.makeUser(), "sameBranch", null, null,
                 null, null, startDate, branch1, meeting, systemUser, new CustomerPersistence());
         StaticHibernateUtil.getSessionTL().save(center);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
        Assert.assertEquals("1.1", center.getSearchId());
        Assert.assertEquals("1.1", center2.getSearchId());
@@ -239,7 +214,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
                 FeeCategory.ALLCUSTOMERS, "100", FeePayment.UPFRONT);
         fees.add(new FeeDto(TestObjectFactory.getContext(), fee1));
         fees.add(new FeeDto(TestObjectFactory.getContext(), fee2));
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return fees;
     }
 }

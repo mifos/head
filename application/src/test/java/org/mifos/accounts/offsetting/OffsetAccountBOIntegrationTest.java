@@ -74,9 +74,9 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            accountBO = null;
+            group = null;
+            center = null;
             accountPersistence = null;
         } catch (Exception e) {
             // throwing here tends to mask failures

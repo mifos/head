@@ -20,24 +20,7 @@
 
 package org.mifos.application.collectionsheet.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -45,17 +28,12 @@ import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.*;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
+import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.CustomValueListElementDto;
@@ -92,6 +70,14 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import java.util.*;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 /**
  * I test {@link CollectionSheetEntryAction}.
  */
@@ -124,21 +110,21 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(centerSavingsAccount);
-            TestObjectFactory.cleanUp(groupSavingsAccount);
-            TestObjectFactory.cleanUp(clientSavingsAccount);
-            TestObjectFactory.cleanUp(groupAccount);
-            TestObjectFactory.cleanUp(clientAccount);
-            TestObjectFactory.cleanUp(account);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            centerSavingsAccount = null;
+            groupSavingsAccount = null;
+            clientSavingsAccount = null;
+            groupAccount = null;
+            clientAccount = null;
+            account = null;
+            client = null;
+            group = null;
+            center = null;
 
         } catch (Exception e) {
             // Throwing here may mask earlier failures.
             e.printStackTrace();
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         super.tearDown();
     }
 
@@ -199,7 +185,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("create_success");
         Assert.assertNotNull(request.getAttribute(CollectionSheetEntryConstants.CENTER));
         Assert.assertEquals(request.getAttribute(CollectionSheetEntryConstants.CENTER), center.getDisplayName());
-
+        StaticHibernateUtil.flushAndClearSession();
         groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount.getAccountId());
         clientAccount = TestObjectFactory.getObject(LoanBO.class, clientAccount.getAccountId());
         centerSavingsAccount = TestObjectFactory.getObject(SavingsBO.class, centerSavingsAccount.getAccountId());

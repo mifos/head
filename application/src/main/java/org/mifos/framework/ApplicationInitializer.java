@@ -130,6 +130,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
             synchronized (ApplicationInitializer.class) {
                 if (servletContext != null) {
                     dbUpgrade(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext));
+
                 }
                 setAttributesOnContext(servletContext);
             }

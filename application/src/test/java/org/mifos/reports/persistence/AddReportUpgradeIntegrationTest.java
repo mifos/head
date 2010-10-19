@@ -36,15 +36,13 @@ import org.mifos.reports.business.ReportsCategoryBO;
 
 public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
 
-    private Session session;
     private Transaction transaction;
     private Connection connection;
 
     @Before
     public void setUp() throws Exception {
-        session = StaticHibernateUtil.getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         connection = session.connection();
-        transaction = session.beginTransaction();
     }
 
     private AddReport createReport() {
@@ -58,10 +56,5 @@ public class AddReportUpgradeIntegrationTest extends MifosIntegrationTestCase {
         ReportsBO report = new ReportsPersistence().getReport(ReportsCategoryBO.ANALYSIS);
         Assert.assertNotNull(report.getActivityId());
         Assert.assertTrue(report.getIsActive() == (short)1);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        transaction.rollback();
     }
 }

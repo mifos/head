@@ -20,11 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -46,6 +42,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+import java.util.List;
 
 public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -87,15 +86,19 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(account);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            account = null;
+            client = null;
+            group = null;
+            center = null;
+            account = null;
+//            client = null;
+//            group = null;
+//            center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -205,7 +208,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         createParentCustomer();
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private LoanBO getLoanAccount(CustomerBO customerBO) {

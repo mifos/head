@@ -20,12 +20,7 @@
 
 package org.mifos.customers.personnel.struts.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -51,6 +46,10 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     public PersonnelSettingsActionStrutsTest() throws Exception {
@@ -97,8 +96,8 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         userContext = null;
-        TestObjectFactory.cleanUp(personnel);
-        StaticHibernateUtil.closeSession();
+        personnel = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -244,6 +243,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
 
         userContext.setId(PersonnelConstants.SYSTEM_USER);
@@ -302,6 +302,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
+        StaticHibernateUtil.flushAndClearSession();
         actionPerform();
 
         userContext.setId(PersonnelConstants.SYSTEM_USER);
@@ -402,8 +403,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
                 "xyz@yahoo.com", getRoles(), customFieldDto, new Name("XYZ", null, null, "ABC"), "111111", date,
                 Integer.valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
         personnel.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         return personnel;
     }

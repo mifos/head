@@ -20,14 +20,11 @@
 
 package org.mifos.security.activity;
 
-import java.io.IOException;
-
 import org.hibernate.HibernateException;
-import org.hibernate.Transaction;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -41,6 +38,8 @@ import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBu
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 
+import java.io.IOException;
+
 public class ActivityGenerator {
 
     private int lookUpId;
@@ -53,12 +52,12 @@ public class ActivityGenerator {
     public void upgradeUsingHQL(DynamicLookUpValueCreationTypes type, short parentActivity, String lookUpDescription)
             throws IOException, HibernateException, PersistenceException, ServiceException, ActivityGeneratorException {
 
-        Transaction tx = StaticHibernateUtil.startTransaction();
+        StaticHibernateUtil.startTransaction();
         insertLookUpValue(type, lookUpDescription);
         insertLookUpValueLocale(lookUpId, lookUpDescription);
         insertActivity(parentActivity, lookUpId);
         insertRolesActivity();
-        tx.commit();
+        StaticHibernateUtil.commitTransaction();
     }
 
     private void insertRolesActivity() throws PersistenceException {

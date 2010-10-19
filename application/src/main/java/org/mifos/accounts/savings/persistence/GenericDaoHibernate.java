@@ -23,7 +23,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 import java.util.Iterator;
 import java.util.List;
@@ -34,15 +34,13 @@ import java.util.Map;
  */
 public class GenericDaoHibernate implements GenericDao {
 
-    private HibernateUtil hibernateUtil;
-
     @SuppressWarnings("unchecked")
     @Override
     public final List<? extends Object> executeNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> nameQueryParameters, final Class<?> className) {
 
         try {
-            Session session = getHibernateUtil().getSessionTL();
+            Session session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(className));
             query.setProperties(nameQueryParameters);
             return query.list();
@@ -56,7 +54,7 @@ public class GenericDaoHibernate implements GenericDao {
             final Map<String, ?> nameQueryParameters, final Class<?> className) {
 
         try {
-            Session session = getHibernateUtil().getSessionTL();
+            Session session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(className));
             query.setProperties(nameQueryParameters);
             return query.uniqueResult();
@@ -70,7 +68,7 @@ public class GenericDaoHibernate implements GenericDao {
     public final List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters) {
 
         try {
-            Session session = getHibernateUtil().getSessionTL();
+            Session session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(queryName);
             query.setProperties(queryParameters);
             return query.list();
@@ -84,7 +82,7 @@ public class GenericDaoHibernate implements GenericDao {
     public final Iterator<? extends Object> executeNamedQueryIterator(final String queryName, final Map<String, ?> queryParameters) {
 
         try {
-            Session session = getHibernateUtil().getSessionTL();
+            Session session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(queryName);
             query.setProperties(queryParameters);
             return query.iterate();
@@ -98,7 +96,7 @@ public class GenericDaoHibernate implements GenericDao {
             final Map<String, ?> queryParameters) {
 
         try {
-            Session session = getHibernateUtil().getSessionTL();
+            Session session = StaticHibernateUtil.getSessionTL();
             Query query = session.getNamedQuery(queryName);
             query.setProperties(queryParameters);
             return query.uniqueResult();
@@ -109,7 +107,7 @@ public class GenericDaoHibernate implements GenericDao {
 
     @Override
     public void delete(final Object entity) {
-        Session session = getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         try {
             session.delete(entity);
         } catch (Exception he) {
@@ -120,23 +118,19 @@ public class GenericDaoHibernate implements GenericDao {
     @Override
     public final void createOrUpdate(final Object entity) {
         try {
-            Session session = getHibernateUtil().getSessionTL();
+            Session session = StaticHibernateUtil.getSessionTL();
             session.saveOrUpdate(entity);
-            if (getHibernateUtil().getInterceptor().isAuditLogRequired()) {
-                getHibernateUtil().getInterceptor().createChangeValueMap(entity);
+            if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
+                StaticHibernateUtil.getInterceptor().createChangeValueMap(entity);
             }
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }
     }
 
-    public final HibernateUtil getHibernateUtil() {
-        return HibernateUtil.getInstance();
-    }
-
     @Override
     public final Query createQueryForUpdate(String hql) {
-        Session session = getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         return session.createQuery(hql);
     }
 }

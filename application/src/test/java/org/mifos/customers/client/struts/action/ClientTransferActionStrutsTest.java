@@ -20,10 +20,7 @@
 
 package org.mifos.customers.client.struts.action;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -39,12 +36,15 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
+import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
 
 public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
     public ClientTransferActionStrutsTest() throws Exception {
@@ -79,17 +79,17 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(group1);
-            TestObjectFactory.cleanUp(center);
-            TestObjectFactory.cleanUp(center1);
-            TestObjectFactory.cleanUp(office);
+            client = null;
+            group = null;
+            group1 = null;
+            center = null;
+            center1 = null;
+            office = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -126,9 +126,9 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("officeName", client.getOffice().getOfficeName());
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyActionErrors(new String[] { CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER });
+        verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER});
         verifyForward(ActionForwards.transferToBranch_failure.toString());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
     }
 
@@ -227,6 +227,8 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(client.getOffice().getOfficeId(), office.getOfficeId());
         Assert.assertEquals(CustomerStatus.CLIENT_HOLD, client.getStatus());
         office = client.getOffice();
+        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());
         List<AuditLog> auditLogList = TestObjectFactory.getChangeLog(EntityType.CLIENT, client.getCustomerId());
         Assert.assertEquals(1, auditLogList.size());
         Assert.assertEquals(EntityType.CLIENT.getValue(), auditLogList.get(0).getEntityType());
@@ -250,7 +252,7 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         office = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, TestObjectFactory
                 .getOffice(TestObjectFactory.HEAD_OFFICE), "customer_office", "cust");
         client = TestObjectFactory.createClient("client_to_transfer", getMeeting(), CustomerStatus.CLIENT_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private void createObjectsForTransferringClientInGroup() throws Exception {
@@ -261,7 +263,7 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         center1 = TestObjectFactory.createWeeklyFeeCenter("Center1", meeting1);
         group1 = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group2", CustomerStatus.GROUP_ACTIVE, center1);
         client = TestObjectFactory.createClient("Client11", CustomerStatus.CLIENT_ACTIVE, group);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private MeetingBO getMeeting() {

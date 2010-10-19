@@ -20,10 +20,7 @@
 
 package org.mifos.customers.office.struts.action;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
@@ -40,6 +37,8 @@ import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
 
 public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -64,7 +63,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -172,8 +171,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("abcd", offActionForm.getOfficeName());
         Assert.assertEquals("abcd", offActionForm.getShortName());
         Assert.assertEquals("123", offActionForm.getAddress().getLine1());
-        OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf(offActionForm.getOfficeId()));
-        TestObjectFactory.cleanUp(officeBO);
     }
 
     public void testGet() throws Exception {
@@ -196,9 +193,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         OfficeBO officeBO = createLoadOffice();
         actionPerform();
         verifyForward(ActionForwards.edit_success.toString());
-
-        TestObjectFactory.cleanUp(officeBO);
-
     }
 
     public void testEditPreview() {
@@ -235,7 +229,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
         Assert.assertEquals("RAJOFFICE", officeBO.getOfficeName());
         Assert.assertEquals("OFFI", officeBO.getShortName());
-        TestObjectFactory.cleanUp(officeBO);
     }
 
     public void testEditPreviewHO() throws Exception {
@@ -311,9 +304,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         OffActionForm offActionForm = (OffActionForm) request.getSession().getAttribute("offActionForm");
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         Assert.assertEquals(false, fm.isFlowValid(flowKey));
-
-        OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf(offActionForm.getOfficeId()));
-        TestObjectFactory.cleanUp(officeBO);
     }
 
     public void testFlowFailure() throws Exception {
@@ -366,7 +356,5 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyActionErrors(new String[] { "exception.framework.PageExpiredException" });
         verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
-        OfficeBO officeBO = TestObjectFactory.getOffice(Short.valueOf(offActionForm.getOfficeId()));
-        TestObjectFactory.cleanUp(officeBO);
     }
 }

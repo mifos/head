@@ -44,7 +44,7 @@ public class CheckListBusinessService implements BusinessService {
 
     public List<CheckListMasterDto> getCheckListMasterData(UserContext userContext) throws ServiceException {
         try {
-            return new CheckListPersistence().getCheckListMasterData(userContext.getLocaleId());
+            return getCheckListPersistence().getCheckListMasterData(userContext.getLocaleId());
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -52,7 +52,7 @@ public class CheckListBusinessService implements BusinessService {
 
     public List<CheckListStatesView> getCustomerStates(Short levelId, Short localeId) throws ServiceException {
         try {
-            return new CheckListPersistence().retrieveAllCustomerStatusList(levelId, localeId);
+            return getCheckListPersistence().retrieveAllCustomerStatusList(levelId, localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -60,15 +60,19 @@ public class CheckListBusinessService implements BusinessService {
 
     public List<CheckListStatesView> getAccountStates(Short prdTypeId, Short localeId) throws ServiceException {
         try {
-            return new CheckListPersistence().retrieveAllAccountStateList(prdTypeId, localeId);
+            return getCheckListPersistence().retrieveAllAccountStateList(prdTypeId, localeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
     }
 
+    protected CheckListPersistence getCheckListPersistence() {
+        return new CheckListPersistence();
+    }
+
     public void isValidCheckListState(Short levelId, Short stateId, boolean isCustomer) throws ServiceException {
         try {
-            Long records = new CheckListPersistence().isValidCheckListState(levelId, stateId, isCustomer);
+            Long records = getCheckListPersistence().isValidCheckListState(levelId, stateId, isCustomer);
             if (records.intValue() != 0) {
                 throw new ServiceException(CheckListConstants.EXCEPTION_STATE_ALREADY_EXIST);
             }
@@ -79,7 +83,7 @@ public class CheckListBusinessService implements BusinessService {
 
     public List<CustomerCheckListBO> retreiveAllCustomerCheckLists() throws ServiceException {
         try {
-            return new CheckListPersistence().retreiveAllCustomerCheckLists();
+            return getCheckListPersistence().retreiveAllCustomerCheckLists();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -87,7 +91,7 @@ public class CheckListBusinessService implements BusinessService {
 
     public List<AccountCheckListBO> retreiveAllAccountCheckLists() throws ServiceException {
         try {
-            return new CheckListPersistence().retreiveAllAccountCheckLists();
+            return getCheckListPersistence().retreiveAllAccountCheckLists();
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -95,7 +99,7 @@ public class CheckListBusinessService implements BusinessService {
 
     public CheckListBO getCheckList(Short checkListId) throws ServiceException {
         try {
-            return new CheckListPersistence().getCheckList(checkListId);
+            return getCheckListPersistence().getCheckList(checkListId);
         } catch (PersistenceException e) {
             try {
                 throw new ServiceException(e);

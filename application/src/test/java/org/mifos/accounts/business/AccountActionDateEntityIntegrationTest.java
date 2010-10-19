@@ -56,7 +56,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
 
     @Test
     public void testWaiveCharges() {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
 
         CustomerScheduleEntity accountActionDate = (CustomerScheduleEntity) group.getCustomerAccount()
@@ -69,7 +69,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
             Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
         }
         Assert.assertEquals(new Money(getCurrency(), "120.0"), chargeWaived);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
@@ -118,7 +118,7 @@ public class AccountActionDateEntityIntegrationTest extends AccountIntegrationTe
                 break;
             }
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }

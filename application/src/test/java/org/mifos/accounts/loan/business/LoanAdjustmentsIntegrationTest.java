@@ -20,19 +20,6 @@
 
 package org.mifos.accounts.loan.business;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -65,8 +52,22 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.UserContext;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
@@ -101,6 +102,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 10, 13));
 
         loan = createLoan();
+        UserContext context = loan.getUserContext();
         Money initialOriginalPrincipal = loan.getLoanSummary().getOriginalPrincipal();
         Money initialOriginalInterest = loan.getLoanSummary().getOriginalInterest();
         Money initialOriginalFees = loan.getLoanSummary().getOriginalFees();
@@ -110,6 +112,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
         // pay 3 installments
         makePayment(loan, "333.0");
+        StaticHibernateUtil.flushAndClearSession();
         loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
         assertThat(loan.getLoanSummary().getOriginalPrincipal(), is(initialOriginalPrincipal));
         assertThat(loan.getLoanSummary().getOriginalInterest(), is(initialOriginalInterest));
@@ -117,9 +120,11 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         assertFalse(loan.getLoanSummary().getPrincipalPaid().equals(initialPrincipalPaid));
         assertFalse(loan.getLoanSummary().getInterestPaid().equals(initialInterestPaid));
         assertFalse(loan.getLoanSummary().getFeesPaid().equals(initialFeesPaid));
+
         List<LoanInstallment> copySchedule = copyLoanSchedule(loan);
 
         makeEarlyPayment(loan);
+        StaticHibernateUtil.flushAndClearSession();
         loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
         // The early repayment should have caused the original interest and fees to be changed to equal the amounts
         // paid.
@@ -131,7 +136,9 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         assertThat(loan.getLoanSummary().getFeesPaid(), is(loan.getLoanSummary().getOriginalFees()));
         assertFalse(sameSchedule(copySchedule, loan.getAccountActionDates()));
 
-        adjustLastLoanPayment(loan);
+
+        adjustLastLoanPayment(loan, context);
+        StaticHibernateUtil.flushAndClearSession();        
         loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
         // The adjustment of a completed loan should have caused the original amounts to be reset
         assertThat(loan.getLoanSummary().getOriginalPrincipal(), is(initialOriginalPrincipal));
@@ -154,7 +161,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         makeEarlyPayment(loan);
         loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
 
-        adjustLastLoanPayment(loan);
+        adjustLastLoanPayment(loan, loan.getUserContext());
         loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
 
         assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
@@ -190,7 +197,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         // ensure loan is in bad standing when reopened
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
 
-        adjustLastLoanPayment(loan);
+        adjustLastLoanPayment(loan, loan.getUserContext());
         loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
         AccountStateEntity currentStatus = loan.getAccountState();
         assertTrue("Current Status Should Have Been LOAN_ACTIVE_IN_BAD_STANDING", currentStatus
@@ -215,7 +222,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         // Ensure that after the adjustment the loan is calculated to be in bad standing.
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
 
-        adjustLastLoanPayment(loan);
+        adjustLastLoanPayment(loan, loan.getUserContext());
         loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
 
         assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
@@ -272,32 +279,28 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
                 false, null);
 
         loan.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         return loan;
 
     }
 
     private void makePayment(LoanBO loan, String amount) throws Exception {
-
         PaymentData paymentData = PaymentData.createPaymentData(new Money(loan.getCurrency(), amount), testUser(),
                 (short) 1, new DateTime().toDate());
         loan.applyPayment(paymentData, true);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     private void makeEarlyPayment(LoanBO loan) throws AccountException {
-
         loan.makeEarlyRepayment(loan.getEarlyRepayAmount(), null, null, "1", testUser().getPersonnelId(), false);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
-    private void adjustLastLoanPayment(LoanBO loan) throws AccountException, PersistenceException {
-        StaticHibernateUtil.closeSession();
-        StaticHibernateUtil.startTransaction();
+    private void adjustLastLoanPayment(LoanBO loan, UserContext userContext) throws AccountException, PersistenceException {
         LoanBO tempLoan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
-        tempLoan.setUserContext(loan.getUserContext());
+        tempLoan.setUserContext(userContext);
         tempLoan.adjustLastPayment("Undo last payment");
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     private DateTime date(int year, int month, int day) {

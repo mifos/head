@@ -20,10 +20,6 @@
 
 package org.mifos.application.holiday.business.service;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -39,6 +35,7 @@ import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
@@ -46,6 +43,10 @@ import org.mifos.service.BusinessRuleException;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 public class HolidayServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -102,6 +103,7 @@ public class HolidayServiceIntegrationTest extends MifosIntegrationTestCase {
 
         // exercise test
         holidayService.create(holidayDetails, officeIds);
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     @Test
@@ -147,5 +149,7 @@ public class HolidayServiceIntegrationTest extends MifosIntegrationTestCase {
 
         branch3 = new OfficeBuilder().withGlobalOfficeNum("007").withName("branch1-of-regional").branchOffice().withParentOffice(regionalOffice).build();
         IntegrationTestObjectMother.createOffice(branch3);
+
+        StaticHibernateUtil.flushAndClearSession();
     }
 }

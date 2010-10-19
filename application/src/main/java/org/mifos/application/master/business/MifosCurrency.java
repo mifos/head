@@ -20,17 +20,10 @@
 
 package org.mifos.application.master.business;
 
-import java.math.BigDecimal;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-
 import org.mifos.framework.business.AbstractEntity;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
 
 /**
  * This class denotes the currency object. It contains information such as the

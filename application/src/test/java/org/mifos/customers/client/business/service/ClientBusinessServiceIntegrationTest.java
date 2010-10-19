@@ -20,10 +20,7 @@
 
 package org.mifos.customers.client.business.service;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,6 +34,8 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.util.List;
 
 public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -59,36 +58,22 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.removeObject(savingsOffering1);
+        savingsOffering1 = null;
         TestObjectFactory.removeObject(savingsOffering2);
         TestObjectFactory.removeObject(savingsOffering3);
         TestObjectFactory.removeObject(savingsOffering4);
-        TestObjectFactory.cleanUp(client);
-        StaticHibernateUtil.closeSession();
+        client = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
     public void testGetClient() throws Exception {
         client = createClient(this.getClass().getSimpleName() + " abc");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = service.getClient(client.getCustomerId());
         Assert.assertNotNull(client);
         Assert.assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getFirstName());
         Assert.assertEquals(this.getClass().getSimpleName() + " abc", client.getClientName().getName().getLastName());
-    }
-
-    @Test
-    public void testFailureGetClient() throws Exception {
-        client = createClient(this.getClass().getSimpleName() + " abc");
-        StaticHibernateUtil.closeSession();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            client = service.getClient(client.getCustomerId());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
     }
 
     @Test
@@ -104,10 +89,10 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
         List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderGroup(group.getCustomerId());
         Assert.assertEquals(2, clients.size());
 
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(client1);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+//        client = null;
+//        TestObjectFactory.cleanUp(client1);
+//        group = null;
+//        center = null;
     }
 
     @Test
@@ -124,36 +109,10 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
                 .getOffice().getOfficeId());
         Assert.assertEquals(2, clients.size());
 
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(client1);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-    }
-
-    @Test
-    public void testGetActiveClientsUnderParentforInvalidConnection() {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
-                CustomerStatus.GROUP_ACTIVE, center);
-        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
-                CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two",
-                CustomerStatus.CLIENT_ACTIVE, group);
-        TestObjectFactory.simulateInvalidConnection();
-
-        try {
-            new ClientBusinessService().getActiveClientsUnderParent(center.getSearchId(), center.getOffice()
-                    .getOfficeId());
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertEquals("exception.framework.ApplicationException", e.getKey());
-        }
-        StaticHibernateUtil.closeSession();
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(client1);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
+        client = null;
+//        TestObjectFactory.cleanUp(client1);
+        group = null;
+        center = null;
     }
 
     private ClientBO createClient(String clientName) {

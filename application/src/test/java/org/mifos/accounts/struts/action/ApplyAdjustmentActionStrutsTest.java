@@ -20,17 +20,8 @@
 
 package org.mifos.accounts.struts.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
-import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.business.*;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -49,6 +40,10 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class tests methods of ApplyAdjustment action class.
@@ -93,7 +88,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         LoanBO loan = TestObjectFactory.createLoanAccount("42423142341", group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         return TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
     }
 
@@ -107,8 +102,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
         loan.applyPaymentWithPersist(accountPaymentDataView);
         TestObjectFactory.updateObject(loan);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     public void testLoadAdjustmentWhenObligationMet() throws Exception {
@@ -184,7 +178,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), personnel, loan);
         AccountTestUtils.addToAccountStatusChangeHistory(loan, historyEntity);
         TestObjectFactory.updateObject(loan);
-        TestObjectFactory.flushandCloseSession();
+        StaticHibernateUtil.flushAndClearSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(userContext);
         for (AccountStatusChangeHistoryEntity accountStatus : loan.getAccountStatusChangeHistory()) {
@@ -232,7 +226,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING), personnel, loan);
         AccountTestUtils.addToAccountStatusChangeHistory(loan, historyEntity);
         TestObjectFactory.updateObject(loan);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setRequestPathInfo("/applyAdjustment");
@@ -330,10 +324,10 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(loan);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        loan = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

@@ -37,7 +37,7 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
     }
 
@@ -47,30 +47,8 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
     }
 
     @Test
-    public void testGetRolesFailure() {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            rolesPermissionsBusinessService.getRoles();
-           Assert.assertTrue(false);
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        }
-    }
-
-    @Test
     public void testGetActivities() throws Exception {
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, rolesPermissionsBusinessService.getActivities().size());
-    }
-
-    @Test
-    public void testGetActivitiesFailure() {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            rolesPermissionsBusinessService.getActivities();
-           Assert.assertTrue(false);
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        }
     }
 
     @Test
@@ -78,17 +56,6 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
         RoleBO role = rolesPermissionsBusinessService.getRole(Short.valueOf("1"));
         Assert.assertNotNull(role);
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
-    }
-
-    @Test
-    public void testGetRoleForGivenIdFailure() {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            rolesPermissionsBusinessService.getRole(Short.valueOf("1"));
-           Assert.assertTrue(false);
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        }
     }
 
 }

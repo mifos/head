@@ -96,7 +96,7 @@ public class ProductCategoryBOIntegrationTest extends MifosIntegrationTestCase {
         Session session = StaticHibernateUtil.getSessionTL();
         Transaction transaction = StaticHibernateUtil.startTransaction();
         session.delete(productCategoryBO);
-        transaction.commit();
+        session.flush();
     }
 
 }

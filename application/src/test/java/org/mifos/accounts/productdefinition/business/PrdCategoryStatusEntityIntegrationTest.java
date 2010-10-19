@@ -46,7 +46,7 @@ public class PrdCategoryStatusEntityIntegrationTest extends MifosIntegrationTest
 
     @After
     public  void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         session = null;
     }
 

@@ -35,7 +35,7 @@ public class LocalizationIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private void restoreConfigSetup(Localization localization, ConfigLocale savedConfigLocale) {

@@ -3,3 +3,8 @@ target
 *.log.*
 test-output
 application/src/main/sql/latest-schema_last.sql
+.idea/*
+*/.idea/*
+*.iml
+*.xmind
+docs/

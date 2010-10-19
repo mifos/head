@@ -20,19 +20,17 @@
 
 package org.mifos.framework.components.audit.persistence;
 
-import java.sql.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.sql.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -57,7 +55,7 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
            Assert.assertEquals("test_1", logRecord.getOldValue());
            Assert.assertEquals("new_test_1", logRecord.getNewValue());
         }
-        TestObjectFactory.cleanUp(auditLog);
+        
     }
 
     @Test
@@ -73,7 +71,7 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
         AuditPersistence auditPersistence = new AuditPersistence();
         List<AuditLog> auditLogList = auditPersistence.getAuditLogRecords(Short.valueOf("2"), Integer.valueOf("1"));
        Assert.assertEquals(1, auditLogList.size());
-        TestObjectFactory.cleanUp(auditLog);
+
     }
 
     private AuditLog getAuditLog(Integer entityId, Short entityType) {

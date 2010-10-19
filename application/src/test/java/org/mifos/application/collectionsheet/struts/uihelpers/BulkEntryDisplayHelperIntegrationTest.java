@@ -94,16 +94,16 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(centerSavingsAccount);
-        TestObjectFactory.cleanUp(groupSavingsAccount);
-        TestObjectFactory.cleanUp(clientSavingsAccount);
-        TestObjectFactory.cleanUp(groupAccount);
-        TestObjectFactory.cleanUp(clientAccount);
-        TestObjectFactory.cleanUp(account);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        centerSavingsAccount = null;
+        groupSavingsAccount = null;
+        clientSavingsAccount = null;
+        groupAccount = null;
+        clientAccount = null;
+        account = null;
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -134,7 +134,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
         StringAssert.assertContains("Attn", result);
 
         TestObjectFactory.removeObject(loanOffering);
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
     }
 
     @Test

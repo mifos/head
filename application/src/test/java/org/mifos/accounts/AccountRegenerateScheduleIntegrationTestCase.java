@@ -20,24 +20,6 @@
 
 package org.mifos.accounts;
 
-import static org.joda.time.DateTimeConstants.APRIL;
-import static org.joda.time.DateTimeConstants.AUGUST;
-import static org.joda.time.DateTimeConstants.DECEMBER;
-import static org.joda.time.DateTimeConstants.FEBRUARY;
-import static org.joda.time.DateTimeConstants.JANUARY;
-import static org.joda.time.DateTimeConstants.JULY;
-import static org.joda.time.DateTimeConstants.JUNE;
-import static org.joda.time.DateTimeConstants.MARCH;
-import static org.joda.time.DateTimeConstants.MAY;
-import static org.joda.time.DateTimeConstants.NOVEMBER;
-import static org.joda.time.DateTimeConstants.SEPTEMBER;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import junit.framework.Assert;
 
 import org.slf4j.Logger;
@@ -53,12 +35,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.productdefinition.util.helpers.*;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -86,6 +63,14 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.joda.time.DateTimeConstants.*;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrationTestCase {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountRegenerateScheduleIntegrationTestCase.class);
@@ -111,18 +96,23 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(savingsBO);
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            savingsBO = null;
+            accountBO = null;
+            client = null;
+            group = null;
+            center = null;
+//            savingsBO = null;
+//            accountBO = null;
+//            client = null;
+//            group = null;
+//            center = null;
 
             accountPersistence = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         } finally {
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
         }
 
         new DateTimeService().resetToCurrentSystemDateTime();
@@ -147,7 +137,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         SavingsBO savings = new SavingsBO(TestUtils.makeUser(), savingsOffering, client, AccountState.SAVINGS_ACTIVE,
                 savingsOffering.getRecommendedAmount(), null);
         savings.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return savings;
     }
 
@@ -401,13 +391,11 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
     }
 
-    @Test
     public void testChangeInMeetingScheduleForDates(MeetingBO meeting, MeetingBO newMeeting, LocalDate startDate,
             LocalDate dateWhenMeetingWillBeChanged) throws Exception {
         testChangeInMeetingScheduleForDates(meeting, meeting, newMeeting, startDate, dateWhenMeetingWillBeChanged, false);
     }
 
-    @Test
     public void testChangeInMeetingScheduleForDates(MeetingBO customerMeeting, MeetingBO loanMeeting, MeetingBO newMeeting, LocalDate startDate, LocalDate dateWhenMeetingWillBeChanged,
             boolean useClosedAndCancelled) throws Exception {
         log("Start: " + startDate + ", Test: " + dateWhenMeetingWillBeChanged);
@@ -422,7 +410,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             savingsBO.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), null, "");
             CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED);
             CustomerBOTestUtils.setCustomerStatus(group, customerStatusEntity);
-            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.flushSession();
         }
 
         new DateTimeService().setCurrentDateTime(dateWhenMeetingWillBeChanged.toDateTimeAtStartOfDay());
@@ -439,9 +427,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         accountBO.handleChangeInMeetingSchedule(workingDays, holidays);
         savingsBO.handleChangeInMeetingSchedule(workingDays, holidays);
 
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-
+        StaticHibernateUtil.flushSession();
     }
 
     private void validateSchedules(List<LocalDate> expectedMeetingDates) {

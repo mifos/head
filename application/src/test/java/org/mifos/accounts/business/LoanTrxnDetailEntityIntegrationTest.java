@@ -20,12 +20,7 @@
 
 package org.mifos.accounts.business;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +37,10 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 
@@ -60,11 +59,11 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(account);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        account = null;
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
 
     }
 
@@ -77,7 +76,7 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(sampleDate, meeting);
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 sampleDate, loanOffering);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         account = new AccountPersistence().getAccount(account.getAccountId());
        Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
@@ -87,7 +86,7 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
                 TestUtils.createMoney("700.0"), null, account.getPersonnel(), "423423", Short
                 .valueOf("1"), sampleDate, sampleDate);
         account.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
 
        Assert.assertEquals(1, account.getAccountPayments().size());
         AccountPaymentEntity payment = account.getAccountPayments().iterator().next();

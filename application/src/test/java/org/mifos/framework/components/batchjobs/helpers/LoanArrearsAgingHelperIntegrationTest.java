@@ -115,12 +115,12 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     public void tearDown() throws Exception {
         new DateTimeService().resetToCurrentSystemDateTime();
 
-        TestDatabase.resetMySQLDatabase();
+
 
         loanArrearsAgingHelper = null;
         loanArrearHelper = null;
         ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, oldRoundingMode);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     private LoanBO setUpLoan(DateTime dateTime, AccountState accountState) {
@@ -138,7 +138,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         } catch (AccountException e) {
             throw new RuntimeException(e);
         }
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         return loan;
     }
 
@@ -221,7 +221,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         new DateTimeService().setCurrentDateTimeFixed(dateTime.plusDays(daysToAgeLoan));
 
         runLoanArrearsThenLoanArrearsAging();
-
+        StaticHibernateUtil.flushAndClearSession();
         LoanBO reloadedLoan = new LoanPersistence().getAccount(loan.getAccountId());
 
         return reloadedLoan.getLoanArrearsAgingEntity();
@@ -233,9 +233,9 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     @Test
     public void testLoanWithOneOverduePayment() throws Exception {
         LoanBO loan = setUpLoan(dateTime, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
-
+        
         LoanArrearsAgingEntity loanArrearsAgingEntity = ageLoanTenDaysAndGetLoanArrearsAgingEntity(loan);
-
+        
         Assert.assertEquals(new Money(getCurrency(), "" + loanAmount), loanArrearsAgingEntity.getUnpaidPrincipal());
         Assert.assertEquals(new Money(getCurrency(), "" + totalInterest), loanArrearsAgingEntity.getUnpaidInterest());
         Assert.assertEquals(new Money(getCurrency(), "" + principalForOneInstallment), loanArrearsAgingEntity
@@ -288,8 +288,8 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         PaymentData paymentData = PaymentData.createPaymentData(new Money(Configuration.getInstance().getSystemConfig()
                 .getCurrency(), "" + onePayment), loan.getPersonnel(), Short.valueOf("1"), dateTime.toDate());
         loan.applyPaymentWithPersist(paymentData);
-
         runLoanArrearsThenLoanArrearsAging();
+        StaticHibernateUtil.flushAndClearSession();
 
         loan = new LoanPersistence().getAccount(loan.getAccountId());
 
@@ -388,7 +388,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         new DateTimeService().setCurrentDateTimeFixed(dateTime);
 
         runLoanArrearsThenLoanArrearsAging();
-
+        StaticHibernateUtil.flushAndClearSession();
         loan = new LoanPersistence().getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
@@ -427,7 +427,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         loan.applyPaymentWithPersist(paymentData);
 
         runLoanArrearsThenLoanArrearsAging();
-
+        StaticHibernateUtil.flushAndClearSession();
         loan = new LoanPersistence().getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
@@ -475,7 +475,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         Query updateQuery = StaticHibernateUtil.getSessionTL().createQuery(
                 "update ProductTypeEntity set latenessDays = 0 where productTypeID = 1");
         updateQuery.executeUpdate();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     private void runLoanArrearsThenLoanArrearsAging() throws BatchJobException, PersistenceException {

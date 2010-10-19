@@ -20,10 +20,7 @@
 
 package org.mifos.accounts.productdefinition.business.service;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.After;
@@ -38,6 +35,8 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
 
 public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -54,7 +53,7 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
     public void tearDown() throws Exception {
         productCategoryBusinessService = null;
         userContext = null;
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
 
@@ -75,17 +74,6 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
     }
 
     @Test
-    public void testGetProductTypesFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            productCategoryBusinessService.getProductTypes();
-            Assert.fail();
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        }
-    }
-
-    @Test
     public void testFindByGlobalNum() throws Exception {
         ProductCategoryBO productCategoryBO = createProductCategory();
         Assert.assertNotNull(productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum()));
@@ -93,32 +81,8 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
     }
 
     @Test
-    public void testFindByGlobalNumFailure() throws Exception {
-        ProductCategoryBO productCategoryBO = createProductCategory();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            productCategoryBusinessService.findByGlobalNum(productCategoryBO.getGlobalPrdCategoryNum());
-            Assert.fail();
-        } catch (ServiceException e) {
-            StaticHibernateUtil.closeSession();
-            deleteProductCategory(productCategoryBO);
-        }
-    }
-
-    @Test
     public void testGetProductCategoryStatusList() throws Exception {
        Assert.assertEquals(2, productCategoryBusinessService.getProductCategoryStatusList().size());
-    }
-
-    @Test
-    public void testGetProductCategoryStatusListFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            productCategoryBusinessService.getProductCategoryStatusList();
-            Assert.fail();
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        }
     }
 
     @Test
@@ -129,22 +93,11 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         deleteProductCategory(productCategoryBO);
     }
 
-    @Test
-    public void testGetAllCategoriesFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            productCategoryBusinessService.getAllCategories();
-            Assert.fail();
-        } catch (ServiceException e) {
-           Assert.assertTrue(true);
-        }
-    }
-
     private void deleteProductCategory(ProductCategoryBO productCategoryBO) {
         Session session = StaticHibernateUtil.getSessionTL();
         Transaction transaction = StaticHibernateUtil.startTransaction();
         session.delete(productCategoryBO);
-        transaction.commit();
+        session.flush();
     }
 
     private ProductCategoryBO createProductCategory() throws Exception {
@@ -152,7 +105,7 @@ public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrat
         ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, productCategoryBusinessService
                 .getProductTypes().get(0), "product category", "created a category");
         productCategoryBO.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return (ProductCategoryBO) StaticHibernateUtil.getSessionTL().createQuery(
                 "from " + ProductCategoryBO.class.getName() + " pcb order by pcb.productCategoryID").list().get(2);
     }

@@ -20,11 +20,8 @@
 
 package org.mifos.accounts.struts.action;
 
-import java.sql.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
+import org.junit.Ignore;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -54,6 +51,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import java.sql.Date;
+import java.util.List;
 
 public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     public EditStatusActionStrutsTest() throws Exception {
@@ -113,19 +113,20 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     public void tearDown() throws Exception {
         try {
             reloadMembers();
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            accountBO = null;
+            client = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
-    public void testLoad() throws Exception {
+    @Ignore("Convert to unit test")
+    public void load() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
@@ -142,10 +143,11 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
         Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
                 .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
-    public void testPreviewSuccess() throws Exception {
+    @Ignore("Convert to unit test")
+    public void previewSuccess() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
@@ -177,10 +179,10 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
                 request));
         Assert.assertNull("Since new Status is not cancel,so flag should be null.", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request.getSession()));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
-
-    public void testPreviewFailure() throws Exception {
+    @Ignore("Convert to unit test")
+    public void previewFailure() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
@@ -195,7 +197,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.STATUS_LIST, request));
         Assert.assertEquals("Size of the status list should be 2", 2, ((List<AccountStateEntity>) SessionUtils
                 .getAttribute(SavingsConstants.STATUS_LIST, request)).size());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/editStatusAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("input", "loan");
@@ -234,8 +236,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
     }
-
-    public void testUpdateSuccessForLoan() throws Exception {
+    @Ignore("Convert to unit test")
+    public void updateSuccessForLoan() throws Exception {
         TestObjectFactory.cleanUpChangeLog();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
@@ -263,7 +265,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward("preview_success");
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/editStatusAction.do");
         addRequestParameter("method", "update");
         addRequestParameter("notes", "Test");

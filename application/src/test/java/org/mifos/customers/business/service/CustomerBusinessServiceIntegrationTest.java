@@ -20,20 +20,10 @@
 
 package org.mifos.customers.business.service;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -84,6 +74,16 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
 public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     private static final Integer THREE = Integer.valueOf(3);
@@ -117,15 +117,15 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         try {
             // if there is an additional currency code defined, then clear it
             ConfigurationManager.getInstance().clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
-            TestObjectFactory.cleanUp(clientSavingsAccount);
-            TestObjectFactory.cleanUp(groupAccount);
-            TestObjectFactory.cleanUp(clientAccount);
-            TestObjectFactory.cleanUp(account);
-            TestObjectFactory.cleanUp(savingsBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
-            StaticHibernateUtil.closeSession();
+            clientSavingsAccount = null;
+            groupAccount = null;
+            clientAccount = null;
+            account = null;
+            savingsBO = null;
+            client = null;
+            group = null;
+            center = null;
+            StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             // throwing here tends to mask other failures
             e.printStackTrace();
@@ -143,20 +143,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     @Test
-    public void testFailureSearchGropAndClient() throws Exception {
-        createInitialCustomers();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            new CustomerBusinessService().searchGroupClient("cl", Short.valueOf("1"));
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    @Test
     public void testSearchCustForSavings() throws Exception {
         createInitialCustomers();
         QueryResult queryResult = new CustomerBusinessService().searchCustForSavings("c", Short.valueOf("1"));
@@ -167,24 +153,10 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     @Test
-    public void testFailureSearchCustForSavings() throws Exception {
-        createInitialCustomers();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            new CustomerBusinessService().searchCustForSavings("c", Short.valueOf("1"));
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-    }
-
-    @Test
     public void testGetAllActivityView() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         List<CustomerRecentActivityDto> customerActivityViewList = service
                 .getAllActivityView(center.getGlobalCustNum());
@@ -208,10 +180,11 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     @Test
+    @Ignore
     public void testFailureGetRecentActivityView() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         TestObjectFactory.simulateInvalidConnection();
         try {
@@ -220,14 +193,14 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         } catch (ServiceException e) {
             Assert.assertTrue(true);
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
     public void testGetRecentActivityView() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         List<CustomerRecentActivityDto> customerActivityViewList = service
                 .getAllActivityView(center.getGlobalCustNum());
@@ -310,14 +283,14 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,
                 center);
         savingsBO = getSavingsAccount(group, "fsaf5", "ads5");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         group = (GroupBO) service.findBySystemId(group.getGlobalCustNum());
         Assert.assertEquals("Group_Active_test", group.getDisplayName());
         Assert.assertEquals(2, group.getAccounts().size());
         Assert.assertEquals(0, group.getOpenLoanAccounts().size());
         Assert.assertEquals(1, group.getOpenSavingAccounts().size());
         Assert.assertEquals(CustomerStatus.GROUP_ACTIVE, group.getStatus());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savingsBO = TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -327,7 +300,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     public void testSuccessfulGet() throws Exception {
         center = createCenter("MyCenter");
         savingsBO = getSavingsAccount(center, "fsaf5", "ads5");
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         center = service.getCustomer(center.getCustomerId());
         Assert.assertNotNull(center);
         Assert.assertEquals("MyCenter", center.getDisplayName());
@@ -335,35 +308,9 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Assert.assertEquals(0, center.getOpenLoanAccounts().size());
         Assert.assertEquals(1, center.getOpenSavingAccounts().size());
         Assert.assertEquals(CustomerStatus.CENTER_ACTIVE.getValue(), center.getCustomerStatus().getId());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savingsBO = TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
-    }
-
-    @Test
-    public void testFailureGet() throws Exception {
-        center = createCenter("MyCenter");
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.getCustomer(center.getCustomerId());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
-    }
-
-    @Test
-    public void testFailureGetBySystemId() throws Exception {
-        center = createCenter("MyCenter");
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.findBySystemId(center.getGlobalCustNum());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
     }
 
     @Test
@@ -379,7 +326,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 .getId(), client.getCustomerStatus().getId(), CheckListConstants.STATUS_INACTIVE);
         CustomerCheckListBO checklistGroup = TestObjectFactory.createCustomerChecklist(
                 group.getCustomerLevel().getId(), group.getCustomerStatus().getId(), CheckListConstants.STATUS_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         Assert.assertEquals(1,
                 service.getStatusChecklist(center.getCustomerStatus().getId(), center.getCustomerLevel().getId())
                         .size());
@@ -395,27 +342,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 checklistClient.getChecklistId())));
         checklistGroup = (CustomerCheckListBO) (StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
                 checklistGroup.getChecklistId())));
-        TestObjectFactory.cleanUp(checklistCenter);
-        TestObjectFactory.cleanUp(checklistClient);
-        TestObjectFactory.cleanUp(checklistGroup);
 
-    }
-
-    @Test
-    public void testFailureGetCustomerChecklist() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
-        StaticHibernateUtil.closeSession();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.getStatusChecklist(center.getCustomerStatus().getId(), center.getCustomerLevel().getId());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
     }
 
     @Test
@@ -423,20 +350,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         Assert.assertEquals(2, service.retrieveAllCustomerStatusList(center.getCustomerLevel().getId()).size());
-    }
-
-    @Test
-    public void testFailureRetrieveAllCustomerStatusList() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.getStatusChecklist(center.getCustomerStatus().getId(), center.getCustomerLevel().getId());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
     }
 
     @Test
@@ -556,28 +469,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     @Test
-    public void testFailureGetAllClosedAccounts() throws Exception {
-        getCustomer();
-        groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
-                "WITHDRAW LOAN ACCOUNT");
-        clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(), null, "WITHDRAW LOAN ACCOUNT");
-        clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(),
-                AccountStateFlag.SAVINGS_REJECTED.getValue(), "WITHDRAW LOAN ACCOUNT");
-        TestObjectFactory.updateObject(groupAccount);
-        TestObjectFactory.updateObject(clientAccount);
-        TestObjectFactory.updateObject(clientSavingsAccount);
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.getAllClosedAccount(client.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
-
-    }
-
-    @Test
     public void testGetAllClosedAccountsWhenNoAccountsClosed() throws Exception {
         getCustomer();
         Assert.assertEquals(0, service
@@ -599,22 +490,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     @Test
-    public void testFailureGetActiveCentersUnderUser() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
-        PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.getActiveCentersUnderUser(personnel);
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
-
-    }
-
-    @Test
     public void testgetGroupsUnderUser() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
@@ -623,23 +498,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         List<CustomerBO> customers = service.getGroupsUnderUser(personnel);
         Assert.assertNotNull(customers);
         Assert.assertEquals(1, customers.size());
-    }
-
-    @Test
-    public void testFailuregetGroupsUnderUser() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("center", meeting, Short.valueOf("1"), Short.valueOf("1"));
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        PersonnelBO personnel = TestObjectFactory.getPersonnel(Short.valueOf("1"));
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.getGroupsUnderUser(personnel);
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
-
     }
 
     @Test

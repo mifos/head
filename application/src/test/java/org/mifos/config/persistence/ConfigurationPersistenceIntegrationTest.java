@@ -33,7 +33,7 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
 
     @After
     public void tearDown() throws Exception {
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test

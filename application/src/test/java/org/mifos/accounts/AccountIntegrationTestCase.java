@@ -20,10 +20,6 @@
 
 package org.mifos.accounts;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -50,7 +46,11 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCase {
 
     protected SavingsBO savingsBO;
     protected LoanBO groupLoan;
@@ -76,20 +76,21 @@ public class AccountIntegrationTestCase extends MifosIntegrationTestCase {
     public void tearDown() throws Exception {
         try {
             this.getBranchOffice().setHolidays(null);
-            TestObjectFactory.cleanUp(holiday);
-            TestObjectFactory.cleanUp(groupLoan);
-            TestObjectFactory.cleanUp(clientLoan);
-            TestObjectFactory.cleanUp(savingsBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            
+            holiday = null;
+            groupLoan = null;
+            clientLoan = null;
+            savingsBO = null;
+            client = null;
+            group = null;
+            center = null;
             accountPersistence = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         } finally {
             new DateTimeService().resetToCurrentSystemDateTime();
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
         }
 
     }

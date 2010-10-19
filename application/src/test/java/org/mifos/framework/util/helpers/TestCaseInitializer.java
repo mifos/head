@@ -44,8 +44,8 @@ public class TestCaseInitializer {
 
     private static Boolean initialized = false;
     
-    public synchronized void initialize() throws Exception {
-        if (initialized == false) {
+    public void initialize() throws Exception {
+        if (!initialized) {
             initializeDB();
             initialized = true;
         }
@@ -53,8 +53,6 @@ public class TestCaseInitializer {
 
     private void initializeDB() throws Exception{
         StaticHibernateUtil.initialize();
-        TestDatabase.createMySQLTestDatabase();
-        // add this because it is added to Application Initializer
         Localization.getInstance().init();
 
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
@@ -67,5 +65,6 @@ public class TestCaseInitializer {
         MifosConfiguration.getInstance().init();
         AuditConfigurtion.init(Localization.getInstance().getMainLocale());
         AccountingRules.init();
+        StaticHibernateUtil.commitTransaction();
     }
 }

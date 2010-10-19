@@ -120,16 +120,16 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
     public void tearDown() throws Exception {
         try {
             reloadMembers();
-            TestObjectFactory.cleanUp(savingsBO);
-            TestObjectFactory.cleanUp(loanBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            savingsBO = null;
+            loanBO = null;
+            client = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -232,7 +232,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         addRequestParameter("globalAccountNum", savingsBO.getGlobalAccountNum());
         setRequestPathInfo("/savingsAction.do");
@@ -248,7 +248,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
        Assert.assertEquals("Size of the search result should be 2", 2, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savingsBO = TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
         getobjects();
     }
@@ -360,7 +360,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         addRequestParameter("globalAccountNum", loanBO.getGlobalAccountNum());
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "get");
@@ -376,7 +376,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
 
         getobjects();

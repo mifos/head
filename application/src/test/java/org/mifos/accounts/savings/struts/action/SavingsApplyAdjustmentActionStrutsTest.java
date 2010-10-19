@@ -103,23 +103,23 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
             if (savings != null) {
                 savings = (SavingsBO) StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
             }
-            TestObjectFactory.cleanUp(savings);
+            savings = null;
             savings = null;
             if (group != null) {
                 group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
             }
-            TestObjectFactory.cleanUp(group);
+            group = null;
             group = null;
             if (center != null) {
                 center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
             }
-            TestObjectFactory.cleanUp(center);
+            center = null;
             center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -134,8 +134,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         AccountTestUtils.addAccountPayment(payment, savings);
         SavingBOTestUtils.setBalance(savings, depositAmount);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "load");
@@ -164,8 +163,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         AccountTestUtils.addAccountPayment(payment, savings);
         SavingBOTestUtils.setBalance(savings, balance);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "load");
@@ -186,7 +184,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         createInitialObjects();
         savingsOffering = createSavingsOffering();
         savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "load");
@@ -208,7 +206,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
                 AccountState.SAVINGS_ACTIVE);
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "load");
         actionPerform();
@@ -222,7 +220,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyForward("preview_success");
         verifyNoActionMessages();
         verifyNoActionErrors();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         // savings = new SavingsPersistence().findById(savings.getAccountId());
     }
 
@@ -230,7 +228,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         createInitialObjects();
         savingsOffering = createSavingsOffering();
         savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "preview");
@@ -245,7 +243,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
                 AccountState.SAVINGS_ACTIVE);
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "load");
         actionPerform();
@@ -266,7 +264,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
        Assert.assertEquals(2, getErrorSize());
        Assert.assertEquals(1, getErrorSize(AccountConstants.MAX_NOTE_LENGTH));
        Assert.assertEquals(1, getErrorSize(SavingsConstants.INVALID_ADJUSTMENT_AMOUNT));
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         // savings = new SavingsPersistence().findById(savings.getAccountId());
     }
 
@@ -293,7 +291,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
                 AccountState.SAVINGS_ACTIVE);
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "load");
         actionPerform();
@@ -307,7 +305,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyForward("preview_success");
         verifyNoActionMessages();
         verifyNoActionErrors();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         // savings = new SavingsPersistence().findById(savings.getAccountId());
     }
 
@@ -334,8 +332,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         AccountActionDateEntity accountActionDate = null;
         paymentData.addAccountPaymentData(new SavingsPaymentData(accountActionDate));
         savings.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         return new SavingsPersistence().findById(savings.getAccountId());
     }
 

@@ -83,11 +83,11 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
         TestObjectFactory.removeObject(prdmix2);
         TestObjectFactory.removeObject(loanOffering);
         TestObjectFactory.removeObject(loanOffering2);
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
         TestObjectFactory.removeObject(secondSavingsOffering);
-        TestObjectFactory.cleanUp(center);
-        TestObjectFactory.cleanUp(center2);
-        StaticHibernateUtil.closeSession();
+        center = null;
+        center2 = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -98,7 +98,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
     @Test
     public void testGetAllPrdOfferingsByType_Success() throws ServiceException {
         Assert.assertEquals(1, service.getAllPrdOfferingsByType(ProductType.SAVINGS.getValue().toString()).size());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
     }
 
@@ -106,13 +106,13 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
     public void testGetAllowedPrdOfferingsForMixProduct_Success() throws ServiceException {
         Assert.assertEquals(1, service.getAllowedPrdOfferingsForMixProduct(
                 savingsOffering.getPrdOfferingId().toString(), ProductType.SAVINGS.getValue().toString()).size());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
     public void testGetAllPrdOfferingsByType_failure() throws ServiceException {
         Assert.assertEquals(0, service.getAllPrdOfferingsByType(ProductType.LOAN.getValue().toString()).size());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -130,7 +130,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
                 .getPrdOfferingName().compareToIgnoreCase(service.getAllowedPrdOfferingsByType(
                 savingsOffering.getPrdOfferingId().toString(), ProductType.SAVINGS.getValue().toString()).get(1)
                 .getPrdOfferingName())) < 0);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
     }
 
@@ -160,7 +160,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
                 .getPrdOfferingName().compareToIgnoreCase(service.getNotAllowedPrdOfferingsByType(
                 savingsOffering.getPrdOfferingId().toString()).get(1).getPrdOfferingName())) < 0);
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
     }
 
     private ProductMixBO createNotAllowedProductForAProductOffering(PrdOfferingBO prdOffering,
@@ -217,7 +217,7 @@ public class ProductMixBusinessServiceIntegrationTest extends MifosIntegrationTe
                 .assertTrue("Products Mix should be in alphabitical order:", (service.getPrdOfferingMix().get(0)
                         .getPrdOfferingName().compareToIgnoreCase(service.getPrdOfferingMix().get(1)
                         .getPrdOfferingName())) < 0);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
     }
 

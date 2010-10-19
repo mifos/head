@@ -20,12 +20,7 @@
 
 package org.mifos.customers.personnel.business.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,6 +39,10 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     private OfficeBO office;
@@ -61,9 +60,9 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(personnelBO);
-        TestObjectFactory.cleanUp(personnel);
-        StaticHibernateUtil.closeSession();
+        personnelBO = null;
+        personnel = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -87,56 +86,14 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
     }
 
     @Test
-    public void testFailureGetOffice() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            personnelBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE);
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-    }
-
-    @Test
-    public void testSearchFailureWithNoConn() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            personnelBusinessService.getPersonnel("WRONG_USERNAME");
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-    }
-
-    @Test
     public void testSearch() throws Exception {
         personnel = createPersonnel();
-        QueryResult queryResult = personnelBusinessService.search(personnel.getUserName(), Short.valueOf("1"), Short
+        QueryResult queryResult = personnelBusinessService.search(personnel.getUserName(), Short
                 .valueOf("1"));
 
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
-    }
-
-    @Test
-    public void testSearchFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            personnelBusinessService.search("Raj", Short.valueOf("1"), Short.valueOf("1"));
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
     }
 
     @Test
@@ -147,48 +104,6 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
                 .getActiveLoanOfficersUnderOffice(office.getOfficeId());
         Assert.assertNotNull(loanOfficers);
         Assert.assertEquals(1, loanOfficers.size());
-
-    }
-
-    @Test
-    public void testGetActiveLoanOfficersUnderOfficeFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            personnelBusinessService.getActiveLoanOfficersUnderOffice(Short.valueOf("3"));
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-    }
-
-    @Test
-    public void testGetRolesFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            personnelBusinessService.getRoles();
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-    }
-
-    @Test
-    public void testGetPersonnelFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            personnelBusinessService.getPersonnel("12345678");
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
 
     }
 
@@ -214,8 +129,7 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
                 "xyz@yahoo.com", null, customFieldDto, new Name("XYZ", null, null, null), "111111", date, Integer
                         .valueOf("1"), Integer.valueOf("1"), date, date, address, PersonnelConstants.SYSTEM_USER);
         personnel.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         return personnel;
     }

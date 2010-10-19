@@ -124,7 +124,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         //
         savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive");
         savings.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         // refresh hibernate data
         savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
 
@@ -138,7 +138,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         //make inactive first
         savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive");
         savings.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         // refresh hibernate data
         savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
 
@@ -149,7 +149,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         //make active again
         savings.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Make Active Again");
         savings.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         // refresh hibernate data
         savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
 

@@ -396,8 +396,9 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     private void validateDuplicateProductOfferingName(final String productOfferingName) throws ProductDefinitionException {
         logger.debug("Checking for duplicate product offering name");
         try {
-            if (!new PrdOfferingPersistence().getProductOfferingNameCount(productOfferingName).equals(
-                    Integer.valueOf("0"))) {
+            PrdOfferingPersistence prdOfferingPersistence = new PrdOfferingPersistence();
+            Integer count = prdOfferingPersistence.getProductOfferingNameCount(productOfferingName);
+            if (!count.equals(0)) {
                 throw new ProductDefinitionException(ProductDefinitionConstants.DUPLPRDINSTNAME);
             }
         } catch (PersistenceException e) {

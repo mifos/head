@@ -131,7 +131,7 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
         Session session = StaticHibernateUtil.getSessionTL();
         Transaction transaction = StaticHibernateUtil.startTransaction();
         session.delete(productCategoryBO);
-        transaction.commit();
+        session.flush();
     }
 
     private ProductCategoryBO createProductCategory() throws Exception {
@@ -139,7 +139,7 @@ public class ProductCategoryPersistenceIntegrationTest extends MifosIntegrationT
         ProductCategoryBO productCategoryBO = new ProductCategoryBO(userContext, productCategoryPersistence
                 .getProductTypes().get(0), "product category", "created a category");
         productCategoryBO.save();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         return getProductCategory().get(2);
     }
 

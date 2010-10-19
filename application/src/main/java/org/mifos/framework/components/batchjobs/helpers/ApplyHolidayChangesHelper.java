@@ -20,11 +20,6 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -42,7 +37,6 @@ import org.mifos.framework.components.batchjobs.configuration.BatchJobConfigurat
 import org.mifos.framework.components.batchjobs.configuration.StandardBatchJobConfigurationService;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -51,12 +45,16 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
     // injectable external dependencies
     private AccountPersistence accountPersistence;
     private BatchJobConfigurationService batchJobConfigurationService;
-    private HibernateUtil hibernateUtil;
     private HolidayDao holidayDao;
     private FiscalCalendarRules fiscalCalendarRules;
     private Map<Short, ScheduledDateGeneration> officeScheduledDateGenerationMap;
@@ -84,10 +82,6 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
     public void setBatchJobConfigurationService(BatchJobConfigurationService batchJobConfigurationService) {
         this.batchJobConfigurationService = batchJobConfigurationService;
-    }
-
-    public HibernateUtil getHibernateUtil() {
-        return HibernateUtil.getInstance();
     }
 
     public AccountPersistence getAccountPersistence() {
@@ -140,14 +134,14 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 try {
                     rescheduleDatesStartingFromUnappliedHoliday(holiday);
                 } catch (Exception e) {
-                    getHibernateUtil().rollbackTransaction();
+                    StaticHibernateUtil.rollbackTransaction();
                     errorList.add("Failed to apply holiday changes: " + e.toString());
                     e.printStackTrace();
                     throw new BatchJobException(SchedulerConstants.FAILURE, errorList);
                 }
             }
         }
-        getHibernateUtil().closeSession();
+        StaticHibernateUtil.closeSession();
         String finalMessage = "ApplyHolidayChanges task completed in "
                 + (new DateTimeService().getCurrentDateTime().getMillis() - taskStartTime) + " ms";
         logMessage(finalMessage);
@@ -181,8 +175,8 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         rollingStartTime = new DateTimeService().getCurrentDateTime().getMillis();
         currentRecordNumber = 0;
 
-        getHibernateUtil().getSessionTL();
-        getHibernateUtil().startTransaction();
+        StaticHibernateUtil.getSessionTL();
+        StaticHibernateUtil.startTransaction();
 
         for (Object[] accountIds : accountIdsArray) {
             Integer accountId = (Integer) accountIds[0];
@@ -210,7 +204,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         }
 
-        getHibernateUtil().commitTransaction();
+        StaticHibernateUtil.commitTransaction();
         long rescheduleEndTime = new DateTimeService().getCurrentDateTime().getMillis();
         String message = "" + currentRecordNumber + " updated, " + (accountCount - currentRecordNumber)
                 + " remaining, batch time: " + (rescheduleEndTime - rollingStartTime) + " ms";
@@ -267,13 +261,12 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     }
 
     private void applyHoliday(Holiday holiday) throws PersistenceException {
-
-        getHibernateUtil().getSessionTL();
-        getHibernateUtil().startTransaction();
+        StaticHibernateUtil.getSessionTL();
+        StaticHibernateUtil.startTransaction();
         Holiday updateHoliday = getHolidayDao().findHolidayById(holiday.getId());
         updateHoliday.markAsApplied();
         getHolidayDao().save(updateHoliday);
-        getHibernateUtil().commitTransaction();
+        StaticHibernateUtil.commitTransaction();
     }
 
     private void initializeTaskGlobalParameters() {
@@ -291,12 +284,12 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
     private void houseKeeping() {
 
         if (currentRecordNumber % batchSize == 0) {
-            getHibernateUtil().flushAndClearSession();
+            StaticHibernateUtil.flushAndClearSession();
         }
         if (currentRecordNumber % recordCommittingSize == 0) {
-            getHibernateUtil().commitTransaction();
-            getHibernateUtil().getSessionTL();
-            getHibernateUtil().startTransaction();
+            StaticHibernateUtil.commitTransaction();
+            StaticHibernateUtil.getSessionTL();
+            StaticHibernateUtil.startTransaction();
         }
 
         if (currentRecordNumber % outputIntervalForBatchJobs == 0) {

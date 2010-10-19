@@ -33,7 +33,11 @@ import org.mifos.security.util.UserContext;
 
 public class RolesPermissionsBusinessService implements BusinessService {
 
-    private RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+    private RolesPermissionsPersistence rolesPermissionsPersistence = getRolesPermissionsPersistence();
+
+    protected RolesPermissionsPersistence getRolesPermissionsPersistence() {
+        return new RolesPermissionsPersistence();
+    }
 
     @Override
     public AbstractBusinessObject getBusinessObject(UserContext userContext) {

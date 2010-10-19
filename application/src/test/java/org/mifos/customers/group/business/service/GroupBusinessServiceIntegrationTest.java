@@ -20,10 +20,7 @@
 
 package org.mifos.customers.group.business.service;
 
-import java.sql.Date;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +45,8 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.sql.Date;
 
 public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -80,13 +79,13 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(loanBO);
-        TestObjectFactory.cleanUp(savingsBO1);
-        TestObjectFactory.cleanUp(savingsBO2);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        loanBO = null;
+        savingsBO1 = null;
+        savingsBO2 = null;
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     @Test
@@ -98,7 +97,7 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         savingsBO2 = getSavingsAccount(center, "fsaf5", "ads5");
         savingsBO1 = getSavingsAccount(group, "fsaf6", "ads6");
         loanBO = getLoanAccount(group);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
         savingsBO2 = TestObjectFactory.getObject(SavingsBO.class, savingsBO2.getAccountId());
         savingsBO1 = TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());
@@ -111,29 +110,13 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(), group.getCustomerStatus().getId());
         Assert.assertEquals(1, ((GroupPerformanceHistoryEntity) group.getPerformanceHistory()).getActiveClientCount()
                 .intValue());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
         savingsBO1 = TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());
         savingsBO2 = TestObjectFactory.getObject(SavingsBO.class, savingsBO2.getAccountId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
-    }
-
-    @Test
-    public void testFailureGetGroupBySystemId() throws Exception {
-        center = createCenter("Center_Active_test");
-        String groupName = "Group_Active_test";
-        group = createGroup(groupName);
-        StaticHibernateUtil.closeSession();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            groupBusinessService.findBySystemId(group.getGlobalCustNum());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
     }
 
     @Test
@@ -144,7 +127,7 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         client = createClient("Client_Active_test");
         savingsBO1 = getSavingsAccount(group, "fsaf6", "ads6");
         loanBO = getLoanAccount(group);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
         savingsBO1 = TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());
         group = groupBusinessService.getGroup(group.getCustomerId());
@@ -156,28 +139,12 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertEquals(CustomerStatus.GROUP_ACTIVE.getValue(), group.getCustomerStatus().getId());
         Assert.assertEquals(1, ((GroupPerformanceHistoryEntity) group.getPerformanceHistory()).getActiveClientCount()
                 .intValue());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
         savingsBO1 = TestObjectFactory.getObject(SavingsBO.class, savingsBO1.getAccountId());
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
-    }
-
-    @Test
-    public void testFailureGet() throws Exception {
-        center = createCenter("Center_Active_test");
-        String groupName = "Group_Active_test";
-        group = createGroup(groupName);
-        StaticHibernateUtil.closeSession();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            groupBusinessService.getGroup(group.getCustomerId());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
     }
 
     @Test
@@ -201,22 +168,6 @@ public class GroupBusinessServiceIntegrationTest extends MifosIntegrationTestCas
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
-    }
-
-    @Test
-    public void testFailureSearch() throws Exception {
-        center = createCenter("Center_Active_test");
-        String groupName = "Group_Active_test";
-        group = createGroup(groupName);
-        StaticHibernateUtil.closeSession();
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            groupBusinessService.search(group.getDisplayName(), Short.valueOf("1"));
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.closeSession();
     }
 
     private GroupBO createGroup(String groupName) {

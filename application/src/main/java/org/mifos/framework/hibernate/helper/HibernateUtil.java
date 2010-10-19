@@ -20,8 +20,6 @@
 
 package org.mifos.framework.hibernate.helper;
 
-import java.util.Properties;
-
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -31,14 +29,18 @@ import org.mifos.framework.exceptions.ConnectionNotFoundException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBean;
 
-public class HibernateUtil implements FactoryBean<HibernateUtil> {
+import java.sql.Connection;
+import java.util.Properties;
+
+class HibernateUtil implements FactoryBean<HibernateUtil> {
 
     private static SessionFactory sessionFactory;
     private static final ThreadLocal<AuditInterceptor> interceptorTL = new ThreadLocal<AuditInterceptor>();
     private static final ThreadLocal<Session> sessionTL = new ThreadLocal<Session>();
 
     private static HibernateUtil hibernateUtil;
-    private HibernateUtil() {
+
+    protected HibernateUtil() {
     }
 
     public static HibernateUtil getInstance() {
@@ -112,8 +114,9 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
     }
 
     public void closeSession() {
-        if (getSessionTL().isOpen()) {
-            getSessionTL().close();
+        Session session = sessionTL.get();
+        if (session != null && session.isOpen()) {
+            session.close();
         }
         sessionTL.set(null);
     }
@@ -124,9 +127,10 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
 
 
     public void flushAndCloseSession() {
-        if (getSessionTL().isOpen()) {
-            getSessionTL().flush();
-            getSessionTL().close();
+        Session session = sessionTL.get();        
+        if (session != null && session.isOpen()) {
+            session.flush();
+            session.close();
         }
         sessionTL.set(null);
 
@@ -138,7 +142,6 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
             session.flush();
             session.clear();
         }
-
     }
 
     private Session getOrCreateSession() throws HibernateException {
@@ -175,5 +178,13 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
     @Override
     public boolean isSingleton() {
         return true;
+    }
+
+    public void clearSession() {
+        getSessionTL().clear();
+    }
+
+    public Connection getConnection() {
+        return getSessionTL().connection();
     }
 }

@@ -20,22 +20,6 @@
 
 package org.mifos.customers.business;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
@@ -80,6 +64,22 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
     private static final double DELTA = 0.00000001;
@@ -93,20 +93,20 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void setUp() throws Exception {
         enableCustomWorkingDays();
-        TestDatabase.resetMySQLDatabase();
+
         userContext = TestObjectFactory.getContext();
     }
 
     @After
     public void tearDown() throws Exception {
         try {
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+            client = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     @Test
@@ -126,7 +126,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         customerAccount = center.getCustomerAccount();
         customerAccount.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
 
         Assert.assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
         Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
@@ -163,7 +163,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccount = center.getCustomerAccount();
 
         customerAccount.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
 
         try {
@@ -281,7 +281,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         customerAccount = center.getCustomerAccount();
         customerAccount.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
 
         Assert.assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
         for (CustomerActivityEntity activity : customerAccount.getCustomerActivitDetails()) {
@@ -372,8 +372,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             FeeBO feesBO = accountFeesEntity.getFees();
             customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feesBO.getFeeId(), Short.valueOf("1"));
         }
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         group = TestObjectFactory.getGroup(group.getCustomerId());
         customerAccountBO = group.getCustomerAccount();
 
@@ -406,7 +405,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             FeeBO feesBO = accountFeesEntity.getFees();
             customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feesBO.getFeeId(), Short.valueOf("1"));
         }
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         checkActivity(null, customerAccountBO);
 
         AccountFeesEntity accountFeesEntity = getInactiveFee();
@@ -604,7 +603,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         customerAccountBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
                 .getAmountDoubleValue());
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         AccountFeesEntity accountFeesEntity = customerAccountBO.getAccountFees(periodicFee.getFeeId());
         Assert.assertEquals(Short.valueOf("1"), accountFeesEntity.getFeeStatus());
         Assert.assertNull(accountFeesEntity.getLastAppliedDate());
@@ -613,7 +612,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(1, customerAccountBO.getCustomerActivitDetails().size());
 
         customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(periodicFee.getFeeId(), Short.valueOf("1"));
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         Assert.assertEquals(2, customerAccountBO.getCustomerActivitDetails().size());
         Assert.assertEquals(2, customerAccountBO.getAccountFees().size());
         for (AccountFeesEntity accountFees : customerAccountBO.getAccountFees()) {
@@ -626,7 +625,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         customerAccountBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
                 .getAmountDoubleValue());
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         Assert.assertEquals(3, customerAccountBO.getCustomerActivitDetails().size());
         accountFeesEntity = customerAccountBO.getAccountFees(periodicFee.getFeeId());
         Assert.assertEquals(Short.valueOf("1"), accountFeesEntity.getFeeStatus());
@@ -651,7 +650,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccountBO.setUserContext(uc);
         customerAccountBO.applyCharge(upfrontFee.getFeeId(), ((AmountFeeBO) upfrontFee).getFeeAmount()
                 .getAmountDoubleValue());
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         Date lastAppliedDate = null;
         Money amount = new Money(getCurrency(), "20");
 
@@ -788,7 +787,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         // exercise test
         customerAccount.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
 
         // verification
         assertThat(customerAccount.getCustomerActivitDetails().size(), is(1));
@@ -813,11 +812,10 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meetingBO);
         changeAllInstallmentDateToPreviousDate(center.getCustomerAccount(), 14);
         center.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         java.util.Date nextMeetingDate = center.getCustomerAccount().getNextMeetingDate();
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -838,11 +836,10 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meetingBO);
         changeFirstInstallmentDateToPreviousDate(center.getCustomerAccount());
         center.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushAndClearSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         java.util.Date nextMeetingDate = center.getCustomerAccount().getNextMeetingDate();
         group = TestObjectFactory.getGroup(group.getCustomerId());
@@ -939,7 +936,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
         customerAccount.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
 
         if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
             for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
@@ -1002,7 +999,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
         customerAccount.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
 
         if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
             for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
@@ -1067,7 +1064,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
         customerAccount.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
 
         if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
             for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
@@ -1129,7 +1126,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccountBO.addCustomerActivity(new CustomerActivityEntity(customerAccountBO, center.getPersonnel(),
                 TestUtils.createMoney(30), AccountConstants.PAYMENT_RCVD, new Date(System.currentTimeMillis() + 345600000)));
         customerAccountBO.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushAndClearSession();
         TestObjectFactory.flushandCloseSession();
         customerAccountBO = TestObjectFactory.getCustomer(client.getCustomerId()).getCustomerAccount();
         UserContext uc = TestUtils.makeUser();

@@ -20,19 +20,9 @@
 
 package org.mifos.customers.center.struts.action;
 
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -63,12 +53,16 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.security.util.UserContext;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 
 public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     public CenterActionStrutsTest() throws Exception {
@@ -93,7 +87,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
+
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -113,11 +107,11 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(savingsBO);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        savingsBO = null;
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -501,7 +495,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     private void createAndSetCenterInSession() throws Exception {
         String name = "manage_center";
         center = TestObjectFactory.createWeeklyFeeCenter(name, getMeeting());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
     }
@@ -521,7 +515,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         savingsBO = getSavingsAccount("fsaf6", "ads6", center);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "get");
         addRequestParameter("globalCustNum", center.getGlobalCustNum());
@@ -541,7 +535,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
         Assert.assertEquals("Size of the active accounts should be 1", 1, centerInformation.getSavingsAccountsInUse()
                 .size());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         savingsBO = TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
@@ -594,14 +588,13 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         AmountFeeBO fee1 = (AmountFeeBO) TestObjectFactory.createPeriodicAmountFee("PeriodicAmountFee",
                 FeeCategory.CENTER, "200", frequency, Short.valueOf("2"));
         fees.add(new FeeDto(TestObjectFactory.getContext(), fee1));
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         return fees;
     }
 
     private void removeFees(List<FeeDto> feesToRemove) {
-        for (FeeDto fee : feesToRemove) {
-            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
-        }
+//        for (FeeDto fee : feesToRemove) {
+//            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
+//        }
     }
 }

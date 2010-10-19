@@ -20,11 +20,7 @@
 
 package org.mifos.accounts.struts.action;
 
-import java.sql.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -43,6 +39,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.sql.Date;
+import java.util.List;
 
 public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -88,11 +87,11 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(accountBO);
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        accountBO = null;
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

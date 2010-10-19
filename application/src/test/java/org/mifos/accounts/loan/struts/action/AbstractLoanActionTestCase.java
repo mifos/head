@@ -69,6 +69,10 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        setup();
+    }
+
+    protected void setup() {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
@@ -84,8 +88,7 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
                 FeePayment.TIME_OF_DISBURSEMENT);
         FeeBO fee3 = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.LOAN, "10.0",
                 RecurrenceType.WEEKLY, (short) 1);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         fees.add(fee1);
         fees.add(fee3);
         return fees;
@@ -127,19 +130,20 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
         clearRequestParameters();
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
                 .getPrdOfferingId()));
-        for (FeeBO fee : fees) {
-            TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId()));
-        }
+        fees = null;
+//        for (FeeBO fee : fees) {
+//            TestObjectFactory.cleanUp((FeeBO) TestObjectFactory.getObject(FeeBO.class, fee.getFeeId()));
+//        }
         try {
-            reloadMembers();
-            TestObjectFactory.cleanUp(accountBO);
-            TestObjectFactory.cleanUp(client);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
+//            reloadMembers();
+            accountBO = null;
+            client = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         } finally {
-            StaticHibernateUtil.closeSession();
+            StaticHibernateUtil.flushSession();
         }
     }
 

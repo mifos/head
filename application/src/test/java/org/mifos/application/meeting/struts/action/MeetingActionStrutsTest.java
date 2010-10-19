@@ -20,18 +20,11 @@
 
 package org.mifos.application.meeting.struts.action;
 
-import java.util.Date;
-
 import junit.framework.Assert;
-
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;
-import org.mifos.application.meeting.util.helpers.MeetingConstants;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.util.helpers.*;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -44,6 +37,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
 
 public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
     public MeetingActionStrutsTest() throws Exception {
@@ -70,11 +65,14 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(client1);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        client1 = null;
+        client2 = null;
+//
+//        TestObjectFactory.cleanUp(client1);
+//        TestObjectFactory.cleanUp(client2);
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -547,7 +545,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
     public void testSuccessfulEditCancel() throws Exception {
         MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new Date());
         center = createCenter(meeting);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "get");
         addRequestParameter("globalCustNum", center.getGlobalCustNum());
@@ -565,7 +563,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         verifyForward(ActionForwards.center_detail_page.toString());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
         Assert.assertNotNull(center.getCustomerMeeting().getMeeting());
     }

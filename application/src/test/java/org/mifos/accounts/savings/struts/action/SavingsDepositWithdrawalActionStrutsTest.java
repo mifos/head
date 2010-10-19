@@ -20,12 +20,7 @@
 
 package org.mifos.accounts.savings.struts.action;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -62,6 +57,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -136,18 +135,18 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
     public void tearDown() throws Exception {
         try {
             reloadMembers();
-            TestObjectFactory.cleanUp(savings);
-            TestObjectFactory.cleanUp(client1);
-            TestObjectFactory.cleanUp(client2);
-            TestObjectFactory.cleanUp(client3);
-            TestObjectFactory.cleanUp(client4);
-            TestObjectFactory.cleanUp(group);
-            TestObjectFactory.cleanUp(center);
             SecurityContextHolder.setContext(null);
+            savings = null;
+            client1 = null;
+            client2 = null;
+            client3 = null;
+            client4 = null;
+            group = null;
+            center = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -158,7 +157,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, client1,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -194,7 +193,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -223,7 +222,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -239,7 +238,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -255,7 +254,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -271,7 +270,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
@@ -291,7 +290,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
@@ -310,7 +309,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
@@ -329,7 +328,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -350,7 +349,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         addRequestParameter("method", "makePayment");
         actionPerform();
         verifyForward(ActionForwards.account_details_page.toString());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
        Assert.assertEquals(new Money(getCurrency(), "200"), savings.getSavingsBalance());
     }
@@ -360,13 +359,12 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
         SavingBOTestUtils.setBalance(savings, new Money(getCurrency(), "500"));
 
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -389,7 +387,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         addRequestParameter("method", "makePayment");
         actionPerform();
         verifyForward(ActionForwards.account_details_page.toString());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         savings = new SavingsPersistence().findById(savings.getAccountId());
        Assert.assertEquals(new Money(getCurrency(), "470"), savings.getSavingsBalance());
     }

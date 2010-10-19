@@ -61,10 +61,10 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(savings);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        savings = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -76,7 +76,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         userContext.setId(PersonnelConstants.SYSTEM_USER);
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         List<SavingsBO> savingsList = new SavingsPrdPersistence().retrieveSavingsAccountsForPrd(savingsOffering
                 .getPrdOfferingId());
        Assert.assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
@@ -89,7 +89,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         savingsOffering = new SavingsPrdPersistence().getSavingsProduct(savingsOffering.getPrdOfferingId());
         Assert.assertNotNull("The time period for Int calc should not be null", savingsOffering.getTimePerForInstcalc());
         Assert.assertNotNull("The freq for Int post should not be null", savingsOffering.getFreqOfPostIntcalc());
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
     }
 
     @Test
@@ -101,14 +101,14 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
     public void testGetSavingsOfferingsNotMixed() throws Exception {
         savingsOffering = createSavingsOfferingBO();
        Assert.assertEquals(1, new SavingsPrdPersistence().getSavingsOfferingsNotMixed(Short.valueOf("1")).size());
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
     }
 
     @Test
     public void testGetAllActiveSavingsProducts() throws Exception {
         savingsOffering = createSavingsOfferingBO();
        Assert.assertEquals(1, new SavingsPrdPersistence().getAllActiveSavingsProducts().size());
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
     }
 
     @Test
@@ -120,7 +120,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
     public void testGetAllSavingsProducts() throws Exception {
         savingsOffering = createSavingsOfferingBO();
        Assert.assertEquals(1, new SavingsPrdPersistence().getAllSavingsProducts().size());
-        TestObjectFactory.removeObject(savingsOffering);
+        savingsOffering = null;
     }
 
     private void createInitialObjects() {

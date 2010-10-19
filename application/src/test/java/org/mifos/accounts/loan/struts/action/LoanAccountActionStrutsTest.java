@@ -49,7 +49,6 @@ import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 
 import junit.framework.Assert;
-
 import org.joda.time.DateMidnight;
 import org.joda.time.LocalDate;
 import org.junit.Ignore;
@@ -132,6 +131,33 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+import javax.servlet.http.HttpServletRequest;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 @SuppressWarnings("unchecked")
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     public LoanAccountActionStrutsTest() throws Exception {
@@ -165,21 +191,17 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         super.tearDown();
     }
 
     public void testLoadWithFeeForToday() throws Exception {
-        // get rid of default objects
         tearDown();
-
         new DateTimeService().setCurrentDateTime(new DateMidnight(2010,1,6).toDateTime());
+        setUp();
         new ConfigurationPersistence().updateConfigurationKeyValueInteger("repaymentSchedulesIndependentOfMeetingIsEnabled", 1);
         LoanAccountActionForm loanActionForm = null;
         try {
-            // setup again after setting date and config parameters
-            setUp();
-
             goToPrdOfferingPage();
             actionPerform();
             setRequestPathInfo("/loanAccountAction.do");
@@ -233,7 +255,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         accountBO.changeStatus(AccountState.LOAN_APPROVED.getValue(), null, "status changed");
         accountBO.update();
 
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         LoanBO loan = (LoanBO) accountBO;
         LoanOfferingBO loanOffering = loan.getLoanOffering();
         // loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
@@ -303,9 +325,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 loanOffering.getMinInterestRate(), loanOffering.getDefInterestRate(), loanOffering.isIncludeInLoanCounter(),
                 loanOffering.isIntDedDisbursement(), loanOffering.isPrinDueLastInst(),
                 new ArrayList<FundBO>(), new ArrayList<FeeBO>(), Short.valueOf("1"),
-                RecurrenceType.MONTHLY, loanPrdActionForm, loanOffering.isInterestWaived(), null);
-        StaticHibernateUtil.commitTransaction();
-
+        RecurrenceType.MONTHLY, loanPrdActionForm, loanOffering.isInterestWaived(), null);
+       
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("loanAmount", loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount()
                 .toString());
@@ -330,7 +351,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         accountBO.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
                 "status changed");
         accountBO.update();
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
         LoanBO loan = (LoanBO) accountBO;
 
         setRequestPathInfo("/loanAccountAction.do");
@@ -720,7 +741,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
         loanOffering.addPrdOfferingFee(new LoanOfferingFeesEntity(loanOffering, fees.get(0)));
         TestObjectFactory.updateObject(loanOffering);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "getPrdOfferings");
@@ -1049,7 +1070,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(Short.valueOf("1"), loan.getGracePeriodDuration());
         Assert.assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
-        TestObjectFactory.cleanUp(loan);
+        loan = null;
     }
 
     public void testManage() throws Exception {
@@ -1210,9 +1231,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         Assert.assertEquals(new Money(getCurrency(), "200"), loan.getLoanAmount());
         Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
-        TestObjectFactory.cleanUp(loan);
-        TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
-                .getPrdOfferingId()));
+        loan = null;
         accountBO = null;
     }
 
@@ -1232,9 +1251,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
         Assert.assertEquals(new Money(getCurrency(), "2000"), loan.getLoanAmount());
         Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
-        TestObjectFactory.cleanUp(loan);
-        TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
-                .getPrdOfferingId()));
+        loan = null;
     }
 
     private void modifyActionDateForFirstInstallment() throws Exception {
@@ -1284,7 +1301,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     private void disburseLoan(Date startDate) throws Exception {
         ((LoanBO) accountBO).disburseLoan("1234", startDate, Short.valueOf("1"), accountBO.getPersonnel(), startDate,
                 Short.valueOf("1"));
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 
     private AccountBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {

@@ -82,10 +82,10 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -98,8 +98,7 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         group.addCustomerPosition(customerPositionEntity);
         group.update();
 
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
@@ -170,8 +169,7 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
                 .getParentCustomer());
         group.addCustomerPosition(customerPositionEntity);
         group.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         group = TestObjectFactory.getCustomer(group.getCustomerId());
         center = TestObjectFactory.getCustomer(center.getCustomerId());

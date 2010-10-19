@@ -23,6 +23,7 @@ package org.mifos.accounts.financial.util.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.exceptions.FinancialExceptionConstants;
@@ -34,6 +35,7 @@ public class FinancialActionCache {
 
     public static void addToCache(FinancialActionTypeEntity financialAction) {
         if ((financialAction != null) && (financialCacheRepository.get(financialAction.getId()) == null)) {
+            Hibernate.initialize(financialAction.getLookUpValue());
             financialCacheRepository.put(financialAction.getId(), financialAction);
         }
     }

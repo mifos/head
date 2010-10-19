@@ -76,10 +76,10 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        TestObjectFactory.cleanUp(client);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        client = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -294,7 +294,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "get");
         addRequestParameter("customerId", center.getCustomerId().toString());
@@ -311,7 +311,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         getobjects();
     }
@@ -440,7 +440,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "get");
         addRequestParameter("customerId", group.getCustomerId().toString());
@@ -457,7 +457,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals("Size of the search result should be 1", 1, ((QueryResult) SessionUtils.getAttribute(
                 Constants.SEARCH_RESULTS, request)).getSize());
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         getobjects();
     }
 

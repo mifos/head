@@ -31,21 +31,19 @@ import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.FeeStatusEntity;
-import org.mifos.accounts.fees.persistence.FeeDao;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class FeeDaoHibernate implements FeeDao {
 
@@ -67,7 +65,7 @@ public class FeeDaoHibernate implements FeeDao {
     @Override
     public FeeDto findDtoById(Short feeId) {
 
-        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         Criteria criteriaQuery = session.createCriteria(FeeBO.class);
         criteriaQuery.add(Restrictions.eq("id", feeId));
         criteriaQuery.setFetchMode("lookUpValue", FetchMode.JOIN);
@@ -136,7 +134,7 @@ public class FeeDaoHibernate implements FeeDao {
 
     @SuppressWarnings("unchecked")
     private <T extends MasterDataEntity> List<T> doFetchListOfMasterDataFor(Class<T> type) {
-        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         List<T> masterEntities = session.createQuery("from " + type.getName()).list();
         for (MasterDataEntity masterData : masterEntities) {
             Hibernate.initialize(masterData.getNames());
@@ -167,7 +165,7 @@ public class FeeDaoHibernate implements FeeDao {
     @SuppressWarnings("unchecked")
     private <T extends MasterDataEntity> T retrieveMasterEntity(final Class<T> entityType, final Short entityId) {
 
-        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         Criteria criteriaQuery = session.createCriteria(entityType);
         criteriaQuery.add(Restrictions.eq("id", entityId));
         criteriaQuery.setFetchMode("lookUpValue", FetchMode.JOIN);

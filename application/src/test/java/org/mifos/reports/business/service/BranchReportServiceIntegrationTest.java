@@ -211,7 +211,7 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         populateLoanArrearSummary();
 
         session = StaticHibernateUtil.getSessionTL();
-        transaction = session.beginTransaction();
+//        transaction = session.beginTransaction();
         officeBusinessServiceMock = createMock(OfficeBusinessService.class);
         branchReportService = new BranchReportService(officeBusinessServiceMock, new PersonnelBusinessService(),
                 new BranchReportPersistence());
@@ -233,10 +233,5 @@ public class BranchReportServiceIntegrationTest extends BranchReportIntegrationT
         branchReport.addLoanArrearsAging(loanArrearReportForFirstWeek);
         branchReport.addLoanArrearsAging(loanArrearReportForSecondWeek);
         branchReport.addLoanArrearsAging(loanArrearReportForThirdWeek);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        transaction.rollback();
     }
 }

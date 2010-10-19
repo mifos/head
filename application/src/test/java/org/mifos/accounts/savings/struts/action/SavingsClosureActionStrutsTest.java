@@ -23,7 +23,6 @@ package org.mifos.accounts.savings.struts.action;
 import java.util.Date;
 
 import junit.framework.Assert;
-
 import org.hibernate.Hibernate;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTestUtils;
@@ -64,6 +63,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+
 
 public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
     public SavingsClosureActionStrutsTest() throws Exception {
@@ -123,15 +123,15 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
     public void tearDown() throws Exception {
         SecurityContext securityContext = new SecurityContextImpl();
         SecurityContextHolder.setContext(securityContext);
-        TestObjectFactory.cleanUp(savings);
-        TestObjectFactory.cleanUp(newSavings);
-        TestObjectFactory.cleanUp(client1);
-        TestObjectFactory.cleanUp(client2);
-        TestObjectFactory.cleanUp(client3);
-        TestObjectFactory.cleanUp(client4);
-        TestObjectFactory.cleanUp(group);
-        TestObjectFactory.cleanUp(center);
-        StaticHibernateUtil.closeSession();
+        savings = null;
+        client1 = null;
+        client2 = null;
+        client3 = null;
+        client4 = null;
+        newSavings = null;
+        group = null;
+        center = null;
+        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -141,7 +141,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         savingsOffering = TestObjectFactory.createSavingsProduct("Offering1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
         savings = createSavingsAccount("000X00000000017", savingsOffering, client1, AccountState.SAVINGS_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsClosureAction.do");
         addRequestParameter("method", "load");
@@ -168,7 +168,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         createClients();
         savingsOffering = createSavingsOffering();
         savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACTIVE);
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsClosureAction.do");
         addRequestParameter("method", "load");
@@ -297,8 +297,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
                 .getDate("30/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
         AccountTestUtils.addAccountPayment(payment1, savings);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         Money balanceAmount = TestUtils.createMoney("1500.0");
         AccountPaymentEntity payment2 = helper.createAccountPaymentToPersist(savings,
@@ -306,15 +305,13 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
                 AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
         AccountTestUtils.addAccountPayment(payment2, savings);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         Money interestAmount = TestUtils.createMoney("40");
         SavingBOTestUtils.setInterestToBePosted(savings, interestAmount);
         SavingBOTestUtils.setBalance(savings, balanceAmount);
         savings.update();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
+        StaticHibernateUtil.flushSession();
 
         savings = new SavingsPersistence().findById(savings.getAccountId());
         savings.setUserContext(userContext);

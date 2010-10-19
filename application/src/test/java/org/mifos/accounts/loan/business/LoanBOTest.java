@@ -23,14 +23,21 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.annotation.ExpectedException;
 
 import java.math.BigDecimal;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanBOTest {
@@ -91,5 +98,24 @@ public class LoanBOTest {
         Assert.assertEquals(loanBO.waiverAmount(), new Money(dollar, "0"));
         Mockito.verify(loanOfferingBO, Mockito.times(1)).getCurrency();
         Mockito.verify(loanScheduleEntity, Mockito.times(1)).isPaid();
+    }
+
+    @Test
+    @ExpectedException(value = AccountException.class)
+    public void testInvalidConnectionForSave() throws PersistenceException {
+        final AccountPersistence accountPersistence = mock(AccountPersistence.class);
+
+        LoanBO loanBO = new LoanBO() {
+            @Override
+            public AccountPersistence getAccountPersistence() {
+                return accountPersistence;
+            }
+        };
+        try {
+            when(accountPersistence.createOrUpdate(loanBO)).thenThrow(new PersistenceException("some exception"));
+            loanBO.update();
+            junit.framework.Assert.fail("should fail because of invalid session");
+        } catch (AccountException e) {
+        }
     }
 }

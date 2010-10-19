@@ -67,7 +67,6 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     private static final String TOTAL_STAFF_ROLENAME_STR = "Total Staff";
     private static final Short BRANCH_ID = Short.valueOf("1");
     private Session session;
-    private Transaction transaction;
     private Date runDate;
     private BranchReportPersistence branchReportPersistence;
     private BranchReportBO branchReportWithLoanArrears;
@@ -268,8 +267,8 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         branchReport.addLoanArrearsAging(branchReportLoanArrearsAgingBO);
         try {
             session.save(branchReport);
-            transaction.commit();
-            transaction = session.beginTransaction();
+            session.flush();
+//            transaction = session.beginTransaction();
             deleteBranchReport(branchReport.getBranchReportId());
         } catch (Exception e) {
             e.printStackTrace(System.out);
@@ -338,8 +337,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
 
     private void deleteBranchReport(Integer reportId) throws PersistenceException {
         branchReportPersistence.delete(branchReportPersistence.getPersistentObject(BranchReportBO.class, reportId));
-        transaction.commit();
-        transaction = session.beginTransaction();
+        session.flush();
     }
 
     private void assertListSizeAndTrueCondition(int resultCount, List retrievedReports, Predicate mustBeTrue) {
@@ -347,12 +345,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         Assert.assertTrue(mustBeTrue.evaluate(CollectionUtils.first(retrievedReports)));
     }
 
-    @After
-    public void tearDown() throws Exception {
-        transaction.rollback();
-    }
 
-    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
@@ -370,6 +363,5 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
         branchReportWithStaffSummary.addStaffSummary(BranchReportBOFixture.createBranchReportStaffSummaryBO());
 
         session = StaticHibernateUtil.getSessionTL();
-        transaction = session.beginTransaction();
     }
 }

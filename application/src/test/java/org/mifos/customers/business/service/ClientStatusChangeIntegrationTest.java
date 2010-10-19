@@ -20,12 +20,6 @@
 
 package org.mifos.customers.business.service;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-
-import java.util.Date;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -56,12 +50,19 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Date;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
 
 public class ClientStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 
@@ -208,7 +209,7 @@ public class ClientStatusChangeIntegrationTest extends MifosIntegrationTestCase 
                                                             .withParentCustomer(existingActiveGroup)
                                                             .buildForIntegrationTests();
         IntegrationTestObjectMother.createClient(existingActiveClient, existingMeeting);
-
+        StaticHibernateUtil.flushAndClearSession();
         DateTime startDate = new DateTime().minusDays(14);
         LoanOfferingBO clientLoanProduct = new LoanProductBuilder().appliesToClientsOnly().withGlobalProductNumber("XXX-00002")
                                                                     .active()

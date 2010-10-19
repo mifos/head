@@ -57,7 +57,7 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
         BranchCashConfirmationInfoBO anotherIssue = new BranchCashConfirmationIssueBO("SOMEMORE", zero());
         reportBO.addCenterIssue(anotherIssue);
         Session session = StaticHibernateUtil.getSessionTL();
-        Transaction transaction = session.beginTransaction();
+//        Transaction transaction = session.beginTransaction();
         session.save(reportBO);
         List<BranchCashConfirmationInfoBO> centerIssues = ReportServiceFactory.getBranchCashConfirmationReportService(
                 null).getCenterIssues(BRANCH_ID, RUN_DATE_STR);
@@ -65,7 +65,7 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
        Assert.assertEquals(2, centerIssues.size());
        Assert.assertTrue(centerIssues.contains(issueBO));
        Assert.assertTrue(centerIssues.contains(anotherIssue));
-        transaction.rollback();
+//        transaction.rollback();
     }
 
     @Test
@@ -80,7 +80,6 @@ public class BranchCashConfirmationReportServiceIntegrationTest extends BranchRe
     @Override
     @Before
     public void setUp() throws Exception {
-        super.setUp();
         persistenceMock = createMock(BranchCashConfirmationReportPersistence.class);
         service = new BranchCashConfirmationReportService(persistenceMock, new OfficeBusinessService());
     }
