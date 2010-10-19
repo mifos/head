@@ -839,7 +839,6 @@
                                 <exclude>**/*ProductStatusHelperIntegrationTest.java</exclude>
                                 <exclude>**/*BatchJobCatchUpIntegrationTest.java</exclude>
                                 <exclude>**/*LatestTestAfterCheckpointIntegrationTest.java</exclude>
-                                <exclude>**/*StrutsTest.java</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
@@ -848,7 +847,7 @@
                                 <mifos.mode>integration</mifos.mode>
                             </systemProperties>
                             <argLine>${maven.surefire.memory}</argLine>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/no_db_commits</reportsDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -861,10 +860,6 @@
                             <testNGArtifactName>null</testNGArtifactName>
                             <printSummary>true</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- override exclude integration test classes    -->
-                            <excludes>
-                                <exclude>**/*IntegrationTest.java</exclude>
-                            </excludes>
                             <includes>
                                 <include>**/*StrutsTest.java</include>
                             </includes>
@@ -872,7 +867,7 @@
                                 <mifos.mode>integration</mifos.mode>
                             </systemProperties>
                             <argLine>${maven.surefire.memory}</argLine>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/struts</reportsDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -885,10 +880,6 @@
                             <testNGArtifactName>null</testNGArtifactName>
                             <printSummary>true</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- override exclude integration test classes    -->
-                            <excludes>
-                                <exclude>none</exclude>
-                            </excludes>
                             <includes>
                                 <include>**/*LatestTestAfterCheckpointIntegrationTest.java</include>
                             </includes>
@@ -896,7 +887,7 @@
                                 <mifos.mode>integration</mifos.mode>
                             </systemProperties>
                             <argLine>${maven.surefire.memory}</argLine>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/dataupgrade</reportsDirectory>
                         </configuration>
                     </execution>
                 </executions>
