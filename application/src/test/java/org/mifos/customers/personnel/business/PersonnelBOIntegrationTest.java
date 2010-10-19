@@ -694,7 +694,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         } catch (PersonnelException e) {
            Assert.assertEquals(PersistenceException.class, e.getCause().getClass());
            Assert.assertEquals(ConstraintViolationException.class, e.getCause().getCause().getClass());
-           StaticHibernateUtil.getHibernateUtil().clearSession();
+           StaticHibernateUtil.clearSession();
            StaticHibernateUtil.rollbackTransaction();
         }
     }

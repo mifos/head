@@ -53,13 +53,11 @@ public class TestCaseInitializer {
 
     private void initializeDB() throws Exception{
         StaticHibernateUtil.initialize();
-        TestDatabase.createMySQLTestDatabase();
-        // add this because it is added to Application Initializer
         Localization.getInstance().init();
 
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));
 
-        FinancialInitializer.initialize(StaticHibernateUtil.getHibernateUtil());
+        FinancialInitializer.initialize();
         ActivityMapper.getInstance().init();
         AuthorizationManager.getInstance().init();
         HierarchyManager.getInstance().init();

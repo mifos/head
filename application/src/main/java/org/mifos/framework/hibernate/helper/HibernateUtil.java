@@ -32,7 +32,7 @@ import org.springframework.orm.hibernate3.annotation.AnnotationSessionFactoryBea
 import java.sql.Connection;
 import java.util.Properties;
 
-public class HibernateUtil implements FactoryBean<HibernateUtil> {
+class HibernateUtil implements FactoryBean<HibernateUtil> {
 
     private static SessionFactory sessionFactory;
     private static final ThreadLocal<AuditInterceptor> interceptorTL = new ThreadLocal<AuditInterceptor>();

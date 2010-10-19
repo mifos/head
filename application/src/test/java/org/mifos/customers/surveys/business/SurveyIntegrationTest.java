@@ -79,7 +79,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
     @After
     public void tearDown() throws Exception {
         StaticHibernateUtil.flushSession();
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @Test

@@ -108,14 +108,14 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testGetPPISurvey() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         int surveyWithLikelihoods = createSurveyWithLikelihoods("surveyName");
         Assert.assertEquals("surveyName", persistence.getPPISurvey(surveyWithLikelihoods).getName());
     }
 
     @Test
     public void testPersistPPISurveyInstance() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         int surveyId = createSurveyWithLikelihoods("surveyName");
         PPISurvey survey = persistence.getPPISurvey(surveyId);
         int instanceId = createSurveyInstance(survey);

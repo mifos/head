@@ -87,7 +87,7 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
             office = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushSession();
         super.tearDown();

@@ -93,7 +93,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
             center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
 
         StaticHibernateUtil.flushSession();

@@ -223,7 +223,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
         AccountingRules.setInitialRoundOffMultiple(savedInitialRoundOffMultiple);
         AccountingRules.setFinalRoundOffMultiple(savedFinalRoundOffMultiple);

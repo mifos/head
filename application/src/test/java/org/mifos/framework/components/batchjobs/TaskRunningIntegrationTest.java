@@ -25,7 +25,7 @@ public class TaskRunningIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @After

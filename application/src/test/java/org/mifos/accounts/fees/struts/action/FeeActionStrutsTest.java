@@ -89,7 +89,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
             StaticHibernateUtil.flushSession();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
         super.tearDown();
     }

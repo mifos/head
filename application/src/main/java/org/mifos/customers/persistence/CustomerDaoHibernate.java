@@ -33,7 +33,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
@@ -95,6 +94,7 @@ import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.ActivityMapper;
@@ -1506,7 +1506,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         String childrenSearchId = parentSearchId + ".%";
 
         try {
-            Connection connection = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL()
+            Connection connection = StaticHibernateUtil.getSessionTL()
                     .connection();
             statement = connection.createStatement();
             String sql = " select customer_id from customer where " + " customer.search_id like '" + childrenSearchId
@@ -1666,7 +1666,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     private <T extends MasterDataEntity> List<T> doFetchListOfMasterDataFor(Class<T> type) {
-        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         List<T> masterEntities = session.createQuery("from " + type.getName()).list();
         for (MasterDataEntity masterData : masterEntities) {
             Hibernate.initialize(masterData.getNames());

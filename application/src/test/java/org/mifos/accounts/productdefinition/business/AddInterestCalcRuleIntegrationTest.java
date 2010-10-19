@@ -76,7 +76,7 @@ public class AddInterestCalcRuleIntegrationTest extends MifosIntegrationTestCase
             InterestTypesEntity entity = (InterestTypesEntity) session.get(InterestTypesEntity.class, newRuleId);
             Assert.assertEquals(goodKey, entity.getLookUpValue().getLookUpName());
         } finally {
-            TestDatabase.resetMySQLDatabase();
+
         }
     }
 

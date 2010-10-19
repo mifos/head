@@ -32,9 +32,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.hibernate.helper.NoActionHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.DatabaseSetup;
 
@@ -64,7 +62,6 @@ public class DatabaseMigratorIntegrationTest extends MifosIntegrationTestCase {
         // Cleaning the database using FK check disabled connection
         // If any one of the test fails or throws error it could lead to
         // multiple failures in other tests during test build
-        FinancialInitializer.initialize(new NoActionHibernateUtil());
         StaticHibernateUtil.flushSession();
     }
 

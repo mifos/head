@@ -20,13 +20,6 @@
 
 package org.mifos.accounts.persistence;
 
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
 import org.hibernate.Query;
@@ -68,6 +61,13 @@ import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.DateUtils;
+
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * FIXME: the term "account" has two meanings in this class:
@@ -455,7 +455,7 @@ public class AccountPersistence extends Persistence {
 
     public void save(List<AccountBO> customerAccounts) {
 
-        Session session = getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         for (AccountBO account : customerAccounts) {
             session.save(account);
         }

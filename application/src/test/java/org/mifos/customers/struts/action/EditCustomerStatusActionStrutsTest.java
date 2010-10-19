@@ -73,7 +73,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     protected void setStrutsConfig() {
         super.setStrutsConfig();
         try {
-            TestDatabase.resetMySQLDatabase();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -231,7 +231,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyForward(ActionForwards.center_detail_page.toString());
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         Assert.assertFalse(center.isActive());
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @SuppressWarnings("unchecked")

@@ -20,12 +20,6 @@
 
 package org.mifos.config.persistence;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -34,7 +28,6 @@ import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.LookUpEntity;
@@ -44,6 +37,13 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ApplicationConfigurationDaoHibernate implements ApplicationConfigurationDao {
 
@@ -60,7 +60,7 @@ public class ApplicationConfigurationDaoHibernate implements ApplicationConfigur
 
     @SuppressWarnings("unchecked")
     private <T extends MasterDataEntity> List<T> doFetchListOfMasterDataFor(Class<T> type) {
-        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         List<T> masterEntities = session.createQuery("from " + type.getName()).list();
         for (MasterDataEntity masterData : masterEntities) {
             Hibernate.initialize(masterData.getNames());
@@ -74,7 +74,7 @@ public class ApplicationConfigurationDaoHibernate implements ApplicationConfigur
     @Override
     public List<LookUpEntity> findLookupValueTypes() {
 
-        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
 
         List<LookUpEntity> entities = session.getNamedQuery(NamedQueryConstants.GET_ENTITIES).list();
 

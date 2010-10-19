@@ -59,7 +59,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     private Question makeTestSelectQuestion(String name, int choiceNumber) throws Exception {

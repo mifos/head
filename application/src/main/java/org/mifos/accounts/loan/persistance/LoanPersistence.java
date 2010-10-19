@@ -20,15 +20,6 @@
 
 package org.mifos.accounts.loan.persistance;
 
-import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
@@ -57,6 +48,15 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+
+import java.math.BigDecimal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class LoanPersistence extends Persistence {
 
@@ -284,7 +284,7 @@ public class LoanPersistence extends Persistence {
     }
 
     public void save(final List<LoanBO> loans) {
-        Session session = getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         for (LoanBO loan : loans) {
             session.save(loan);
         }
@@ -378,7 +378,7 @@ public class LoanPersistence extends Persistence {
             }
             Integer loanAccountId = (Integer) obj[0];
             BigDecimal lastLoanAmount = (BigDecimal) obj[1];
-            LoanBO loan = (LoanBO) getHibernateUtil().getSessionTL().get(LoanBO.class, loanAccountId);
+            LoanBO loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loanAccountId);
             return new Money(loan.getCurrency(), lastLoanAmount);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
@@ -395,7 +395,7 @@ public class LoanPersistence extends Persistence {
             }
             Integer loanAccountId = (Integer) obj[0];
             BigDecimal lastLoanAmount = (BigDecimal) obj[1];
-            LoanBO loan = (LoanBO) getHibernateUtil().getSessionTL().get(LoanBO.class, loanAccountId);
+            LoanBO loan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loanAccountId);
             return new Money(loan.getCurrency(), lastLoanAmount);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);

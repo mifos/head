@@ -79,7 +79,7 @@ public class CenterBOIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @Test

@@ -68,7 +68,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
     @After
     public void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @Test

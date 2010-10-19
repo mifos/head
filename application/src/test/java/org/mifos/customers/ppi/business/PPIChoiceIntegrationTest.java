@@ -53,7 +53,7 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @Test

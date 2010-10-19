@@ -57,7 +57,7 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         super.tearDown();
     }
 

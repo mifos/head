@@ -46,7 +46,7 @@ public class AddReportIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @Test

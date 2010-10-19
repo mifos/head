@@ -76,7 +76,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+        
         mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsTestTask.xml");
         jobName = "LoanArrearsTaskJob";
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());

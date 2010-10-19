@@ -100,7 +100,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
             office = null;
             savingsOffering1 = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushSession();
     }

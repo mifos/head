@@ -50,7 +50,7 @@ public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationT
             saveCollectionSheetUtils.clearObjects();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
 
         StaticHibernateUtil.flushSession();

@@ -107,7 +107,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
 //            new OfficePersistence().getOffice((short)1).getHolidays().clear();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         } finally {
             StaticHibernateUtil.flushSession();
             new DateTimeService().resetToCurrentSystemDateTime();

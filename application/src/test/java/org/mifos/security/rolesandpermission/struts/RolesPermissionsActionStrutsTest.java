@@ -86,7 +86,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testLoad() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "load");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

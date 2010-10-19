@@ -94,7 +94,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
+
 
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);

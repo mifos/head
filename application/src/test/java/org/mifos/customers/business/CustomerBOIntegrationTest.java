@@ -96,7 +96,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
             loanOfficer = null;
             createdBranchOffice = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushAndClearSession();
     }

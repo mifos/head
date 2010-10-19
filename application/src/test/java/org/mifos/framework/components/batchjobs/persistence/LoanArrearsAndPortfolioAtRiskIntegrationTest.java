@@ -58,7 +58,7 @@ public class LoanArrearsAndPortfolioAtRiskIntegrationTest extends MifosIntegrati
 
     @Before
     public void setUp() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         jobName = "LoanArrearsAndPortfolioAtRiskTaskJob";
     }
 

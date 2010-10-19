@@ -106,7 +106,7 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
             officeBO = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushSession();
     }

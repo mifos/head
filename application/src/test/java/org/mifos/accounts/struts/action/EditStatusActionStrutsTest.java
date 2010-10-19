@@ -119,7 +119,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
             center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushSession();
         super.tearDown();

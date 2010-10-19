@@ -26,7 +26,6 @@ import org.hibernate.Transaction;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
 import org.mifos.framework.exceptions.HibernateStartUpException;
 
-import javax.jws.soap.SOAPBinding;
 import java.sql.Connection;
 
 public class StaticHibernateUtil {
@@ -97,5 +96,9 @@ public class StaticHibernateUtil {
 
     public static Connection getConnection() {
         return hibernateUtil.getConnection();
+    }
+
+    public static void clearSession() {
+        hibernateUtil.clearSession();
     }
 }

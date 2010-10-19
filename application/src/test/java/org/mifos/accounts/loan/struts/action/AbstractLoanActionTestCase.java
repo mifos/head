@@ -141,7 +141,7 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
             group = null;
             center = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         } finally {
             StaticHibernateUtil.flushSession();
         }

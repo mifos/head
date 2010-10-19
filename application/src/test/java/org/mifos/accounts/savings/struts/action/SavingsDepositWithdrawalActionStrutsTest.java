@@ -144,7 +144,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
             group = null;
             center = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushSession();
         super.tearDown();

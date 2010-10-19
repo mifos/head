@@ -147,7 +147,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
             savingsOffering1 = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushAndClearSession();
         super.tearDown();

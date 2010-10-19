@@ -68,7 +68,7 @@ public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         jobName = "ProductStatusJob";
     }
 

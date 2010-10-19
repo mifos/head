@@ -73,7 +73,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
 
     @Before
     public void setUp() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         productStatusHelper = new ProductStatusHelper();
         jobName = "ProductStatusJob";
     }

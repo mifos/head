@@ -62,7 +62,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
             saveCollectionSheetUtils.clearObjects();
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
 
         new DateTimeService().resetToCurrentSystemDateTime();

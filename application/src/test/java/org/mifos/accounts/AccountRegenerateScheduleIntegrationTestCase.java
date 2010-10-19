@@ -110,7 +110,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
             accountPersistence = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         } finally {
             StaticHibernateUtil.flushSession();
         }

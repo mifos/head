@@ -123,7 +123,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testUpgradePathNotRuined() throws Exception {
         // TODO Temporary solution to avoid unsuccessful test on some machines
-        TestDatabase.resetMySQLDatabase();
+
         // Retrieve initial activities information
         List<ActivityEntity> activities = new RolesPermissionsBusinessService().getActivities();
         int newActivityId = activities.get(activities.size() - 1).getId() + 1;
@@ -217,7 +217,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testShouldSubmitSucessWhenUploadNewReport() throws Exception {
         // TODO Temporary solution to avoid unsuccessful test on some machines
-        TestDatabase.resetMySQLDatabase();
+
 
         setRequestPathInfo("/birtReportsUploadAction.do");
 

@@ -64,36 +64,6 @@ public class TestDatabase implements FactoryBean<TestDatabase> {
         this.integrationDataSource = integrationDataSource;
     }
 
-    /**
-     * This method was added to work around integration test inter- and intra-dependencies. Once these dependencies in
-     * main code are eliminated, we should be able to use Spring managed testing environment (transaction) this method
-     * should be eliminated as well.
-     */
-    public static void resetMySQLDatabase() throws Exception {
-//        StaticHibernateUtil.flushAndClearSession();
-//        executeScript("truncate_tables.sql", getJDBCConnection());
-//        insertTestData();
-
-        // If the database is ever blown away, we must re-populate chart of
-        // accounts data since some unit tests rely on its presence. It must
-        // be created via this method since adding it via an sql script would
-        // invalidate *other* unit tests that assume this method has been
-        // called.
-//        FinancialInitializer.initialize();
-    }
-
-    public static void createMySQLTestDatabase() throws Exception {
-//        dropMySQLDatabase();
-//        executeScript("latest-schema.sql", getJDBCConnection());
-//        insertTestData();
-    }
-
-    public static void insertTestData() throws Exception {
-//        executeScript("latest-data.sql", getJDBCConnection());
-//        executeScript("custom_data.sql", getJDBCConnection());
-//        executeScript("testdbinsertionscript.sql", getJDBCConnection());
-    }
-
     /*
      * public static void createNotMappedTables() throws Exception { Connection connection = getJDBCConnection(); String
      * sql =

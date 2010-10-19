@@ -191,7 +191,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        TestDatabase.resetMySQLDatabase();
+
         super.tearDown();
     }
 

@@ -115,7 +115,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     public void tearDown() throws Exception {
         new DateTimeService().resetToCurrentSystemDateTime();
 
-        TestDatabase.resetMySQLDatabase();
+
 
         loanArrearsAgingHelper = null;
         loanArrearHelper = null;

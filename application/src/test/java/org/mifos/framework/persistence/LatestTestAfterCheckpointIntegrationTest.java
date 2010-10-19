@@ -30,7 +30,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 import java.io.File;
@@ -60,13 +59,13 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        StaticHibernateUtil.setHibernateUtil(HibernateUtil.getInstance());
+        StaticHibernateUtil.setHibernateUtil(StaticHibernateUtil.getHibernateUtil());
         StaticHibernateUtil.initialize();
     }
 
     @Before
     public void setUp() throws Exception {
-        StaticHibernateUtil.setHibernateUtil(HibernateUtil.getInstance());
+        StaticHibernateUtil.setHibernateUtil(StaticHibernateUtil.getHibernateUtil());
         connection = StaticHibernateUtil.getSessionTL().connection();
         connection.setAutoCommit(false);
         dbUnitConnection = new DatabaseConnection(connection);

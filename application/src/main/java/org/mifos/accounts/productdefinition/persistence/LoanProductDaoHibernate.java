@@ -20,11 +20,6 @@
 
 package org.mifos.accounts.productdefinition.persistence;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -45,7 +40,6 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConsta
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.persistence.GenericDao;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
@@ -54,7 +48,13 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -219,7 +219,7 @@ public class LoanProductDaoHibernate implements LoanProductDao {
 
     @SuppressWarnings("unchecked")
     private <T extends MasterDataEntity> List<T> doFetchListOfMasterDataFor(Class<T> type) {
-        Session session = ((GenericDaoHibernate) this.genericDao).getHibernateUtil().getSessionTL();
+        Session session = StaticHibernateUtil.getSessionTL();
         List<T> masterEntities = session.createQuery("from " + type.getName()).list();
         for (MasterDataEntity masterData : masterEntities) {
             Hibernate.initialize(masterData.getNames());

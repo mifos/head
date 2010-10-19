@@ -68,7 +68,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
             saveCollectionSheetUtils.clearObjects();
             collectionSheetRetrieveSavingsAccountsUtils.clearObjects();
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
 
         StaticHibernateUtil.flushSession();

@@ -56,7 +56,7 @@ public class AddAccountStateFlagIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.flushSession();
         connection = null;
         session = null;
-        TestDatabase.resetMySQLDatabase();
+
     }
 
     @Test

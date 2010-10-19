@@ -93,7 +93,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void setUp() throws Exception {
         enableCustomWorkingDays();
-        TestDatabase.resetMySQLDatabase();
+
         userContext = TestObjectFactory.getContext();
     }
 
@@ -104,7 +104,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
             group = null;
             center = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushAndClearSession();
     }

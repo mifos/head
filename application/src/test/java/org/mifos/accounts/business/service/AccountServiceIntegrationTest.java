@@ -97,7 +97,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
             accountPersistence = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
     }
 
@@ -246,7 +246,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         // FIXME some test leaves database table (apart from CUSTOMER and
         // PRD_OFFERING) in dirty state Failures are noticed on windows xp
         // system, the execution order differs for surefire from OS to OS.
-        TestDatabase.resetMySQLDatabase();
+
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         CustomerAccountBO customerAccountBO = getCustomerAccountWithAllTypesOfFees();
         TestObjectFactory.flushandCloseSession();

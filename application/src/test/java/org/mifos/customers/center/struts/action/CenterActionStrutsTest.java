@@ -87,7 +87,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        TestDatabase.resetMySQLDatabase();
+
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");

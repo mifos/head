@@ -63,7 +63,7 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
             center = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushSession();
     }

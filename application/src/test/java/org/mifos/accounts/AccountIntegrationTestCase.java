@@ -87,7 +87,7 @@ public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCas
             accountPersistence = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
-            TestDatabase.resetMySQLDatabase();
+
         } finally {
             new DateTimeService().resetToCurrentSystemDateTime();
             StaticHibernateUtil.flushSession();

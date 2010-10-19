@@ -67,7 +67,7 @@ public class AccountFeesEntityIntegrationTest extends MifosIntegrationTestCase {
 //            group = null;
 //            center = null;
         } catch (Exception e) {
-            TestDatabase.resetMySQLDatabase();
+
         }
         StaticHibernateUtil.flushSession();
         //super.tearDown();

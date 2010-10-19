@@ -885,11 +885,10 @@
                             <printSummary>true</printSummary>
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <excludes>
-                                <exclude>**/*IntegrationTest.java</exclude>
-                                <exclude>**/*StrutsTest.java</exclude>
+                                <exclude>none</exclude>
                             </excludes>
                             <includes>
-                                <include>**/*LatestTestAfterCheckpointIntegrationTest.java</include>
+                                <include>org/mifos/framework/persistence/LatestTestAfterCheckpointIntegrationTest.java</include>
                             </includes>
                             <systemProperties>
                                 <mifos.mode>integration</mifos.mode>
