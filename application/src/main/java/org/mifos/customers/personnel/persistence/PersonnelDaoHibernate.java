@@ -106,9 +106,12 @@ public class PersonnelDaoHibernate implements PersonnelDao {
             roleIds.add(role.getId());
         }
 
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("ROLE_IDS", new ArrayList<Short>(roleIds));
-        List<Short> activityIds = (List<Short>) this.genericDao.executeNamedQuery("findDistinctActivityIdsForGivenSetOfRoleIds", queryParameters);
+        List<Short> activityIds = new ArrayList<Short>();
+        if (!roleIds.isEmpty()) {
+            HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+            queryParameters.put("ROLE_IDS", new ArrayList<Short>(roleIds));
+            activityIds = (List<Short>) this.genericDao.executeNamedQuery("findDistinctActivityIdsForGivenSetOfRoleIds", queryParameters);
+        }
 
         byte[] password = user.getEncryptedPassword();
         boolean enabled = user.isActive();
@@ -116,13 +119,10 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = !user.isLocked();
 
-        //List<GrantedAuthority> authorities = translateActivityIdsToGrantedAuthorities(activityIds);
         List<GrantedAuthority> authorities = getGrantedActivityAuthorities(activityIds);
 
         return new MifosUser(user.getPersonnelId(), user.getOffice().getOfficeId(), username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
-
-
 
     @SuppressWarnings("unchecked")
     @Override
