@@ -15,14 +15,14 @@
         <div>
             <form method="POST" action="defineNewFund.ftl" name="organizationPreferences.definenewfund.defineNewFund">
                 <div class="margin20lefttop">
-                    <p class="font11pt"><span
-                            class="fontBold">[@spring.message "organizationPreferences.definenewfund.defineanewfund"/]&nbsp;-&nbsp;</span>
+                    <p class="font11pt">
+                        <span class="fontBold">[@spring.message "organizationPreferences.definenewfund.defineanewfund"/]&nbsp;-&nbsp;</span>
                         <span class="orangeheading">[@spring.message "organizationPreferences.definenewfund.enterfundinformation"/]</span>
                     </p>
 
                     <div class="font9pt">[@spring.message "organizationPreferences.definenewfund.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminpagewithoutsubmittinginformation"/]</div>
                     <div class="font9pt"><span
-                            class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/] </div>
+                            class="red">*</span>[@spring.message "fieldsmarkedwithanasteriskarerequired"/] </div>
                 [@mifos.showAllErrors "formBean.*"/]
                     <br/>
 
@@ -38,7 +38,7 @@
     				</span>
                         </div>
                         <div class="span-20 "><span class="span-3 rightAlign"><span
-                                class="red">* </span>[@spring.message "organizationPreferences.definenewfund.fundCode"/]</span><span
+                                class="red">* </span>[@spring.message "organizationPreferences.definenewfund.fundCode"/]:</span><span
                                 class="span-5">&nbsp;
                         [@mifos.formSingleSelectWithPrompt "formBean.codeId", code,"--selectone--" /]
 				    </span>
