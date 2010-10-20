@@ -108,12 +108,8 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
 
         Assert.assertEquals(latestSchemaDump, upgradeSchemaDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
-    }
 
-    @Test
-    public void testAfterLookupValuesAfterCheckpoint() throws Exception {
-        dropLatestDatabase();
-        createLatestCheckPointDatabaseWithLatestData();
+
         int nextLookupId = largestLookupId() + 1;
         connection.createStatement().execute(
                 "insert into lookup_value(lookup_id, entity_id, lookup_name) " + "values(" + nextLookupId
@@ -122,11 +118,10 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
                 "insert into lookup_value_locale(locale_id, lookup_id, lookup_value) " + "values(1," + nextLookupId
                         + ",'Martian')");
 
-        DatabaseMigrator migrator = new DatabaseMigrator(connection);
-        migrator.upgrade();
-        connection.commit();
 
-        // Assert that custom values have been retained
+        migrator = new DatabaseMigrator(connection);
+        migrator.upgrade();
+
         ResultSet rs = connection.createStatement().executeQuery(
                 "select * from lookup_value where lookup_id=" + nextLookupId);
         rs.next();
@@ -139,7 +134,6 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
         Assert.assertEquals(1, rs.getInt("locale_id"));
         Assert.assertEquals("Martian", rs.getString("lookup_value"));
         rs.close();
-
     }
 
     private int largestLookupId() throws SQLException {
