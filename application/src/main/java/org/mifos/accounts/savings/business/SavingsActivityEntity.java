@@ -51,6 +51,11 @@ public class SavingsActivityEntity extends AbstractEntity {
         return new SavingsActivityEntity(personnel, accountAction, amountAdjusted, savingsBalance, adjustedOn, savings);
     }
 
+    public static SavingsActivityEntity savingsWithdrawal(SavingsBO savings, PersonnelBO loggedInUser, Money savingsBalance, Money withdrawalAmount, Date paymentDate) {
+        AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_WITHDRAWAL);
+        return new SavingsActivityEntity(loggedInUser, accountAction, withdrawalAmount, savingsBalance, paymentDate, savings);
+    }
+
     protected SavingsActivityEntity() {
         this.id = null;
         this.account = null;

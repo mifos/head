@@ -33,6 +33,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -74,11 +75,6 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         security.allow("previous", SecurityConstants.VIEW);
         security.allow("adjustLastUserAction", SecurityConstants.VIEW);
         return security;
-    }
-
-    @Override
-    protected boolean startSession() {
-        return false;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -139,6 +135,10 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         Integer accountId = savings.getAccountId();
         Integer versionNum = savings.getVersionNo();
         savings = getSavingsService().findById(accountId);
+
+        // NOTE: initialise so when error occurs when apply adjustment, savings object is correctly initialised for
+        // use within Tag library in jsp.
+        new SavingsPersistence().initialize(savings);
         checkVersionMismatch(versionNum, savings.getVersionNo());
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -166,8 +166,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {
-            // FIXME - keithw - check to see where initialisation is required for failing adjustment.
-//            doCleanUp(request);
+            doCleanUp(request);
         }
 
         return mapping.findForward("account_detail_page");

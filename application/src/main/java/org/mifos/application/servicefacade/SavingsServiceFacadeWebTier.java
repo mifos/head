@@ -352,8 +352,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
-//      Money interestAmount = savingsAccount.calculateInterestForClosure(transactionDate);
-
         Money interestAmount = new Money(savingsAccount.getCurrency(), "0");
 
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
@@ -405,11 +403,19 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
             AccountPaymentEntity closeAccount = new AccountPaymentEntity(savingsAccount, amount, closeAccountDto.getReceiptId(), receiptDate, paymentType, closeAccountDto.getDateOfWithdrawal().toDateMidnight().toDate());
 
-            savingsAccount.closeAccount(closeAccount, notesEntity, customer);
+            this.transactionHelper.startTransaction();
+
+            savingsAccount.closeAccount(closeAccount, notesEntity, customer, createdBy);
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.commitTransaction();
         } catch (AccountException e) {
+            this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getKey(), e);
         } catch (CustomerException e) {
+            this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            this.transactionHelper.closeSession();
         }
     }
 }
