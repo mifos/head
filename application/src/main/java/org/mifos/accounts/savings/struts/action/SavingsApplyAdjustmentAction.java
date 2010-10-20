@@ -166,7 +166,8 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {
-            doCleanUp(request);
+            // FIXME - keithw - check to see where initialisation is required for failing adjustment.
+//            doCleanUp(request);
         }
 
         return mapping.findForward("account_detail_page");

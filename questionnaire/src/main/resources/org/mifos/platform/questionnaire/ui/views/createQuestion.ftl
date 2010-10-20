@@ -20,37 +20,45 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-    <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-    <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
-    <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
-    <span id="page.id" title="createQuestion"/>
+<STYLE TYPE="text/css"><!--
+@import url(pages/questionnaire/css/questionnaire.css);
+--></STYLE>
+<script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+<script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
+<span id="page.id" title="createQuestion"/>
+<div class=" content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.add.questions":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+[@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
-        <h1>
-            [@spring.message "questionnaire.add.questions"/]
-        </h1>
-        <div id="allErrorsDiv" class="allErrorsDiv">
-            [@mifosmacros.showAllErrors "questionDefinition.*"/]
-        </div>
-        <form name="createquestionform" action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.title">
-            <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value="" style="visibility:hidden"/>
+        <p class="font15 orangeheading">
+        [@spring.message "questionnaire.add.questions"/]
+        </p>
+        [@mifosmacros.showAllErrors "questionDefinition.*"/]
+        <form name="createquestionform" action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST"
+              focus="currentQuestion.title">
+            <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value=""
+                   style="visibility:hidden"/>
+
             <div class="create_question">
                 [#include "questionDefinition.ftl"]
                 <div class="add_question">
                     <div class="button_container">
-                        <input type="submit" name="_eventId_addQuestion" value="Add Question" class="buttn" id="_eventId_addQuestion">
+                        <input type="submit" name="_eventId_addQuestion" value="Add Question" class="buttn"
+                               id="_eventId_addQuestion">
                     </div>
                 </div>
                 [#include "questionListing.ftl"]
                 <div class="button_footer">
                     <div class="button_container">
-                        <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
+                        <input type="submit" id="_eventId_createQuestions" name="_eventId_createQuestions"
+                               value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
                         &nbsp;
-                        <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
+                        <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
+                               value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
                     </div>
                 </div>
-             </div>
+            </div>
         </form>
     </div>
+</div>
 [/@adminLeftPaneLayout]

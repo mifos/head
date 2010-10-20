@@ -47,9 +47,10 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
     public static SavingsTrxnDetailEntity savingsInterestPosting(AccountPaymentEntity interestPayment,
             CustomerBO customer, Money savingsBalance, Date nextIntPostDate, DateTime dueDate) {
         AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_INTEREST_POSTING);
+        SavingsTrxnDetailEntity relatedTrxnNotApplicable = null;
         return new SavingsTrxnDetailEntity(interestPayment,
-                customer, accountAction, interestPayment.getAmount(), savingsBalance, null, null,
-                nextIntPostDate, null, "", dueDate.toDate());
+                customer, accountAction, accountAction, interestPayment.getAmount(), savingsBalance, null, null,
+                nextIntPostDate, null, "", dueDate.toDate(), relatedTrxnNotApplicable);
     }
 
     public static SavingsTrxnDetailEntity savingsDeposit(AccountPaymentEntity newAccountPayment, CustomerBO customer,
@@ -57,8 +58,9 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
             Date dueDate, Date oldTrxnDate, Date transactionCreatedDate, Short installmentId) {
 
         AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_DEPOSIT);
-        return new SavingsTrxnDetailEntity(newAccountPayment, customer, accountAction, depositAmount, savingsBalance,
-                createdBy, dueDate, oldTrxnDate, installmentId, "", transactionCreatedDate);
+        SavingsTrxnDetailEntity relatedTrxnNotApplicable = null;
+        return new SavingsTrxnDetailEntity(newAccountPayment, customer, accountAction, accountAction, depositAmount, savingsBalance,
+                createdBy, dueDate, oldTrxnDate, installmentId, "", transactionCreatedDate, relatedTrxnNotApplicable);
     }
 
     public static SavingsTrxnDetailEntity savingsWithdrawal(AccountPaymentEntity newAccountPayment, CustomerBO customer,
@@ -67,10 +69,23 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 
         AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_WITHDRAWAL);
         Short installmentIdNotNeeded = null;
-        return new SavingsTrxnDetailEntity(newAccountPayment, customer, accountAction, withdrawalAmount, savingsBalance,
-                createdBy, dueDate, oldTrxnDate, installmentIdNotNeeded, "", transactionCreatedDate);
+        SavingsTrxnDetailEntity relatedTrxnNotApplicable = null;
+        return new SavingsTrxnDetailEntity(newAccountPayment, customer, accountAction, accountAction, withdrawalAmount, savingsBalance,
+                createdBy, dueDate, oldTrxnDate, installmentIdNotNeeded, "", transactionCreatedDate, relatedTrxnNotApplicable);
     }
 
+    public static SavingsTrxnDetailEntity savingsDepositAdjustment(AccountPaymentEntity accountPayment, CustomerBO customer,
+            Money balAfterAdjust, Money negate, PersonnelBO loggedInUser, Date dueDate, Date actionDate, Date transactionCreatedDate,
+            String adjustmentComment, SavingsTrxnDetailEntity relatedTrxn) {
+
+        AccountActionEntity applicationTransactionType = new AccountActionEntity(AccountActionTypes.SAVINGS_ADJUSTMENT);
+        AccountActionEntity monetaryTransactionType = new AccountActionEntity(AccountActionTypes.SAVINGS_DEPOSIT);
+        Short installmentIdNotNeeded = null;
+        SavingsTrxnDetailEntity adjustment = new SavingsTrxnDetailEntity(accountPayment, customer, applicationTransactionType, monetaryTransactionType, negate, balAfterAdjust,
+                loggedInUser, dueDate, actionDate, installmentIdNotNeeded, adjustmentComment, transactionCreatedDate, relatedTrxn);
+
+        return adjustment;
+    }
 
     protected SavingsTrxnDetailEntity() {
         depositAmount = null;
@@ -97,20 +112,22 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
     }
 
     public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
-            AccountActionEntity accountActionType, Money amount, Money balance, PersonnelBO createdBy,
-            java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment, java.util.Date transactionDate) {
-        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate, amount, comment, null, transactionDate);
+            AccountActionEntity accountActionType, AccountActionEntity monetaryTransactionType, Money amount, Money balance, PersonnelBO createdBy,
+            java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment, java.util.Date transactionDate, SavingsTrxnDetailEntity relatedTrxn) {
+
+        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate, amount, comment, relatedTrxn, transactionDate);
+
         this.balance = balance;
         MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
-        if (AccountActionTypes.SAVINGS_WITHDRAWAL.equals(accountActionType.asEnum())) {
+        if (AccountActionTypes.SAVINGS_WITHDRAWAL.equals(monetaryTransactionType.asEnum())) {
             this.depositAmount = new Money(currency);
             this.withdrawlAmount = amount;
             this.interestAmount = new Money(currency);
-        } else if (AccountActionTypes.SAVINGS_DEPOSIT.equals(accountActionType.asEnum())) {
+        } else if (AccountActionTypes.SAVINGS_DEPOSIT.equals(monetaryTransactionType.asEnum())) {
             this.depositAmount = amount;
             this.withdrawlAmount = new Money(currency);
             this.interestAmount = new Money(currency);
-        } else if (AccountActionTypes.SAVINGS_INTEREST_POSTING.equals(accountActionType.asEnum())) {
+        } else if (AccountActionTypes.SAVINGS_INTEREST_POSTING.equals(monetaryTransactionType.asEnum())) {
             this.depositAmount = new Money(currency);
             this.withdrawlAmount = new Money(currency);
             this.interestAmount = amount;
@@ -182,16 +199,18 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
     @Override
     protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
     throws AccountException {
-        MasterPersistence masterPersistence = new MasterPersistence();
         SavingsTrxnDetailEntity reverseAccntTrxn = null;
         Money balAfterAdjust = null;
-        if (getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
-            balAfterAdjust = getBalance().subtract(getDepositAmount());
-            reverseAccntTrxn = new SavingsTrxnDetailEntity(getAccountPayment(),
-                    AccountActionTypes.SAVINGS_ADJUSTMENT, getDepositAmount().negate(),
-                    balAfterAdjust, loggedInUser, getCustomer(), getDueDate(), getActionDate(), adjustmentComment,
-                    this, masterPersistence);
-        } else if (getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
+
+        if (isSavingsDeposit()) {
+
+            balAfterAdjust = this.balance.subtract(this.depositAmount);
+            reverseAccntTrxn = SavingsTrxnDetailEntity.savingsDepositAdjustment(getAccountPayment(), getCustomer(),
+                    balAfterAdjust, this.depositAmount.negate(), loggedInUser,
+                    getDueDate(), getActionDate(), new DateTime().toDate(), adjustmentComment, this);
+
+        } else if (isSavingsWithdrawal()) {
+            MasterPersistence masterPersistence = new MasterPersistence();
             balAfterAdjust = getBalance().add(getWithdrawlAmount());
             reverseAccntTrxn = new SavingsTrxnDetailEntity(getAccountPayment(),
                     AccountActionTypes.SAVINGS_ADJUSTMENT, getWithdrawlAmount().negate(),
@@ -199,6 +218,8 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
                     this, masterPersistence);
 
         } else {
+
+            MasterPersistence masterPersistence = new MasterPersistence();
             reverseAccntTrxn = new SavingsTrxnDetailEntity(getAccountPayment(),
                     AccountActionTypes.SAVINGS_ADJUSTMENT, getAmount().negate(),
                     balAfterAdjust, getPersonnel(), getCustomer(), getDueDate(), getActionDate(),

@@ -2,13 +2,10 @@
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
 
-[@mifos.header "title" /]
-[@mifos.topNavigationNoSecurity currentTab="Admin" /]
-<div class="sidebar htTotal">
-    [#include "adminLeftPane.ftl" /]
-</div>
+[#include "layout.ftl"]
+[@adminLeftPaneLayout]
 <!--  Main Content Begins-->
-<div class=" content leftMargin180">
+<div class=" content">
     <form method="post" name="batchjobs" action="batchjobs.ftl">
         [@mifos.crumbs breadcrumbs /]
         [@spring.showErrors "<br>" /]
@@ -53,10 +50,10 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                 [/#if]
-                <div class="span-21">
+                <div class="span-21 margin10topbottom">
                     <p class="font15"><span class="orangeheading">[@spring.message "systemAdministration.batchjobs.scheduledTasks" /]</span></p>
                 </div>
-                <div class="span-21 borderbtm">
+                <div class="span-21">
                     [#list model.batchjobs as batchjobs]
                         <div class="span-21 paddingLeft">
                             <span class="span-1">
@@ -152,11 +149,8 @@
                     [/#list]
                 </div>
                 <div class="clear">&nbsp;</div>
-                <div class="span-21">
-                    <span class="span-1">&nbsp;</span>
-                    <span class="span-4">
+                <div class="span-21 buttonsSubmitCancel" >
                         <input class="buttn"  type="submit" id="RUN" name="RUN" value="[@spring.message "systemAdministration.batchjobs.runSelectedTasks"/]"/>
-                    </span>
                 </div>
                 <div class="clear">&nbsp;</div>
             </div>
@@ -164,4 +158,4 @@
     </form>
 </div>
 <!--Main Content Ends-->
-[@mifos.footer/]
+[/@adminLeftPaneLayout]

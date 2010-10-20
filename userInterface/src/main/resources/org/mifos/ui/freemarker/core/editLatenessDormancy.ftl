@@ -31,12 +31,12 @@
   		    <div class="clear">&nbsp;</div>
     		<div class="span-23 borderbtm width95prc">
         		<p class="font15 margin10topbottom"><span class="orangeheading">[@spring.message "manageProducts.editLatenessDormancy.setLatenessDefinition" /]</span></p>
-            	<div class="fontBold">Loans</div>
+            	<div class="fontBold">[@spring.message "manageProducts.editLatenessDormancy.loan" /]</div>
             	<div class="span-23 width95prc">
 	            	<span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" /]</span>
     	            <span class="span-8">
     	            	[@spring.bind "formBean.latenessDays" /]
-						<input class="width40px" type="text" id="lateness" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
+						<input size="4" maxlength="4" type="text" id="lateness" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
 					</span>
 					[@spring.showErrors "<br>" /]
         	    </div>
@@ -45,12 +45,12 @@
         <div class="clear">&nbsp;</div>
         <div class="span-23 width95prc">
 			        	<p class="font15 orangeheading margin10topbottom">[@spring.message "manageProducts.editLatenessDormancy.setDormancyDefinition" /] </p>
-            <div class="fontBold">Savings</div>
+            <div class="fontBold">[@spring.message "manageProducts.editLatenessDormancy.savings" /]</div>
             <div class="span-23 width95prc">
             	<span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy"/]</span>
                 <span class="span-8">
                 	[@spring.bind "formBean.dormancyDays" /]
-                	<input class="width40px" type="text" id="dormancy" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
+                	<input size="4" maxlength="4" type="text" id="dormancy" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
                 </span>
 				[@spring.showErrors "<br>" /]
             </div>

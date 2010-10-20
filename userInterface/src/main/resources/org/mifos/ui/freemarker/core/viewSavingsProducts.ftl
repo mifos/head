@@ -30,7 +30,7 @@
 
     <div style="margin-left:18px; margin-top:2px;">
         <p>[@spring.message "manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor"/]
-            <a href="defineSavingsProduct.ftl">[@spring.message "admin.definenewSavingsproduct"/]</a></p>
+            <a href="defineSavingsProduct.ftl">[@spring.message "manageLoanProducts.viewSavingsProducts.defineNewSavingPorduct"/]</a></p>
         [#list products as product]
             <div style="margin-top:10px;">
                 <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/> <a
