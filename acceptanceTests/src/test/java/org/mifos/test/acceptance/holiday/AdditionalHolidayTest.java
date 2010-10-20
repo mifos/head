@@ -39,8 +39,8 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ViewClientChargesDetail;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayConfirmationPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
-import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
+import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
@@ -468,7 +468,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
 
-    @Test(enabled=false) //disabled due to MIFOS-3785. Please enable once that issue is fixed.
+    @Test(enabled=true) //disabled due to MIFOS-3785. Please enable once that issue is fixed.
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void testMoratoriumPushesFeesToFutureMeeting() throws Exception {
         // MIFOSTEST-281
@@ -491,7 +491,9 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         // Run batch jobs
 
-        new BatchJobHelper(selenium).runAllBatchJobs();
+        List<String> jobsToRun = new ArrayList<String>();
+        jobsToRun.add("ApplyHolidayChangesTaskJob");
+        new BatchJobHelper(selenium).runSomeBatchJobs(jobsToRun);
 
         // Move system date to moratorium holiday date
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(
@@ -499,10 +501,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2009, 3, 18, 0, 0, 0, 0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        verifyFeesInPage("0.0");
-
-        verifyFees("AdditionalHolidayTest_014_result_dbunit.xml.zip");
-
+        verifyFeesInPage("17.0");
     }
 
     private void verifyFeesInPage(String amount) {
@@ -755,17 +754,6 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { LOAN_SCHEDULE });
 
         dbUnitUtilities.verifyTable(LOAN_SCHEDULE, databaseDataSet, expectedDataSet);
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled = false)
-    private void verifyFees(String resultDataSetFile) throws Exception {
-        String[] tablesToValidate = { "CUSTOMER_FEE_SCHEDULE" };
-
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
-
-        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
     }
 
     @Test(enabled = false)
