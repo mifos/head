@@ -357,7 +357,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromClientPhoneNumberAndLoanProductShortName(
             String phoneNumber, String loanProductShortName) throws Exception {
-        AccountBO accountBo = getAccountPersistence().findLoanByClientGovernmentIdAndProductShortName(
+        AccountBO accountBo = getAccountPersistence().findLoanByClientPhoneNumberAndProductShortName(
                 phoneNumber, loanProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("loan not found for client phone number " + phoneNumber
@@ -369,7 +369,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(
             String phoneNumber, String savingsProductShortName) throws Exception {
-        AccountBO accountBo = getAccountPersistence().findSavingsByClientGovernmentIdAndProductShortName(
+        AccountBO accountBo = getAccountPersistence().findSavingsByClientPhoneNumberAndProductShortName(
                 phoneNumber, savingsProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("savings not found for client phone number " + phoneNumber

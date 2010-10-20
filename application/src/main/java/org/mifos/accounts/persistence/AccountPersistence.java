@@ -69,6 +69,7 @@ import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.MifosStringUtils;
 
 /**
  * FIXME: the term "account" has two meanings in this class:
@@ -108,6 +109,18 @@ public class AccountPersistence extends Persistence {
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
+	public AccountBO findSavingsByClientPhoneNumberAndProductShortName(String phoneNumber,
+            String productShortName) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
+        queryParameters.put("savingsAccountTypeId", AccountTypes.SAVINGS_ACCOUNT.getValue());
+        queryParameters.put("productShortName", productShortName);
+        Object queryResult = execUniqueResultNamedQuery(
+                NamedQueryConstants.FIND_SAVINGS_ACCOUNT_BY_CLIENT_PHONE_NUMBER_AND_PRODUCT_SHORT_NAME,
+                queryParameters);
+        return queryResult == null ? null : (AccountBO) queryResult;
+    }
+
     public AccountBO findLoanByClientGovernmentIdAndProductShortName(String clientGovernmentId, String productShortName)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -116,6 +129,17 @@ public class AccountPersistence extends Persistence {
         queryParameters.put("productShortName", productShortName);
         Object queryResult = execUniqueResultNamedQuery(
                 NamedQueryConstants.FIND_LOAN_ACCOUNT_BY_CLIENT_GOVERNMENT_ID_AND_PRODUCT_SHORT_NAME, queryParameters);
+        return queryResult == null ? null : (AccountBO) queryResult;
+    }
+
+	public AccountBO findLoanByClientPhoneNumberAndProductShortName(String phoneNumber, String productShortName)
+            throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
+        queryParameters.put("loanAccountTypeId", AccountTypes.LOAN_ACCOUNT.getValue());
+        queryParameters.put("productShortName", productShortName);
+        Object queryResult = execUniqueResultNamedQuery(
+                NamedQueryConstants.FIND_LOAN_ACCOUNT_BY_CLIENT_PHONE_NUMBER_AND_PRODUCT_SHORT_NAME, queryParameters);
         return queryResult == null ? null : (AccountBO) queryResult;
     }
 
