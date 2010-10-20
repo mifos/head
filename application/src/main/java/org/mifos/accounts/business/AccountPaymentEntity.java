@@ -35,15 +35,11 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Records information about a payment from client to teller/field officer.
  */
 public class AccountPaymentEntity extends AbstractEntity {
-
-    private static final Logger logger = LoggerFactory.getLogger(AccountPaymentEntity.class);
 
     private final Integer paymentId = null;
     private AccountBO account;
@@ -60,12 +56,14 @@ public class AccountPaymentEntity extends AbstractEntity {
 
     private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
 
-    public static AccountPaymentEntity savingsInterestPosting(SavingsBO account, Money amount, Date paymentDate) {
+    public static AccountPaymentEntity savingsInterestPosting(SavingsBO account, Money amount, Date paymentDate, PersonnelBO loggedInUser) {
 
         String theReceiptNumber = null;
         Date theReceiptDate = null;
         PaymentTypeEntity paymentType = new PaymentTypeEntity(SavingsConstants.DEFAULT_PAYMENT_TYPE.shortValue());
-        return new AccountPaymentEntity(account, amount, theReceiptNumber, theReceiptDate, paymentType, paymentDate);
+        AccountPaymentEntity interestPostingPayment = new AccountPaymentEntity(account, amount, theReceiptNumber, theReceiptDate, paymentType, paymentDate);
+        interestPostingPayment.setCreatedByUser(loggedInUser);
+        return interestPostingPayment;
     }
 
     protected AccountPaymentEntity() {

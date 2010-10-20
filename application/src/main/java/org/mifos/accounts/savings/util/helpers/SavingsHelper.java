@@ -35,13 +35,11 @@ import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -160,13 +158,6 @@ public class SavingsHelper {
         AccountActionDateEntity actionDate = new SavingsScheduleEntity(account, customer, installmentId,
                 new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, amount);
         return actionDate;
-    }
-
-    public AccountPaymentEntity createAccountPayment(AccountBO account, Money amount,
-            PaymentTypeEntity paymentTypeEntity, PersonnelBO createdBy, Date transactionDate) {
-        AccountPaymentEntity payment = new AccountPaymentEntity(account, amount, null, null, paymentTypeEntity, transactionDate);
-        payment.setAmount(amount);
-        return payment;
     }
 
     public Short getPaymentActionType(AccountPaymentEntity payment) {

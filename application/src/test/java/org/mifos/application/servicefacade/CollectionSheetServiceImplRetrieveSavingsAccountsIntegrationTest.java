@@ -48,6 +48,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -110,6 +111,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         clientSavings.setUserContext(userContext);
         PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(userContext.getId());
         clientSavings.closeAccount(payment, notes, clientSavings.getCustomer(), loggedInUser);
+        IntegrationTestObjectMother.saveSavingsAccount(clientSavings);
 
         StaticHibernateUtil.commitTransaction();
 

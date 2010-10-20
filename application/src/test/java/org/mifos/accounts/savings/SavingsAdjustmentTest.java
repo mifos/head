@@ -71,7 +71,7 @@ public class SavingsAdjustmentTest {
     private static MifosCurrency defaultCurrency;
 
     @BeforeClass
-    public static void setupMifosLoggerDueToUseOfStaticClientRules() {
+    public static void setupChartOfAccountsAndFinancialTransactions() {
         defaultCurrency = TestUtils.RUPEE;
         Money.setDefaultCurrency(defaultCurrency);
 
@@ -81,6 +81,7 @@ public class SavingsAdjustmentTest {
 
         COABO coabo = new COABO("testAccountName", glCodeEntity);
         ChartOfAccountsCache chartOfAccountsCache = new ChartOfAccountsCache();
+        chartOfAccountsCache.clear();
         chartOfAccountsCache.add(coabo);
 
         Map<FinancialActionConstants, String> actionToCreditAccount = new HashMap<FinancialActionConstants, String>();

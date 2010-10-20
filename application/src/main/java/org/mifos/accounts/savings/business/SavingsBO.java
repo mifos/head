@@ -566,7 +566,7 @@ public class SavingsBO extends AccountBO {
         SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsInterestPosting(this, personnel, this.savingsBalance, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate());
         savingsActivityDetails.add(savingsActivity);
 
-        AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate());
+        AccountPaymentEntity interestPayment = AccountPaymentEntity.savingsInterestPosting(this, actualInterestToBePosted, currentPostingDate.toDateMidnight().toDate(), loggedInUser);
 
         DateTime dueDate = new DateTime();
         SavingsTrxnDetailEntity interestPostingTransaction = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment, this.customer, this.savingsBalance, currentPostingDate.toDateMidnight().toDate(), dueDate, loggedInUser);
@@ -591,8 +591,7 @@ public class SavingsBO extends AccountBO {
         this.interestToBePosted = Money.zero(this.getCurrency());
     }
 
-    public void closeAccount(final AccountPaymentEntity payment, final AccountNotesEntity notes,
-            final CustomerBO customer, PersonnelBO loggedInUser) throws AccountException {
+    public void closeAccount(final AccountPaymentEntity payment, final AccountNotesEntity notes, final CustomerBO customer, PersonnelBO loggedInUser) {
 
         AccountStateEntity previousAccountState = this.getAccountState();
         AccountStateEntity closedAccountState = new AccountStateEntity(AccountState.SAVINGS_CLOSED);
@@ -602,25 +601,12 @@ public class SavingsBO extends AccountBO {
         this.addAccountStatusChangeHistory(statusChangeHistory);
         this.setAccountState(closedAccountState);
 
-        this.interestToBePosted = payment.getAmount().subtract(this.savingsBalance);
-        if (this.interestToBePosted.isGreaterThanZero()) {
-            Money interestAmt = this.interestToBePosted;
-            Date postingDate = payment.getPaymentDate();
-            AccountPaymentEntity interestPayment = helper.createAccountPayment(this, interestAmt, payment
-                    .getPaymentType(), loggedInUser, postingDate);
+        Money interestOutstanding = payment.getAmount().subtract(this.savingsBalance);
 
-            SavingsTrxnDetailEntity interestPosting = SavingsTrxnDetailEntity.savingsInterestPosting(interestPayment,
-                    customer, this.savingsBalance, postingDate, new DateTime(postingDate), loggedInUser);
-
-            interestPayment.addAccountTrxn(interestPosting);
-
-            this.addAccountPayment(interestPayment);
-
-            SavingsActivityEntity interestPostingActivity = SavingsActivityEntity.savingsInterestPosting(this,
-                    loggedInUser, this.savingsBalance, interestAmt, postingDate);
-            savingsActivityDetails.add(interestPostingActivity);
-
-            buildFinancialEntries(interestPayment.getAccountTrxns());
+        if (interestOutstanding.isGreaterThanZero()) {
+            LocalDate currentPostingDate = new LocalDate(payment.getPaymentDate());
+            LocalDate nextPostingDate = new LocalDate();
+            doPostInterest(currentPostingDate, nextPostingDate, interestOutstanding, loggedInUser);
         }
 
         Date transactionDate = new DateTimeService().getCurrentDateMidnight().toDate();
@@ -641,7 +627,11 @@ public class SavingsBO extends AccountBO {
             this.savingsPerformance.setTotalWithdrawals(this.savingsPerformance.getTotalWithdrawals().add(
                     payment.getAmount()));
 
-            buildFinancialEntries(payment.getAccountTrxns());
+            try {
+                buildFinancialEntries(payment.getAccountTrxns());
+            } catch (AccountException e) {
+                throw new BusinessRuleException(e.getKey(), e);
+            }
         }
 
         this.addAccountNotes(notes);

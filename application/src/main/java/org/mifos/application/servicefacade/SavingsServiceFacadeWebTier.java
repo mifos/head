@@ -408,9 +408,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             savingsAccount.closeAccount(closeAccount, notesEntity, customer, createdBy);
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
-        } catch (AccountException e) {
+        } catch (BusinessRuleException e) {
             this.transactionHelper.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
+            throw new BusinessRuleException(e.getMessageKey(), e);
         } catch (CustomerException e) {
             this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getKey(), e);
