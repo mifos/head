@@ -20,6 +20,10 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -36,20 +40,14 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 @Controller
 @RequestMapping("/defineProductMix")
 @SessionAttributes("formBean")
-@SuppressWarnings("PMD")
-// suppressing complexity warnings for now.. keithw.
+@SuppressWarnings("PMD") // suppressing complexity warnings for now.. keithw.
 public class DefineProductMixController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static final String PREVIEW_PARAM = "preview";
 
     @Autowired
     private AdminServiceFacade adminServiceFacade;
@@ -72,44 +70,41 @@ public class DefineProductMixController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
-    public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String canceBtn,
-                                          @RequestParam(value = PREVIEW_PARAM, required = false) String previewBtn,
-                                          @ModelAttribute("formBean") ProductMixFormBean formBean,
-                                          BindingResult result,
-                                          SessionStatus status) {
+    public ModelAndView processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+                                    @ModelAttribute("formBean") ProductMixFormBean formBean,
+                                    BindingResult result,
+                                    SessionStatus status) {
 
-        ModelAndView mav = new ModelAndView("defineProductMix");
-        ProductMixFormValidator formValidator = new ProductMixFormValidator();
+        ModelAndView mav = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
 
-        if (StringUtils.isNotBlank(canceBtn)) {
-            mav = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
+        if (StringUtils.isNotBlank(cancel)) {
             status.setComplete();
-        }
-
-        if (StringUtils.isBlank(formBean.getProductTypeId())) {
-
-            List<ProductTypeDto> productTypes = this.adminServiceFacade.retrieveProductTypesApplicableToProductMix();
-            mav.addObject("formBean", productMixAssembler.createFormBean(productTypes));
-            validateForPreview(formValidator, formBean, result, previewBtn);
-
-        } else if (StringUtils.isNotBlank(formBean.getProductTypeId()) && StringUtils.isBlank(formBean.getProductId())) {
-
-            populateProductNameOptions(formBean);
-            validateForPreview(formValidator, formBean, result, previewBtn);
-
-        } else if (StringUtils.isNotBlank(formBean.getProductTypeId()) &&
-                StringUtils.isNotBlank(formBean.getProductId()) && (formBean.getAllowed() == null && formBean.getNotAllowed() == null)) {
-
-            populateAllowedNotAllowedOptions(formBean);
-            validateForPreview(formValidator, formBean, result, previewBtn);
-
+        } else if (result.hasErrors()) {
+            mav = new ModelAndView("defineProductMix");
         } else {
-            validateForPreview(formValidator, formBean, result, previewBtn);
-            ProductMixPreviewDto preview = this.productMixAssembler.createProductMixPreview(formBean);
+            mav = new ModelAndView("defineProductMix");
 
-            mav = new ModelAndView("previewProductMix");
-            mav.addObject("ref", preview);
-            mav.addObject("formView", "defineProductMix");
+            if (StringUtils.isBlank(formBean.getProductTypeId())) {
+
+                List<ProductTypeDto> productTypes = this.adminServiceFacade.retrieveProductTypesApplicableToProductMix();
+                mav.addObject("formBean", productMixAssembler.createFormBean(productTypes));
+
+            } else if (StringUtils.isNotBlank(formBean.getProductTypeId()) && StringUtils.isBlank(formBean.getProductId())) {
+
+                populateProductNameOptions(formBean);
+
+            } else if (StringUtils.isNotBlank(formBean.getProductTypeId()) &&
+                    StringUtils.isNotBlank(formBean.getProductId()) && (formBean.getAllowed() == null && formBean.getNotAllowed() == null)) {
+                populateAllowedNotAllowedOptions(formBean);
+
+            } else {
+                ProductMixPreviewDto preview = this.productMixAssembler.createProductMixPreview(formBean);
+
+                mav = new ModelAndView("previewProductMix");
+                mav.addObject("ref", preview);
+                mav.addObject("formView", "defineProductMix");
+            }
+
         }
 
         return mav;
@@ -142,12 +137,6 @@ public class DefineProductMixController {
 
         formBean.setAllowedProductOptions(allowedProductOptions);
         formBean.setNotAllowedProductOptions(notAllowedProductOptions);
-    }
-
-    private void validateForPreview(ProductMixFormValidator formValidator, ProductMixFormBean formBean, BindingResult result, String previewBtn) {
-        if (StringUtils.isNotBlank(previewBtn)) {
-            formValidator.validate(formBean, result);
-        }
     }
 
     public void setProductMixAssembler(ProductMixAssembler productMixAssembler) {
