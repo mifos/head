@@ -65,7 +65,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -84,7 +83,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 
 import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
@@ -141,13 +139,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     protected CustomerBO group = null;
 
     private CustomerBO client = null;
-    private BigDecimal savedInitialRoundOffMultiple = null;
-    private BigDecimal savedFinalRoundOffMultiple = null;
-    private RoundingMode savedCurrencyRoundingMode = null;
-    private RoundingMode savedInitialRoundingMode = null;
-    private RoundingMode savedFinalRoundingMode = null;
-    private Short savedDigitAfterDecimal;
-    private int savedDaysInYear = 0;
 
     private UserContext userContext;
     private boolean allConsoleOutputEnabled = false;
@@ -160,50 +151,16 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     public void setUp() throws Exception {
         enableCustomWorkingDays();
         userContext = TestObjectFactory.getContext();
-
-        savedInitialRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
-        savedFinalRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
-        savedCurrencyRoundingMode = AccountingRules.getCurrencyRoundingMode();
-        savedDigitAfterDecimal = AccountingRules.getDigitsAfterDecimal();
-        savedInitialRoundingMode = AccountingRules.getInitialRoundingMode();
-        savedFinalRoundingMode = AccountingRules.getFinalRoundingMode();
-        savedDaysInYear = AccountingRules.getNumberOfInterestDays();
-
         loanDao = new LoanDaoLegacyImpl();
     }
 
     @After
     public void tearDown() throws Exception {
-        TestObjectFactory.removeObject(loanOffering);
-        if (accountBO != null) {
-            accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        }
-        if (badAccountBO != null) {
-            badAccountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class,
-                    badAccountBO.getAccountId());
-        }
-        if (group != null) {
-            group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
-        }
-        if (center != null) {
-            center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
-        }
         accountBO = null;
         badAccountBO = null;
         client = null;
         group = null;
         center = null;
-
-        StaticHibernateUtil.flushSession();
-        // Money.setUsingNewMoney(false);
-        // LoanBO.setUsingNewLoanSchedulingMethod(false);
-        AccountingRules.setInitialRoundOffMultiple(savedInitialRoundOffMultiple);
-        AccountingRules.setFinalRoundOffMultiple(savedFinalRoundOffMultiple);
-        AccountingRules.setCurrencyRoundingMode(savedCurrencyRoundingMode);
-        AccountingRules.setDigitsAfterDecimal(savedDigitAfterDecimal);
-        AccountingRules.setInitialRoundingMode(savedInitialRoundingMode);
-        AccountingRules.setFinalRoundingMode(savedFinalRoundingMode);
-        setNumberOfInterestDays(savedDaysInYear);
     }
 
     /* This part is for the testing of 999 account */
@@ -676,8 +633,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (String dataFileName : dataFileNames) {
             if (fileNameContains(dataFileName, decliningEPIGraceFeeTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-                tearDown();
-                setUp();
             }
         }
     }
@@ -736,8 +691,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (String dataFileName : dataFileNames) {
             if (dataFileName.startsWith("testcase-2008-05-13-declining-grace-fee-set1")) {
                 runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
-                tearDown();
-                setUp();
             }
         }
     }
@@ -750,8 +703,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (String dataFileName : dataFileNames) {
             if (dataFileName.startsWith("testcase") && dataFileName.contains("flat-grace-fee-set")) {
                 runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
-                tearDown();
-                setUp();
             }
         }
 
@@ -2076,8 +2027,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             fileNameContains(dataFileName, flatGraceFeeTestCases)
                     || fileNameContains(dataFileName, flatNegativeLastPaymentTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-                tearDown();
-                setUp();
             }
         }
     }
@@ -2090,8 +2039,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             if (fileNameContains(dataFileName, decliningGraceFeeTestCases)
                     || fileNameContains(dataFileName, decliningNegativeLastPaymentTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-                tearDown();
-                setUp();
             }
         }
     }
@@ -2102,8 +2049,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (String dataFileName : dataFileNames) {
             if (dataFileName.startsWith("testcase") && fileNameContains(dataFileName, selectedCaseNumbers)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-                tearDown();
-                setUp();
             }
         }
     }
@@ -2115,8 +2060,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (String dataFileName : dataFileNames) {
             if (dataFileName.startsWith("testcase") && fileNameContains(dataFileName, flatTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
-                tearDown();
-                setUp();
             }
         }
     }
