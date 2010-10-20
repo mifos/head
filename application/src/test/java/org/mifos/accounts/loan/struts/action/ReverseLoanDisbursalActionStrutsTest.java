@@ -85,23 +85,11 @@ public class ReverseLoanDisbursalActionStrutsTest extends MifosMockStrutsTestCas
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            loan = null;
-            client = null;
-            group = null;
-            center = null;
-            loan = null;
-//            client = null;
-//            group = null;
-//            center = null;
-            StaticHibernateUtil.flushSession();
-        } catch (Exception e) {
-            /*
-             * throwing exceptions here will often mask whatever the real
-             * failure was
-             */
-            e.printStackTrace();
-        }
+        loan = null;
+        client = null;
+        group = null;
+        center = null;
+        loan = null;
         super.tearDown();
     }
 

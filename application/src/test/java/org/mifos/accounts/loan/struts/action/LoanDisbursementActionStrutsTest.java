@@ -96,8 +96,6 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
         secondLoanBO = null;
         group2 = null;
         center2 = null;
-
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

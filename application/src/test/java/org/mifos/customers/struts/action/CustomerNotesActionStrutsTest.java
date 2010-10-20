@@ -79,7 +79,6 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         client = null;
         group = null;
         center = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

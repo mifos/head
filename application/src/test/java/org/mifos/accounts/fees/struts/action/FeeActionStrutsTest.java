@@ -26,7 +26,13 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
-import org.mifos.accounts.fees.util.helpers.*;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeConstants;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -36,7 +42,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -81,16 +86,10 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            fee = null;
-            fee1 = null;
-            fee2 = null;
-            fee3 = null;
-            StaticHibernateUtil.flushSession();
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
+        fee = null;
+        fee1 = null;
+        fee2 = null;
+        fee3 = null;
         super.tearDown();
     }
 

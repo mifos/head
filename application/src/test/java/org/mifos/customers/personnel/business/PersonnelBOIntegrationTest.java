@@ -628,7 +628,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
             loginWithWrongPassword();
             StaticHibernateUtil.flushSession();
             personnel = TestObjectFactory.getPersonnel(personnel.getPersonnelId());
-            TestObjectFactory.simulateInvalidConnection();
+
             personnel.unlockPersonnel(Short.valueOf("1"));
             Assert.fail();
         } catch (PersonnelException e) {

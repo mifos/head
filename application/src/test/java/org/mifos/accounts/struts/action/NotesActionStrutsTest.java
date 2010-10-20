@@ -20,10 +20,7 @@
 
 package org.mifos.accounts.struts.action;
 
-import java.sql.Date;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -40,12 +37,13 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.sql.Date;
 
 public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -97,39 +95,13 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
     }
 
-    private void reloadMembers() {
-        if (savingsBO != null) {
-            savingsBO = (SavingsBO) StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savingsBO.getAccountId());
-        }
-        if (loanBO != null) {
-            loanBO = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, loanBO.getAccountId());
-        }
-        if (group != null) {
-            group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-        }
-        if (center != null) {
-            center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        }
-        if (client != null) {
-            client = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
-        }
-
-    }
-
     @Override
     public void tearDown() throws Exception {
-        try {
-            reloadMembers();
-            savingsBO = null;
-            loanBO = null;
-            client = null;
-            group = null;
-            center = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
-        StaticHibernateUtil.flushSession();
+        savingsBO = null;
+        loanBO = null;
+        client = null;
+        group = null;
+        center = null;
         super.tearDown();
     }
 

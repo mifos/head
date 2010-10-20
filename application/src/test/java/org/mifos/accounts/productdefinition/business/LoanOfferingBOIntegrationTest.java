@@ -159,7 +159,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                Assert.assertEquals("0", auditLogRecord.getNewValue());
             }
         }
-        TestObjectFactory.cleanUpChangeLog();
+
 
     }
 
@@ -205,7 +205,7 @@ public class LoanOfferingBOIntegrationTest extends MifosIntegrationTestCase {
                Assert.assertEquals("Month(s)", auditLogRecord.getNewValue());
             }
         }
-        TestObjectFactory.cleanUpChangeLog();
+        
 
     }
 

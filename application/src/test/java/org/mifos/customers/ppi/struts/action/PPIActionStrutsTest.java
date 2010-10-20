@@ -57,7 +57,6 @@ public class PPIActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-
         super.tearDown();
     }
 

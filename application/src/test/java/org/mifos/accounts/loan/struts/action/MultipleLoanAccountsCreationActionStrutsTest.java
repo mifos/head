@@ -20,18 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -54,14 +43,22 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -100,16 +97,10 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            accountBO = null;
-            client = null;
-            group = null;
-            center = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
-        StaticHibernateUtil.flushSession();
+        accountBO = null;
+        client = null;
+        group = null;
+        center = null;
         super.tearDown();
     }
 

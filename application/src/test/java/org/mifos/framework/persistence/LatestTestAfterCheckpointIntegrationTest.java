@@ -26,7 +26,6 @@ import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSet;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.SystemException;
@@ -57,17 +56,9 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
     private static Connection connection;
     private static DatabaseConnection dbUnitConnection;
 
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        StaticHibernateUtil.setHibernateUtil(StaticHibernateUtil.getHibernateUtil());
-        StaticHibernateUtil.initialize();
-    }
-
     @Before
     public void setUp() throws Exception {
-        StaticHibernateUtil.setHibernateUtil(StaticHibernateUtil.getHibernateUtil());
         connection = StaticHibernateUtil.getSessionTL().connection();
-        connection.setAutoCommit(false);
         dbUnitConnection = new DatabaseConnection(connection);
     }
 
@@ -76,7 +67,6 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
         loadLatest();
         IDataSet latestDump = dbUnitConnection.createDataSet();
         connection.createStatement().execute("drop table database_upgrade_test");
-        connection.commit();
         applyUpgrades();
         IDataSet upgradeDump = dbUnitConnection.createDataSet();
         Assertion.assertEquals(latestDump, upgradeDump);
@@ -108,7 +98,7 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
         createLatestCheckPointDatabaseWithLatestData();
 
         DatabaseMigrator migrator = new DatabaseMigrator(connection);
-        migrator.upgrade() ;
+        migrator.upgrade();
 
         String upgradeSchemaDump = TestDatabase.getAllTablesStructureDump();
         new FileOutputStream(tmpDir + "upgradeSchemaDump").write(upgradeSchemaDump.getBytes());
@@ -188,11 +178,6 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
         executeScript("mifosdroptables.sql", connection);
         executeScript("latest-schema.sql", connection);
         executeScript("latest-data.sql", connection);
-        connection.commit();
-    }
-
-    private void createLatestDatabase() throws Exception {
-        executeScript("latest-schema.sql", connection);
         connection.commit();
     }
 

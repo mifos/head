@@ -427,7 +427,7 @@ public class RoleBOIntegrationTest extends MifosIntegrationTestCase {
             List<ActivityEntity> activities = RolesPermissionsPersistence.getActivities();
            Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
             RoleBO roleBO = new RoleBO(TestObjectFactory.getContext(), "Test Role", activities);
-            TestObjectFactory.simulateInvalidConnection();
+
             roleBO.save();
             Assert.fail();
         } catch (RolesPermissionException e) {

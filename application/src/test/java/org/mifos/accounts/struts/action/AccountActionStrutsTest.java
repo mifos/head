@@ -85,10 +85,6 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO = null;
         group = null;
         center = null;
-//        accountBO = null;
-//        group = null;
-//        center = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

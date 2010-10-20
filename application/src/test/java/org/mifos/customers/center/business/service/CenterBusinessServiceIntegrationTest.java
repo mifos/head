@@ -72,7 +72,7 @@ public class CenterBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     public void testFailureFindBySystemId() throws Exception {
         center = createCenter("Center1");
         StaticHibernateUtil.flushSession();
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             service.findBySystemId(center.getGlobalCustNum());
             Assert.assertTrue(false);

@@ -131,7 +131,6 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         newSavings = null;
         group = null;
         center = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

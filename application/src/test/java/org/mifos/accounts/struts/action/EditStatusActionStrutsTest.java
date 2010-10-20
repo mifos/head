@@ -45,7 +45,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -93,35 +92,13 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, EditStatusAction.class);
     }
 
-    private void reloadMembers() {
-        if (accountBO != null) {
-            accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        }
-        if (group != null) {
-            group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-        }
-        if (center != null) {
-            center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        }
-        if (client != null) {
-            client = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client.getCustomerId());
-        }
-
-    }
-
     @Override
     public void tearDown() throws Exception {
-        try {
-            reloadMembers();
-            accountBO = null;
-            client = null;
-            group = null;
-            center = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
+        accountBO = null;
+        client = null;
+        group = null;
+        center = null;
 
-        }
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -238,7 +215,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     }
     @Ignore("Convert to unit test")
     public void updateSuccessForLoan() throws Exception {
-        TestObjectFactory.cleanUpChangeLog();
+
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
@@ -292,7 +269,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
                 Assert.assertEquals("Closed- Rescheduled", auditLogRecord.getNewValue());
             }
         }
-        TestObjectFactory.cleanUpChangeLog();
+        
     }
 
     public void testUpdateStatusForLoanToCancel() throws Exception {

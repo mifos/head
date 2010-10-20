@@ -74,7 +74,7 @@ public class AccountStateMachineIntegrationTest extends MifosIntegrationTestCase
 
     @Test @Ignore("Convert to unit test")
     public void testStatesInitializationException() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.LOAN_ACCOUNT, null);
             Assert.fail();

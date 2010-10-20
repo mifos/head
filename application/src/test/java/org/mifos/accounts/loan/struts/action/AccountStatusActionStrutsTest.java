@@ -37,7 +37,6 @@ import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -85,20 +84,11 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            account = null;
-            client = null;
-            group = null;
-            center = null;
-            account = null;
-//            client = null;
-//            group = null;
-//            center = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
-        StaticHibernateUtil.flushSession();
+        account = null;
+        client = null;
+        group = null;
+        center = null;
+        account = null;
         super.tearDown();
     }
 

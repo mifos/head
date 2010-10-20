@@ -28,7 +28,12 @@ import org.mifos.accounts.loan.util.helpers.LoanAccountDto;
 import org.mifos.accounts.loan.util.helpers.LoanAccountsProductDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.*;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -72,7 +77,14 @@ import org.mifos.security.util.UserContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
@@ -109,22 +121,15 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            centerSavingsAccount = null;
-            groupSavingsAccount = null;
-            clientSavingsAccount = null;
-            groupAccount = null;
-            clientAccount = null;
-            account = null;
-            client = null;
-            group = null;
-            center = null;
-
-        } catch (Exception e) {
-            // Throwing here may mask earlier failures.
-            e.printStackTrace();
-        }
-        StaticHibernateUtil.flushAndClearSession();
+        centerSavingsAccount = null;
+        groupSavingsAccount = null;
+        clientSavingsAccount = null;
+        groupAccount = null;
+        clientAccount = null;
+        account = null;
+        client = null;
+        group = null;
+        center = null;
         super.tearDown();
     }
 
@@ -248,7 +253,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("customerAccountAmountEntered[1][6]", "abc");
         actionPerform();
 
-        verifyActionErrors(new String[] { "errors.invalidaccollections", "errors.invalidaccollections" });
+        verifyActionErrors(new String[]{"errors.invalidaccollections", "errors.invalidaccollections"});
 
     }
 
@@ -335,7 +340,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
             Assert.assertEquals(new java.util.Date(DateUtils
                     .getDateWithoutTimeStamp(getMeetingDates(officeId, meeting).getTime()).getTime()), DateUtils
                     .getDate(((BulkEntryActionForm) request.getSession().getAttribute(
-                            CollectionSheetEntryConstants.BULKENTRYACTIONFORM)).getTransactionDate()));
+                    CollectionSheetEntryConstants.BULKENTRYACTIONFORM)).getTransactionDate()));
         } else {
             Assert.assertEquals("The value for isBackDated Trxn Allowed", SessionUtils.getAttribute(
                     CollectionSheetEntryConstants.ISBACKDATEDTRXNALLOWED, request), Constants.NO);
@@ -421,8 +426,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "get");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyActionErrors(new String[] { "errors.mandatoryenter", "errors.mandatoryselect", "errors.mandatoryselect",
-                "errors.mandatoryselect", "errors.mandatoryselect" });
+        verifyActionErrors(new String[]{"errors.mandatoryenter", "errors.mandatoryselect", "errors.mandatoryselect",
+                "errors.mandatoryselect", "errors.mandatoryselect"});
     }
 
     public void testFailurePreviewForEmptyAmount() throws Exception {
@@ -435,7 +440,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("customerAccountAmountEntered[1][6]", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyActionErrors(new String[] { "errors.invalidaccollections", "errors.invalidaccollections" });
+        verifyActionErrors(new String[]{"errors.invalidaccollections", "errors.invalidaccollections"});
     }
 
     public void testFailurePreviewForCharAmount() throws Exception {
@@ -448,7 +453,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("customerAccountAmountEntered[1][6]", "abc");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyActionErrors(new String[] { "errors.invalidaccollections", "errors.invalidaccollections" });
+        verifyActionErrors(new String[]{"errors.invalidaccollections", "errors.invalidaccollections"});
     }
 
     public void testValidateForLoadMethod() {
@@ -701,7 +706,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private CollectionSheetEntryFormDto createCollectionSheetDto(final CustomerDto customerDto,
-            final OfficeDetailsDto officeDetailsDto, final PersonnelDto personnelDto) {
+                                                                 final OfficeDetailsDto officeDetailsDto, final PersonnelDto personnelDto) {
 
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
 
@@ -843,7 +848,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private LoanBO getLoanAccount(final AccountState state, final Date startDate, final int disbursalType,
-            final LoanOfferingBO loanOfferingBO) {
+                                  final LoanOfferingBO loanOfferingBO) {
         return TestObjectFactory.createLoanAccountWithDisbursement("99999999999", client, state, startDate,
                 loanOfferingBO, disbursalType);
 

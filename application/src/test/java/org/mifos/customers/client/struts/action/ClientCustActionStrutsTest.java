@@ -74,7 +74,6 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -139,17 +138,11 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            accountBO = null;
-            client = null;
-            group = null;
-            center = null;
-            savingsOffering1 = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
-        StaticHibernateUtil.flushAndClearSession();
+        accountBO = null;
+        client = null;
+        group = null;
+        center = null;
+        savingsOffering1 = null;
         super.tearDown();
     }
 
@@ -1222,7 +1215,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 matchValues(auditLogRecord, "Mr", "Mrs");
             }
         }
-        TestObjectFactory.cleanUpChangeLog();
+        
     }
 
     private void createClientForAuditLog() throws Exception {

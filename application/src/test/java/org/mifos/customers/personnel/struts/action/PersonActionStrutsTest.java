@@ -110,7 +110,6 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         userContext = null;
         personnel = null;
         createdBranchOffice = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 
@@ -451,7 +450,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(1, ((List) request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
         verifyForward("viewPersonnelChangeLog");
         personnel = null;
-        TestObjectFactory.cleanUpChangeLog();
+
     }
 
     public void testCancelChangeLog() {

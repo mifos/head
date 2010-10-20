@@ -62,7 +62,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test @org.junit.Ignore
     public void testEntityMasterRetrievalForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
                     "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
@@ -95,7 +95,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test @org.junit.Ignore
     public void testRetrieveMasterEntitiesForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, Short.valueOf("1"));
             Assert.fail();
@@ -108,7 +108,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
  @org.junit.Ignore
     public void retrieveCustomFieldsDefinitionForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             masterPersistence.retrieveCustomFieldsDefinition(EntityType.CLIENT);
             Assert.fail();
@@ -142,7 +142,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test @Ignore("Convert to unit test")
     public void testRetrieveMasterDataEntityForInvalidConnection() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             masterPersistence.retrieveMasterDataEntity("org.mifos.accounts.business.AccountStateEntity");
             Assert.fail();

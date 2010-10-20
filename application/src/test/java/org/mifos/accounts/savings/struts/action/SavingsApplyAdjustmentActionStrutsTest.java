@@ -20,11 +20,7 @@
 
 package org.mifos.accounts.savings.struts.action;
 
-import java.util.Date;
-import java.util.Locale;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -44,19 +40,19 @@ import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+import java.util.Locale;
 
 public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
     public SavingsApplyAdjustmentActionStrutsTest() throws Exception {
@@ -99,27 +95,12 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
 
     @Override
     public void tearDown() throws Exception {
-        try {
-            if (savings != null) {
-                savings = (SavingsBO) StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
-            }
-            savings = null;
-            savings = null;
-            if (group != null) {
-                group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-            }
-            group = null;
-            group = null;
-            if (center != null) {
-                center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-            }
-            center = null;
-            center = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
-        StaticHibernateUtil.flushSession();
+        savings = null;
+        savings = null;
+        group = null;
+        group = null;
+        center = null;
+        center = null;
         super.tearDown();
     }
 

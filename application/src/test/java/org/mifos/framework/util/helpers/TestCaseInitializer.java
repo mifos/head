@@ -27,7 +27,6 @@ import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.ActivityMapper;
@@ -42,7 +41,7 @@ import org.mifos.security.util.ActivityMapper;
  */
 public class TestCaseInitializer {
 
-    private static Boolean initialized = false;
+    private static boolean initialized = false;
     
     public void initialize() throws Exception {
         if (!initialized) {

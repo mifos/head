@@ -109,7 +109,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         boolean res = client.hasActiveLoanAccounts();
         StaticHibernateUtil.flushAndClearSession();
         Assert.assertEquals(res, false);
-        TestObjectFactory.cleanUpChangeLog();
+
     }
 
     @Test
@@ -127,7 +127,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.flushAndClearSession();
 
-        TestObjectFactory.cleanUpChangeLog();
+        
     }
 
     @Test

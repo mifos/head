@@ -55,7 +55,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     @Test @org.junit.Ignore
     public void testGetActiveLoanProductCategoriesForInvalidConnection() {
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
            Assert.assertEquals(1, new LoanPrdBusinessService().getActiveLoanProductCategories().size());
            Assert.assertTrue(false);
@@ -71,7 +71,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     @Test @org.junit.Ignore
     public void testGetLoanApplicableCustomerTypesForInvalidConnection() {
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             new LoanPrdBusinessService().getLoanApplicableCustomerTypes((short) 1);
            Assert.assertTrue(false);
@@ -101,7 +101,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.flushSession();
 
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             new LoanPrdBusinessService().getLoanOffering(loanOffering.getPrdOfferingId());
            Assert.assertTrue(false);
@@ -128,7 +128,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
 
     @Test @org.junit.Ignore
     public void testGetApplicablePrdStatusForInvalidConnection() {
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             new LoanPrdBusinessService().getApplicablePrdStatus((short) 1);
             Assert.fail();
@@ -159,7 +159,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.flushSession();
 
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             new LoanPrdBusinessService().getLoanOffering(loanOffering.getPrdOfferingId(), (short) 1);
            Assert.assertTrue(false);
@@ -192,7 +192,7 @@ public class LoanPrdBusinessServiceIntegrationTest extends MifosIntegrationTestC
         loanOffering = createLoanOfferingBO("Loan Offering", "Loan");
         StaticHibernateUtil.flushSession();
 
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             new LoanPrdBusinessService().getAllLoanOfferings((short) 1);
            Assert.assertTrue(false);

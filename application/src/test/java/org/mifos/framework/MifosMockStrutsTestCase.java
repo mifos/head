@@ -49,7 +49,7 @@ import java.util.List;
  */
 public class MifosMockStrutsTestCase extends MockStrutsTestCase {
 
-    private static Boolean isTestingModeSet = false;
+    private static boolean isTestingModeSet = false;
 
     private static String savedFiscalCalendarRulesWorkingDays;
 
@@ -125,7 +125,6 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         doCleanUp(request.getSession());
         diableCustomWorkingDays();
         DatabaseDependentTest.after();
-        TestObjectFactory.cleanUpTestObjects();
         super.tearDown();
         TestUtils.dereferenceObjects(this);
     }

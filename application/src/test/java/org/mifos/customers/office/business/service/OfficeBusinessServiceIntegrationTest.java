@@ -78,7 +78,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     @Test @org.junit.Ignore
     public void testGetStatusListFailure() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             officeBusinessService.getStatusList();
             Assert.fail();

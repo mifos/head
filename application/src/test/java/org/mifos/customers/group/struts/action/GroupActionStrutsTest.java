@@ -128,7 +128,6 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         client = null;
         group = null;
         center = null;
-        StaticHibernateUtil.flushAndClearSession();
         userContext = null;
         super.tearDown();
     }
@@ -851,7 +850,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
         Assert.assertTrue(group.isTrained());
         Assert.assertEquals(newDisplayName, group.getDisplayName());
-        TestObjectFactory.cleanUpChangeLog();
+        
     }
 
     public void testUpdateSuccessWithoutTrained() throws Exception {

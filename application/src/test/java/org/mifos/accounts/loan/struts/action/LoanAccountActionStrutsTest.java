@@ -191,7 +191,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-
         super.tearDown();
     }
 
@@ -445,7 +444,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         actionPerform();
         Assert.assertEquals(1, ((List) request.getSession().getAttribute(AuditConstants.AUDITLOGRECORDS)).size());
         verifyForward("viewLoanChangeLog");
-        TestObjectFactory.cleanUpChangeLog();
+
     }
 
     public void testCancelChangeLog() {

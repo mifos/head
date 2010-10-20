@@ -111,7 +111,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         client = null;
         group = null;
         center = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

@@ -69,7 +69,6 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         role = null;
-//        TestObjectFactory.cleanUp(role);
         super.tearDown();
     }
 

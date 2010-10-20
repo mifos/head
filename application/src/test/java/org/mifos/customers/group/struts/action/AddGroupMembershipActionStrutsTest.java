@@ -95,7 +95,6 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
         group = null;
         center = null;
         office = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

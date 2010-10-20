@@ -85,7 +85,7 @@ public class AuditInterceptorIntegrationTest extends MifosIntegrationTestCase {
                Assert.assertEquals("0", auditLogRecord.getNewValue());
             }
         }
-        TestObjectFactory.cleanUpChangeLog();
+
         accountBO = null;
         group = null;
         center = null;

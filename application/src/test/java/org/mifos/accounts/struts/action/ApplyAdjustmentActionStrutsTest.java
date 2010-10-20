@@ -327,7 +327,6 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         loan = null;
         group = null;
         center = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

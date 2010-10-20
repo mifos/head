@@ -85,7 +85,6 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         account = null;
         group = null;
         center = null;
-        StaticHibernateUtil.flushSession();
         userContext = null;
         super.tearDown();
     }

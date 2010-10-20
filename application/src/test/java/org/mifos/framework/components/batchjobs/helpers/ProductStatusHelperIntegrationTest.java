@@ -95,7 +95,7 @@ public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase
     @Test @org.junit.Ignore
     public void testExecuteFailure() throws PersistenceException {
         createInactiveLoanOffering();
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             productStatusHelper.execute(System.currentTimeMillis());
             Assert.fail("unexpected absence of exception");

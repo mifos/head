@@ -20,10 +20,7 @@
 
 package org.mifos.customers.surveys.struts.action;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.apache.struts.action.ActionMapping;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.business.Question;
@@ -34,11 +31,12 @@ import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.List;
 
 public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -62,9 +60,8 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Override
-    protected void tearDown() throws Exception {
-
-        StaticHibernateUtil.flushSession();
+    public void tearDown() throws Exception {
+        super.tearDown();
     }
 
     private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {

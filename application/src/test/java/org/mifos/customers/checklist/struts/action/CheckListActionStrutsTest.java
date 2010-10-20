@@ -66,7 +66,6 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

@@ -84,7 +84,6 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         loanBO = null;
         group = null;
         center = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

@@ -97,7 +97,6 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     protected void tearDown() throws Exception {
         userContext = null;
         personnel = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

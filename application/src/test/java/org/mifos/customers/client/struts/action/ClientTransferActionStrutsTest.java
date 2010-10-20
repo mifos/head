@@ -38,7 +38,6 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -78,18 +77,12 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            client = null;
-            group = null;
-            group1 = null;
-            center = null;
-            center1 = null;
-            office = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
-        StaticHibernateUtil.flushSession();
+        client = null;
+        group = null;
+        group1 = null;
+        center = null;
+        center1 = null;
+        office = null;
         super.tearDown();
     }
 
@@ -245,7 +238,7 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
                 matchValues(auditLogRecord, "TestBranchOffice", "customer_office");
             }
         }
-        TestObjectFactory.cleanUpChangeLog();
+        
     }
 
     private void createObjectsForClientTransfer() throws Exception {

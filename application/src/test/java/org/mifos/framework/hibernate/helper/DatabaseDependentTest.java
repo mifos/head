@@ -15,8 +15,6 @@ public class DatabaseDependentTest {
     public static void after() {
         Session sessionTL = StaticHibernateUtil.getSessionTL();
         if (sessionTL.isOpen()) {
-            sessionTL.clear();
-            StaticHibernateUtil.rollbackTransaction();
             HibernateUtil.getInstance().closeSession();
         }
     }

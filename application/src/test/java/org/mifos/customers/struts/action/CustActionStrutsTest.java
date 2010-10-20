@@ -110,7 +110,6 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
         client = null;
         group = null;
         center = null;
-        StaticHibernateUtil.flushSession();
         userContext = null;
         super.tearDown();
     }

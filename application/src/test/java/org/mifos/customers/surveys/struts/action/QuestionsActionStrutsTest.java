@@ -20,13 +20,7 @@
 
 package org.mifos.customers.surveys.struts.action;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.business.Question;
@@ -35,10 +29,14 @@ import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -59,7 +57,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-
+       super.tearDown();
     }
 
     private Question makeTestSelectQuestion(String name, int choiceNumber) throws Exception {

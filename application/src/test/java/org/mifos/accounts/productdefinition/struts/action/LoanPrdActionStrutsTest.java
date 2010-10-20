@@ -77,7 +77,6 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         fee = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

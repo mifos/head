@@ -44,7 +44,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -106,47 +105,16 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         SecurityContextHolder.setContext(securityContext);
     }
 
-    private void reloadMembers() {
-        if (savings != null) {
-            savings = (SavingsBO) StaticHibernateUtil.getSessionTL().get(SavingsBO.class, savings.getAccountId());
-        }
-        if (group != null) {
-            group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-        }
-        if (center != null) {
-            center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        }
-        if (client1 != null) {
-            client1 = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client1.getCustomerId());
-        }
-        if (client2 != null) {
-            client2 = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client2.getCustomerId());
-        }
-        if (client3 != null) {
-            client3 = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client3.getCustomerId());
-        }
-        if (client4 != null) {
-            client4 = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, client4.getCustomerId());
-        }
-
-    }
-
     @Override
     public void tearDown() throws Exception {
-        try {
-            reloadMembers();
-            SecurityContextHolder.setContext(null);
-            savings = null;
-            client1 = null;
-            client2 = null;
-            client3 = null;
-            client4 = null;
-            group = null;
-            center = null;
-        } catch (Exception e) {
+        savings = null;
+        client1 = null;
+        client2 = null;
+        client3 = null;
+        client4 = null;
+        group = null;
+        center = null;
 
-        }
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

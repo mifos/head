@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.util.Date;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -30,11 +28,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
 
 public class LoanActivityActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -71,16 +69,9 @@ public class LoanActivityActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        try {
-            accountBO = null;
-            group = null;
-            center = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
-
-        StaticHibernateUtil.flushSession();
+        accountBO = null;
+        group = null;
+        center = null;
         super.tearDown();
     }
 

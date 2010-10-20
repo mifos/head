@@ -103,22 +103,14 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        try {
-            savings = null;
-            savings3 = null;
-            group = null;
-            center = null;
-            savingsOffering = null;
-            savingsOffering1 = null;
-            TestObjectFactory.removeObject(savingsOffering2);
-            StaticHibernateUtil.flushSession();
-        } catch (Exception e) {
-            /*
-             * If this was caused by an underlying failure, we don't want to
-             * swallow the underlying failure.
-             */
-            e.printStackTrace();
-        }
+        savings = null;
+        savings3 = null;
+        group = null;
+        center = null;
+        savingsOffering = null;
+        savingsOffering1 = null;
+        TestObjectFactory.removeObject(savingsOffering2);
+
         super.tearDown();
     }
 

@@ -834,44 +834,21 @@
                             <redirectTestOutputToFile>true</redirectTestOutputToFile>
                             <!-- override exclude integration test classes    -->
                             <excludes>
-                                <exclude>**/*LoanArrearsTaskIntegrationTest.java</exclude>
-                                <exclude>**/*TaskRunningIntegrationTest.java</exclude>
-                                <exclude>**/*ProductStatusHelperIntegrationTest.java</exclude>
-                                <exclude>**/*BatchJobCatchUpIntegrationTest.java</exclude>
-                                <exclude>**/*LatestTestAfterCheckpointIntegrationTest.java</exclude>
-                                <exclude>**/*StrutsTest.java</exclude>
+                                <exclude>org/mifos/framework/components/batchjobs/helpers/LoanArrearsTaskIntegrationTest.java</exclude>
+                                <exclude>org/mifos/framework/components/batchjobs/TaskRunningIntegrationTest.java</exclude>
+                                <exclude>org/mifos/framework/components/batchjobs/helpers/ProductStatusHelperIntegrationTest.java</exclude>
+                                <exclude>org/mifos/framework/components/batchjobs/BatchJobCatchUpIntegrationTest.java</exclude>
+                                <exclude>org/mifos/framework/persistence/LatestTestAfterCheckpointIntegrationTest.java</exclude>
                             </excludes>
                             <includes>
                                 <include>**/*IntegrationTest.java</include>
-                            </includes>
-                            <systemProperties>
-                                <mifos.mode>integration</mifos.mode>
-                            </systemProperties>
-                            <argLine>${maven.surefire.memory}</argLine>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/no_db_commits</reportsDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>integration-test-struts</id>
-                        <phase>integration-test</phase>
-                        <goals>
-                            <goal>test</goal>
-                        </goals>
-                        <configuration>
-                            <testNGArtifactName>null</testNGArtifactName>
-                            <printSummary>true</printSummary>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <excludes>
-                                <exclude>**/*IntegrationTest.java</exclude>
-                            </excludes>
-                            <includes>
                                 <include>**/*StrutsTest.java</include>
                             </includes>
                             <systemProperties>
                                 <mifos.mode>integration</mifos.mode>
                             </systemProperties>
                             <argLine>${maven.surefire.memory}</argLine>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/struts</reportsDirectory>
+                            <reportsDirectory>${project.build.directory}/surefire-reports/integration/no_db_commits</reportsDirectory>
                         </configuration>
                     </execution>
                     <execution>
@@ -909,7 +886,6 @@
                     <reportsDirectories>
                         <reportsDirectories>${project.build.directory}/surefire-reports/unit</reportsDirectories>
                         <reportsDirectories>${project.build.directory}/surefire-reports/integration/no_db_commits</reportsDirectories>
-                        <reportsDirectories>${project.build.directory}/surefire-reports/integration/struts</reportsDirectories>
                         <reportsDirectories>${project.build.directory}/surefire-reports/integration/dataupgrade</reportsDirectories>
                     </reportsDirectories>
                 </configuration>

@@ -78,7 +78,6 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         userContext = null;
         personnel = null;
         createdBranchOffice = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

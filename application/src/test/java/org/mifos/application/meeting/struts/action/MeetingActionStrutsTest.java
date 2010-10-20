@@ -67,12 +67,8 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
     public void tearDown() throws Exception {
         client1 = null;
         client2 = null;
-//
-//        TestObjectFactory.cleanUp(client1);
-//        TestObjectFactory.cleanUp(client2);
         group = null;
         center = null;
-        StaticHibernateUtil.flushSession();
         super.tearDown();
     }
 

@@ -66,7 +66,7 @@ public class ConfigurationIntializerIntegrationTest extends MifosIntegrationTest
     @Test
     @Ignore
     public void testStartUpException() throws Exception {
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             configInitializer.initialize();
             Assert.fail();

@@ -1152,7 +1152,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 (short) 1);
         FundBO fund = TestObjectFactory.createFund(fundCodeEntity, "Fund1");
 
-        TestObjectFactory.cleanUpChangeLog();
+
         StaticHibernateUtil.flushAndClearSession();
         Date newDate = incrementCurrentDate(14);
         accountBO = getLoanAccount();
@@ -1188,7 +1188,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 Assert.assertEquals("0", auditLogRecord.getNewValue());
             }
         }
-        TestObjectFactory.cleanUpChangeLog();
+
     }
 
     @Test

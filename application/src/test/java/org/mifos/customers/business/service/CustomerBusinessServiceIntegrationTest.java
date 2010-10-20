@@ -186,7 +186,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
         StaticHibernateUtil.flushSession();
         center = TestObjectFactory.getCenter(center.getCustomerId());
-        TestObjectFactory.simulateInvalidConnection();
+
         try {
             service.getAllActivityView(center.getGlobalCustNum());
             Assert.assertTrue(false);
