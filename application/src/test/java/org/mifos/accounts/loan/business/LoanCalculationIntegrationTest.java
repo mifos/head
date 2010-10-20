@@ -65,6 +65,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -130,8 +131,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     // TODO: probably should be of type LoanBO
     protected AccountBO accountBO = null;
 
-    protected AccountBO badAccountBO = null;
-
     protected CustomerBO center = null;
 
     protected CustomerBO group = null;
@@ -150,7 +149,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private boolean isFileNameConsoleOutputEnabled = false;
 
     private LoanDaoLegacyImpl loanDao;
-    private static int random = 0;
 
     @Before
     public void setUp() throws Exception {
@@ -170,12 +168,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
     @After
     public void tearDown() throws Exception {
-        accountBO = null;
-        badAccountBO = null;
-        client = null;
-        group = null;
-        center = null;
-
         AccountingRules.setInitialRoundOffMultiple(savedInitialRoundOffMultiple);
         AccountingRules.setFinalRoundOffMultiple(savedFinalRoundOffMultiple);
         AccountingRules.setCurrencyRoundingMode(savedCurrencyRoundingMode);
@@ -466,7 +458,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan"+System.currentTimeMillis(), "L"+ ++random, ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
@@ -655,6 +647,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (String dataFileName : dataFileNames) {
             if (fileNameContains(dataFileName, decliningEPIGraceFeeTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
+                StaticHibernateUtil.clearSession();
+                StaticHibernateUtil.rollbackTransaction();
             }
         }
     }
@@ -713,6 +707,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (String dataFileName : dataFileNames) {
             if (dataFileName.startsWith("testcase-2008-05-13-declining-grace-fee-set1")) {
                 runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
+                StaticHibernateUtil.clearSession();
+                StaticHibernateUtil.rollbackTransaction();
             }
         }
     }
@@ -725,6 +721,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (String dataFileName : dataFileNames) {
             if (dataFileName.startsWith("testcase") && dataFileName.contains("flat-grace-fee-set")) {
                 runOne999AccountTestCaseLoanWithFees(rootPath + dataFileName);
+                StaticHibernateUtil.clearSession();
+                StaticHibernateUtil.rollbackTransaction();
             }
         }
 
@@ -855,7 +853,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan"+System.currentTimeMillis(), "L"+ ++random, ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
@@ -920,7 +918,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan"+System.currentTimeMillis(), "L"+ ++random, ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
@@ -1555,9 +1553,10 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group", CustomerStatus.GROUP_ACTIVE, center);
+
         Date startDate = new Date(System.currentTimeMillis());
 
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan"+System.currentTimeMillis(), "L"+ ++random, ApplicableTo.GROUPS, startDate,
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(this.getClass().getSimpleName() + " Loan", "L", ApplicableTo.GROUPS, startDate,
                 PrdStatus.LOAN_ACTIVE, Double.parseDouble(loanParams.getPrincipal()), Double.parseDouble(loanParams
                         .getAnnualInterest()), loanParams.getNumberOfPayments(), loanParams.getLoanType(), false,
                 false, center.getCustomerMeeting().getMeeting(), config.getGracePeriodType(), config.getGracePeriod(), "1", "1");
@@ -2049,6 +2048,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             fileNameContains(dataFileName, flatGraceFeeTestCases)
                     || fileNameContains(dataFileName, flatNegativeLastPaymentTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
+                StaticHibernateUtil.clearSession();
+                StaticHibernateUtil.rollbackTransaction();
             }
         }
     }
@@ -2061,6 +2062,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             if (fileNameContains(dataFileName, decliningGraceFeeTestCases)
                     || fileNameContains(dataFileName, decliningNegativeLastPaymentTestCases)) {
                 runOneTestCaseWithDataFromSpreadSheet(rootPath, dataFileName);
+                StaticHibernateUtil.clearSession();
+                StaticHibernateUtil.rollbackTransaction();
             }
         }
     }

@@ -20,10 +20,7 @@
 
 package org.mifos.config.business;
 
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,8 +30,9 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.util.List;
 
 /**
  * Most of this class is a remnant of per-office configuration, which <a
@@ -48,11 +46,6 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
     @Before
     public void setUp() throws Exception {
         configuration = Configuration.getInstance();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        StaticHibernateUtil.flushSession();
     }
 
     @After
@@ -101,6 +94,7 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
     public void testFiscalCalendarRules() {
        Assert.assertEquals(Short.valueOf("2"), new FiscalCalendarRules().getStartOfWeek());
        Assert.assertEquals("same_day", new FiscalCalendarRules().getScheduleTypeForMeetingIfNonWorkingDay());
+       enableCustomWorkingDays();
        List<Short> weekOffs = new FiscalCalendarRules().getWeekDayOffList();
        Assert.assertEquals(weekOffs.size(), 0);
     }
