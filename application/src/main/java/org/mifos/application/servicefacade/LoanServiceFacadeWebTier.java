@@ -44,6 +44,8 @@ import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
 import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.business.service.LoanSummaryDto;
+import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -59,6 +61,7 @@ import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -89,6 +92,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -114,6 +118,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.validations.Errors;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
@@ -142,14 +147,16 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final PersonnelDao personnelDao;
     private final FundDao fundDao;
     private final LoanDao loanDao;
+    private final InstallmentsValidator installmentsValidator;
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao) {
+                                    PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, InstallmentsValidator installmentsValidator) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.fundDao = fundDao;
         this.loanDao = loanDao;
+        this.installmentsValidator = installmentsValidator;
     }
 
     @Override
@@ -1068,8 +1075,59 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public void validateVariableInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments) throws ServiceException {
-        // TODO Implement this !!
+    public Errors validateInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
+                                       List<RepaymentScheduleInstallment> installments) {
+        FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
+        InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
+        return installmentsValidator.validate(installments, installmentValidationContext);
     }
 
+    @Override
+    public void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments,
+                                            List<LoanScheduleEntity> loanScheduleEntities, Money loanAmount,
+                                            Double interestRate, Date disbursementDate) {
+        Double dailyInterestFactor = interestRate / (AccountingRules.getNumberOfInterestDays() * 100d);
+        Money principalOutstanding = loanAmount;
+        Money runningPrincipal = new Money(loanAmount.getCurrency());
+        Date initialDueDate = disbursementDate;
+        int installmentIndex, numInstallments;
+        for (installmentIndex = 0, numInstallments = repaymentScheduleInstallments.size(); installmentIndex < numInstallments - 1; installmentIndex++) {
+            RepaymentScheduleInstallment installment = repaymentScheduleInstallments.get(installmentIndex);
+            LoanScheduleEntity loanScheduleEntity = loanScheduleEntities.get(installmentIndex);
+            Date currentDueDate = installment.getDueDateValue();
+            long duration = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, initialDueDate);
+            Money fees = installment.getFees();
+            Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, installment, duration);
+            Money total = installment.getTotalValue();
+            Money principal = total.subtract(interest.add(fees));
+            setPrincipalAndInterest(installment, loanScheduleEntity, interest, principal);
+            initialDueDate = currentDueDate;
+            principalOutstanding = principalOutstanding.subtract(principal);
+            runningPrincipal = runningPrincipal.add(principal);
+        }
+
+        RepaymentScheduleInstallment lastInstallment = repaymentScheduleInstallments.get(installmentIndex);
+        LoanScheduleEntity lastLoanScheduleEntity = loanScheduleEntities.get(installmentIndex);
+        long duration = DateUtils.getNumberOfDaysBetweenTwoDates(lastInstallment.getDueDateValue(), initialDueDate);
+        Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, lastInstallment, duration);
+        Money fees = lastInstallment.getFees();
+        Money principal = loanAmount.subtract(runningPrincipal);
+        Money total = principal.add(interest).add(fees);
+        lastInstallment.setTotalAndTotalValue(total);
+        setPrincipalAndInterest(lastInstallment, lastLoanScheduleEntity, interest, principal);
+    }
+
+    private void setPrincipalAndInterest(RepaymentScheduleInstallment installment, LoanScheduleEntity loanScheduleEntity, 
+                                         Money interest, Money principal) {
+        installment.setPrincipal(principal);
+        installment.setInterest(interest);
+        loanScheduleEntity.setPrincipal(principal);
+        loanScheduleEntity.setInterest(interest);
+    }
+
+    private Money computeInterestAmount(Double dailyInterestFactor, Money principalOutstanding,
+                                        RepaymentScheduleInstallment installment, long duration) {
+        Double interestForInstallment = dailyInterestFactor * duration * principalOutstanding.getAmountDoubleValue();
+        return new Money(installment.getCurrency(), interestForInstallment);
+    }
 }

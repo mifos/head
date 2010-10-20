@@ -40,8 +40,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
-import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
-import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
@@ -245,7 +243,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
     private final LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
-    private final InstallmentsValidator installmentsValidator = DependencyInjectedServiceLocator.locateInstallmentsValidator();
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -479,9 +476,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         UserContext userContext = getUserContext(request);
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId());
         if (loanOffering.isVariableInstallmentsAllowed()) {
-            ActionErrors actionErrors = validateInstallmentSchedule(
-                                        loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale()),
-                                        loanOffering.getVariableInstallmentDetails(), loanActionForm.getInstallments());
+            List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
+            VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
+            java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
+            Errors errors = loanServiceFacade.validateInstallments(disbursementDate, variableInstallmentDetails, installments);
+            ActionErrors actionErrors = getActionErrors(errors);
             if (!actionErrors.isEmpty()) {
                 addErrors(request, actionErrors);
                 result = false;
@@ -1659,14 +1658,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createLoanQuestionnaire.editResponses(mapping, request, (LoanAccountActionForm) form);
-    }
-
-    private ActionErrors validateInstallmentSchedule(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
-                                                     List<RepaymentScheduleInstallment> installments) {
-        FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
-        InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
-        Errors errors = installmentsValidator.validate(installments, installmentValidationContext);
-        return getActionErrors(errors);
     }
 
     private ActionErrors getActionErrors(Errors errors) {

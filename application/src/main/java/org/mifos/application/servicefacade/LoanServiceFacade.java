@@ -27,6 +27,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -35,6 +36,7 @@ import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
@@ -42,6 +44,8 @@ import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
 
 import java.util.Date;
@@ -103,5 +107,7 @@ public interface LoanServiceFacade {
 
     RepayLoanDto getRepaymentDetails(String globalAccountNumber, Short localeId, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) throws PersistenceException;
 
-    void validateVariableInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments) throws ServiceException;
+    Errors validateInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments);
+
+    void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments, List<LoanScheduleEntity> loanScheduleEntities, Money loanAmount, Double interestRate, Date disbursementDate);
 }

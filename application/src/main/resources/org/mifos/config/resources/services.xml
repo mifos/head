@@ -56,6 +56,7 @@
     	<constructor-arg ref="personnelDao" />
     	<constructor-arg ref="fundDao" />
     	<constructor-arg ref="loanDao" />
+    	<constructor-arg ref="installmentsValidator" />
     </bean>
     
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" >

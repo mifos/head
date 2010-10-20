@@ -26,11 +26,17 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePer
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -50,19 +56,26 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.platform.validations.Errors;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
@@ -110,9 +123,18 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private LoanBO loanBO;
 
+    @Mock
+    private InstallmentsValidator installmentsValidator;
+
+    private RepaymentScheduleInstallmentBuilder installmentBuilder;
+
+    private Locale locale;
+
     @Before
     public void setupAndInjectDependencies() {
-        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao);
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao, installmentsValidator);
+        locale = new Locale("en", "GB");
+        installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
     }
 
     @Test
@@ -183,13 +205,140 @@ public class LoanServiceFacadeWebTierTest {
         Mockito.when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
         MifosCurrency dollar = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
         Mockito.when(loanBO.getCurrency()).thenReturn(dollar);
-        Date date = new Date(new java.util.Date().getTime());
+        java.sql.Date date = new java.sql.Date(new Date().getTime());
         boolean waiveInterest = true;
         String paymentMethod = "Cash";
         String receiptNumber = "001";
         loanServiceFacade.makeEarlyRepayment("1", "100", receiptNumber,
                 date, paymentMethod, (short) 1, waiveInterest);
         short userId = (short) 1;
-        Mockito.verify(loanBO).makeEarlyRepayment(new Money(dollar, "100"), receiptNumber, date, paymentMethod, userId, waiveInterest);
+        verify(loanBO).makeEarlyRepayment(new Money(dollar, "100"), receiptNumber, date, paymentMethod, userId, waiveInterest);
+    }
+
+    @Test
+    public void shouldValidateInstallments() {
+        Errors errors = new Errors();
+        when(installmentsValidator.validate(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class))).thenReturn(errors);
+        Errors actual = loanServiceFacade.validateInstallments(null, null, new ArrayList<RepaymentScheduleInstallment>());
+        assertThat(actual, is(errors));
+        verify(installmentsValidator).validate(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
+    }
+
+    @Test
+    public void shouldGenerateMonthlyInstallmentScheduleFromRepaymentSchedule() {
+        MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("25-Sep-2010", 1, rupee, "178.6", "20.4", "1", "100");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("25-Oct-2010", 2, rupee, "182.8", "16.2", "1", "200");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("25-Nov-2010", 3, rupee, "186.0", "13.0", "1", "200");
+        RepaymentScheduleInstallment installment4 =
+                getRepaymentScheduleInstallment("25-Dec-2010", 4, rupee, "452.6", "8.9", "1", "462.5");
+        List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3, installment4);
+        List<LoanScheduleEntity> scheduleEntities = new ArrayList<LoanScheduleEntity>();
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment1.getDueDateValue(), "178.6", "20.4"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment2.getDueDateValue(), "182.8", "16.2"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment3.getDueDateValue(), "186.0", "13.0"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment4.getDueDateValue(), "452.6", "8.9"));
+        Date disbursementDate = getDate(2010, 8, 25);
+        loanServiceFacade.generateInstallmentSchedule(installments, scheduleEntities, new Money(rupee, "1000"), 24d, disbursementDate);
+
+        assertLoanScheduleEntity(scheduleEntities.get(0), "78.6", "20.4");
+        assertLoanScheduleEntity(scheduleEntities.get(1), "180.8", "18.2");
+        assertLoanScheduleEntity(scheduleEntities.get(2), "183.9", "15.1");
+        assertLoanScheduleEntity(scheduleEntities.get(3), "556.7", "11.0");
+    }
+
+    @Test
+    public void shouldGenerateWeeklyInstallmentScheduleFromRepaymentSchedule() {
+        MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, rupee, "194.4", "4.6", "1", "100");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, rupee, "195.3", "3.7", "1", "200");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, rupee, "196.2", "2.8", "1", "200");
+        RepaymentScheduleInstallment installment4 =
+                getRepaymentScheduleInstallment("22-Sep-2010", 4, rupee, "414.1", "1.9", "1", "417.0");
+        List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3, installment4);
+        List<LoanScheduleEntity> scheduleEntities = new ArrayList<LoanScheduleEntity>();
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment1.getDueDateValue(), "194.4", "4.6"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment2.getDueDateValue(), "195.3", "3.7"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment3.getDueDateValue(), "196.2", "2.8"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment4.getDueDateValue(), "414.1", "1.9"));
+        Date disbursementDate = getDate(2010, 8, 25);
+        loanServiceFacade.generateInstallmentSchedule(installments, scheduleEntities, new Money(rupee, "1000"), 24d, disbursementDate);
+
+        assertLoanScheduleEntity(scheduleEntities.get(0), "94.4", "4.6");
+        assertLoanScheduleEntity(scheduleEntities.get(1), "194.8", "4.2");
+        assertLoanScheduleEntity(scheduleEntities.get(2), "195.7", "3.3");
+        assertLoanScheduleEntity(scheduleEntities.get(3), "515.0", "2.4");
+    }
+
+    @Test
+    public void shouldGenerateInstallmentScheduleFromRepaymentSchedule() {
+        MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, rupee, "94.4", "4.6", "1", "75");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, rupee, "94.8", "4.2", "1", "100");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, rupee, "95.3", "3.7", "1", "100");
+        RepaymentScheduleInstallment installment4 =
+                getRepaymentScheduleInstallment("15-Oct-2010", 4, rupee, "84.9", "14.1", "1", "100");
+        RepaymentScheduleInstallment installment5 =
+                getRepaymentScheduleInstallment("25-Oct-2010", 5, rupee, "94.9", "4.2", "1", "100");
+        RepaymentScheduleInstallment installment6 =
+                getRepaymentScheduleInstallment("01-Nov-2010", 6, rupee, "96.5", "2.5", "1", "100");
+        RepaymentScheduleInstallment installment7 =
+                getRepaymentScheduleInstallment("18-Nov-2010", 7, rupee, "439.2", "4.9", "1", "445.1");
+        List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3,
+                installment4, installment5, installment6, installment7);
+        List<LoanScheduleEntity> scheduleEntities = new ArrayList<LoanScheduleEntity>();
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment1.getDueDateValue(), "94.4", "4.6"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment2.getDueDateValue(), "94.8", "4.2"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment3.getDueDateValue(), "95.3", "3.7"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment4.getDueDateValue(), "84.9", "14.1"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment5.getDueDateValue(), "94.9", "4.2"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment6.getDueDateValue(), "96.5", "2.5"));
+        scheduleEntities.add(getLoanScheduleEntity(rupee, installment7.getDueDateValue(), "439.2", "4.9"));
+        Date disbursementDate = getDate(2010, 8, 25);
+        loanServiceFacade.generateInstallmentSchedule(installments, scheduleEntities, new Money(rupee, "1000"), 24d, disbursementDate);
+
+        assertLoanScheduleEntity(scheduleEntities.get(0), "69.4", "4.6");
+        assertLoanScheduleEntity(scheduleEntities.get(1), "94.7", "4.3");
+        assertLoanScheduleEntity(scheduleEntities.get(2), "95.2", "3.8");
+        assertLoanScheduleEntity(scheduleEntities.get(3), "84.4", "14.6");
+        assertLoanScheduleEntity(scheduleEntities.get(4), "94.7", "4.3");
+        assertLoanScheduleEntity(scheduleEntities.get(5), "96.4", "2.6");
+        assertLoanScheduleEntity(scheduleEntities.get(6), "465.2", "5.2");
+    }
+
+    private Date getDate(int year, int month, int day) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month - 1, day);
+        return calendar.getTime();
+    }
+
+    private void assertLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity, String principal, String interest) {
+        assertThat(loanScheduleEntity.getPrincipal().toString(), is(principal));
+        assertThat(loanScheduleEntity.getInterest().toString(), is(interest));
+    }
+
+    private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest) {
+        LoanBO loanBO = mock(LoanBO.class);
+        when(loanBO.getCurrency()).thenReturn(currency);
+        return new LoanScheduleEntity(loanBO, mock(CustomerBO.class), Short
+                .valueOf("1"), new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, new Money(currency, principal),
+                new Money(currency, interest));
+    }
+
+    private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
+                                                                         MifosCurrency currency, String principal,
+                                                                         String interest, String fees, String total) {
+        return installmentBuilder.reset(locale).withInstallment(installment).withDueDateValue(dueDate).
+                withPrincipal(new Money(currency, principal)).withInterest(new Money(currency, interest)).
+                withFees(new Money(currency, fees)).withTotalValue(total).build();
     }
 }

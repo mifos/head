@@ -93,7 +93,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return interest;
     }
 
-    void setInterest(Money interest) {
+    public void setInterest(Money interest) {
         this.interest = interest;
     }
 
@@ -121,7 +121,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return principal;
     }
 
-    void setPrincipal(Money principal) {
+    public void setPrincipal(Money principal) {
         this.principal = principal;
     }
 
