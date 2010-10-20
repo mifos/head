@@ -27,14 +27,10 @@ import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.persistence.Persistence;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
@@ -45,11 +41,11 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
     private final Money balance;
 
     public static SavingsTrxnDetailEntity savingsInterestPosting(AccountPaymentEntity interestPayment,
-            CustomerBO customer, Money savingsBalance, Date nextIntPostDate, DateTime dueDate) {
+            CustomerBO customer, Money savingsBalance, Date nextIntPostDate, DateTime dueDate, PersonnelBO createdBy) {
         AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_INTEREST_POSTING);
         SavingsTrxnDetailEntity relatedTrxnNotApplicable = null;
         return new SavingsTrxnDetailEntity(interestPayment,
-                customer, accountAction, accountAction, interestPayment.getAmount(), savingsBalance, null, null,
+                customer, accountAction, accountAction, interestPayment.getAmount(), savingsBalance, createdBy, null,
                 nextIntPostDate, null, "", dueDate.toDate(), relatedTrxnNotApplicable);
     }
 
@@ -87,28 +83,40 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
         return adjustment;
     }
 
+    public static SavingsTrxnDetailEntity savingsWithdrawalAdjustment(AccountPaymentEntity accountPayment, CustomerBO customer,
+            Money balAfterAdjust, Money negate, PersonnelBO loggedInUser, Date dueDate, Date actionDate, Date transactionCreatedDate,
+            String adjustmentComment, SavingsTrxnDetailEntity relatedTrxn) {
+
+        AccountActionEntity applicationTransactionType = new AccountActionEntity(AccountActionTypes.SAVINGS_ADJUSTMENT);
+        AccountActionEntity monetaryTransactionType = new AccountActionEntity(AccountActionTypes.SAVINGS_WITHDRAWAL);
+        Short installmentIdNotNeeded = null;
+        SavingsTrxnDetailEntity adjustment = new SavingsTrxnDetailEntity(accountPayment, customer, applicationTransactionType, monetaryTransactionType, negate, balAfterAdjust,
+                loggedInUser, dueDate, actionDate, installmentIdNotNeeded, adjustmentComment, transactionCreatedDate, relatedTrxn);
+
+        return adjustment;
+    }
+
+    public static SavingsTrxnDetailEntity savingsAdjustment(AccountPaymentEntity accountPayment, CustomerBO customer,
+            Money balAfterAdjust, Money negate, PersonnelBO loggedInUser, Date dueDate, Date actionDate, Date transactionCreatedDate,
+            String adjustmentComment, SavingsTrxnDetailEntity relatedTrxn) {
+
+        AccountActionEntity applicationTransactionType = new AccountActionEntity(AccountActionTypes.SAVINGS_ADJUSTMENT);
+        AccountActionEntity monetaryTransactionType = new AccountActionEntity(AccountActionTypes.SAVINGS_ADJUSTMENT);
+        Short installmentIdNotNeeded = null;
+        SavingsTrxnDetailEntity adjustment = new SavingsTrxnDetailEntity(accountPayment, customer, applicationTransactionType, monetaryTransactionType, negate, balAfterAdjust,
+                loggedInUser, dueDate, actionDate, installmentIdNotNeeded, adjustmentComment, transactionCreatedDate, relatedTrxn);
+
+        return adjustment;
+    }
+
+    /**
+     * default constructor for hibernate
+     */
     protected SavingsTrxnDetailEntity() {
         depositAmount = null;
         withdrawlAmount = null;
         interestAmount = null;
         balance = null;
-    }
-
-    public SavingsTrxnDetailEntity(Money depositAmount, Money withdrawlAmount, Money interestAmount, Money balance) {
-        this.depositAmount = depositAmount;
-        this.withdrawlAmount = withdrawlAmount;
-        this.interestAmount = interestAmount;
-        this.balance = balance;
-    }
-
-    public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
-            AccountActionTypes accountActionType, Money amount, Money balance, PersonnelBO createdBy,
-            java.util.Date dueDate, java.util.Date transactionDate, Short installmentId, String comment,
-            Persistence persistence) {
-        this(accountPaymentEntity, customer,
-            accountActionType, amount, balance, createdBy,
-            dueDate, transactionDate, installmentId, comment,
-            persistence, new DateTimeService().getCurrentJavaDateTime());
     }
 
     public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
@@ -138,67 +146,8 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
         }
     }
 
-    /**
-     * use constructor that does not require persistence for super class
-     */
-    @Deprecated
-    public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, CustomerBO customer,
-            AccountActionTypes accountActionType, Money amount, Money balance, PersonnelBO createdBy,
-            java.util.Date dueDate, java.util.Date actionDate, Short installmentId, String comment,
-            Persistence persistence, java.util.Date postingDate) {
-        super(accountPaymentEntity, accountActionType, installmentId, dueDate, createdBy, customer, actionDate,
-                amount, comment, null, persistence, postingDate);
-        this.balance = balance;
-        MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
-        if (accountActionType.equals(AccountActionTypes.SAVINGS_WITHDRAWAL)) {
-            this.depositAmount = new Money(currency);
-            this.withdrawlAmount = amount;
-            this.interestAmount = new Money(currency);
-        } else if (accountActionType.equals(AccountActionTypes.SAVINGS_DEPOSIT)) {
-            this.depositAmount = amount;
-            this.withdrawlAmount = new Money(currency);
-            this.interestAmount = new Money(currency);
-        } else if (accountActionType.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING)) {
-            this.depositAmount = new Money(currency);
-            this.withdrawlAmount = new Money(currency);
-            this.interestAmount = amount;
-        } else {
-            this.depositAmount = new Money(currency);
-            this.withdrawlAmount = new Money(currency);
-            this.interestAmount = new Money(currency);
-        }
-    }
-
-    public SavingsTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, AccountActionTypes accountActionType,
-            Money amount, Money balance, PersonnelBO createdBy, CustomerBO customer, java.util.Date dueDate,
-            java.util.Date transactionDate, String comments, AccountTrxnEntity relatedTrxn, Persistence persistence) {
-        super(accountPaymentEntity, accountActionType, null, dueDate, createdBy, customer, transactionDate, amount,
-                comments, relatedTrxn, persistence);
-        this.balance = balance;
-        MifosCurrency currency = accountPaymentEntity.getAccount().getCurrency();
-        Short lastAccountAction = new SavingsHelper().getPaymentActionType(accountPaymentEntity);
-        if (lastAccountAction.equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue())) {
-            this.depositAmount = new Money(currency);
-            this.withdrawlAmount = amount;
-            this.interestAmount = new Money(currency);
-        } else if (lastAccountAction.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
-            this.depositAmount = amount;
-            this.withdrawlAmount = new Money(currency);
-            this.interestAmount = new Money(currency);
-        } else if (lastAccountAction.equals(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue())) {
-            this.depositAmount = new Money(currency);
-            this.withdrawlAmount = new Money(currency);
-            this.interestAmount = amount;
-        } else {
-            this.depositAmount = new Money(currency);
-            this.withdrawlAmount = new Money(currency);
-            this.interestAmount = new Money(currency);
-        }
-    }
-
     @Override
-    protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment)
-    throws AccountException {
+    protected AccountTrxnEntity generateReverseTrxn(PersonnelBO loggedInUser, String adjustmentComment) throws AccountException {
         SavingsTrxnDetailEntity reverseAccntTrxn = null;
         Money balAfterAdjust = null;
 
@@ -210,20 +159,15 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
                     getDueDate(), getActionDate(), new DateTime().toDate(), adjustmentComment, this);
 
         } else if (isSavingsWithdrawal()) {
-            MasterPersistence masterPersistence = new MasterPersistence();
-            balAfterAdjust = getBalance().add(getWithdrawlAmount());
-            reverseAccntTrxn = new SavingsTrxnDetailEntity(getAccountPayment(),
-                    AccountActionTypes.SAVINGS_ADJUSTMENT, getWithdrawlAmount().negate(),
-                    balAfterAdjust, loggedInUser, getCustomer(), getDueDate(), getActionDate(), adjustmentComment,
-                    this, masterPersistence);
 
+            balAfterAdjust = this.balance.add(this.withdrawlAmount);
+            reverseAccntTrxn = SavingsTrxnDetailEntity.savingsWithdrawalAdjustment(getAccountPayment(), getCustomer(),
+                    balAfterAdjust, this.withdrawlAmount.negate(), loggedInUser,
+                    getDueDate(), getActionDate(), new DateTime().toDate(), adjustmentComment, this);
         } else {
-
-            MasterPersistence masterPersistence = new MasterPersistence();
-            reverseAccntTrxn = new SavingsTrxnDetailEntity(getAccountPayment(),
-                    AccountActionTypes.SAVINGS_ADJUSTMENT, getAmount().negate(),
-                    balAfterAdjust, getPersonnel(), getCustomer(), getDueDate(), getActionDate(),
-                    adjustmentComment, this, masterPersistence);
+            reverseAccntTrxn = SavingsTrxnDetailEntity.savingsAdjustment(getAccountPayment(), getCustomer(),
+                    balAfterAdjust, getAmount().negate(), loggedInUser,
+                    getDueDate(), getActionDate(), new DateTime().toDate(), adjustmentComment, this);
         }
         return reverseAccntTrxn;
     }

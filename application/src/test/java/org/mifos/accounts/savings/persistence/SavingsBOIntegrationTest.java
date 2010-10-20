@@ -35,6 +35,7 @@ import java.util.Set;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
+import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.junit.After;
 import org.junit.Before;
@@ -63,9 +64,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsRecentActivityDto;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
@@ -155,9 +154,10 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         Money initialBal = new Money(currency, "5500");
         payment = helper.createAccountPayment(savings, null, new Money(currency, "5500.0"), new Date(), createdBy);
-        payment.addAccountTrxn(helper.createAccountTrxn(payment, null, initialBal, initialBal,
-                helper.getDate("04/01/2006"), null, null, AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings,
-                createdBy, group));
+
+        SavingsTrxnDetailEntity adjustment = SavingsTrxnDetailEntity.savingsAdjustment(payment, group, initialBal, initialBal, createdBy,
+                helper.getDate("04/01/2006"), helper.getDate("04/01/2006"), new DateTime().toDate(), "", null);
+        payment.addAccountTrxn(adjustment);
         AccountTestUtils.addAccountPayment(payment, savings);
         savings.update();
 
@@ -592,113 +592,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), Short.valueOf("6"), "notes");
         Assert.assertEquals(AccountStates.SAVINGS_ACC_CANCEL, savings.getAccountState().getId().shortValue());
 
-    }
-
-    @Test
-    public void testIsAdjustPossibleOnLastTrxn_OnPartialAccount() throws Exception {
-        createInitialObjects();
-        savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-        Money amountAdjustedTo = new Money(currency, "500.0");
-        boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        Assert.assertEquals(savings.getAccountState().getId().shortValue(),
-                AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-        Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
-    }
-
-    @Test
-    public void testIsAdjustPossibleOnLastTrxn_NoLastPayment() throws Exception {
-        createInitialObjects();
-        savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        Money amountAdjustedTo = new Money(currency, "500.0");
-        boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        Assert.assertNull(savings.getLastPmnt());
-        Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
-    }
-
-    @Test
-    public void testIsAdjustPossibleOnLastTrxn_LastPaymentIsInterestPosting() throws Exception {
-        createInitialObjects();
-        savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, new Money(currency, "1000.0"),
-                new Money(currency, "1000.0"), helper.getDate("20/05/2006"),
-                AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue(), savings, createdBy, group);
-        AccountTestUtils.addAccountPayment(payment, savings);
-        savings.update();
-
-        Money amountAdjustedTo = new Money(currency, "500.0");
-        boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        Assert.assertNotNull(savings.getLastPmnt());
-        Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
-    }
-
-    @Test
-    public void testIsAdjustPossibleOnLastTrxn_AmountSame() throws Exception {
-        createInitialObjects();
-        savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, new Money(currency, "1000.0"),
-                new Money(currency, "1000.0"), helper.getDate("20/05/2006"),
-                AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-        AccountTestUtils.addAccountPayment(payment, savings);
-        savings.update();
-
-        Money amountAdjustedTo = new Money(currency, "1000.0");
-        boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        Assert.assertNotNull(savings.getLastPmnt());
-        Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
-    }
-
-    @Test
-    public void testIsAdjustPossibleOnLastTrxn_MaxWithdrawalAmntIsLess() throws Exception {
-        createInitialObjects();
-        savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, new Money(currency, "1000.0"),
-                new Money(currency, "1000.0"), helper.getDate("20/05/2006"),
-                AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
-        AccountTestUtils.addAccountPayment(payment, savings);
-        savings.update();
-
-        savingsOffering.setMaxAmntWithdrawl(new Money(getCurrency(), "1200"));
-        Money amountAdjustedTo = new Money(currency, "1500.0");
-        boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        Assert.assertNotNull(savings.getLastPmnt());
-        Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
-    }
-
-    @Test
-    public void testIsAdjustPossibleOnLastTrxn_Balance_Negative() throws Exception {
-        createInitialObjects();
-        savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, new Money(currency, "1000.0"),
-                new Money(currency, "1000.0"), helper.getDate("20/05/2006"),
-                AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
-        AccountTestUtils.addAccountPayment(payment, savings);
-        savings.setSavingsBalance(new Money(currency, "400.0"));
-        savings.update();
-
-
-        savingsOffering.setMaxAmntWithdrawl(new Money(getCurrency(), "2500"));
-        Money amountAdjustedTo = new Money(currency, "2000.0");
-        boolean isAdjustPossible = savings.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
-        Assert.assertEquals(savings.getAccountState().getId().shortValue(), AccountStates.SAVINGS_ACC_APPROVED);
-        Assert.assertNotNull(savings.getLastPmnt());
-        Assert.assertEquals(savings.getSavingsBalance(), new Money(currency, "400.0"));
-        Assert.assertEquals(Boolean.FALSE.booleanValue(), isAdjustPossible);
     }
 
     @Test

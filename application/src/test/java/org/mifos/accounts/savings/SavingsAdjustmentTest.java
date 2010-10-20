@@ -75,8 +75,6 @@ public class SavingsAdjustmentTest {
         defaultCurrency = TestUtils.RUPEE;
         Money.setDefaultCurrency(defaultCurrency);
 
-        // FIXME - see how this can be made part of builder process to hide complexity.
-        // Set up GLCode, chart of accounts cache and financial Rules and action caches so deposits on account are handled when building account.
         Short glcodeId = Short.valueOf("1");
         String glcode = "123456";
         GLCodeEntity glCodeEntity = new GLCodeEntity(glcodeId, glcode);
@@ -330,7 +328,7 @@ public class SavingsAdjustmentTest {
     }
 
     @Test
-    public void accountActivitysRecordAdjustmenetOfLastTransactionWithAReversalAndDepositTransactions() {
+    public void accountActivitysRecordAdjustmentOfLastTransactionWithAReversalAndDepositTransactions() {
 
         savingsAccount = new SavingsAccountBuilder().mandatory()
                                                     .active()
@@ -355,4 +353,57 @@ public class SavingsAdjustmentTest {
         List<SavingsActivityEntity> activitysAfter = new ArrayList<SavingsActivityEntity>(savingsAccount.getSavingsActivityDetails());
         assertThat(activitysAfter.size(), is(3));
     }
+
+    @Test
+    public void accountBalanceIsUpdatedWhenLastWithdrawalIsAdjusted() {
+
+        savingsAccount = new SavingsAccountBuilder().mandatory()
+                                                    .active()
+                                                    .withSavingsProduct(savingsProduct)
+                                                    .withCustomer(client)
+                                                    .withBalanceOf(TestUtils.createMoney("100"))
+                                                    .withWithdrawalOf("15")
+                                                    .build();
+
+        Money amountAdjustedTo = TestUtils.createMoney("25");
+        String adjustmentNote = "testAdjustment";
+        PersonnelBO updatedBy = new PersonnelBuilder().build();
+
+        // pre verification
+        assertThat(savingsAccount.getSavingsBalance(), is(TestUtils.createMoney(85)));
+
+        // exercise test
+        savingsAccount.adjustLastUserAction(amountAdjustedTo, adjustmentNote, updatedBy);
+
+        // verification
+        assertThat(savingsAccount.getSavingsBalance(), is(TestUtils.createMoney(75)));
+    }
+
+    @Test
+    public void accountActivitysRecordAdjustmentOfLastTransactionWithAReversalAndWithdrawalTransactions() {
+
+        savingsAccount = new SavingsAccountBuilder().mandatory()
+                                                    .active()
+                                                    .withSavingsProduct(savingsProduct)
+                                                    .withCustomer(client)
+                                                    .withBalanceOf(TestUtils.createMoney("100"))
+                                                    .withWithdrawalOf("15")
+                                                    .build();
+
+        Money amountAdjustedTo = TestUtils.createMoney("25");
+        String adjustmentNote = "testAdjustment";
+        PersonnelBO updatedBy = new PersonnelBuilder().build();
+
+        // pre verification
+        List<SavingsActivityEntity> activitysBefore = new ArrayList<SavingsActivityEntity>(savingsAccount.getSavingsActivityDetails());
+        assertThat(activitysBefore.size(), is(1));
+
+        // exercise test
+        savingsAccount.adjustLastUserAction(amountAdjustedTo, adjustmentNote, updatedBy);
+
+        // verification
+        List<SavingsActivityEntity> activitysAfter = new ArrayList<SavingsActivityEntity>(savingsAccount.getSavingsActivityDetails());
+        assertThat(activitysAfter.size(), is(3));
+    }
+
 }

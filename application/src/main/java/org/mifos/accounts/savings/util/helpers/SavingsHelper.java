@@ -31,7 +31,6 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
-import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -43,7 +42,6 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -162,16 +160,6 @@ public class SavingsHelper {
         AccountActionDateEntity actionDate = new SavingsScheduleEntity(account, customer, installmentId,
                 new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, amount);
         return actionDate;
-    }
-
-    public AccountTrxnEntity createAccountPaymentTrxn(AccountPaymentEntity payment, Money balance,
-            AccountActionTypes accountActionType, CustomerBO customer, PersonnelBO createdBy, Persistence persistence,
-            Date actionDate) {
-
-        SavingsTrxnDetailEntity savingsTrxn = new SavingsTrxnDetailEntity(payment, customer, accountActionType, payment
-                .getAmount(), balance, createdBy, null, actionDate, null,
-                "", persistence, new DateTimeService().getCurrentDateTime().toDate());
-        return savingsTrxn;
     }
 
     public AccountPaymentEntity createAccountPayment(AccountBO account, Money amount,
