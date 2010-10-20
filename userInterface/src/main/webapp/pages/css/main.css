@@ -322,3 +322,7 @@ margin-top:2px;
     font-size:11pt;
 }
 
+.sideMarginAuto {
+    margin-left:auto;
+    margin-right:auto;
+}

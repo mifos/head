@@ -42,6 +42,8 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -106,7 +108,8 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(System.currentTimeMillis()),
                 "close client savings account", TestObjectFactory.getPersonnel(userContext.getId()), clientSavings);
         clientSavings.setUserContext(userContext);
-        clientSavings.closeAccount(payment, notes, clientSavings.getCustomer());
+        PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(userContext.getId());
+        clientSavings.closeAccount(payment, notes, clientSavings.getCustomer(), loggedInUser);
 
         StaticHibernateUtil.commitTransaction();
 

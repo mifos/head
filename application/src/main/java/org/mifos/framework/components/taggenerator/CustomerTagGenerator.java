@@ -21,8 +21,10 @@
 package org.mifos.framework.components.taggenerator;
 
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.framework.business.AbstractBusinessObject;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.tags.MifosTagUtils;
 
 public class CustomerTagGenerator extends TagGenerator {
@@ -53,9 +55,14 @@ public class CustomerTagGenerator extends TagGenerator {
         if (customer == null) {
             return;
         }
-        buildLink(strBuilder, customer.getParentCustomer(), originalCustomer, selfLinkRequired, randomNum);
-        strBuilder.append(" / ");
-        createCustomerLink(strBuilder, customer, originalCustomer, selfLinkRequired, randomNum);
+        try {
+            CustomerBO customerReloaded = new CustomerPersistence().getCustomer(customer.getCustomerId());
+            buildLink(strBuilder, customerReloaded.getParentCustomer(), originalCustomer, selfLinkRequired, randomNum);
+            strBuilder.append(" / ");
+            createCustomerLink(strBuilder, customer, originalCustomer, selfLinkRequired, randomNum);
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void createCustomerLink(StringBuilder strBuilder, CustomerBO customer, CustomerBO originalCustomer,

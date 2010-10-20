@@ -176,12 +176,8 @@ public class AccountPaymentEntity extends AbstractEntity {
             throws AccountException {
         Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
         for (AccountTrxnEntity accntTrxn : getAccountTrxns()) {
-            logger.debug("Generating reverse transactions for transaction id " + accntTrxn.getAccountTrxnId());
             AccountTrxnEntity reverseAccntTrxn = accntTrxn.generateReverseTrxn(personnel, adjustmentComment);
-            logger.debug("Amount associated with reverse transaction is "
-                    + reverseAccntTrxn.getAmount());
             reverseAccntTrxns.add(reverseAccntTrxn);
-            logger.debug("After succesfully adding the reverse transaction");
         }
         return reverseAccntTrxns;
     }
