@@ -127,8 +127,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     final String account999 = "Account 999";
     String rootPath = "org/mifos/accounts/loan/business/testCaseData/";
 
-    LoanOfferingBO loanOffering = null;
-
     // TODO: probably should be of type LoanBO
     protected AccountBO accountBO = null;
 
@@ -139,6 +137,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     protected CustomerBO group = null;
 
     private CustomerBO client = null;
+    private BigDecimal savedInitialRoundOffMultiple = null;
+    private BigDecimal savedFinalRoundOffMultiple = null;
+    private RoundingMode savedCurrencyRoundingMode = null;
+    private RoundingMode savedInitialRoundingMode = null;
+    private RoundingMode savedFinalRoundingMode = null;
+    private Short savedDigitAfterDecimal;
+    private int savedDaysInYear = 0;
 
     private UserContext userContext;
     private boolean allConsoleOutputEnabled = false;
@@ -151,6 +156,15 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     public void setUp() throws Exception {
         enableCustomWorkingDays();
         userContext = TestObjectFactory.getContext();
+
+        savedInitialRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
+        savedFinalRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
+        savedCurrencyRoundingMode = AccountingRules.getCurrencyRoundingMode();
+        savedDigitAfterDecimal = AccountingRules.getDigitsAfterDecimal();
+        savedInitialRoundingMode = AccountingRules.getInitialRoundingMode();
+        savedFinalRoundingMode = AccountingRules.getFinalRoundingMode();
+        savedDaysInYear = AccountingRules.getNumberOfInterestDays();
+
         loanDao = new LoanDaoLegacyImpl();
     }
 
@@ -161,6 +175,14 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         client = null;
         group = null;
         center = null;
+
+        AccountingRules.setInitialRoundOffMultiple(savedInitialRoundOffMultiple);
+        AccountingRules.setFinalRoundOffMultiple(savedFinalRoundOffMultiple);
+        AccountingRules.setCurrencyRoundingMode(savedCurrencyRoundingMode);
+        AccountingRules.setDigitsAfterDecimal(savedDigitAfterDecimal);
+        AccountingRules.setInitialRoundingMode(savedInitialRoundingMode);
+        AccountingRules.setFinalRoundingMode(savedFinalRoundingMode);
+        setNumberOfInterestDays(savedDaysInYear);
     }
 
     /* This part is for the testing of 999 account */
