@@ -107,7 +107,7 @@ public class AccountBO extends AbstractBusinessObject {
 
     // associations
     protected Set<AccountNotesEntity> accountNotes;
-    protected List<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
+    protected List<AccountStatusChangeHistoryEntity> accountStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>();
     private final Set<AccountFlagMapping> accountFlags;
 
     /**
@@ -407,9 +407,6 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public void addAccountStatusChangeHistory(final AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
-        if (this.accountStatusChangeHistory == null) {
-            this.accountStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>();
-        }
         this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
     }
 
