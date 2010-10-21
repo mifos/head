@@ -26,7 +26,6 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePer
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
@@ -36,7 +35,6 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -54,10 +52,8 @@ import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.framework.util.helpers.Transformer;
 import org.mifos.platform.validations.Errors;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -70,7 +66,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -239,27 +234,13 @@ public class LoanServiceFacadeWebTierTest {
         RepaymentScheduleInstallment installment4 =
                 getRepaymentScheduleInstallment("25-Dec-2010", 4, rupee, "452.6", "8.9", "1", "462.5");
         List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3, installment4);
-        List<LoanScheduleEntity> scheduleEntities = new ArrayList<LoanScheduleEntity>();
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment1.getDueDateValue(), "178.6", "20.4", "1"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment2.getDueDateValue(), "182.8", "16.2", "2"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment3.getDueDateValue(), "186.0", "13.0", "3"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment4.getDueDateValue(), "452.6", "8.9", "4"));
         Date disbursementDate = getDate(2010, 8, 25);
-        loanServiceFacade.generateInstallmentSchedule(installments, build(scheduleEntities), new Money(rupee, "1000"), 24d, disbursementDate);
+        loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
 
-        assertLoanScheduleEntity(scheduleEntities.get(0), "78.6", "20.4");
-        assertLoanScheduleEntity(scheduleEntities.get(1), "180.8", "18.2");
-        assertLoanScheduleEntity(scheduleEntities.get(2), "183.9", "15.1");
-        assertLoanScheduleEntity(scheduleEntities.get(3), "556.7", "11.0");
-    }
-
-    private Map<Integer, LoanScheduleEntity> build(List<LoanScheduleEntity> scheduleEntities) {
-        return CollectionUtils.asValueMap(scheduleEntities, new Transformer<LoanScheduleEntity, Integer>() {
-            @Override
-            public Integer transform(LoanScheduleEntity input) {
-                return Integer.valueOf(input.getInstallmentId());
-            }
-        });
+        assertInstallment(installment1, "78.6", "20.4");
+        assertInstallment(installment2, "180.8", "18.2");
+        assertInstallment(installment3, "183.9", "15.1");
+        assertInstallment(installment4, "556.7", "11.0");
     }
 
     @Test
@@ -274,18 +255,13 @@ public class LoanServiceFacadeWebTierTest {
         RepaymentScheduleInstallment installment4 =
                 getRepaymentScheduleInstallment("22-Sep-2010", 4, rupee, "414.1", "1.9", "1", "417.0");
         List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3, installment4);
-        List<LoanScheduleEntity> scheduleEntities = new ArrayList<LoanScheduleEntity>();
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment1.getDueDateValue(), "194.4", "4.6", "1"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment2.getDueDateValue(), "195.3", "3.7", "2"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment3.getDueDateValue(), "196.2", "2.8", "3"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment4.getDueDateValue(), "414.1", "1.9", "4"));
         Date disbursementDate = getDate(2010, 8, 25);
-        loanServiceFacade.generateInstallmentSchedule(installments, build(scheduleEntities), new Money(rupee, "1000"), 24d, disbursementDate);
+        loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
 
-        assertLoanScheduleEntity(scheduleEntities.get(0), "94.4", "4.6");
-        assertLoanScheduleEntity(scheduleEntities.get(1), "194.8", "4.2");
-        assertLoanScheduleEntity(scheduleEntities.get(2), "195.7", "3.3");
-        assertLoanScheduleEntity(scheduleEntities.get(3), "515.0", "2.4");
+        assertInstallment(installment1, "94.4", "4.6");
+        assertInstallment(installment2, "194.8", "4.2");
+        assertInstallment(installment3, "195.7", "3.3");
+        assertInstallment(installment4, "515.0", "2.4");
     }
 
     @Test
@@ -307,24 +283,16 @@ public class LoanServiceFacadeWebTierTest {
                 getRepaymentScheduleInstallment("18-Nov-2010", 7, rupee, "439.2", "4.9", "1", "445.1");
         List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3,
                 installment4, installment5, installment6, installment7);
-        List<LoanScheduleEntity> scheduleEntities = new ArrayList<LoanScheduleEntity>();
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment1.getDueDateValue(), "94.4", "4.6", "1"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment2.getDueDateValue(), "94.8", "4.2", "2"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment3.getDueDateValue(), "95.3", "3.7", "3"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment4.getDueDateValue(), "84.9", "14.1", "4"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment5.getDueDateValue(), "94.9", "4.2", "5"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment6.getDueDateValue(), "96.5", "2.5", "6"));
-        scheduleEntities.add(getLoanScheduleEntity(rupee, installment7.getDueDateValue(), "439.2", "4.9", "7"));
         Date disbursementDate = getDate(2010, 8, 25);
-        loanServiceFacade.generateInstallmentSchedule(installments, build(scheduleEntities), new Money(rupee, "1000"), 24d, disbursementDate);
+        loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
 
-        assertLoanScheduleEntity(scheduleEntities.get(0), "69.4", "4.6");
-        assertLoanScheduleEntity(scheduleEntities.get(1), "94.7", "4.3");
-        assertLoanScheduleEntity(scheduleEntities.get(2), "95.2", "3.8");
-        assertLoanScheduleEntity(scheduleEntities.get(3), "84.4", "14.6");
-        assertLoanScheduleEntity(scheduleEntities.get(4), "94.7", "4.3");
-        assertLoanScheduleEntity(scheduleEntities.get(5), "96.4", "2.6");
-        assertLoanScheduleEntity(scheduleEntities.get(6), "465.2", "5.2");
+        assertInstallment(installment1, "69.4", "4.6");
+        assertInstallment(installment2, "94.7", "4.3");
+        assertInstallment(installment3, "95.2", "3.8");
+        assertInstallment(installment4, "84.4", "14.6");
+        assertInstallment(installment5, "94.7", "4.3");
+        assertInstallment(installment6, "96.4", "2.6");
+        assertInstallment(installment7, "465.2", "5.2");
     }
 
     private Date getDate(int year, int month, int day) {
@@ -333,17 +301,9 @@ public class LoanServiceFacadeWebTierTest {
         return calendar.getTime();
     }
 
-    private void assertLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity, String principal, String interest) {
-        assertThat(loanScheduleEntity.getPrincipal().toString(), is(principal));
-        assertThat(loanScheduleEntity.getInterest().toString(), is(interest));
-    }
-
-    private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest, String installmentId) {
-        LoanBO loanBO = mock(LoanBO.class);
-        when(loanBO.getCurrency()).thenReturn(currency);
-        return new LoanScheduleEntity(loanBO, mock(CustomerBO.class), Short
-                .valueOf(installmentId), new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, new Money(currency, principal),
-                new Money(currency, interest));
+    private void assertInstallment(RepaymentScheduleInstallment installment, String principal, String interest) {
+        assertThat(installment.getPrincipal().toString(), is(principal));
+        assertThat(installment.getInterest().toString(), is(interest));
     }
 
     private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,

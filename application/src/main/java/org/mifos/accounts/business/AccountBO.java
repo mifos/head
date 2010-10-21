@@ -417,7 +417,7 @@ public class AccountBO extends AbstractBusinessObject {
         accountFees.add(fees);
     }
 
-    protected void addAccountActionDate(final AccountActionDateEntity accountAction) {
+    public void addAccountActionDate(final AccountActionDateEntity accountAction) {
         if (accountAction == null) {
             throw new NullPointerException();
         }

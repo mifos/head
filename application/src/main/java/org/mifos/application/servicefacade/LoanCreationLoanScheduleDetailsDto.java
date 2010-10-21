@@ -20,7 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 
@@ -34,19 +33,17 @@ public class LoanCreationLoanScheduleDetailsDto {
     private final boolean isLoanPendingApprovalDefined;
     private final List<RepaymentScheduleInstallment> installments;
     private final List<PaymentDataHtmlBean> paymentDataBeans;
-    private final LoanBO loanBO;
 
     public LoanCreationLoanScheduleDetailsDto(boolean isGroup, boolean isGlimApplicable, double glimLoanAmount,
                                               boolean isLoanPendingApprovalDefined,
                                               List<RepaymentScheduleInstallment> installments,
-                                              List<PaymentDataHtmlBean> paymentDataBeans, LoanBO loanBO) {
+                                              List<PaymentDataHtmlBean> paymentDataBeans) {
         this.isGroup = isGroup;
         this.isGlimApplicable = isGlimApplicable;
         this.glimLoanAmount = glimLoanAmount;
         this.isLoanPendingApprovalDefined = isLoanPendingApprovalDefined;
         this.installments = installments;
         this.paymentDataBeans = paymentDataBeans;
-        this.loanBO = loanBO;
     }
 
     public boolean isGroup() {
@@ -71,9 +68,5 @@ public class LoanCreationLoanScheduleDetailsDto {
 
     public List<PaymentDataHtmlBean> getPaymentDataBeans() {
         return this.paymentDataBeans;
-    }
-
-    public LoanBO getLoanBO() {
-        return loanBO;
     }
 }

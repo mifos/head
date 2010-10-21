@@ -129,7 +129,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -354,7 +353,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         final boolean isGlimApplicable = customer.isGroup() && configurationPersistence.isGlimEnabled();
         return new LoanCreationLoanScheduleDetailsDto(customer.isGroup(), isGlimApplicable, glimLoanAmount,
-                isLoanPendingApprovalDefined, installments, new ArrayList<PaymentDataHtmlBean>(), loan);
+                isLoanPendingApprovalDefined, installments, new ArrayList<PaymentDataHtmlBean>());
     }
 
     private double computeGLIMLoanAmount(LoanAccountActionForm loanActionForm, LocalizationConverter localizationConverter) {
@@ -459,7 +458,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         boolean isLoanPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
 
         return new LoanCreationLoanScheduleDetailsDto(customer.isGroup(), isGlimApplicable, glimLoanAmount,
-                isLoanPendingApprovalDefined, installments, paymentDataBeans, loan);
+                isLoanPendingApprovalDefined, installments, paymentDataBeans);
     }
 
     private LoanBO assembleLoan(UserContext userContext, CustomerBO customer, DateTime disbursementDate, FundBO fund,
@@ -602,6 +601,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
                 isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
+        loan.copyInstallmentSchedule(loanActionForm.getInstallments());
 
         try {
             PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
@@ -1084,8 +1084,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments,
-                                            Map<Integer, LoanScheduleEntity> integerLoanScheduleEntityMap, Money loanAmount,
-                                            Double interestRate, Date disbursementDate) {
+                                            Money loanAmount, Double interestRate, Date disbursementDate) {
         Double dailyInterestFactor = interestRate / (AccountingRules.getNumberOfInterestDays() * 100d);
         Money principalOutstanding = loanAmount;
         Money runningPrincipal = new Money(loanAmount.getCurrency());
@@ -1093,36 +1092,31 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         int installmentIndex, numInstallments;
         for (installmentIndex = 0, numInstallments = repaymentScheduleInstallments.size(); installmentIndex < numInstallments - 1; installmentIndex++) {
             RepaymentScheduleInstallment installment = repaymentScheduleInstallments.get(installmentIndex);
-            LoanScheduleEntity loanScheduleEntity = integerLoanScheduleEntityMap.get(installment.getInstallment());
             Date currentDueDate = installment.getDueDateValue();
             long duration = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, initialDueDate);
             Money fees = installment.getFees();
             Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, installment, duration);
             Money total = installment.getTotalValue();
             Money principal = total.subtract(interest.add(fees));
-            setPrincipalAndInterest(installment, loanScheduleEntity, interest, principal);
+            setPrincipalAndInterest(installment, interest, principal);
             initialDueDate = currentDueDate;
             principalOutstanding = principalOutstanding.subtract(principal);
             runningPrincipal = runningPrincipal.add(principal);
         }
 
         RepaymentScheduleInstallment lastInstallment = repaymentScheduleInstallments.get(installmentIndex);
-        LoanScheduleEntity lastLoanScheduleEntity = integerLoanScheduleEntityMap.get(lastInstallment.getInstallment());
         long duration = DateUtils.getNumberOfDaysBetweenTwoDates(lastInstallment.getDueDateValue(), initialDueDate);
         Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, lastInstallment, duration);
         Money fees = lastInstallment.getFees();
         Money principal = loanAmount.subtract(runningPrincipal);
         Money total = principal.add(interest).add(fees);
         lastInstallment.setTotalAndTotalValue(total);
-        setPrincipalAndInterest(lastInstallment, lastLoanScheduleEntity, interest, principal);
+        setPrincipalAndInterest(lastInstallment, interest, principal);
     }
 
-    private void setPrincipalAndInterest(RepaymentScheduleInstallment installment, LoanScheduleEntity loanScheduleEntity, 
-                                         Money interest, Money principal) {
+    private void setPrincipalAndInterest(RepaymentScheduleInstallment installment, Money interest, Money principal) {
         installment.setPrincipal(principal);
         installment.setInterest(interest);
-        loanScheduleEntity.setPrincipal(principal);
-        loanScheduleEntity.setInterest(interest);
     }
 
     private Money computeInterestAmount(Double dailyInterestFactor, Money principalOutstanding,

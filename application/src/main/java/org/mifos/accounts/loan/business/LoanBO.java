@@ -449,7 +449,7 @@ public class LoanBO extends AccountBO {
                 newMeetingForRepaymentDay);
     }
 
-    public Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(){
+    private Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(){
         Collection<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         return CollectionUtils.asValueMap(loanScheduleEntities, new Transformer<LoanScheduleEntity, Integer>() {
             @Override
@@ -459,7 +459,7 @@ public class LoanBO extends AccountBO {
         });
     }
 
-    private Collection<LoanScheduleEntity> getLoanScheduleEntities() {
+    Collection<LoanScheduleEntity> getLoanScheduleEntities() {
         return CollectionUtils.collect(this.getAccountActionDates(), new Transformer<AccountActionDateEntity, LoanScheduleEntity>() {
             @Override
             public LoanScheduleEntity transform(AccountActionDateEntity input) {
@@ -3924,6 +3924,15 @@ public class LoanBO extends AccountBO {
 
     public boolean shouldWaiverInterest() {
         return loanOffering.isInterestWaived();
+    }
+
+    public void copyInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
+        Map<Integer, LoanScheduleEntity> loanScheduleEntityLookUp = getLoanScheduleEntityMap();
+        for (RepaymentScheduleInstallment installment : installments) {
+            LoanScheduleEntity loanScheduleEntity = loanScheduleEntityLookUp.get(installment.getInstallment());
+            loanScheduleEntity.setPrincipal(installment.getPrincipal());
+            loanScheduleEntity.setInterest(installment.getInterest());
+        }
     }
 
     /**

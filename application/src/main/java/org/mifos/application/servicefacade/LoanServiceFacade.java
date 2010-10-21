@@ -27,7 +27,6 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -50,7 +49,6 @@ import org.mifos.security.util.UserContext;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public interface LoanServiceFacade {
 
@@ -110,5 +108,5 @@ public interface LoanServiceFacade {
 
     Errors validateInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments);
 
-    void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments, Map<Integer, LoanScheduleEntity> loanScheduleEntities, Money loanAmount, Double interestRate, Date disbursementDate);
+    void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments, Money loanAmount, Double interestRate, Date disbursementDate);
 }

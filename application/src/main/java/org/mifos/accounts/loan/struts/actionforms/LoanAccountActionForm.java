@@ -217,8 +217,9 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     private CashFlowForm cashFlowForm;
 
-  private List<CashflowDataHtmlBean> cashflowDataHtmlBeans;
+    private List<CashflowDataHtmlBean> cashflowDataHtmlBeans;
 
+    private Money loanAmountValue;
 
     public List<CashflowDataHtmlBean> getCashflowDataHtmlBeans(){
         return cashflowDataHtmlBeans;
@@ -576,10 +577,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         return getIntegerValue(getCollateralTypeId());
     }
 
-    public Double getInterestRateValue() {
-        return getDoubleValue(interestRate);
-    }
-
     public FeeDto getDefaultFee(int i) {
         while (i >= defaultFees.size()) {
             defaultFees.add(new FeeDto());
@@ -687,10 +684,15 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     protected void validateLoanAmount(ActionErrors errors, Locale locale, MifosCurrency currency) {
         DoubleConversionResult conversionResult = validateAmount(getLoanAmount(), currency,
                 LoanConstants.LOAN_AMOUNT_KEY, errors, locale, FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
-        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
-                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
-                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+        Double loanAmountValue = conversionResult.getDoubleValue();
+        if (conversionResult.getErrors().size() == 0) {
+            if (loanAmountValue <= 0.0) {
+                addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO,
+                        lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
+                                FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            } else {
+                this.loanAmountValue = new Money(currency, loanAmountValue);
+            }
         }
     }
 
@@ -1570,5 +1572,9 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     public void setCashFlowForm(CashFlowForm cashFlowForm) {
         this.cashFlowForm = cashFlowForm;
+    }
+
+    public Money getLoanAmountValue() {
+        return loanAmountValue;
     }
 }

@@ -78,7 +78,6 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
@@ -90,7 +89,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
@@ -770,7 +768,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         performNoErrors();
         verifyForward(ActionForwards.schedulePreview_success.toString());
         verifyInstallmentsOnSessionAndForm((LoanAccountActionForm) request.getSession().getAttribute("loanAccountActionForm"));
-        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_ACCOUNT, request));
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
