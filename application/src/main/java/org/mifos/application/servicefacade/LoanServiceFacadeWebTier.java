@@ -586,6 +586,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException {
 
         CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
 
         if (!isPermissionAllowed(loanActionForm.getState().getValue(), userContext, customer.getOffice().getOfficeId(),
                 customer.getPersonnel().getPersonnelId())) {
@@ -618,8 +619,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         } finally {
             StaticHibernateUtil.closeSession();
         }
-
-        final boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
 
         return new LoanCreationResultDto(isGlimApplicable, loan.getAccountId(), loan.getGlobalAccountNum(), loan,
                 customer);
