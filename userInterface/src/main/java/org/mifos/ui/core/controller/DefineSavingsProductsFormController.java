@@ -28,6 +28,8 @@ import org.mifos.dto.screen.SavingsProductFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -46,12 +48,12 @@ public class DefineSavingsProductsFormController {
     @Autowired
     private AdminServiceFacade adminServiceFacade;
 
-    protected DefineSavingsProductsFormController(){
+    protected DefineSavingsProductsFormController() {
         //for spring autowiring
     }
 
-    public DefineSavingsProductsFormController(final AdminServiceFacade adminServicefacade){
-        this.adminServiceFacade=adminServicefacade;
+    public DefineSavingsProductsFormController(final AdminServiceFacade adminServicefacade) {
+        this.adminServiceFacade = adminServicefacade;
     }
 
     @RequestMapping(method = RequestMethod.GET)
@@ -69,14 +71,16 @@ public class DefineSavingsProductsFormController {
         return savingsProduct;
     }
 
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(new SavingsProductFormValidator());
+    }
+
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-            @ModelAttribute("savingsProduct") @Valid SavingsProductFormBean savingsProductFormBean, BindingResult result, SessionStatus status) {
+                                    @ModelAttribute("savingsProduct") @Valid SavingsProductFormBean savingsProductFormBean, BindingResult result, SessionStatus status) {
 
         String viewName = "redirect:/previewSavingsProducts.ftl?editFormview=defineSavingsProduct";
-
-        new SavingsProductValidator().validateGroup(savingsProductFormBean, result);
-        new SavingsProductValidator().validateManadtorySavingsProduct(savingsProductFormBean, result);
 
         if (StringUtils.isNotBlank(cancel)) {
             viewName = REDIRECT_TO_ADMIN_SCREEN;
