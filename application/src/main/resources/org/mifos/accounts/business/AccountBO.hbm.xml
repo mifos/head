@@ -180,31 +180,23 @@
 				<column name="int_to_be_posted_currency_id" />
 				<column name="int_to_be_posted" />
 			</property>
-			<property name="minAmntForInt"
-				type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true">
+			<property name="minAmntForInt" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" lazy="true" access="field">
 				<column name="min_amnt_for_int_currency_id" />
 				<column name="min_amnt_for_int" />
 			</property>
-			<property name="interestRate" column="interest_rate" lazy="true" />
-			<property name="activationDate" column="activation_date"
-				lazy="true" />
-			<property name="lastIntCalcDate" column="last_int_calc_date"
-				lazy="true" />
-			<property name="lastIntPostDate" column="last_int_post_date"
-				lazy="true" />
-			<property name="nextIntCalcDate" column="next_int_calc_date"
-				lazy="true" />
-			<property name="nextIntPostDate" column="next_int_post_date"
-				lazy="true" />
+			<property name="interestRate" column="interest_rate" lazy="true" access="field"/>
+			<property name="activationDate" column="activation_date" lazy="true" access="field"/>
+			<property name="lastIntCalcDate" column="last_int_calc_date" lazy="true" access="field"/>
+			<property name="lastIntPostDate" column="last_int_post_date" lazy="true" access="field"/>
+			<property name="nextIntCalcDate" column="next_int_calc_date" lazy="true" access="field"/>
+			<property name="nextIntPostDate" column="next_int_post_date" lazy="true" access="field"/>
 			<!-- Date of interest calculation in between the period, might be done when interest rate changes etc. -->
-			<property name="interIntCalcDate" column="inter_int_calc_date"
-				lazy="true" />
+			<property name="interIntCalcDate" column="inter_int_calc_date" lazy="true" access="field"/>
 
-			<many-to-one name="timePerForInstcalc" column="time_per_for_int_calc"
-				class="org.mifos.application.meeting.business.MeetingBO" cascade="all"
-				insert="true" update="true" unique="true" />
+			<many-to-one name="timePerForInstcalc" column="time_per_for_int_calc" class="org.mifos.application.meeting.business.MeetingBO" cascade="all"
+				insert="true" update="true" unique="true" access="field"/>
 			<many-to-one name="interestCalcType" column="interest_calculation_type_id"
-				class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" />
+				class="org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity" access="field"/>
 			<many-to-one name="recommendedAmntUnit" column="recommended_amnt_unit_id"
 				class="org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity"
 				insert="true" update="false" cascade="none" />
