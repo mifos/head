@@ -41,13 +41,19 @@ public class CustomerTagGenerator extends TagGenerator {
     protected StringBuilder build(AbstractBusinessObject obj, boolean selfLinkRequired, Object randomNum) {
         CustomerBO customer = (CustomerBO) obj;
 
-        StringBuilder strBuilder = getAssociatedGenerator().build(customer.getOffice(), randomNum);
-        if (strBuilder == null) {
-            strBuilder = new StringBuilder();
-        }
+        try {
+            CustomerBO customerReloaded = new CustomerPersistence().getCustomer(customer.getCustomerId());
+            StringBuilder strBuilder = getAssociatedGenerator().build(customerReloaded.getOffice(), randomNum);
+            if (strBuilder == null) {
+                strBuilder = new StringBuilder();
+            }
 
-        buildLink(strBuilder, customer, customer, selfLinkRequired, randomNum);
-        return strBuilder;
+            buildLink(strBuilder, customerReloaded, customerReloaded, selfLinkRequired, randomNum);
+            return strBuilder;
+
+        } catch (PersistenceException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void buildLink(StringBuilder strBuilder, CustomerBO customer, CustomerBO originalCustomer,

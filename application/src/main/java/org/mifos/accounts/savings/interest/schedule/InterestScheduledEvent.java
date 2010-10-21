@@ -34,7 +34,7 @@ public interface InterestScheduledEvent {
 
     LocalDate nextMatchingDateFromAlreadyMatchingDate(LocalDate validMatchingDate);
 
-    List<LocalDate> findAllMatchingDatesFromBaseDateToCutOffDate(LocalDate baseDate, LocalDate cutOffDate);
+    List<LocalDate> findAllMatchingDatesFromBaseDateUpToAndIncludingNearestMatchingEndDate(LocalDate baseDate, LocalDate cutOffDate);
 
     LocalDate findFirstDateOfPeriodForMatchingDate(LocalDate matchingDate);
 

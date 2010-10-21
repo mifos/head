@@ -92,7 +92,6 @@ import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -1748,10 +1747,6 @@ public class SavingsBO extends AccountBO {
 
     public MeetingBO getInterestPostingMeeting() {
         return this.savingsOffering.getFreqOfPostIntcalc().getMeeting();
-    }
-
-    public SavingsAccountClosureDto toClosureDto(String interestAmountAtClosure) {
-        return new SavingsAccountClosureDto(new LocalDate(), this.savingsBalance.toString(), interestAmountAtClosure);
     }
 
     public boolean isGroupModelWithIndividualAccountability() {

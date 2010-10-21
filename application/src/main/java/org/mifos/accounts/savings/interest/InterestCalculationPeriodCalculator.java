@@ -58,7 +58,6 @@ public class InterestCalculationPeriodCalculator implements NonCompoundingIntere
         List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossiblePeriods(
                                                                                                         calculationPeriod.getStartDate(),
                                                                                                         this.interestCalculationSchedule,
-                                                                                                        calculationPeriod.getEndDate(),
                                                                                                         calculationPeriod.getEndDate());
 
         Money runningBalance = totalBalanceBeforeCalculationPeriod;
