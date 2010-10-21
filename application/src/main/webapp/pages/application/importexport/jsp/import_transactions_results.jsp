@@ -135,11 +135,17 @@ explanation of the license and how it is applied.
 												</p>
 												<p>
 													<fmt:message key="admin.importexport.amountImported">
-															<fmt:param><c:out value="${requestScope.totalAmountOfTransactionsImported}"/></fmt:param>
+															<fmt:param>
+																<fmt:formatNumber value="${requestScope.totalAmountOfTransactionsImported}" type="number"
+																					minFractionDigits="0" maxFractionDigits="2"/>
+															</fmt:param>
 													</fmt:message>
 													<br/>
 													<fmt:message key="admin.importexport.amountError">
-															<fmt:param><c:out value="${requestScope.totalAmountOfTransactionsWithError}"/></fmt:param>
+															<fmt:param>
+																<fmt:formatNumber value="${requestScope.totalAmountOfTransactionsWithError}" type="number"
+																					minFractionDigits="0" maxFractionDigits="2"/>
+															</fmt:param>
 													</fmt:message>
 												</p>
 										</c:when>
