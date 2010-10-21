@@ -55,6 +55,7 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -226,23 +227,35 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    /**
+     * create a constructor that doesnt take customFields or delegate to goActiveForFristTimeAndGenerateSavingsSchedule which contains persistence.
+     */
+    @Deprecated
     public SavingsBO(final UserContext userContext, final SavingsOfferingBO savingsOffering, final CustomerBO customer,
             final AccountState accountState, final Money recommendedAmount, final List<CustomFieldDto> customFields)
             throws AccountException {
         super(userContext, customer, AccountTypes.SAVINGS_ACCOUNT, accountState);
-        this.setSavingsOffering(savingsOffering);
 
-        setSavingsPerformance(createSavingsPerformance());
-        setSavingsBalance(new Money(getCurrency()));
-        this.setSavingsType(savingsOffering.getSavingsType());
-        this.setRecommendedAmntUnit(savingsOffering.getRecommendedAmntUnit());
+        this.savingsOffering = savingsOffering;
+        this.savingsPerformance = createSavingsPerformance();
+        this.savingsBalance = Money.zero();
+
+        // inherit details from savings product definition
+        this.savingsType = savingsOffering.getSavingsType();
+        this.recommendedAmntUnit = savingsOffering.getRecommendedAmntUnit();
+        this.minAmntForInt = this.savingsOffering.getMinAmntForInt();
+        this.interestRate = this.savingsOffering.getInterestRate();
+        this.interestCalcType = this.savingsOffering.getInterestCalcType();
+        this.timePerForInstcalc = this.createNewMeetingFrom(this.savingsOffering.getTimePerForInstcalc().getMeeting());
+
+        // FIXME - keithw - create constructor that does not take DTO of customFields
         try {
             addcustomFields(customFields);
         } catch (InvalidDateException e) {
             throw new AccountException(e);
         }
         this.recommendedAmount = recommendedAmount;
-        this.setSavingsOfferingDetails();
+
         // generated the deposit action dates only if savings account is being
         // saved in approved state
         if (isActive()) {
@@ -258,10 +271,6 @@ public class SavingsBO extends AccountBO {
                 .getOfficeId());
         setValuesForActiveState(futureCalendarEventsApplicableToOffice.getWorkingDays(),
                 futureCalendarEventsApplicableToOffice.getHolidays(), new DateTime(new DateTimeService().getCurrentJavaDateTime()));
-    }
-
-    public void populateInstanceForTest(final SavingsOfferingBO savingsOffering) {
-        this.savingsOffering = savingsOffering;
     }
 
     public Money getRecommendedAmount() {
@@ -391,20 +400,8 @@ public class SavingsBO extends AccountBO {
         return timePerForInstcalc;
     }
 
-    private void setInterestCalcType(final InterestCalcTypeEntity interestCalcType) {
-        this.interestCalcType = interestCalcType;
-    }
-
-    private void setInterestRate(final Double interestRate) {
-        this.interestRate = interestRate;
-    }
-
     public void setMinAmntForInt(final Money minAmntForInt) {
         this.minAmntForInt = minAmntForInt;
-    }
-
-    private void setTimePerForInstcalc(final MeetingBO timePerForInstcalc) {
-        this.timePerForInstcalc = timePerForInstcalc;
     }
 
     public Set<SavingsActivityEntity> getSavingsActivityDetails() {
@@ -430,22 +427,18 @@ public class SavingsBO extends AccountBO {
                 .getId().equals(AccountState.SAVINGS_CLOSED.getValue()));
     }
 
-    private void setSavingsOfferingDetails() throws AccountException {
-        setMinAmntForInt(getSavingsOffering().getMinAmntForInt());
-        setInterestRate(getSavingsOffering().getInterestRate());
-        setInterestCalcType(getSavingsOffering().getInterestCalcType());
+    private MeetingBO createNewMeetingFrom(final MeetingBO offeringMeeting) {
         try {
-            setTimePerForInstcalc(getMeeting(getSavingsOffering().getTimePerForInstcalc().getMeeting()));
-        } catch (MeetingException me) {
-            throw new AccountException(me);
+            RecurrenceType recurrenceType = offeringMeeting.getMeetingDetails().getRecurrenceTypeEnum();
+            MeetingType meetingType = MeetingType.fromInt(offeringMeeting.getMeetingType().getMeetingTypeId());
+            return new MeetingBO(recurrenceType, offeringMeeting.getMeetingDetails().getRecurAfter(), startOfFiscalYear(), meetingType);
+        } catch (MeetingException e) {
+            throw new BusinessRuleException(e.getKey(), e);
         }
     }
 
-    private MeetingBO getMeeting(final MeetingBO offeringMeeting) throws MeetingException {
-        RecurrenceType recurrenceType = offeringMeeting.getMeetingDetails().getRecurrenceTypeEnum();
-        MeetingType meetingType = MeetingType.fromInt(offeringMeeting.getMeetingType().getMeetingTypeId());
-        return new MeetingBO(recurrenceType, offeringMeeting.getMeetingDetails().getRecurAfter(), helper
-                .getFiscalStartDate(), meetingType);
+    private Date startOfFiscalYear() {
+        return new LocalDate().withMonthOfYear(1).withDayOfYear(1).toDateMidnight().toDate();
     }
 
     private void setSavingsPerformance(final SavingsPerformanceEntity savingsPerformance) {
@@ -936,17 +929,14 @@ public class SavingsBO extends AccountBO {
 
     private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays, DateTime activationDate)
             throws AccountException {
-        this.setActivationDate(activationDate.toDate());
+        this.activationDate = activationDate.toDate();
         this.generateDepositAccountActions(workingDays, holidays);
-        try {
-            Date intCalcDate = helper.getNextScheduleDate(getActivationDate(), null, getTimePerForInstcalc());
-            this.setNextIntCalcDate(intCalcDate);
-            Date intPostDate = helper.getNextScheduleDate(getActivationDate(), null, getMeeting(getSavingsOffering()
-                    .getFreqOfPostIntcalc().getMeeting()));
-            this.setNextIntPostDate(intPostDate);
-        } catch (MeetingException me) {
-            throw new AccountException(me);
-        }
+
+        InterestScheduledEvent interestCalculationEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(getTimePerForInstcalc());
+        this.nextIntCalcDate = interestCalculationEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),new LocalDate(this.activationDate)).toDateMidnight().toDate();
+
+        InterestScheduledEvent interestPostingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(this.savingsOffering.getFreqOfPostIntcalc().getMeeting());
+        this.nextIntPostDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),new LocalDate(this.activationDate)).toDateMidnight().toDate();
     }
 
     @Override
