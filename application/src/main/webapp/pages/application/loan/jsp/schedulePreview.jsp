@@ -445,7 +445,7 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 									<br/>
-                                        <c:if test="${loanAccountActionForm.cashflowDataHtmlBeans!=null}">
+                                        <c:if test="${loanAccountActionForm.cashflowDataHtmlBeans != null}">
 										<tr>
                                             <td>
                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">

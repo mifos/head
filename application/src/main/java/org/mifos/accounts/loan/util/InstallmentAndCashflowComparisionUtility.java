@@ -43,18 +43,23 @@ public class InstallmentAndCashflowComparisionUtility {
     }
 
     public List<CashflowDataHtmlBean> getCashflowDataHtmlBeans(){
-         List<CashflowDataHtmlBean> cashflowDataHtmlBeans = new ArrayList<CashflowDataHtmlBean>();
+         List<CashflowDataHtmlBean> cashflowDataHtmlBeans = null;
 
-         for(MonthlyCashFlowForm monthlyCashflowform : getMonthlyCashFlows()) {
-             CashflowDataHtmlBean cashflowDataHtmlBean = new CashflowDataHtmlBean();
-             cashflowDataHtmlBean.setMonth(monthlyCashflowform.getMonth());
-             cashflowDataHtmlBean.setYear(String.valueOf(monthlyCashflowform.getYear()));
-             cashflowDataHtmlBean.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow()));
-             cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallment(computeDiffBetweenCumulativeAndInstallment(monthlyCashflowform.getDateTime(),monthlyCashflowform.getCumulativeCashFlow()));
-             cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallmentPercent(computeDiffBetweenCumulativeAndInstallmentPercent(monthlyCashflowform.getDateTime(),monthlyCashflowform.getCumulativeCashFlow()));
-             cashflowDataHtmlBean.setNotes(monthlyCashflowform.getNotes());
-             cashflowDataHtmlBeans.add(cashflowDataHtmlBean);
+         if(getMonthlyCashFlows() != null) {
+             cashflowDataHtmlBeans = new ArrayList<CashflowDataHtmlBean>();
+             for(MonthlyCashFlowForm monthlyCashflowform : getMonthlyCashFlows()) {
+                 CashflowDataHtmlBean cashflowDataHtmlBean = new CashflowDataHtmlBean();
+                 cashflowDataHtmlBean.setMonth(monthlyCashflowform.getMonth());
+                 cashflowDataHtmlBean.setYear(String.valueOf(monthlyCashflowform.getYear()));
+                 cashflowDataHtmlBean.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow()));
+                 cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallment(computeDiffBetweenCumulativeAndInstallment(monthlyCashflowform.getDateTime(),monthlyCashflowform.getCumulativeCashFlow()));
+                 cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallmentPercent(computeDiffBetweenCumulativeAndInstallmentPercent(monthlyCashflowform.getDateTime(),monthlyCashflowform.getCumulativeCashFlow()));
+                 cashflowDataHtmlBean.setNotes(monthlyCashflowform.getNotes());
+                 cashflowDataHtmlBeans.add(cashflowDataHtmlBean);
+             }
          }
+
+
          return cashflowDataHtmlBeans;
      }
 

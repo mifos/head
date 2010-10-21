@@ -100,7 +100,7 @@ public class CashFlowAdaptor {
         return new CashFlowDetail(monthlyCashFlowDetails);
     }
 
-    private void cleanCashFlowContext(HttpSession session) {
+    public void cleanCashFlowContext(HttpSession session) {
         session.removeAttribute(CashFlowConstants.START_MONTH);
         session.removeAttribute(CashFlowConstants.START_YEAR);
         session.removeAttribute(CashFlowConstants.NO_OF_MONTHS);
