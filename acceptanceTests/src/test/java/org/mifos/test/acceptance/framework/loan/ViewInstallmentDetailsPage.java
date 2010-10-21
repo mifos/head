@@ -28,9 +28,11 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.testng.Assert;
 
+import java.util.Locale;
+
 public class ViewInstallmentDetailsPage extends AbstractPage {
     String validateButton = "validateBtn";
-    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy");
+    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy").withLocale(Locale.ENGLISH);
 
     public ViewInstallmentDetailsPage(Selenium selenium) {
         super(selenium);

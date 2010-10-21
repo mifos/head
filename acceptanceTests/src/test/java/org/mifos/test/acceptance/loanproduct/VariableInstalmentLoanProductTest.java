@@ -31,6 +31,8 @@ import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
 import org.mifos.test.acceptance.util.TestDataSetup;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.framework.util.DbUnitUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
@@ -52,12 +54,21 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     LoanProductTestHelper loanProductTestHelper;
     LoanTestHelper loanTestHelper;
     DateTime systemDateTime;
+    // TODO: please ensure that the database contains Mrs Salutation!
+    @Autowired
+    private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private DbUnitUtilities dbUnitUtilities;
+    // ---
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
+        // TODO: please ensure that the database contains Mrs Salutation!
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        // ---
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
