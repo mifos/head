@@ -20,6 +20,51 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADDITIONAL_FEES_LIST;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.CLIENT_LIST;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.CUSTOM_FIELDS;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNER;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANFUNDS;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANOFFERING;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ALL_ACTIVITY_VIEW;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.NEXTMEETING_DATE;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PROPOSED_DISBURSAL_DATE;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCEID;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCENAME;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.STATUS_HISTORY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.TOTAL_AMOUNT_OVERDUE;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEWINSTALLMENTDETAILS_SUCCESS;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEW_UPCOMING_INSTALLMENT_DETAILS;
+import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
+import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
+
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Formatter;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -42,7 +87,9 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.struts.uihelpers.CashflowDataHtmlBean;
 import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
+import org.mifos.accounts.loan.util.MonthYearComparator;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -109,6 +156,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.cashflow.CashFlowService;
+import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validations.ErrorEntry;
@@ -120,48 +168,6 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.MifosServiceFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADDITIONAL_FEES_LIST;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.CLIENT_LIST;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.CUSTOM_FIELDS;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNER;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANFUNDS;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANOFFERING;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ALL_ACTIVITY_VIEW;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.NEXTMEETING_DATE;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PROPOSED_DISBURSAL_DATE;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCEID;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCENAME;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.STATUS_HISTORY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.TOTAL_AMOUNT_OVERDUE;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEWINSTALLMENTDETAILS_SUCCESS;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEW_UPCOMING_INSTALLMENT_DETAILS;
-import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
-import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 /**
  * Creation and management of loan accounts.
@@ -465,10 +471,80 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-        ActionForwards forward = validateInstallments(request, loanActionForm) ?
-                                    ActionForwards.validateInstallments_success :
-                                    ActionForwards.validateInstallments_failure;
+
+        boolean validateInstallmentsPassed = validateInstallments(request, loanActionForm);
+
+        boolean cashflowBounded = bindCashflowIfPresent(request, loanActionForm);
+
+        if(validateInstallmentsPassed && cashflowBounded) {
+            updateCashflowAndValidate(request, loanActionForm);
+        }
+
+        ActionForwards forward = validateInstallmentsPassed ?
+                ActionForwards.validateInstallments_success :
+                    ActionForwards.validateInstallments_failure;
+
         return mapping.findForward(forward.name());
+    }
+
+
+    private boolean updateCashflowAndValidate(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
+        boolean result = true;
+        ActionErrors validateCashflowForInstallments = validateCashflowForInstallments(request, loanActionForm);
+        if(!validateCashflowForInstallments.isEmpty()) {
+            addErrors(request,validateCashflowForInstallments);
+        }
+        return result;
+    }
+
+    private ActionErrors validateCashflowForInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
+        UserContext userContext = getUserContext(request);
+        Double cashflowThresholdPercent = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()).getCashFlowCheckThreshold();
+
+        //Do not compare or validate if cashflow threshold is null or zero
+        ActionErrors errors = new ActionErrors();
+        if(cashflowThresholdPercent!=null && cashflowThresholdPercent != 0) {
+            List<CashflowDataHtmlBean> cashflowDataHtmlBeans = loanActionForm.getCashflowDataHtmlBeans();
+            if(cashflowDataHtmlBeans != null && cashflowDataHtmlBeans.size() != 0) {
+                for(CashflowDataHtmlBean cashflowDataHtmlBean: cashflowDataHtmlBeans) {
+                    String cashflowAndInstallmentDiffPercent = cashflowDataHtmlBean.getDiffCumulativeCashflowAndInstallmentPercent();
+                    if(StringUtils.isNotEmpty(cashflowAndInstallmentDiffPercent) && Double.valueOf(cashflowAndInstallmentDiffPercent) > cashflowThresholdPercent) {
+                       errors.add(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new ActionMessage(AccountConstants.BEYOND_CASHFLOW_THRESHOLD ,cashflowDataHtmlBean.getMonth(),String.valueOf(cashflowThresholdPercent)));
+                    }
+                    String cumulativeCashflow = cashflowDataHtmlBean.getCumulativeCashFlow();
+                    if(StringUtils.isNotEmpty(cumulativeCashflow) && Double.valueOf(cumulativeCashflow) < 0) {
+                        errors.add(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE ,cashflowDataHtmlBean.getMonth()));
+                    }else  if(StringUtils.isNotEmpty(cumulativeCashflow) && Double.valueOf(cumulativeCashflow) == 0) {
+                        errors.add(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_ZERO ,cashflowDataHtmlBean.getMonth()));
+                    }
+                }
+
+                errors = validateCashflowAndInstallmentDates(errors,loanActionForm);
+
+            }
+        }
+        return errors;
+    }
+
+    private ActionErrors validateCashflowAndInstallmentDates(ActionErrors errors, LoanAccountActionForm loanActionForm) {
+           List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
+           List<MonthlyCashFlowForm> monthlyCashFlows = loanActionForm.getCashFlowForm().getMonthlyCashFlows();
+
+           if((installments != null && installments.size() > 0) && (monthlyCashFlows !=null && monthlyCashFlows.size() > 0)) {
+               boolean lowerBound = MonthYearComparator.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDateTime().toDate(),installments.get(0).getDueDateValue());
+               boolean upperBound = MonthYearComparator.firstLessOrEqualSecond(installments.get(installments.size()-1).getDueDateValue(),monthlyCashFlows.get(monthlyCashFlows.size()-1).getDateTime().toDate());
+
+               SimpleDateFormat df = new SimpleDateFormat("MMMM",installments.get(0).getLocale());
+
+               if(!lowerBound) {
+                   errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(0).getDueDateValue())));
+               }
+
+               if(!upperBound) {
+                   errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(installments.size()-1).getDueDateValue())));
+               }
+           }
+           return errors;
     }
 
     private boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
@@ -477,9 +553,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId());
         if (loanOffering.isVariableInstallmentsAllowed()) {
             List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
+            VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
             java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
             ActionErrors actionErrors = getActionErrors(loanServiceFacade.validateInputInstallments(disbursementDate,
                                                 loanOffering.getVariableInstallmentDetails(), installments));
+
+            validateCashflowAndInstallmentDates(actionErrors, loanActionForm);
+
             if (!actionErrors.isEmpty()) {
                 addErrors(request, actionErrors);
                 result = false;
@@ -500,19 +580,31 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response){
+            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception{
         request.setAttribute(METHODCALLED, "showPreview");
 
         ActionForward forwardAfterCashflowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
                 ActionForwards.schedulePreview_success.toString(), request.getSession(), mapping);
 
-        LoanAccountActionForm loanForm = (LoanAccountActionForm)form;
-        InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
-                loanForm.getInstallments(),loanForm.getCashFlowForm().getMonthlyCashFlows());
-
-        loanForm.setCashflowDataHtmlBeans(cashflowUtility.getCashflowDataHtmlBeans());
+        bindCashflowIfPresent(request, form);
 
         return forwardAfterCashflowBinding;
+    }
+
+    private boolean bindCashflowIfPresent(final HttpServletRequest request, final ActionForm form) throws Exception {
+        boolean cashflowBound = false;
+        UserContext userContext = getUserContext(request);
+        LoanAccountActionForm loanForm = (LoanAccountActionForm)form;
+        LoanOfferingBO loanOffering = getLoanOffering(loanForm.getPrdOfferingIdValue(), userContext.getLocaleId());
+
+        if(loanOffering!= null && loanOffering.isCashFlowCheckEnabled()) {
+            InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
+                    loanForm.getInstallments(),loanForm.getCashFlowForm().getMonthlyCashFlows());
+
+            loanForm.setCashflowDataHtmlBeans(cashflowUtility.getCashflowDataHtmlBeans());
+            cashflowBound = true;
+        }
+        return cashflowBound;
     }
 
 

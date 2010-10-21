@@ -45,7 +45,7 @@ public class InstallmentAndCashflowComparisionUtility {
     public List<CashflowDataHtmlBean> getCashflowDataHtmlBeans(){
          List<CashflowDataHtmlBean> cashflowDataHtmlBeans = null;
 
-         if(getMonthlyCashFlows() != null) {
+         if(getMonthlyCashFlows() != null && getMonthlyCashFlows().size() > 0) {
              cashflowDataHtmlBeans = new ArrayList<CashflowDataHtmlBean>();
              for(MonthlyCashFlowForm monthlyCashflowform : getMonthlyCashFlows()) {
                  CashflowDataHtmlBean cashflowDataHtmlBean = new CashflowDataHtmlBean();
@@ -55,6 +55,7 @@ public class InstallmentAndCashflowComparisionUtility {
                  cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallment(computeDiffBetweenCumulativeAndInstallment(monthlyCashflowform.getDateTime(),monthlyCashflowform.getCumulativeCashFlow()));
                  cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallmentPercent(computeDiffBetweenCumulativeAndInstallmentPercent(monthlyCashflowform.getDateTime(),monthlyCashflowform.getCumulativeCashFlow()));
                  cashflowDataHtmlBean.setNotes(monthlyCashflowform.getNotes());
+                 cashflowDataHtmlBean.setMonthYear(monthlyCashflowform.getDateTime().toDate());
                  cashflowDataHtmlBeans.add(cashflowDataHtmlBean);
              }
          }
@@ -72,7 +73,7 @@ public class InstallmentAndCashflowComparisionUtility {
      private String computeDiffBetweenCumulativeAndInstallmentPercent(DateTime dateOfCashFlow, BigDecimal cashflow) {
          BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
          String value= "";
-         if(totalInstallmentForMonth.doubleValue()!=0) {
+         if(cashflow.doubleValue()!=0) {
             value = String.valueOf(totalInstallmentForMonth.multiply(new BigDecimal(100)).divide(cashflow, 2, RoundingMode.HALF_UP));
          }
          return value;

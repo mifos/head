@@ -185,9 +185,9 @@ public interface AccountConstants {
     String SELECTED_ACCOUNT_STATUS = "SelectedAccountStatus";
 
     String GL_CODE = "glCode";
-    String INSTALLMENT_DUEDATE_INVALID = "errors.installment.duedate.invalid"; 
-    String INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE = "errors.installment.duedate.same.as.disburse.date"; 
-    String INSTALLMENT_DUEDATE_IS_HOLIDAY = "errors.installment.duedate.is.holiday"; 
+    String INSTALLMENT_DUEDATE_INVALID = "errors.installment.duedate.invalid";
+    String INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE = "errors.installment.duedate.same.as.disburse.date";
+    String INSTALLMENT_DUEDATE_IS_HOLIDAY = "errors.installment.duedate.is.holiday";
     String INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE = "errors.installment.duedate.before.disburse.date";
     String INSTALLMENT_DUEDATE_DUPLICATE = "errors.installment.duedate.duplicate";
     String INSTALLMENT_DUEDATE_INVALID_ORDER = "errors.installment.duedate.invalid.order";
@@ -197,4 +197,11 @@ public interface AccountConstants {
     String INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE = "errors.installment.amount.less.than.interest.fee";
     String INSTALLMENT_TOTAL_AMOUNT_INVALID = "errors.installment.total.amount.invalid";
     String GENERIC_VALIDATION_ERROR = "Generic Error";
+
+    String BEYOND_CASHFLOW_THRESHOLD="warning.cashflow_installment_diff_beyond_threshold";
+    String CUMULATIVE_CASHFLOW_NEGATIVE = "warning.cumulative_cashflow_negative";
+    String CUMULATIVE_CASHFLOW_ZERO = "warning.cumulative_cashflow_zero";
+    String INSTALLMENT_BEYOND_CASHFLOW_DATE = "errors.installment_due_date_beyond_cashflow_date";
+
+
 }
