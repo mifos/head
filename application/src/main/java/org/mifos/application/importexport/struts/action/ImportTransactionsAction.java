@@ -225,8 +225,8 @@ public class ImportTransactionsAction extends BaseAction {
 			"%d rows will be ignored\n" +
 			"%d rows contained errors and were not imported\n" +
 			"\n" +
-			"Total amount of transactions imported: %s\n" +
-			"Total amount of transactions with error: %s\n" +
+			"Total amount of transactions imported: %.2f\n" +
+			"Total amount of transactions with error: %.2f\n" +
 			"\n" +
 			"%s";
 
@@ -239,8 +239,8 @@ public class ImportTransactionsAction extends BaseAction {
 				transactionImport.getSuccessfullyParsedRows(),
 				result.getNumberOfIgnoredRows(),
 				result.getNumberOfErrorRows(),
-				result.getTotalAmountOfTransactionsImported().toString(),
-				result.getTotalAmountOfTransactionsWithError().toString(),
+				result.getTotalAmountOfTransactionsImported(),
+				result.getTotalAmountOfTransactionsWithError(),
 				rowErrors);
 	}
 
