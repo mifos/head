@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings.business;
+package org.mifos.accounts.savings;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -40,6 +40,12 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.SavingsPaymentStrategy;
+import org.mifos.accounts.savings.business.SavingsPaymentStrategyImpl;
+import org.mifos.accounts.savings.business.SavingsScheduleEntity;
+import org.mifos.accounts.savings.business.SavingsTransactionActivityHelper;
+import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.SavingsScheduleBuilder;
 import org.mifos.application.master.business.MifosCurrency;

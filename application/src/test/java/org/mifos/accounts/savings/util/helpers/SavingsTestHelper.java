@@ -29,23 +29,22 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.savings.business.SavingBOTestUtils;
+import org.mifos.accounts.savings.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -94,36 +93,12 @@ public class SavingsTestHelper {
             Date trxnDate, Short accountAction, SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer)
             throws Exception {
         AccountPaymentEntity payment = createAccountPayment(account, amount, new Date(), createdBy);
-        payment.addAccountTrxn(createAccountTrxn(payment, null, amount, balance, trxnDate, trxnDate, null,
-                accountAction, savingsObj, createdBy, customer));
+
+        SavingsTrxnDetailEntity savingsTrxnDetail = SavingsTrxnDetailEntity.savingsAdjustment(payment, customer, balance, amount,
+                createdBy, trxnDate, trxnDate, new DateTime().toDate(), "", null);
+
+        payment.addAccountTrxn(savingsTrxnDetail);
         return payment;
-    }
-
-    public SavingsTrxnDetailEntity createAccountTrxn(AccountPaymentEntity paymentEntity, Short installmentId,
-            Money amount, Money balance, Date trxnDate, Date dueDate, Integer id, Short accountAction,
-            SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer) throws Exception {
-        SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity, customer,
-                AccountActionTypes.fromInt(accountAction),
-                amount, balance, createdBy, dueDate, trxnDate, installmentId, "", getSavingsPersistence());
-        return trxn;
-    }
-
-    public SavingsTrxnDetailEntity createAccountTrxn(AccountPaymentEntity paymentEntity, Money amount, Money balance,
-            Date trxnDate, Date dueDate, Short accountAction, SavingsBO savingsObj, PersonnelBO createdBy,
-            CustomerBO customer, String comments, AccountTrxnEntity relatedTrxn) throws Exception {
-        SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity,
-                AccountActionTypes.fromInt(accountAction),
-                amount, balance, createdBy, customer, dueDate, trxnDate, comments, relatedTrxn, getSavingsPersistence());
-        return trxn;
-    }
-
-    public SavingsTrxnDetailEntity createAccountTrxn(AccountPaymentEntity paymentEntity, Short installmentId,
-            Money amount, Money balance, Date trxnDate, Date dueDate, Integer id, Short accountAction,
-            SavingsBO savingsObj, PersonnelBO createdBy, CustomerBO customer, String comments) throws Exception {
-        SavingsTrxnDetailEntity trxn = new SavingsTrxnDetailEntity(paymentEntity, customer,
-                AccountActionTypes.fromInt(accountAction),
-                amount, balance, createdBy, dueDate, trxnDate, installmentId, comments, getSavingsPersistence());
-        return trxn;
     }
 
     public CenterBO createCenter() {

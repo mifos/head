@@ -66,7 +66,7 @@ i=i+counter;numberOfItems=i;}
   			</div>
           	<div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.type" /]</span><span class="span-5">&nbsp;
     				<select name="select">
-    				  <option>[@spring.message "--select--" /] </option>
+    				  <option>[@spring.message "--Select--" /] </option>
                         <option>[@spring.message "datadisplayandrules.defineAdditionalFields.center" /] </option>
                         <option>[@spring.message "datadisplayandrules.defineAdditionalFields.group" /] </option>
                         <option>[@spring.message "datadisplayandrules.defineAdditionalFields.client" /] </option>
@@ -76,7 +76,7 @@ i=i+counter;numberOfItems=i;}
   			</div>
         	<div class="span-20"><span class="span-6 rightAlign"><span class="red">* </span>[@spring.message "organizationPreferences.defineNewCheckLists.displayedwhenmovingintoStatus" /]&nbsp;:</span><span class="span-5">&nbsp;
    					<select name="select">
-   					 <option>[@spring.message "--select--" /] </option>
+   					 <option>[@spring.message "--Select--" /] </option>
                         <option>[@spring.message "active" /] </option>
                         <option>[@spring.message "inactive" /] </option>
 				    </select></span>

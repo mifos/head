@@ -263,13 +263,4 @@ public class SavingsDaoHibernate implements SavingsDao {
 
         return postingPendingAccounts;
     }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<Integer> retreiveAccountsPendingForInterestCalculation(LocalDate currentDate) {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("currentDate", currentDate);
-        List<Integer> queryResult = (List<Integer>) this.baseDao.executeNamedQuery("accounts.retrieveSavingsAccountsIntCalc", queryParameters);
-        return queryResult;
-    }
 }

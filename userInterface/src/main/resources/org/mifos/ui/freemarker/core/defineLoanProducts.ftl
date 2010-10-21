@@ -372,7 +372,7 @@ function switchLoanInstallmentType()
             </div>
           </div>
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.repaymentschedule" /]</p>
+          <p class="fontBold">[@spring.message "manageLoanProducts.defineLoanProduct.repaymentSchedule" /]</p>
           <div class="prepend-2  span-23 last">
           	<div class="span-23 ">
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageLoanProducts.defineLoanProduct.frequencyofinstallments" /]&nbsp;:</span>

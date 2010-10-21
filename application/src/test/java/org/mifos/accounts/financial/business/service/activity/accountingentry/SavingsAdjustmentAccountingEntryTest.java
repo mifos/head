@@ -31,9 +31,7 @@ import org.joda.time.DateMidnight;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
@@ -65,41 +63,31 @@ import org.mockito.runners.MockitoJUnitRunner;
 public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTestCase {
 
     @Mock
-    SavingsAdjustmentFinancialActivity mockedFinancialActivity;
+    private SavingsAdjustmentFinancialActivity mockedFinancialActivity;
     @Mock
-    SavingsTrxnDetailEntity mockedIncomingTransaction;
+    private SavingsTrxnDetailEntity mockedIncomingTransaction;
     @Mock
-    SavingsBO mockedSavingsBO;
+    private SavingsBO mockedSavingsBO;
     @Mock
-    SavingsOfferingBO mockedSavingsOffering;
+    private SavingsOfferingBO mockedSavingsOffering;
     @Mock
-    SavingsTypeEntity mockedSavingsType;
+    private SavingsTypeEntity mockedSavingsType;
     @Mock
-    AccountPaymentEntity mockedAccountPayment;
+    private GLCodeEntity mockedBankGLCode;
     @Mock
-    AccountTrxnEntity mockedLastTransaction;
+    private GLCodeEntity mockedSavingsDepositGLCode;
     @Mock
-    AccountActionEntity mockedAccountAction;
+    private FinancialBusinessService mockedFinancialBusinessService;
     @Mock
-    GLCodeEntity mockedBankGLCode;
+    private COABO mockedBankGLAccount;
     @Mock
-    GLCodeEntity mockedSavingsDepositGLCode;
+    private COABO mockedSavingsGLAccount;
     @Mock
-    FinancialBusinessService mockedFinancialBusinessService;
+    private FinancialActionTypeEntity mockedFinancialAction;
     @Mock
-    COABO mockedSavingsGLCategory;
+    private SavingsHelper mockedSavingsHelper;
     @Mock
-    COABO mockedBankGLCategory;
-    @Mock
-    COABO mockedBankGLAccount;
-    @Mock
-    COABO mockedSavingsGLAccount;
-    @Mock
-    FinancialActionTypeEntity mockedFinancialAction;
-    @Mock
-    SavingsHelper mockedSavingsHelper;
-    @Mock
-    PersonnelBO mockedTransactionCreator;
+    private PersonnelBO mockedTransactionCreator;
 
     // Test parameters set up the same for all tests
 
@@ -122,14 +110,14 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
         mockedSavingsBO = mock(SavingsBO.class);
         mockedSavingsOffering = mock(SavingsOfferingBO.class);
         mockedSavingsType = mock(SavingsTypeEntity.class);
-        mockedAccountPayment = mock(AccountPaymentEntity.class);
-        mockedLastTransaction = mock(AccountTrxnEntity.class);
-        mockedAccountAction = mock(AccountActionEntity.class);
+//        mockedAccountPayment = mock(AccountPaymentEntity.class);
+//        mockedLastTransaction = mock(AccountTrxnEntity.class);
+//        mockedAccountAction = mock(AccountActionEntity.class);
         mockedBankGLCode = mock(GLCodeEntity.class);
         mockedSavingsDepositGLCode = mock(GLCodeEntity.class);
         mockedFinancialBusinessService = mock(FinancialBusinessService.class);
-        mockedSavingsGLCategory = mock(COABO.class);
-        mockedBankGLCategory = mock(COABO.class);
+//        mockedSavingsGLCategory = mock(COABO.class);
+//        mockedBankGLCategory = mock(COABO.class);
         mockedBankGLAccount = mock(COABO.class);
         mockedSavingsGLAccount = mock(COABO.class);
         mockedFinancialAction = mock(FinancialActionTypeEntity.class);
@@ -203,21 +191,21 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
                 accountActionType.getValue());
     }
 
-    @Test
-    public void testBuildAccountEntryAdjustSavingsWithdrawalForMandatorySavings() throws FinancialException {
-
-        runOneTest(SavingsType.MANDATORY, AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET,
-                GLCategoryType.LIABILITY, FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT,
-                FinancialConstants.DEBIT, FinancialConstants.CREDIT, withdrawalAmount);
-    }
-
-    @Test
-    public void testBuildAccountEntryAdjustSavingsWithdrawalForVoluntarySavings() throws FinancialException {
-
-        runOneTest(SavingsType.VOLUNTARY, AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET,
-                GLCategoryType.LIABILITY, FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT,
-                FinancialConstants.DEBIT, FinancialConstants.CREDIT, withdrawalAmount);
-    }
+//    @Test
+//    public void testBuildAccountEntryAdjustSavingsWithdrawalForMandatorySavings() throws FinancialException {
+//
+//        runOneTest(SavingsType.MANDATORY, AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET,
+//                GLCategoryType.LIABILITY, FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT,
+//                FinancialConstants.DEBIT, FinancialConstants.CREDIT, withdrawalAmount);
+//    }
+//
+//    @Test
+//    public void testBuildAccountEntryAdjustSavingsWithdrawalForVoluntarySavings() throws FinancialException {
+//
+//        runOneTest(SavingsType.VOLUNTARY, AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET,
+//                GLCategoryType.LIABILITY, FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT,
+//                FinancialConstants.DEBIT, FinancialConstants.CREDIT, withdrawalAmount);
+//    }
 
     @Test
     public void testBuildAccountEntryAdjustSavingsDepositForMandatorySavings() throws FinancialException {
@@ -235,21 +223,21 @@ public class SavingsAdjustmentAccountingEntryTest extends BaseAccountingEntryTes
                 FinancialConstants.CREDIT, FinancialConstants.DEBIT, depositAmount);
     }
 
-    @Test(expected = FinancialException.class)
-    public void testReThrowsFinancialExceptionAdjustSavingsWithdrawalForMandatorySavings() throws FinancialException {
-
-        runOneTestMockFinancialBusinessServiceThrowsException(SavingsType.MANDATORY,
-                AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET, GLCategoryType.LIABILITY,
-                FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT, FinancialConstants.DEBIT);
-    }
-
-    @Test(expected = FinancialException.class)
-    public void testReThrowsFinancialExceptionAdjustSavingsWithdrawalForVoluntarySavings() throws FinancialException {
-
-        runOneTestMockFinancialBusinessServiceThrowsException(SavingsType.VOLUNTARY,
-                AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET, GLCategoryType.LIABILITY,
-                FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT, FinancialConstants.DEBIT);
-    }
+//    @Test(expected = FinancialException.class)
+//    public void testReThrowsFinancialExceptionAdjustSavingsWithdrawalForMandatorySavings() throws FinancialException {
+//
+//        runOneTestMockFinancialBusinessServiceThrowsException(SavingsType.MANDATORY,
+//                AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET, GLCategoryType.LIABILITY,
+//                FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT, FinancialConstants.DEBIT);
+//    }
+//
+//    @Test(expected = FinancialException.class)
+//    public void testReThrowsFinancialExceptionAdjustSavingsWithdrawalForVoluntarySavings() throws FinancialException {
+//
+//        runOneTestMockFinancialBusinessServiceThrowsException(SavingsType.VOLUNTARY,
+//                AccountActionTypes.SAVINGS_WITHDRAWAL, GLCategoryType.ASSET, GLCategoryType.LIABILITY,
+//                FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT, FinancialConstants.DEBIT);
+//    }
 
     @Test(expected = FinancialException.class)
     public void testReThrowsFinancialExceptionAdjustSavingsDepositForMandatorySavings() throws FinancialException {

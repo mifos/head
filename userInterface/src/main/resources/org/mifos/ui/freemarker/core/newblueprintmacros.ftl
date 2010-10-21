@@ -52,7 +52,7 @@
 <div class="breadcrumb">
 	    [#list breadcrumbs as messages]
   			[#if messages_has_next]
-    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;  [#else] <span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
+    			<a href="${messages.link}">[@spring.message "${messages.message}" /]</a>&nbsp;/&nbsp;[#else]<span class="fontBold">[@spring.messageText "${messages.message}","${messages.message}" /]</span>
   			[/#if]
   		[/#list]
  </div>

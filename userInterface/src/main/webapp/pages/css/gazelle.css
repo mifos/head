@@ -93,7 +93,7 @@ a:hover {
 	padding-right: 15px;
 	background-color:#FF9600;
 	text-decoration:none; 
-	color:#FFFFFF;
+	color:#FFFFFF !important;
 	font-family: Arial, Verdana, Helvetica, sans-serif;
 	font-size: 9pt;
 	font-weight: bold;
@@ -130,13 +130,8 @@ a:hover {
 }
 
 .bluetablehead{
-	padding-left: 5px;
-	padding-top: 3px;
-	padding-bottom: 3px;
-	border: 1px solid #D7DEEE;
-	padding-right: 3px;
-
-
+    padding: 3px 3px 3px 5px;
+    border: 1px solid #D7DEEE;
 }
 .bluetablehead05{
 	padding-left: 10px;

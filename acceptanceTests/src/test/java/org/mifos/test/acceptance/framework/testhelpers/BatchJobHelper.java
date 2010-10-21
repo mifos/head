@@ -42,7 +42,6 @@ public class BatchJobHelper {
 
        List<String> jobs = new ArrayList<String>();
        jobs.add("ApplyHolidayChangesTaskJob");
-       jobs.add("SavingsIntCalcTaskJob");
        jobs.add("SavingsIntPostingTaskJob");
        jobs.add("LoanArrearsAgingTaskJob");
        jobs.add("ApplyCustomerFeeChangesTaskJob");

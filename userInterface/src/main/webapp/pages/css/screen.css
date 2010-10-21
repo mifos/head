@@ -368,20 +368,20 @@ form.inline p {
 	width:150px;
 }
 .span-5 {
-    width:33%;
-	/*width:190px*/;
+    /*width:33%;*/
+	width:190px;
 }
 .span-6 {
 	width:230px;
 }
 .span-7 {
-    width:34%;
-	/*width:270px;*/
+    /*width:34%;*/
+	width:270px;
 }
 .span-8 {
     padding-left:5px;
-    width:29%;
-	/*width:310px;*/
+    /*width:29%;*/
+	width:310px;
 }
 .span-9 {
 	width:350px;
@@ -411,7 +411,8 @@ form.inline p {
 	width:670px;
 }
 .span-18 {
-	width:92%
+	/*width:92%*/
+    width:710px;
 }
 .span-19 {
 	width:750px;

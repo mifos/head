@@ -18,16 +18,21 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.framework.components.batchjobs.helpers;
+package org.mifos.accounts.business;
 
-import org.mifos.framework.components.batchjobs.MifosBatchJob;
-import org.mifos.framework.components.batchjobs.TaskHelper;
+import java.sql.Date;
 
-public class SavingsIntCalcTask extends MifosBatchJob {
+import org.mifos.customers.personnel.business.PersonnelBO;
 
-    @Override
-    public TaskHelper getTaskHelper() {
-        return new SavingsIntCalcHelper();
+public class AccountNotesEntityBuilder {
+
+    private Date commentDate;
+    private String comment;
+    private PersonnelBO personnel;
+    private AccountBO account;
+
+    public AccountNotesEntity build() {
+        return new AccountNotesEntity(commentDate, comment, personnel, account);
     }
 
 }

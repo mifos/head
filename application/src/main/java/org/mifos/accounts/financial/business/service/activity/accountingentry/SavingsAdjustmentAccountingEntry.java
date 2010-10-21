@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.financial.business.service.activity.accountingentry;
 
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
@@ -28,7 +29,6 @@ import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
 
 /**
  * Create accounting entries for an adjustment to a deposit or withdrawal on a savings account.
@@ -172,8 +172,14 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
     }
 
     protected boolean isAdjustmentForWithdrawal(SavingsBO savings) {
-        return (getSavingsHelper().getPaymentActionType(savings.getLastPmnt())
-                .equals(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()));
+        AccountPaymentEntity payment = savings.getLastPmnt();
+
+        boolean isWithdrawal = false;
+        if (payment != null) {
+            isWithdrawal = payment.isSavingsWithdrawal();
+        }
+
+        return isWithdrawal;
     }
 
 

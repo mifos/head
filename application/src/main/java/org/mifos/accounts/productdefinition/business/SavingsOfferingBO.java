@@ -418,4 +418,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         freqOfPostIntcalc.setPrdOffering(this);
         setFreqOfPostIntcalc(freqOfPostIntcalc);
     }
+
+    public boolean isMaxWithdrawalAmountExceeded(Money amountAdjustedTo) {
+        return this.maxAmntWithdrawl.isGreaterThanZero() && amountAdjustedTo.isGreaterThan(this.maxAmntWithdrawl);
+    }
 }

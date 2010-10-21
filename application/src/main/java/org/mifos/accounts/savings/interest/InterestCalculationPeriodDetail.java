@@ -36,6 +36,7 @@ public class InterestCalculationPeriodDetail {
     private final InterestCalculationInterval interval;
     private final List<EndOfDayDetail> dailyDetails;
     private final Money balanceBeforeInterval;
+    private final boolean isFirstActivityBeforeInterval;
 
     /**
      * I am responsible for ensuring a {@link InterestCalculationPeriodDetail} is populated with correct
@@ -46,6 +47,13 @@ public class InterestCalculationPeriodDetail {
             InterestCalculationInterval interval, List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money balanceBeforeInterval) {
 
         Money balance = balanceBeforeInterval;
+        boolean isFirstActivityBeforeInterval = true;
+
+        if(!allEndOfDayDetailsForAccount.isEmpty()) {
+            if(!allEndOfDayDetailsForAccount.get(0).getDate().isBefore(interval.getStartDate())) {
+                isFirstActivityBeforeInterval = false;
+            }
+        }
 
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
@@ -55,13 +63,14 @@ public class InterestCalculationPeriodDetail {
             }
         }
 
-        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, balance);
+        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, balance, isFirstActivityBeforeInterval);
     }
 
-    public InterestCalculationPeriodDetail(InterestCalculationInterval interval, List<EndOfDayDetail> dailyDetails, Money balanceBeforeInterval) {
+    public InterestCalculationPeriodDetail(InterestCalculationInterval interval, List<EndOfDayDetail> dailyDetails, Money balanceBeforeInterval, boolean isFirstActivityBeforeInterval) {
         this.dailyDetails = dailyDetails;
         this.balanceBeforeInterval = balanceBeforeInterval;
         this.interval = interval;
+        this.isFirstActivityBeforeInterval = isFirstActivityBeforeInterval;
     }
 
     public InterestCalculationInterval getInterval() {
@@ -73,11 +82,19 @@ public class InterestCalculationPeriodDetail {
     }
 
     public int getDuration() {
-        return Days.daysBetween(interval.getStartDate(), interval.getEndDate()).getDays() + 1;
+        int duration = Days.daysBetween(interval.getStartDate(), interval.getEndDate()).getDays();
+        if (isFirstActivityBeforeInterval) {
+            duration += 1;
+        }
+        return duration;
     }
 
     public Money getBalanceBeforeInterval() {
         return balanceBeforeInterval;
+    }
+
+    public boolean isFirstActivityBeforeInterval() {
+        return isFirstActivityBeforeInterval;
     }
 
     public Money zeroAmount() {

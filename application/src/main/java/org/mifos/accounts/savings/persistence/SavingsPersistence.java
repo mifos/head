@@ -27,6 +27,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -121,14 +122,6 @@ public class SavingsPersistence extends Persistence {
         return queryResult;
     }
 
-    public List<Integer> retreiveAccountsPendingForIntCalc(Date currentDate) throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("currentDate", currentDate);
-        List<Integer> queryResult = executeNamedQuery(NamedQueryConstants.RETRIEVE_ACCCOUNTS_FOR_INT_CALC,
-                queryParameters);
-        return queryResult;
-    }
-
     public int getMissedDeposits(Integer accountId, Date currentDate) throws PersistenceException {
         Integer count = 0;
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -202,5 +195,13 @@ public class SavingsPersistence extends Persistence {
         for (SavingsBO savingsBO : savingsAccounts) {
             session.saveOrUpdate(savingsBO);
         }
+    }
+
+    public void initialize(SavingsBO savings) {
+        Hibernate.initialize(savings);
+        Hibernate.initialize(savings.getCustomer());
+        Hibernate.initialize(savings.getCustomer().getOffice());
+        Hibernate.initialize(savings.getCustomer().getParentCustomer());
+        Hibernate.initialize(savings.getCustomer().getParentCustomer().getOffice());
     }
 }

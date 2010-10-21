@@ -107,7 +107,7 @@ public class AccountBO extends AbstractBusinessObject {
 
     // associations
     protected Set<AccountNotesEntity> accountNotes;
-    protected List<AccountStatusChangeHistoryEntity> accountStatusChangeHistory;
+    protected List<AccountStatusChangeHistoryEntity> accountStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>();
     private final Set<AccountFlagMapping> accountFlags;
 
     /**
@@ -407,9 +407,6 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public void addAccountStatusChangeHistory(final AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity) {
-        if (this.accountStatusChangeHistory == null) {
-            this.accountStatusChangeHistory = new ArrayList<AccountStatusChangeHistoryEntity>();
-        }
         this.accountStatusChangeHistory.add(accountStatusChangeHistoryEntity);
     }
 
@@ -684,6 +681,7 @@ public class AccountBO extends AbstractBusinessObject {
                 reschedule();
             }
 
+            // FIXME - keithw - move to savings account so savings doesnt have to use changeStatus for loans also.
             if (newStatusId.equals(AccountState.SAVINGS_INACTIVE.getValue())) {
                 ((SavingsBO) this).removeRecommendedAmountOnFutureInstallments();
             }
@@ -836,8 +834,7 @@ public class AccountBO extends AbstractBusinessObject {
     public AccountActionDateEntity getAccountActionDate(final Short installmentId, final Integer customerId) {
         if (null != accountActionDates && accountActionDates.size() > 0) {
             for (AccountActionDateEntity accntActionDate : accountActionDates) {
-                if (accntActionDate.getInstallmentId().equals(installmentId)
-                        && accntActionDate.getCustomer().getCustomerId().equals(customerId)) {
+                if (accntActionDate.getInstallmentId().equals(installmentId) && accntActionDate.getCustomer().getCustomerId() == customerId) {
                     return accntActionDate;
                 }
             }

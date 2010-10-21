@@ -49,6 +49,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -85,6 +86,7 @@ public class IntegrationTestObjectMother {
     private static final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
     private static final FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
     private static final SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
+    private static final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
@@ -460,5 +462,9 @@ public class IntegrationTestObjectMother {
 
     public static SavingsBO findSavingsAccountById(Long savingsId) {
         return savingsDao.findById(savingsId);
+    }
+
+    public static CustomerBO findCustomerById(Integer customerId) {
+        return customerDao.findCustomerById(customerId);
     }
 }

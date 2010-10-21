@@ -48,4 +48,9 @@ public class EndOfDayDetail {
     public Money getInterest() {
         return this.interest;
     }
+
+    @Override
+    public String toString() {
+        return date.toString() +" deposits="+ deposits +" withdrawals"+ withdrawals +" interest="+ interest +"\n";
+    }
 }
