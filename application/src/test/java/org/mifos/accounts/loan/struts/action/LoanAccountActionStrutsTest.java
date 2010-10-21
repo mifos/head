@@ -20,38 +20,9 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
-
 import junit.framework.Assert;
 import org.joda.time.DateMidnight;
 import org.joda.time.LocalDate;
-import org.junit.Ignore;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
@@ -107,6 +78,7 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.TestUtils;
@@ -331,8 +303,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .toString());
         addRequestParameter("interestRate", loanOffering.getDefInterestRate().toString());
         addRequestParameter("noOfInstallments", loanOffering.getDefaultNumOfEligibleInstallmentsSameForAllLoan().toString());
-        addRequestParameter("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
-                .getAttribute("UserContext")).getPreferredLocale()));
+        addRequestParameter("disbursementDate", DateUtils.getCurrentDate(getLocale()));
         addRequestParameter("gracePeriodDuration", "1");
         addRequestParameter("businessActivityId", "1");
         addRequestParameter("loanOfferingFund", "1");
@@ -414,7 +385,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     private String getDisbursementDate() throws InvalidDateException {
         return DateUtils.getLocalDateString(CalendarUtils.nearestDayOfWeekTo(DayOfWeek.monday(),
                                                    new DateTimeService().getCurrentDateTime()),
-        ((UserContext) request.getSession().getAttribute("UserContext")).getPreferredLocale());
+                getLocale());
     }
 
     public void testforwardWaiveCharge() {
@@ -730,8 +701,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(loanOffering.getDefInterestRate().toString(), loanActionForm.getInterestRate());
         Assert.assertEquals(loanOffering.isIntDedDisbursement(), loanActionForm.isInterestDedAtDisbValue());
         Assert.assertEquals(loanOffering.getGracePeriodDuration().toString(), loanActionForm.getGracePeriodDuration());
-        Assert.assertEquals(DateUtils.getCurrentDate(((UserContext) request.getSession().getAttribute("UserContext"))
-                .getPreferredLocale()), loanActionForm.getDisbursementDate());
+        Assert.assertEquals(DateUtils.getCurrentDate(getLocale()), loanActionForm.getDisbursementDate());
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
@@ -767,8 +737,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(loanOffering.getDefInterestRate().toString(), loanActionForm.getInterestRate());
         Assert.assertEquals(loanOffering.isIntDedDisbursement(), loanActionForm.isInterestDedAtDisbValue());
         Assert.assertEquals(loanOffering.getGracePeriodDuration().toString(), loanActionForm.getGracePeriodDuration());
-        Assert.assertEquals(DateUtils.getCurrentDate(((UserContext) request.getSession().getAttribute("UserContext"))
-                .getPreferredLocale()), loanActionForm.getDisbursementDate());
+        Assert.assertEquals(DateUtils.getCurrentDate(getLocale()), loanActionForm.getDisbursementDate());
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
@@ -792,8 +761,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("interestRate", loanOffering.getDefInterestRate().toString());
         addRequestParameter("noOfInstallments", loanOffering.getDefaultNumOfEligibleInstallmentsSameForAllLoan().toString());
         //Set disbursement date to closest Monday, presumed to be a working day
-        addRequestParameter("disbursementDate",
-                getDisbursementDate());
+        addRequestParameter("disbursementDate", getDisbursementDate());
         addRequestParameter("gracePeriodDuration", "1");
         addRequestParameter("businessActivityId", "1");
         addRequestParameter("loanOfferingFund", "1");
@@ -802,7 +770,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         performNoErrors();
         verifyForward(ActionForwards.schedulePreview_success.toString());
         verifyInstallmentsOnSessionAndForm((LoanAccountActionForm) request.getSession().getAttribute("loanAccountActionForm"));
-
+        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_ACCOUNT, request));
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
@@ -813,11 +781,9 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(3, installmentsFromSession.size());
     }
 
-
-    /*
     public void testValidateInstallmentsForInstallmentAmountValidation() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
-                                            EVERY_WEEK, getVariableInstallmentDetails(2, 5, 100));
+                                            EVERY_WEEK, getVariableInstallmentDetails(2, 15, 100));
 
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
         MeetingBO meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
@@ -834,7 +800,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .toString());
         addRequestParameter("interestRate", loanOfferingWithVariableInstallments.getDefInterestRate().toString());
         addRequestParameter("noOfInstallments", loanOfferingWithVariableInstallments.getDefaultNumOfEligibleInstallmentsSameForAllLoan().toString());
-        addRequestParameter("disbursementDate", getDisbursementDate());
+        String disbursementDate = getDisbursementDate();
+        addRequestParameter("disbursementDate", disbursementDate);
         addRequestParameter("gracePeriodDuration", "1");
         addRequestParameter("businessActivityId", "1");
         addRequestParameter("loanOfferingFund", "1");
@@ -845,9 +812,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         addRequestParameter("installments[1].total", "100");
         addRequestParameter("installments[2].total", "100");
 
-        addRequestParameter("installments[0].dueDate", "18-Oct-2010");
-        addRequestParameter("installments[1].dueDate", "20-Oct-2010");
-        addRequestParameter("installments[2].dueDate", "22-Oct-2010");
+        Date date = DateUtils.getDate(disbursementDate, getLocale(), "dd/MM/yyyy");
+        addRequestParameter("installments[0].dueDate", DateUtils.getDBtoUserFormatString(addWeeks(date, 1), getLocale()));
+        addRequestParameter("installments[1].dueDate", DateUtils.getDBtoUserFormatString(addWeeks(date, 2), getLocale()));
+        addRequestParameter("installments[2].dueDate", DateUtils.getDBtoUserFormatString(addWeeks(date, 3), getLocale()));
 
         addRequestParameter("method", "validateInstallments");
         actionPerform();
@@ -856,7 +824,18 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         group = TestObjectFactory.getGroup(group.getCustomerId());
         TestObjectFactory.removeObject(loanOfferingWithVariableInstallments);
-    }*/
+    }
+
+    private Date addWeeks(Date date, int num) {
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(date);
+        instance.add(Calendar.WEEK_OF_MONTH, num);
+        return instance.getTime();
+    }
+
+    private Locale getLocale() {
+        return ((UserContext) request.getSession().getAttribute("UserContext")).getPreferredLocale();
+    }
 
     public void testValidateInstallments() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
@@ -1505,8 +1484,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         schedulePreviewPageParams.put("noOfInstallments", loanOffering.eligibleNoOfInstall(
                 group.getMaxLoanAmount(loanOffering), group.getMaxLoanCycleForProduct(loanOffering))
                 .getDefaultNoOfInstall().toString());
-        schedulePreviewPageParams.put("disbursementDate", DateUtils.getCurrentDate(((UserContext) request.getSession()
-                .getAttribute("UserContext")).getPreferredLocale()));
+        schedulePreviewPageParams.put("disbursementDate", DateUtils.getCurrentDate(getLocale()));
         schedulePreviewPageParams.put("gracePeriodDuration", "1");
         schedulePreviewPageParams.put("businessActivityId", "1");
         schedulePreviewPageParams.put("loanOfferingFund", "1");

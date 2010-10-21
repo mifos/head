@@ -37,6 +37,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
@@ -135,6 +136,7 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
@@ -484,6 +486,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             if (!actionErrors.isEmpty()) {
                 addErrors(request, actionErrors);
                 result = false;
+            } else {
+                LoanBO loanBO = (LoanBO) SessionUtils.getAttribute(CustomerConstants.LOAN_ACCOUNT, request);
+                Map<Integer, LoanScheduleEntity> loanScheduleEntityMap = loanBO.getLoanScheduleEntityMap();
+                loanServiceFacade.generateInstallmentSchedule(loanActionForm.getInstallments(),
+                        loanScheduleEntityMap, loanBO.getLoanAmount(), loanBO.getInterestRate(), loanBO.getDisbursementDate());
+                // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
+                setInstallmentsOnSession(request, loanActionForm);
             }
         }
         return result;
@@ -526,6 +535,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto.isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
+        SessionUtils.setAttribute(CustomerConstants.LOAN_ACCOUNT, loanScheduleDetailsDto.getLoanBO(), request);
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
 

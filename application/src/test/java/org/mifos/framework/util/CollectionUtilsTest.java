@@ -20,16 +20,18 @@
 
 package org.mifos.framework.util;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.mifos.framework.util.helpers.Transformer;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
-
-import static org.mifos.framework.util.CollectionUtils.*;
+import static org.mifos.framework.util.CollectionUtils.asList;
+import static org.mifos.framework.util.CollectionUtils.splitListIntoParts;
 
 public class CollectionUtilsTest extends TestCase {
 
@@ -86,5 +88,16 @@ public class CollectionUtilsTest extends TestCase {
        assertEquals(expected, splitListIntoParts(Arrays.asList(1, 2, 3, 4, 5), 2));
     }
 
+    public void testValuesAsMap() {
+        Map<Integer,String> stringMap = CollectionUtils.asValueMap(asList("Two", "Three", "Four"), new Transformer<String, Integer>() {
+            @Override
+            public Integer transform(String input) {
+                return input.length();
+            }
+        });
+        assertEquals("Two", stringMap.get(3));
+        assertEquals("Three", stringMap.get(5));
+        assertEquals("Four", stringMap.get(4));
+    }
 
 }

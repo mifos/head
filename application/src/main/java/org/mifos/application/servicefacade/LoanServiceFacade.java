@@ -50,6 +50,7 @@ import org.mifos.security.util.UserContext;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface LoanServiceFacade {
 
@@ -109,5 +110,5 @@ public interface LoanServiceFacade {
 
     Errors validateInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments);
 
-    void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments, List<LoanScheduleEntity> loanScheduleEntities, Money loanAmount, Double interestRate, Date disbursementDate);
+    void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments, Map<Integer, LoanScheduleEntity> loanScheduleEntities, Money loanAmount, Double interestRate, Date disbursementDate);
 }

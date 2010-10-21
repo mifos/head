@@ -130,5 +130,11 @@ public class CollectionUtils {
         return result;
     }
 
-
+    public static <K, V> Map<K, V> asValueMap(Collection<V> values, Transformer<V, K> keyTransformer) {
+        Map<K, V> map = new LinkedHashMap<K, V>();
+        for (V value : values) {
+            map.put(keyTransformer.transform(value), value);
+        }
+        return map;
+    }
 }
