@@ -61,7 +61,7 @@ public class InstallmentAndCashflowComparisionUtility {
 
      private String computeDiffBetweenCumulativeAndInstallment(DateTime dateOfCashFlow, BigDecimal cashflow) {
          BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
-         return String.valueOf(cashflow.subtract(totalInstallmentForMonth).setScale(2));
+         return String.valueOf(cashflow.subtract(totalInstallmentForMonth).setScale(2,RoundingMode.HALF_UP));
      }
 
      private String computeDiffBetweenCumulativeAndInstallmentPercent(DateTime dateOfCashFlow, BigDecimal cashflow) {

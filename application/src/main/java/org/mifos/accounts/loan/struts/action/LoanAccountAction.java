@@ -467,9 +467,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-        ActionForwards forward = validateInstallments(request, loanActionForm) ?
+        //update the computation for new totals if any
+        boolean validateInstallmentsPassed = validateInstallments(request, loanActionForm);
+
+        InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
+                loanActionForm.getInstallments(),loanActionForm.getCashFlowForm().getMonthlyCashFlows());
+        loanActionForm.setCashflowDataHtmlBeans(cashflowUtility.getCashflowDataHtmlBeans());
+
+        ActionForwards forward = validateInstallmentsPassed ?
                                     ActionForwards.validateInstallments_success :
                                     ActionForwards.validateInstallments_failure;
+
         return mapping.findForward(forward.name());
     }
 
