@@ -104,11 +104,11 @@ public class GroupTransferToCenterTest {
     @Test
     public void transferingGroupToCenterInSameBranchShouldModifyGroupToHaveSameLoanOfficerAsReceivingCenter() throws Exception {
 
-        PersonnelBO loanOfficer = new PersonnelBuilder().withName("old loan officer").build();
+        PersonnelBO loanOfficer = new PersonnelBuilder().withDisplayName("old loan officer").build();
         CenterBO fromCenter = new CenterBuilder().withName("fromCenter").withLoanOfficer(loanOfficer).build();
         GroupBO groupForTransfer = new GroupBuilder().withParentCustomer(fromCenter).active().build();
 
-        PersonnelBO newLoanOfficer = new PersonnelBuilder().withName("loan officer").build();
+        PersonnelBO newLoanOfficer = new PersonnelBuilder().withDisplayName("loan officer").build();
         CenterBO receivingCenter = new CenterBuilder().withName("receivingCenter").withLoanOfficer(newLoanOfficer).build();
 
         // pre-verification

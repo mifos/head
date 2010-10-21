@@ -98,7 +98,7 @@ class HibernateUtil implements FactoryBean<HibernateUtil> {
     /**
      * Begin a transaction and store it in a thread-local variable, or return
      * the currently open transaction if there is one. The result is that the
-     * transaction will remain open until a call to {@link #commitTransaction()}
+     * transaction will remain open until a call to {@link HibernateUtil}
      * or {@link #rollbackTransaction()}. Calling this method instead of just
      * creating a hibernate Transaction via the session is probably not a good
      * idea (see an example of the latter at
@@ -127,7 +127,7 @@ class HibernateUtil implements FactoryBean<HibernateUtil> {
 
 
     public void flushAndCloseSession() {
-        Session session = sessionTL.get();        
+        Session session = sessionTL.get();
         if (session != null && session.isOpen()) {
             session.flush();
             session.close();

@@ -141,7 +141,7 @@ public class CenterHierarchyCustomerServiceIntegrationTest extends MifosIntegrat
         group2 = new GroupBuilder().withName("group2").withParentCustomer(center).active().formedBy(center.getPersonnel()).build();
         IntegrationTestObjectMother.createGroup(group2, group2.getCustomerMeetingValue());
 
-        otherLoanOfficer = new PersonnelBuilder().withName("otherLoanOfficer").with(existingBranch).build();
+        otherLoanOfficer = new PersonnelBuilder().withDisplayName("otherLoanOfficer").with(existingBranch).build();
         IntegrationTestObjectMother.createPersonnel(otherLoanOfficer);
     }
 

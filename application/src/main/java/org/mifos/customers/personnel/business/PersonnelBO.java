@@ -91,7 +91,7 @@ public class PersonnelBO extends AbstractBusinessObject {
     private String searchId;
     private Integer maxChildCount;
     private byte[] encryptedPassword;
-    private final String userName;
+    private String userName;
     private String emailId;
     private Short passwordChanged = Short.valueOf("0");
     private Date lastLogin;
@@ -347,7 +347,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.preferredLocale = preferredLocale;
     }
 
-    void setStatus(final PersonnelStatusEntity status) {
+    public void setStatus(final PersonnelStatusEntity status) {
         this.status = status;
     }
 
@@ -916,5 +916,9 @@ public class PersonnelBO extends AbstractBusinessObject {
     @Deprecated
     public void setPersonnelId(Short personnelId) {
         this.personnelId = personnelId;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }
