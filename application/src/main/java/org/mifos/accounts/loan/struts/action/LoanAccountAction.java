@@ -44,6 +44,7 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentValidation
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -493,8 +494,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response){
         request.setAttribute(METHODCALLED, "showPreview");
-        return cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
+
+        ActionForward forwardAfterCashflowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
                 ActionForwards.schedulePreview_success.toString(), request.getSession(), mapping);
+
+        LoanAccountActionForm loanForm = (LoanAccountActionForm)form;
+        InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
+                loanForm.getInstallments(),loanForm.getCashFlowForm().getMonthlyCashFlows());
+
+        loanForm.setCashflowDataHtmlBeans(cashflowUtility.getCashflowDataHtmlBeans());
+
+        return forwardAfterCashflowBinding;
     }
 
 
@@ -568,8 +578,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
         return loanScheduleDetailsDto;
     }
-
-
 
     private void setVariableInstallmentDetailsOnForm(LoanOfferingBO loanOffering, LoanAccountActionForm loanActionForm) {
         boolean variableInstallmentsAllowed = loanOffering.isVariableInstallmentsAllowed();

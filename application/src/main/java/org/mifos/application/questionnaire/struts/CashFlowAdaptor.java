@@ -47,8 +47,9 @@ public class CashFlowAdaptor {
 
     public ActionForward bindCashFlow(CashFlowCaptor cashFlowCaptor
             , String joinUrlAfterCashFlow, HttpSession session, ActionMapping mapping) {
-        cashFlowCaptor.setCashFlowForm(
-                (CashFlowForm) session.getAttribute(CashFlowConstants.CASH_FLOW_FORM));
+
+        cashFlowCaptor.setCashFlowForm((CashFlowForm) session.getAttribute(CashFlowConstants.CASH_FLOW_FORM));
+
         return mapping.findForward(joinUrlAfterCashFlow);
     }
 

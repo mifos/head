@@ -21,9 +21,12 @@
 package org.mifos.accounts.loan.struts.actionforms;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -39,10 +42,12 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.struts.uihelpers.CashflowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -84,23 +89,10 @@ import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
+import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
 
@@ -171,7 +163,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList<PaymentDataHtmlBean>();
 
     // For Repayment day
-
     private String monthRank;
 
     private String weekRank;
@@ -225,6 +216,18 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private Money minInstallmentAmount;
 
     private CashFlowForm cashFlowForm;
+
+  private List<CashflowDataHtmlBean> cashflowDataHtmlBeans;
+
+
+    public List<CashflowDataHtmlBean> getCashflowDataHtmlBeans(){
+        return cashflowDataHtmlBeans;
+    }
+
+    public void setCashflowDataHtmlBeans(List<CashflowDataHtmlBean> cashflowDataHtmlBeans) {
+        this.cashflowDataHtmlBeans = cashflowDataHtmlBeans;
+    }
+
 
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
@@ -1556,7 +1559,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     public Money getMinInstallmentAmount() {
         return minInstallmentAmount;
     }
-    
+
     public void setMinInstallmentAmount(Money minInstallmentAmount) {
         this.minInstallmentAmount = minInstallmentAmount;
     }
