@@ -290,19 +290,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
 
-    private void recalculateAndPostInterestPostingsForPastPeriods(SavingsBO savingsAccount, LocalDate upToAndIncludingDate, PersonnelBO createdBy) {
-
-        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
-        LocalDate nextPostingSchedule = postingSchedule.nextMatchingDateAfter(upToAndIncludingDate.withDayOfMonth(1).withMonthOfYear(1), upToAndIncludingDate);
-        if (nextPostingSchedule.isAfter(upToAndIncludingDate)) {
-            nextPostingSchedule = postingSchedule.findFirstDateOfPeriodForMatchingDate(nextPostingSchedule).minusDays(1);
-        }
-
-        boolean interestPosted = postCurrentAndRecalculatePreviousInterest(savingsAccount, createdBy, nextPostingSchedule);
-
-        saveInTransaction(interestPosted, savingsAccount);
-    }
-
     private boolean postCurrentAndRecalculatePreviousInterest(SavingsBO savingsAccount, PersonnelBO createdBy, LocalDate interestPostingDate) {
         boolean interestPosted = false;
 
@@ -396,8 +383,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         savingsAccount.updateDetails(userContext);
 
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+        LocalDate upToAndIncludingDate = closeAccountDto.getDateOfWithdrawal();
 
-        recalculateAndPostInterestPostingsForPastPeriods(savingsAccount, closeAccountDto.getDateOfWithdrawal(), createdBy);
+        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+        LocalDate nextPostingSchedule = postingSchedule.nextMatchingDateAfter(upToAndIncludingDate.withDayOfMonth(1).withMonthOfYear(1), upToAndIncludingDate);
+        if (nextPostingSchedule.isAfter(upToAndIncludingDate)) {
+            nextPostingSchedule = postingSchedule.findFirstDateOfPeriodForMatchingDate(nextPostingSchedule).minusDays(1);
+        }
+
+        postCurrentAndRecalculatePreviousInterest(savingsAccount, createdBy, nextPostingSchedule);
 
         AccountNotesEntity notesEntity = new AccountNotesEntity(new DateTimeService().getCurrentJavaSqlDate(), notes, createdBy, savingsAccount);
 
