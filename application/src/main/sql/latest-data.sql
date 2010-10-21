@@ -77,6 +77,7 @@ insert into applied_upgrades(upgrade_id) values(1285651956);
 insert into applied_upgrades(upgrade_id) values(1285812348);
 insert into applied_upgrades(upgrade_id) values(1286529235);
 insert into applied_upgrades(upgrade_id) values(1286780611);
+insert into applied_upgrades(upgrade_id) values(1287653038);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3307,3 +3308,10 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 insert into event_sources (id, entity_type_id, event_id, description) values
     (15, (select entity_type_id from entity_master where entity_type = 'Personnel'), 1, 'Create Personnel');
 /* Upgrade - 1284986654 */
+
+/* Upgrade - 1287653038 Interest type declining principle type*/
+insert into lookup_value(lookup_id,entity_id,lookup_name)
+    values(635, 37, 'InterestTypes-DecliningPrincipalBalance');
+insert into interest_types (interest_type_id, lookup_id, category_id, descripton)
+    values(5,635,1,'InterestTypes-DecliningPrincipalBalance');
+/* Upgrade - 1287653038 */
