@@ -327,6 +327,12 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-envers</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>freemarker</artifactId>
+            		<groupId>freemarker</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
