@@ -156,6 +156,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.cashflow.CashFlowService;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -527,24 +528,27 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private ActionErrors validateCashflowAndInstallmentDates(ActionErrors errors, LoanAccountActionForm loanActionForm) {
-           List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
-           List<MonthlyCashFlowForm> monthlyCashFlows = loanActionForm.getCashFlowForm().getMonthlyCashFlows();
+        List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
+        CashFlowForm cashFlowForm = loanActionForm.getCashFlowForm();
+        if(cashFlowForm != null) {
+            List<MonthlyCashFlowForm> monthlyCashFlows = cashFlowForm.getMonthlyCashFlows();
 
-           if((installments != null && installments.size() > 0) && (monthlyCashFlows !=null && monthlyCashFlows.size() > 0)) {
-               boolean lowerBound = MonthYearComparator.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDateTime().toDate(),installments.get(0).getDueDateValue());
-               boolean upperBound = MonthYearComparator.firstLessOrEqualSecond(installments.get(installments.size()-1).getDueDateValue(),monthlyCashFlows.get(monthlyCashFlows.size()-1).getDateTime().toDate());
+            if((installments != null && installments.size() > 0) && (monthlyCashFlows !=null && monthlyCashFlows.size() > 0)) {
+                boolean lowerBound = MonthYearComparator.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDateTime().toDate(),installments.get(0).getDueDateValue());
+                boolean upperBound = MonthYearComparator.firstLessOrEqualSecond(installments.get(installments.size()-1).getDueDateValue(),monthlyCashFlows.get(monthlyCashFlows.size()-1).getDateTime().toDate());
 
-               SimpleDateFormat df = new SimpleDateFormat("MMMM",installments.get(0).getLocale());
+                SimpleDateFormat df = new SimpleDateFormat("MMMM",installments.get(0).getLocale());
 
-               if(!lowerBound) {
-                   errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(0).getDueDateValue())));
-               }
+                if(!lowerBound) {
+                    errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(0).getDueDateValue())));
+                }
 
-               if(!upperBound) {
-                   errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(installments.size()-1).getDueDateValue())));
-               }
-           }
-           return errors;
+                if(!upperBound) {
+                    errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(installments.size()-1).getDueDateValue())));
+                }
+            }
+        }
+        return errors;
     }
 
     private boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
