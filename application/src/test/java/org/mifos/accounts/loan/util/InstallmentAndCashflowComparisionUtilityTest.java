@@ -164,6 +164,28 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         Assert.assertEquals("66.67",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
+    @Test
+    public void shouldReturnInfinityForDivideByZero() {
+        Date date = new Date();
+
+        when(repaymentScheduleInstallment.getTotalValue()).thenReturn(new Money(currency,0.0));
+        when(repaymentScheduleInstallment.getDueDateValue()).thenReturn(date);
+        when(monthlyCashFlowForm.getCumulativeCashFlow()).thenReturn(new BigDecimal(0));
+        when(monthlyCashFlowForm.getDateTime()).thenReturn(new DateTime(date.getTime()));
+
+        ArrayList<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        installments.add(repaymentScheduleInstallment);
+        ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
+        monthlyCashFlows.add(monthlyCashFlowForm);
+
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
+        List<CashflowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        Assert.assertNotNull(cashflowDataHtmlBeans);
+        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
+        Assert.assertEquals("Infinity",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+    }
+
+
 
     @Test
     public void shouldGetCorrectPercentFromGetCashflowDataHtmlBeansForEqualCashflow() {

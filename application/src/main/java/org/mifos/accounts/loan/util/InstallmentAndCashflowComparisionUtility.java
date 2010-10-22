@@ -75,6 +75,8 @@ public class InstallmentAndCashflowComparisionUtility {
          String value= "";
          if(cashflow.doubleValue()!=0) {
             value = String.valueOf(totalInstallmentForMonth.multiply(new BigDecimal(100)).divide(cashflow, 2, RoundingMode.HALF_UP));
+         }else {
+             value = "Infinity";
          }
          return value;
      }
