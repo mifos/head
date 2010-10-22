@@ -30,6 +30,9 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+/**
+ * @see SavingsProductFormValidator - manual validatior added to fix MIFOS-3915 (morzechowski@soldevelo.com)  
+ */
 @SuppressWarnings("PMD")
 public class SavingsProductFormBean {
 

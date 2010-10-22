@@ -89,7 +89,7 @@ public class MonthlyOnLastDayOfMonthInterestScheduledEventTest {
         monthlyEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(every);
 
         // exercise test
-        List<LocalDate> nextValidMatchingDate = monthlyEvent.findAllMatchingDatesFromBaseDateToCutOffDate(startOfFiscalYear, cutOffDate);
+        List<LocalDate> nextValidMatchingDate = monthlyEvent.findAllMatchingDatesFromBaseDateUpToAndIncludingNearestMatchingEndDate(startOfFiscalYear, cutOffDate);
 
         assertThat(nextValidMatchingDate, hasItem(jan31st));
         assertThat(nextValidMatchingDate, hasItem(feb28th));
@@ -113,7 +113,7 @@ public class MonthlyOnLastDayOfMonthInterestScheduledEventTest {
         monthlyEvent = new MonthlyOnLastDayOfMonthInterestScheduledEvent(every);
 
         // exercise test
-        List<LocalDate> nextValidMatchingDate = monthlyEvent.findAllMatchingDatesFromBaseDateToCutOffDate(startOfFiscalYear, cutOffDate);
+        List<LocalDate> nextValidMatchingDate = monthlyEvent.findAllMatchingDatesFromBaseDateUpToAndIncludingNearestMatchingEndDate(startOfFiscalYear, cutOffDate);
 
         assertThat(nextValidMatchingDate, hasItem(mar31st));
         assertThat(nextValidMatchingDate, hasItem(jun30th));
