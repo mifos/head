@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
@@ -39,8 +38,6 @@ import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.accounts.savings.interest.InterestCalculationInterval;
 import org.mifos.accounts.savings.interest.InterestCalculationIntervalHelper;
 import org.mifos.accounts.savings.interest.InterestCalculationPeriodCalculator;
-import org.mifos.accounts.savings.interest.InterestCalculationPeriodDetail;
-import org.mifos.accounts.savings.interest.InterestCalculationPeriodResult;
 import org.mifos.accounts.savings.interest.InterestCalculator;
 import org.mifos.accounts.savings.interest.InterestPostingPeriodCalculator;
 import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
@@ -244,6 +241,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         userContext.setId(Short.valueOf((short) user.getUserId()));
         userContext.setName(user.getUsername());
 
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+
         List<Integer> accountIds = this.savingsDao.retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(dateBatchJobIsScheduled);
         for (Integer savingsId : accountIds) {
             boolean interestPosted = false;
@@ -251,56 +250,62 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             SavingsBO savingsAccount = this.savingsDao.findById(Long.valueOf(savingsId));
             savingsAccount.updateDetails(userContext);
 
-            interestPosted = postCurrentAndRecalculatePreviousInterest(savingsAccount);
+            LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
 
-            try {
-                this.transactionHelper.startTransaction();
+            InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
 
-                if (interestPosted) {
-                    this.savingsDao.save(savingsAccount);
-                }
-                this.transactionHelper.commitTransaction();
-            } catch (Exception e) {
-                this.transactionHelper.rollbackTransaction();
-                throw new BusinessRuleException(savingsId.toString(), e);
-            } finally {
-                this.transactionHelper.closeSession();
+            LocalDate startOfYearOfPostingDate = new LocalDate(new DateTime().withDate(interestPostingDate.getYear(), 1, 1));
+
+            if (!postingSchedule.isAMatchingDate(startOfYearOfPostingDate, interestPostingDate)) {
+
+                LocalDate nextPostingDate = postingSchedule.nextMatchingDateAfter(startOfYearOfPostingDate, interestPostingDate);
+
+                savingsAccount.updatePostingDetails(nextPostingDate);
+
+                StringBuilder infoMessage = new StringBuilder().append("account id: ").append(savingsAccount.getAccountId())
+                                                               .append(" Invalid posting date: ").append(interestPostingDate)
+                                                               .append(" updated to:").append(nextPostingDate);
+                logger.info(infoMessage.toString());
+            } else {
+                interestPosted = postCurrentAndRecalculatePreviousInterest(savingsAccount, createdBy, interestPostingDate);
             }
+
+            saveInTransaction(interestPosted, savingsAccount);
         }
     }
 
-    private boolean postCurrentAndRecalculatePreviousInterest(SavingsBO savingsAccount) {
-        Boolean interestPosted = false;
+    private void saveInTransaction(boolean interestPosted, SavingsBO savingsAccount) {
+        try {
+            this.transactionHelper.startTransaction();
+
+            if (interestPosted) {
+                this.savingsDao.save(savingsAccount);
+            }
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(savingsAccount.getAccountId().toString(), e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    private boolean postCurrentAndRecalculatePreviousInterest(SavingsBO savingsAccount, PersonnelBO createdBy, LocalDate interestPostingDate) {
+        boolean interestPosted = false;
 
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
 
-        LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
-        LocalDate startOfYearOfPostingDate = new LocalDate(new DateTime().withDate(interestPostingDate.getYear(), 1, 1));
+        List<InterestPostingPeriodResult> postingResults = recalculateSavingsAccountInterest(savingsAccount,postingSchedule, interestPostingDate);
 
-        if (!postingSchedule.isAMatchingDate(startOfYearOfPostingDate, interestPostingDate)) {
+        for (InterestPostingPeriodResult interestPostingPeriodResult : postingResults) {
+            if (interestPostingPeriodResult.isTotalCalculatedInterestIsDifferent()) {
+                interestPosted = true;
+                savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
-            LocalDate nextPostingDate = postingSchedule.nextMatchingDateAfter(startOfYearOfPostingDate, interestPostingDate);
+                StringBuilder postingInfoMessage = new StringBuilder().append("account id: ").append(
+                        savingsAccount.getAccountId()).append("posting interest: ").append(interestPostingPeriodResult);
 
-            savingsAccount.updatePostingDetails(nextPostingDate);
-
-            StringBuilder infoMessage = new StringBuilder().append("account id: ").append(savingsAccount.getAccountId())
-                                                           .append(" Invalid posting date: ").append(interestPostingDate)
-                                                           .append(" updated to:").append(nextPostingDate);
-            logger.info(infoMessage.toString());
-        } else {
-
-            List<InterestPostingPeriodResult> postingResults = recalculateSavingsAccountInterest(savingsAccount, postingSchedule, interestPostingDate);
-
-            for (InterestPostingPeriodResult interestPostingPeriodResult : postingResults) {
-                if (interestPostingPeriodResult.isTotalCalculatedInterestIsDifferent()) {
-                    interestPosted = true;
-                    savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult);
-
-                    StringBuilder postingInfoMessage = new StringBuilder().append("account id: ").append(savingsAccount.getAccountId())
-                                                                          .append("posting interest: ").append(interestPostingPeriodResult);
-
-                    logger.info(postingInfoMessage.toString());
-                }
+                logger.info(postingInfoMessage.toString());
             }
         }
         return interestPosted;
@@ -309,8 +314,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private List<InterestPostingPeriodResult> recalculateSavingsAccountInterest(SavingsBO savingsAccount, InterestScheduledEvent postingSchedule, LocalDate endDateOfLastPeriod) {
 
         Long savingsId = Long.valueOf(savingsAccount.getAccountId());
-
-        LocalDate interestPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
 
         List<InterestPostingPeriodResult> postingPeriodResults = new ArrayList<InterestPostingPeriodResult>();
 
@@ -326,7 +329,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         if (!allEndOfDayDetailsForAccount.isEmpty()) {
 
             LocalDate firstAccountActivityDate = allEndOfDayDetailsForAccount.get(0).getDate();
-            List<InterestCalculationInterval> allPossiblePostingPeriods = interestCalculationIntervalHelper.determineAllPossiblePeriods(firstAccountActivityDate, postingSchedule, interestPostingDate, endDateOfLastPeriod);
+            List<InterestCalculationInterval> allPossiblePostingPeriods = interestCalculationIntervalHelper.determineAllPossiblePeriods(firstAccountActivityDate, postingSchedule, endDateOfLastPeriod);
 
             postingPeriodResults = compoundingInterestCalculator.calculatePostingPeriodDetails(allEndOfDayDetailsForAccount, allPossiblePostingPeriods);
        }
@@ -353,21 +356,17 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
-//      Money interestAmount = savingsAccount.calculateInterestForClosure(transactionDate);
-
-        Money interestAmount = new Money(savingsAccount.getCurrency(), "0");
-
+        Money interestAmountAtClosure = new Money(savingsAccount.getCurrency(), "0");
+        Money endOfAccountBalance = new Money(savingsAccount.getCurrency(), "0");
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         List<InterestPostingPeriodResult> postingResults = recalculateSavingsAccountInterest(savingsAccount, postingSchedule, closureDate);
 
         if (!postingResults.isEmpty()) {
-            Money endOfAccountBalance = postingResults.get(postingResults.size()-1).getPeriodBalance();
-            interestAmount = postingResults.get(postingResults.size()-1).getPeriodInterest();
-            System.out.println(endOfAccountBalance);
-            System.out.println(interestAmount);
+            endOfAccountBalance = postingResults.get(postingResults.size()-1).getPeriodBalance();
+            interestAmountAtClosure = postingResults.get(postingResults.size()-1).getPeriodInterest();
         }
 
-        return savingsAccount.toClosureDto(interestAmount.toString());
+        return new SavingsAccountClosureDto(new LocalDate(), endOfAccountBalance.toString(), interestAmountAtClosure.toString());
     }
 
     @Override
@@ -384,6 +383,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         savingsAccount.updateDetails(userContext);
 
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+        LocalDate upToAndIncludingDate = closeAccountDto.getDateOfWithdrawal();
+
+        InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
+        LocalDate nextPostingSchedule = postingSchedule.nextMatchingDateAfter(upToAndIncludingDate.withDayOfMonth(1).withMonthOfYear(1), upToAndIncludingDate);
+        if (nextPostingSchedule.isAfter(upToAndIncludingDate)) {
+            nextPostingSchedule = postingSchedule.findFirstDateOfPeriodForMatchingDate(nextPostingSchedule).minusDays(1);
+        }
+
+        postCurrentAndRecalculatePreviousInterest(savingsAccount, createdBy, nextPostingSchedule);
+
         AccountNotesEntity notesEntity = new AccountNotesEntity(new DateTimeService().getCurrentJavaSqlDate(), notes, createdBy, savingsAccount);
 
         try {
@@ -406,11 +415,19 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
             AccountPaymentEntity closeAccount = new AccountPaymentEntity(savingsAccount, amount, closeAccountDto.getReceiptId(), receiptDate, paymentType, closeAccountDto.getDateOfWithdrawal().toDateMidnight().toDate());
 
-            savingsAccount.closeAccount(closeAccount, notesEntity, customer);
-        } catch (AccountException e) {
-            throw new BusinessRuleException(e.getKey(), e);
+            this.transactionHelper.startTransaction();
+
+            savingsAccount.closeAccount(closeAccount, notesEntity, customer, createdBy);
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
         } catch (CustomerException e) {
+            this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            this.transactionHelper.closeSession();
         }
     }
 }

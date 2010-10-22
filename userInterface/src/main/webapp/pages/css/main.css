@@ -91,7 +91,8 @@ html, body { height: 100% }
     padding-bottom:4px;
     padding-left:10px;
     padding-top:3px;
-    font-size:10px;
+    font-size:8pt;
+    height:13px;
 }
 .side_bar h3 {
 	background-color:#FF9600;
@@ -229,6 +230,10 @@ margin-top:2px;
     margin-bottom:5px;
 }
 
+.margin15bottom{
+    margin-bottom:15px;
+}
+
 .margin5top10bottom {
     margin: 5px 0 10px 0;
 }
@@ -236,6 +241,11 @@ margin-top:2px;
 
 .margin10topbottom {
     margin: 10px 0;
+}
+
+.margin20topbottom {
+    margin-top:20px;
+    margin-bottom:20px;
 }
 
 .margin20top30bottom {
@@ -321,3 +331,7 @@ margin-top:2px;
     font-size:11pt;
 }
 
+.sideMarginAuto {
+    margin-left:auto;
+    margin-right:auto;
+}

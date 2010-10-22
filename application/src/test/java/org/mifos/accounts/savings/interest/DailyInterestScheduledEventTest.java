@@ -81,7 +81,7 @@ public class DailyInterestScheduledEventTest {
         dailyEvent = new DailyInterestScheduledEvent(every);
 
         // exercise test
-        List<LocalDate> nextValidMatchingDate = dailyEvent.findAllMatchingDatesFromBaseDateToCutOffDate(startOfFiscalYear, cutOffDate);
+        List<LocalDate> nextValidMatchingDate = dailyEvent.findAllMatchingDatesFromBaseDateUpToAndIncludingNearestMatchingEndDate(startOfFiscalYear, cutOffDate);
 
         assertThat(nextValidMatchingDate, hasItem(jan1st));
         assertThat(nextValidMatchingDate, hasItem(jan2nd));
@@ -97,7 +97,7 @@ public class DailyInterestScheduledEventTest {
         dailyEvent = new DailyInterestScheduledEvent(every);
 
         // exercise test
-        List<LocalDate> nextValidMatchingDate = dailyEvent.findAllMatchingDatesFromBaseDateToCutOffDate(startOfFiscalYear, cutOffDate);
+        List<LocalDate> nextValidMatchingDate = dailyEvent.findAllMatchingDatesFromBaseDateUpToAndIncludingNearestMatchingEndDate(startOfFiscalYear, cutOffDate);
 
         assertThat(nextValidMatchingDate, hasItem(jan2nd));
         assertThat(nextValidMatchingDate, hasItem(jan4th));

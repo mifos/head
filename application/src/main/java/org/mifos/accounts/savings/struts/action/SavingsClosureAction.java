@@ -34,6 +34,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsClosureActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -90,26 +91,35 @@ public class SavingsClosureAction extends BaseAction {
         logger.debug("In SavingsClosureAction::load(), accountId: " + savings.getAccountId());
 
         Long savingsId = Long.valueOf(savings.getAccountId());
-        SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, new LocalDate());
-
         savings = this.savingsDao.findById(savingsId);
         savings.setUserContext(uc);
+
+        // NOTE: initialise so when error occurs when apply adjustment, savings object is correctly initialised for
+        // use within Tag library in jsp.
+        new SavingsPersistence().initialize(savings);
+
+        LocalDate accountCloseDate = new LocalDate();
+        SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, accountCloseDate);
 
         AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
         List<PaymentTypeEntity> acceptedPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
 
-        Money interestAmount = new Money(savings.getCurrency(), closureDetails.getInterestAmountAtClosure());
+        Money interestAmountDue = new Money(savings.getCurrency(), closureDetails.getInterestAmountAtClosure());
+        Money endOfAccountBalance = new Money(savings.getCurrency(), closureDetails.getBalance());
         Date transactionDate = closureDetails.getClosureDate().toDateMidnight().toDate();
-        AccountPaymentEntity payment = new AccountPaymentEntity(savings, savings.getSavingsBalance().add(interestAmount), null, null, null, transactionDate);
 
-        actionForm.setAmount(closureDetails.getBalance());
+        Money withdrawalAmountAtClosure = endOfAccountBalance.add(interestAmountDue);
+        Money oldValue = savings.getSavingsBalance().add(interestAmountDue);
+        AccountPaymentEntity payment = new AccountPaymentEntity(savings, withdrawalAmountAtClosure, null, null, null, transactionDate);
+
+        actionForm.setAmount(withdrawalAmountAtClosure.toString());
         actionForm.setTrxnDate(DateUtils.getCurrentDate(uc.getPreferredLocale()));
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, acceptedPaymentTypes, request);
         SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);
 
-        logger.debug("In SavingsClosureAction::load(), Interest calculated:  " + interestAmount);
+        logger.debug("In SavingsClosureAction::load(), Interest calculated:  " + interestAmountDue);
 
         return mapping.findForward("load_success");
     }
@@ -188,6 +198,7 @@ public class SavingsClosureAction extends BaseAction {
         }
         Locale preferredLocale = userContext.getPreferredLocale();
         SavingsWithdrawalDto closeAccount = new SavingsWithdrawalDto(savingsId, customerId, dateOfWithdrawal, amount, modeOfPayment, receiptId, dateOfReceipt, preferredLocale);
+
         this.savingsServiceFacade.closeSavingsAccount(savingsId, actionForm.getNotes(), closeAccount);
 
         SessionUtils.removeAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);

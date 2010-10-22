@@ -23,20 +23,21 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.List;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.service.test.TestMode;
@@ -99,6 +100,24 @@ public class PersonnelDaoHibernateIntegrationTest extends MifosIntegrationTestCa
         assertThat(user.getUsername(), is("mifos"));
         assertThat(user.getAuthorities().isEmpty(), is(false));
     }
+
+    @Test
+    public void shouldFindAppUserWithNoRolesByUsername() {
+
+        OfficeBO office = IntegrationTestObjectMother.sampleBranchOffice();
+        PersonnelBO userWithNoRoles = new PersonnelBuilder().withUsername("noRoles")
+                                                            .asLoanOfficer()
+                                                            .with(office)
+                                                            .build();
+        IntegrationTestObjectMother.createPersonnel(userWithNoRoles);
+
+        // exercise test
+        MifosUser user = personnelDao.findAuthenticatedUserByUsername("noRoles");
+
+        // verification
+        assertNotNull(user);
+    }
+
 
     @Test
     public void shouldFindUsersByNameWhenSearching() {

@@ -47,6 +47,10 @@ import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
+import org.mifos.accounts.savings.interest.InterestCalculationPeriodResult;
+import org.mifos.accounts.savings.interest.InterestCalculationPeriodResultBuilder;
+import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
+import org.mifos.accounts.savings.interest.InterestPostingPeriodResultBuilder;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.internal.MonthlyOnLastDayOfMonthInterestScheduledEvent;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -57,6 +61,8 @@ import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
@@ -113,21 +119,24 @@ public class SavingsPostInterestTest {
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
-        Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         savingsAccount = new SavingsAccountBuilder().mandatory()
                                                     .active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
                                                     .build();
 
         // pre verification
         assertThat(savingsAccount.getSavingsBalance(), is(TestUtils.createMoney("0")));
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder().with(calculationPeriod).build();
+
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
         assertThat(savingsAccount.getSavingsBalance(), is(TestUtils.createMoney("100")));
@@ -139,21 +148,23 @@ public class SavingsPostInterestTest {
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
-        Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         savingsAccount = new SavingsAccountBuilder().mandatory()
                                                     .active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
                                                     .build();
 
         // pre verification
         assertThat(savingsAccount.getSavingsPerformance().getTotalInterestEarned(), is(TestUtils.createMoney("0")));
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder().with(calculationPeriod).build();
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
         assertThat(savingsAccount.getSavingsPerformance().getTotalInterestEarned(), is(TestUtils.createMoney("100")));
@@ -165,22 +176,24 @@ public class SavingsPostInterestTest {
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
-        Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         savingsAccount = new SavingsAccountBuilder().mandatory()
                                                     .active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
                                                     .build();
 
         // pre verification
         List<SavingsActivityEntity> preSavingsActivityityDetails = new ArrayList<SavingsActivityEntity>(savingsAccount.getSavingsActivityDetails());
         assertThat(preSavingsActivityityDetails.size(), is(0));
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder().with(calculationPeriod).build();
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
         List<SavingsActivityEntity> savingsActivityityDetails = new ArrayList<SavingsActivityEntity>(savingsAccount.getSavingsActivityDetails());
@@ -193,7 +206,6 @@ public class SavingsPostInterestTest {
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
-        Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
         savingsAccount = new SavingsAccountBuilder().mandatory()
@@ -201,21 +213,27 @@ public class SavingsPostInterestTest {
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
                                                     .build();
 
         // pre verification
         assertThat(new LocalDate(savingsAccount.getNextIntPostDate()), is(nextInterestPostingDate.toLocalDate()));
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder().from(nextInterestPostingDate.toLocalDate())
+                                                                                                          .to(nextInterestPostingDate.toLocalDate())
+                                                                                                          .with(calculationPeriod)
+                                                                                                          .build();
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
         List<SavingsActivityEntity> savingsActivityityDetails = new ArrayList<SavingsActivityEntity>(savingsAccount.getSavingsActivityDetails());
         SavingsActivityEntity interestPostingActivity = savingsActivityityDetails.get(0);
         assertThat(interestPostingActivity.getAccount(), is((AccountBO)savingsAccount));
         assertThat(interestPostingActivity.getActivity().getId(), is(AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue()));
-        assertThat(interestPostingActivity.getAmount(), is(interestToBePosted));
+        assertThat(interestPostingActivity.getAmount(), is(TestUtils.createMoney("100")));
         assertThat(datePartOf(interestPostingActivity.getTrxnCreatedDate()), is(nextInterestPostingDate.toLocalDate()));
     }
 
@@ -243,11 +261,17 @@ public class SavingsPostInterestTest {
         // pre verification
         assertTrue(savingsAccount.getAccountPayments().isEmpty());
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder().from(nextInterestPostingDate.toLocalDate())
+                                                                                                          .to(nextInterestPostingDate.toLocalDate())
+                                                                                                          .with(calculationPeriod)
+                                                                                                          .build();
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
-
         assertFalse(savingsAccount.getAccountPayments().isEmpty());
         AccountPaymentEntity interestPostingPayment = savingsAccount.getAccountPayments().get(0);
 
@@ -277,12 +301,17 @@ public class SavingsPostInterestTest {
         // pre verification
         assertTrue(savingsAccount.getAccountPayments().isEmpty());
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder().from(nextInterestPostingDate.toLocalDate())
+                                                                                                          .to(nextInterestPostingDate.toLocalDate())
+                                                                                                          .with(calculationPeriod)
+                                                                                                          .build();
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
-
-
         AccountPaymentEntity interestPostingPayment = savingsAccount.getAccountPayments().get(0);
         assertFalse(interestPostingPayment.getAccountTrxns().isEmpty());
 
@@ -322,8 +351,15 @@ public class SavingsPostInterestTest {
         // pre verification
         assertThat(savingsAccount.getLastIntPostDate(), is(nullValue()));
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder().from(nextInterestPostingDate.toLocalDate())
+                                                                                                          .to(nextInterestPostingDate.toLocalDate())
+                                                                                                          .with(calculationPeriod)
+                                                                                                          .build();
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
         assertThat(new LocalDate(savingsAccount.getLastIntPostDate()), is(nextInterestPostingDate.toLocalDate()));
@@ -349,8 +385,15 @@ public class SavingsPostInterestTest {
         // pre verification
         assertThat(new LocalDate(savingsAccount.getNextIntPostDate()), is(nextInterestPostingDate.toLocalDate()));
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder().from(nextInterestPostingDate.toLocalDate())
+                                                                                                          .to(nextInterestPostingDate.toLocalDate())
+                                                                                                          .with(calculationPeriod)
+                                                                                                          .build();
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
         assertThat(new LocalDate(savingsAccount.getNextIntPostDate()), is(endOfMonthAfter(nextInterestPostingDate)));
@@ -380,8 +423,14 @@ public class SavingsPostInterestTest {
         // pre verification
         assertThat(savingsAccount.getInterestToBePosted(), is(interestToBePosted));
 
+        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
+        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder()
+                                                                                                          .with(calculationPeriod)
+                                                                                                          .build();
+        PersonnelBO createdBy = new PersonnelBuilder().build();
+
         // exercise
-        savingsAccount.postInterest(postingSchedule);
+        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
 
         // verification
         assertThat(savingsAccount.getInterestToBePosted(), is(TestUtils.createMoney("0")));

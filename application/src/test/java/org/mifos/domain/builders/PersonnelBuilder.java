@@ -20,10 +20,16 @@
 
 package org.mifos.domain.builders;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
+import org.mifos.customers.personnel.business.PersonnelRoleEntity;
+import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.framework.TestUtils;
 import org.mifos.security.util.UserContext;
 
@@ -32,10 +38,13 @@ import org.mifos.security.util.UserContext;
  */
 public class PersonnelBuilder {
 
-    private String name = "BuilderLoanOfficer";
+    private String username = "anyUserName";
+    private String displayName = "BuilderLoanOfficer";
     private PersonnelLevel level = PersonnelLevel.LOAN_OFFICER;
     private OfficeBO office;
     private UserContext userContext = TestUtils.makeUser();
+    private Set<PersonnelRoleEntity> personnelRoles = new HashSet<PersonnelRoleEntity>();
+    private PersonnelStatusEntity status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
 
     public static PersonnelBO anyLoanOfficer() {
         return new PersonnelBuilder().build();
@@ -43,21 +52,25 @@ public class PersonnelBuilder {
 
     public PersonnelBO build() {
         final PersonnelBO personnel = new PersonnelBO();
+        personnel.setUserName(username);
+        personnel.setStatus(status);
+
         personnel.setPersonnelDetails(null);
         personnel.setPreferredLocale(null);
 
         personnel.setLevel(new PersonnelLevelEntity(level));
         personnel.setOffice(office);
-        personnel.setDisplayName(name);
+        personnel.setDisplayName(displayName);
 
         personnel.setUserContext(userContext);
         personnel.setCreateDetails();
+        personnel.setPersonnelRoles(personnelRoles);
 
         return personnel;
     }
 
-    public PersonnelBuilder withName(final String withName) {
-        this.name = withName;
+    public PersonnelBuilder withDisplayName(final String withName) {
+        this.displayName = withName;
         return this;
     }
 
@@ -68,6 +81,11 @@ public class PersonnelBuilder {
 
     public PersonnelBuilder with(OfficeBO withOffice) {
         this.office = withOffice;
+        return this;
+    }
+
+    public PersonnelBuilder withUsername(String withUsername) {
+        this.username = withUsername;
         return this;
     }
 }

@@ -20,32 +20,38 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-    <span id="page.id" title="view_question_groups"></span>
+<span id="page.id" title="view_question_groups"></span>
+<div class=" content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+[@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
-        <h1>
-            [@spring.message "questionnaire.view.question.groups"/]
-        </h1>
+        <p class="font15 orangeheading">
+        [@spring.message "questionnaire.view.question.groups"/]
+        </p>
+
         <p>
-            [@spring.message "questionnaire.create.question.group.prompt"/]
+        [@spring.message "questionnaire.create.question.group.prompt"/]
             <a href="createQuestionGroup.ftl">[@spring.message
                 "questionnaire.create.question.group.link"/]</a>
         </p>
+
         <div id="questionGroupList">
-            	[#assign eventSources = questionGroups?keys]
-                [#list eventSources as eventSource]
-	                	
-	                <span class="fontnormalbold">${eventSource}</span>
-	                <ul class="questions">
-	                [#list questionGroups[eventSource] as questionGroup]
-		                <li>
-		                    <a href="viewAndEditQuestionGroup.ftl?questionGroupId=${questionGroup.id}" id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
-		                	[#if questionGroup.active == false]&nbsp;<img src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;inactive[/#if]
-		                </li>
-	                [/#list]
-	                </ul>
-                [/#list]
+            [#assign eventSources = questionGroups?keys]
+            [#list eventSources as eventSource]
+
+                <span class="fontnormalbold">${eventSource}</span>
+                <ul class="questions">
+                    [#list questionGroups[eventSource] as questionGroup]
+                        <li>
+                            <a href="viewAndEditQuestionGroup.ftl?questionGroupId=${questionGroup.id}"
+                               id="questionGroupId_${questionGroup.id}">${questionGroup.title}</a>
+                            [#if questionGroup.active == false]&nbsp;<img
+                                    src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;inactive[/#if]
+                        </li>
+                    [/#list]
+                </ul>
+            [/#list]
         </div>
     </div>
+</div>
 [/@adminLeftPaneLayout]

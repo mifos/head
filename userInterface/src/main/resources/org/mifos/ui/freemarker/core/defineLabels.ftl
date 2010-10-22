@@ -22,10 +22,10 @@
 [@adminLeftPaneLayout]
    <!--  Main Content Begins-->  
   <div class=" content">
-  <span id="page.id" title="definelabels" />
+  <span id="page.id" title="defineLabels" />
   
-    [@mifos.crumbs breadcrumbs /]
-  
+    [@mifos.crumbs breadcrumbs/]
+
   	<form method="post" action="defineLabels.ftl" name="formname">  	
     <div class="margin15lefttop">
         <div class="fontBold"><span class="orangeheading">[@spring.message "datadisplayandrules.defineLabels"/]</span></div>
