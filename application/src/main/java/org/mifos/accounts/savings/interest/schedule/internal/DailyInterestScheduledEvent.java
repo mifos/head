@@ -43,7 +43,7 @@ public class DailyInterestScheduledEvent implements InterestScheduledEvent {
     }
 
     @Override
-    public List<LocalDate> findAllMatchingDatesFromBaseDateToCutOffDate(LocalDate baseDate, LocalDate cutOffDate) {
+    public List<LocalDate> findAllMatchingDatesFromBaseDateUpToAndIncludingNearestMatchingEndDate(LocalDate baseDate, LocalDate cutOffDate) {
 
         List<LocalDate> allMatchingDates = new ArrayList<LocalDate>();
 
@@ -52,6 +52,10 @@ public class DailyInterestScheduledEvent implements InterestScheduledEvent {
         while (matchingDate.isEqual(cutOffDate) || matchingDate.isBefore(cutOffDate)) {
             allMatchingDates.add(matchingDate);
             matchingDate = nextMatchingDateFromAlreadyMatchingDate(matchingDate);
+        }
+
+        if (!allMatchingDates.contains(matchingDate)) {
+            allMatchingDates.add(matchingDate);
         }
 
         return allMatchingDates;
@@ -71,14 +75,14 @@ public class DailyInterestScheduledEvent implements InterestScheduledEvent {
 
     @Override
     public boolean isAMatchingDate(LocalDate baseDate, LocalDate date) {
-        List<LocalDate> allMatchingDates = findAllMatchingDatesFromBaseDateToCutOffDate(baseDate, date);
+        List<LocalDate> allMatchingDates = findAllMatchingDatesFromBaseDateUpToAndIncludingNearestMatchingEndDate(baseDate, date);
         return allMatchingDates.contains(date);
     }
 
     @Override
     public LocalDate nextMatchingDateAfter(LocalDate baseDate, LocalDate after) {
         LocalDate cutOff = after.plusMonths(every+1);
-        List<LocalDate> allMatchingDates = findAllMatchingDatesFromBaseDateToCutOffDate(baseDate, cutOff);
+        List<LocalDate> allMatchingDates = findAllMatchingDatesFromBaseDateUpToAndIncludingNearestMatchingEndDate(baseDate, cutOff);
 
         return findNextMatchingDateFromList(after, allMatchingDates);
     }
