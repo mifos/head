@@ -706,6 +706,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         ActionForwards forward = validateInstallments(request, loanAccountForm) ?
                                                     ActionForwards.preview_success :
                                                     ActionForwards.preview_failure;
+
+        //----to display errors on second page
+        ActionErrors validateCashflowForInstallments = validateCashflowForInstallments(request, (LoanAccountActionForm) form);
+        if(!validateCashflowForInstallments.isEmpty()) {
+            addErrors(request,validateCashflowForInstallments);
+        }
+        //-----------------------------
+
         return mapping.findForward(forward.name());
     }
     private void setRedoLoanAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm, String perspective, Integer customerId) throws InvalidDateException, ApplicationException {
