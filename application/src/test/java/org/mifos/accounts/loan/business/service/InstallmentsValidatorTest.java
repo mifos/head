@@ -16,7 +16,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.platform.validations.Errors;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
@@ -29,6 +28,7 @@ import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.CollectionUtils.asList;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InstallmentsValidatorTest {
@@ -65,20 +65,31 @@ public class InstallmentsValidatorTest {
         RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withInstallment(3).withDueDateValue("08-Nov-2010").build();
 
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
-        Errors errors = installmentsValidator.validate(installments, getValidationContext(null));
+        Errors errors = installmentsValidator.validateInputInstallments(installments, getValidationContext(null));
         for (RepaymentScheduleInstallment installment : installments) {
-            Mockito.verify(installmentFormatValidator).validateDueDateFormat(installment);
-            Mockito.verify(installmentFormatValidator).validateTotalAmountFormat(installment);
+            verify(installmentFormatValidator).validateDueDateFormat(installment);
+            verify(installmentFormatValidator).validateTotalAmountFormat(installment);
         }
-        Mockito.verify(listOfInstallmentsValidator).validateDuplicateDueDates(installments);
-        Mockito.verify(listOfInstallmentsValidator).validateOrderingOfDueDates(installments);
+        verify(listOfInstallmentsValidator).validateDuplicateDueDates(installments);
+        verify(listOfInstallmentsValidator).validateOrderingOfDueDates(installments);
 
-        Mockito.verify(installmentRulesValidator).validateForDisbursementDate(eq(installments), any(Date.class));
-        Mockito.verify(installmentRulesValidator).validateForVariableInstallments(eq(installments), any(VariableInstallmentDetailsBO.class));
-        Mockito.verify(installmentRulesValidator).validateForHolidays(eq(installments), any(FiscalCalendarRules.class));
+        verify(installmentRulesValidator).validateForDisbursementDate(eq(installments), any(Date.class));
+        verify(installmentRulesValidator).validateForVariableInstallments(eq(installments), any(VariableInstallmentDetailsBO.class));
+        verify(installmentRulesValidator).validateForHolidays(eq(installments), any(FiscalCalendarRules.class));
         assertThat(errors.hasErrors(), is(false));
     }
 
+    @Test
+    public void shouldValidateInstallmentSchedule() {
+        RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();
+        RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withInstallment(2).withDueDateValue("06-Nov-2010").build();
+        RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withInstallment(3).withDueDateValue("08-Nov-2010").build();
+
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
+        installmentsValidator.validateInstallmentSchedule(installments);
+        verify(installmentRulesValidator).validateForMinimumInstallmentAmount(installments);
+    }
+    
     private InstallmentValidationContext getValidationContext(Date disbursementDate) {
         return new InstallmentValidationContext(disbursementDate, new VariableInstallmentDetailsBO(),
                 new FiscalCalendarRules());

@@ -221,10 +221,10 @@ public class LoanServiceFacadeWebTierTest {
     @Test
     public void shouldValidateInstallments() {
         Errors errors = new Errors();
-        when(installmentsValidator.validate(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class))).thenReturn(errors);
-        Errors actual = loanServiceFacade.validateInstallments(null, null, new ArrayList<RepaymentScheduleInstallment>());
+        when(installmentsValidator.validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class))).thenReturn(errors);
+        Errors actual = loanServiceFacade.validateInputInstallments(null, null, new ArrayList<RepaymentScheduleInstallment>());
         assertThat(actual, is(errors));
-        verify(installmentsValidator).validate(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
+        verify(installmentsValidator).validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
     }
 
     @Test
@@ -327,6 +327,16 @@ public class LoanServiceFacadeWebTierTest {
         verify(loanBO, never()).copyInstallmentSchedule(any(List.class));
     }
 
+    @Test
+    public void shouldValidateInstallmentSchedule() {
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        Errors expectedErrors = new Errors();
+        when(installmentsValidator.validateInstallmentSchedule(installments)).thenReturn(expectedErrors);
+        Errors errors = loanServiceFacade.validateInstallmentSchedule(installments);
+        assertThat(errors, is(expectedErrors));
+        verify(installmentsValidator).validateInstallmentSchedule(installments);
+    }
+    
     private Date getDate(int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, day);

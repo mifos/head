@@ -6,5 +6,7 @@ import org.mifos.platform.validations.Errors;
 import java.util.List;
 
 public interface InstallmentsValidator {
-    Errors validate(List<RepaymentScheduleInstallment> installments, InstallmentValidationContext installmentValidationContext);
+    Errors validateInputInstallments(List<RepaymentScheduleInstallment> installments, InstallmentValidationContext installmentValidationContext);
+
+    Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments);
 }

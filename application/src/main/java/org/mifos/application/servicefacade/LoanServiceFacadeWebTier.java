@@ -1089,23 +1089,23 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public Errors validateInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
+    public Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
                                        List<RepaymentScheduleInstallment> installments) {
         FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
         InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
-        return installmentsValidator.validate(installments, installmentValidationContext);
+        return installmentsValidator.validateInputInstallments(installments, installmentValidationContext);
     }
 
     @Override
-    public void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments,
+    public void generateInstallmentSchedule(List<RepaymentScheduleInstallment> installments,
                                             Money loanAmount, Double interestRate, Date disbursementDate) {
         Double dailyInterestFactor = interestRate / (AccountingRules.getNumberOfInterestDays() * 100d);
         Money principalOutstanding = loanAmount;
         Money runningPrincipal = new Money(loanAmount.getCurrency());
         Date initialDueDate = disbursementDate;
         int installmentIndex, numInstallments;
-        for (installmentIndex = 0, numInstallments = repaymentScheduleInstallments.size(); installmentIndex < numInstallments - 1; installmentIndex++) {
-            RepaymentScheduleInstallment installment = repaymentScheduleInstallments.get(installmentIndex);
+        for (installmentIndex = 0, numInstallments = installments.size(); installmentIndex < numInstallments - 1; installmentIndex++) {
+            RepaymentScheduleInstallment installment = installments.get(installmentIndex);
             Date currentDueDate = installment.getDueDateValue();
             long duration = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, initialDueDate);
             Money fees = installment.getFees();
@@ -1118,7 +1118,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             runningPrincipal = runningPrincipal.add(principal);
         }
 
-        RepaymentScheduleInstallment lastInstallment = repaymentScheduleInstallments.get(installmentIndex);
+        RepaymentScheduleInstallment lastInstallment = installments.get(installmentIndex);
         long duration = DateUtils.getNumberOfDaysBetweenTwoDates(lastInstallment.getDueDateValue(), initialDueDate);
         Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, lastInstallment, duration);
         Money fees = lastInstallment.getFees();
@@ -1126,6 +1126,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         Money total = principal.add(interest).add(fees);
         lastInstallment.setTotalAndTotalValue(total);
         setPrincipalAndInterest(lastInstallment, interest, principal);
+    }
+
+    @Override
+    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
+        return installmentsValidator.validateInstallmentSchedule(installments);
     }
 
     private void setPrincipalAndInterest(RepaymentScheduleInstallment installment, Money interest, Money principal) {

@@ -48,6 +48,18 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
         return errorEntries;
     }
 
+    @Override
+    public List<ErrorEntry> validateForMinimumInstallmentAmount(List<RepaymentScheduleInstallment> installments) {
+        List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
+        for (RepaymentScheduleInstallment installment : installments) {
+            if(installment.getTotalValue().compareTo(installment.getInterest().add(installment.getFees())) <= 0 ){
+                String identifier = installment.getInstallmentNumberAsString();
+                errorEntries.add(new ErrorEntry(AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, identifier));
+            }
+        }
+        return errorEntries;
+    }
+
     private List<ErrorEntry> validateForVariableInstallmentDetails(List<RepaymentScheduleInstallment> installments,
                                                                    VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
         List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();

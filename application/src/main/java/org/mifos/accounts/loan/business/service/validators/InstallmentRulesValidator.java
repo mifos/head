@@ -14,4 +14,6 @@ public interface InstallmentRulesValidator {
     List<ErrorEntry> validateForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
 
     List<ErrorEntry> validateForHolidays(List<RepaymentScheduleInstallment> installments, FiscalCalendarRules fiscalCalendarRules);
+
+    List<ErrorEntry> validateForMinimumInstallmentAmount(List<RepaymentScheduleInstallment> installments);
 }

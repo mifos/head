@@ -31,11 +31,18 @@ public class InstallmentsValidatorImpl implements InstallmentsValidator {
     }
 
     @Override
-    public Errors validate(List<RepaymentScheduleInstallment> installments, InstallmentValidationContext installmentValidationContext) {
+    public Errors validateInputInstallments(List<RepaymentScheduleInstallment> installments, InstallmentValidationContext installmentValidationContext) {
         Errors errors = new Errors();
         validateInstallmentFormat(installments, errors);
         validateListOfInstallments(installments, errors);
         validateBusinessRulesForInstallments(installments, installmentValidationContext, errors);
+        return errors;
+    }
+
+    @Override
+    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
+        Errors errors = new Errors();
+        errors.addErrors(installmentRulesValidator.validateForMinimumInstallmentAmount(installments));
         return errors;
     }
 

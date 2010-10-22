@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 public class InstallmentRulesValidatorTest {
     private RepaymentScheduleInstallmentBuilder installmentBuilder;
 
-    private MifosCurrency rupeeCurrency;
+    private MifosCurrency rupee;
     private InstallmentRulesValidator installmentRulesValidator;
     private Locale locale;
 
@@ -43,15 +43,15 @@ public class InstallmentRulesValidatorTest {
     public void setupAndInjectDependencies() {
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
-        rupeeCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         installmentRulesValidator = new InstallmentRulesValidatorImpl();
     }
 
     @Test
     public void shouldValidateInstallmentForDueDateSameAsDisburseDate() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDateValue("30-Nov-2010")
-                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
-                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
+                .withPrincipal(new Money(rupee, "499.9")).withInterest(new Money(rupee, "22.1"))
+                .withFees(new Money(rupee, "0.0")).withTotal("522.0").build();
         Date dateValue = getDate(installment, "30-Nov-2010");
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForDisbursementDate(asList(installment), dateValue);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_SAME_AS_DISBURSE_DATE, "3");
@@ -60,8 +60,8 @@ public class InstallmentRulesValidatorTest {
     @Test
     public void shouldNotValidateInstallmentForDueDateAfterDisburseDate() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDateValue("30-Nov-2010")
-                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
-                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
+                .withPrincipal(new Money(rupee, "499.9")).withInterest(new Money(rupee, "22.1"))
+                .withFees(new Money(rupee, "0.0")).withTotal("522.0").build();
         Date dateValue = getDate(installment, "30-Sep-2010");
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForDisbursementDate(asList(installment), dateValue);
         assertThat(errorEntries.isEmpty(), is(true));
@@ -70,8 +70,8 @@ public class InstallmentRulesValidatorTest {
     @Test
     public void shouldValidateInstallmentForDueDateBeforeDisburseDate() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDateValue("30-Nov-2010")
-                .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
-                .withFees(new Money(rupeeCurrency, "0.0")).withTotal("522.0").build();
+                .withPrincipal(new Money(rupee, "499.9")).withInterest(new Money(rupee, "22.1"))
+                .withFees(new Money(rupee, "0.0")).withTotal("522.0").build();
         Date dateValue = getDate(installment, "30-Dec-2010");
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForDisbursementDate(asList(installment), dateValue);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_BEFORE_DISBURSE_DATE, "3");
@@ -86,7 +86,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment5 = installmentBuilder.reset(locale).withInstallment(5).withDueDateValue("20-Nov-2010").build();
         RepaymentScheduleInstallment installment6 = installmentBuilder.reset(locale).withInstallment(6).withDueDateValue("30-Nov-2010").build();
         RepaymentScheduleInstallment installment7 = installmentBuilder.reset(locale).withInstallment(7).withDueDateValue("01-Dec-2010").build();
-        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(5, null, 100, rupeeCurrency);
+        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(5, null, 100, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, "3");
@@ -102,7 +102,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment5 = installmentBuilder.reset(locale).withInstallment(5).withDueDateValue("20-Nov-2010").build();
         RepaymentScheduleInstallment installment6 = installmentBuilder.reset(locale).withInstallment(6).withDueDateValue("30-Nov-2010").build();
         RepaymentScheduleInstallment installment7 = installmentBuilder.reset(locale).withInstallment(7).withDueDateValue("01-Dec-2010").build();
-        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, 5, 100, rupeeCurrency);
+        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, 5, 100, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "4");
@@ -113,8 +113,8 @@ public class InstallmentRulesValidatorTest {
     @Test
     public void shouldValidateMinInstallmentForVariableInstallments() {
         RepaymentScheduleInstallment installment = installmentBuilder.reset(locale).withInstallment(1).
-                withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").build();
-        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, null, 100, rupeeCurrency);
+                withPrincipal(new Money(rupee, "49")).withTotalValue("50").build();
+        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, null, 100, rupee);
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForVariableInstallments(asList(installment), variableInstallmentDetails);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, "1");
     }
@@ -122,12 +122,12 @@ public class InstallmentRulesValidatorTest {
     @Test
     public void shouldNotValidateForValidVariableInstallments() {
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).
-                withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").withDueDateValue("01-Nov-2010").build();
+                withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("01-Nov-2010").build();
         RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withInstallment(2).
-                withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").withDueDateValue("03-Nov-2010").build();
+                withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("03-Nov-2010").build();
         RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withInstallment(3).
-                withPrincipal(new Money(rupeeCurrency, "49")).withTotalValue("50").withDueDateValue("06-Nov-2010").build();
-        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(2, 5, 50, rupeeCurrency);
+                withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("06-Nov-2010").build();
+        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(2, 5, 50, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
         assertThat(errorEntries.isEmpty(), is(true));
@@ -142,6 +142,32 @@ public class InstallmentRulesValidatorTest {
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForHolidays(asList(installment1, installment2), fiscalCalendarRules);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, "1");
         verify(fiscalCalendarRules, times(1)).isWorkingDay(holiday);
+    }
+
+    @Test
+    public void shouldValidateForMinimumInstallmentAmount() {
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "194.4", "4.6", "1", "5");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "195.3", "3.7", "1", "4");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "196.2", "2.8", "1", "3");
+        RepaymentScheduleInstallment installment4 =
+                getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0");
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(installments);
+        assertThat(errorEntries.size(), is(3));
+        assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "1");
+        assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "2");
+        assertErrorEntry(errorEntries.get(2), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "3");
+    }
+
+    private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
+                                                                         String principal, String interest,
+                                                                         String fees, String total) {
+        return installmentBuilder.reset(locale).withInstallment(installment).withDueDateValue(dueDate).
+                withPrincipal(new Money(rupee, principal)).withInterest(new Money(rupee, interest)).
+                withFees(new Money(rupee, fees)).withTotalValue(total).build();
     }
 
     private void assertErrorEntry(ErrorEntry errorEntry, String errorCode, String fieldName) {

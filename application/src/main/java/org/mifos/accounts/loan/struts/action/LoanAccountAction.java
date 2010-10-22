@@ -477,22 +477,27 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId());
         if (loanOffering.isVariableInstallmentsAllowed()) {
             List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
-            VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
             java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
-            Errors errors = loanServiceFacade.validateInstallments(disbursementDate, variableInstallmentDetails, installments);
-            ActionErrors actionErrors = getActionErrors(errors);
+            ActionErrors actionErrors = getActionErrors(loanServiceFacade.validateInputInstallments(disbursementDate,
+                                                loanOffering.getVariableInstallmentDetails(), installments));
             if (!actionErrors.isEmpty()) {
                 addErrors(request, actionErrors);
                 result = false;
             } else {
-                loanServiceFacade.generateInstallmentSchedule(loanActionForm.getInstallments(), 
-                        loanActionForm.getLoanAmountValue(), loanActionForm.getInterestDoubleValue(), disbursementDate);
+                loanServiceFacade.generateInstallmentSchedule(installments, loanActionForm.getLoanAmountValue(),
+                                                        loanActionForm.getInterestDoubleValue(), disbursementDate);
                 // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
                 setInstallmentsOnSession(request, loanActionForm);
+                actionErrors = getActionErrors(loanServiceFacade.validateInstallmentSchedule(installments));
+                if (!actionErrors.isEmpty()) {
+                    addErrors(request, actionErrors);
+                    result = false;
+                }
             }
         }
         return result;
     }
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response){

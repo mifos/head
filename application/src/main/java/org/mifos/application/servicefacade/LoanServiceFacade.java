@@ -106,7 +106,9 @@ public interface LoanServiceFacade {
 
     RepayLoanDto getRepaymentDetails(String globalAccountNumber, Short localeId, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) throws PersistenceException;
 
-    Errors validateInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments);
+    Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments);
 
-    void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments, Money loanAmount, Double interestRate, Date disbursementDate);
+    void generateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, Money loanAmount, Double interestRate, Date disbursementDate);
+
+    Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments);
 }
