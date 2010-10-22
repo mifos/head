@@ -103,7 +103,8 @@ html, body { height: 100% }
     padding-bottom:4px;
     padding-left:10px;
     padding-top:3px;
-    font-size:10px;
+    font-size:8pt;
+    height:13px;
 }
 .side_bar h3 {
 	background-color:#FF9600;
@@ -248,6 +249,10 @@ margin-top:2px;
     margin: 5px 0;
 }
 
+.margin5bottom {
+    margin-bottom:5px;
+}
+
 .margin5top10bottom {
     margin: 5px 0 10px 0;
 }
@@ -257,12 +262,35 @@ margin-top:2px;
     margin: 10px 0;
 }
 
+.margin20top30bottom {
+    margin-top:20px;
+    margin-bottom:30px;
+}
+
 .marginLeft20prc {
     margin-left:20%;
 }
 
+.margin20leftright {
+    margin-left:20px;
+    margin-right:20px;
+}
+
+.marginLeft20px {
+    margin-left:20px;
+}
+
 .padding5topbottom {
     padding: 5px 0;
+}
+
+.padding20left {
+    padding-left:20px;
+}
+
+.padding20left10right {
+    padding-left:20px;
+    padding-right:10px;
 }
 
 .buttonsSubmitCancel {
@@ -279,12 +307,24 @@ margin-top:2px;
     width:80%;
 }
 
+.width90prc {
+    width:90%;
+}
+
 .width95prc {
     width:95%;
 }
 
+.width100prc {
+    width:100%;
+}
+
 .height5px {
     height:5px;
+}
+
+.height25px {
+    height:25px;
 }
 
 .lineheight1p2 {
@@ -295,4 +335,17 @@ margin-top:2px;
     line-height:1.2;
     margin-bottom:5px;
     border-bottom:1px solid #D7DEEE;
+}
+
+.font9pt {
+    font-size:9pt;
+}
+
+.font11pt {
+    font-size:11pt;
+}
+
+.sideMarginAuto {
+    margin-left:auto;
+    margin-right:auto;
 }

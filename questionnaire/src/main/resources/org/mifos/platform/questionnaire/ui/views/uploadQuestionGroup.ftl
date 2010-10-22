@@ -20,36 +20,43 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-    <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-    <span id="page.id" title="uploadQuestionGroup"></span>
+<STYLE TYPE="text/css"><!--
+@import url(pages/questionnaire/css/questionnaire.css);
+--></STYLE>
+<span id="page.id" title="uploadQuestionGroup"></span>
+<div class="content">
     [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.uploadQuestionGroup":""}/]
-    [@mifos.crumbpairs breadcrumb/]
+[@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
+
         <h1>
-            [@spring.message "questionnaire.uploadQuestionGroup"/]
+        [@spring.message "questionnaire.uploadQuestionGroup"/]
         </h1>
-        <div class="allErrorsDiv">
-            [@mifosmacros.showAllErrors "uploadQuestionGroupForm.*"/]
-        </div>
+        [@mifosmacros.showAllErrors "uploadQuestionGroupForm.*"/]
         <div class="fontnormal">
-            [@spring.message "questionnaire.uploadQuestionGroupMessage"/]
+        [@spring.message "questionnaire.uploadQuestionGroupMessage"/]
         </div>
-        <form name="uploadQuestionGroupForm" action="uploadQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST">
+        <form name="uploadQuestionGroupForm" action="uploadQuestionGroup.ftl?execution=${flowExecutionKey}"
+              method="POST">
             <fieldset>
                 <ol>
                     <li>
                         <label for="selectedCountry"><span class="red">*</span>[@spring.message
-                            "questionnaire.select.questionGroup"/]:</label>
-                        [@mifosmacros.formSingleSelectWithPrompt "uploadQuestionGroupForm.selectedCountry", uploadQuestionGroupForm.countries,
-                        "--select one--" /]
+                        "questionnaire.select.questionGroup"/]:</label>
+                    [@mifosmacros.formSingleSelectWithPrompt "uploadQuestionGroupForm.selectedCountry", uploadQuestionGroupForm.countries,
+                    "--select one--" /]
                     </li>
                 </ol>
             </fieldset>
             <div class="marginLeft12em">
-                 <input type="submit" name="_eventId_uploadQuestionGroupContinue" id="_eventId_uploadQuestionGroupContinue" value='[@spring.message "questionnaire.submit"/]' class="buttn"/>
-                 &nbsp;
-                 <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value='[@spring.message "questionnaire.cancel"/]' class="cancelbuttn"/>
+                <input type="submit" name="_eventId_uploadQuestionGroupContinue"
+                       id="_eventId_uploadQuestionGroupContinue" value='[@spring.message "questionnaire.submit"/]'
+                       class="buttn"/>
+                &nbsp;
+                <input type="submit" name="_eventId_cancel" id="_eventId_cancel"
+                       value='[@spring.message "questionnaire.cancel"/]' class="cancelbuttn"/>
             </div>
         </form>
     </div>
+</div>
 [/@adminLeftPaneLayout]

@@ -40,10 +40,9 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
-import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
-import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -156,7 +155,6 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VAL
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PROPOSED_DISBURSAL_DATE;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCEID;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCENAME;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.REPAYMENTSCHEDULEINSTALLMENTS;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.STATUS_HISTORY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.TOTAL_AMOUNT_OVERDUE;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEWINSTALLMENTDETAILS_SUCCESS;
@@ -245,7 +243,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
     private final LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
-    private final InstallmentsValidator installmentsValidator = DependencyInjectedServiceLocator.locateInstallmentsValidator();
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -479,12 +476,19 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         UserContext userContext = getUserContext(request);
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId());
         if (loanOffering.isVariableInstallmentsAllowed()) {
-            ActionErrors actionErrors = validateInstallmentSchedule(
-                                        loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale()),
-                                        loanOffering.getVariableInstallmentDetails(), loanActionForm.getInstallments());
+            List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
+            VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
+            java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
+            Errors errors = loanServiceFacade.validateInstallments(disbursementDate, variableInstallmentDetails, installments);
+            ActionErrors actionErrors = getActionErrors(errors);
             if (!actionErrors.isEmpty()) {
                 addErrors(request, actionErrors);
                 result = false;
+            } else {
+                loanServiceFacade.generateInstallmentSchedule(loanActionForm.getInstallments(), 
+                        loanActionForm.getLoanAmountValue(), loanActionForm.getInterestDoubleValue(), disbursementDate);
+                // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
+                setInstallmentsOnSession(request, loanActionForm);
             }
         }
         return result;
@@ -493,8 +497,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response){
         request.setAttribute(METHODCALLED, "showPreview");
-        return cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
+
+        ActionForward forwardAfterCashflowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
                 ActionForwards.schedulePreview_success.toString(), request.getSession(), mapping);
+
+        LoanAccountActionForm loanForm = (LoanAccountActionForm)form;
+        InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
+                loanForm.getInstallments(),loanForm.getCashFlowForm().getMonthlyCashFlows());
+
+        loanForm.setCashflowDataHtmlBeans(cashflowUtility.getCashflowDataHtmlBeans());
+
+        return forwardAfterCashflowBinding;
     }
 
 
@@ -515,7 +528,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto = retrieveLoanSchedule(request, loanActionForm, userContext, disbursementDate);
         setGlimOnSession(request, loanActionForm, loanScheduleDetailsDto);
 
-        SessionUtils.setCollectionAttribute(REPAYMENTSCHEDULEINSTALLMENTS, loanScheduleDetailsDto.getInstallments(), request);
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto.isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
@@ -568,8 +580,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
         return loanScheduleDetailsDto;
     }
-
-
 
     private void setVariableInstallmentDetailsOnForm(LoanOfferingBO loanOffering, LoanAccountActionForm loanActionForm) {
         boolean variableInstallmentsAllowed = loanOffering.isVariableInstallmentsAllowed();
@@ -921,7 +931,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 .getPreferredLocale()));
         Integer customerId = ((CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request)).getCustomerId();
 
-        LoanCreationResultDto loanCreationResultDto = null;
+        LoanCreationResultDto loanCreationResultDto;
         if (isRedoOperation(perspective)) {
             loanCreationResultDto = this.loanServiceFacade.redoLoan(userContext, customerId, disbursementDate,
                     loanActionForm);
@@ -1653,14 +1663,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createLoanQuestionnaire.editResponses(mapping, request, (LoanAccountActionForm) form);
-    }
-
-    private ActionErrors validateInstallmentSchedule(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
-                                                     List<RepaymentScheduleInstallment> installments) {
-        FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
-        InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
-        Errors errors = installmentsValidator.validate(installments, installmentValidationContext);
-        return getActionErrors(errors);
     }
 
     private ActionErrors getActionErrors(Errors errors) {

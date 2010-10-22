@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings.business.service;
+package org.mifos.accounts.savings.persistence;
 
 import junit.framework.Assert;
 import org.junit.After;
@@ -31,6 +31,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.meeting.business.MeetingBO;

@@ -24,6 +24,7 @@ import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Locale;
 
 public class MonthlyCashFlowForm implements Serializable {
     private static final long serialVersionUID = 6876855921528555322L;
@@ -39,6 +40,10 @@ public class MonthlyCashFlowForm implements Serializable {
 
     public String getMonth() {
         return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText();
+    }
+
+    public String getMonthInEnglish() {
+        return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText(Locale.ENGLISH);
     }
 
     public int getYear() {

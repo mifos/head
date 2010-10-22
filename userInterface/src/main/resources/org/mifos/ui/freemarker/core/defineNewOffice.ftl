@@ -59,7 +59,7 @@
   					</span>
   					[@spring.bind "officeFormBean.levelId"/]
    					<select id="${spring.status.expression}" name="${spring.status.expression}" onchange="getData();">
-   						<option value="">${springMacroRequestContext.getMessage("--select--")}</option>
+   						<option value="">${springMacroRequestContext.getMessage("--Select--")}</option>
    						[#if officeTypes?is_hash]
    							[#list officeTypes?keys as value]
    								<option value="${value?html}" [@spring.checkSelected value/]>${officeTypes[value]?html}</option>

@@ -232,7 +232,8 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         AccountNotesEntity notes = new AccountNotesEntity(new java.sql.Date(System.currentTimeMillis()),
                 "close client savings account", TestObjectFactory.getPersonnel(userContext.getId()), clientSavings);
         clientSavings.setUserContext(userContext);
-        clientSavings.closeAccount(payment, notes, clientSavings.getCustomer());
+
+//        clientSavings.closeAccount(payment, notes, clientSavings.getCustomer());
         StaticHibernateUtil.flushSession();
 
         // Save collection sheet and test for errors returned

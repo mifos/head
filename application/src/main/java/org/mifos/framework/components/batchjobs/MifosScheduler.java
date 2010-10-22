@@ -263,9 +263,6 @@ public class MifosScheduler {
         if ("LoanArrearsTask".equals(jobName)) {
             return "LoanArrearsHelper";
         }
-        if ("SavingsIntCalcTask".equals(jobName)) {
-            return "SavingsIntCalcHelper";
-        }
         if ("SavingsIntPostingTask".equals(jobName)) {
             return "SavingsIntPostingHelper";
         }

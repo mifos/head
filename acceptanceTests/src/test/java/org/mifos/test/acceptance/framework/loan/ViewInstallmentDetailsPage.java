@@ -28,9 +28,11 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.testng.Assert;
 
+import java.util.Locale;
+
 public class ViewInstallmentDetailsPage extends AbstractPage {
     String validateButton = "validateBtn";
-    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy");
+    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy").withLocale(Locale.ENGLISH);
 
     public ViewInstallmentDetailsPage(Selenium selenium) {
         super(selenium);
@@ -83,7 +85,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
             Assert.assertTrue(selenium.isEditable("installment.dueDate." + instalment));
         }
         for (int instalment = 0; instalment < defInstallments-2  ; instalment++) {
-            Assert.assertTrue(selenium.isEditable("installments[" + instalment + "].total"));            
+            Assert.assertTrue(selenium.isEditable("installments[" + instalment + "].total"));
         }
         Assert.assertTrue(!selenium.isElementPresent("installments[" + (defInstallments-1) + "].total"));
 
@@ -278,7 +280,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         int  cashFlow = cashFlowIncremental;
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
             Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex+1) + "]/td[2]"),String.valueOf(cashFlow));
-            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex+1) + "]/td[3]"), "notes" + rowIndex);
+            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex+1) + "]/td[5]"), "notes" + rowIndex);
             cashFlow = cashFlow + cashFlowIncremental;
         }
 

@@ -22,30 +22,20 @@ package org.mifos.accounts.financial.business.service;
 
 import junit.framework.Assert;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.*;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
-import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.savings.business.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -57,29 +47,16 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.util.UserContext;
 
 import java.sql.Date;
 import java.util.Set;
 
 public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    protected LoanBO loan = null;
-
-    protected SavingsBO savings;
-
-    protected SavingsOfferingBO savingsOffering;
-
-    protected CustomerBO center = null;
-
+    private LoanBO loan = null;
+    private SavingsBO savings;
+    private CustomerBO center = null;
     private CustomerBO group = null;
-
-    private UserContext userContext;
-
-    @Before
-    public void setUp() throws Exception {
-        userContext = TestUtils.makeUser();
-    }
 
     @After
     public void tearDown() throws Exception {
@@ -93,7 +70,6 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
 
         }
         StaticHibernateUtil.flushSession();
-
     }
 
     @Test
@@ -194,192 +170,6 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 startDate, meeting);
         return TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
-    }
-
-    @Test
-    public void testSavingsAdjustmentDepositAccountingEntries() throws Exception {
-        createInitialObjectsForSavings();
-        SavingsTestHelper helper = new SavingsTestHelper();
-        SavingsPersistence savingsPersistence = new SavingsPersistence();
-
-        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-        Money depositAmount = new Money(TestUtils.RUPEE, "1000.0");
-        Money balanceAmount = new Money(TestUtils.RUPEE, "5000.0");
-        java.util.Date trxnDate = helper.getDate("20/05/2006");
-
-        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositAmount, balanceAmount,
-                trxnDate, AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-        AccountTestUtils.addAccountPayment(payment, savings);
-
-        SavingBOTestUtils.setBalance(savings, balanceAmount);
-        savings.update();
-        StaticHibernateUtil.flushSession();
-
-        savings = savingsPersistence.findById(savings.getAccountId());
-        savings.setUserContext(userContext);
-        payment = savings.getLastPmnt();
-        balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "4000.0");
-        AccountTrxnEntity accountTrxn = helper.createAccountTrxn(payment, depositAmount.negate(), balanceAmount,
-                trxnDate, trxnDate, AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy, group, "",
-                null);
-        payment.addAccountTrxn(accountTrxn);
-        SavingBOTestUtils.setBalance(savings, balanceAmount);
-
-        FinancialBusinessService financialBusinessService = new FinancialBusinessService();
-        financialBusinessService.buildAccountingEntries(accountTrxn);
-        savings.update();
-        StaticHibernateUtil.flushSession();
-
-        savings = savingsPersistence.findById(savings.getAccountId());
-        savings.setUserContext(userContext);
-        payment = savings.getLastPmnt();
-        Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
-            if (trxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
-                Assert.assertTrue(true);
-                Assert.assertEquals(2, trxn.getFinancialTransactions().size());
-                for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
-                    if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19")) && finTrxn.isCreditEntry()) {
-                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
-                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
-                        Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
-                    } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("19"))
-                            && finTrxn.isDebitEntry()) {
-                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
-                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
-                        Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
-                    } else {
-                        //--fail("There should not be any other entry");
-                    }
-                }
-            }
-        }
-        group = savings.getCustomer();
-        center = group.getParentCustomer();
-    }
-
-    @Test
-    public void testSavingsAdjustmentWithdrawalAccountingEntries() throws Exception {
-        createInitialObjectsForSavings();
-        SavingsTestHelper helper = new SavingsTestHelper();
-        SavingsPersistence savingsPersistence = new SavingsPersistence();
-
-        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-        Money withdrawalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.0");
-        Money balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "5000.0");
-        java.util.Date trxnDate = helper.getDate("20/05/2006");
-
-        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, withdrawalAmount, balanceAmount,
-                trxnDate, AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
-        AccountTestUtils.addAccountPayment(payment, savings);
-        SavingBOTestUtils.setBalance(savings, balanceAmount);
-        savings.update();
-        StaticHibernateUtil.flushSession();
-
-        savings = savingsPersistence.findById(savings.getAccountId());
-        savings.setUserContext(userContext);
-        payment = savings.getLastPmnt();
-        balanceAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "6000.0");
-        AccountTrxnEntity accountTrxn = helper.createAccountTrxn(payment, withdrawalAmount, balanceAmount, trxnDate,
-                trxnDate, AccountActionTypes.SAVINGS_ADJUSTMENT.getValue(), savings, createdBy, group,
-                "correction entry", null);
-        payment.addAccountTrxn(accountTrxn);
-        SavingBOTestUtils.setBalance(savings, balanceAmount);
-
-        FinancialBusinessService financialBusinessService = new FinancialBusinessService();
-        financialBusinessService.buildAccountingEntries(accountTrxn);
-        savings.update();
-        StaticHibernateUtil.flushSession();
-
-        savings = savingsPersistence.findById(savings.getAccountId());
-        savings.setUserContext(userContext);
-        payment = savings.getLastPmnt();
-        Assert.assertEquals(Integer.valueOf(2).intValue(), payment.getAccountTrxns().size());
-        for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
-            if (trxn.getAccountActionEntity().getId().equals(AccountActionTypes.SAVINGS_ADJUSTMENT.getValue())) {
-                Assert.assertTrue(true);
-                Assert.assertEquals(Integer.valueOf(2).intValue(), trxn.getFinancialTransactions().size());
-                for (FinancialTransactionBO finTrxn : trxn.getFinancialTransactions()) {
-                    if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21")) && finTrxn.isCreditEntry()) {
-                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
-                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
-                        Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("31"));
-                    } else if (finTrxn.getFinancialAction().getId().equals(Short.valueOf("21"))
-                            && finTrxn.isDebitEntry()) {
-                        Assert.assertEquals(finTrxn.getPostedAmount(), TestUtils.createMoney("1000"));
-                        Assert.assertEquals(finTrxn.getBalanceAmount(), TestUtils.createMoney("1000"));
-                        Assert.assertEquals(finTrxn.getGlcode().getGlcodeId(), Short.valueOf("7"));
-                    } else {
-                        //--fail("There should not be any other entry");
-                    }
-                }
-            }
-        }
-        group = savings.getCustomer();
-        center = group.getParentCustomer();
-    }
-
-    @Test
-    public void testWithdrawalEntriesOnSavingsCloseAccount() throws Exception {
-        try {
-            createInitialObjectsForSavings();
-            SavingsTestHelper helper = new SavingsTestHelper();
-            PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-            Money withdrawalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.7");
-            java.util.Date trxnDate = helper.getDate("20/05/2006");
-
-            AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, withdrawalAmount, new Money(
-                    getCurrency()), trxnDate, AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy,
-                    group);
-
-            Assert.assertEquals(Integer.valueOf(1).intValue(), payment.getAccountTrxns().size());
-            FinancialBusinessService financialBusinessService = new FinancialBusinessService();
-            AccountTestUtils.addAccountPayment(payment, savings);
-            SavingsTrxnDetailEntity accountTrxn = null;
-            for (AccountTrxnEntity trxn : payment.getAccountTrxns()) {
-                accountTrxn = (SavingsTrxnDetailEntity) trxn;
-            }
-            savings.setUserContext(TestObjectFactory.getContext());
-            savings.changeStatus(AccountState.SAVINGS_CLOSED.getValue(), AccountStateFlag.SAVINGS_REJECTED.getValue(),
-                    "");
-            financialBusinessService.buildAccountingEntries(accountTrxn);
-            Set<FinancialTransactionBO> financialTrxns = accountTrxn.getFinancialTransactions();
-            Assert.assertEquals(Integer.valueOf(4).intValue(), financialTrxns.size());
-
-            int withdrawalTrxns = 0;
-            int roundingTrxns = 0;
-            for (FinancialTransactionBO finTrxn : financialTrxns) {
-                if (finTrxn.getFinancialAction().getId().equals(FinancialActionConstants.ROUNDING.getValue())) {
-                    roundingTrxns++;
-                } else {
-                    withdrawalTrxns++;
-                }
-            }
-            Assert.assertEquals(Integer.valueOf(2).intValue(), roundingTrxns);
-            Assert.assertEquals(Integer.valueOf(2).intValue(), withdrawalTrxns);
-            Assert.assertEquals(new Money(getCurrency(), "1000.7"), accountTrxn.getWithdrawlAmount());
-
-            TestObjectFactory.flushandCloseSession();
-
-            savings = new SavingsPersistence().findById(savings.getAccountId());
-            group = savings.getCustomer();
-            center = group.getParentCustomer();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void createInitialObjectsForSavings() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center_Active_test",
-                meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName()
-                + " Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
-        SavingsTestHelper helper = new SavingsTestHelper();
-        savingsOffering = helper.createSavingsOffering("sav 1234", "cvf1", (short) 31, (short) 7);
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
     }
 
     @Test

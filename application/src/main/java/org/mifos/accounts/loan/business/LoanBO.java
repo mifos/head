@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.loan.business;
 
+import org.mifos.framework.util.CollectionUtils;
+import org.mifos.framework.util.helpers.Transformer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
@@ -124,6 +126,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 public class LoanBO extends AccountBO {
@@ -444,6 +447,25 @@ public class LoanBO extends AccountBO {
                 customFields, false, maxLoanAmount, minLoanAmount, loanOffering.getMaxInterestRate(), loanOffering
                         .getMinInterestRate(), maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled,
                 newMeetingForRepaymentDay);
+    }
+
+    private Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(){
+        Collection<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        return CollectionUtils.asValueMap(loanScheduleEntities, new Transformer<LoanScheduleEntity, Integer>() {
+            @Override
+            public Integer transform(LoanScheduleEntity input) {
+                return Integer.valueOf(input.getInstallmentId());
+            }
+        });
+    }
+
+    Collection<LoanScheduleEntity> getLoanScheduleEntities() {
+        return CollectionUtils.collect(this.getAccountActionDates(), new Transformer<AccountActionDateEntity, LoanScheduleEntity>() {
+            @Override
+            public LoanScheduleEntity transform(AccountActionDateEntity input) {
+                return (LoanScheduleEntity) input;
+            }
+        });
     }
 
     public static LoanBO createInstanceForTest(final LoanOfferingBO loanOffering) {
@@ -3905,6 +3927,15 @@ public class LoanBO extends AccountBO {
 
     public boolean shouldWaiverInterest() {
         return loanOffering.isInterestWaived();
+    }
+
+    public void copyInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
+        Map<Integer, LoanScheduleEntity> loanScheduleEntityLookUp = getLoanScheduleEntityMap();
+        for (RepaymentScheduleInstallment installment : installments) {
+            LoanScheduleEntity loanScheduleEntity = loanScheduleEntityLookUp.get(installment.getInstallment());
+            loanScheduleEntity.setPrincipal(installment.getPrincipal());
+            loanScheduleEntity.setInterest(installment.getInterest());
+        }
     }
 
     /**

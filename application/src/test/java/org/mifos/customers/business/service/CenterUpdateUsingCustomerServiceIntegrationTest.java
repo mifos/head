@@ -136,8 +136,9 @@ public class CenterUpdateUsingCustomerServiceIntegrationTest extends MifosIntegr
                                             .build();
         IntegrationTestObjectMother.createCenter(center, center.getCustomerMeetingValue());
 
-        otherLoanOfficer = new PersonnelBuilder().withName("otherLoanOfficer").with(existingBranch).build();
-//        IntegrationTestObjectMother.createPersonnel(otherLoanOfficer);
+        otherLoanOfficer = new PersonnelBuilder().withUsername("CenterUpdateUsingCustomerServiceIntegrationTest").withDisplayName("otherLoanOfficer").with(existingBranch).build();
+
+        IntegrationTestObjectMother.createPersonnel(otherLoanOfficer);
     }
 
     @Test

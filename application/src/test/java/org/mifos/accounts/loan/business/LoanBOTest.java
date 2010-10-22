@@ -24,9 +24,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
@@ -35,6 +39,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -47,7 +55,9 @@ public class LoanBOTest {
     @Mock
     private LoanOfferingBO loanOfferingBO;
 
-    private MifosCurrency dollar = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
+    private MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+    private Locale locale = new Locale("en", "GB");
+    private RepaymentScheduleInstallmentBuilder installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
 
     @Test
     public void testWaiverAmount() {
@@ -57,8 +67,8 @@ public class LoanBOTest {
                 return loanScheduleEntity;
             }
         };
-        Mockito.when(loanScheduleEntity.getInterestDue()).thenReturn(new Money(dollar, "42"));
-        Assert.assertEquals(loanBO.waiverAmount(), new Money(dollar, "42"));
+        Mockito.when(loanScheduleEntity.getInterestDue()).thenReturn(new Money(rupee, "42"));
+        Assert.assertEquals(loanBO.waiverAmount(), new Money(rupee, "42"));
         Mockito.verify(loanScheduleEntity, Mockito.times(1)).getInterestDue();
     }
 
@@ -75,8 +85,8 @@ public class LoanBOTest {
                 return loanOfferingBO;
             }
         };
-        Mockito.when(loanOfferingBO.getCurrency()).thenReturn(dollar);
-        Assert.assertEquals(loanBO.waiverAmount(), new Money(dollar, "0"));
+        Mockito.when(loanOfferingBO.getCurrency()).thenReturn(rupee);
+        Assert.assertEquals(loanBO.waiverAmount(), new Money(rupee, "0"));
         Mockito.verify(loanOfferingBO, Mockito.times(1)).getCurrency();
     }
 
@@ -93,11 +103,33 @@ public class LoanBOTest {
                 return loanOfferingBO;
             }
         };
-        Mockito.when(loanOfferingBO.getCurrency()).thenReturn(dollar);
+        Mockito.when(loanOfferingBO.getCurrency()).thenReturn(rupee);
         Mockito.when(loanScheduleEntity.isPaid()).thenReturn(true);
-        Assert.assertEquals(loanBO.waiverAmount(), new Money(dollar, "0"));
+        Assert.assertEquals(loanBO.waiverAmount(), new Money(rupee, "0"));
         Mockito.verify(loanOfferingBO, Mockito.times(1)).getCurrency();
         Mockito.verify(loanScheduleEntity, Mockito.times(1)).isPaid();
+    }
+
+    @Test
+    public void testCopyInstallmentSchedule() {
+        LoanBO loanBO = new LoanBO();
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, new Date("23/10/2010"), "100", "10", "1"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, new Date("23/11/2010"), "100", "10", "2"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, new Date("23/12/2010"), "100", "10", "3"));
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        installments.add(getRepaymentScheduleInstallment(1,"123","12"));
+        installments.add(getRepaymentScheduleInstallment(2,"231","23"));
+        installments.add(getRepaymentScheduleInstallment(3,"312","31"));
+        loanBO.copyInstallmentSchedule(installments);
+        List<LoanScheduleEntity> loanScheduleEntities = (List<LoanScheduleEntity>) loanBO.getLoanScheduleEntities();
+        assertLoanScheduleEntity(loanScheduleEntities.get(0),"123.0","12.0");
+        assertLoanScheduleEntity(loanScheduleEntities.get(1),"231.0","23.0");
+        assertLoanScheduleEntity(loanScheduleEntities.get(2),"312.0","31.0");
+    }
+
+    private void assertLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity, String pricipal, String interest) {
+        Assert.assertEquals(loanScheduleEntity.getPrincipal().toString(),pricipal);
+        Assert.assertEquals(loanScheduleEntity.getInterest().toString(),interest);
     }
 
     @Test
@@ -117,5 +149,20 @@ public class LoanBOTest {
             junit.framework.Assert.fail("should fail because of invalid session");
         } catch (AccountException e) {
         }
+    }
+
+    private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest, String installmentId) {
+        LoanBO loanBO = mock(LoanBO.class);
+        when(loanBO.getCurrency()).thenReturn(currency);
+        return new LoanScheduleEntity(loanBO, mock(CustomerBO.class), Short
+                .valueOf(installmentId), new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, new Money(currency, principal),
+                new Money(currency, interest));
+
+    }
+
+    private RepaymentScheduleInstallment getRepaymentScheduleInstallment(int installment, String principal,String interest) {
+        return installmentBuilder.reset(locale).withInstallment(installment).
+                withPrincipal(new Money(rupee, principal)).
+                withInterest(new Money(rupee, interest)).build();
     }
 }

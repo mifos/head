@@ -22,10 +22,10 @@
 [@adminLeftPaneLayout]
    <!--  Main Content Begins-->  
   <div class=" content">
-  <span id="page.id" title="definelabels" />
+  <span id="page.id" title="defineLabels" />
   
-    [@mifos.crumbs breadcrumbs /]
-  
+    [@mifos.crumbs breadcrumbs/]
+
   	<form method="post" action="defineLabels.ftl" name="formname">  	
     <div class="margin15lefttop">
         <div class="fontBold"><span class="orangeheading">[@spring.message "datadisplayandrules.defineLabels"/]</span></div>
@@ -33,7 +33,7 @@
 	        [@mifosmacros.showAllErrors "formBean.*"/]
         </div>
   		
-		<p class="fontBold margin10topbottom">[@spring.message "datadisplayandrules.defineLabels.officeHierarchy"/] </p>
+		<p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.officeHierarchy"/] </p>
         
         <div class="span-16 last width80prc marginLeft20prc ">
         	<div class="span-16 width80prc ">
@@ -77,7 +77,7 @@
   			</div>  
         </div>
         
-        <p class="fontBold margin10topbottom">[@spring.message "datadisplayandrules.defineLabels.clients"/]</p>
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.clients"/]</p>
         <div class="span-16 last width80prc marginLeft20prc ">
         	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.client"/]</span>
@@ -104,7 +104,7 @@
   			</div>
         </div>
         
-        <p class="fontBold margin10topbottom">[@spring.message "datadisplayandrules.defineLabels.productTypes"/]</p>
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.productTypes"/]</p>
         
         <div class="span-16 last width80prc marginLeft20prc ">
         
@@ -125,7 +125,7 @@
   			</div>
         </div>
         
-        <p class="fontBold margin10topbottom">[@spring.message "datadisplayandrules.defineLabels.personalInformation"/] </p>
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.personalInformation"/] </p>
         <div class="span-16 last width80prc marginLeft20prc ">
   			<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.ethnicity"/]</span>
@@ -160,7 +160,7 @@
   			</div>
         </div>
         
-        <p class="fontBold margin10topbottom">[@spring.message "datadisplayandrules.defineLabels.address"/]</p>
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.address"/]</p>
         <div class="span-16 last width80prc marginLeft20prc ">
         	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.address1"/]</span>
@@ -203,7 +203,7 @@
   			</div>
         </div>
         
-        <p class="fontBold margin10topbottom">[@spring.message "datadisplayandrules.defineLabels.statuses"/]</p>
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.statuses"/]</p>
         <div class="span-16 last width80prc marginLeft20prc ">
         
         	<div class="span-16 width80prc ">
@@ -311,7 +311,7 @@
   			</div>
         </div>
         
-        <p class="fontBold margin10topbottom">[@spring.message "datadisplayandrules.defineLabels.gracetypes"/]</p>
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.gracetypes"/]</p>
         <div class="span-16 last width80prc marginLeft20prc ">
         	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.none"/]</span>
@@ -338,7 +338,7 @@
   			</div>
         </div>
         
-        <p class="fontBold margin10topbottom">[@spring.message "datadisplayandrules.defineLabels.miscellaneous"/] </p>
+        <p class="fontBold margin20top30bottom">[@spring.message "datadisplayandrules.defineLabels.miscellaneous"/] </p>
         <div class="span-16 last width80prc marginLeft20prc ">
         	<div class="span-16 width80prc ">
         			<span class="span-4 rightAlign">[@spring.message "datadisplayandrules.defineLabels.interest"/]</span>

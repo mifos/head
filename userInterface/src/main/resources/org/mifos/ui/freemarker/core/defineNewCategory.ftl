@@ -28,7 +28,7 @@
         		<span class="span-4">
         			[#--[@spring.bind "formBean.productTypeId"/]
         			<select id="${spring.status.expression}" name="${spring.status.expression}">
-        				<option value="" [#if spring.status.value?exists != 1 && spring.status.value?if_exists != 2] selected=="selected"[/#if] >[@spring.message "--select--"/]</option>
+        				<option value="" [#if spring.status.value?exists != 1 && spring.status.value?if_exists != 2] selected=="selected"[/#if] >[@spring.message "--Select--"/]</option>
         				<option value="1" [#if spring.status.value?if_exists == 1] selected=="selected"[/#if] >[@spring.message "Loan-Loan"/]</option>
         				<option value="2" [#if spring.status.value?if_exists == 2] selected=="selected"[/#if] >[@spring.message "Savings-Savings"/]</option>
         			</select>--]

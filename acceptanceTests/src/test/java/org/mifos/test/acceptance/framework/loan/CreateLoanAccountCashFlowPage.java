@@ -7,6 +7,8 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.testng.Assert;
 
+import java.util.Locale;
+
 public class CreateLoanAccountCashFlowPage extends AbstractPage{
     public CreateLoanAccountCashFlowPage(Selenium selenium) {
         super(selenium);
@@ -34,7 +36,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         DateTime currentIteratorDate = firstCashFlowDate;
         int rowCount = 1;
         while (!currentIteratorDate.isAfter(lastCashFlowDate)) {
-            Assert.assertEquals(selenium.getText("//tr[" + rowCount + "]/td[1]"), DateTimeFormat.forPattern("MMMMMMMM yyyy").print(currentIteratorDate));
+            Assert.assertEquals(selenium.getText("//tr[" + rowCount + "]/td[1]"), DateTimeFormat.forPattern("MMMMMMMM yyyy").withLocale(Locale.ENGLISH).print(currentIteratorDate));
             currentIteratorDate = currentIteratorDate.plusMonths(1);
             rowCount++;
         }

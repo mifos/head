@@ -35,18 +35,14 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Records information about a payment from client to teller/field officer.
  */
 public class AccountPaymentEntity extends AbstractEntity {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccountPaymentEntity.class);
-
     private final Integer paymentId = null;
-    private final AccountBO account;
+    private AccountBO account;
     private final PaymentTypeEntity paymentType;
     private final String receiptNumber;
     private final String voucherNumber;
@@ -60,12 +56,14 @@ public class AccountPaymentEntity extends AbstractEntity {
 
     private Set<AccountTrxnEntity> accountTrxns = new LinkedHashSet<AccountTrxnEntity>();
 
-    public static AccountPaymentEntity savingsInterestPosting(SavingsBO account, Money amount, Date paymentDate) {
+    public static AccountPaymentEntity savingsInterestPosting(SavingsBO account, Money amount, Date paymentDate, PersonnelBO loggedInUser) {
 
         String theReceiptNumber = null;
         Date theReceiptDate = null;
         PaymentTypeEntity paymentType = new PaymentTypeEntity(SavingsConstants.DEFAULT_PAYMENT_TYPE.shortValue());
-        return new AccountPaymentEntity(account, amount, theReceiptNumber, theReceiptDate, paymentType, paymentDate);
+        AccountPaymentEntity interestPostingPayment = new AccountPaymentEntity(account, amount, theReceiptNumber, theReceiptDate, paymentType, paymentDate);
+        interestPostingPayment.setCreatedByUser(loggedInUser);
+        return interestPostingPayment;
     }
 
     protected AccountPaymentEntity() {
@@ -176,12 +174,8 @@ public class AccountPaymentEntity extends AbstractEntity {
             throws AccountException {
         Set<AccountTrxnEntity> reverseAccntTrxns = new HashSet<AccountTrxnEntity>();
         for (AccountTrxnEntity accntTrxn : getAccountTrxns()) {
-            logger.debug("Generating reverse transactions for transaction id " + accntTrxn.getAccountTrxnId());
             AccountTrxnEntity reverseAccntTrxn = accntTrxn.generateReverseTrxn(personnel, adjustmentComment);
-            logger.debug("Amount associated with reverse transaction is "
-                    + reverseAccntTrxn.getAmount());
             reverseAccntTrxns.add(reverseAccntTrxn);
-            logger.debug("After succesfully adding the reverse transaction");
         }
         return reverseAccntTrxns;
     }
@@ -197,5 +191,33 @@ public class AccountPaymentEntity extends AbstractEntity {
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public void setAccount(AccountBO account) {
+        this.account = account;
+    }
+
+    public boolean isSavingsDepositOrWithdrawal() {
+        return isSavingsDeposit() || isSavingsWithdrawal();
+    }
+
+    public boolean isSavingsDeposit() {
+        boolean savingsDeposit = false;
+        for (AccountTrxnEntity transaction : this.accountTrxns) {
+            if (transaction.isSavingsDeposit()) {
+                savingsDeposit = true;
+            }
+        }
+        return savingsDeposit;
+    }
+
+    public boolean isSavingsWithdrawal() {
+        boolean savingsWithdrawal = false;
+        for (AccountTrxnEntity transaction : this.accountTrxns) {
+            if (transaction.isSavingsWithdrawal()) {
+                savingsWithdrawal = true;
+            }
+        }
+        return savingsWithdrawal;
     }
 }

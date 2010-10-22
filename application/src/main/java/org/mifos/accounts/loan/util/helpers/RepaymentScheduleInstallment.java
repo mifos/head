@@ -64,8 +64,7 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.fees = fees;
         this.miscFees = miscFees;
         this.miscPenalty = miscPenalty;
-        this.totalValue = principal.add(interest).add(fees).add(miscFees).add(miscPenalty);
-        this.total = this.totalValue.toString();
+        setTotalAndTotalValue(this.principal.add(this.interest).add(this.fees).add(this.miscFees).add(this.miscPenalty));
         this.locale = locale;
         this.dateFormat = computeDateFormat(this.locale);
         this.dueDateValue = dueDateValue;
@@ -186,5 +185,10 @@ public class RepaymentScheduleInstallment implements Serializable {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(dueDateValue);
         return calendar;
+    }
+
+    public void setTotalAndTotalValue(Money total) {
+        this.totalValue = total;
+        this.total = total.toString();
     }
 }

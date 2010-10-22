@@ -93,7 +93,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return interest;
     }
 
-    void setInterest(Money interest) {
+    public void setInterest(Money interest) {
         this.interest = interest;
     }
 
@@ -121,7 +121,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return principal;
     }
 
-    void setPrincipal(Money principal) {
+    public void setPrincipal(Money principal) {
         this.principal = principal;
     }
 
@@ -456,6 +456,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     public RepaymentScheduleInstallment toDto(Locale userLocale) {
         return new RepaymentScheduleInstallment(this.installmentId,
-                this.actionDate, this.principal, this.interest, this.getTotalFeeDue(), this.miscFee, this.miscPenalty, userLocale);
+                this.actionDate, this.principal, this.interest,
+                this.getTotalFeeDue(), this.miscFee, this.miscPenalty, userLocale);
     }
 }

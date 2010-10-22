@@ -34,25 +34,6 @@
     <bean name="ProductStatusTasklet" class="org.mifos.framework.components.batchjobs.helpers.ProductStatusHelper" />
 	
     <!--
-                SavingsIntCalcTask:
-    -->
-    <bean name="SavingsIntCalcTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
-      <property name="jobClass" value="org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcTask" />
-      <property name="name" value="SavingsIntCalcTaskJob" />
-    </bean>
-    <bean id="savingsIntCalcTaskTrigger" class="org.springframework.scheduling.quartz.CronTriggerBean">
-        <property name="name" value="SavingsIntCalcTaskJob"/>
-        <property name="jobDetail" ref="SavingsIntCalcTask" />
-        <property name="cronExpression" value="0 0 0 * * ?" />
-    </bean>
-    <batch:job id="SavingsIntCalcTaskJob" parent="jobBase" job-repository="jobRepository">
-        <batch:step id="SavingsIntCalcTask-step-1">
-            <batch:tasklet ref="SavingsIntCalcTaskTasklet" />
-        </batch:step>
-    </batch:job>
-    <bean name="SavingsIntCalcTaskTasklet" class="org.mifos.framework.components.batchjobs.helpers.SavingsIntCalcHelper" />
-    
-    <!--
                 SavingsIntPostingTask:
     -->
     <bean name="SavingsIntPostingTask" parent="jobDetailBase" class="org.springframework.scheduling.quartz.JobDetailBean">
@@ -204,7 +185,6 @@
 	    <property name="triggers">
 	        <list>
 	            <ref bean="productStatusTrigger" />
-	            <ref bean="savingsIntCalcTaskTrigger" />
 	            <ref bean="savingsIntPostingTaskTrigger" />
 	            <ref bean="applyCustomerFeeChangesTaskTrigger" />
 	            <ref bean="loanArrearsAgingTaskTrigger" />

@@ -215,4 +215,12 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
         return "{" + accountTrxnId + ", " + account + ", " + accountActionEntity + ", " + amount + ", " + installmentId
                 + "}";
     }
+
+    public boolean isSavingsDeposit() {
+        return this.accountActionEntity.isSavingsDeposit();
+    }
+
+    public boolean isSavingsWithdrawal() {
+        return this.accountActionEntity.isSavingsWithdrawal();
+    }
 }

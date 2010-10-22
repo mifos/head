@@ -44,6 +44,8 @@ import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
 import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.business.service.LoanSummaryDto;
+import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -59,6 +61,7 @@ import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -89,6 +92,7 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -114,6 +118,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.validations.Errors;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
@@ -142,14 +147,16 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final PersonnelDao personnelDao;
     private final FundDao fundDao;
     private final LoanDao loanDao;
+    private final InstallmentsValidator installmentsValidator;
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao) {
+                                    PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, InstallmentsValidator installmentsValidator) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.fundDao = fundDao;
         this.loanDao = loanDao;
+        this.installmentsValidator = installmentsValidator;
     }
 
     @Override
@@ -322,8 +329,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         new LoanService().validateDisbursementDateForNewLoan(customer.getOfficeId(), disbursementDate);
 
-        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence()
-                .isRepaymentIndepOfMeetingEnabled();
+        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 
         MeetingBO newMeetingForRepaymentDay = null;
         if (isRepaymentIndependentOfMeetingEnabled) {
@@ -338,23 +344,19 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         if (isRepaymentIndependentOfMeetingEnabled) {
             Date firstRepaymentDate = installments.get(0).getDueDateValue();
-
-            Integer minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                    MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-            Integer maxDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                    MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-
-            if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
-                    DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) < minDaysInterval) {
-                throw new AccountException(MIN_RANGE_IS_NOT_MET, new String[] { minDaysInterval.toString() });
-            } else if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
-                    DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) > maxDaysInterval) {
-                throw new AccountException(MAX_RANGE_IS_NOT_MET, new String[] { maxDaysInterval.toString() });
-            }
+            validateFirstRepaymentDate(disbursementDate, configurationPersistence, firstRepaymentDate);
         }
 
-        final boolean isGroup = customer.isGroup();
-        final boolean isGlimApplicable = isGroup && configurationPersistence.isGlimEnabled();
+        double glimLoanAmount = computeGLIMLoanAmount(loanActionForm, localizationConverter);
+
+        boolean isLoanPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
+
+        final boolean isGlimApplicable = customer.isGroup() && configurationPersistence.isGlimEnabled();
+        return new LoanCreationLoanScheduleDetailsDto(customer.isGroup(), isGlimApplicable, glimLoanAmount,
+                isLoanPendingApprovalDefined, installments, new ArrayList<PaymentDataHtmlBean>());
+    }
+
+    private double computeGLIMLoanAmount(LoanAccountActionForm loanActionForm, LocalizationConverter localizationConverter) {
         double glimLoanAmount = Double.valueOf("0");
         List<LoanAccountDetailsDto> loanAccountDetails = loanActionForm.getClientDetails();
         List<String> clientNames = loanActionForm.getClients();
@@ -366,11 +368,22 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 }
             }
         }
+        return glimLoanAmount;
+    }
 
-        boolean isLoanPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
+    private void validateFirstRepaymentDate(DateTime disbursementDate, ConfigurationPersistence configurationPersistence, Date firstRepaymentDate) throws AccountException {
+        Integer minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
+                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+        Integer maxDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
+                MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
 
-        return new LoanCreationLoanScheduleDetailsDto(isGroup, isGlimApplicable, glimLoanAmount,
-                isLoanPendingApprovalDefined, installments, new ArrayList<PaymentDataHtmlBean>());
+        if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
+                DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) < minDaysInterval) {
+            throw new AccountException(MIN_RANGE_IS_NOT_MET, new String[] { minDaysInterval.toString() });
+        } else if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
+                DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) > maxDaysInterval) {
+            throw new AccountException(MAX_RANGE_IS_NOT_MET, new String[] { maxDaysInterval.toString() });
+        }
     }
 
     @Override
@@ -409,9 +422,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
         Short minNumOfShortInstallments = loanActionForm.getMinNoInstallmentsValue();
         String externalId = loanActionForm.getExternalId();
-        Integer selectedLoanPurpose = loanActionForm.getBusinessActivityIdValue();
-        String collateralNote = loanActionForm.getCollateralNote();
-        Integer selectedCollateralType = loanActionForm.getCollateralTypeIdValue();
         AccountState accountState = loanActionForm.getState();
         if (accountState == null) {
             accountState = AccountState.LOAN_PARTIAL_APPLICATION;
@@ -428,36 +438,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         if (isRepaymentIndependentOfMeetingEnabled) {
             Date firstRepaymentDate = installments.get(0).getDueDateValue();
 
-            Integer minDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                    MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-            Integer maxDaysInterval = configurationPersistence.getConfigurationKeyValueInteger(
-                    MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
-
-            if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
-                    DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) < minDaysInterval) {
-                throw new AccountException(MIN_RANGE_IS_NOT_MET, new String[] { minDaysInterval.toString() });
-            } else if (DateUtils.getNumberOfDaysBetweenTwoDates(DateUtils.getDateWithoutTimeStamp(firstRepaymentDate),
-                    DateUtils.getDateWithoutTimeStamp(disbursementDate.toDate())) > maxDaysInterval) {
-                throw new AccountException(MAX_RANGE_IS_NOT_MET, new String[] { maxDaysInterval.toString() });
-            }
+            validateFirstRepaymentDate(disbursementDate, configurationPersistence, firstRepaymentDate);
         }
 
-        final boolean isGroup = customer.isGroup();
-        final boolean isGlimApplicable = isGroup && configurationPersistence.isGlimEnabled();
-        double glimLoanAmount = Double.valueOf("0");
-        List<LoanAccountDetailsDto> loanAccountDetails = loanActionForm.getClientDetails();
-        List<String> clientNames = loanActionForm.getClients();
-        for (LoanAccountDetailsDto loanAccount : loanAccountDetails) {
-            if (clientNames.contains(loanAccount.getClientId())) {
-                if (loanAccount.getLoanAmount() != null) {
-                    glimLoanAmount = glimLoanAmount
-                            + localizationConverter.getDoubleValueForCurrentLocale(loanAccount.getLoanAmount());
-                }
-            }
-        }
+        double glimLoanAmount = computeGLIMLoanAmount(loanActionForm, localizationConverter);
 
         List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList<PaymentDataHtmlBean>(installments.size());
         PersonnelBO personnel = this.personnelDao.findPersonnelById(userContext.getId());
+        final boolean isGlimApplicable = customer.isGroup() && configurationPersistence.isGlimEnabled();
         if (personnel == null) {
             throw new IllegalArgumentException("bad UserContext id");
         }
@@ -469,7 +457,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         boolean isLoanPendingApprovalDefined = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
 
-        return new LoanCreationLoanScheduleDetailsDto(isGroup, isGlimApplicable, glimLoanAmount,
+        return new LoanCreationLoanScheduleDetailsDto(customer.isGroup(), isGlimApplicable, glimLoanAmount,
                 isLoanPendingApprovalDefined, installments, paymentDataBeans);
     }
 
@@ -597,28 +585,26 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException {
 
         CustomerBO customer = this.customerDao.findCustomerById(customerId);
-
-        final boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
+        boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
 
         if (!isPermissionAllowed(loanActionForm.getState().getValue(), userContext, customer.getOffice().getOfficeId(),
                 customer.getPersonnel().getPersonnelId())) {
             throw new ApplicationException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
 
-        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence()
-                .isRepaymentIndepOfMeetingEnabled();
+        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 
         MeetingBO newMeetingForRepaymentDay = null;
         if (isRepaymentIndependentOfMeetingEnabled) {
-            newMeetingForRepaymentDay = this
-                    .createNewMeetingForRepaymentDay(disbursementDate, loanActionForm, customer);
+            newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(disbursementDate, loanActionForm, customer);
         }
 
         LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
                 isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
+        loan.copyInstallmentSchedule(loanActionForm.getInstallments());
 
-        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         try {
+            PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
             loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan
                     .getAccountState(), createdBy, loan));
             new LoanPersistence().createOrUpdate(loan);
@@ -1089,8 +1075,53 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public void validateVariableInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments) throws ServiceException {
-        // TODO Implement this !!
+    public Errors validateInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
+                                       List<RepaymentScheduleInstallment> installments) {
+        FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
+        InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
+        return installmentsValidator.validate(installments, installmentValidationContext);
     }
 
+    @Override
+    public void generateInstallmentSchedule(List<RepaymentScheduleInstallment> repaymentScheduleInstallments,
+                                            Money loanAmount, Double interestRate, Date disbursementDate) {
+        Double dailyInterestFactor = interestRate / (AccountingRules.getNumberOfInterestDays() * 100d);
+        Money principalOutstanding = loanAmount;
+        Money runningPrincipal = new Money(loanAmount.getCurrency());
+        Date initialDueDate = disbursementDate;
+        int installmentIndex, numInstallments;
+        for (installmentIndex = 0, numInstallments = repaymentScheduleInstallments.size(); installmentIndex < numInstallments - 1; installmentIndex++) {
+            RepaymentScheduleInstallment installment = repaymentScheduleInstallments.get(installmentIndex);
+            Date currentDueDate = installment.getDueDateValue();
+            long duration = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, initialDueDate);
+            Money fees = installment.getFees();
+            Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, installment, duration);
+            Money total = installment.getTotalValue();
+            Money principal = total.subtract(interest.add(fees));
+            setPrincipalAndInterest(installment, interest, principal);
+            initialDueDate = currentDueDate;
+            principalOutstanding = principalOutstanding.subtract(principal);
+            runningPrincipal = runningPrincipal.add(principal);
+        }
+
+        RepaymentScheduleInstallment lastInstallment = repaymentScheduleInstallments.get(installmentIndex);
+        long duration = DateUtils.getNumberOfDaysBetweenTwoDates(lastInstallment.getDueDateValue(), initialDueDate);
+        Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, lastInstallment, duration);
+        Money fees = lastInstallment.getFees();
+        Money principal = loanAmount.subtract(runningPrincipal);
+        Money total = principal.add(interest).add(fees);
+        lastInstallment.setTotalAndTotalValue(total);
+        setPrincipalAndInterest(lastInstallment, interest, principal);
+    }
+
+    private void setPrincipalAndInterest(RepaymentScheduleInstallment installment, Money interest, Money principal) {
+        installment.setPrincipal(principal);
+        installment.setInterest(interest);
+    }
+
+    private Money computeInterestAmount(Double dailyInterestFactor, Money principalOutstanding,
+                                        RepaymentScheduleInstallment installment, long duration) {
+        Double interestForInstallment = dailyInterestFactor * duration * principalOutstanding.getAmountDoubleValue();
+        return new Money(installment.getCurrency(), interestForInstallment);
+    }
 }

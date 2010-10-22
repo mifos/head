@@ -30,7 +30,7 @@
         </div>
         <div class="clear">&nbsp;</div>
         <div class="marginLeft30" style="line-height:1.2">
-            <div class="span-18 " style="margin-bottom:7px;">
+            <div class="span-18 width90prc" style="margin-bottom:7px;">
                 <span class="orangeheading">${savingsProductDetails.productDetails.name}</span>
                 <div style="position:relative;top:-17px; text-align:right;">
                     <a href="editSavingsProduct.ftl?productId=${savingsProductDetails.productDetails.id}">[@spring.message "manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" /]</a>
@@ -54,7 +54,7 @@
                 <span>${savingsProductDetails.productDetails.name}</span>
             </div>
             <div>
-                <span>[@spring.message "manageSavngsProducts.editsavingsproduct.shortname" /]</span><span>${savingsProductDetails.productDetails.shortName}</span>
+                <span>[@spring.message "manageSavngsProducts.editsavingsproduct.shortname" /]</span>&nbsp;<span>${savingsProductDetails.productDetails.shortName}</span>
             </div>
             <div class="clear">&nbsp;</div>
             <div>
@@ -62,13 +62,13 @@
             </div>
             <div class="clear">&nbsp;</div>
             <div>
-                <span>[@spring.message "manageSavngsProducts.editsavingsproduct.productcategory" /]</span><span>${savingsProductDetails.productDetails.categoryName}</span>
+                <span>[@spring.message "manageSavngsProducts.editsavingsproduct.productcategory" /]</span>&nbsp;<span>${savingsProductDetails.productDetails.categoryName}</span>
             </div>
             <div>
-                <span>[@spring.message "manageSavngsProducts.editsavingsproduct.startdate" /]</span><span>${savingsProductDetails.productDetails.startDateFormatted}</span>
+                <span>[@spring.message "manageSavngsProducts.editsavingsproduct.startdate" /]</span>&nbsp;<span>${savingsProductDetails.productDetails.startDateFormatted}</span>
             </div>
             <div>
-                <span>[@spring.message "manageSavngsProducts.editsavingsproduct.enddate" /]</span><span>${savingsProductDetails.productDetails.endDateFormatted}</span>
+                <span>[@spring.message "manageSavngsProducts.editsavingsproduct.enddate" /]</span>&nbsp;<span>${savingsProductDetails.productDetails.endDateFormatted}</span>
             </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.applicablefor" /]</span>
