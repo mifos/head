@@ -152,7 +152,6 @@ public class RepaymentScheduleInstallment implements Serializable {
     }
 
     public void setDueDate(String dueDate) {
-//        this.dueDateValue = DateUtils.getDate(dueDate, locale, dateFormat);
         this.dueDate = dueDate;
     }
 

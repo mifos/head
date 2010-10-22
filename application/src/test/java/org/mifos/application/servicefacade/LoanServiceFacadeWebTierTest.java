@@ -31,6 +31,7 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentValidation
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -61,18 +62,19 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
@@ -128,11 +130,14 @@ public class LoanServiceFacadeWebTierTest {
 
     private Locale locale;
 
+    private MifosCurrency rupee;
+
     @Before
     public void setupAndInjectDependencies() {
         loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao, installmentsValidator);
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
+        rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
     }
 
     @Test
@@ -142,7 +147,7 @@ public class LoanServiceFacadeWebTierTest {
         MeetingBO meeting = new MeetingBuilder().build();
         CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.GROUP);
 
-        List<LoanOfferingBO> activeLoanProducts = Arrays.asList(activeLoanProduct);
+        List<LoanOfferingBO> activeLoanProducts = asList(activeLoanProduct);
 
         // stubbing
         when(customer.getCustomerLevel()).thenReturn(customerLevelEntity);
@@ -163,9 +168,9 @@ public class LoanServiceFacadeWebTierTest {
 
         // setup
         ValueListElement valueListElement = new BusinessActivityEntity(Integer.valueOf(1), "", "");
-        List<ValueListElement> loanPurposes = Arrays.asList(valueListElement);
+        List<ValueListElement> loanPurposes = asList(valueListElement);
 
-        List<ClientBO> clients = Arrays.asList(client);
+        List<ClientBO> clients = asList(client);
 
         // stubbing
         when(loanProductDao.findAllLoanPurposes()).thenReturn(loanPurposes);
@@ -226,14 +231,14 @@ public class LoanServiceFacadeWebTierTest {
     public void shouldGenerateMonthlyInstallmentScheduleFromRepaymentSchedule() {
         MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("25-Sep-2010", 1, rupee, "178.6", "20.4", "1", "100");
+                getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "100");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("25-Oct-2010", 2, rupee, "182.8", "16.2", "1", "200");
+                getRepaymentScheduleInstallment("25-Oct-2010", 2, "182.8", "16.2", "1", "200");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("25-Nov-2010", 3, rupee, "186.0", "13.0", "1", "200");
+                getRepaymentScheduleInstallment("25-Nov-2010", 3, "186.0", "13.0", "1", "200");
         RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("25-Dec-2010", 4, rupee, "452.6", "8.9", "1", "462.5");
-        List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3, installment4);
+                getRepaymentScheduleInstallment("25-Dec-2010", 4, "452.6", "8.9", "1", "462.5");
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = getDate(2010, 8, 25);
         loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
 
@@ -247,14 +252,14 @@ public class LoanServiceFacadeWebTierTest {
     public void shouldGenerateWeeklyInstallmentScheduleFromRepaymentSchedule() {
         MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, rupee, "194.4", "4.6", "1", "100");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "194.4", "4.6", "1", "100");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, rupee, "195.3", "3.7", "1", "200");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "195.3", "3.7", "1", "200");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, rupee, "196.2", "2.8", "1", "200");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "196.2", "2.8", "1", "200");
         RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("22-Sep-2010", 4, rupee, "414.1", "1.9", "1", "417.0");
-        List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3, installment4);
+                getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0");
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = getDate(2010, 8, 25);
         loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
 
@@ -266,22 +271,21 @@ public class LoanServiceFacadeWebTierTest {
 
     @Test
     public void shouldGenerateInstallmentScheduleFromRepaymentSchedule() {
-        MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, rupee, "94.4", "4.6", "1", "75");
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
         RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, rupee, "94.8", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
         RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, rupee, "95.3", "3.7", "1", "100");
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
         RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("15-Oct-2010", 4, rupee, "84.9", "14.1", "1", "100");
+                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100");
         RepaymentScheduleInstallment installment5 =
-                getRepaymentScheduleInstallment("25-Oct-2010", 5, rupee, "94.9", "4.2", "1", "100");
+                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100");
         RepaymentScheduleInstallment installment6 =
-                getRepaymentScheduleInstallment("01-Nov-2010", 6, rupee, "96.5", "2.5", "1", "100");
+                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100");
         RepaymentScheduleInstallment installment7 =
-                getRepaymentScheduleInstallment("18-Nov-2010", 7, rupee, "439.2", "4.9", "1", "445.1");
-        List<RepaymentScheduleInstallment> installments = Arrays.asList(installment1, installment2, installment3,
+                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
                 installment4, installment5, installment6, installment7);
         Date disbursementDate = getDate(2010, 8, 25);
         loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
@@ -293,6 +297,34 @@ public class LoanServiceFacadeWebTierTest {
         assertInstallment(installment5, "94.7", "4.3");
         assertInstallment(installment6, "96.4", "2.6");
         assertInstallment(installment7, "465.2", "5.2");
+    }
+
+    @Test
+    public void shouldComputeVariableInstallmentScheduleForVariableInstallments() {
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+        LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
+        when(loanAccountActionForm.getLoanAmount()).thenReturn("1000");
+        when(loanAccountActionForm.getLoanAmountValue()).thenReturn(new Money(rupee, "1000"));
+        when(loanAccountActionForm.getInterestRate()).thenReturn("24");
+        when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(true);
+        when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
+        ((LoanServiceFacadeWebTier) loanServiceFacade).computeVariableInstallmentSchedule(loanAccountActionForm, loanBO, getDate(2010, 8, 22), locale);
+        verify(loanBO).copyInstallmentSchedule(installments);
+        verify(loanBO).toRepaymentScheduleDto(locale);
+    }
+
+    @Test
+    public void shouldNotComputeVariableInstallmentSchedule() {
+        LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
+        when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
+        ((LoanServiceFacadeWebTier) loanServiceFacade).computeVariableInstallmentSchedule(loanAccountActionForm, loanBO, getDate(2010, 8, 22), null);
+        verify(loanBO, never()).copyInstallmentSchedule(any(List.class));
     }
 
     private Date getDate(int year, int month, int day) {
@@ -307,10 +339,10 @@ public class LoanServiceFacadeWebTierTest {
     }
 
     private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
-                                                                         MifosCurrency currency, String principal,
-                                                                         String interest, String fees, String total) {
+                                                                         String principal, String interest,
+                                                                         String fees, String total) {
         return installmentBuilder.reset(locale).withInstallment(installment).withDueDateValue(dueDate).
-                withPrincipal(new Money(currency, principal)).withInterest(new Money(currency, interest)).
-                withFees(new Money(currency, fees)).withTotalValue(total).build();
+                withPrincipal(new Money(rupee, principal)).withInterest(new Money(rupee, interest)).
+                withFees(new Money(rupee, fees)).withTotalValue(total).build();
     }
 }

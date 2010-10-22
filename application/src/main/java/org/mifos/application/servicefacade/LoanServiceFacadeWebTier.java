@@ -129,6 +129,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -339,8 +340,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
                 isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
-
-        List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto(userContext.getPreferredLocale());
+        List<RepaymentScheduleInstallment> installments = computeVariableInstallmentSchedule(loanActionForm, loan, 
+                                                    disbursementDate.toDate(), userContext.getPreferredLocale());
 
         if (isRepaymentIndependentOfMeetingEnabled) {
             Date firstRepaymentDate = installments.get(0).getDueDateValue();
@@ -354,6 +355,19 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         final boolean isGlimApplicable = customer.isGroup() && configurationPersistence.isGlimEnabled();
         return new LoanCreationLoanScheduleDetailsDto(customer.isGroup(), isGlimApplicable, glimLoanAmount,
                 isLoanPendingApprovalDefined, installments, new ArrayList<PaymentDataHtmlBean>());
+    }
+
+    // Intentionally made package accessible to aid testing !
+    List<RepaymentScheduleInstallment> computeVariableInstallmentSchedule(LoanAccountActionForm loanActionForm, LoanBO loanBO,
+                                                                          Date disbursementDate, Locale locale) {
+        List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
+        if (loanActionForm.isVariableInstallmentsAllowed()) {
+            Money loanAmountValue = loanActionForm.getLoanAmountValue();
+            Double interestRate = loanActionForm.getInterestDoubleValue();
+            generateInstallmentSchedule(installments, loanAmountValue, interestRate, disbursementDate);
+            loanBO.copyInstallmentSchedule(installments);
+        }
+        return installments;
     }
 
     private double computeGLIMLoanAmount(LoanAccountActionForm loanActionForm, LocalizationConverter localizationConverter) {

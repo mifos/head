@@ -114,9 +114,9 @@ public class LoanBOTest {
     @Test
     public void testCopyInstallmentSchedule() {
         LoanBO loanBO = new LoanBO();
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 9, 2010), "100", "10", "1"));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "2"));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "3"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "1"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "2"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 12, 2010), "100", "10", "3"));
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
         installments.add(getRepaymentScheduleInstallment("24-Oct-2010", 1, "123", "12"));
         installments.add(getRepaymentScheduleInstallment("24-Nov-2010", 2, "231", "23"));
@@ -131,7 +131,7 @@ public class LoanBOTest {
     private Date getDate(int date, int month, int year) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.DAY_OF_MONTH, date);
-        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.MONTH, month - 1);
         calendar.set(Calendar.YEAR, year);
         return calendar.getTime();
     }
