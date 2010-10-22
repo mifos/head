@@ -112,7 +112,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals("The size of grace period types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, request)).size());
-       Assert.assertEquals("The size of interest types list", 4, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of interest types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.INTERESTTYPESLIST, request)).size());
        Assert.assertEquals("The size of applicable list", 10, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRICIPALGLCODELIST, request)).size());
@@ -702,7 +702,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals("The size of grace period types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, request)).size());
-       Assert.assertEquals("The size of interest types list", 4, ((List<MasterDataEntity>) SessionUtils.getAttribute(
+       Assert.assertEquals("The size of interest types list", 3, ((List<MasterDataEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.INTERESTTYPESLIST, request)).size());
        Assert.assertEquals("The size of applicable list", 10, ((List<GLCodeEntity>) SessionUtils.getAttribute(
                 ProductDefinitionConstants.LOANPRICIPALGLCODELIST, request)).size());

@@ -3174,15 +3174,12 @@ public class LoanBO extends AccountBO {
                  * (getLoanOffering().getInterestTypes().getId().equals( InterestType.DECLINING_EPI.getValue()))) {
                  * return principalInLastPaymentDecliningInterest_v2(loanInterest); }
                  */
-            } else {
-                Short interestTypeId = getLoanOffering().getInterestTypes().getId();
-                if (interestTypeId.equals(InterestType.FLAT.getValue())) {
-                    return allFlatInstallments_v2(loanInterest);
-                } else if (interestTypeId.equals(InterestType.DECLINING.getValue())) {
-                    return allDecliningInstallments_v2();
-                } else if (interestTypeId.equals(InterestType.DECLINING_EPI.getValue())||interestTypeId.equals(InterestType.DECLINING_PB.getValue())) {
-                    return allDecliningEPIInstallments_v2();
-                }
+            } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.FLAT.getValue())) {
+                return allFlatInstallments_v2(loanInterest);
+            } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING.getValue())) {
+                return allDecliningInstallments_v2();
+            } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING_EPI.getValue())) {
+                return allDecliningEPIInstallments_v2();
             }
         }
 

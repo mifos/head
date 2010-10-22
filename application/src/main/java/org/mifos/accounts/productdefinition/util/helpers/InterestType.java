@@ -22,9 +22,9 @@ package org.mifos.accounts.productdefinition.util.helpers;
 
 public enum InterestType {
 
-    FLAT((short) 1), DECLINING((short) 2), COMPOUND((short) 3), DECLINING_EPI((short) 4)/* Equal Principal Installments*/
-    ,DECLINING_PB((short) 5);
-
+    FLAT((short) 1), DECLINING((short) 2), COMPOUND((short) 3), DECLINING_EPI((short) 4); // Equal
+                                                                                          // Principal
+                                                                                          // Installments
 
     private Short value;
 
