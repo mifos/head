@@ -3935,6 +3935,7 @@ public class LoanBO extends AccountBO {
             LoanScheduleEntity loanScheduleEntity = loanScheduleEntityLookUp.get(installment.getInstallment());
             loanScheduleEntity.setPrincipal(installment.getPrincipal());
             loanScheduleEntity.setInterest(installment.getInterest());
+            loanScheduleEntity.setActionDate(new java.sql.Date(installment.getDueDateValue().getTime()));
         }
     }
 

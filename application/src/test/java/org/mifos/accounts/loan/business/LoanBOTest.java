@@ -40,6 +40,7 @@ import org.springframework.test.annotation.ExpectedException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -113,23 +114,32 @@ public class LoanBOTest {
     @Test
     public void testCopyInstallmentSchedule() {
         LoanBO loanBO = new LoanBO();
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, new Date("23/10/2010"), "100", "10", "1"));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, new Date("23/11/2010"), "100", "10", "2"));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, new Date("23/12/2010"), "100", "10", "3"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 9, 2010), "100", "10", "1"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "2"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "3"));
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
-        installments.add(getRepaymentScheduleInstallment(1,"123","12"));
-        installments.add(getRepaymentScheduleInstallment(2,"231","23"));
-        installments.add(getRepaymentScheduleInstallment(3,"312","31"));
+        installments.add(getRepaymentScheduleInstallment("24-Oct-2010", 1, "123", "12"));
+        installments.add(getRepaymentScheduleInstallment("24-Nov-2010", 2, "231", "23"));
+        installments.add(getRepaymentScheduleInstallment("24-Dec-2010", 3, "312", "31"));
         loanBO.copyInstallmentSchedule(installments);
         List<LoanScheduleEntity> loanScheduleEntities = (List<LoanScheduleEntity>) loanBO.getLoanScheduleEntities();
-        assertLoanScheduleEntity(loanScheduleEntities.get(0),"123.0","12.0");
-        assertLoanScheduleEntity(loanScheduleEntities.get(1),"231.0","23.0");
-        assertLoanScheduleEntity(loanScheduleEntities.get(2),"312.0","31.0");
+        assertLoanScheduleEntity(loanScheduleEntities.get(0), "123.0", "12.0", "2010-10-24");
+        assertLoanScheduleEntity(loanScheduleEntities.get(1), "231.0", "23.0", "2010-11-24");
+        assertLoanScheduleEntity(loanScheduleEntities.get(2), "312.0", "31.0", "2010-12-24");
     }
 
-    private void assertLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity, String pricipal, String interest) {
-        Assert.assertEquals(loanScheduleEntity.getPrincipal().toString(),pricipal);
-        Assert.assertEquals(loanScheduleEntity.getInterest().toString(),interest);
+    private Date getDate(int date, int month, int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_MONTH, date);
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.YEAR, year);
+        return calendar.getTime();
+    }
+
+    private void assertLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity, String pricipal, String interest, String dueDate) {
+        Assert.assertEquals(loanScheduleEntity.getPrincipal().toString(), pricipal);
+        Assert.assertEquals(loanScheduleEntity.getInterest().toString(), interest);
+        Assert.assertEquals(loanScheduleEntity.getActionDate().toString(), dueDate);
     }
 
     @Test
@@ -160,9 +170,11 @@ public class LoanBOTest {
 
     }
 
-    private RepaymentScheduleInstallment getRepaymentScheduleInstallment(int installment, String principal,String interest) {
-        return installmentBuilder.reset(locale).withInstallment(installment).
-                withPrincipal(new Money(rupee, principal)).
-                withInterest(new Money(rupee, interest)).build();
+    private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
+                                                                         String principal,
+                                                                         String interest) {
+        return installmentBuilder.reset(locale).withInstallment(installment).withDueDateValue(dueDate).
+                withPrincipal(new Money(rupee, principal)).withInterest(new Money(rupee, interest)).
+                build();
     }
 }
