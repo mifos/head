@@ -51,7 +51,7 @@ import org.mifos.customers.group.business.GroupPerformanceHistoryUpdater.UpdateC
 import org.mifos.customers.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnReversal;
 import org.mifos.customers.group.business.GroupPerformanceHistoryUpdater.UpdateClientPerfHistoryForGroupLoanOnWriteOff;
 import org.mifos.customers.util.helpers.ChildrenStateType;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Predicate;

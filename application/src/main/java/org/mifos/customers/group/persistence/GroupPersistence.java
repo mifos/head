@@ -32,7 +32,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.framework.exceptions.HibernateSearchException;
@@ -90,7 +90,7 @@ public class GroupPersistence extends Persistence {
             queryInputs.setAliasNames(aliasNames);
         }
         paramList.add(typeNameValue("String", "SEARCH_ID", officeSearchId + "%"));
-        paramList.add(typeNameValue("String", "SEARCH_STRING", searchString + "%"));
+        paramList.add(typeNameValue("String", "SEARCH_STRING", "%" + searchString + "%"));
         paramList.add(typeNameValue("Short", "LEVEL_ID", CustomerLevel.GROUP.getValue()));
         paramList.add(typeNameValue("Short", "USER_ID", userId));
         paramList.add(typeNameValue("Short", "USER_LEVEL_ID", personnel.getLevelEnum().getValue()));

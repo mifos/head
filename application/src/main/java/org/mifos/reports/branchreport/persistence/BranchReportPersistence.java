@@ -39,7 +39,7 @@ import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_LOAN_A
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_LOAN_DETAILS_FOR_DATE_AND_BRANCH;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_STAFFING_LEVEL_SUMMARY_FOR_DATE_AND_BRANCH;
 import static org.mifos.application.NamedQueryConstants.GET_BRANCH_REPORT_STAFF_SUMMARY_FOR_DATE_AND_BRANCH;
-import static org.mifos.customers.util.helpers.CustomerLevel.CLIENT;
+import static org.mifos.customers.api.CustomerLevel.CLIENT;
 import static org.mifos.customers.util.helpers.CustomerSearchConstants.OFFICEID;
 import static org.mifos.customers.util.helpers.QueryParamConstants.BRANCH_ID;
 import static org.mifos.customers.util.helpers.QueryParamConstants.CUSTOMER_LEVEL_ID;

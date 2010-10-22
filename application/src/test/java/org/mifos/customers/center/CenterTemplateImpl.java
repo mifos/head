@@ -24,7 +24,7 @@ import java.util.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.CustomerTemplateImpl;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 
 public class CenterTemplateImpl extends CustomerTemplateImpl implements CenterTemplate {

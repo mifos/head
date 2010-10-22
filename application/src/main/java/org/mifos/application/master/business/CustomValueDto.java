@@ -22,7 +22,7 @@ package org.mifos.application.master.business;
 
 import java.util.List;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * This class represents a {@link LookUpEntity} and its associated list of

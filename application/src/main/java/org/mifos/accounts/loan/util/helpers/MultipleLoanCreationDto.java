@@ -28,7 +28,7 @@ import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class MultipleLoanCreationDto implements DataTransferObject {

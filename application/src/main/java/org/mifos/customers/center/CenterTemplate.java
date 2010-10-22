@@ -24,7 +24,7 @@ import java.util.Date;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.CustomerTemplate;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 
 /**
  * use builders instead of templates.

@@ -21,10 +21,10 @@ package org.mifos.application.servicefacade;
 
 import java.util.Date;
 
-import org.mifos.customers.business.CustomerDto;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * DTO for data entered on collection sheet form.

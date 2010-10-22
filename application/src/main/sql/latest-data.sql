@@ -75,6 +75,7 @@ insert into applied_upgrades(upgrade_id) values(1285046834);
 insert into applied_upgrades(upgrade_id) values(1285177663);
 insert into applied_upgrades(upgrade_id) values(1285651956);
 insert into applied_upgrades(upgrade_id) values(1285812348);
+insert into applied_upgrades(upgrade_id) values(1286195484);
 insert into applied_upgrades(upgrade_id) values(1286529235);
 insert into applied_upgrades(upgrade_id) values(1286780611);
 

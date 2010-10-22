@@ -22,7 +22,7 @@ package org.mifos.application.collectionsheet.business;
 
 import java.util.Date;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public abstract class CollectionSheetEntryInstallmentDto implements DataTransferObject {
 

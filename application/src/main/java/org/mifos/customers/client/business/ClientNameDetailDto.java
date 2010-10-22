@@ -25,7 +25,7 @@ import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.business.util.Name;
 
 public class ClientNameDetailDto implements DataTransferObject {

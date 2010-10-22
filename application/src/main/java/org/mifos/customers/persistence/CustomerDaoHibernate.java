@@ -51,7 +51,7 @@ import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerDto;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
@@ -76,7 +76,7 @@ import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerFlagDto;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
@@ -115,10 +115,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import org.mifos.framework.util.helpers.MifosStringUtils;
 
-/**
- *
- */
 public class CustomerDaoHibernate implements CustomerDao {
 
     private final GenericDao genericDao;
@@ -375,7 +373,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         namedQuery[1] = NamedQueryConstants.CENTER_SEARCH;
 
         paramList.add(typeNameValue("String", "SEARCH_ID", officeSearchId + "%"));
-        paramList.add(typeNameValue("String", "CENTER_NAME", searchString + "%"));
+        paramList.add(typeNameValue("String", "CENTER_NAME", "%" + searchString + "%"));
         paramList.add(typeNameValue("Short", "LEVEL_ID", CustomerLevel.CENTER.getValue()));
         paramList.add(typeNameValue("Short", "STATUS_ID", CustomerStatus.CENTER_ACTIVE.getValue()));
         paramList.add(typeNameValue("Short", "USER_ID", user.getPersonnelId()));
@@ -1711,6 +1709,21 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
+    public List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
+        List<CustomerBO> queryResult = (List<CustomerBO>) genericDao
+                .executeNamedQuery("Customer.findCustomersWithGivenPhoneNumber", queryParameters);
+        List<CustomerDto> customerDtos = new ArrayList<CustomerDto>();
+        for (CustomerBO customerBO : queryResult) {
+            CustomerDto customerDto = new CustomerDto(customerBO.getCustomerId(), customerBO.getDisplayName(),
+                    customerBO.getCustomerLevel().getId(), customerBO.getSearchId());
+
+            customerDtos.add(customerDto);
+        }
+        return customerDtos;
+    }
+
     public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CENTER.getValue());

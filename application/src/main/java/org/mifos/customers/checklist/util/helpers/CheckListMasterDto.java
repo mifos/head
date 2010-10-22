@@ -21,7 +21,7 @@
 package org.mifos.customers.checklist.util.helpers;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public class CheckListMasterDto implements DataTransferObject {
 

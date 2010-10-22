@@ -29,7 +29,7 @@ import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerDto;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
@@ -237,6 +237,11 @@ public interface CustomerDao {
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator();
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator();
+
+    /**
+     * <code>phoneNumber</code> is stripped to contain numeric characters only
+     */
+    List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber);
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator();
 }

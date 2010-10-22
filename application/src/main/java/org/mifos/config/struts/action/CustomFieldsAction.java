@@ -53,7 +53,7 @@ import org.mifos.config.struts.actionform.CustomFieldsActionForm;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.config.util.helpers.CustomFieldsBackfiller;
 import org.mifos.config.util.helpers.CustomFieldsListBoxData;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;

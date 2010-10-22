@@ -22,7 +22,7 @@ package org.mifos.accounts.loan.util.helpers;
 
 import java.util.Date;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanDisbursalDto implements DataTransferObject {

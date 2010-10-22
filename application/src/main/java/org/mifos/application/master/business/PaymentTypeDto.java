@@ -20,7 +20,7 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public class PaymentTypeDto implements DataTransferObject {
 

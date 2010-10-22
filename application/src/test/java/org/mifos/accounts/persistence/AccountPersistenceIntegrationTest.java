@@ -23,6 +23,7 @@ package org.mifos.accounts.persistence;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +40,7 @@ import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.COAHierarchyEntity;
 import org.mifos.accounts.financial.business.GLCategoryType;
@@ -60,6 +62,7 @@ import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -79,6 +82,9 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import edu.emory.mathcs.backport.java.util.Arrays;
+import edu.emory.mathcs.backport.java.util.Collections;
 
 public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCase {
 
@@ -427,6 +433,41 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         assertThat(accountIds.contains(group.getCustomerAccount().getAccountId()), is(true));
         assertThat(accountIds.contains(client.getCustomerAccount().getAccountId()), is(true));
         assertThat(accountIds.contains(savingsBO.getAccountId()), is(true));
+    }
+    
+    @Test
+    public void testFindingAccountPaymentShouldReturnOnePayment() throws Exception {
+        savingsBO = createSavingsAccount();
+
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(savingsBO, TestUtils.createMoney(100),
+                "1111", new Date(System.currentTimeMillis()), new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
+        List<AccountPaymentEntity> payments = new ArrayList<AccountPaymentEntity>();
+        payments.add(accountPaymentEntity);
+        savingsBO.setAccountPayments(payments);
+        new AccountPersistence().createOrUpdate(savingsBO);
+        StaticHibernateUtil.commitTransaction();
+
+        List<AccountPaymentEntity> result = accountPersistence.findAccountPaymentsByReceiptNumber("1111");
+        Assert.assertNotNull(result);
+        Assert.assertEquals(1, result.size());
+        Assert.assertEquals("1111", result.get(0).getReceiptNumber());
+    }
+    
+    @Test
+    public void testFindingAccountPaymentShouldReturnZeroPayments() throws Exception {
+        savingsBO = createSavingsAccount();
+
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(savingsBO, TestUtils.createMoney(100),
+                "2222", new Date(System.currentTimeMillis()), new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
+        List<AccountPaymentEntity> payments = new ArrayList<AccountPaymentEntity>();
+        payments.add(accountPaymentEntity);
+        savingsBO.setAccountPayments(payments);
+        new AccountPersistence().createOrUpdate(savingsBO);
+        StaticHibernateUtil.commitTransaction();
+
+        List<AccountPaymentEntity> result = accountPersistence.findAccountPaymentsByReceiptNumber("1111");
+        Assert.assertNotNull(result);
+        Assert.assertEquals(0, result.size());
     }
 
     /**

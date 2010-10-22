@@ -28,7 +28,7 @@ import java.util.Map;
 
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.CollectionUtils;
