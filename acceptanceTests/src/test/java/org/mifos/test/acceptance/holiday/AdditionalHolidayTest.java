@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
+import org.junit.Ignore;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -39,8 +40,8 @@ import org.mifos.test.acceptance.framework.client.ClientViewDetailsPage;
 import org.mifos.test.acceptance.framework.client.ViewClientChargesDetail;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayConfirmationPage;
 import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
-import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.holiday.ViewHolidaysPage;
+import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage.CreateHolidaySubmitParameters;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
@@ -748,6 +749,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Ignore
     @Test(enabled = false)
     private void verifyLoanSchedule(final String resultDataSet) throws Exception {
         IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSet);
