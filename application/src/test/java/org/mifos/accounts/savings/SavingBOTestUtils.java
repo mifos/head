@@ -33,10 +33,6 @@ public class SavingBOTestUtils {
         savings.setSavingsBalance(balanceAmount);
     }
 
-    public static void setNextIntCalcDate(SavingsBO savings, Date nextDate) {
-        savings.setNextIntCalcDate(nextDate);
-    }
-
     public static void setActivationDate(SavingsBO savings, Date nextDate) {
         savings.setActivationDate(nextDate);
     }

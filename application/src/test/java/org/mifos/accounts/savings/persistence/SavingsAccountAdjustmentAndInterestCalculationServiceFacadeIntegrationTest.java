@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.savings.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
@@ -141,8 +139,7 @@ public class SavingsAccountAdjustmentAndInterestCalculationServiceFacadeIntegrat
         createCenterGroupClientHierarchy(aWeeklyMeeting);
 
         SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().withMandatoryAmount("33.0").appliesToClientsOnly().buildForIntegrationTests();
-        SavingsBO savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                              .active()
+        SavingsBO savingsAccount = new SavingsAccountBuilder().active()
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(client)

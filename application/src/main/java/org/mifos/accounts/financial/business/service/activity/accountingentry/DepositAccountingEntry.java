@@ -24,7 +24,6 @@ import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 
@@ -35,10 +34,9 @@ public class DepositAccountingEntry extends BaseAccountingEntry {
         SavingsTrxnDetailEntity savingsTrxn = (SavingsTrxnDetailEntity) financialActivity.getAccountTrxn();
         SavingsBO savings = (SavingsBO) savingsTrxn.getAccount();
         FinancialActionTypeEntity finActionDeposit = null;
-        if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
+        if (savings.isMandatory()) {
             finActionDeposit = getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT);
-        }
-        if (savings.getSavingsType().getId().equals(SavingsType.VOLUNTARY.getValue())) {
+        } else if (savings.isVoluntary()) {
             finActionDeposit = getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT);
         }
 
