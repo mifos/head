@@ -23,7 +23,7 @@ package org.mifos.accounts.business;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class TransactionHistoryDto implements DataTransferObject, Comparable<TransactionHistoryDto> {

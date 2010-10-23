@@ -18,10 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.business;
+package org.mifos.accounts.api;
 
-import org.mifos.customers.util.helpers.CustomerLevel;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.api.DataTransferObject;
 
 public class CustomerDto implements DataTransferObject {
 

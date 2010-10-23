@@ -41,7 +41,7 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.MifosIntegrationTestCase;

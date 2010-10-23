@@ -20,11 +20,14 @@
 
 package org.mifos.framework.business.util;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.dto.domain.AddressDto;
+import org.mifos.framework.util.helpers.MifosStringUtils;
 
 
-public class Address {
+public class Address implements Serializable {
 
     private String line1;
 
@@ -42,6 +45,8 @@ public class Address {
 
     private String phoneNumber;
 
+    private String phoneNumberStripped;
+
     public Address(String line1, String line2, String line3, String city, String state, String country, String zip,
             String phoneNumber) {
         super();
@@ -52,7 +57,7 @@ public class Address {
         this.state = state;
         this.country = country;
         this.zip = zip;
-        this.phoneNumber = phoneNumber;
+        setPhoneNumber(phoneNumber);
     }
 
     public Address() {
@@ -105,6 +110,19 @@ public class Address {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        this.phoneNumberStripped = computePhoneNumberStripped();
+    }
+
+    public String getPhoneNumberStripped() {
+        return this.phoneNumberStripped;
+    }
+
+    private String computePhoneNumberStripped() {
+        return MifosStringUtils.removeNondigits(phoneNumber);
+    }
+
+    private void setPhoneNumberStripped(String phoneNumberStripped) {
+        // This field is computed from phoneNumber so we do nothing here
     }
 
     public String getState() {

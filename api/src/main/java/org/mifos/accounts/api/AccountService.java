@@ -109,6 +109,32 @@ public interface AccountService {
     AccountReferenceDto lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName(
             String clientGovernmentId, String savingsProductShortName) throws Exception;
 
+    /**
+     * Lookup a loan account reference for a loan based on the borrower's phone number (with nondigit characters
+     * stripped) and the loan product short name.
+     *
+     * @param clientGovernmentId government ID
+     *
+     * @return a reference to the account found
+     *
+     * @throws Exception If no loan is found
+     */
+    AccountReferenceDto lookupLoanAccountReferenceFromClientPhoneNumberAndLoanProductShortName(
+            String phoneNumber, String loanProductShortName) throws Exception;
+
+    /**
+     * Lookup a Savings account reference for a savings based on the borrower's phone number (with nondigit characters
+     * stripped) and the savings product short name.
+     *
+     * @param clientGovernmentId government ID
+     *
+     * @return a reference to the account found
+     *
+     * @throws Exception If no savings is found
+     */
+    AccountReferenceDto lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(
+            String phoneNumber, String savingsProductShortName) throws Exception;
+
 
     /**
      * Validate a payment by checking for any errors that would result from making a
@@ -170,5 +196,10 @@ public interface AccountService {
      * @param accountRef is a reference to the account for which payment information is requested.
      */
     List<AccountPaymentParametersDto> lookupPayments(AccountReferenceDto accountRef) throws Exception;
+    
+    /**
+     * Checks if given receipt number already exists in account_payments table 
+     */
+    boolean receiptExists(String receiptNumber) throws Exception;
 
 }

@@ -53,7 +53,7 @@ import org.mifos.customers.checklist.util.helpers.CheckListMasterDto;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.screen.AccountCheckBoxItemDto;
 import org.mifos.dto.screen.CustomerCheckBoxItemDto;

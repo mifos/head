@@ -42,7 +42,7 @@ import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 /**

@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.business;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class InstallmentDetailsDto implements DataTransferObject {

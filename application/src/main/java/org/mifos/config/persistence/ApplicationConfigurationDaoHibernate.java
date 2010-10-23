@@ -43,7 +43,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 
 public class ApplicationConfigurationDaoHibernate implements ApplicationConfigurationDao {
 

@@ -37,7 +37,7 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.exceptions.CheckListException;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;

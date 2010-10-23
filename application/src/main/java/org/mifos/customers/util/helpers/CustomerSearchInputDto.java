@@ -20,7 +20,7 @@
 
 package org.mifos.customers.util.helpers;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * This class is helper class and provides input for center search

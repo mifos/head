@@ -33,7 +33,7 @@ import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * Data transfer object to hold data for display on the viewCenterDetails.jsp page

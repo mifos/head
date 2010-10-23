@@ -23,7 +23,7 @@ package org.mifos.application.servicefacade;
 import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.util.helpers.ClientConstants;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public class ClientDetailDto implements DataTransferObject {
 

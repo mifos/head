@@ -42,7 +42,7 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;

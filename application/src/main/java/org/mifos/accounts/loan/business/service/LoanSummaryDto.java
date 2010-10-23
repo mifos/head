@@ -2,7 +2,7 @@ package org.mifos.accounts.loan.business.service;
 
 import org.mifos.framework.util.helpers.Money;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 public class LoanSummaryDto implements DataTransferObject {
 

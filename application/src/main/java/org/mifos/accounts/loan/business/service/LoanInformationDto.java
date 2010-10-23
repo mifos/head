@@ -8,7 +8,7 @@ import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.customers.util.helpers.SurveyDto;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class LoanInformationDto implements DataTransferObject {

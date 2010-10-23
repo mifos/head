@@ -29,7 +29,7 @@ import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  *

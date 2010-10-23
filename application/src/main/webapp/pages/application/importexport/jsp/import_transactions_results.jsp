@@ -106,19 +106,65 @@ explanation of the license and how it is applied.
                                         value="${importTransactionsForm.importTransactionsFile.fileName}" /></td>
                                 </tr>
                                 <tr class="fontnormal">
-                                    <td><mifos:mifoslabel name="admin.importexport.importstatus"
-                                        isColonRequired="Yes" bundle="adminUIResources" /> <c:choose>
-                                        <c:when test="${0 == requestScope.numSuccessfulRows}">
-                                            <fmt:message key="admin.importexport.zeroImportableRows" />
-                                        </c:when>
-                                        <c:otherwise>
-                                            <fmt:message key="admin.importexport.successfulImportRows">
-                                                <fmt:param>
-                                                    <c:out value="${requestScope.numSuccessfulRows}" />
-                                                </fmt:param>
-                                            </fmt:message>
-                                        </c:otherwise>
-                                    </c:choose></td>
+									<c:choose>
+										<c:when test="${requestScope.isExtraInformationFilled}">
+											<td>
+												<mifos:mifoslabel name="admin.importexport.importstatus"
+													isColonRequired="Yes" bundle="adminUIResources" />
+												<p>
+												<fmt:message key="admin.importexport.rowsWereRead">
+													<fmt:param><c:out value="${requestScope.numberOfReadRows}"/></fmt:param>
+												</fmt:message>:
+												<ul>
+													<li>
+														<fmt:message key="admin.importexport.rowsNoError">
+															<fmt:param><c:out value="${requestScope.numSuccessfulRows}"/></fmt:param>
+														</fmt:message>
+													</li>
+													<li>
+														<fmt:message key="admin.importexport.rowsIgnored">
+															<fmt:param><c:out value="${requestScope.numberOfIgnoredRows}"/></fmt:param>
+														</fmt:message>
+													</li>
+													<li>
+														<fmt:message key="admin.importexport.rowsError">
+															<fmt:param><c:out value="${requestScope.numberOfErrorRows}"/></fmt:param>
+														</fmt:message>
+													</li>
+												</ul>
+												</p>
+												<p>
+													<fmt:message key="admin.importexport.amountImported">
+															<fmt:param>
+																<fmt:formatNumber value="${requestScope.totalAmountOfTransactionsImported}" type="number"
+																					minFractionDigits="0" maxFractionDigits="2"/>
+															</fmt:param>
+													</fmt:message>
+													<br/>
+													<fmt:message key="admin.importexport.amountError">
+															<fmt:param>
+																<fmt:formatNumber value="${requestScope.totalAmountOfTransactionsWithError}" type="number"
+																					minFractionDigits="0" maxFractionDigits="2"/>
+															</fmt:param>
+													</fmt:message>
+												</p>
+										</c:when>
+										<c:otherwise>
+											<td><mifos:mifoslabel name="admin.importexport.importstatus"
+												isColonRequired="Yes" bundle="adminUIResources" /> <c:choose>
+												<c:when test="${0 == requestScope.numSuccessfulRows}">
+													<fmt:message key="admin.importexport.zeroImportableRows" />
+												</c:when>
+												<c:otherwise>
+													<fmt:message key="admin.importexport.successfulImportRows">
+														<fmt:param>
+															<c:out value="${requestScope.numSuccessfulRows}" />
+														</fmt:param>
+													</fmt:message>
+												</c:otherwise>
+											</c:choose></td>
+										</c:otherwise>
+									</c:choose>
                                 </tr>
                                 <tr class="fontnormalred">
                                     <td><br />
@@ -130,6 +176,14 @@ explanation of the license and how it is applied.
                                         <c:out value="${error}" />
                                     </c:forEach></td>
                                 </tr>
+								<c:if test="${requestScope.isExtraInformationFilled}">
+									<tr class="fontnormal">
+										<td>
+											<p><a href="manageImportAction.do?method=downloadLog" target="_blank"><fmt:message key="admin.importexport.downloadLog"/>
+												</a></p>
+										</td>
+									</tr>	
+								</c:if>
                                 <tr class="fontnormal">
                                     <td><html-el:submit property="edit"
                                         onclick="this.form.action='manageImportAction.do?method=load'">

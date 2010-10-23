@@ -36,7 +36,7 @@ import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;

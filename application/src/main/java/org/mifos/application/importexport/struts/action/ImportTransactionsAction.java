@@ -21,17 +21,21 @@
 package org.mifos.application.importexport.struts.action;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,11 +71,15 @@ public class ImportTransactionsAction extends BaseAction {
     static final String IMPORT_TEMPORARY_FILENAME = "importTemporaryFilename";
     static final String IMPORT_PLUGIN_CLASSNAME = "importPluginClassname";
 
+	public static final String SESSION_ATTRIBUTE_LOG = "importTransactionLog";
+	public static final String SESSION_ATTRIBUTE_LOG_FILENAME = "importTransactionLogFilename";
+
     public static ActionSecurity getSecurity() {
         final ActionSecurity security = new ActionSecurity("manageImportAction");
         security.allow("load", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
         security.allow("upload", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
         security.allow("confirm", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+		security.allow("downloadLog", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
         return security;
     }
 
@@ -118,6 +126,20 @@ public class ImportTransactionsAction extends BaseAction {
         if (numberRowSuccessfullyParsed == 0) {
             submitButtonDisabled = true;
         }
+
+		if (importResult.isAmountInformationFilled() && importResult.isExtraRowInformationFilled()) {
+			request.setAttribute("isExtraInformationFilled", true);
+			request.setAttribute("numberOfErrorRows", importResult.getNumberOfErrorRows());
+			request.setAttribute("numberOfIgnoredRows", importResult.getNumberOfIgnoredRows());
+			request.setAttribute("numberOfReadRows", importResult.getNumberOfReadRows());
+			request.setAttribute("totalAmountOfTransactionsImported", importResult.getTotalAmountOfTransactionsImported());
+			request.setAttribute("totalAmountOfTransactionsWithError", importResult.getTotalAmountOfTransactionsWithError());
+
+			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG, generateStatusLogfile(importResult, ti).getBytes());
+			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG_FILENAME, statusLogfileName(importTransactionsFile.getFileName()));
+		} else {
+			request.setAttribute("isExtraInformationFilled", false);
+		}
 
         request.setAttribute("importTransactionsErrors", errorsForDisplay);
         request.setAttribute("numSuccessfulRows", numberRowSuccessfullyParsed);
@@ -185,6 +207,49 @@ public class ImportTransactionsAction extends BaseAction {
         return mapping.findForward("import_confirm");
     }
 
+	public ActionForward downloadLog(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+        HttpServletResponse response) throws Exception {
+		byte[] fileContents = (byte[]) request.getSession().getAttribute(ImportTransactionsAction.SESSION_ATTRIBUTE_LOG);
+		String fileName = (String) request.getSession().getAttribute(ImportTransactionsAction.SESSION_ATTRIBUTE_LOG_FILENAME);
+		response.setHeader("Content-disposition",
+				"attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+		response.setContentType("text/plain");
+		IOUtils.copy(new ByteArrayInputStream(fileContents), response.getOutputStream());
+		return null;
+	}
+	
+	private static final String LOG_TEMPLATE =
+			"%d rows were read.\n" +
+			"\n" +
+			"%d rows contained no errors and will be imported\n" +
+			"%d rows will be ignored\n" +
+			"%d rows contained errors and were not imported\n" +
+			"\n" +
+			"Total amount of transactions imported: %.2f\n" +
+			"Total amount of transactions with error: %.2f\n" +
+			"\n" +
+			"%s";
+
+	private String generateStatusLogfile(ParseResultDto result, TransactionImport transactionImport) {
+		String rowErrors = "";
+		if (!result.getParseErrors().isEmpty())
+			rowErrors = StringUtils.join(result.getParseErrors(), System.getProperty("line.separator"));
+		return String.format(LOG_TEMPLATE,
+				result.getNumberOfReadRows(),
+				transactionImport.getSuccessfullyParsedRows(),
+				result.getNumberOfIgnoredRows(),
+				result.getNumberOfErrorRows(),
+				result.getTotalAmountOfTransactionsImported(),
+				result.getTotalAmountOfTransactionsWithError(),
+				rowErrors);
+	}
+
+	private String statusLogfileName(String uploadedFilename) {
+		if (uploadedFilename.contains("."))
+			return uploadedFilename.split("\\.")[0] + "-log.txt";
+		return uploadedFilename + "-log.txt";
+	}
+
     /**
      * Used to remove our (this action's) temporaries after use to keep them
      * from accumulating in the session. This probably breaks the "back" button.
@@ -194,6 +259,8 @@ public class ImportTransactionsAction extends BaseAction {
     private void clearOurSessionVariables(HttpSession session) {
         session.removeAttribute(IMPORT_TEMPORARY_FILENAME);
         session.removeAttribute(IMPORT_PLUGIN_CLASSNAME);
+		session.removeAttribute(SESSION_ATTRIBUTE_LOG);
+		session.removeAttribute(SESSION_ATTRIBUTE_LOG_FILENAME);
     }
 
     @Override

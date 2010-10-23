@@ -21,12 +21,19 @@
 package org.mifos.spi;
 
 import java.util.List;
+import java.math.BigDecimal;
 
 import org.mifos.accounts.api.AccountPaymentParametersDto;
 
 public class ParseResultDto {
     private final List<String> parseErrors;
     private final List<AccountPaymentParametersDto> successfullyParsedPayments;
+
+	private Integer numberOfReadRows;
+	private Integer numberOfIgnoredRows;
+	private Integer numberOfErrorRows;
+	private BigDecimal totalAmountOfTransactionsImported;
+	private BigDecimal totalAmountOfTransactionsWithError;
 
     public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows) {
         this.parseErrors = parseErrors;
@@ -40,5 +47,53 @@ public class ParseResultDto {
     public List<AccountPaymentParametersDto> getSuccessfullyParsedPayments() {
         return this.successfullyParsedPayments;
     }
+
+	public Integer getNumberOfErrorRows() {
+		return numberOfErrorRows;
+	}
+
+	public void setNumberOfErrorRows(Integer numberOfErrorRows) {
+		this.numberOfErrorRows = numberOfErrorRows;
+	}
+
+	public Integer getNumberOfIgnoredRows() {
+		return numberOfIgnoredRows;
+	}
+
+	public void setNumberOfIgnoredRows(Integer numberOfIgnoredRows) {
+		this.numberOfIgnoredRows = numberOfIgnoredRows;
+	}
+
+	public Integer getNumberOfReadRows() {
+		return numberOfReadRows;
+	}
+
+	public void setNumberOfReadRows(Integer numberOfReadRows) {
+		this.numberOfReadRows = numberOfReadRows;
+	}
+
+	public BigDecimal getTotalAmountOfTransactionsImported() {
+		return totalAmountOfTransactionsImported;
+	}
+
+	public void setTotalAmountOfTransactionsImported(BigDecimal totalAmountOfTransactionsImported) {
+		this.totalAmountOfTransactionsImported = totalAmountOfTransactionsImported;
+	}
+
+	public BigDecimal getTotalAmountOfTransactionsWithError() {
+		return totalAmountOfTransactionsWithError;
+	}
+
+	public void setTotalAmountOfTransactionsWithError(BigDecimal totalAmountOfTransactionsWithError) {
+		this.totalAmountOfTransactionsWithError = totalAmountOfTransactionsWithError;
+	}
+
+	public boolean isAmountInformationFilled() {
+		return totalAmountOfTransactionsImported != null && totalAmountOfTransactionsWithError != null;
+	}
+
+	public boolean isExtraRowInformationFilled() {
+		return numberOfErrorRows != null && numberOfIgnoredRows != null && numberOfReadRows != null;
+	}
 
 }

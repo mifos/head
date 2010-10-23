@@ -38,7 +38,7 @@ import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Money;

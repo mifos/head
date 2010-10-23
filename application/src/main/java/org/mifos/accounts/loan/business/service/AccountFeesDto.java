@@ -1,7 +1,7 @@
 package org.mifos.accounts.loan.business.service;
 
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.util.helpers.Money;
 
 public class AccountFeesDto  implements DataTransferObject {

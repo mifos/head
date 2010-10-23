@@ -133,8 +133,6 @@ explanation of the license and how it is applied.
                   <span class="fontnormal">
 	                  <html-el:button property="editButton" styleClass="insidebuttn" onclick="fnEdit(this.form)">
 							<mifos:mifoslabel name="Savings.Edit" />
-							<mifos:mifoslabel name="${ConfigurationConstants.SAVINGS}" />
-							<mifos:mifoslabel name="Savings.accountInformation" />
 						</html-el:button> 
                   </span></td>
                 </tr>

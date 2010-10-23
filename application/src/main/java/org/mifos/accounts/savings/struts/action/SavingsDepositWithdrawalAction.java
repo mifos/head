@@ -49,7 +49,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.util.helpers.ChildrenStateType;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.framework.business.service.BusinessService;

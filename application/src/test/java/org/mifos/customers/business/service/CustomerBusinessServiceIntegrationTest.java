@@ -69,7 +69,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;

@@ -35,7 +35,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.struts.actionforms.CustomerAccountActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.util.helpers.BusinessServiceName;

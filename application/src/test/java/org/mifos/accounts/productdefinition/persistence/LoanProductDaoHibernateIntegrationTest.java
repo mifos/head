@@ -31,7 +31,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;

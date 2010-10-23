@@ -20,7 +20,7 @@
 
 package org.mifos.customers.client.business.service;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /*
  * TODO : Work in progress on moving more data for client details display into Data Transfer Objects

@@ -328,7 +328,7 @@
 		org.mifos.customers.office.util.helpers.OfficeStatus,
 		org.mifos.customers.office.util.helpers.OfficeLevel,
 		org.mifos.customers.util.helpers.CustomerStatus,
-		org.mifos.customers.util.helpers.CustomerLevel,
+		org.mifos.customers.api.CustomerLevel,
 		org.mifos.accounts.productdefinition.util.helpers.PrdStatus,
 		org.mifos.accounts.util.helpers.AccountState,
 		org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit"/>

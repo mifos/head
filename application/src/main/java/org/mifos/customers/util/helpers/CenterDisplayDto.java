@@ -21,7 +21,7 @@ package org.mifos.customers.util.helpers;
 
 import java.util.Date;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  *

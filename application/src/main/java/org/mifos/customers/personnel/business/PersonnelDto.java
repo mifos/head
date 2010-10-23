@@ -20,7 +20,7 @@
 
 package org.mifos.customers.personnel.business;
 
-import org.mifos.framework.business.service.DataTransferObject;
+import org.mifos.customers.api.DataTransferObject;
 
 /**
  * I am an immutable DTO for PersonnelBO

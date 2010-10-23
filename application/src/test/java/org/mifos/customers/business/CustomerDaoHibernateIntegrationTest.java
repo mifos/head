@@ -19,6 +19,8 @@
  */
 package org.mifos.customers.business;
 
+import org.mifos.accounts.api.CustomerDto;
+import org.mifos.framework.business.util.Address;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -133,6 +135,8 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
 
         activeClient = new ClientBuilder().active().withMeeting(weeklyMeeting).withName("Active Client").withOffice(
                 sampleBranchOffice()).withLoanOfficer(testUser()).withParentCustomer(group).buildForIntegrationTests();
+        Address address = new Address("a", "b", "c", "gdynia", "pomorskie", "PL", "81-661", "0-89 222 33");
+        activeClient.setCustomerAddressDetail(new CustomerAddressDetailEntity(activeClient, address));
         IntegrationTestObjectMother.createClient(activeClient, weeklyMeeting);
 
         weeklyPeriodicFeeForSecondClient = new FeeBuilder().appliesToClientsOnly().withFeeAmount("10.0").withName(
@@ -221,5 +225,11 @@ public class CustomerDaoHibernateIntegrationTest extends MifosIntegrationTestCas
 
         // exercise test
         customerDao.validateCenterNameIsNotTakenForOffice(center.getDisplayName(), center.getOfficeId());
+    }
+
+    @Test
+    public void shouldFindClientWithPhoneNumber() {
+         List<CustomerDto> customers = customerDao.findCustomersWithGivenPhoneNumber("08922233");
+         assertThat(customers.size(), is(1));
     }
 }

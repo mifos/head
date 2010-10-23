@@ -158,7 +158,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
-import org.mifos.customers.util.helpers.CustomerLevel;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.TestUtils;
@@ -439,6 +439,13 @@ public class TestObjectFactory {
 
     public static ClientBO createClient(final String customerName, final CustomerStatus status,
                                         final CustomerBO parentCustomer, final List<FeeDto> fees, final String governmentId, final Date dateOfBirth) {
+        return createClient(customerName, status, parentCustomer, fees, governmentId, dateOfBirth, null);
+
+    }
+
+    public static ClientBO createClient(final String customerName, final CustomerStatus status,
+                                        final CustomerBO parentCustomer, final List<FeeDto> fees, final String governmentId, final Date dateOfBirth,
+                                        final Address address) {
 
         ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short
                 .valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
@@ -447,7 +454,7 @@ public class TestObjectFactory {
 
         ClientBO client;
         try {
-            client = new ClientBO(TestUtils.makeUserWithLocales(), customerName, status, null, null, null, null, fees,
+            client = new ClientBO(TestUtils.makeUserWithLocales(), customerName, status, null, null, address, null, fees,
                     null, new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER),
                     new OfficePersistence().getOffice(SAMPLE_BRANCH_OFFICE), parentCustomer, dateOfBirth, governmentId,
                     null, null, YesNoFlag.YES.getValue(), clientNameDetailDto, spouseNameDetailView,

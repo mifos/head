@@ -177,11 +177,11 @@
 		id,officeid,customerlevelid
 	-->
 	<query name="Customer.getParentCustomersForLoanOfficer">
-		<![CDATA[select new org.mifos.customers.business.CustomerDto(customer.customerId,customer.displayName,customer.customerLevel.id,customer.searchId) from  org.mifos.customers.business.CustomerBO customer where customer.personnel.personnelId=:personnelId and 
+		<![CDATA[select new org.mifos.accounts.api.CustomerDto(customer.customerId,customer.displayName,customer.customerLevel.id,customer.searchId) from  org.mifos.customers.business.CustomerBO customer where customer.personnel.personnelId=:personnelId and 
 	        	   		customer.office.officeId=:officeId and customer.customerLevel.id=:customerLevelId and customer.customerStatus.id in (13,9,10) order by customer.displayName ]]>
 	</query>
 	<query name="Customer.getActiveChildrenForParent"><![CDATA[
-		select new org.mifos.customers.business.CustomerDto(
+		select new org.mifos.accounts.api.CustomerDto(
 			customer.customerId,customer.displayName,
 			customer.parentCustomer.customerId,customer.customerLevel.id) 
 		from org.mifos.customers.business.CustomerBO as customer 
@@ -582,6 +582,8 @@
 				inner join customer c on c.customer_id = a.customer_id
 				inner join lookup_value lv on lv.lookup_id = ast.lookup_id
 				where c.customer_id = :CUSTOMER_ID
+				and a.account_state_id not in (15, 17)
+				order by sa.account_id
 		]]>
 	</sql-query>
 	<sql-query name="getCustomerAccountSummaryDto">
@@ -969,6 +971,15 @@
 	        	   left join c.personnel as per where  c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
 	</query>
 
+	<query name="Customer.cust_phonesearch_withoutoffice">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+	        	   from org.mifos.customers.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+	        	   left join c.personnel as per where c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+	</query>
+
 	<query name="Customer.cust_idsearch">
 	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
 	        	   from org.mifos.customers.business.CustomerBO as c 
@@ -987,6 +998,15 @@
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and per.personnelId =:ID ]]>
 	</query>
 
+	<query name="Customer.cust_phonesearch">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+	        	   from org.mifos.customers.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+                           left join c.personnel as per where c.office.officeId=:OFFICEID and
+                           c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and per.personnelId =:ID ]]>
+	</query>
 	<query name="Customer.cust_idsearch_withoutoffice_count">
 	        	   <![CDATA[select count(*)
 	        	   from org.mifos.customers.business.CustomerBO as c 
@@ -1003,6 +1023,16 @@
 	        	   left join pa.parentCustomer as papa
 	        	   left join c.office as off
 	        	   left join c.personnel as per where  c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
+	</query>
+
+	<query name="Customer.cust_phonesearch_withoutoffice_count">
+	        	   <![CDATA[select count(*)
+	        	   from org.mifos.customers.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+                           left join c.personnel as per where
+                           c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID]]>
 	</query>
 
 	<query name="Customer.cust_idsearch_count">
@@ -1023,6 +1053,16 @@
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and per.personnelId =:ID ]]>
 	</query>
 
+	<query name="Customer.cust_phonesearch_count">
+	        	   <![CDATA[select count(*)
+	        	   from org.mifos.customers.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+                           left join c.personnel as per where c.office.officeId=:OFFICEID and
+                           c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and per.personnelId =:ID ]]>
+	</query>
+
 	<query name="Customer.cust_idsearch_nonLo">
 	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum  
 	        	   from org.mifos.customers.business.CustomerBO as c 
@@ -1039,6 +1079,16 @@
 	        	   left join pa.parentCustomer as papa
 	        	   left join c.office as off
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+	</query>
+
+	<query name="Customer.cust_phonesearch_nonLo">
+	        	   <![CDATA[select c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id, off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum, papa.displayName,papa.globalCustNum
+	        	   from org.mifos.customers.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+                           left join c.personnel as per where c.office.officeId=:OFFICEID and
+                           c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
 	</query>
 
 	<query name="Customer.cust_idsearch_count_nonLo">
@@ -1059,6 +1109,15 @@
 	        	   left join c.personnel as per where c.office.officeId=:OFFICEID and c.governmentId=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
 	</query>
 
+	<query name="Customer.cust_phonesearch_count_nonLo">
+	        	   <![CDATA[select count(*)
+	        	   from org.mifos.customers.business.CustomerBO as c
+	        	   left join c.parentCustomer as pa
+	        	   left join pa.parentCustomer as papa
+	        	   left join c.office as off
+                           left join c.personnel as per where c.office.officeId=:OFFICEID and
+                           c.customerAddressDetail.address.phoneNumberStripped=:SEARCH_STRING and off.searchId like :SEARCH_ID ]]>
+	</query>
 
 	<query name="search_Centers">
 	        	   <![CDATA[select  customer.office.officeId, customer.office.officeName,customer.globalCustNum,customer.displayName 
@@ -1778,5 +1837,9 @@
 		 from org.mifos.customers.business.CustomerBO as customer where customer.customerLevel.id =2 and customer.customerStatus in (9, 10) order by customer.customerId]]>
 	</query>
 
+        <query name="Customer.findCustomersWithGivenPhoneNumber">
+            <![CDATA[from org.mifos.customers.business.CustomerBO customer 
+            where customer.customerAddressDetail.address.phoneNumberStripped=:phoneNumberStripped]]>
+        </query>
 
 </hibernate-mapping>
