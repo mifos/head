@@ -27,7 +27,6 @@
     <bean id="webExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
     	<property name="exceptionMappings">
     		<props>
-    			<prop key="java.lang.Exception">unhandledError</prop>
     			<prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
     		</props>
     	</property>
