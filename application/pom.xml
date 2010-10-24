@@ -327,6 +327,12 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-envers</artifactId>
+            <exclusions>
+            	<exclusion>
+            		<artifactId>freemarker</artifactId>
+            		<groupId>freemarker</groupId>
+            	</exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -645,6 +651,14 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>${modules.root.dir}/questionnaire/src/main/webapp/pages</directory>
+                <targetPath>pages</targetPath>
+            </resource>
+            <resource>
+                <directory>${modules.root.dir}/userInterface/src/main/webapp/pages</directory>
+                <targetPath>pages</targetPath>
             </resource>
         </resources>
         <testResources>
