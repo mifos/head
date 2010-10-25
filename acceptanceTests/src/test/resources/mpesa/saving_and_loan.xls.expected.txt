@@ -1,0 +1,11 @@
+1 rows were read:
+
+0 rows contained no errors and will be imported
+0 rows will be ignored
+1 rows contained errors and were not imported
+Total amount of transactions imported: 0 
+Total amount of transactions with error: 2,000
+
+The following row(s) contain errors and will not be imported: 
+
+Row <24> error - THY3333333 - No Product name in "Transaction Party Details" field and ImportTransactionOrder property is not set
