@@ -1112,7 +1112,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, installment, duration);
             Money total = installment.getTotalValue();
             Money principal = total.subtract(interest.add(fees));
-            setPrincipalAndInterest(installment, interest, principal);
+            installment.setPrincipalAndInterest(interest, principal);
             initialDueDate = currentDueDate;
             principalOutstanding = principalOutstanding.subtract(principal);
             runningPrincipal = runningPrincipal.add(principal);
@@ -1125,17 +1125,12 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         Money principal = loanAmount.subtract(runningPrincipal);
         Money total = principal.add(interest).add(fees);
         lastInstallment.setTotalAndTotalValue(total);
-        setPrincipalAndInterest(lastInstallment, interest, principal);
+        lastInstallment.setPrincipalAndInterest(interest, principal);
     }
 
     @Override
     public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
         return installmentsValidator.validateInstallmentSchedule(installments);
-    }
-
-    private void setPrincipalAndInterest(RepaymentScheduleInstallment installment, Money interest, Money principal) {
-        installment.setPrincipal(principal);
-        installment.setInterest(interest);
     }
 
     private Money computeInterestAmount(Double dailyInterestFactor, Money principalOutstanding,

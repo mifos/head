@@ -190,4 +190,9 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.totalValue = total;
         this.total = total.toString();
     }
+
+    public void setPrincipalAndInterest(Money interest, Money principal) {
+        setPrincipal(principal);
+        setInterest(interest);
+    }
 }
