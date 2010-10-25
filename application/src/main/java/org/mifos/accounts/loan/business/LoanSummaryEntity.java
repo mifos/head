@@ -203,7 +203,7 @@ public class LoanSummaryEntity extends AbstractEntity {
         return totalAmount;
     }
 
-    void updatePaymentDetails(Money principal, Money interest, Money penalty, Money fees) {
+    public void updatePaymentDetails(Money principal, Money interest, Money penalty, Money fees) {
         principalPaid = principalPaid.add(principal);
         interestPaid = interestPaid.add(interest);
         penaltyPaid = penaltyPaid.add(penalty);

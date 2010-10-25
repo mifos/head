@@ -20,14 +20,14 @@
 
 package org.mifos.accounts.util.helpers;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /*
  * Used to hold information entered about a payment made.
@@ -164,4 +164,7 @@ public class PaymentData {
     }
 
 
+    public java.sql.Date getTransactionDateAsSQLDate() {
+        return new java.sql.Date(getTransactionDate().getTime());
+    }
 }

@@ -72,4 +72,5 @@ public abstract class AccountPaymentData {
     public boolean isPaid() {
         return paymentStatus.shortValue() == PaymentStatus.PAID.getValue().shortValue();
     }
+
 }

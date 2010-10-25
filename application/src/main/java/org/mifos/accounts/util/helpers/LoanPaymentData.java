@@ -20,14 +20,15 @@
 
 package org.mifos.accounts.util.helpers;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.LoanSummaryEntity;
 import org.mifos.framework.util.helpers.Money;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class LoanPaymentData extends AccountPaymentData {
 
@@ -148,5 +149,10 @@ public class LoanPaymentData extends AccountPaymentData {
             return money2;
         }
         return money1;
+    }
+
+    public void updateLoanSummary(LoanSummaryEntity loanSummary) {
+        loanSummary.updatePaymentDetails(principalPaid, interestPaid, penaltyPaid.add(miscPenaltyPaid),
+                getFeeAmountPaidForInstallment().add(miscFeePaid));
     }
 }
