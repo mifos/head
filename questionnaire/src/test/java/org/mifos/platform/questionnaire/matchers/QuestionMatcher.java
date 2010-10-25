@@ -42,7 +42,7 @@ public class QuestionMatcher extends TypeSafeMatcher<Question> {
     public boolean matchesSafely(Question question) {
         return (StringUtils.equalsIgnoreCase(type, question.getType())
                 && StringUtils.equalsIgnoreCase(id, question.getId())
-                && StringUtils.equalsIgnoreCase(title, question.getTitle()));
+                && StringUtils.equalsIgnoreCase(title, question.getText()));
     }
 
     @Override

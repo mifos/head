@@ -12,11 +12,11 @@
     <section order="1">
         <name>default</name>
         <question order="1">
-            <title>Your DOB</title>
+            <text>Your DOB</text>
             <type>DATE</type>
         </question>
         <question order="2">
-            <title>How many family members</title>
+            <text>How many family members</text>
             <type>NUMERIC</type>
             <minValue>3</minValue>
             <maxValue>10</maxValue>
@@ -26,11 +26,11 @@
     <section order="2">
         <name>misc</name>
         <question order="1">
-            <title>Father's name'</title>
+            <text>Father's name'</text>
             <type>FREETEXT</type>
         </question>
         <question order="2">
-            <title>No of dependents</title>
+            <text>No of dependents</text>
             <type>SINGLE_SELECT</type>
             <choice order="1">
                 <value>Less than 2</value>
@@ -44,7 +44,7 @@
             <mandatory>true</mandatory>
         </question>
         <question order="3">
-            <title>Previous Loans taken for</title>
+            <text>Previous Loans taken for</text>
             <type>SMART_SELECT</type>
             <mandatory>true</mandatory>
             <choice order="1">

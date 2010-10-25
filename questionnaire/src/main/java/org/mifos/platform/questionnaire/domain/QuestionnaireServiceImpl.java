@@ -142,8 +142,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public boolean isDuplicateQuestionTitle(String title) {
-        List result = questionDao.retrieveCountOfQuestionsWithTitle(title);
+    public boolean isDuplicateQuestionText(String title) {
+        List result = questionDao.retrieveCountOfQuestionsWithText(title);
         return (Long) result.get(0) > 0;
     }
 
@@ -250,7 +250,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private Integer persistQuestionGroup(QuestionGroup questionGroup) {
         List<SectionQuestion> sectionQuestions = questionGroup.getAllSectionQuestions();
         for (SectionQuestion sectionQuestion : sectionQuestions) {
-            List<QuestionEntity> questionEntities = questionDao.retrieveByName(sectionQuestion.getQuestionTitle());
+            List<QuestionEntity> questionEntities = questionDao.retrieveByText(sectionQuestion.getQuestionText());
             if (isNotEmpty(questionEntities)) {
                 QuestionEntity questionEntity = questionEntities.get(0);
                 questionEntity.setQuestionState(QuestionState.ACTIVE);

@@ -32,8 +32,6 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
 
     private QuestionState questionState;
 
-    private String shortName;
-
     private String questionText;
 
     private Integer numericMin;
@@ -52,27 +50,14 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
     }
 
     public QuestionEntity(String questionText, AnswerType answerType) {
-        this(null, questionText, answerType);
+        this(questionText, answerType, null);
     }
 
-    public QuestionEntity(String shortName, String questionText, AnswerType answerType) {
-        this(shortName, questionText, answerType, null);
-    }
-
-    public QuestionEntity(String shortName, String questionText, AnswerType answerType,List<QuestionChoiceEntity> choices) {
-        this.shortName = shortName;
+    public QuestionEntity(String questionText, AnswerType answerType,List<QuestionChoiceEntity> choices) {
         this.questionText = questionText;
         this.answerType = answerType;
         this.choices = choices;
         this.questionState = QuestionState.ACTIVE;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getShortName() {
-        return shortName;
     }
 
     public Integer getNumericMax() {
@@ -177,7 +162,7 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
     }
 
     public int compareTo(QuestionEntity other) {
-        return getShortName().compareTo(other.getShortName());
+        return getQuestionText().compareTo(other.getQuestionText());
     }
 
     public boolean isActive() {

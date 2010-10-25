@@ -198,7 +198,7 @@ public class GroupTest extends UiTestCaseBase {
 
     private CreateQuestionParameters getCreateQuestionParams(String title, String type, Integer numericMin, Integer numericMax, List<Choice> choices) {
         CreateQuestionParameters parameters = new CreateQuestionParameters();
-        parameters.setTitle(title);
+        parameters.setText(title);
         parameters.setType(type);
         parameters.setChoices(choices);
         parameters.setNumericMin(numericMin);

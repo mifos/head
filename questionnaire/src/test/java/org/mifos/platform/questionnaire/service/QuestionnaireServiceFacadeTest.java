@@ -85,26 +85,26 @@ public class QuestionnaireServiceFacadeTest {
         String title = TITLE + System.currentTimeMillis();
         String title1 = title + 1;
         String title2 = title + 2;
-        questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT),
-                getQuestionDetail(0, title2, title2, QuestionType.DATE),
-                getQuestionDetail(0, title2, title2, QuestionType.MULTI_SELECT, asList("choice1", "choice2"))));
-        Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, title1, QuestionType.FREETEXT))));
-        Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.DATE))));
-        Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, title2, QuestionType.MULTI_SELECT, asList("choice1", "choice2")))));
+        questionnaireServiceFacade.createQuestions(asList(getQuestionDetail(0, title1, QuestionType.FREETEXT),
+                getQuestionDetail(0, title2, QuestionType.DATE),
+                getQuestionDetail(0, title2, QuestionType.MULTI_SELECT, asList("choice1", "choice2"))));
+        Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title1, QuestionType.FREETEXT))));
+        Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, QuestionType.DATE))));
+        Mockito.verify(questionnaireService, times(1)).defineQuestion(argThat(new QuestionDetailMatcher(getQuestionDetail(0, title2, QuestionType.MULTI_SELECT, asList("choice1", "choice2")))));
     }
 
     @Test
     public void testShouldCheckDuplicates() {
         questionnaireServiceFacade.isDuplicateQuestion(TITLE);
-        Mockito.verify(questionnaireService).isDuplicateQuestionTitle(Mockito.any(String.class));
+        Mockito.verify(questionnaireService).isDuplicateQuestionText(Mockito.any(String.class));
     }
 
     @Test
     public void testGetAllActiveQuestion() {
-        when(questionnaireService.getAllActiveQuestions(null)).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
+        when(questionnaireService.getAllActiveQuestions(null)).thenReturn(asList(getQuestionDetail(1, "title", QuestionType.NUMERIC)));
         List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllActiveQuestions();
         Assert.assertNotNull(questionDetailList);
-        assertThat(questionDetailList.get(0).getTitle(), is("title"));
+        assertThat(questionDetailList.get(0).getText(), is("title"));
         assertThat(questionDetailList.get(0).getId(), is(1));
         Mockito.verify(questionnaireService).getAllActiveQuestions(null);
     }
@@ -112,20 +112,20 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void testGetAllActiveQuestionWithoutExcludedQuestions() {
         List<Integer> excludedQuestions = asList(2);
-        when(questionnaireService.getAllActiveQuestions(excludedQuestions)).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
+        when(questionnaireService.getAllActiveQuestions(excludedQuestions)).thenReturn(asList(getQuestionDetail(1, "title", QuestionType.NUMERIC)));
         List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllActiveQuestions(excludedQuestions);
         Assert.assertNotNull(questionDetailList);
-        assertThat(questionDetailList.get(0).getTitle(), is("title"));
+        assertThat(questionDetailList.get(0).getText(), is("title"));
         assertThat(questionDetailList.get(0).getId(), is(1));
         Mockito.verify(questionnaireService).getAllActiveQuestions(excludedQuestions);
     }
 
     @Test
     public void testGetAllQuestion() {
-        when(questionnaireService.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "title", "title", QuestionType.NUMERIC)));
+        when(questionnaireService.getAllQuestions()).thenReturn(asList(getQuestionDetail(1, "title", QuestionType.NUMERIC)));
         List<QuestionDetail> questionDetailList = questionnaireServiceFacade.getAllQuestions();
         Assert.assertNotNull(questionDetailList);
-        assertThat(questionDetailList.get(0).getTitle(), is("title"));
+        assertThat(questionDetailList.get(0).getText(), is("title"));
         assertThat(questionDetailList.get(0).getId(), is(1));
         Mockito.verify(questionnaireService).getAllQuestions();
     }
@@ -176,13 +176,13 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        QuestionDetail question = new QuestionDetail(questionId, title, title, QuestionType.NUMERIC, true);
+        QuestionDetail question = new QuestionDetail(questionId, title, QuestionType.NUMERIC, true);
         question.setNumericMin(10);
         question.setNumericMax(100);
         when(questionnaireService.getQuestion(questionId)).thenReturn(question);
         QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
         Assert.assertNotNull("Question group should not be null", questionDetail);
-        assertThat(questionDetail.getShortName(), is(title));
+        assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
         assertThat(questionDetail.getNumericMin(), is(10));
         assertThat(questionDetail.getNumericMax(), is(100));
@@ -194,7 +194,7 @@ public class QuestionnaireServiceFacadeTest {
         int questionId = 1;
         String title = "Title";
         List<ChoiceDto> answerChoices = asList(new ChoiceDto("choice1"), new ChoiceDto("choice2"));
-        QuestionDetail expectedQuestionDetail = new QuestionDetail(questionId, title, title, QuestionType.MULTI_SELECT, true);
+        QuestionDetail expectedQuestionDetail = new QuestionDetail(questionId, title, QuestionType.MULTI_SELECT, true);
         expectedQuestionDetail.setAnswerChoices(answerChoices);
         when(questionnaireService.getQuestion(questionId)).thenReturn(expectedQuestionDetail);
         QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
@@ -254,14 +254,14 @@ public class QuestionnaireServiceFacadeTest {
         assertThat(questions1.size(), is(3));
         SectionQuestionDetail question1 = questions1.get(0);
         assertThat(question1.getQuestionId(), is(11));
-        assertThat(question1.getTitle(), is("Q11"));
+        assertThat(question1.getText(), is("Q11"));
         assertThat(question1.isMandatory(), is(false));
         assertThat(question1.getQuestionType(), is(QuestionType.DATE));
     }
 
     @Test
     public void shouldSaveQuestionGroupDetail() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
         QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 1, 1,
                 asList(getQuestionGroupDetail("QG1", "Create", "Client", sectionDetails)));
@@ -271,7 +271,7 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testValidateResponse() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         try {
@@ -339,7 +339,7 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void testSaveQuestionDto() {
         QuestionDtoBuilder questionDtoBuilder = new QuestionDtoBuilder();
-        QuestionDto questionDto = questionDtoBuilder.withTitle("Ques1").withType(QuestionType.FREETEXT).build();
+        QuestionDto questionDto = questionDtoBuilder.withText("Ques1").withType(QuestionType.FREETEXT).build();
         when(questionnaireService.defineQuestion(questionDto)).thenReturn(1234);
         Integer questionId = questionnaireServiceFacade.createQuestion(questionDto);
         assertThat(questionId, is(1234));
@@ -375,7 +375,7 @@ public class QuestionnaireServiceFacadeTest {
         List<SectionQuestionDetail> questions = new ArrayList<SectionQuestionDetail>();
         for (int quesId : questionIds) {
             String text = "Q" + quesId;
-            questions.add(new SectionQuestionDetail(new QuestionDetail(quesId, text, text, QuestionType.DATE, true), false));
+            questions.add(new SectionQuestionDetail(new QuestionDetail(quesId, text, QuestionType.DATE, true), false));
         }
         sectionDetail.setQuestionDetails(questions);
         return sectionDetail;
@@ -384,7 +384,7 @@ public class QuestionnaireServiceFacadeTest {
     private SectionDetail getSectionDetail(String name) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Q1", "Q1", QuestionType.FREETEXT, true), true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Q1", QuestionType.FREETEXT, true), true));
         return sectionDetail;
     }
 
@@ -396,13 +396,13 @@ public class QuestionnaireServiceFacadeTest {
         return new EventSourceDto(event, source, description);
     }
 
-    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType) {
-        return new QuestionDetail(id, text, shortName, questionType, true);
+    private QuestionDetail getQuestionDetail(int id, String text, QuestionType questionType) {
+        return new QuestionDetail(id, text, questionType, true);
     }
 
 
-    private QuestionDetail getQuestionDetail(int id, String text, String shortName, QuestionType questionType, List<String> choices) {
-        QuestionDetail questionDetail = new QuestionDetail(id, text, shortName, questionType, true);
+    private QuestionDetail getQuestionDetail(int id, String text, QuestionType questionType, List<String> choices) {
+        QuestionDetail questionDetail = new QuestionDetail(id, text, questionType, true);
         List<ChoiceDto> choiceDtos = new ArrayList<ChoiceDto>();
         for (String choice : choices) {
             choiceDtos.add(new ChoiceDto(choice));

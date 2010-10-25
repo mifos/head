@@ -145,8 +145,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
         QuestionEntity question = getQuestion(questionDetail);
         question.setQuestionId(questionDetail.getId());
-        question.setShortName(questionDetail.getTitle());
-        question.setQuestionText(questionDetail.getTitle());
+        question.setQuestionText(questionDetail.getText());
         question.setAnswerType(mapToAnswerType(questionDetail.getType()));
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
         question.setQuestionState(QuestionState.getQuestionStateEnum(questionDetail.isActive()));
@@ -334,7 +333,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
         List<ChoiceDto> answerChoices = mapToQuestionChoices(question.getChoices());
-        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), question.getShortName(), type, question.isActive());
+        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), type, question.isActive());
         questionDetail.setAnswerChoices(answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);
         return questionDetail;
@@ -493,8 +492,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Override
     public QuestionEntity mapToQuestion(QuestionDto questionDto) {
         QuestionEntity questionEntity = new QuestionEntity();
-        questionEntity.setShortName(questionDto.getTitle());
-        questionEntity.setQuestionText(questionDto.getTitle());
+        questionEntity.setQuestionText(questionDto.getText());
         questionEntity.setAnswerType(mapToAnswerType(questionDto.getType()));
         questionEntity.setNumericMin(questionDto.getMinValue());
         questionEntity.setNumericMax(questionDto.getMaxValue());

@@ -23,6 +23,7 @@ package org.mifos.platform.questionnaire.service;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
@@ -113,7 +114,6 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionId);
         QuestionEntity questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        Assert.assertEquals(questionTitle, questionEntity.getShortName());
         Assert.assertEquals(questionTitle, questionEntity.getQuestionText());
         Assert.assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
         Assert.assertEquals(questionDetail.getAnswerChoices(), asList());
@@ -129,23 +129,22 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionId);
         QuestionEntity questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        Assert.assertEquals(questionTitle, questionEntity.getShortName());
         Assert.assertEquals(questionTitle, questionEntity.getQuestionText());
         Assert.assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
         Assert.assertEquals(questionDetail.getAnswerChoices(), asList());
 
         questionDetail.setActive(false);
-        questionDetail.setTitle(questionTitle + 1);
-        Assert.assertThat(questionDao.retrieveCountOfQuestionsWithTitle(questionTitle).get(0).intValue(), is(1));
+        questionDetail.setText(questionTitle + 1);
+        Assert.assertThat(questionDao.retrieveCountOfQuestionsWithText(questionTitle).get(0).intValue(), is(1));
 
         // See http://forum.springsource.org/showthread.php?t=18951, integration test practice recommended by Rod Johnson
         SessionFactoryUtils.getSession(sessionFactory.getObject(), false).clear();
 
         questionnaireService.defineQuestion(questionDetail);
-        Assert.assertThat(questionDao.retrieveCountOfQuestionsWithTitle(questionTitle).get(0).intValue(), is(0));
+        Assert.assertThat(questionDao.retrieveCountOfQuestionsWithText(questionTitle).get(0).intValue(), is(0));
         questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        Assert.assertEquals(questionTitle + 1, questionEntity.getShortName());
+        Assert.assertEquals(questionTitle + 1, questionEntity.getQuestionText());
         Assert.assertEquals(questionTitle + 1, questionEntity.getQuestionText());
         Assert.assertEquals(AnswerType.DATE, questionEntity.getAnswerTypeAsEnum());
         Assert.assertEquals(questionDetail.getAnswerChoices(), asList());
@@ -161,7 +160,6 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionId);
         QuestionEntity questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        Assert.assertEquals(questionTitle, questionEntity.getShortName());
         Assert.assertEquals(questionTitle, questionEntity.getQuestionText());
         Assert.assertEquals(AnswerType.MULTISELECT, questionEntity.getAnswerTypeAsEnum());
         assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
@@ -177,7 +175,6 @@ public class QuestionnaireServiceIntegrationTest {
         assertNotNull(questionId);
         QuestionEntity questionEntity = questionDao.getDetails(questionId);
         assertNotNull(questionEntity);
-        Assert.assertEquals(questionTitle, questionEntity.getShortName());
         Assert.assertEquals(questionTitle, questionEntity.getQuestionText());
         Assert.assertEquals(AnswerType.SINGLESELECT, questionEntity.getAnswerTypeAsEnum());
         assertThat(questionEntity.getChoices(), new QuestionChoicesMatcher(asList(new QuestionChoiceEntity("choice1"), new QuestionChoiceEntity("choice2"))));
@@ -203,9 +200,9 @@ public class QuestionnaireServiceIntegrationTest {
         List<Section> sections = questionGroup.getSections();
         Assert.assertEquals(2, sections.size());
         Assert.assertEquals("S1", sections.get(0).getName());
-        Assert.assertEquals(title + 1, sections.get(0).getQuestions().get(0).getQuestion().getShortName());
+        Assert.assertEquals(title + 1, sections.get(0).getQuestions().get(0).getQuestion().getQuestionText());
         Assert.assertEquals("S2", sections.get(1).getName());
-        Assert.assertEquals(title + 2, sections.get(1).getQuestions().get(0).getQuestion().getShortName());
+        Assert.assertEquals(title + 2, sections.get(1).getQuestions().get(0).getQuestion().getQuestionText());
         verifyCreationDate(questionGroup);
         verifyEventSources(questionGroup);
     }
@@ -217,7 +214,7 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionDetail questionDetail2 = defineQuestion("Q2" + currentTimeMillis(), QuestionType.FREETEXT, true);
         QuestionDetail questionDetail1 = defineQuestion("Q1" + currentTimeMillis(), QuestionType.NUMERIC, true);
         defineQuestion("Q0" + currentTimeMillis(), QuestionType.NUMERIC, false);
-        List<String> expectedOrderTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<String> expectedOrderTitles = asList(questionDetail1.getText(), questionDetail2.getText());
         List<Integer> expectedOrderIds = asList(questionDetail1.getId(), questionDetail2.getId());
         List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions(null);
         int finalCountOfQuestions = questionDetails.size();
@@ -228,8 +225,8 @@ public class QuestionnaireServiceIntegrationTest {
                 actualQuestions.add(questionDetail);
             }
         }
-        assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
-        assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
+        assertThat(actualQuestions.get(0).getText(), is(expectedOrderTitles.get(0)));
+        assertThat(actualQuestions.get(1).getText(), is(expectedOrderTitles.get(1)));
     }
 
     @Test
@@ -240,7 +237,7 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionDetail questionDetail2 = defineQuestion("Q2" + currentTimeMillis(), QuestionType.FREETEXT, true);
         QuestionDetail questionDetail1 = defineQuestion("Q1" + currentTimeMillis(), QuestionType.NUMERIC, true);
         defineQuestion("Q0" + currentTimeMillis(), QuestionType.NUMERIC, false);
-        List<String> expectedOrderTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<String> expectedOrderTitles = asList(questionDetail1.getText(), questionDetail2.getText());
         List<Integer> expectedOrderIds = asList(questionDetail1.getId(), questionDetail2.getId());
         List<QuestionDetail> questionDetails = questionnaireService.getAllActiveQuestions(asList(questionDetail3.getId()));
         int finalCountOfQuestions = questionDetails.size();
@@ -251,8 +248,8 @@ public class QuestionnaireServiceIntegrationTest {
                 actualQuestions.add(questionDetail);
             }
         }
-        assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
-        assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
+        assertThat(actualQuestions.get(0).getText(), is(expectedOrderTitles.get(0)));
+        assertThat(actualQuestions.get(1).getText(), is(expectedOrderTitles.get(1)));
     }
 
     @Test
@@ -262,7 +259,7 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionDetail questionDetail2 = defineQuestion("Q2" + currentTimeMillis(), QuestionType.FREETEXT, true);
         QuestionDetail questionDetail1 = defineQuestion("Q1" + currentTimeMillis(), QuestionType.NUMERIC, true);
         QuestionDetail questionDetail0 = defineQuestion("Q0" + currentTimeMillis(), QuestionType.NUMERIC, false);
-        List<String> expectedOrderTitles = asList(questionDetail0.getShortName(), questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<String> expectedOrderTitles = asList(questionDetail0.getText(), questionDetail1.getText(), questionDetail2.getText());
         List<Integer> expectedOrderIds = asList(questionDetail0.getId(), questionDetail1.getId(), questionDetail2.getId());
         List<QuestionDetail> questionDetails = questionnaireService.getAllQuestions();
         int finalCountOfQuestions = questionDetails.size();
@@ -273,9 +270,9 @@ public class QuestionnaireServiceIntegrationTest {
                 actualQuestions.add(questionDetail);
             }
         }
-        assertThat(actualQuestions.get(0).getShortName(), is(expectedOrderTitles.get(0)));
-        assertThat(actualQuestions.get(1).getShortName(), is(expectedOrderTitles.get(1)));
-        assertThat(actualQuestions.get(2).getShortName(), is(expectedOrderTitles.get(2)));
+        assertThat(actualQuestions.get(0).getText(), is(expectedOrderTitles.get(0)));
+        assertThat(actualQuestions.get(1).getText(), is(expectedOrderTitles.get(1)));
+        assertThat(actualQuestions.get(2).getText(), is(expectedOrderTitles.get(2)));
     }
 
     @Test
@@ -350,18 +347,18 @@ public class QuestionnaireServiceIntegrationTest {
         List<SectionQuestionDetail> questions1 = section1.getQuestions();
         assertThat(questions1, Matchers.notNullValue());
         assertThat(questions1.size(), is(3));
-        assertThat(questions1.get(0).getTitle(), is(section1Question1));
-        assertThat(questions1.get(1).getTitle(), is(section1Question2));
-        assertThat(questions1.get(2).getTitle(), is(section1Question3));
+        assertThat(questions1.get(0).getText(), is(section1Question1));
+        assertThat(questions1.get(1).getText(), is(section1Question2));
+        assertThat(questions1.get(2).getText(), is(section1Question3));
 
         SectionDetail section2 = sectionDetails.get(1);
         assertThat(section2.getName(), is("Section2"));
         List<SectionQuestionDetail> questions2 = section2.getQuestions();
         assertThat(questions2, Matchers.notNullValue());
         assertThat(questions2.size(), is(3));
-        assertThat(questions2.get(0).getTitle(), is(section2Question1));
-        assertThat(questions2.get(1).getTitle(), is(section2Question2));
-        assertThat(questions2.get(2).getTitle(), is(section2Question3));
+        assertThat(questions2.get(0).getText(), is(section2Question1));
+        assertThat(questions2.get(1).getText(), is(section2Question2));
+        assertThat(questions2.get(2).getText(), is(section2Question3));
     }
 
     @Test
@@ -385,7 +382,6 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail.getId());
         Assert.assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
         assertThat(retrievedQuestionDetail.getText(), is(title));
-        assertThat(retrievedQuestionDetail.getShortName(), is(title));
         assertThat(retrievedQuestionDetail.getType(), is(QuestionType.FREETEXT));
     }
 
@@ -395,7 +391,6 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionDetail retrievedQuestionDetail = questionnaireService.getQuestion(createdQuestionDetail.getId());
         Assert.assertNotSame(createdQuestionDetail, retrievedQuestionDetail);
         assertThat(retrievedQuestionDetail.getText(), is(title));
-        assertThat(retrievedQuestionDetail.getShortName(), is(title));
         assertThat(retrievedQuestionDetail.getType(), is(QuestionType.MULTI_SELECT));
         Assert.assertEquals(retrievedQuestionDetail.getAnswerChoices(), asList("choice1", "choice2"));
     }
@@ -413,6 +408,8 @@ public class QuestionnaireServiceIntegrationTest {
         }
     }
 
+    // TODO JS - unignore it after MIFOS-3897 is done
+    @Ignore
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldThrowExceptionForDuplicateQuestion() throws SystemException {
@@ -431,10 +428,10 @@ public class QuestionnaireServiceIntegrationTest {
     @Transactional
     public void testIsDuplicateQuestion() throws SystemException {
         String questionTitle = TITLE + currentTimeMillis();
-        boolean result = questionnaireService.isDuplicateQuestionTitle(questionTitle);
+        boolean result = questionnaireService.isDuplicateQuestionText(questionTitle);
         assertThat(result, is(false));
         defineQuestion(questionTitle, QuestionType.DATE, true);
-        result = questionnaireService.isDuplicateQuestionTitle(questionTitle);
+        result = questionnaireService.isDuplicateQuestionText(questionTitle);
         assertThat(result, is(true));
     }
 
@@ -563,7 +560,6 @@ public class QuestionnaireServiceIntegrationTest {
         questionEntity.setAnswerType(AnswerType.SMARTSELECT);
         questionEntity.setQuestionState(QuestionState.ACTIVE);
         questionEntity.setQuestionText(quesTitle);
-        questionEntity.setShortName(quesTitle);
         questionEntity.setChoices(asList(getChoice("Choice1", 0, "Tag1", "Tag2"), getChoice("Choice2", 1, "Tag4")));
         Integer quesId = questionDao.create(questionEntity);
         QuestionEntity newQuestionEntity = questionDao.getDetails(quesId);
@@ -587,11 +583,11 @@ public class QuestionnaireServiceIntegrationTest {
         String ques2Title = "Ques2" + currentTimeMillis();
         String qgTitle = "QG1" + currentTimeMillis();
         createSingleSelectQuestion(ques2Title);
-        QuestionDto question1 = new QuestionDtoBuilder().withTitle(ques1Title).withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
+        QuestionDto question1 = new QuestionDtoBuilder().withText(ques1Title).withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
         ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
         ChoiceDto choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
         ChoiceDto choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
-        QuestionDto question2 = new QuestionDtoBuilder().withTitle(ques2Title).withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).withOrder(2).build();
+        QuestionDto question2 = new QuestionDtoBuilder().withText(ques2Title).withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).withOrder(2).build();
         SectionDto section1 = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         QuestionGroupDto questionGroupDto = new QuestionGroupDtoBuilder().withTitle(qgTitle).withEventSource("Create", "Client").addSections(section1).build();
         Integer questionGroupId = questionnaireService.defineQuestionGroup(questionGroupDto);
@@ -631,7 +627,6 @@ public class QuestionnaireServiceIntegrationTest {
         questionEntity.setAnswerType(AnswerType.SINGLESELECT);
         questionEntity.setQuestionState(QuestionState.INACTIVE);
         questionEntity.setQuestionText(ques1Title);
-        questionEntity.setShortName(ques1Title);
         questionEntity.setChoices(asList(getChoice("Ch2", 1), getChoice("Ch1", 2), getChoice("Ch3", 3)));
         questionDao.create(questionEntity);
     }
@@ -662,7 +657,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(sectionQuestion1.getSection().getSequenceNumber(), is(1));
         assertThat(sectionQuestion1.getQuestion(), is(notNullValue()));
         assertThat(sectionQuestion1.getQuestion().getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
-        assertThat(sectionQuestion1.getQuestion().getShortName(), is(firstQuestionTitle));
+        assertThat(sectionQuestion1.getQuestion().getQuestionText(), is(firstQuestionTitle));
         assertThat(sectionQuestion1.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.FREETEXT));
 
         SectionQuestion sectionQuestion2 = questions.get(1);
@@ -672,7 +667,7 @@ public class QuestionnaireServiceIntegrationTest {
         assertThat(sectionQuestion2.getSection().getSequenceNumber(), is(1));
         assertThat(sectionQuestion2.getQuestion(), is(notNullValue()));
         assertThat(sectionQuestion2.getQuestion().getQuestionStateAsEnum(), is(QuestionState.ACTIVE));
-        assertThat(sectionQuestion2.getQuestion().getShortName(), is(secondQuestionTitle));
+        assertThat(sectionQuestion2.getQuestion().getQuestionText(), is(secondQuestionTitle));
         assertThat(sectionQuestion2.getQuestion().getAnswerTypeAsEnum(), is(AnswerType.SINGLESELECT));
         assertThat(sectionQuestion2.getQuestion().getChoices(), is(notNullValue()));
         assertThat(sectionQuestion2.getQuestion().getChoices().size(), is(3));

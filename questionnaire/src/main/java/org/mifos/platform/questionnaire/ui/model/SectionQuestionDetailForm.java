@@ -40,8 +40,8 @@ public class SectionQuestionDetailForm {
         return sectionQuestionDetail.getQuestionId();
     }
 
-    public String getTitle() {
-        return sectionQuestionDetail.getTitle();
+    public String getText() {
+        return sectionQuestionDetail.getText();
     }
 
     public boolean isMandatory() {

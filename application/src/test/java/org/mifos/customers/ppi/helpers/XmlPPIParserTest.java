@@ -46,7 +46,7 @@ public class XmlPPIParserTest extends TestCase {
         PPISurvey comparisonSurvey = new PPISurvey("Test PPI Survey", SurveyState.ACTIVE, SurveyType.CLIENT,
                 Country.INDIA);
 
-        Question question = new Question("Test Question", "What is your question?", AnswerType.CHOICE);
+        Question question = new Question("What is your question?", AnswerType.CHOICE);
         PPIChoice choice1 = new PPIChoice("What?");
         choice1.setPoints(0);
         PPIChoice choice2 = new PPIChoice("Why?");

@@ -94,8 +94,8 @@ public class SectionQuestionDetail implements Serializable {
         return mandatory;
     }
 
-    public String getTitle() {
-        return questionDetail.getTitle();
+    public String getText() {
+        return questionDetail.getText();
     }
 
     public void setMandatory(boolean mandatory) {

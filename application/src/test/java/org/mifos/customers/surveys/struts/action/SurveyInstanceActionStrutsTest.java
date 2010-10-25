@@ -115,11 +115,11 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         String officerName = personnel.getUserName();
 
         Survey survey = sampleInstance.getSurvey();
-        Question question1 = new Question("test name 1", "test question 1", AnswerType.FREETEXT);
-        Question question2 = new Question("test name 2", "test question 2", AnswerType.NUMBER);
-        Question question3 = new Question("test name 3", "test question 3", AnswerType.DATE);
-        Question question4 = new Question("test name 4", "test question 4", AnswerType.CHOICE);
-        Question question5 = new Question("test name 5", "test question 4", AnswerType.MULTISELECT);
+        Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+        Question question2 = new Question("test question 2", AnswerType.NUMBER);
+        Question question3 = new Question("test question 3", AnswerType.DATE);
+        Question question4 = new Question("test question 4", AnswerType.CHOICE);
+        Question question5 = new Question("test question 4", AnswerType.MULTISELECT);
 
         QuestionChoice choice1 = new QuestionChoice("choice 1");
         QuestionChoice choice2 = new QuestionChoice("choice 2");
@@ -211,8 +211,8 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         SurveysPersistence persistence = new SurveysPersistence();
         String testName = "testGet survey name";
         SurveyInstance sampleInstance = SurveyIntegrationTest.makeSurveyInstance(testName);
-        Question question1 = new Question("test name 1", "testGet question1 text", AnswerType.NUMBER);
-        Question question2 = new Question("test name 2", "testGet question1 text", AnswerType.FREETEXT);
+        Question question1 = new Question("testGet question1 text", AnswerType.NUMBER);
+        Question question2 = new Question("testGet question1 text", AnswerType.FREETEXT);
 
         Survey sampleSurvey = sampleInstance.getSurvey();
         SurveyQuestion surveyQuestion1 = sampleSurvey.addQuestion(question1, true);
@@ -270,10 +270,10 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         String officerName = officer.getName();
 
         Survey survey = sampleInstance.getSurvey();
-        Question question1 = new Question("test name 1", "test question 1", AnswerType.FREETEXT);
-        Question question2 = new Question("test name 2", "test question 2", AnswerType.NUMBER);
-        Question question3 = new Question("test name 3", "test question 3", AnswerType.DATE);
-        Question question4 = new Question("test name 4", "test question 4", AnswerType.CHOICE);
+        Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+        Question question2 = new Question("test question 2", AnswerType.NUMBER);
+        Question question3 = new Question("test question 3", AnswerType.DATE);
+        Question question4 = new Question("test question 4", AnswerType.CHOICE);
 
         QuestionChoice choice1 = new QuestionChoice("choice 1");
         QuestionChoice choice2 = new QuestionChoice("choice 2");

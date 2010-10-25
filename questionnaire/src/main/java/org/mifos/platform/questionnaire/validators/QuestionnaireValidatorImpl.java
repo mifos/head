@@ -72,7 +72,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     @Override
     public void validateForDefineQuestion(QuestionDetail questionDetail) throws SystemException {
-        validateQuestionTitle(questionDetail);
+        validateQuestionText(questionDetail);
         validateQuestionType(questionDetail);
     }
 
@@ -178,9 +178,9 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private void validateQuestion(QuestionDto question, ValidationException parentException, boolean withDuplicateQuestionTypeCheck) {
-        if (StringUtils.isEmpty(question.getTitle())) {
-            parentException.addChildException(new ValidationException(QUESTION_TITLE_NOT_PROVIDED));
-        } else if (question.getTitle().length() >= MAX_LENGTH_FOR_QUESTION_TEXT) {
+        if (StringUtils.isEmpty(question.getText())) {
+            parentException.addChildException(new ValidationException(QUESTION_TEXT_NOT_PROVIDED));
+        } else if (question.getText().length() >= MAX_LENGTH_FOR_QUESTION_TEXT) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_TOO_BIG));
         } else if (questionHasDuplicateTitle(question, withDuplicateQuestionTypeCheck)) {
             parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
@@ -272,7 +272,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     }
 
     private boolean questionHasDuplicateTitle(QuestionDto question, boolean withQuestionTypeCheck) {
-        List<QuestionEntity> questions = questionDao.retrieveByName(question.getTitle());
+        List<QuestionEntity> questions = questionDao.retrieveByText(question.getText());
         boolean result = false;
         if (isNotEmpty(questions)) {
             result = true;
@@ -351,7 +351,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     private boolean questionsHaveInvalidNames(List<QuestionDto> questions, ValidationException parentException) {
         boolean invalid = false;
         if (!allQuestionsHaveNames(questions)) {
-            parentException.addChildException(new ValidationException(QUESTION_TITLE_NOT_PROVIDED));
+            parentException.addChildException(new ValidationException(QUESTION_TEXT_NOT_PROVIDED));
             invalid = true;
         } else if(!allQuestionsHaveUniqueNames(questions)) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_DUPLICATE));
@@ -364,7 +364,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         boolean result = true;
         Set<String> questionNames = new HashSet<String>();
         for (QuestionDto question : questions) {
-            String name = question.getTitle().toLowerCase(Locale.getDefault());
+            String name = question.getText().toLowerCase(Locale.getDefault());
             if (questionNames.contains(name)) {
                 result = false;
                 break;
@@ -482,7 +482,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         boolean result = true;
         for (QuestionDto questionDto : questions) {
             questionDto.trimTitle();
-            if (StringUtils.isEmpty(questionDto.getTitle())) {
+            if (StringUtils.isEmpty(questionDto.getText())) {
                 result = false;
                 break;
             }
@@ -525,7 +525,7 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     private void validateSectionQuestionDetail(ValidationException validationException, SectionQuestionDetail sectionQuestionDetail) {
         // TODO: When there are more such validations, use a chain of validators
-        String questionTitle = sectionQuestionDetail.getTitle();
+        String questionTitle = sectionQuestionDetail.getText();
         if (sectionQuestionDetail.isMandatory() && sectionQuestionDetail.hasNoAnswer()) {
             validationException.addChildException(new MandatoryAnswerNotFoundException(questionTitle));
         } else if (sectionQuestionDetail.hasAnswer() && sectionQuestionDetail.isNumeric()) {
@@ -599,9 +599,9 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return min != null && max != null && min > max;
     }
 
-    private void validateQuestionTitle(QuestionDetail questionDefinition) throws SystemException {
-        if (StringUtils.isEmpty(questionDefinition.getTitle())) {
-            throw new SystemException(QUESTION_TITLE_NOT_PROVIDED);
+    private void validateQuestionText(QuestionDetail questionDefinition) throws SystemException {
+        if (StringUtils.isEmpty(questionDefinition.getText())) {
+            throw new SystemException(QUESTION_TEXT_NOT_PROVIDED);
         }
     }
 }

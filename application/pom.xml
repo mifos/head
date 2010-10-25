@@ -658,6 +658,14 @@
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
             </resource>
+            <resource>
+                <directory>${modules.root.dir}/questionnaire/src/main/webapp/pages</directory>
+                <targetPath>pages</targetPath>
+            </resource>
+            <resource>
+                <directory>${modules.root.dir}/userInterface/src/main/webapp/pages</directory>
+                <targetPath>pages</targetPath>
+            </resource>
         </resources>
         <testResources>
             <testResource>

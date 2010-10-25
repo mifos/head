@@ -52,7 +52,7 @@
                     <li class="marginTop15">
                         <label for="details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
                             [#if question.mandatory]<span class="red">*</span>[/#if]
-                            ${question.title}
+                            ${question.text}
                             [#if question.questionType=="DATE"](dd/mm/yyyy)&nbsp[/#if]:
                         </label>
                         [#switch question.questionType]

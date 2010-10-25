@@ -1,0 +1,1 @@
+alter table questions drop column short_name;

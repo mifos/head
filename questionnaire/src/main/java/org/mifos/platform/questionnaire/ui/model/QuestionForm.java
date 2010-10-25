@@ -54,19 +54,19 @@ public class QuestionForm extends ScreenObject {
     }
 
     public void addCurrentQuestion() {
-        currentQuestion.trimTitleAndSetChoices();
+        currentQuestion.setChoices();
         questions.add(currentQuestion);
         currentQuestion = new Question(new QuestionDetail());
     }
 
     public boolean isDuplicateTitle(String questionTitle) {
-        return (findQuestionByTitle(questionTitle) != null);
+        return (findQuestionByText(questionTitle) != null);
     }
 
-    private Question findQuestionByTitle(String title) {
-        if(!StringUtils.isBlank(title)){
+    private Question findQuestionByText(String text) {
+        if(!StringUtils.isBlank(text)){
             for (Question qt : questions){
-                if(StringUtils.equalsIgnoreCase(title.trim(), qt.getTitle())){
+                if(StringUtils.equalsIgnoreCase(text.trim(), qt.getText())){
                     return qt;
                 }
             }
@@ -75,7 +75,7 @@ public class QuestionForm extends ScreenObject {
     }
 
     public void removeQuestion(String questionTitle) {
-        Question question = findQuestionByTitle(questionTitle);
+        Question question = findQuestionByText(questionTitle);
         if (question != null) {
             questions.remove(question);
         }
@@ -89,7 +89,7 @@ public class QuestionForm extends ScreenObject {
         return currentQuestion.numericBoundsAreInvalid();
     }
 
-    public boolean titleHasChanged() {
-        return currentQuestion.titleHasChanged();
+    public boolean textHasChanged() {
+        return currentQuestion.textHasChanged();
     }
 }

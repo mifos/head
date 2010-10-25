@@ -174,17 +174,17 @@ public class QuestionGroupForm extends ScreenObject {
     }
 
     private void addNewQuestion() {
-        currentQuestion.trimTitleAndSetChoices();
+        currentQuestion.setChoices();
         SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(currentQuestion.getQuestionDetail(), false);
         currentSection.addSectionQuestion(sectionQuestionDetail);
         currentQuestion = new Question(new QuestionDetail());
     }
 
-    public boolean isDuplicateTitle(String questionTitle) {
+    public boolean isDuplicateText(String questionTitle) {
         boolean result = false;
         if(StringUtils.isNotEmpty(questionTitle)){
             for (SectionQuestionDetail sectionQuestionDetail : getAllQuestionsInAllSections()) {
-                if(StringUtils.equalsIgnoreCase(questionTitle, sectionQuestionDetail.getTitle())){
+                if(StringUtils.equalsIgnoreCase(questionTitle, sectionQuestionDetail.getText())){
                     result = true;
                     break;
                 }

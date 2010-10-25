@@ -92,7 +92,7 @@ public class QuestionnaireFlowAdapterTest {
     }
 
     private List<QuestionGroupDetail> getQuestionGroups() {
-        List<QuestionDetail> questions = Arrays.asList(new QuestionDetail(12, "Question1", "Question1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questions = Arrays.asList(new QuestionDetail(12, "Question1", QuestionType.FREETEXT, true));
         List<SectionDetail> section = Arrays.asList(getSectionDetailWithQuestions("Section1", questions, null, true));
         QuestionGroupDetail questionGroup = getQuestionGroupDetail("Group1", "Create", "Loan", section);
         return Arrays.asList(questionGroup);

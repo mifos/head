@@ -12,7 +12,7 @@
       <tbody>
       [#list questionDefinition.questions as question]
         <tr>
-            <td class="title">${question.title}</td>
+            <td class="title">${question.text}</td>
             <td class="ans_type">${question.type}</td>
             <td class="choices">
               [#if question.commaSeparateChoices?has_content]
@@ -21,7 +21,7 @@
                 <i>[@spring.message "questionnaire.quesiton.choices.notapplicable"/]</i>
               [/#if]
             </td>
-            <td class="remove"><a href="removeQuestion#" title="${question.title}">[@spring.message "questionnaire.remove.link"/]</a></td>
+            <td class="remove"><a href="removeQuestion#" title="${question.text}">[@spring.message "questionnaire.remove.link"/]</a></td>
        </tr>
       [/#list]
       </tbody>

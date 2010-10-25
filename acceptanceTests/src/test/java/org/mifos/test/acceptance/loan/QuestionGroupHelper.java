@@ -35,7 +35,7 @@ public class QuestionGroupHelper {
 
     private CreateQuestionParameters getCreateQuestionParams(String title, String type, List<String> choices) {
         CreateQuestionParameters parameters = new CreateQuestionParameters();
-        parameters.setTitle(title);
+        parameters.setText(title);
         parameters.setType(type);
         parameters.setChoicesFromStrings(choices);
         return parameters;

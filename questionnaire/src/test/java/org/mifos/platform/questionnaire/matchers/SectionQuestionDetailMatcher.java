@@ -35,7 +35,7 @@ public class SectionQuestionDetailMatcher extends TypeSafeMatcher<SectionQuestio
     @Override
     public boolean matchesSafely(SectionQuestionDetail sectionQuestionDetail) {
         return this.sectionQuestionDetail.getQuestionId() == sectionQuestionDetail.getQuestionId()
-                && equalsIgnoreCase(this.sectionQuestionDetail.getTitle(), sectionQuestionDetail.getTitle());
+                && equalsIgnoreCase(this.sectionQuestionDetail.getText(), sectionQuestionDetail.getText());
     }
 
     @Override

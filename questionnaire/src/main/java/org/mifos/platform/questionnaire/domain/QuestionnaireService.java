@@ -43,7 +43,7 @@ public interface QuestionnaireService {
 
     List<QuestionGroupDetail> getAllQuestionGroups();
 
-    boolean isDuplicateQuestionTitle(String title);
+    boolean isDuplicateQuestionText(String title);
 
     QuestionGroupDetail getQuestionGroup(int questionGroupId) throws SystemException;
 

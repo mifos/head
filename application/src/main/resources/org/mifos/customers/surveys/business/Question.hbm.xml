@@ -7,7 +7,6 @@
 		<id name="questionId" column="question_id" type="integer" unsaved-value="0" access="field">
 			<generator class="native"/>
 		</id>
-		<property name="shortName" column="short_name"/>
 		<property name="questionText" column="question_text"/>
 		<property name="answerType" column="answer_type" />
 		<property name="questionState" column="question_state"/>
@@ -23,19 +22,19 @@
        <![CDATA[select count(*) from Question as question where question.answerType in (1,2,3,4,5,6)]]>
     </query>
 	<query name="questions.retrieveAll">
-       <![CDATA[from Question as question where question.answerType in (1,2,3,4,5,6) order by question.shortName]]>
+       <![CDATA[from Question as question where question.answerType in (1,2,3,4,5,6) order by question.questionText]]>
     </query>
  	<query name="Question.retrieveByState">
-       <![CDATA[from Question as question where question.questionState=:QUESTION_STATE and question.answerType in (1,2,3,4,5,6) order by question.shortName]]>
+       <![CDATA[from Question as question where question.questionState=:QUESTION_STATE and question.answerType in (1,2,3,4,5,6) order by question.questionText]]>
     </query>
-    <query name="questions.retrieveByName">
-       <![CDATA[from Question as question where question.shortName=:SHORT_NAME]]>
+    <query name="questions.retrieveByText">
+       <![CDATA[from Question as question where question.questionText=:QUESTION_TEXT]]>
     </query>    
      <query name="questions.retrieveByAnswerType">
        <![CDATA[from Question as question where question.answerType=:ANSWER_TYPE]]>
     </query>  
-     <query name="Question.retrieveCountOfQuestionsWithTitle">
-       <![CDATA[select count(*) from Question as question where question.shortName=:questionTitle]]>
+     <query name="Question.retrieveCountOfQuestionsWithText">
+       <![CDATA[select count(*) from Question as question where question.questionText=:questionText]]>
     </query>
 
 </hibernate-mapping>

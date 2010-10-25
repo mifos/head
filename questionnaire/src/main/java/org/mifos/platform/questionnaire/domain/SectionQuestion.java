@@ -74,8 +74,8 @@ public class SectionQuestion implements Serializable {
         this.sequenceNumber = sequenceNumber;
     }
 
-    public String getQuestionTitle() {
-        return question.getShortName();
+    public String getQuestionText() {
+        return question.getQuestionText();
     }
 
     public boolean isNewSectionQuestion() {

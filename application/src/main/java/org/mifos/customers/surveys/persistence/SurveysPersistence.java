@@ -171,9 +171,9 @@ public class SurveysPersistence extends Persistence {
         return (Question) getSession().get(Question.class, id);
     }
 
-    public List<Question> retrieveQuestionsByName(String name) {
-        Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_BY_NAME);
-        query.setParameter("SHORT_NAME", name);
+    public List<Question> retrieveQuestionsByText(String text) {
+        Query query = getSession().getNamedQuery(NamedQueryConstants.QUESTIONS_RETRIEVE_BY_TEXT);
+        query.setParameter("QUESTION_TEXT", text);
         return query.list();
     }
 
