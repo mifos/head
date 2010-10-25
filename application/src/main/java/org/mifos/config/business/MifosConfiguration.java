@@ -20,20 +20,21 @@
 
 package org.mifos.config.business;
 
+import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpLabelEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.config.LocalizedTextLookup;
+import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.util.helpers.LabelKey;
+import org.mifos.framework.components.mifosmenu.MenuRepository;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.mifos.application.master.business.LookUpLabelEntity;
-import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.LookUpEntity;
-import org.mifos.config.LocalizedTextLookup;
-import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
-import org.mifos.config.util.helpers.LabelKey;
 
 /**
  * This class caches label text and lookUpValue text.
@@ -59,7 +60,14 @@ public class MifosConfiguration {
 
     public void init() {
         initializeLabelCache();
+    }
 
+    /**
+     * Refreshes labels cache and resets MenuRepository
+     */
+    public void refresh() {
+        MenuRepository.getInstance().removeMenuForAllLocale();
+        initializeLabelCache();
     }
 
     public void updateLabelKey(String keyString, String newLabelValue, Short localeId) {

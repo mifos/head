@@ -100,10 +100,10 @@ html, body { height: 100% }
 }
 .breadcrumb {
 	background-color:#D7DEEE;
-    padding-bottom:4px;
+    padding-bottom:5px;
     padding-left:10px;
-    padding-top:3px;
-    font-size:8pt;
+    padding-top:2px;
+    font-size:8pt !important;
     height:13px;
 }
 .side_bar h3 {
@@ -357,4 +357,8 @@ margin-top:2px;
 .sideMarginAuto {
     margin-left:auto;
     margin-right:auto;
+}
+
+.breadcrumb a, .breadcrumb span {
+    font-size:8pt;
 }

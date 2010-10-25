@@ -161,4 +161,8 @@ public class MenuRepository {
     public void removeLocaleMenu(Locale lc) {
         localeMenuMap.remove(lc);
     }
+
+    public void removeMenuForAllLocale() {
+        localeMenuMap = new HashMap();
+    }
 }
