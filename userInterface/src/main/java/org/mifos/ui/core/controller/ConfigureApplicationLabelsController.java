@@ -20,10 +20,6 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.domain.AccountStatusesLabelDto;
@@ -40,6 +36,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import javax.validation.Valid;
+import java.util.List;
+
 
 @Controller
 @RequestMapping("/defineLabels")
@@ -68,7 +68,7 @@ public class ConfigureApplicationLabelsController {
 
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
-        return new AdminBreadcrumbBuilder().withLink(FORM_VIEW, "defineLabels.ftl").build();
+        return new AdminBreadcrumbBuilder().withLink("admin.defineLabels", "defineLabels.ftl").build();
     }
 
     @RequestMapping(method = RequestMethod.GET)

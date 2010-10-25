@@ -129,7 +129,7 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
             transactionHelper.commitTransaction();
 
             if (!accountStatuses.isEmpty()) {
-                MifosConfiguration.getInstance().init();
+                MifosConfiguration.getInstance().refresh();                
             }
 
         } catch (BusinessRuleException e) {
