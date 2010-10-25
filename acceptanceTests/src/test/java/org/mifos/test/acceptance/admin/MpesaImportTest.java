@@ -25,22 +25,17 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.URI;
-import org.aspectj.util.FileUtil;
-import org.joda.time.DateTime;
+import java.net.URISyntaxException;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.admin.ImportTransactionsConfirmationPage;
 import org.mifos.test.acceptance.framework.admin.ImportTransactionsPage;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
-import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -98,11 +93,15 @@ public class MpesaImportTest extends UiTestCaseBase {
 		}
      }
 
-	private void checkIfOutputMatchesExpected(String path) throws Exception {
+	private void checkIfOutputMatchesExpected(String path) throws FileNotFoundException, IOException, URISyntaxException {
 		DataInputStream in = new DataInputStream(new FileInputStream(new File(new URI(path + ".expected.txt"))));
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		String line = null;
-		while ((line = br.readLine()) != null) {
+		while (true) {
+			line = br.readLine();
+			if (line == null) {
+				break;
+			}
 			if (!selenium.isTextPresent(line.trim())) {
 				Assert.fail("No text <" + line.trim() + "> present on the page");
 			}
