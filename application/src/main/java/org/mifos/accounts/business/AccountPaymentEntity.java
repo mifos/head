@@ -20,21 +20,27 @@
 
 package org.mifos.accounts.business;
 
+import org.joda.time.DateTime;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.LoanPaymentData;
+import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.framework.business.AbstractEntity;
+import org.mifos.framework.util.helpers.Money;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.joda.time.DateTime;
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.util.helpers.SavingsConstants;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.business.AbstractEntity;
-import org.mifos.framework.util.helpers.Money;
 
 /**
  * Records information about a payment from client to teller/field officer.
@@ -219,5 +225,11 @@ public class AccountPaymentEntity extends AbstractEntity {
             }
         }
         return savingsWithdrawal;
+    }
+
+    public void addAccountTrxn(PaymentData paymentData, LoanPaymentData loanPaymentData, LoanPersistence loanPersistence) {
+        addAccountTrxn(new LoanTrxnDetailEntity(this, loanPaymentData,
+                paymentData.getPersonnel(), paymentData.getTransactionDate(), AccountActionTypes.LOAN_REPAYMENT,
+                loanPaymentData.getAmountPaidWithFeeForInstallment(), AccountConstants.PAYMENT_RCVD, loanPersistence));
     }
 }

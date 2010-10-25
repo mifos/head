@@ -477,6 +477,7 @@ public class AccountBO extends AbstractBusinessObject {
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());
+        // TODO adjust inst. schedule for PAWDEP
     }
 
     /*

@@ -1506,15 +1506,89 @@ public class LoanBO extends AccountBO {
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
 
-        if ((this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) != 0)
-                && (this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) != 0)) {
-            throw new AccountException("Loan not in a State for a Repayment to be made: " + this.getState().toString());
+        validateForMakePayment(paymentData);
+        LoanPaymentTypes loanPaymentTypes = handleLoanPayment(paymentData);
+        AccountPaymentEntity accountPayment = getAccountPayment(paymentData);
+        applyPaymentsToInstallments(paymentData, loanPaymentTypes, accountPayment);
+        if (isLoanInBadStanding() && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
+            handleArrearsAging();
         }
+        addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), paymentData.getPersonnel(), AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
+        return accountPayment;
+    }
 
-        if (!paymentAmountIsValid(paymentData.getTotalAmount())) {
-            throw new AccountException("errors.makePayment", new String[] { getGlobalAccountNum() });
+    private void applyPaymentsToInstallments(PaymentData paymentData, LoanPaymentTypes loanPaymentTypes, AccountPaymentEntity accountPayment) throws AccountException {
+        for (AccountPaymentData accountPaymentData : paymentData.getAccountPayments()) {
+            applyPayment(paymentData, loanPaymentTypes, accountPayment, accountPaymentData);
         }
+    }
 
+    private void applyPayment(PaymentData paymentData, LoanPaymentTypes loanPaymentTypes, AccountPaymentEntity accountPayment, AccountPaymentData accountPaymentData) throws AccountException {
+        LoanScheduleEntity currentInstallment = (LoanScheduleEntity) getAccountActionDate(accountPaymentData.getInstallmentId());
+        validateInstallment(currentInstallment);
+        closeLoanIfRequired(paymentData, accountPaymentData, currentInstallment);
+        changeLoanToGoodStandingIfRequired(paymentData, loanPaymentTypes);
+        updateLoanSummaryAndPerfHistory(paymentData, accountPayment, currentInstallment, (LoanPaymentData) accountPaymentData);
+    }
+
+    private void updateLoanSummaryAndPerfHistory(PaymentData paymentData, AccountPaymentEntity accountPayment, LoanScheduleEntity currentInstallment, LoanPaymentData loanPaymentData) {
+        currentInstallment.setPaymentDetails(loanPaymentData, paymentData.getTransactionDateAsSQLDate());
+        loanPaymentData.setAccountActionDate(currentInstallment);
+        accountPayment.addAccountTrxn(paymentData, loanPaymentData, getLoanPersistence());
+        loanPaymentData.updateLoanSummary(loanSummary);
+        if (loanPaymentData.isPaid()) performanceHistory.incrementPayments();
+    }
+
+    private void changeLoanToGoodStandingIfRequired(PaymentData paymentData, LoanPaymentTypes loanPaymentTypes) throws AccountException {
+        if (isLoanInBadStanding() && loanPaymentTypes.isFullOrFuturePayment()) {
+            changeLoanToGoodStanding(paymentData);
+        }
+    }
+
+    private void closeLoanIfRequired(PaymentData paymentData, AccountPaymentData accountPaymentData, LoanScheduleEntity currentInstallment) throws AccountException {
+        AccountActionDateEntity lastInstallment = getLastInstallmentAccountAction();
+        if (currentInstallment.isSameAs(lastInstallment) && accountPaymentData.isPaid()) {
+            closeLoan(paymentData);
+        }
+    }
+
+    private void validateInstallment(LoanScheduleEntity loanScheduleEntity) throws AccountException {
+        if (loanScheduleEntity.isPaid()) {
+            throw new AccountException("errors.update", new String[] { getGlobalAccountNum() });
+        }
+    }
+
+    private void changeLoanToGoodStanding(PaymentData paymentData) throws AccountException {
+        changeLoanStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, paymentData.getPersonnel());
+        // Client performance entry
+        updateCustomerHistoryOnPayment();
+        this.delete(loanArrearsAgingEntity);
+        loanArrearsAgingEntity = null;
+    }
+
+    private void closeLoan(PaymentData paymentData) throws AccountException {
+        changeLoanStatus(AccountState.LOAN_CLOSED_OBLIGATIONS_MET, paymentData.getPersonnel());
+        this.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
+        // Client performance entry
+        updateCustomerHistoryOnLastInstlPayment(paymentData.getTotalAmount());
+        this.delete(loanArrearsAgingEntity);
+        loanArrearsAgingEntity = null;
+    }
+
+    private boolean isLoanInBadStanding() {
+        return getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
+    }
+
+    private AccountPaymentEntity getAccountPayment(PaymentData paymentData) {
+        final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
+                paymentData.getReceiptNum(), paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData
+                        .getPaymentTypeId()), paymentData.getTransactionDate());
+        accountPayment.setCreatedByUser(paymentData.getPersonnel());
+        accountPayment.setComment(paymentData.getComment());
+        return accountPayment;
+    }
+
+    private LoanPaymentTypes handleLoanPayment(PaymentData paymentData) {
         final LoanPaymentTypes loanPaymentTypes = getLoanPaymentType(paymentData.getTotalAmount());
         if (loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
             handlePartialPayment(paymentData);
@@ -1523,67 +1597,25 @@ public class LoanBO extends AccountBO {
         } else if (loanPaymentTypes.equals(LoanPaymentTypes.FUTURE_PAYMENT)) {
             handleFuturePayment(paymentData);
         }
+        return loanPaymentTypes;
+    }
 
-        final AccountActionDateEntity lastAccountAction = getLastInstallmentAccountAction();
-        final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
-                paymentData.getReceiptNum(), paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData
-                        .getPaymentTypeId()), paymentData.getTransactionDate());
-        accountPayment.setCreatedByUser(paymentData.getPersonnel());
-        accountPayment.setComment(paymentData.getComment());
+    private void validateForMakePayment(PaymentData paymentData) throws AccountException {
+        validateForLoanStatus();
+        validateForTotalAmount(paymentData);
+    }
 
-        java.sql.Date paymentDate = new java.sql.Date(paymentData.getTransactionDate().getTime());
-
-        for (AccountPaymentData accountPaymentData : paymentData.getAccountPayments()) {
-            LoanScheduleEntity accountAction = (LoanScheduleEntity) getAccountActionDate(accountPaymentData
-                    .getInstallmentId());
-            if (accountAction.isPaid()) {
-                throw new AccountException("errors.update", new String[] { getGlobalAccountNum() });
-            }
-            if (accountAction.getInstallmentId().equals(lastAccountAction.getInstallmentId())
-                    && accountPaymentData.isPaid()) {
-                changeLoanStatus(AccountState.LOAN_CLOSED_OBLIGATIONS_MET, paymentData.getPersonnel());
-                this.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
-                // Client performance entry
-                updateCustomerHistoryOnLastInstlPayment(paymentData.getTotalAmount());
-                this.delete(loanArrearsAgingEntity);
-                loanArrearsAgingEntity = null;
-            }
-            if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
-                    && (loanPaymentTypes.equals(LoanPaymentTypes.FULL_PAYMENT) || loanPaymentTypes
-                            .equals(LoanPaymentTypes.FUTURE_PAYMENT))) {
-                changeLoanStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, paymentData.getPersonnel());
-                // Client performance entry
-                updateCustomerHistoryOnPayment();
-                this.delete(loanArrearsAgingEntity);
-                loanArrearsAgingEntity = null;
-            }
-
-            LoanPaymentData loanPaymentData = (LoanPaymentData) accountPaymentData;
-            accountAction.setPaymentDetails(loanPaymentData, paymentDate);
-            accountPaymentData.setAccountActionDate(accountAction);
-
-            final LoanTrxnDetailEntity accountTrxnBO = new LoanTrxnDetailEntity(accountPayment, loanPaymentData,
-                    paymentData.getPersonnel(), paymentData.getTransactionDate(), AccountActionTypes.LOAN_REPAYMENT,
-                    loanPaymentData.getAmountPaidWithFeeForInstallment(), AccountConstants.PAYMENT_RCVD,
-                    getLoanPersistence());
-            accountPayment.addAccountTrxn(accountTrxnBO);
-
-            loanSummary.updatePaymentDetails(loanPaymentData.getPrincipalPaid(), loanPaymentData.getInterestPaid(),
-                    loanPaymentData.getPenaltyPaid().add(loanPaymentData.getMiscPenaltyPaid()), loanPaymentData
-                            .getFeeAmountPaidForInstallment().add(loanPaymentData.getMiscFeePaid()));
-            if (loanPaymentData.isPaid()) {
-                performanceHistory.setNoOfPayments(getPerformanceHistory().getNoOfPayments() + 1);
-            }
+    private void validateForTotalAmount(PaymentData paymentData) throws AccountException {
+        if (!paymentAmountIsValid(paymentData.getTotalAmount())) {
+            throw new AccountException("errors.makePayment", new String[] { getGlobalAccountNum() });
         }
+    }
 
-        if (getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
-                && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
-            handleArrearsAging();
+    private void validateForLoanStatus() throws AccountException {
+        if ((this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING) != 0)
+                && (this.getState().compareTo(AccountState.LOAN_ACTIVE_IN_BAD_STANDING) != 0)) {
+            throw new AccountException("Loan not in a State for a Repayment to be made: " + this.getState().toString());
         }
-
-        addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), paymentData.getPersonnel(),
-                AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
-        return accountPayment;
     }
 
     private void delete(final AbstractEntity objectoDelete) throws AccountException {
@@ -2538,15 +2570,10 @@ public class LoanBO extends AccountBO {
     }
 
     private AccountActionDateEntity getLastInstallmentAccountAction() {
+        Set<AccountActionDateEntity> accountActionDateEntitySet = getAccountActionDates();
         AccountActionDateEntity nextAccountAction = null;
-        if (getAccountActionDates() != null && getAccountActionDates().size() > 0) {
-            for (AccountActionDateEntity accountAction : getAccountActionDates()) {
-                if (null == nextAccountAction) {
-                    nextAccountAction = accountAction;
-                } else if (nextAccountAction.getInstallmentId() < accountAction.getInstallmentId()) {
-                    nextAccountAction = accountAction;
-                }
-            }
+        if (org.mifos.platform.util.CollectionUtils.isNotEmpty(accountActionDateEntitySet)) {
+            nextAccountAction = Collections.max(accountActionDateEntitySet);
         }
         return nextAccountAction;
     }
@@ -2631,11 +2658,12 @@ public class LoanBO extends AccountBO {
     }
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {
-        if (amount.equals(getTotalPaymentDue())) {
+        Money totalPaymentDue = getTotalPaymentDue();
+        if (amount.equals(totalPaymentDue)) {
             return LoanPaymentTypes.FULL_PAYMENT;
-        } else if (amount.isLessThan(getTotalPaymentDue())) {
+        } else if (amount.isLessThan(totalPaymentDue)) {
             return LoanPaymentTypes.PARTIAL_PAYMENT;
-        } else if (amount.isGreaterThan(getTotalPaymentDue()) && amount.isLessThanOrEqual(getTotalRepayableAmount())) {
+        } else if (amount.isGreaterThan(totalPaymentDue) && amount.isLessThanOrEqual(getTotalRepayableAmount())) {
             return LoanPaymentTypes.FUTURE_PAYMENT;
         }
         return null;

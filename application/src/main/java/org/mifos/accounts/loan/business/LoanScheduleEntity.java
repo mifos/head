@@ -459,4 +459,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
                 this.actionDate, this.principal, this.interest,
                 this.getTotalFeeDue(), this.miscFee, this.miscPenalty, userLocale);
     }
+
+    public boolean isSameAs(AccountActionDateEntity accountActionDateEntity) {
+        return getInstallmentId().equals(accountActionDateEntity.getInstallmentId());
+    }
 }

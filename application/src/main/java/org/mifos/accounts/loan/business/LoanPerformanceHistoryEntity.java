@@ -115,4 +115,8 @@ public class LoanPerformanceHistoryEntity extends AbstractEntity {
         }
         return noOfMissedPayments;
     }
+
+    public void incrementPayments() {
+        setNoOfPayments(getNoOfPayments() + 1);
+    }
 }

@@ -24,4 +24,7 @@ public enum LoanPaymentTypes {
 
     PARTIAL_PAYMENT, FULL_PAYMENT, FUTURE_PAYMENT;
 
+    public boolean isFullOrFuturePayment() {
+        return (equals(FULL_PAYMENT) || equals(FUTURE_PAYMENT));
+    }
 }
