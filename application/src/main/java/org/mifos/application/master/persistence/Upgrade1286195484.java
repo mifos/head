@@ -24,7 +24,6 @@ import java.sql.SQLException;
 import java.util.Iterator;
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.customers.business.CustomerAddressDetailEntity;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlUpgrade;
@@ -46,7 +45,6 @@ public class Upgrade1286195484 extends Upgrade {
         Session session = StaticHibernateUtil.getSessionTL();
         Query query = session.createQuery("from CustomerAddressDetailEntity");
         Iterator it = query.iterate();
-		Transaction t = session.beginTransaction();
         while (it.hasNext()) {
             CustomerAddressDetailEntity address = (CustomerAddressDetailEntity)it.next();
 			if (address.getAddress().getPhoneNumber() != null && !address.getAddress().getPhoneNumber().isEmpty()) {
@@ -57,7 +55,6 @@ public class Upgrade1286195484 extends Upgrade {
 				update.executeUpdate();
 			}
         }
-		t.commit();
     }
 
 }
