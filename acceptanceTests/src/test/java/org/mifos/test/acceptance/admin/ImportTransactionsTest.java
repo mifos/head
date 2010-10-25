@@ -83,11 +83,11 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     @Test(enabled=false)
     public void importTabDelimitedAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-OneTransactionEA00002.txt").toString();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml", dataSource, selenium);
 
         importTransaction(importFile, TSV_IMPORT_TYPE);
 
-        String expectedDataSetFile = "ImportTransactions_001_result_dbunit.xml.zip";
+        String expectedDataSetFile = "ImportTransactions_001_result_dbunit.xml";
 
         verifyImportTransactions(expectedDataSetFile);
      }
@@ -97,11 +97,11 @@ public class ImportTransactionsTest extends UiTestCaseBase {
     @Test(enabled=false)
     public void importExcelFormatAudiBankTransactions() throws Exception {
         String importFile = this.getClass().getResource("/AudiUSD-SevenTransactions.xls").toString();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_009_dbunit.xml", dataSource, selenium);
 
         importTransaction(importFile, EXCEL_IMPORT_TYPE);
 
-        String expectedDataSetFile = "ImportTransactions_002_result_dbunit.xml.zip";
+        String expectedDataSetFile = "ImportTransactions_002_result_dbunit.xml";
 
         verifyImportTransactions(expectedDataSetFile);
      }

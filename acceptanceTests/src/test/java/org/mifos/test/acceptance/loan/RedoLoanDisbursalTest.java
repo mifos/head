@@ -78,7 +78,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void redoLoanDisbursalWithPastDate() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         RedoLoanDisbursalParameters params = new RedoLoanDisbursalParameters();
 
@@ -88,13 +88,13 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
         loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", params);
 
-        verifyRedoneLoanDisbursal("RedoLoanDisbursalTest_001_result_dbunit.xml.zip");
+        verifyRedoneLoanDisbursal("RedoLoanDisbursalTest_001_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(enabled=true)
     public void redoLoanDisbursalWithCurrentOrFutureDate() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         RedoLoanDisbursalParameters params = new RedoLoanDisbursalParameters();
 

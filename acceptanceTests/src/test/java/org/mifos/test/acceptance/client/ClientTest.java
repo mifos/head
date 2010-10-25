@@ -111,7 +111,7 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientAndChangeStatusTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
@@ -125,7 +125,7 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchForClientAndEditDetailsTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
 
         ClientsAndAccountsHomepage clientsPage = navigationHelper.navigateToClientsAndAccountsPage();
@@ -154,7 +154,7 @@ public class ClientTest extends UiTestCaseBase {
     @Test(groups = {"smoke"})
     public void createClientWithCorrectAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
@@ -167,7 +167,7 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithMoreThanMaximumAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
@@ -180,7 +180,7 @@ public class ClientTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithLessThanMinimumAgeTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setMinimumAgeForClients(18);
         propertiesHelper.setMaximumAgeForClients(60);
@@ -192,7 +192,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void searchForClientAndAddSurveysTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         createQuestionGroup();
         navigateToClientDetailsPage();
@@ -314,7 +314,7 @@ public class ClientTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createClientWithQuestionGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         String questionGroupTitle = "QG1" + random.nextInt(100);
         String question1 = "NU_" + random.nextInt(100);

@@ -80,7 +80,7 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newLoan() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
 
@@ -90,37 +90,37 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
 
         loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters);
 
-        verifyStatusHistory("ClientLoanStatusHistory_001_result_dbunit.xml.zip");
+        verifyStatusHistory("ClientLoanStatusHistory_001_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void pendingApprovalToApproved() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
         params.setStatus(EditLoanAccountStatusParameters.APPROVED);
         params.setNote("Test");
         loanTestHelper.changeLoanAccountStatus(ACCOUNT_PENDING_APPROVAL_ID, params);
 
-        verifyStatusHistory("ClientLoanStatusHistory_002_result_dbunit.xml.zip");
+        verifyStatusHistory("ClientLoanStatusHistory_002_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void pendingApprovalToPartialApplication() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
         params.setStatus(EditLoanAccountStatusParameters.PARTIAL_APPLICATION);
         params.setNote("Test");
         loanTestHelper.changeLoanAccountStatus(ACCOUNT_PENDING_APPROVAL_ID, params);
 
-        verifyStatusHistory("ClientLoanStatusHistory_003_result_dbunit.xml.zip");
+        verifyStatusHistory("ClientLoanStatusHistory_003_result_dbunit.xml");
 
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void approvedToRejected() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
         params.setStatus(EditLoanAccountStatusParameters.CANCEL);
@@ -128,26 +128,26 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
         params.setNote("Test");
         loanTestHelper.changeLoanAccountStatus(ACCOUNT_APPROVED_ID, params);
 
-        verifyStatusHistory("ClientLoanStatusHistory_004_result_dbunit.xml.zip");
+        verifyStatusHistory("ClientLoanStatusHistory_004_result_dbunit.xml");
 
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void partialApplicationToPendingApproval() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         EditLoanAccountStatusParameters params = new EditLoanAccountStatusParameters();
         params.setStatus(EditLoanAccountStatusParameters.PENDING_APPROVAL);
         params.setNote("Test");
         loanTestHelper.changeLoanAccountStatus(ACCOUNT_PARTIAL_APPLICATION_ID, params);
 
-        verifyStatusHistory("ClientLoanStatusHistory_005_result_dbunit.xml.zip");
+        verifyStatusHistory("ClientLoanStatusHistory_005_result_dbunit.xml");
 
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newLoanToApproved() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
 
@@ -165,13 +165,13 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
         // we're missing the ID.
         loanAccountPage.navigateToEditAccountStatus().submitAndNavigateToNextPage(params).submitAndNavigateToLoanAccountPage();
 
-        verifyStatusHistory("ClientLoanStatusHistory_006_result_dbunit.xml.zip");
+        verifyStatusHistory("ClientLoanStatusHistory_006_result_dbunit.xml");
 
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newLoanToPartialApplicationToPendingApprovalToApproved() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
 
@@ -199,7 +199,7 @@ public class ClientLoanStatusHistoryTest extends UiTestCaseBase {
         params.setNote("Approved.");
         loanTestHelper.changeLoanAccountStatus(loanId, params);
 
-        verifyStatusHistory("ClientLoanStatusHistory_007_result_dbunit.xml.zip");
+        verifyStatusHistory("ClientLoanStatusHistory_007_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

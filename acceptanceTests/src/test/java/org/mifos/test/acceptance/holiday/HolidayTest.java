@@ -51,7 +51,7 @@ public class HolidayTest extends UiTestCaseBase {
     private AppLauncher appLauncher;
 
     public static final String HOLIDAY = "HOLIDAY";
-    private static final String HOLIDAY_RESULT_DATA_SET = "HolidayTest_001_result_dbunit.xml.zip";
+    private static final String HOLIDAY_RESULT_DATA_SET = "HolidayTest_001_result_dbunit.xml";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
@@ -74,7 +74,7 @@ public class HolidayTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createHoliday() throws Exception {
-        dbUnitUtilities.loadDataFromFile("acceptance_default_003_dbunit.xml.zip", dataSource);
+        dbUnitUtilities.loadDataFromFile("acceptance_default_003_dbunit.xml", dataSource);
         AdminPage adminPage = loginAndNavigateToAdminPage();
         adminPage.verifyPage();
         CreateHolidayEntryPage createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();

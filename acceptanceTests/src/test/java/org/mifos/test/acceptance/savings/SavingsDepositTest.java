@@ -57,7 +57,7 @@ public class SavingsDepositTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
-    private static final String startDataSet = "acceptance_small_008_dbunit.xml.zip";
+    private static final String startDataSet = "acceptance_small_008_dbunit.xml";
 
 
     @Override
@@ -99,7 +99,7 @@ public class SavingsDepositTest extends UiTestCaseBase {
         String[] tablesToRetrieve = { "SAVINGS_ACTIVITY_DETAILS", "SAVINGS_ACCOUNT", "SAVINGS_PERFORMANCE", "SAVINGS_TRXN_DETAIL" };
         String[] tablesToValidate = { "SAVINGS_ACTIVITY_DETAILS", "SAVINGS_ACCOUNT", "SAVINGS_PERFORMANCE" };
 
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("SavingsDeposit_001_result_dbunit.xml.zip");
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("SavingsDeposit_001_result_dbunit.xml");
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToRetrieve);
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
 

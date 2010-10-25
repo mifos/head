@@ -66,7 +66,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @Test(sequential = true, groups = { "smoke", "savings", "acceptance", "ui" })
     public void newVoluntaryClientSavingsAccount() throws Exception {
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
@@ -81,7 +81,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
     public void newMandatoryClientSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
@@ -96,7 +96,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
     public void newMandatoryClientSavingsAccountWithDateTypeCustomField() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_015_dbunit.xml", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString("Stu1233266079799 Client1233266079799");
@@ -111,7 +111,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
     public void newMandatoryGroupSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1232993846342");
@@ -126,7 +126,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
     public void newVoluntaryGroupSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1232993846342");
@@ -141,7 +141,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Test(sequential = true, groups = { "savings", "acceptance", "ui" })
     public void newVoluntaryCenterSavingsAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_008_dbunit.xml", dataSource, selenium);
 
         CreateSavingsAccountSearchParameters searchParameters = new CreateSavingsAccountSearchParameters();
         searchParameters.setSearchString("MyCenter1233266075715");
