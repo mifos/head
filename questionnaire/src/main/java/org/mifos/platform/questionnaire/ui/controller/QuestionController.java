@@ -65,7 +65,7 @@ public class QuestionController extends QuestionnaireController {
     private boolean validateQuestion(QuestionForm questionForm, MessageContext context, boolean createMode) {
         questionForm.validateConstraints(context);
         boolean result = true;
-        String title = StringUtils.trim(questionForm.getCurrentQuestion().getTitle());
+        String text = StringUtils.trim(questionForm.getCurrentQuestion().getText());
 
         if (context.hasErrorMessages()) {
             result = false;
@@ -74,14 +74,14 @@ public class QuestionController extends QuestionnaireController {
         else if (checkDuplicateTitleForCreateOperation(questionForm, createMode)) {
             constructErrorMessage(
                     context, "questionnaire.error.question.duplicate",
-                    "currentQuestion.title", "The name specified already exists.");
+                    "currentQuestion.text", "The text specified already exists.");
             result = false;
         }
 
-        else if (checkDuplicateTitleForEditOperation(questionForm, createMode, title)) {
+        else if (checkDuplicateTextForEditOperation(questionForm, createMode, text)) {
             constructErrorMessage(
                     context, "questionnaire.error.question.duplicate",
-                    "currentQuestion.title", "The name specified already exists.");
+                    "currentQuestion.text", "The text specified already exists.");
             result = false;
         }
 
@@ -102,8 +102,8 @@ public class QuestionController extends QuestionnaireController {
         return result;
     }
 
-    private boolean checkDuplicateTitleForEditOperation(QuestionForm questionForm, boolean createMode, String title) {
-        return !createMode && questionForm.titleHasChanged() && questionnaireServiceFacade.isDuplicateQuestion(title);
+    private boolean checkDuplicateTextForEditOperation(QuestionForm questionForm, boolean createMode, String text) {
+        return !createMode && questionForm.textHasChanged() && questionnaireServiceFacade.isDuplicateQuestion(text);
     }
 
     private boolean checkDuplicateTitleForCreateOperation(QuestionForm questionForm, boolean createMode) {
@@ -134,8 +134,8 @@ public class QuestionController extends QuestionnaireController {
     }
 
     private boolean isDuplicateQuestion(QuestionForm questionForm) {
-        String title = StringUtils.trim(questionForm.getCurrentQuestion().getTitle());
-        return questionForm.isDuplicateTitle(title) || questionnaireServiceFacade.isDuplicateQuestion(title);
+        String text = StringUtils.trim(questionForm.getCurrentQuestion().getText());
+        return questionForm.isDuplicateTitle(text) || questionnaireServiceFacade.isDuplicateQuestion(text);
     }
 
 }

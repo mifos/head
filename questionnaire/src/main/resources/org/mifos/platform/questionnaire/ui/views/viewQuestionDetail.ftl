@@ -23,11 +23,11 @@
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script type="text/javascript" src="pages/questionnaire/js/viewQuestionDetail.js"></script>
     <span id="page.id" title="view_question_details"></span>
-        [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",question.title:""}/]
+        [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",question.text:""}/]
         [@mifos.crumbpairs breadcrumb/]
         <div class="content_panel">
             <h1>
-                ${question.title}
+                ${question.text}
             </h1>
             <form name="viewQuestionDetailsForm" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST" class="marginLeft30">
                 <fieldset>
@@ -35,7 +35,7 @@
                         <li>
                             <a href="editQuestion#" class="topRight">[@spring.message "questionnaire.edit"/]</a>
                             <input type="submit" id="_eventId_editQuestion" name="_eventId_editQuestion" value="${question.id}" style="display:none"/>
-                            [@spring.message "questionnaire.question"/]: ${question.title}
+                            [@spring.message "questionnaire.question"/]: ${question.text}
                         </li>
                         <li>
                             [@spring.message "questionnaire.answer.type"/]: ${question.type}

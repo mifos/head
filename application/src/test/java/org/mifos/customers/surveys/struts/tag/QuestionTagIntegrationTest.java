@@ -58,8 +58,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
     public void testFreetext() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
-        String shortName = "QuestionTagIntegrationTest Name";
-        Question question = new Question(shortName, questionText, AnswerType.FREETEXT);
+        Question question = new Question(questionText, AnswerType.FREETEXT);
         persistence.createOrUpdate(question);
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "freetext answer", false);
         String markup = tag.getQuestionMarkup(result);
@@ -72,8 +71,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
     public void testNumber() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
-        String shortName = "QuestionTagIntegrationTest Name1";
-        Question question = new Question(shortName, questionText, AnswerType.NUMBER);
+        Question question = new Question(questionText, AnswerType.NUMBER);
         persistence.createOrUpdate(question);
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "42", false);
         String expectedMarkup = "<input type=\"text\" class=\"surveyform number fontnormal8t\" "
@@ -88,8 +86,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
     public void testDate() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
-        String shortName = "QuestionTagIntegrationTest Name2";
-        Question question = new Question(shortName, questionText, AnswerType.DATE);
+        Question question = new Question(questionText, AnswerType.DATE);
         persistence.createOrUpdate(question);
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "20/3/2000", false);
         String expectedMarkup = "<input type=\"text\" maxlength=\"2\""

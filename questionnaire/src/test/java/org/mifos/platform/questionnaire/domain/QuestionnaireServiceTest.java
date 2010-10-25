@@ -141,7 +141,6 @@ public class QuestionnaireServiceTest {
             verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
-            Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.FREETEXT, questionDetail.getType());
         } catch (SystemException e) {
             Assert.fail("Should not have thrown the validation exception");
@@ -162,7 +161,6 @@ public class QuestionnaireServiceTest {
             verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
-            Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
             Assert.assertEquals(choice1.getValue(), questionDetail.getAnswerChoices().get(0).getValue());
             Assert.assertEquals(choice2.getValue(), questionDetail.getAnswerChoices().get(1).getValue());
@@ -187,7 +185,6 @@ public class QuestionnaireServiceTest {
             verify(questionDao, times(1)).saveOrUpdate(any(QuestionEntity.class));
             Assert.assertNotNull(questionDetail);
             Assert.assertEquals(QUESTION_TITLE, questionDetail.getText());
-            Assert.assertEquals(QUESTION_TITLE, questionDetail.getShortName());
             Assert.assertEquals(QuestionType.MULTI_SELECT, questionDetail.getType());
             Assert.assertEquals(choice1.getValue(), questionDetail.getAnswerChoices().get(0).getValue());
             Assert.assertEquals(choice1.getTags().get(0), questionDetail.getAnswerChoices().get(0).getTags().get(0));
@@ -205,7 +202,7 @@ public class QuestionnaireServiceTest {
     @Test(expected = SystemException.class)
     public void shouldThrowValidationExceptionWhenQuestionTitleIsNull() throws SystemException {
         QuestionDetail questionDefinition = new QuestionDetail(null, QuestionType.INVALID);
-        doThrow(new SystemException(QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED)).when(questionnaireValidator).validateForDefineQuestion(questionDefinition);
+        doThrow(new SystemException(QuestionnaireConstants.QUESTION_TEXT_NOT_PROVIDED)).when(questionnaireValidator).validateForDefineQuestion(questionDefinition);
         questionnaireService.defineQuestion(questionDefinition);
         verify(questionnaireValidator).validateForDefineQuestion(questionDefinition);
     }
@@ -218,12 +215,10 @@ public class QuestionnaireServiceTest {
         verify(questionDao, times(1)).retrieveByState(1);
 
         assertThat(questionDetails.get(0).getText(), is("q1"));
-        assertThat(questionDetails.get(0).getShortName(), is("q1"));
         assertThat(questionDetails.get(0).getId(), is(1));
         assertThat(questionDetails.get(0).getType(), is(QuestionType.DATE));
 
         assertThat(questionDetails.get(1).getText(), is("q2"));
-        assertThat(questionDetails.get(1).getShortName(), is("q2"));
         assertThat(questionDetails.get(1).getId(), is(2));
         assertThat(questionDetails.get(1).getType(), is(QuestionType.FREETEXT));
 
@@ -239,12 +234,10 @@ public class QuestionnaireServiceTest {
         verify(questionDao, times(1)).retrieveByStateExcluding(excludedQuestions, 1);
 
         assertThat(questionDetails.get(0).getText(), is("q1"));
-        assertThat(questionDetails.get(0).getShortName(), is("q1"));
         assertThat(questionDetails.get(0).getId(), is(1));
         assertThat(questionDetails.get(0).getType(), is(QuestionType.DATE));
 
         assertThat(questionDetails.get(1).getText(), is("q2"));
-        assertThat(questionDetails.get(1).getShortName(), is("q2"));
         assertThat(questionDetails.get(1).getId(), is(2));
         assertThat(questionDetails.get(1).getType(), is(QuestionType.FREETEXT));
 
@@ -258,12 +251,10 @@ public class QuestionnaireServiceTest {
         verify(questionDao, times(1)).retrieveAll();
 
         assertThat(questionDetails.get(0).getText(), is("q1"));
-        assertThat(questionDetails.get(0).getShortName(), is("q1"));
         assertThat(questionDetails.get(0).getId(), is(1));
         assertThat(questionDetails.get(0).getType(), is(QuestionType.DATE));
 
         assertThat(questionDetails.get(1).getText(), is("q2"));
-        assertThat(questionDetails.get(1).getShortName(), is("q2"));
         assertThat(questionDetails.get(1).getId(), is(2));
         assertThat(questionDetails.get(1).getType(), is(QuestionType.FREETEXT));
 
@@ -273,7 +264,6 @@ public class QuestionnaireServiceTest {
         QuestionEntity question = new QuestionEntity();
         question.setQuestionId(id);
         question.setQuestionText(text);
-        question.setShortName(text);
         question.setAnswerType(type);
         question.setChoices(new LinkedList<QuestionChoiceEntity>());
         return question;
@@ -374,8 +364,8 @@ public class QuestionnaireServiceTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, null, QuestionType.INVALID, true), true));
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, null, QuestionType.INVALID, true), false));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, QuestionType.INVALID, true), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, QuestionType.INVALID, true), false));
         return section;
     }
 
@@ -428,7 +418,6 @@ public class QuestionnaireServiceTest {
             sectionQuestion.setSection(section);
             QuestionEntity questionEntity = new QuestionEntity();
             questionEntity.setQuestionText(questionNames[i]);
-            questionEntity.setShortName(questionNames[i]);
             setEveryOtherStateActive(i, questionEntity);
             questionEntity.setChoices(new LinkedList<QuestionChoiceEntity>());
             sectionQuestion.setQuestion(questionEntity);
@@ -454,7 +443,6 @@ public class QuestionnaireServiceTest {
         sectionQuestion.setSection(section);
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setQuestionText(questionName);
-        questionEntity.setShortName(questionName);
         questionEntity.setAnswerType(AnswerType.MULTISELECT);
         LinkedList<QuestionChoiceEntity> questionChoiceEntities = new LinkedList<QuestionChoiceEntity>();
         for (String choice : choices) {
@@ -510,7 +498,6 @@ public class QuestionnaireServiceTest {
         when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.DATE));
         QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
         Assert.assertNotNull(questionDetail);
-        assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.DATE));
         verify(questionDao, times(1)).getDetails(questionId);
@@ -526,7 +513,6 @@ public class QuestionnaireServiceTest {
         when(questionDao.getDetails(questionId)).thenReturn(question);
         QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
         Assert.assertNotNull(questionDetail);
-        assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.NUMERIC));
         assertThat(questionDetail.getNumericMin(), is(10));
@@ -542,7 +528,6 @@ public class QuestionnaireServiceTest {
         when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.MULTISELECT, questionChoiceEntities));
         QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
         Assert.assertNotNull(questionDetail);
-        assertThat(questionDetail.getShortName(), is(title));
         assertThat(questionDetail.getText(), is(title));
         assertThat(questionDetail.getType(), is(QuestionType.MULTI_SELECT));
         Assert.assertEquals("choice1", questionDetail.getAnswerChoices().get(0).getValue());
@@ -558,7 +543,6 @@ public class QuestionnaireServiceTest {
         when(questionDao.getDetails(questionId)).thenReturn(getQuestion(questionId, title, AnswerType.SINGLESELECT, questionChoices));
         QuestionDetail questionDetail = questionnaireService.getQuestion(questionId);
         Assert.assertNotNull(questionDetail);
-        Assert.assertThat(questionDetail.getShortName(), is(title));
         Assert.assertThat(questionDetail.getText(), is(title));
         Assert.assertThat(questionDetail.getType(), is(QuestionType.SINGLE_SELECT));
         Assert.assertEquals("choice1", questionDetail.getAnswerChoices().get(0).getValue());
@@ -582,10 +566,10 @@ public class QuestionnaireServiceTest {
     @Test
     public void shouldCheckDuplicates() {
         QuestionDefinition questionDefinition = new QuestionDefinition(QUESTION_TITLE, QuestionType.FREETEXT);
-        when(questionDao.retrieveCountOfQuestionsWithTitle(QUESTION_TITLE)).thenReturn(asList((long) 0)).thenReturn(asList((long) 1));
-        Assert.assertEquals(false, questionnaireService.isDuplicateQuestionTitle(questionDefinition.getTitle()));
-        Assert.assertEquals(true, questionnaireService.isDuplicateQuestionTitle(questionDefinition.getTitle()));
-        verify(questionDao, times(2)).retrieveCountOfQuestionsWithTitle(QUESTION_TITLE);
+        when(questionDao.retrieveCountOfQuestionsWithText(QUESTION_TITLE)).thenReturn(asList((long) 0)).thenReturn(asList((long) 1));
+        Assert.assertEquals(false, questionnaireService.isDuplicateQuestionText(questionDefinition.getTitle()));
+        Assert.assertEquals(true, questionnaireService.isDuplicateQuestionText(questionDefinition.getTitle()));
+        verify(questionDao, times(2)).retrieveCountOfQuestionsWithText(QUESTION_TITLE);
     }
 
     @Test
@@ -616,8 +600,8 @@ public class QuestionnaireServiceTest {
         assertThat(questionGroupDetails.get(1).getSectionDetails().size(), is(1));
         assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getName(), is("SectionN"));
         assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getQuestions().size(), is(2));
-        assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getQuestions().get(0).getTitle(), is("q2"));
-        assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getQuestions().get(1).getTitle(), is("q4"));
+        assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getQuestions().get(0).getText(), is("q2"));
+        assertThat(questionGroupDetails.get(1).getSectionDetails().get(0).getQuestions().get(1).getText(), is("q4"));
         assertThat(questionGroupDetails.get(2).getSectionDetails().size(), is(1));
     }
 
@@ -666,7 +650,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldSaveResponses() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
@@ -680,7 +664,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void testValidateResponse() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         try {
@@ -798,7 +782,7 @@ public class QuestionnaireServiceTest {
         QuestionEntity questionEntity = new QuestionEntity("Ques2");
         questionEntity.setAnswerType(AnswerType.SINGLESELECT);
         questionEntity.setChoices(asList(new QuestionChoiceEntity("Choice1"), new QuestionChoiceEntity("Choice2")));
-        when(questionDao.retrieveByName("Ques2")).thenReturn(asList(questionEntity));
+        when(questionDao.retrieveByText("Ques2")).thenReturn(asList(questionEntity));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
         questionnaireService.defineQuestionGroup(questionGroupDto);
         verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
@@ -806,11 +790,11 @@ public class QuestionnaireServiceTest {
     }
 
     private QuestionGroupDto getQuestionGroupDto() {
-        QuestionDto question1 = new QuestionDtoBuilder().withTitle("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).build();
+        QuestionDto question1 = new QuestionDtoBuilder().withText("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).build();
         ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
         ChoiceDto choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
         ChoiceDto choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
-        QuestionDto question2 = new QuestionDtoBuilder().withTitle("Ques2").withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).build();
+        QuestionDto question2 = new QuestionDtoBuilder().withText("Ques2").withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).build();
         SectionDto section = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
         return new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
     }
@@ -858,7 +842,7 @@ public class QuestionnaireServiceTest {
     @Test
     public void shouldSaveQuestionDto() {
         QuestionDtoBuilder questionDtoBuilder = new QuestionDtoBuilder();
-        QuestionDto questionDto = questionDtoBuilder.withTitle("Ques1").withType(QuestionType.SMART_SELECT).addChoices(new ChoiceDto("Ch1"), new ChoiceDto("Ch2")).build();
+        QuestionDto questionDto = questionDtoBuilder.withText("Ques1").withType(QuestionType.SMART_SELECT).addChoices(new ChoiceDto("Ch1"), new ChoiceDto("Ch2")).build();
         when(questionDao.create(any(QuestionEntity.class))).thenReturn(1234);
         Integer questionId = questionnaireService.defineQuestion(questionDto);
         assertThat(questionId, is(1234));
@@ -947,7 +931,7 @@ public class QuestionnaireServiceTest {
             for (Section section : questionGroup.getSections()) {
                 for (SectionQuestion sectionQuestion : section.getQuestions()) {
                     QuestionEntity questionEntity = sectionQuestion.getQuestion();
-                    if (StringUtils.equals(this.questionEntity.getShortName(), questionEntity.getShortName())) {
+                    if (StringUtils.equals(this.questionEntity.getQuestionText(), questionEntity.getQuestionText())) {
                         return this.questionEntity.getAnswerTypeAsEnum() == questionEntity.getAnswerTypeAsEnum()
                                 && areCompatibleChoices(questionEntity.getChoices());
                     }

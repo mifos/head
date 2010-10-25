@@ -33,7 +33,6 @@ public class QuestionDetail implements Serializable {
 
     private Integer id;
     private String text;
-    private String shortName;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<ChoiceDto> answerChoices;
@@ -46,13 +45,12 @@ public class QuestionDetail implements Serializable {
     }
 
     public QuestionDetail(String text, QuestionType type) {
-        this(0, text, text, type, true);
+        this(0, text, type, true);
     }
 
-    public QuestionDetail(Integer id, String text, String shortName, QuestionType type, boolean active) {
+    public QuestionDetail(Integer id, String text, QuestionType type, boolean active) {
         this.id = id;
         this.text = text;
-        this.shortName = shortName;
         this.type = type;
         this.answerChoices = new ArrayList<ChoiceDto>();
         this.active = active;
@@ -66,20 +64,12 @@ public class QuestionDetail implements Serializable {
         return text;
     }
 
-    public String getShortName() {
-        return shortName;
-    }
-
-    public String getTitle() {
-        return shortName;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public QuestionType getType() {
         return type;
-    }
-
-    public void setTitle(String title) {
-        this.shortName = title;
     }
 
     public void setType(QuestionType type) {
@@ -90,8 +80,8 @@ public class QuestionDetail implements Serializable {
         this.id = id;
     }
 
-    public void trimTitle() {
-        this.shortName = StringUtils.trim(this.shortName);
+    public void trimText() {
+        this.text = StringUtils.trim(this.text);
     }
 
     public List<ChoiceDto> getAnswerChoices() {

@@ -37,7 +37,7 @@
             [#list questions as question]
                 <li>
                     <a href="viewAndEditQuestion.ftl?questionId=${question.id}"
-                       id="questionId_${question.id}">${question.title}</a>
+                       id="questionId_${question.id}">${question.text}</a>
                 </li>
             [/#list]
         </ul>

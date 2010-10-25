@@ -26,9 +26,9 @@ import org.mifos.platform.questionnaire.domain.QuestionEntity;
 import java.util.List;
 
 public interface QuestionDao extends GenericDao<QuestionEntity, Integer> {
-    List<Long> retrieveCountOfQuestionsWithTitle(String questionTitle);
+    List<Long> retrieveCountOfQuestionsWithText(String questionText);
     List<QuestionEntity> retrieveByState(int questionState);
     List<QuestionEntity> retrieveByStateExcluding(List<Integer> questionsToExclude, int questionState);
     List<QuestionEntity> retrieveAll();
-    List<QuestionEntity> retrieveByName(String questionTitle);
+    List<QuestionEntity> retrieveByText(String questionText);
 }

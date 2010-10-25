@@ -29,7 +29,7 @@
     [@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
         <h1>
-            ${questionDefinition.currentQuestion.title} - [@spring.message "questionnaire.editquestion"/]
+            ${questionDefinition.currentQuestion.text} - [@spring.message "questionnaire.editquestion"/]
         </h1>
         <p class="red">
             [@spring.message "questionnaire.editquestion.warning"/]
@@ -40,7 +40,7 @@
         <div id="allErrorsDiv" class="allErrorsDiv">
             [@mifosmacros.showAllErrors "questionDefinition.*"/]
         </div>
-        <form name="editquestionform" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.title">
+        <form name="editquestionform" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.text">
 
 
             [#include "questionDefinition.ftl"]

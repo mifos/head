@@ -88,7 +88,7 @@ explanation of the license and how it is applied.
      		<c:out value="(PPI) " />
         </c:if>
         <html-el:link href="questionsAction.do?method=get&questionId=${question.questionId}&randomNUm=${sessionScope.randomNUm}">
-          <c:out value="${question.shortName}"/>
+          <c:out value="${question.questionText}"/>
         </html-el:link>
         <c:if test="${question.questionState == 0}">
           <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Inactive"/>

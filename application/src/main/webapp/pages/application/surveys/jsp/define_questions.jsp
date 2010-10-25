@@ -130,7 +130,7 @@ explanation of the license and how it is applied.
               </tr>
               <c:forEach var="question" items="${newQuestions}" varStatus="status">
               <tr>
-              	<td class="drawtablerow"><c:out value="${question.shortName}"/></td>
+              	<td class="drawtablerow"><c:out value="${question.questionText}"/></td>
                 <td class="drawtablerow"><c:out value="${question.questionText}"/></td>
                 <td class="drawtablerow">
 

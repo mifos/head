@@ -58,7 +58,7 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testRetrievePPIChoice() throws Exception {
-        Question question = new Question("question1", "what is your question", AnswerType.CHOICE);
+        Question question = new Question("what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");
         question.addChoice(ppiChoice);
         ppiChoice.setPoints(34);
@@ -71,7 +71,7 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testRetrieveRegularChoice() throws Exception {
-        Question question = new Question("question2", "what is your question", AnswerType.CHOICE);
+        Question question = new Question("what is your question", AnswerType.CHOICE);
         QuestionChoice regularChoice = new QuestionChoice("Hello World");
         question.addChoice(regularChoice);
         new SurveysPersistence().createOrUpdate(question);
@@ -97,7 +97,7 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
      */
     // marked @Ignore in JUnit 4 so converting to xtest
     public void xtestViaResponses() throws Exception {
-        Question question = new Question("question3", "what is your question", AnswerType.CHOICE);
+        Question question = new Question("what is your question", AnswerType.CHOICE);
         PPIChoice ppiChoice = new PPIChoice("Hello World");
         question.addChoice(ppiChoice);
         ppiChoice.setPoints(34);

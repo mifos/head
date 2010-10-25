@@ -91,7 +91,7 @@ public class QuestionnaireMigrationMapperTest {
                CustomFieldType.ALPHA_NUMERIC, EntityType.CLIENT, "Red", YesNoFlag.YES);
         QuestionDto questionDto = mapper.map(customField, 0);
         assertThat(questionDto, is(notNullValue()));
-        assertThat(questionDto.getTitle(), is("Favourite color"));
+        assertThat(questionDto.getText(), is("Favourite color"));
         assertThat(questionDto.getType(), is(QuestionType.FREETEXT));
         assertThat(questionDto.isMandatory(),is(true));
         assertThat(questionDto.getOrder(),is(0));
@@ -285,7 +285,7 @@ public class QuestionnaireMigrationMapperTest {
     }
 
     private void assertSingleSelectQuestion(QuestionDto questionDto, int order) {
-        assertThat(questionDto.getTitle(), is("Single Select Ques"));
+        assertThat(questionDto.getText(), is("Single Select Ques"));
         assertThat(questionDto.getType(), is(QuestionType.SINGLE_SELECT));
         assertThat(questionDto.getOrder(), is(order));
         List<ChoiceDto> choiceDtos = questionDto.getChoices();
@@ -300,7 +300,7 @@ public class QuestionnaireMigrationMapperTest {
     }
 
     private void assertMultiSelectQuestion(QuestionDto questionDto, int order) {
-        assertThat(questionDto.getTitle(), is("Multi Select Ques"));
+        assertThat(questionDto.getText(), is("Multi Select Ques"));
         assertThat(questionDto.getType(), is(QuestionType.MULTI_SELECT));
         assertThat(questionDto.getOrder(), is(order));
         List<ChoiceDto> choiceDtos = questionDto.getChoices();
@@ -315,13 +315,13 @@ public class QuestionnaireMigrationMapperTest {
     }
 
     private void assertDateQuestion(QuestionDto questionDto, int order) {
-        assertThat(questionDto.getTitle(), is("Date Ques"));
+        assertThat(questionDto.getText(), is("Date Ques"));
         assertThat(questionDto.getType(), is(QuestionType.DATE));
         assertThat(questionDto.getOrder(), is(order));
     }
 
     private void assertNumericQuestion(QuestionDto questionDto, int order) {
-        assertThat(questionDto.getTitle(), is("Numeric Ques"));
+        assertThat(questionDto.getText(), is("Numeric Ques"));
         assertThat(questionDto.getType(), is(QuestionType.NUMERIC));
         assertThat(questionDto.getOrder(), is(order));
         assertThat(questionDto.getMinValue(), is(30));
@@ -329,7 +329,7 @@ public class QuestionnaireMigrationMapperTest {
     }
 
     private void assertFreeTextQuestion(QuestionDto questionDto, int order) {
-        assertThat(questionDto.getTitle(), is("FreeText Ques"));
+        assertThat(questionDto.getText(), is("FreeText Ques"));
         assertThat(questionDto.getType(), is(QuestionType.FREETEXT));
         assertThat(questionDto.getOrder(), is(order));
     }
@@ -341,7 +341,7 @@ public class QuestionnaireMigrationMapperTest {
     }
 
     private void assertQuestion(QuestionDto questionDto, String title, QuestionType type, int order) {
-        assertThat(questionDto.getTitle(), is(title));
+        assertThat(questionDto.getText(), is(title));
         assertThat(questionDto.getType(), is(type));
         assertThat(questionDto.getOrder(), is(order));
     }

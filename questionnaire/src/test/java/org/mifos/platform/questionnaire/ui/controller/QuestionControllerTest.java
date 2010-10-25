@@ -129,7 +129,7 @@ public class QuestionControllerTest {
         Assert.assertThat(result, is(notNullValue()));
         Assert.assertThat(result, is("failure"));
         Mockito.verify(requestContext).getMessageContext();
-        Mockito.verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionForm.currentQuestion.title")));
+        Mockito.verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionForm.currentQuestion.text")));
     }
 
     @Test
@@ -151,7 +151,7 @@ public class QuestionControllerTest {
     public void testAddQuestionForFailureWhenQuestionTitleProvidedWithAllBlanks() throws Exception {
         QuestionForm qform = new QuestionForm();
         qform.setValidator(validator);
-        qform.getCurrentQuestion().setTitle("   ");
+        qform.getCurrentQuestion().setText("   ");
         qform.getCurrentQuestion().setType("Free Text");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         when(messageContext.hasErrorMessages()).thenReturn(true);
@@ -161,7 +161,7 @@ public class QuestionControllerTest {
         Assert.assertThat(result, is("failure"));
         Mockito.verify(requestContext).getMessageContext();
         // TODO: Assert for message code content
-        Mockito.verify(messageContext).addMessage(argThat(new MessageMatcher("Pattern.QuestionForm.currentQuestion.title")));
+        Mockito.verify(messageContext).addMessage(argThat(new MessageMatcher("Pattern.QuestionForm.currentQuestion.text")));
         //verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionForm.currentQuestion.type")));
 
     }
@@ -169,7 +169,7 @@ public class QuestionControllerTest {
     @Test
     public void testAddQuestionForFailureWhenQuestionTitleIsDuplicateInDB() throws Exception {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.getCurrentQuestion().setTitle(TITLE);
+        questionForm.getCurrentQuestion().setText(TITLE);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(true);
         String result = questionController.addQuestion(questionForm, requestContext, true);
@@ -182,7 +182,7 @@ public class QuestionControllerTest {
     @Test
     public void testAddQuestionForFailureWhenQuestionTitleIsDuplicateInForm() throws Exception {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
+        questionForm.getCurrentQuestion().setText("  " + TITLE + "    ");
         questionForm.setQuestions(Arrays.asList(getQuestion("0", TITLE, "Number")));
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionController.addQuestion(questionForm, requestContext, true);
@@ -197,7 +197,7 @@ public class QuestionControllerTest {
     public void testAddQuestionWhenTitleIsEdited() throws Exception {
         Question currentQuestion = new Question();
         QuestionDetail questionDetail = new QuestionDetail();
-        questionDetail.setTitle(TITLE);
+        questionDetail.setText(TITLE);
         questionDetail.setType(QuestionType.SINGLE_SELECT);
         questionDetail.setAnswerChoices(new ArrayList<ChoiceDto>(Arrays.asList(new ChoiceDto("choice1"), new ChoiceDto("choice2"))));
         currentQuestion.setQuestionDetail(questionDetail);
@@ -205,7 +205,7 @@ public class QuestionControllerTest {
         currentQuestion.addAnswerChoice();
         QuestionForm questionForm = new QuestionForm();
         questionForm.setCurrentQuestion(currentQuestion);
-        questionForm.getCurrentQuestion().setTitle(TITLE + 1);
+        questionForm.getCurrentQuestion().setText(TITLE + 1);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE + 1)).thenReturn(false);
         String result = questionController.addQuestion(questionForm, requestContext, false);
@@ -219,11 +219,11 @@ public class QuestionControllerTest {
     public void testAddQuestionWhenTitleIsEditedToOneAlreadyInDB() throws Exception {
         Question currentQuestion = new Question();
         QuestionDetail questionDetail = new QuestionDetail();
-        questionDetail.setTitle(TITLE);
+        questionDetail.setText(TITLE);
         currentQuestion.setQuestionDetail(questionDetail);
         QuestionForm questionForm = new QuestionForm();
         questionForm.setCurrentQuestion(currentQuestion);
-        questionForm.getCurrentQuestion().setTitle(TITLE + 1);
+        questionForm.getCurrentQuestion().setText(TITLE + 1);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE + 1)).thenReturn(true);
         String result = questionController.addQuestion(questionForm, requestContext, false);
@@ -235,7 +235,7 @@ public class QuestionControllerTest {
     public void testAddQuestionDuringEditOperationWhereTitleIsUnchanged() throws Exception {
         Question currentQuestion = new Question();
         QuestionDetail questionDetail = new QuestionDetail();
-        questionDetail.setTitle(TITLE);
+        questionDetail.setText(TITLE);
         currentQuestion.setQuestionDetail(questionDetail);
         QuestionForm questionForm = new QuestionForm();
         questionForm.setCurrentQuestion(currentQuestion);
@@ -249,7 +249,7 @@ public class QuestionControllerTest {
     @Test
     public void testAddQuestionForFailureWhenLessThanTwoChoicesAreGivenForMultiSelect() throws Exception {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
+        questionForm.getCurrentQuestion().setText("  " + TITLE + "    ");
         questionForm.getCurrentQuestion().setType("Multi Select");
         questionForm.getCurrentQuestion().setCurrentChoice("C1");
         questionForm.getCurrentQuestion().addAnswerChoice();
@@ -264,7 +264,7 @@ public class QuestionControllerTest {
     @Test
     public void testAddQuestionForSuccessWhenTwoChoicesAreGivenForSigleSelect() throws Exception {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.getCurrentQuestion().setTitle("  " + TITLE + "    ");
+        questionForm.getCurrentQuestion().setText("  " + TITLE + "    ");
         questionForm.getCurrentQuestion().setType("Single Select");
         questionForm.getCurrentQuestion().setCurrentChoice("C1");
         questionForm.getCurrentQuestion().addAnswerChoice();
@@ -310,19 +310,19 @@ public class QuestionControllerTest {
 
     private Question getQuestion(String id, String title, String type) {
         Question question = new Question(new QuestionDetail());
-        question.setTitle(title);
+        question.setText(title);
         question.setId(id);
         question.setType(type);
         return question;
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, title, title, type, true);
+        return new QuestionDetail(id, title, type, true);
     }
 
     private QuestionForm getQuestionForm(String title, String type) {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.getCurrentQuestion().setTitle(title);
+        questionForm.getCurrentQuestion().setText(title);
         questionForm.getCurrentQuestion().setType(type);
         return questionForm;
     }

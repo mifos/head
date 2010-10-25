@@ -44,7 +44,7 @@ explanation of the license and how it is applied.
 	               <c:forEach var="question" items="${section.questions}" varStatus="questionLoopStatus">
 	               	  <c:set var="questionIdx" value="${questionLoopStatus.index}"/> 
 	                  <li>
-	                    <span class="fontnormalbold">${question.title}:</span>
+	                    <span class="fontnormalbold">${question.text}:</span>
 	                    <span class="fontnormal">
 	                     <c:choose> 
 						   <c:when test="${question.questionType == 'MULTI_SELECT' || question.questionType == 'SMART_SELECT'}" >

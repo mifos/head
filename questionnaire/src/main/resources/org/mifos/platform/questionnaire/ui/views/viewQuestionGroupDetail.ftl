@@ -62,7 +62,7 @@
                                 <tbody>
                                 [#list section.sectionQuestions as sectionQuestion]
                                      <tr>
-                                         <td class="name" ><a href="viewAndEditQuestion.ftl?questionId=${sectionQuestion.questionId}">${sectionQuestion.title}</a></td>
+                                         <td class="name" ><a href="viewAndEditQuestion.ftl?questionId=${sectionQuestion.questionId}">${sectionQuestion.text}</a></td>
                                          <td class="mandatory" >
                                              [#if sectionQuestion.mandatory]
                                                  [@spring.message "questionnaire.yes"/]
