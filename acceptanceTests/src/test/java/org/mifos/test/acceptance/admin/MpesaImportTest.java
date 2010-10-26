@@ -44,7 +44,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * This test requires installation of MPESA plugin.
+ * This test requires installation of MPESA plugin and changing @Test(enabled=false) to @Test(enabled=true).
  *
  * The test imports the files from acceptanceTests/src/test/resources/mpesa/*.xls and for each file expects
  * that on import review page there will be messages from the corresponding file
@@ -81,7 +81,7 @@ public class MpesaImportTest extends UiTestCaseBase {
 	}
 
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
-    @Test
+    @Test(enabled=false)
     public void importMpesaTransactions() throws Exception {
 		String dataset = "mpesa_export.xml.zip";
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
@@ -117,7 +117,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     }
 
     //  Test the import transaction page loads with no plugins available  - regression test for MIFOS-2683
-    @Test
+    @Test(enabled=false)
     public void importTransactionPageLoad() {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ImportTransactionsPage importTransactionsPage = adminPage.navigateToImportTransactionsPage();
