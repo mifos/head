@@ -7,6 +7,7 @@
 		<id name="questionId" column="question_id" type="integer" unsaved-value="0" access="field">
 			<generator class="native"/>
 		</id>
+        <property name="nickname" column="nickname"/>
 		<property name="questionText" column="question_text"/>
 		<property name="answerType" column="answer_type" />
 		<property name="questionState" column="question_state"/>

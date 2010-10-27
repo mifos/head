@@ -34,11 +34,13 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
 
     private String questionText;
 
+    private String nickname;
+
     private Integer numericMin;
 
     private Integer numericMax;
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
+    @SuppressWarnings(value="SE_BAD_FIELD")
     private List<QuestionChoiceEntity> choices;
 
     public QuestionEntity() {
@@ -106,6 +108,14 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
 
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public AnswerType getAnswerTypeAsEnum() {

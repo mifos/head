@@ -68,10 +68,12 @@ public class QuestionGroupDefinitionParserTest {
         assertThat(questions, is(notNullValue()));
         assertThat(questions.size(), is(2));
         QuestionDto questionDto = questions.get(0);
+        assertThat(questionDto.getNickname(), is("date_of_birth"));
         assertThat(questionDto.getText(), is("Your DOB"));
         assertThat(questionDto.getType(), is(QuestionType.DATE));
         assertThat(questionDto.getOrder(), is(1));
         questionDto = questions.get(1);
+        assertThat(questionDto.getNickname(), is("num_family_members"));
         assertThat(questionDto.getText(), is("How many family members"));
         assertThat(questionDto.getType(), is(QuestionType.NUMERIC));
         assertThat(questionDto.getOrder(), is(2));
@@ -87,10 +89,12 @@ public class QuestionGroupDefinitionParserTest {
         assertThat(questions, is(notNullValue()));
         assertThat(questions.size(), is(3));
         QuestionDto questionDto = questions.get(0);
+        assertThat(questionDto.getNickname(), is("father_name"));
         assertThat(questionDto.getText(), is("Father's name'"));
         assertThat(questionDto.getType(), is(QuestionType.FREETEXT));
         assertThat(questionDto.getOrder(), is(1));
         questionDto = questions.get(1);
+        assertThat(questionDto.getNickname(), is("num_dependents"));
         assertThat(questionDto.getText(), is("No of dependents"));
         assertThat(questionDto.getType(), is(QuestionType.SINGLE_SELECT));
         assertThat(questionDto.getOrder(), is(2));
@@ -102,6 +106,7 @@ public class QuestionGroupDefinitionParserTest {
         assertChoiceDetail(choices.get(1), "Less than 5", 2);
         assertChoiceDetail(choices.get(2), "Less than 10", 3);
         questionDto = questions.get(2);
+        assertThat(questionDto.getNickname(), is("previous_loans"));
         assertThat(questionDto.getText(), is("Previous Loans taken for"));
         assertThat(questionDto.getType(), is(QuestionType.SMART_SELECT));
         assertThat(questionDto.getOrder(), is(3));

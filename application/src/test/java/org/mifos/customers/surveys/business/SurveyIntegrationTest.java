@@ -114,9 +114,12 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         String questionText3 = "testGetQuestionsByState question 3";
 
         Question question1 = new Question(questionText1);
+        question1.setNickname("Q1");
         Question question2 = new Question(questionText2);
+        question2.setNickname("Q2");
         question2.setQuestionState(QuestionState.INACTIVE);
         Question question3 = new Question(questionText3);
+        question3.setNickname("Q3");
         question3.setQuestionState(QuestionState.ACTIVE);
 
         surveysPersistence.createOrUpdate(question1);
@@ -189,9 +192,13 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         String questionText3 = "testGetQuestionsByState question 3";
         String questionText4 = "testGetQuestionsByState question 4";
         Question question1 = new Question(questionText1, AnswerType.FREETEXT);
+        question1.setNickname("name 1");
         Question question2 = new Question(questionText2, AnswerType.NUMBER);
+        question2.setNickname("name 2");
         Question question3 = new Question(questionText3, AnswerType.DATE);
+        question3.setNickname("name 3");
         Question question4 = new Question(questionText4, AnswerType.CHOICE);
+        question4.setNickname("name 4");
 
         surveysPersistence.createOrUpdate(question1);
         surveysPersistence.createOrUpdate(question2);
@@ -275,6 +282,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         Question question = new Question();
         question.setAnswerType(AnswerType.FREETEXT);
         question.setQuestionText(questionText);
+        question.setNickname("Short Name Test");
         question.setQuestionState(QuestionState.ACTIVE);
         StaticHibernateUtil.getSessionTL().save(question);
 
@@ -292,8 +300,11 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         String questionText2 = "test question 2";
         String questionText3 = "test question 3";
         Question question1 = new Question(questionText1, AnswerType.FREETEXT);
+        question1.setNickname("test name 1");
         Question question2 = new Question(questionText2, AnswerType.NUMBER);
+        question2.setNickname("test name 2");
         Question question3 = new Question(questionText3, AnswerType.DATE);
+        question3.setNickname("test name 3");
         question2.setQuestionState(QuestionState.INACTIVE);
 
         SurveysPersistence surveysPersistence = new SurveysPersistence();
@@ -318,6 +329,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
     public void testRetrieveQuestionsByName() throws Exception {
         String name1 = "name1";
         Question question1 = new Question(name1, AnswerType.FREETEXT);
+        question1.setNickname("test question text");
 
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         surveysPersistence.createOrUpdate(question1);
@@ -367,6 +379,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         Survey survey = instance.getSurvey();
         String questionText = "Why did the chicken cross the road?";
         Question question = new Question(questionText, AnswerType.CHOICE);
+        question.setNickname("Chicken Question");
         QuestionChoice choice1 = new QuestionChoice("To get to the other side.");
         QuestionChoice choice2 = new QuestionChoice("Exercise");
         List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
@@ -393,6 +406,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
         Survey survey = instance.getSurvey();
         String questionText = "Sample question with a numeric answer";
         Question question = new Question(questionText, AnswerType.NUMBER);
+        question.setNickname("Sample Name");
         SurveyQuestion surveyQuestion = survey.addQuestion(question, false);
         StaticHibernateUtil.getSessionTL().save(question);
         SurveyResponse response = new SurveyResponse();
@@ -413,6 +427,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         String questionText = "Dummy question text";
         Question question = new Question(questionText, AnswerType.FREETEXT);
+        question.setNickname("Short name");
         survey.addQuestion(question, true);
 
         String freetextAnswer = "Some answer";
@@ -480,6 +495,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         String questionText = "Text for testCreateSurveyResponse question";
         Question question = new Question(questionText, AnswerType.FREETEXT);
+        question.setNickname("Short name uno");
         SurveyQuestion surveyQuestion = survey.addQuestion(question, true);
 
         SurveyResponse response1 = new SurveyResponse();
@@ -494,6 +510,7 @@ public class SurveyIntegrationTest extends MifosIntegrationTestCase {
 
         questionText = "text for second testCreateSurveyResponse question";
         Question question2 = new Question(questionText, AnswerType.NUMBER);
+        question2.setNickname("Short name two");
         SurveyQuestion surveyQuestion2 = survey.addQuestion(question2, true);
         SurveyResponse response2 = new SurveyResponse();
         response2.setSurveyQuestion(surveyQuestion2);

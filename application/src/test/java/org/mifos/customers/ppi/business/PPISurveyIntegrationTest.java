@@ -108,6 +108,7 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
         List<SurveyQuestion> questions = new ArrayList<SurveyQuestion>();
 
         Question question = new Question("What is this question?", AnswerType.CHOICE);
+        question.setNickname("Test Question 1");
         question.setChoices(new ArrayList<QuestionChoice>());
         PPIChoice choice = new PPIChoice("First choice");
         choice.setChoiceId(1);

@@ -145,6 +145,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
         QuestionEntity question = getQuestion(questionDetail);
         question.setQuestionId(questionDetail.getId());
+        question.setNickname(questionDetail.getNickname());
         question.setQuestionText(questionDetail.getText());
         question.setAnswerType(mapToAnswerType(questionDetail.getType()));
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
@@ -334,6 +335,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
         List<ChoiceDto> answerChoices = mapToQuestionChoices(question.getChoices());
         QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), type, question.isActive());
+        questionDetail.setNickname(question.getNickname());
         questionDetail.setAnswerChoices(answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);
         return questionDetail;

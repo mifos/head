@@ -43,6 +43,8 @@ public class Question implements Serializable, Comparable<Question> {
 
     private String questionText;
 
+    private String nickname;
+
     private Integer numericMin;
 
     private Integer numericMax;
@@ -137,6 +139,14 @@ public class Question implements Serializable, Comparable<Question> {
 
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public AnswerType getAnswerTypeAsEnum() {

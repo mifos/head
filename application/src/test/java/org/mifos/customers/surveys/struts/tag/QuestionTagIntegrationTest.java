@@ -59,6 +59,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
         Question question = new Question(questionText, AnswerType.FREETEXT);
+        question.setNickname("QuestionTagIntegrationTest Name");
         persistence.createOrUpdate(question);
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "freetext answer", false);
         String markup = tag.getQuestionMarkup(result);
@@ -72,6 +73,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
         Question question = new Question(questionText, AnswerType.NUMBER);
+        question.setNickname("QuestionTagIntegrationTest Name1");
         persistence.createOrUpdate(question);
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "42", false);
         String expectedMarkup = "<input type=\"text\" class=\"surveyform number fontnormal8t\" "
@@ -87,6 +89,7 @@ public class QuestionTagIntegrationTest extends MifosIntegrationTestCase {
         SurveysPersistence persistence = new SurveysPersistence();
         String questionText = "question";
         Question question = new Question(questionText, AnswerType.DATE);
+        question.setNickname("QuestionTagIntegrationTest Name2");
         persistence.createOrUpdate(question);
         QuestionTag tag = new QuestionTag(question.getQuestionId(), "20/3/2000", false);
         String expectedMarkup = "<input type=\"text\" maxlength=\"2\""

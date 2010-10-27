@@ -208,6 +208,11 @@ public class QuestionsAction extends PersistenceAction {
                 SurveysConstants.KEY_NEW_QUESTIONS);
         SurveysPersistence persistence = new SurveysPersistence();
         for (Question question : questions) {
+            // TODO remove this code completely in MIFOS-3926
+            if (question.getNickname() == null) {
+                question.setNickname(question.getQuestionText().length() > 60 ?
+                question.getQuestionText().substring(0, 60) : question.getQuestionText());
+            }
             persistence.createOrUpdate(question);
         }
         List<Question> questionList = persistence.getQuestionsByQuestionType(SurveysConstants.QUESTION_TYPE_GENERAL);

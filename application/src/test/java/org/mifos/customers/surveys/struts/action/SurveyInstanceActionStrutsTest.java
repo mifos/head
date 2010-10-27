@@ -114,10 +114,15 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
         Survey survey = sampleInstance.getSurvey();
         Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+        question1.setNickname("test name 1");
         Question question2 = new Question("test question 2", AnswerType.NUMBER);
+        question2.setNickname("test name 2");
         Question question3 = new Question("test question 3", AnswerType.DATE);
+        question3.setNickname("test name 3");
         Question question4 = new Question("test question 4", AnswerType.CHOICE);
-        Question question5 = new Question("test question 4", AnswerType.MULTISELECT);
+        question4.setNickname("test name 4");
+        Question question5 = new Question("test question 5", AnswerType.MULTISELECT);
+        question5.setNickname("test name 5");
 
         QuestionChoice choice1 = new QuestionChoice("choice 1");
         QuestionChoice choice2 = new QuestionChoice("choice 2");
@@ -210,7 +215,9 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         String testName = "testGet survey name";
         SurveyInstance sampleInstance = SurveyIntegrationTest.makeSurveyInstance(testName);
         Question question1 = new Question("testGet question1 text", AnswerType.NUMBER);
+        question1.setNickname("test name 1");
         Question question2 = new Question("testGet question1 text", AnswerType.FREETEXT);
+        question2.setNickname("test name 2");
 
         Survey sampleSurvey = sampleInstance.getSurvey();
         SurveyQuestion surveyQuestion1 = sampleSurvey.addQuestion(question1, true);
@@ -269,9 +276,13 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
         Survey survey = sampleInstance.getSurvey();
         Question question1 = new Question("test question 1", AnswerType.FREETEXT);
+        question1.setNickname("test name 1");
         Question question2 = new Question("test question 2", AnswerType.NUMBER);
+        question2.setNickname("test name 2");
         Question question3 = new Question("test question 3", AnswerType.DATE);
+        question3.setNickname("test name 3");
         Question question4 = new Question("test question 4", AnswerType.CHOICE);
+        question4.setNickname("test name 4");
 
         QuestionChoice choice1 = new QuestionChoice("choice 1");
         QuestionChoice choice2 = new QuestionChoice("choice 2");
