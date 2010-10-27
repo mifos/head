@@ -3888,7 +3888,9 @@ create table questions (
   question_text varchar(1000) not null,
   numeric_min integer,
   numeric_max integer,
-  primary key(question_id)
+  nickname varchar(64) not null,
+  primary key(question_id),
+  unique(nickname)
 ) engine=innodb character set utf8;
 
 

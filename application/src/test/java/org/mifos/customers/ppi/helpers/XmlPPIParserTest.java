@@ -47,6 +47,7 @@ public class XmlPPIParserTest extends TestCase {
                 Country.INDIA);
 
         Question question = new Question("What is your question?", AnswerType.CHOICE);
+        question.setNickname("Test Question");
         PPIChoice choice1 = new PPIChoice("What?");
         choice1.setPoints(0);
         PPIChoice choice2 = new PPIChoice("Why?");

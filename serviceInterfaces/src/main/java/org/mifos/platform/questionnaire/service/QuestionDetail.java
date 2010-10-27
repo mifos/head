@@ -33,6 +33,7 @@ public class QuestionDetail implements Serializable {
 
     private Integer id;
     private String text;
+    private String nickname;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<ChoiceDto> answerChoices;
@@ -66,6 +67,14 @@ public class QuestionDetail implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public QuestionType getType() {

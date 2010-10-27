@@ -220,20 +220,18 @@ public class GroupPerformanceHistoryUsingCustomerServiceIntegrationTest extends 
                 "groupSavings").withShortName("GSP").buildForIntegrationTests();
         IntegrationTestObjectMother.createProduct(groupSavingsProduct);
 
-        SavingsBO groupSavingsAccount = new SavingsAccountBuilder().voluntary()
-                                                            .withSavingsProduct(groupSavingsProduct)
-                                                            .withCustomer(existingActiveClient)
-                                                            .withSavingsOfficer(existingLoanOfficer)
-                                                            .withBalanceOf(new Money(Money.getDefaultCurrency(), "200.0"))
-                                                            .build();
+        SavingsBO groupSavingsAccount = new SavingsAccountBuilder().withSavingsProduct(groupSavingsProduct)
+                                                                    .withCustomer(existingActiveClient)
+                                                                    .withSavingsOfficer(existingLoanOfficer)
+                                                                    .withBalanceOf(new Money(Money.getDefaultCurrency(), "200.0"))
+                                                                    .build();
         IntegrationTestObjectMother.saveSavingsAccount(groupSavingsAccount);
 
         SavingsOfferingBO clientSavingsProduct = new SavingsProductBuilder().appliesToClientsOnly().voluntary()
                 .withName("clientSavings").withShortName("CSP").buildForIntegrationTests();
         IntegrationTestObjectMother.createProduct(clientSavingsProduct);
 
-        SavingsBO clientSavingsAccount = new SavingsAccountBuilder().voluntary()
-                                                            .withSavingsProduct(clientSavingsProduct)
+        SavingsBO clientSavingsAccount = new SavingsAccountBuilder().withSavingsProduct(clientSavingsProduct)
                                                             .withCustomer(existingActiveClient)
                                                             .withSavingsOfficer(existingLoanOfficer).withBalanceOf(new Money(Money.getDefaultCurrency(), "550.0"))
                                                             .build();

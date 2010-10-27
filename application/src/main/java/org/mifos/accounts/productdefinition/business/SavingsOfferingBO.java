@@ -422,4 +422,16 @@ public class SavingsOfferingBO extends PrdOfferingBO {
     public boolean isMaxWithdrawalAmountExceeded(Money amountAdjustedTo) {
         return this.maxAmntWithdrawl.isGreaterThanZero() && amountAdjustedTo.isGreaterThan(this.maxAmntWithdrawl);
     }
+
+    public boolean hasRecommendedAmountOf(Money amount) {
+        return this.recommendedAmount != null && amount != null && !this.recommendedAmount.equals(amount);
+    }
+
+    public boolean isMandatory() {
+      return SavingsType.MANDATORY.getValue().equals(this.savingsType.getId());
+    }
+
+    public boolean isVoluntary() {
+      return SavingsType.VOLUNTARY.getValue().equals(this.savingsType.getId());
+    }
 }

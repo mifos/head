@@ -151,8 +151,7 @@ public class SavingsCloseTest {
 
         Money remainingBalance = TestUtils.createMoney("100");
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(remainingBalance)
@@ -175,8 +174,7 @@ public class SavingsCloseTest {
 
         Money remainingBalance = TestUtils.createMoney("100");
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(remainingBalance)
@@ -207,8 +205,7 @@ public class SavingsCloseTest {
 
         Money remainingBalance = TestUtils.createMoney("100");
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(remainingBalance)
@@ -231,8 +228,7 @@ public class SavingsCloseTest {
 
         Money remainingBalance = TestUtils.createMoney("100");
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(remainingBalance)
@@ -260,8 +256,7 @@ public class SavingsCloseTest {
 
         Money remainingBalance = TestUtils.createMoney("100");
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(remainingBalance)

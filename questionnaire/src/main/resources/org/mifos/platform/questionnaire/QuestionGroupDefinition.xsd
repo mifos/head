@@ -32,6 +32,7 @@
 
     <complexType name="Question">
         <sequence>
+            <element name="nickname" type="string" maxOccurs="1" minOccurs="0"/>
             <element name="text" type="string" maxOccurs="1" minOccurs="1"/>
             <element name="type" type="tns:QuestionType" maxOccurs="1" minOccurs="1"/>
             <element name="minValue" type="int" maxOccurs="1" minOccurs="0"/>

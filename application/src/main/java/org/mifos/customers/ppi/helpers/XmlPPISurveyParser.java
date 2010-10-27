@@ -89,15 +89,17 @@ public class XmlPPISurveyParser {
         NodeList questionNodes = docElement.getElementsByTagName("question");
         for (int i = 0; i < questionNodes.getLength(); i++) {
             Element node = (Element) questionNodes.item(i);
+            String nickname = null;
             String mandatory = null;
             Integer order = null;
             String questionText = node.getElementsByTagName("text").item(0).getTextContent();
 
             if (node.hasAttributes()) {
+                nickname = node.getAttributes().getNamedItem("name").getNodeValue();
                 mandatory = node.getAttributes().getNamedItem("mandatory").getNodeValue();
                 order = Integer.parseInt(node.getAttributes().getNamedItem("order").getNodeValue());
             }
-            if (mandatory == null || order == null || questionText == null) {
+            if (nickname == null || mandatory == null || order == null || questionText == null) {
                 throw new IllegalStateException("Malformatted xml file");
             }
 
@@ -112,6 +114,7 @@ public class XmlPPISurveyParser {
                 surveyQuestion.setQuestion(question);
             }
 
+            question.setNickname(nickname);
             question.setQuestionText(questionText);
             question.setAnswerType(AnswerType.CHOICE);
 

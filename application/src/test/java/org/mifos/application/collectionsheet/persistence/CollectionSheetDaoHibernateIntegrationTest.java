@@ -366,13 +366,13 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         // setup
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToCentersOnly().withShortName("SP1")
                 .buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct)
+        savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct)
                 .withCustomer(center).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         savingsProduct2 = new SavingsProductBuilder().withName("product2").withShortName("SP2").mandatory().appliesToCentersOnly()
                 .buildForIntegrationTests();
-        savingsAccount2 = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct2).withCustomer(
+        savingsAccount2 = new SavingsAccountBuilder().withSavingsProduct(savingsProduct2).withCustomer(
                 center).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct2, savingsAccount2);
 

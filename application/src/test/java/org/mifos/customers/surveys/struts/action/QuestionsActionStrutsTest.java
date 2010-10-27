@@ -67,6 +67,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         for (int i = 1; i <= choiceNumber; i++) {
             choices.add(new QuestionChoice("Test Choice " + i));
         }
+        question.setNickname(name);
         question.setChoices(choices);
         new SurveysPersistence().createOrUpdate(question);
         return question;
@@ -75,6 +76,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
     private Question makeTestNumberQuestion(String name, int min, int max) throws Exception {
         AnswerType type = AnswerType.fromInt(3);
         Question question = new Question(name, type);
+        question.setNickname(name);
         question.setNumericMin(min);
         question.setNumericMax(max);
         new SurveysPersistence().createOrUpdate(question);
@@ -84,6 +86,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
     private Question makeTestTextQuestion(String name) throws Exception {
         AnswerType type = AnswerType.fromInt(3);
         Question question = new Question(name, type);
+        question.setNickname(name);
         new SurveysPersistence().createOrUpdate(question);
         return question;
     }
@@ -91,6 +94,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
     private Question makeTestDateQuestion(String name) throws Exception {
         AnswerType type = AnswerType.fromInt(5);
         Question question = new Question(name, type);
+        question.setNickname(name);
         new SurveysPersistence().createOrUpdate(question);
         return question;
     }
@@ -120,6 +124,8 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(AnswerType.FREETEXT, newQuestions.get(0).getAnswerTypeAsEnum());
 
         String questionText2 = "testDefineQuestion sample text two";
+        String shortName2 = "testDefineQuestion 2";
+        addRequestParameter("value(shortName)", shortName2);
         addRequestParameter("value(questionText)", questionText2);
         addRequestParameter("value(answerType)", Integer.toString(AnswerType.CHOICE.getValue()));
         choices = new LinkedList<String>();
@@ -143,6 +149,8 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(3, newQuestions.get(1).getChoices().size());
 
         String questionText3 = "testDefineQuestions question text 3";
+        String shortName3 = "testDefineQuestion 3";
+        addRequestParameter("value(shortName)", shortName3);
         addRequestParameter("value(questionText)", questionText3);
         addRequestParameter("method", "addQuestion");
         getRequest().getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
@@ -241,6 +249,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testEditPPI() throws Exception {
         Question question = new Question("What's the q?", AnswerType.CHOICE);
+        question.setNickname("New Q");
 
         PPIChoice choice = new PPIChoice("choice 1");
         choice.setPoints(11);

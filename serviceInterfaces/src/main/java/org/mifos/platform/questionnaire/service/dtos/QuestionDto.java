@@ -35,6 +35,7 @@ import static org.apache.commons.lang.StringUtils.trim;
 public class QuestionDto implements Serializable {
     private static final long serialVersionUID = 4062506731931643620L;
 
+    private String nickname;
     private String text;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
@@ -56,6 +57,14 @@ public class QuestionDto implements Serializable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public QuestionType getType() {

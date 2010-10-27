@@ -171,14 +171,16 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
         if (customer.getCustomerLevel().getId().compareTo(CustomerLevel.CLIENT.getValue()) == 0) {
             savingsProductBuilder.appliesToClientsOnly();
         }
-        SavingsOfferingBO savingsProduct = savingsProductBuilder.buildForIntegrationTests();
 
-        SavingsAccountBuilder savingsAccountBuilder = new SavingsAccountBuilder().mandatory().completeGroup()
-                .withSavingsProduct(savingsProduct).withCustomer(customer).withRecommendedAmount(
-                        TestUtils.createMoney(amount));
+        SavingsOfferingBO savingsProduct = savingsProductBuilder.mandatory().withInterestRate(Double.valueOf("4.0")).buildForIntegrationTests();
         if (isVoluntary) {
-            savingsAccountBuilder.voluntary();
+            savingsProductBuilder.voluntary();
         }
+
+        SavingsAccountBuilder savingsAccountBuilder = new SavingsAccountBuilder().withSavingsProduct(savingsProduct)
+                                                                                 .withCustomer(customer)
+                                                                                 .completeGroup()
+                                                                                 .withRecommendedAmount(TestUtils.createMoney(amount));
         if (isPerIndividual) {
             savingsAccountBuilder.perIndividual();
         }

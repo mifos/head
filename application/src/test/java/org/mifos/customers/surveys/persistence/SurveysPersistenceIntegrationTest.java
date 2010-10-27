@@ -65,18 +65,21 @@ public class SurveysPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     private void createQuestions() throws PersistenceException {
         question1 = new Question("this is a non-ppi question", AnswerType.CHOICE);
+        question1.setNickname("question1");
         QuestionChoice regularChoice1 = new QuestionChoice("Hello World 1");
         QuestionChoice regularChoice2 = new QuestionChoice("Hello World 2");
         question1.addChoice(regularChoice1);
         question1.addChoice(regularChoice2);
 
         question2 = new Question("this is a ppi question", AnswerType.CHOICE);
+        question2.setNickname("question2");
         PPIChoice ppiChoice1 = new PPIChoice("Hello PPI World 1");
         PPIChoice ppiChoice2 = new PPIChoice("Hello PPI World 2");
         question2.addChoice(ppiChoice1);
         question2.addChoice(ppiChoice2);
 
         question3 = new Question("this is another ppi question", AnswerType.CHOICE);
+        question3.setNickname("question3");
         PPIChoice ppiChoice3 = new PPIChoice("Hello PPI World 3");
         PPIChoice ppiChoice4 = new PPIChoice("Hello PPI World 4");
         PPIChoice ppiChoice5 = new PPIChoice("Hello PPI World 5");

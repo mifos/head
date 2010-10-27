@@ -408,8 +408,6 @@ public class QuestionnaireServiceIntegrationTest {
         }
     }
 
-    // TODO JS - unignore it after MIFOS-3897 is done
-    @Ignore
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
     public void shouldThrowExceptionForDuplicateQuestion() throws SystemException {
@@ -559,6 +557,7 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setAnswerType(AnswerType.SMARTSELECT);
         questionEntity.setQuestionState(QuestionState.ACTIVE);
+        questionEntity.setNickname(quesTitle);
         questionEntity.setQuestionText(quesTitle);
         questionEntity.setChoices(asList(getChoice("Choice1", 0, "Tag1", "Tag2"), getChoice("Choice2", 1, "Tag4")));
         Integer quesId = questionDao.create(questionEntity);
@@ -626,6 +625,7 @@ public class QuestionnaireServiceIntegrationTest {
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setAnswerType(AnswerType.SINGLESELECT);
         questionEntity.setQuestionState(QuestionState.INACTIVE);
+        questionEntity.setNickname(ques1Title);
         questionEntity.setQuestionText(ques1Title);
         questionEntity.setChoices(asList(getChoice("Ch2", 1), getChoice("Ch1", 2), getChoice("Ch3", 3)));
         questionDao.create(questionEntity);
