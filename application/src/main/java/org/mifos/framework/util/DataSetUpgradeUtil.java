@@ -47,17 +47,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
 
 
 @SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
@@ -117,7 +112,7 @@ public class DataSetUpgradeUtil {
                 for (File listOfFile : listOfFiles) {
                     String currentFilename = listOfFile.getName();
                     if (listOfFile.isFile() &&
-                            currentFilename.endsWith("dbunit.xml.zip")) {
+                            currentFilename.endsWith("dbunit.xml")) {
                         String dataFileName = dataSetDirectoryName + File.separator + currentFilename;
                         upgrade(dataFileName, applicationContext);
                         dump(dataFileName);
@@ -139,7 +134,7 @@ public class DataSetUpgradeUtil {
         for (File listOfFile : listOfFiles) {
             String currentFilename = listOfFile.getName();
             if (listOfFile.isFile() &&
-                    currentFilename.endsWith("dbunit.xml.zip")) {
+                    currentFilename.endsWith("dbunit.xml")) {
                 ++fileCount;
             }
         }
@@ -212,56 +207,20 @@ public class DataSetUpgradeUtil {
         Connection jdbcConnection = DriverManager.getConnection("jdbc:mysql://localhost/" + databaseName
                 + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);
 
-
-        String fileNamewoZip = fileName.substring(0, fileName.length()-4);
-        String fileEnding = fileName.substring(fileName.length()-7, fileName.length()-4);
+        String fileEnding = fileName.substring(fileName.length()-3, fileName.length());
 
         if ("xml".equals(fileEnding)) {
             // dump xml
-            dbUnitUtilities.dumpDatabase(fileNamewoZip, jdbcConnection);
+            dbUnitUtilities.dumpDatabase(fileName, jdbcConnection);
         } else if ("sql".equals(fileEnding)) {
             // dump sql
             fail("ERROR: SQL dumping not implemented yet. Please dump " + databaseName + " manually with mysqldump. The upgrades have been applied.");
         } else {
-            fail("ERROR: Bad data set name. The file ending has to be .xml.zip or .sql.zip.");
+            fail("ERROR: Bad data set name. The file ending has to be .xml or .sql");
         }
-
-        zip(fileNamewoZip, fileName);
 
         jdbcConnection.close();
         System.out.println(" dump done!");
-    }
-
-    @SuppressWarnings("PMD.AssignmentInOperand")
-    private void zip (String fullInputFilePath, String zipFileName) {
-        byte[] buffer = new byte[2048];
-
-        try {
-            String entryFileName = fullInputFilePath.substring(fullInputFilePath.lastIndexOf(File.separator)+1);
-            String fullOutputFilePath = zipFileName;
-            // Create the ZIP file
-            ZipOutputStream zipStream = new ZipOutputStream(new FileOutputStream(fullOutputFilePath));
-
-            FileInputStream entryStream = new FileInputStream(fullInputFilePath);
-
-            zipStream.putNextEntry(new ZipEntry(entryFileName));
-
-            // transfer bytes
-            int len;
-            while ((len = entryStream.read(buffer)) > 0) {
-                zipStream.write(buffer, 0, len);
-            }
-
-            zipStream.closeEntry();
-
-            entryStream.close();
-            zipStream.close();
-
-            File f = new File(fullInputFilePath);
-            f.delete();
-        } catch (IOException e) {
-            fail(e.getStackTrace() + "\nERROR: Couldn't zip the file.");
-        }
     }
 
 
@@ -269,7 +228,7 @@ public class DataSetUpgradeUtil {
         outputFile = OptionBuilder.withArgName( "data set file name" )
         .withLongOpt("dataset")
         .hasArg()
-        .withDescription( "Upgrade the test data set with this name-- include the full file path (e.g. /home/me/dataSets/data_dbunit.xml.zip" )
+        .withDescription( "Upgrade the test data set with this name-- include the full file path (e.g. /home/me/dataSets/data_dbunit.xml" )
         .create( DATA_SET_OPTION_NAME );
 
         allFilesInDirecoryOption = OptionBuilder.withArgName( "data set directory" )
