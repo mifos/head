@@ -38,6 +38,6 @@
       </form>
     </div>
   <!--Main Login Ends-->
-  
+[@spring.message "login.chinese.translation.attribution" /]
 <!--Container Ends-->
-[@mifos.footer /] 
+[@mifos.footer /]
