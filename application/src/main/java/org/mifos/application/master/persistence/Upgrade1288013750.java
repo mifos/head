@@ -20,7 +20,6 @@ package org.mifos.application.master.persistence;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.mifos.framework.persistence.SqlUpgrade;
 import org.mifos.framework.persistence.Upgrade;
 import org.mifos.framework.util.SqlUpgradeScriptFinder;
@@ -51,7 +50,6 @@ public class Upgrade1288013750 extends Upgrade {
         Session session = StaticHibernateUtil.getSessionTL();
         Query query = session.createQuery("from Question");
         Iterator it = query.iterate();
-        Transaction t = session.beginTransaction();
         while (it.hasNext()) {
             Question question = (Question)it.next();
             String questionText = question.getQuestionText();
@@ -65,8 +63,6 @@ public class Upgrade1288013750 extends Upgrade {
                 updateResults = updateQuestion(session, questionText, questionId);
             }
         }
-
-        t.commit();
 
         SqlUpgrade upgrade2 = SqlUpgradeScriptFinder.findUpgradeScript(
                 "upgrade1288013750_step2.sql");
