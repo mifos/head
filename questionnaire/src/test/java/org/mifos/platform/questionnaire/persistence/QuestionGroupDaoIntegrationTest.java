@@ -75,9 +75,9 @@ public class QuestionGroupDaoIntegrationTest {
         List<SectionQuestion> sections2Questions = section2.getQuestions();
         assertThat(sections2Questions, is(notNullValue()));
         assertThat(sections2Questions.size(), is(3));
-        assertThat(sections2Questions.get(0).getQuestionTitle(), is(sectionDetail2.getQuestionDetail(0).getTitle()));
-        assertThat(sections2Questions.get(1).getQuestionTitle(), is(sectionDetail2.getQuestionDetail(1).getTitle()));
-        assertThat(sections2Questions.get(2).getQuestionTitle(), is(sectionDetail2.getQuestionDetail(2).getTitle()));
+        assertThat(sections2Questions.get(0).getQuestionText(), is(sectionDetail2.getQuestionDetail(0).getText()));
+        assertThat(sections2Questions.get(1).getQuestionText(), is(sectionDetail2.getQuestionDetail(1).getText()));
+        assertThat(sections2Questions.get(2).getQuestionText(), is(sectionDetail2.getQuestionDetail(2).getText()));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {

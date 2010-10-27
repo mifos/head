@@ -208,12 +208,12 @@ public class QuestionTest {
         assertThat(question.getQuestionDetail().getAnswerChoices().get(0).getTags().size(), is(0));
     }
 
-    private void assertQuestion(String shortName, QuestionType questionType, String questionTypeString, List<String> choices) {
-        QuestionDetail questionDetail = new QuestionDetail(123, "Question Text", shortName, questionType, true);
+    private void assertQuestion(String text, QuestionType questionType, String questionTypeString, List<String> choices) {
+        QuestionDetail questionDetail = new QuestionDetail(123, text, questionType, true);
         List<ChoiceDto> choiceDtos = getChoiceDetails(choices);
         questionDetail.setAnswerChoices(choiceDtos);
         Question question = new Question(questionDetail);
-        assertThat(question.getTitle(), is(shortName));
+        assertThat(question.getText(), is(text));
         assertThat(question.getType(), is(questionTypeString));
         assertEquals(question.getChoices(), choiceDtos);
     }

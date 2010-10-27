@@ -52,7 +52,6 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
@@ -82,6 +81,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -89,7 +89,6 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.ChildrenStateType;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -110,22 +109,26 @@ public class SavingsBO extends AccountBO {
     private static final Logger logger = LoggerFactory.getLogger(SavingsBO.class);
 
     private Money recommendedAmount;
+    private RecommendedAmntUnitEntity recommendedAmntUnit;
+
     private Money savingsBalance;
     private Date activationDate;
     private Money interestToBePosted;
-    private Date lastIntCalcDate;
     private Date lastIntPostDate;
-    private Date nextIntCalcDate;
     private Date nextIntPostDate;
-    private Date interIntCalcDate;
-    private Money minAmntForInt;
-    private Double interestRate;
+
     private SavingsOfferingBO savingsOffering;
     private SavingsPerformanceEntity savingsPerformance;
-    private RecommendedAmntUnitEntity recommendedAmntUnit;
+
+//  private Date lastIntCalcDate;
+//  private Date nextIntCalcDate;
+//  private Date interIntCalcDate;
+//  private Money minAmntForInt;
+//  private MeetingBO timePerForInstcalc;
+    // the follow three fields cant be null at present on savings_account table so populate them for now but dont use em.
     private SavingsTypeEntity savingsType;
     private InterestCalcTypeEntity interestCalcType;
-    private MeetingBO timePerForInstcalc;
+    private Double interestRate;
 
     private Set<SavingsActivityEntity> savingsActivityDetails = new LinkedHashSet<SavingsActivityEntity>();
 
@@ -192,11 +195,9 @@ public class SavingsBO extends AccountBO {
     /**
      * minimal constructor for builder (will be deprecated after accounts refactoring)
      */
-    public SavingsBO(final SavingsOfferingBO savingsProduct, final SavingsType savingsType,
-            final Money savingsBalanceAmount, final SavingsPaymentStrategy savingsPaymentStrategy,
+    public SavingsBO(final SavingsOfferingBO savingsProduct, final Money savingsBalanceAmount, final SavingsPaymentStrategy savingsPaymentStrategy,
             final SavingsTransactionActivityHelper savingsTransactionActivityHelper,
-            final Set<AccountActionDateEntity> scheduledPayments, final Double interestRate,
-            final InterestCalcType interestCalcType, final AccountState accountState,
+            final Set<AccountActionDateEntity> scheduledPayments, final AccountState accountState,
             final CustomerBO customer, final Integer offsettingAllowable,
             final MeetingBO scheduleForInterestCalculation, final RecommendedAmountUnit recommendedAmountUnit,
             final Money recommendedAmount, final Date createdDate,
@@ -207,11 +208,8 @@ public class SavingsBO extends AccountBO {
         this.savingsOffering = savingsProduct;
         this.savingsPaymentStrategy = savingsPaymentStrategy;
         this.savingsTransactionActivityHelper = savingsTransactionActivityHelper;
-        this.savingsType = new SavingsTypeEntity(savingsType);
         this.savingsBalance = savingsBalanceAmount;
-        this.interestRate = interestRate;
-        this.interestCalcType = new InterestCalcTypeEntity(interestCalcType);
-        this.timePerForInstcalc = scheduleForInterestCalculation;
+//        this.timePerForInstcalc = scheduleForInterestCalculation;
         this.recommendedAmntUnit = new RecommendedAmntUnitEntity(recommendedAmountUnit);
         this.recommendedAmount = recommendedAmount;
         this.userContext = new UserContext();
@@ -224,6 +222,10 @@ public class SavingsBO extends AccountBO {
         } catch (AccountException e) {
             throw new IllegalStateException("Unable to create savings schedules", e);
         }
+
+      this.interestRate = this.savingsOffering.getInterestRate();
+      this.interestCalcType = new InterestCalcTypeEntity(InterestCalcType.fromInt(this.savingsOffering.getInterestCalcType().getId()));
+      this.savingsType = new SavingsTypeEntity(this.savingsOffering.getSavingsTypeAsEnum());
     }
 
     /**
@@ -240,12 +242,17 @@ public class SavingsBO extends AccountBO {
         this.savingsBalance = Money.zero();
 
         // inherit details from savings product definition
-        this.savingsType = savingsOffering.getSavingsType();
+//        this.savingsType = savingsOffering.getSavingsType();
+//        this.minAmntForInt = this.savingsOffering.getMinAmntForInt();
+//        this.interestRate = this.savingsOffering.getInterestRate();
+//        this.interestCalcType = this.savingsOffering.getInterestCalcType();
+//        this.timePerForInstcalc = this.createNewMeetingFrom(this.savingsOffering.getTimePerForInstcalc().getMeeting());
+      this.interestRate = this.savingsOffering.getInterestRate();
+      this.interestCalcType = new InterestCalcTypeEntity(InterestCalcType.fromInt(this.savingsOffering.getInterestCalcType().getId()));
+      this.savingsType = new SavingsTypeEntity(this.savingsOffering.getSavingsTypeAsEnum());
+
         this.recommendedAmntUnit = savingsOffering.getRecommendedAmntUnit();
-        this.minAmntForInt = this.savingsOffering.getMinAmntForInt();
-        this.interestRate = this.savingsOffering.getInterestRate();
-        this.interestCalcType = this.savingsOffering.getInterestCalcType();
-        this.timePerForInstcalc = this.createNewMeetingFrom(this.savingsOffering.getTimePerForInstcalc().getMeeting());
+        this.recommendedAmount = recommendedAmount;
 
         // FIXME - keithw - create constructor that does not take DTO of customFields
         try {
@@ -253,7 +260,6 @@ public class SavingsBO extends AccountBO {
         } catch (InvalidDateException e) {
             throw new AccountException(e);
         }
-        this.recommendedAmount = recommendedAmount;
 
         // generated the deposit action dates only if savings account is being
         // saved in approved state
@@ -327,36 +333,12 @@ public class SavingsBO extends AccountBO {
         this.recommendedAmntUnit = new RecommendedAmntUnitEntity(unit);
     }
 
-    public SavingsTypeEntity getSavingsType() {
-        return savingsType;
-    }
-
-    void setSavingsType(final SavingsTypeEntity savingsType) {
-        this.savingsType = savingsType;
-    }
-
     public Money getInterestToBePosted() {
         return interestToBePosted;
     }
 
     public void setInterestToBePosted(final Money interestToBePosted) {
         this.interestToBePosted = interestToBePosted;
-    }
-
-    public Date getInterIntCalcDate() {
-        return interIntCalcDate;
-    }
-
-    void setInterIntCalcDate(final Date interIntCalcDate) {
-        this.interIntCalcDate = interIntCalcDate;
-    }
-
-    public Date getLastIntCalcDate() {
-        return lastIntCalcDate;
-    }
-
-    public void setLastIntCalcDate(final Date lastIntCalcDate) {
-        this.lastIntCalcDate = lastIntCalcDate;
     }
 
     public Date getLastIntPostDate() {
@@ -367,40 +349,12 @@ public class SavingsBO extends AccountBO {
         this.lastIntPostDate = lastIntPostDate;
     }
 
-    Date getNextIntCalcDate() {
-        return nextIntCalcDate;
-    }
-
-    public void setNextIntCalcDate(final Date nextIntCalcDate) {
-        this.nextIntCalcDate = nextIntCalcDate;
-    }
-
     public Date getNextIntPostDate() {
         return nextIntPostDate;
     }
 
     public void setNextIntPostDate(final Date nextIntPostDate) {
         this.nextIntPostDate = nextIntPostDate;
-    }
-
-    public InterestCalcTypeEntity getInterestCalcType() {
-        return interestCalcType;
-    }
-
-    public Double getInterestRate() {
-        return interestRate;
-    }
-
-    public Money getMinAmntForInt() {
-        return minAmntForInt;
-    }
-
-    public MeetingBO getTimePerForInstcalc() {
-        return timePerForInstcalc;
-    }
-
-    public void setMinAmntForInt(final Money minAmntForInt) {
-        this.minAmntForInt = minAmntForInt;
     }
 
     public Set<SavingsActivityEntity> getSavingsActivityDetails() {
@@ -424,30 +378,6 @@ public class SavingsBO extends AccountBO {
     public boolean isOpen() {
         return !(getAccountState().getId().equals(AccountState.SAVINGS_CANCELLED.getValue()) || getAccountState()
                 .getId().equals(AccountState.SAVINGS_CLOSED.getValue()));
-    }
-
-    private MeetingBO createNewMeetingFrom(final MeetingBO offeringMeeting) {
-        try {
-            RecurrenceType recurrenceType = offeringMeeting.getMeetingDetails().getRecurrenceTypeEnum();
-            MeetingType meetingType = MeetingType.fromInt(offeringMeeting.getMeetingType().getMeetingTypeId());
-            return new MeetingBO(recurrenceType, offeringMeeting.getMeetingDetails().getRecurAfter(), startOfFiscalYear(), meetingType);
-        } catch (MeetingException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        }
-    }
-
-    private Date startOfFiscalYear() {
-        return new LocalDate().withMonthOfYear(1).withDayOfYear(1).toDateMidnight().toDate();
-    }
-
-    private void setSavingsPerformance(final SavingsPerformanceEntity savingsPerformance) {
-        this.savingsPerformance = savingsPerformance;
-    }
-
-    private SavingsPerformanceEntity createSavingsPerformance() {
-        SavingsPerformanceEntity savingsPerformance = new SavingsPerformanceEntity(this);
-        logger.info("In SavingsBO::createSavingsPerformance(), SavingsPerformanceEntity created successfully ");
-        return savingsPerformance;
     }
 
     public void save() throws AccountException {
@@ -519,11 +449,11 @@ public class SavingsBO extends AccountBO {
     }
 
     public boolean isMandatory() {
-        return SavingsType.MANDATORY.getValue().equals(this.savingsType.getId());
+        return this.savingsOffering.isMandatory();
     }
 
     public boolean isVoluntary() {
-        return SavingsType.VOLUNTARY.getValue().equals(this.savingsType.getId());
+        return this.savingsOffering.isVoluntary();
     }
 
     public boolean isDepositScheduleBeRegenerated() {
@@ -627,9 +557,9 @@ public class SavingsBO extends AccountBO {
         }
 
         this.addAccountNotes(notes);
-        this.lastIntCalcDate = transactionDate;
+//        this.lastIntCalcDate = transactionDate;
         this.lastIntPostDate = transactionDate;
-        this.interIntCalcDate = null;
+//        this.interIntCalcDate = null;
         this.savingsBalance = new Money(getCurrency());
         this.interestToBePosted = new Money(getCurrency());
         this.setClosedDate(new DateTimeService().getCurrentJavaDateTime());
@@ -767,8 +697,7 @@ public class SavingsBO extends AccountBO {
                     depositAmount = enteredAmount;
                     enteredAmount = new Money(getCurrency());
                 }
-                if (getSavingsType().getId().equals(SavingsType.VOLUNTARY.getValue())
-                        && depositAmountIsInExcess(depositAmount)) {
+                if (this.isVoluntary() && depositAmountIsInExcess(depositAmount)) {
                     paymentStatus = PaymentStatus.PAID;
                 }
                 savingsBalance = savingsBalance.add(depositAmount);
@@ -837,7 +766,7 @@ public class SavingsBO extends AccountBO {
         // make scheduled payments (if any) and make an unscheduled payment
         // with any amount remaining
         final Money amountRemaining = this.savingsPaymentStrategy.makeScheduledPayments(payment,
-                unpaidDepositsForPayingCustomer, payingCustomer, SavingsType.fromInt(this.savingsType.getId()),
+                unpaidDepositsForPayingCustomer, payingCustomer, this.savingsOffering.getSavingsTypeAsEnum(),
                 savingsBalanceBeforeDeposit);
 
         if (depositAmountIsInExcess(amountRemaining)) {
@@ -931,8 +860,8 @@ public class SavingsBO extends AccountBO {
         this.activationDate = activationDate.toDate();
         this.generateDepositAccountActions(workingDays, holidays);
 
-        InterestScheduledEvent interestCalculationEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(getTimePerForInstcalc());
-        this.nextIntCalcDate = interestCalculationEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),new LocalDate(this.activationDate)).toDateMidnight().toDate();
+//        InterestScheduledEvent interestCalculationEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(getTimePerForInstcalc());
+//        this.nextIntCalcDate = interestCalculationEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),new LocalDate(this.activationDate)).toDateMidnight().toDate();
 
         InterestScheduledEvent interestPostingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(this.savingsOffering.getFreqOfPostIntcalc().getMeeting());
         this.nextIntPostDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),new LocalDate(this.activationDate)).toDateMidnight().toDate();
@@ -1752,5 +1681,45 @@ public class SavingsBO extends AccountBO {
     public boolean isGroupModelWithIndividualAccountability() {
 
         return this.customer.isCenter() || (this.customer.isGroup() && this.recommendedAmntUnit.isPerIndividual());
+    }
+
+    public InterestCalcType getInterestCalcType() {
+        return InterestCalcType.fromInt(this.savingsOffering.getInterestCalcType().getId());
+    }
+
+    public Double getInterestRate() {
+        return this.savingsOffering.getInterestRate();
+    }
+
+    public Money getMinAmntForInt() {
+        return this.savingsOffering.getMinAmntForInt();
+    }
+
+    public MeetingBO getTimePerForInstcalc() {
+        return this.savingsOffering.getTimePerForInstcalc().getMeeting();
+    }
+
+    private MeetingBO createNewMeetingFrom(final MeetingBO offeringMeeting) {
+        try {
+            RecurrenceType recurrenceType = offeringMeeting.getMeetingDetails().getRecurrenceTypeEnum();
+            MeetingType meetingType = MeetingType.fromInt(offeringMeeting.getMeetingType().getMeetingTypeId());
+            return new MeetingBO(recurrenceType, offeringMeeting.getMeetingDetails().getRecurAfter(), startOfFiscalYear(), meetingType);
+        } catch (MeetingException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    private Date startOfFiscalYear() {
+        return new LocalDate().withMonthOfYear(1).withDayOfYear(1).toDateMidnight().toDate();
+    }
+
+    private void setSavingsPerformance(final SavingsPerformanceEntity savingsPerformance) {
+        this.savingsPerformance = savingsPerformance;
+    }
+
+    private SavingsPerformanceEntity createSavingsPerformance() {
+        SavingsPerformanceEntity savingsPerformance = new SavingsPerformanceEntity(this);
+        logger.info("In SavingsBO::createSavingsPerformance(), SavingsPerformanceEntity created successfully ");
+        return savingsPerformance;
     }
 }

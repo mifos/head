@@ -54,9 +54,9 @@ public class QuestionTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
     private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
     private String title;
-    private static final String TITLE_MISSING = "Please specify the question title.";
+    private static final String TITLE_MISSING = "must match \"^.*[^\\s]+.*$\"";
     private static final String AT_LEAST_2_CHOICES = "Please specify at least 2 choices.";
-    private static final String DUPLICATE_TITLE = "Question title already exists.";
+    private static final String DUPLICATE_TITLE = "Question already exists.";
     private CreateQuestionParameters createQuestionParameters;
     private static final String DATE = "Date";
     private static final String FREE_TEXT = "Free Text";
@@ -161,7 +161,7 @@ public class QuestionTest extends UiTestCaseBase {
     }
 
     private void setupQuestionParameters(String title, String type, List<Choice> choices, int numericMin, int numericMax) {
-        createQuestionParameters.setTitle(title);
+        createQuestionParameters.setText(title);
         createQuestionParameters.setType(type);
         createQuestionParameters.setChoices(choices);
         createQuestionParameters.setNumericMin(numericMin);
@@ -286,7 +286,7 @@ public class QuestionTest extends UiTestCaseBase {
     private void testDuplicateTitleForExistingQuestionInDB() {
         CreateQuestionPage createQuestionPage = adminPage.navigateToCreateQuestionPage();
         createQuestionPage.verifyPage();
-        createQuestionParameters.setTitle(title + DATE);
+        createQuestionParameters.setText(title + DATE);
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertTrue(selenium.isTextPresent(DUPLICATE_TITLE), "Duplicate title error should appear");
         adminPage = createQuestionPage.navigateToAdminPage();
@@ -304,14 +304,14 @@ public class QuestionTest extends UiTestCaseBase {
     }
 
     private void testDuplicateTitle() {
-        createQuestionParameters.setTitle(title + FREE_TEXT);
+        createQuestionParameters.setText(title + FREE_TEXT);
         createQuestionPage.addQuestion(createQuestionParameters);
         Assert.assertTrue(selenium.isTextPresent(DUPLICATE_TITLE), "Duplicate title error should appear");
     }
 
     private void assertLastAddedQuestion(CreateQuestionPage createQuestionPage) {
         CreateQuestionParameters question = createQuestionPage.getLastAddedQuestion();
-        assertEquals(createQuestionParameters.getTitle(), question.getTitle());
+        assertEquals(createQuestionParameters.getText(), question.getText());
         assertEquals(createQuestionParameters.getType(), question.getType());
         if (createQuestionParameters.questionHasAnswerChoices() || createQuestionParameters.questionHasSmartAnswerChoices()) {
             Assert.assertEquals(createQuestionParameters.getChoicesAsStrings(), question.getChoicesAsStrings());
@@ -340,7 +340,7 @@ public class QuestionTest extends UiTestCaseBase {
     }
 
     private void testMissingTitle() {
-        createQuestionParameters.setTitle("");
+        createQuestionParameters.setText("");
         createQuestionParameters.setType(DATE);
         createQuestionPage.addQuestion(createQuestionParameters);
         assertTextFoundOnPage(TITLE_MISSING);

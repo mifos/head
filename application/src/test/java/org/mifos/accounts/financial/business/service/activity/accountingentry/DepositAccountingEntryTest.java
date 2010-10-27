@@ -123,7 +123,7 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
 
     }
 
-    private void setupForOneTest(SavingsType savingsType, GLCategoryType bankCategoryType,
+    private void setupMandatoryForOneTest(SavingsType savingsType, GLCategoryType bankCategoryType,
             GLCategoryType savingsCategoryType, FinancialActionConstants financialAction) throws FinancialException {
 
         when(mockedFinancialActivity.getAccountTrxn()).thenReturn(mockedIncomingTransaction);
@@ -138,7 +138,7 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
 
         when(mockedSavingsBO.getSavingsOffering()).thenReturn(mockedSavingsOffering);
 
-        when(mockedSavingsBO.getSavingsType()).thenReturn(mockedSavingsType);
+        when(mockedSavingsBO.isMandatory()).thenReturn(true);
 
         when(mockedSavingsOffering.getDepositGLCode()).thenReturn(mockedSavingsDepositGLCode);
 
@@ -166,6 +166,51 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
         // when(mockedBankGLCategory.getCategoryType()).thenReturn(bankCategoryType);
     }
 
+    private void setupVoluntaryForOneTest(SavingsType savingsType, GLCategoryType bankCategoryType,
+            GLCategoryType savingsCategoryType, FinancialActionConstants financialAction) throws FinancialException {
+
+        when(mockedFinancialActivity.getAccountTrxn()).thenReturn(mockedIncomingTransaction);
+
+        when(mockedIncomingTransaction.getAccount()).thenReturn(mockedSavingsBO);
+        when(mockedIncomingTransaction.getDepositAmount()).thenReturn(new Money(currency, depositAmount));
+        when(mockedIncomingTransaction.getActionDate()).thenReturn(transactionActionDate.toDate());
+        when(mockedIncomingTransaction.getTrxnCreatedDate()).thenReturn(
+                new Timestamp(transactionPostedDate.getMillis()));
+        when(mockedIncomingTransaction.getPersonnel()).thenReturn(transactionCreator);
+        when(mockedIncomingTransaction.getComments()).thenReturn(comments);
+
+        when(mockedSavingsBO.getSavingsOffering()).thenReturn(mockedSavingsOffering);
+
+        when(mockedSavingsBO.isMandatory()).thenReturn(false);
+        when(mockedSavingsBO.isVoluntary()).thenReturn(true);
+
+        when(mockedSavingsOffering.getDepositGLCode()).thenReturn(mockedSavingsDepositGLCode);
+
+        when(mockedSavingsDepositGLCode.getGlcode()).thenReturn(savingsDepositGLCode);
+
+        when(mockedSavingsGLAccount.getGlCode()).thenReturn(savingsDepositGLCode);
+        // when(mockedSavingsGLAccount.getCOAHead()) .thenReturn(mockedSavingsGLCategory);
+        when(mockedSavingsGLAccount.getTopLevelCategoryType()).thenReturn(savingsCategoryType);
+        when(mockedSavingsGLAccount.getAccountName()).thenReturn("Clients Accounts");
+
+        // when(mockedBankGLAccount.getCOAHead()) .thenReturn(mockedBankGLCategory);
+        when(mockedBankGLAccount.getTopLevelCategoryType()).thenReturn(bankCategoryType);
+        when(mockedBankGLAccount.getAssociatedGlcode()).thenReturn(mockedBankGLCode);
+        when(mockedBankGLAccount.getGlCode()).thenReturn(bankGLCode);
+        when(mockedBankGLCode.getGlcode()).thenReturn(bankGLCode);
+
+        when(mockedFinancialBusinessService.getGlAccount(savingsDepositGLCode)).thenReturn(mockedSavingsGLAccount);
+        when(mockedFinancialBusinessService.getGlAccount(bankGLCode)).thenReturn(mockedBankGLAccount);
+        when(mockedFinancialBusinessService.getFinancialAction(financialAction)).thenReturn(mockedFinancialAction);
+
+        when(mockedFinancialAction.getApplicableDebitCharts()).thenReturn(setWith(mockedBankGLAccount));
+
+        when(mockedSavingsType.getId()).thenReturn(savingsType.getValue());
+        // when(mockedSavingsGLCategory.getCategoryType()).thenReturn(savingsCategoryType);
+        // when(mockedBankGLCategory.getCategoryType()).thenReturn(bankCategoryType);
+    }
+
+
     @Test
     public void testBuildAccountEntryDepositIntoMandatorySavings() throws FinancialException {
 
@@ -174,7 +219,7 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
         GLCategoryType savingsCategoryType = GLCategoryType.LIABILITY;
         FinancialActionConstants financialActionConstant = FinancialActionConstants.MANDATORYDEPOSIT;
 
-        setupForOneTest(savingsType, bankCategoryType, savingsCategoryType, financialActionConstant);
+        setupMandatoryForOneTest(savingsType, bankCategoryType, savingsCategoryType, financialActionConstant);
 
         doBuild(new DepositAccountingEntry(), mockedFinancialBusinessService, mockedFinancialActivity);
 
@@ -191,7 +236,7 @@ public class DepositAccountingEntryTest extends BaseAccountingEntryTestCase {
         GLCategoryType savingsCategoryType = GLCategoryType.LIABILITY;
         FinancialActionConstants financialActionConstant = FinancialActionConstants.VOLUNTORYDEPOSIT;
 
-        setupForOneTest(savingsType, bankCategoryType, savingsCategoryType, financialActionConstant);
+        setupVoluntaryForOneTest(savingsType, bankCategoryType, savingsCategoryType, financialActionConstant);
 
         doBuild(new DepositAccountingEntry(), mockedFinancialBusinessService, mockedFinancialActivity);
 

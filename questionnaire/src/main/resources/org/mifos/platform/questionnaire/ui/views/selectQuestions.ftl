@@ -10,7 +10,7 @@
             [#list questionGroupForm.questionPool as sectionQuestion]
             <li >
                <input type="checkbox" id="${sectionQuestion.questionId?c}" name="selectedQuestionIds" value="${sectionQuestion.questionId?c}"/>
-                &nbsp;<label for="${sectionQuestion.questionId?c}">${sectionQuestion.title}</label>
+                &nbsp;<label for="${sectionQuestion.questionId?c}">${sectionQuestion.text}</label>
             </li>
             [/#list]
         </ul>

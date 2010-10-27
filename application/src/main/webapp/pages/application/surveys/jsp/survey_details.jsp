@@ -89,7 +89,7 @@ explanation of the license and how it is applied.
                   <c:when test="${itemCount !=0}">
 		  <c:forEach var="question" items="${sessionScope.BusinessKey.questions}">
                   <tr>
-                  	<td class="drawtablerow"><c:out value="${question.question.shortName}"/></td>
+                  	<td class="drawtablerow"><c:out value="${question.question.questionText}"/></td>
                     <td width="39%" class="drawtablerow"><c:out value="${question.question.questionText}"/></td>
                     <td width="14%" class="drawtablerow">
                     <c:choose>

@@ -121,7 +121,7 @@
             <tbody>
             [#list section.sectionQuestions as sectionQuestion]
             <tr>
-                <td class="name">${sectionQuestion.title}</td>
+                <td class="name">${sectionQuestion.text}</td>
                 <td align="center" valign="center" class="mandatory orderCenter">
                     [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>

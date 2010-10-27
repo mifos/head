@@ -339,11 +339,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
     private NonCompoundingInterestCalculator createInterestCalculationPeriodCalculator(SavingsBO savingsAccount,
             InterestScheduledEvent interestCalculationEvent) {
-        InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsAccount.getInterestCalcType().getId());
+        InterestCalcType interestCalcType = savingsAccount.getInterestCalcType();
 
         int accountingNumberOfInterestDaysInYear = AccountingRules.getNumberOfInterestDays();
-        SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount
-                .getInterestRate(), accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
+
+        // FIXME - this may change as we need to check if interest rate or other interest calculation details have changed
+        // on savings product which are applicable to current interest posting period.
+        SavingsInterestDetail interestDetail = new SavingsInterestDetail(interestCalcType, savingsAccount.getInterestRate(),
+                accountingNumberOfInterestDaysInYear, savingsAccount.getMinAmntForInt());
+
         InterestCalculator interestCalculator = SavingsInterestCalculatorFactory.create(interestDetail);
 
         NonCompoundingInterestCalculator interestCalculationPeriodCalculator = new InterestCalculationPeriodCalculator(

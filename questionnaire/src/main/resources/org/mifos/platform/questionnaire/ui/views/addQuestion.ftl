@@ -16,8 +16,8 @@
 <input type="submit" id="_eventId_addSmartChoiceTag" name="_eventId_addSmartChoiceTag" value="" style="display: none;"/>
 <ul class="form_content">
     <li>
-      <label for="currentQuestion.title"><span class="red">*</span>[@spring.message "questionnaire.question.title"/]: </label>
-      [@spring.formInput "questionGroupForm.currentQuestion.title", 'maxlength="50"' /]
+      <label for="currentQuestion.text"><span class="red">*</span>[@spring.message "questionnaire.question.title"/]: </label>
+      [@spring.formInput "questionGroupForm.currentQuestion.text", 'maxlength="1000"' /]
     </li>
     <li>
       <label for="currentQuestion.type"><span class="red">*</span>[@spring.message "questionnaire.answer.type"/]: </label>

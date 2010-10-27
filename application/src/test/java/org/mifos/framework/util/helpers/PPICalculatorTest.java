@@ -78,7 +78,8 @@ public class PPICalculatorTest extends TestCase {
 
         List<SurveyQuestion> questions = new ArrayList<SurveyQuestion>();
 
-        Question question = new Question("Test Question 1", "What is this question?", AnswerType.CHOICE);
+        Question question = new Question( "What is this question?", AnswerType.CHOICE);
+        question.setNickname("Test Question 1");
         SurveyQuestion surveyQuestion = survey.addQuestion(question, true);
         question.setChoices(new ArrayList<QuestionChoice>());
         PPIChoice choice = new PPIChoice("First choice");
@@ -92,7 +93,8 @@ public class PPICalculatorTest extends TestCase {
         responses.add(response);
         questions.add(surveyQuestion);
 
-        question = new Question("Test Question 2", "What is this question?", AnswerType.CHOICE);
+        question = new Question("What is this question?", AnswerType.CHOICE);
+        question.setNickname("Test Question 2");
         surveyQuestion = survey.addQuestion(question, true);
         choice = new PPIChoice("Second choice");
         choice.setChoiceId(2);
@@ -105,7 +107,8 @@ public class PPICalculatorTest extends TestCase {
         responses.add(response);
         questions.add(surveyQuestion);
 
-        question = new Question("Test Question 3", "What is this question?", AnswerType.CHOICE);
+        question = new Question("What is this question?", AnswerType.CHOICE);
+        question.setNickname("Test Question 3");
         surveyQuestion = survey.addQuestion(question, true);
         choice = new PPIChoice("Third choice");
         choice.setChoiceId(3);

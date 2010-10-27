@@ -94,7 +94,7 @@ explanation of the license and how it is applied.
                                                      <font color="#FF0000">*</font>
                                                  </span>
                                              </c:if>
-                                             <c:out value="${question.title}" />
+                                             <c:out value="${question.text}" />
                                          </span>:
                                      </td>
                                      <td width="83%">

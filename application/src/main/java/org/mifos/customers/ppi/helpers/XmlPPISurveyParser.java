@@ -89,17 +89,17 @@ public class XmlPPISurveyParser {
         NodeList questionNodes = docElement.getElementsByTagName("question");
         for (int i = 0; i < questionNodes.getLength(); i++) {
             Element node = (Element) questionNodes.item(i);
-            String name = null;
+            String nickname = null;
             String mandatory = null;
             Integer order = null;
             String questionText = node.getElementsByTagName("text").item(0).getTextContent();
 
             if (node.hasAttributes()) {
-                name = node.getAttributes().getNamedItem("name").getNodeValue();
+                nickname = node.getAttributes().getNamedItem("name").getNodeValue();
                 mandatory = node.getAttributes().getNamedItem("mandatory").getNodeValue();
                 order = Integer.parseInt(node.getAttributes().getNamedItem("order").getNodeValue());
             }
-            if (name == null || mandatory == null || order == null || questionText == null) {
+            if (nickname == null || mandatory == null || order == null || questionText == null) {
                 throw new IllegalStateException("Malformatted xml file");
             }
 
@@ -114,7 +114,7 @@ public class XmlPPISurveyParser {
                 surveyQuestion.setQuestion(question);
             }
 
-            question.setShortName(name);
+            question.setNickname(nickname);
             question.setQuestionText(questionText);
             question.setAnswerType(AnswerType.CHOICE);
 
@@ -223,7 +223,6 @@ public class XmlPPISurveyParser {
         Collections.sort(surveyQuestions);
         for (SurveyQuestion surveyQuestion : surveyQuestions) {
             Element questionNode = document.createElement("question");
-            questionNode.setAttribute("name", surveyQuestion.getQuestion().getShortName());
             questionNode.setAttribute("mandatory", surveyQuestion.getMandatory() == 1 ? "true" : "false");
             questionNode.setAttribute("order", surveyQuestion.getOrder().toString());
 

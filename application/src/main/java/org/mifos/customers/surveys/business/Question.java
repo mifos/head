@@ -41,9 +41,9 @@ public class Question implements Serializable, Comparable<Question> {
 
     private QuestionState questionState;
 
-    private String shortName;
-
     private String questionText;
+
+    private String nickname;
 
     private Integer numericMin;
 
@@ -83,27 +83,14 @@ public class Question implements Serializable, Comparable<Question> {
     }
 
     public Question(String questionText, AnswerType answerType) {
-        this(null, questionText, answerType);
+        this(questionText, answerType, new LinkedList<QuestionChoice>());
     }
 
-    public Question(String shortName, String questionText, AnswerType answerType) {
-        this(shortName, questionText, answerType, new LinkedList<QuestionChoice>());
-    }
-
-    public Question(String shortName, String questionText, AnswerType answerType,List<QuestionChoice> choices) {
-        setShortName(shortName);
+    public Question(String questionText, AnswerType answerType,List<QuestionChoice> choices) {
         setQuestionText(questionText);
         setAnswerType(answerType);
         setChoices(choices);
         questionState = QuestionState.ACTIVE;
-    }
-
-    public void setShortName(String shortName) {
-        this.shortName = shortName;
-    }
-
-    public String getShortName() {
-        return shortName;
     }
 
     public Integer getNumericMax() {
@@ -152,6 +139,14 @@ public class Question implements Serializable, Comparable<Question> {
 
     public void setQuestionText(String questionText) {
         this.questionText = questionText;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public AnswerType getAnswerTypeAsEnum() {
@@ -218,7 +213,7 @@ public class Question implements Serializable, Comparable<Question> {
     }
 
     public int compareTo(Question other) {
-        return getShortName().compareTo(other.getShortName());
+        return getQuestionText().compareTo(other.getQuestionText());
     }
 
 }

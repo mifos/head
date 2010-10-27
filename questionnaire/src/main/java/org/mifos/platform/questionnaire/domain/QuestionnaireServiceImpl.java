@@ -48,6 +48,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Arrays;
+import java.security.NoSuchAlgorithmException;
+import java.security.MessageDigest;
+import java.io.UnsupportedEncodingException;
 
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_EXT;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_PREFIX;
@@ -130,6 +133,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @Override
     public QuestionGroupDetail defineQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
         questionnaireValidator.validateForDefineQuestionGroup(questionGroupDetail);
+        generateNicknamesForQuestions(questionGroupDetail);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDetail);
         questionGroupDao.create(questionGroup);
         return questionnaireMapper.mapToQuestionGroupDetail(questionGroup);
@@ -142,8 +146,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public boolean isDuplicateQuestionTitle(String title) {
-        List result = questionDao.retrieveCountOfQuestionsWithTitle(title);
+    public boolean isDuplicateQuestionText(String title) {
+        List result = questionDao.retrieveCountOfQuestionsWithText(title);
         return (Long) result.get(0) > 0;
     }
 
@@ -250,14 +254,45 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private Integer persistQuestionGroup(QuestionGroup questionGroup) {
         List<SectionQuestion> sectionQuestions = questionGroup.getAllSectionQuestions();
         for (SectionQuestion sectionQuestion : sectionQuestions) {
-            List<QuestionEntity> questionEntities = questionDao.retrieveByName(sectionQuestion.getQuestionTitle());
+            List<QuestionEntity> questionEntities = questionDao.retrieveByText(sectionQuestion.getQuestionText());
             if (isNotEmpty(questionEntities)) {
                 QuestionEntity questionEntity = questionEntities.get(0);
                 questionEntity.setQuestionState(QuestionState.ACTIVE);
                 sectionQuestion.setQuestion(questionEntity);
             }
         }
+        generateNicknamesForQuestions(questionGroup);
         return questionGroupDao.create(questionGroup);
+    }
+
+    private void generateNicknamesForQuestions(QuestionGroup questionGroup) {
+        for (SectionQuestion question : questionGroup.getAllSectionQuestions()) {
+            if (question.getQuestion().getNickname() == null) {
+                try {
+                    question.getQuestion().setNickname(computeMD5(question.getQuestionText()));
+                } catch (NoSuchAlgorithmException e) {
+                    throw new SystemException(e);
+                } catch (UnsupportedEncodingException e) {
+                    throw new SystemException(e);
+                }
+            }
+        }
+    }
+
+    private void generateNicknamesForQuestions(QuestionGroupDetail questionGroupDetail) {
+        for (SectionDetail sectionDetail : questionGroupDetail.getSectionDetails()) {
+            for (SectionQuestionDetail sectionQuestionDetail : sectionDetail.getQuestions()) {
+                if (sectionQuestionDetail.getQuestionDetail().getNickname() == null) {
+                    try {
+                        sectionQuestionDetail.getQuestionDetail().setNickname(computeMD5(sectionQuestionDetail.getQuestionDetail().getText()));
+                    } catch (NoSuchAlgorithmException e) {
+                        throw new SystemException(e);
+                    } catch (UnsupportedEncodingException e) {
+                        throw new SystemException(e);
+                    }
+                }
+            }
+        }
     }
 
     @Override
@@ -319,8 +354,18 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     @SuppressWarnings("PMD.PreserveStackTrace")
     private Integer createQuestion(QuestionEntity questionEntity) {
         try {
+            if (questionEntity.getNickname() == null) {
+                try {
+                    questionEntity.setNickname(computeMD5(questionEntity.getQuestionText()));
+                } catch (NoSuchAlgorithmException e) {
+                    throw new SystemException(e);
+                } catch (UnsupportedEncodingException e) {
+                    throw new SystemException(e);
+                }
+            }
             return questionDao.create(questionEntity);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            questionEntity.setNickname(null);
             throw new ValidationException(QuestionnaireConstants.QUESTION_TITLE_DUPLICATE);
         }
     }
@@ -331,8 +376,18 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     private void persistQuestion(QuestionEntity question) throws SystemException {
         try {
+            if (question.getNickname() == null) {
+                try {
+                    question.setNickname(computeMD5(question.getQuestionText()));
+                } catch (NoSuchAlgorithmException e) {
+                    throw new SystemException(e);
+                } catch (UnsupportedEncodingException e) {
+                    throw new SystemException(e);
+                }
+            }
             questionDao.saveOrUpdate(question);
         } catch (org.springframework.dao.DataIntegrityViolationException e) {
+            question.setNickname(null);
             throw new SystemException(QuestionnaireConstants.QUESTION_TITLE_DUPLICATE, e);
         }
     }
@@ -362,4 +417,31 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         }
     }
 
+    private String computeMD5(String questionText) throws NoSuchAlgorithmException, UnsupportedEncodingException {
+        String md5hash = null;
+        if (questionText != null) {
+            MessageDigest md;
+            md = MessageDigest.getInstance("MD5");
+            md.update(questionText.getBytes("utf-8"), 0, questionText.length());
+            md5hash = convertToHex(md.digest());
+        }
+        return md5hash;
+    }
+
+    private String convertToHex(byte[] data) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = 0; i < data.length; i++) {
+            int halfbyte = (data[i] >>> 4) & 0x0F;
+            int two_halfs = 0;
+            do {
+                if ((0 <= halfbyte) && (halfbyte <= 9)) {
+                    buf.append((char) ('0' + halfbyte));
+                } else {
+                    buf.append((char) ('a' + (halfbyte - 10)));
+                }
+                halfbyte = data[i] & 0x0F;
+            } while(two_halfs++ < 1);
+        }
+        return buf.toString();
+    }
 }

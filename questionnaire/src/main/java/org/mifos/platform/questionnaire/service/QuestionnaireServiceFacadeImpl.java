@@ -61,8 +61,8 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public boolean isDuplicateQuestion(String title) {
-        return questionnaireService.isDuplicateQuestionTitle(title);
+    public boolean isDuplicateQuestion(String text) {
+        return questionnaireService.isDuplicateQuestionText(text);
     }
 
     @Override

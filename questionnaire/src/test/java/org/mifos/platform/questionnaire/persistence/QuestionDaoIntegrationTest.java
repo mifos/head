@@ -58,10 +58,10 @@ public class QuestionDaoIntegrationTest {
     @Transactional
     public void testCountOfQuestionsWithTitle() throws SystemException {
         String questionTitle = "Title" + System.currentTimeMillis();
-        List result = questionDao.retrieveCountOfQuestionsWithTitle(questionTitle);
+        List result = questionDao.retrieveCountOfQuestionsWithText(questionTitle);
         assertEquals((long) 0, result.get(0));
         defineQuestion(questionTitle, DATE);
-        result = questionDao.retrieveCountOfQuestionsWithTitle(questionTitle);
+        result = questionDao.retrieveCountOfQuestionsWithText(questionTitle);
         assertEquals((long) 1, result.get(0));
     }
 
@@ -70,11 +70,11 @@ public class QuestionDaoIntegrationTest {
     public void testRetrieveByState() throws SystemException {
         QuestionDetail questionDetail2 = defineQuestion("Title2" + System.currentTimeMillis(), QuestionType.NUMERIC);
         QuestionDetail questionDetail1 = defineQuestion("Title1" + System.currentTimeMillis(), QuestionType.NUMERIC);
-        List<String> expectedTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<String> expectedTitles = asList(questionDetail1.getText(), questionDetail2.getText());
         List<QuestionEntity> actualQuestions = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
         assertThat(actualQuestions.size(), is(2));
-        assertThat(actualQuestions.get(0).getShortName(), is(expectedTitles.get(0)));
-        assertThat(actualQuestions.get(1).getShortName(), is(expectedTitles.get(1)));
+        assertThat(actualQuestions.get(0).getQuestionText(), is(expectedTitles.get(0)));
+        assertThat(actualQuestions.get(1).getQuestionText(), is(expectedTitles.get(1)));
     }
 
     @Test
@@ -83,11 +83,11 @@ public class QuestionDaoIntegrationTest {
         QuestionDetail questionDetail3 = defineQuestion("Title3" + System.currentTimeMillis(), QuestionType.NUMERIC);
         QuestionDetail questionDetail2 = defineQuestion("Title2" + System.currentTimeMillis(), QuestionType.NUMERIC);
         QuestionDetail questionDetail1 = defineQuestion("Title1" + System.currentTimeMillis(), QuestionType.NUMERIC);
-        List<String> expectedTitles = asList(questionDetail1.getShortName(), questionDetail2.getShortName());
+        List<String> expectedTitles = asList(questionDetail1.getText(), questionDetail2.getText());
         List<QuestionEntity> actualQuestions = questionDao.retrieveByStateExcluding(asList(questionDetail3.getId()), QuestionState.ACTIVE.getValue());
         assertThat(actualQuestions.size(), is(2));
-        assertThat(actualQuestions.get(0).getShortName(), is(expectedTitles.get(0)));
-        assertThat(actualQuestions.get(1).getShortName(), is(expectedTitles.get(1)));
+        assertThat(actualQuestions.get(0).getQuestionText(), is(expectedTitles.get(0)));
+        assertThat(actualQuestions.get(1).getQuestionText(), is(expectedTitles.get(1)));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {

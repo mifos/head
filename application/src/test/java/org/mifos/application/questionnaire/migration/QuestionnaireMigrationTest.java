@@ -607,7 +607,7 @@ public class QuestionnaireMigrationTest {
 
     private QuestionGroupDto getQuestionGroupDto(String questionGroupTitle, String questionTitle, String event, String source) {
         QuestionGroupDtoBuilder questionGroupDtoBuilder = new QuestionGroupDtoBuilder();
-        QuestionDto questionDto = new QuestionDtoBuilder().withTitle(questionTitle).withType(QuestionType.FREETEXT).build();
+        QuestionDto questionDto = new QuestionDtoBuilder().withText(questionTitle).withType(QuestionType.FREETEXT).build();
         SectionDto sectionDto = new SectionDtoBuilder().withName("Misc").withOrder(0).withQuestions(asList(questionDto)).build();
         questionGroupDtoBuilder.withTitle(questionGroupTitle).withEventSource(event, source).withSections(asList(sectionDto));
         return questionGroupDtoBuilder.build();

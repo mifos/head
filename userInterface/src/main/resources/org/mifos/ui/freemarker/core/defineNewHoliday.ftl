@@ -18,7 +18,7 @@
             [@mifos.showAllErrors "formBean.*"/]
                 <div style="margin-left:100px;margin-top:25px">
                     <div class="prepend-3 span-22 last margin5bottom">
-                    <span class="span-4 rightAlign"><span
+                    <span class="span-4 rightAlign" style="margin-top:6px;" ><span
                             class="red"> * </span>[@spring.message "organizationPreferences.definenewholiday.holidayName" /]</span>
         	    <span class="span-4 margin5topbottom">
         	    [@spring.bind "formBean.name" /]

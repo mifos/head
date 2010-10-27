@@ -33,6 +33,7 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
@@ -199,6 +200,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
                 is(zeroDouble));
     }
 
+    @Ignore
     @Test
     public void testPartPayingVoluntarySavingsAccountResultsInAZeroTotalDepositAmountWhenCollectionSheetRetrievedAgain()
             throws Exception {

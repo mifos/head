@@ -64,11 +64,12 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private Question makeTestSelectQuestion(String name, int choiceNumber) throws Exception {
         AnswerType type = AnswerType.fromInt(4);
-        Question question = new Question(name, name, type);
+        Question question = new Question(name, type);
         List<QuestionChoice> choices = new ArrayList<QuestionChoice>();
         for (int i = 1; i <= choiceNumber; i++) {
             choices.add(new QuestionChoice("Test Choice " + i));
         }
+        question.setNickname(name);
         question.setChoices(choices);
         new SurveysPersistence().createOrUpdate(question);
         return question;
@@ -76,7 +77,8 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private Question makeTestNumberQuestion(String name, int min, int max) throws Exception {
         AnswerType type = AnswerType.fromInt(3);
-        Question question = new Question(name, name, type);
+        Question question = new Question(name, type);
+        question.setNickname(name);
         question.setNumericMin(min);
         question.setNumericMax(max);
         new SurveysPersistence().createOrUpdate(question);
@@ -85,14 +87,16 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private Question makeTestTextQuestion(String name) throws Exception {
         AnswerType type = AnswerType.fromInt(3);
-        Question question = new Question(name, name, type);
+        Question question = new Question(name, type);
+        question.setNickname(name);
         new SurveysPersistence().createOrUpdate(question);
         return question;
     }
 
     private Question makeTestDateQuestion(String name) throws Exception {
         AnswerType type = AnswerType.fromInt(5);
-        Question question = new Question(name, name, type);
+        Question question = new Question(name, type);
+        question.setNickname(name);
         new SurveysPersistence().createOrUpdate(question);
         return question;
     }
@@ -142,13 +146,12 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
        Assert.assertEquals(2, newQuestions.size());
-       Assert.assertEquals(shortName2, newQuestions.get(1).getShortName());
        Assert.assertEquals(questionText2, newQuestions.get(1).getQuestionText());
        Assert.assertEquals(AnswerType.CHOICE, newQuestions.get(1).getAnswerTypeAsEnum());
        Assert.assertEquals(3, newQuestions.get(1).getChoices().size());
 
         String questionText3 = "testDefineQuestions question text 3";
-        String shortName3 = "testDefineQuestions 3";
+        String shortName3 = "testDefineQuestion 3";
         addRequestParameter("value(shortName)", shortName3);
         addRequestParameter("value(questionText)", questionText3);
         addRequestParameter("method", "addQuestion");
@@ -158,7 +161,6 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         newQuestions = (List<Question>) request.getSession().getAttribute(SurveysConstants.KEY_NEW_QUESTIONS);
        Assert.assertEquals(3, newQuestions.size());
        Assert.assertEquals(questionText3, newQuestions.get(2).getQuestionText());
-       Assert.assertEquals(shortName3, newQuestions.get(2).getShortName());
         addRequestParameter("newQuestionNum", Integer.toString(newQuestions.size() - 1));
         addRequestParameter("method", "deleteNewQuestion");
         actionPerform();
@@ -233,9 +235,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "edit_entry");
         actionPerform();
 
-        String shortName = "New Name";
         String questionText = "New question text";
-        addRequestParameter("value(shortName)", shortName);
         addRequestParameter("value(questionText)", questionText);
         addRequestParameter("value(status)", "1");
         addRequestParameter("method", "preview_entry");
@@ -246,12 +246,12 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
         Question newQuestion = persistence.getQuestion(questionId);
 
-       Assert.assertEquals(newQuestion.getShortName(), shortName);
        Assert.assertEquals(newQuestion.getQuestionText(), questionText);
     }
 
     public void testEditPPI() throws Exception {
-        Question question = new Question("New Q", "What's the q?", AnswerType.CHOICE);
+        Question question = new Question("What's the q?", AnswerType.CHOICE);
+        question.setNickname("New Q");
 
         PPIChoice choice = new PPIChoice("choice 1");
         choice.setPoints(11);

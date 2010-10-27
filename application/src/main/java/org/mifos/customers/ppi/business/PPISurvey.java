@@ -217,7 +217,7 @@ public class PPISurvey extends Survey {
         for (SurveyQuestion sQuestion : getQuestions()) {
             output += "\t";
             output += sQuestion.getMandatory() == 1 ? "*" : "";
-            output += sQuestion.getOrder() + ". " + sQuestion.getQuestion().getShortName() + "\n";
+            output += sQuestion.getOrder() + "\n";
             output += "\t " + sQuestion.getQuestion().getQuestionText() + "\n";
             for (QuestionChoice choice : sQuestion.getQuestion().getChoices()) {
                 PPIChoice ppiChoice = (PPIChoice) choice;

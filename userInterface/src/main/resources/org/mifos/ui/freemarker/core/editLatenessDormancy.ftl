@@ -20,49 +20,58 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
- <!--  Main Content Begins-->  
-  <div class=" content">
-  	<form method="post" name="latenessanddormancy" action="editLatenessDormancy.ftl">
-[@mifos.crumbs breadcrumbs /]	
-  		[@spring.bind "formBean" /]
-  		  [@mifos.showAllErrors "formBean.*"/]   
-  		<div class="marginLeft30">
-		<div class="span-24">
-  		    <div class="clear">&nbsp;</div>
-    		<div class="span-23 borderbtm width95prc">
-        		<p class="font15 margin10topbottom"><span class="orangeheading">[@spring.message "manageProducts.editLatenessDormancy.setLatenessDefinition" /]</span></p>
-            	<div class="fontBold">[@spring.message "manageProducts.editLatenessDormancy.loan" /]</div>
-            	<div class="span-23 width95prc">
-	            	<span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" /]</span>
+<!--  Main Content Begins-->
+<div class=" content">
+    <style type="text/css">
+        .error {
+            margin-bottom:0;
+            margin-top:15px;
+        }
+    </style>
+    <form method="post" name="latenessanddormancy" action="editLatenessDormancy.ftl">
+    [@mifos.crumbs breadcrumbs /]
+    [@spring.bind "formBean" /]
+        <div class="marginLeft30">
+            <div class="span-24">
+                [@mifos.showAllErrors "formBean.*"/]
+                <div class="span-23 borderbtm width95prc">
+                    <p class="font15 margin10topbottom"><span
+                            class="orangeheading">[@spring.message "manageProducts.editLatenessDormancy.setLatenessDefinition" /]</span>
+                    </p>
+
+                    <div class="fontBold">[@spring.message "manageProducts.editLatenessDormancy.loan" /]</div>
+                    <div class="span-23 width95prc">
+                        <span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" /]</span>
     	            <span class="span-8">
     	            	[@spring.bind "formBean.latenessDays" /]
-						<input size="4" maxlength="4" type="text" id="lateness" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
+                            <input size="4" maxlength="4" type="text" id="lateness" name="${spring.status.expression}"
+                                   value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days" /]
 					</span>
-					[@spring.showErrors "<br>" /]
-        	    </div>
-			<div class="clear">&nbsp;</div>
-        </div>
-        <div class="clear">&nbsp;</div>
-        <div class="span-23 width95prc">
-			        	<p class="font15 orangeheading margin10topbottom">[@spring.message "manageProducts.editLatenessDormancy.setDormancyDefinition" /] </p>
-            <div class="fontBold">[@spring.message "manageProducts.editLatenessDormancy.savings" /]</div>
-            <div class="span-23 width95prc">
-            	<span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy"/]</span>
+                    </div>
+                    <div class="clear">&nbsp;</div>
+                </div>
+                <div class="clear">&nbsp;</div>
+                <div class="span-23 width95prc">
+                    <p class="font15 orangeheading margin10topbottom">[@spring.message "manageProducts.editLatenessDormancy.setDormancyDefinition" /] </p>
+
+                    <div class="fontBold">[@spring.message "manageProducts.editLatenessDormancy.savings" /]</div>
+                    <div class="span-23 width95prc">
+                        <span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy"/]</span>
                 <span class="span-8">
                 	[@spring.bind "formBean.dormancyDays" /]
-                	<input size="4" maxlength="4" type="text" id="dormancy" name="${spring.status.expression}" value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
+                        <input size="4" maxlength="4" type="text" id="dormancy" name="${spring.status.expression}"
+                               value="${spring.status.value?default("")}">&nbsp;[@spring.message "manageProducts.editLatenessDormancy.days"/]
                 </span>
-				[@spring.showErrors "<br>" /]
+                    </div>
+                    <div class="clear">&nbsp;</div>
+                </div>
+                <div class="clear">&nbsp;</div>
+                <div class="buttonsSubmitCancel">
+                    <input class="buttn" type="submit" name="submit" value="[@spring.message "submit"/]"/>
+                    <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
+                </div>
             </div>
-            <div class="clear">&nbsp;</div>
         </div>
-        <div class="clear">&nbsp;</div>
-        <div class="buttonsSubmitCancel">
-            <input class="buttn"  type="submit" name="submit" value="[@spring.message "submit"/]"/>
-            <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
-        </div>
-	</div>
-	</div>
-   	</form>	 
-  </div><!--Main Content Ends-->
-  [/@adminLeftPaneLayout]
+    </form>
+</div><!--Main Content Ends-->
+[/@adminLeftPaneLayout]

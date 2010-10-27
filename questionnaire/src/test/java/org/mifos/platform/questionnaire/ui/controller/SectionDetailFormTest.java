@@ -51,15 +51,15 @@ public class SectionDetailFormTest {
 
     private void assertQuestionDetailForm(SectionQuestionDetailForm questionDetailForm, int id, String title, boolean mandatory) {
         assertThat(questionDetailForm.getQuestionId(), Matchers.is(id));
-        assertThat(questionDetailForm.getTitle(), Matchers.is(title));
+        assertThat(questionDetailForm.getText(), Matchers.is(title));
         assertThat(questionDetailForm.isMandatory(), Matchers.is(mandatory));
     }
 
     private SectionDetail getSectionDefinition() {
         SectionDetail sectionDetail = new SectionDetail();
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(121, "Question1", "Question1", QuestionType.FREETEXT, true), true));
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(122, "Question2", "Question2", QuestionType.FREETEXT, true), false));
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Question3", "Question3", QuestionType.FREETEXT, true), true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(121, "Question1", QuestionType.FREETEXT, true), true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(122, "Question2", QuestionType.FREETEXT, true), false));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Question3", QuestionType.FREETEXT, true), true));
         return sectionDetail;
     }
 }

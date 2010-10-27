@@ -102,10 +102,6 @@ public class SavingsPostInterestTest {
                                                                           .monthly().every(1)
                                                                           .build();
 
-//        MeetingBO interestCalculationMeeting = new MeetingBuilder().savingsInterestCalulationSchedule()
-//                                                                              .monthly().every(1)
-//                                                                              .build();
-
         savingsProduct = new SavingsProductBuilder().mandatory()
                                                                         .withMandatoryAmount("33.0")
                                                                         .appliesToClientsOnly()
@@ -120,8 +116,7 @@ public class SavingsPostInterestTest {
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
@@ -149,8 +144,7 @@ public class SavingsPostInterestTest {
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
@@ -177,8 +171,7 @@ public class SavingsPostInterestTest {
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
@@ -208,8 +201,7 @@ public class SavingsPostInterestTest {
 
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
@@ -250,8 +242,7 @@ public class SavingsPostInterestTest {
         Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
@@ -290,8 +281,7 @@ public class SavingsPostInterestTest {
         Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
@@ -340,8 +330,7 @@ public class SavingsPostInterestTest {
         Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
@@ -374,8 +363,7 @@ public class SavingsPostInterestTest {
         Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
@@ -412,8 +400,7 @@ public class SavingsPostInterestTest {
 
         Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
