@@ -69,7 +69,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
     @Test(enabled=true)
     public void createVoluntarySavingsProductForClients() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
@@ -77,12 +77,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_001_result_dbunit.xml.zip");
+//        verifySavingsProduct("DefineNewSavingsProduct_001_result_dbunit.xml");
     }
 
     @Test(enabled=true)
     public void createMandatorySavingsProductForClients() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.MANDATORY);
@@ -90,12 +90,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_002_result_dbunit.xml.zip");
+//        verifySavingsProduct("DefineNewSavingsProduct_002_result_dbunit.xml");
     }
 
     @Test(enabled=true)
     public void createVoluntarySavingsProductForGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
@@ -103,12 +103,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_003_result_dbunit.xml.zip");
+//        verifySavingsProduct("DefineNewSavingsProduct_003_result_dbunit.xml");
     }
 
     @Test(enabled=true)
     public void createMandatorySavingsProductForGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.MANDATORY);
@@ -116,12 +116,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_004_result_dbunit.xml.zip");
+//        verifySavingsProduct("DefineNewSavingsProduct_004_result_dbunit.xml");
     }
 
     @Test(enabled=true)
     public void createVoluntarySavingsProductForCenters() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.VOLUNTARY);
@@ -129,12 +129,12 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_005_result_dbunit.xml.zip");
+//        verifySavingsProduct("DefineNewSavingsProduct_005_result_dbunit.xml");
     }
 
     @Test(enabled=true)
     public void createMandatorySavingsProductForCenters() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_default_003_dbunit.xml", dataSource, selenium);
 
         SavingsProductParameters params = getGenericSavingsProductParameters();
         params.setTypeOfDeposits(SavingsProductParameters.MANDATORY);
@@ -142,7 +142,7 @@ public class DefineNewSavingsProductTest extends UiTestCaseBase {
 
         savingsProductHelper.createSavingsProduct(params);
 
-//        verifySavingsProduct("DefineNewSavingsProduct_006_result_dbunit.xml.zip");
+//        verifySavingsProduct("DefineNewSavingsProduct_006_result_dbunit.xml");
     }
 
 

@@ -72,7 +72,7 @@ public class DatasetVersionTest extends UiTestCaseBase {
         // FIXME - Path works for maven build but not from eclipse
         // To run this test in eclipse, change path below to: "acceptanceTests/target/test-classes/dataSets"
         File f = new File("target/test-classes/dataSets");
-        FileExtensionFilter filter = new FileExtensionFilter("", "dbunit.xml.zip");
+        FileExtensionFilter filter = new FileExtensionFilter("", "dbunit.xml");
         File[] acceptList = f.listFiles(filter);
 
         for (File element : acceptList) {

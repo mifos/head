@@ -38,7 +38,7 @@ public class DbUnitUtilitiesTest {
      */
     public void testGetDataSetFromFile() throws DataSetException, IOException, URISyntaxException {
         DbUnitUtilities utilities = new DbUnitUtilities();
-        utilities.getDataSetFromDataSetDirectoryFile("test directory/acceptance_small_001_dbunit.xml.zip");
+        utilities.getDataSetFromDataSetDirectoryFile("test directory/acceptance_small_001_dbunit.xml");
     }
 }
 

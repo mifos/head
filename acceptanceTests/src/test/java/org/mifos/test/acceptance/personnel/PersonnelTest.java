@@ -83,7 +83,7 @@ public class PersonnelTest extends UiTestCaseBase {
     @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createUserTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         userHelper.createUser(adminPage.getAdminUserParameters(), "MyOffice1233171674227");
@@ -91,7 +91,7 @@ public class PersonnelTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void editUserTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
 
@@ -111,7 +111,7 @@ public class PersonnelTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createUserWithNonAdminRoleTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         userHelper.createUser(adminPage.getNonAdminUserParameters(), "MyOffice1233171674227");
@@ -120,7 +120,7 @@ public class PersonnelTest extends UiTestCaseBase {
     @Test(groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void changePasswordTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         HomePage homePage = loginSuccessfully();
         AdminPage adminPage = homePage.navigateToAdminPage();

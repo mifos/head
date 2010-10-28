@@ -74,7 +74,7 @@ public class FeeTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void applyFee() throws Exception {
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // the data set contains an approved loan w/ id 000100000000005
         // we use this loan for our test
@@ -85,12 +85,12 @@ public class FeeTest extends UiTestCaseBase {
 
         loanTestHelper.applyCharge("000100000000005", params);
 
-        verifyFees("FeeTest_001_result_dbunit.xml.zip");
+        verifyFees("FeeTest_001_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void applyAndWaiveFee() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // this account has an approved but not disbursed loan.
         String accountId = "000100000000005";
@@ -114,7 +114,7 @@ public class FeeTest extends UiTestCaseBase {
 
         loanTestHelper.waiveFee(accountId);
 
-        verifyFees("FeeTest_002_result_dbunit.xml.zip");
+        verifyFees("FeeTest_002_result_dbunit.xml");
 
     }
 

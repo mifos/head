@@ -109,7 +109,7 @@ public class CollectionSheetEntryAttendanceTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public CollectionSheetEntryConfirmationPage enterAndVerifyBasicAttendanceData() throws DatabaseUnitException, SQLException, IOException,
             Exception, DataSetException {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         SubmitFormParameters formParameters = getFormParametersForCenter2();
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
         enterAttendanceData(enterDataPage, BASIC_ATTENDANCE_VALUES);

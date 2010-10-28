@@ -85,7 +85,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");
@@ -144,7 +144,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newWeeklyGLIMAccount() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");
@@ -160,7 +160,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMAccountTotalCalculationWithDecimal() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");
@@ -178,7 +178,7 @@ public class CreateGLIMLoanAccountTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void checkGLIMAccountTotalCalculationWholeNumber() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountSearchParameters searchParameters = new CreateLoanAccountSearchParameters();
         searchParameters.setSearchString("MyGroup1233266297718");

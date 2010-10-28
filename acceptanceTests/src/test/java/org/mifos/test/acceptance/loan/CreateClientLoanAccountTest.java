@@ -84,7 +84,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
     public void newWeeklyClientLoanAccountWithQuestionGroups() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         String questionGroupTitle = "QG1" + random.nextInt(100);
         String question1 = "DT_" + random.nextInt(100);
         String question2 = "SS_" + random.nextInt(100);
@@ -119,7 +119,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
 
         String loanId = createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
         submitAccountParameters.setAmount("10666.0");
@@ -139,7 +139,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
 
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1012.0");
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_014_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_014_dbunit.xml", dataSource, selenium);
 
         String loanId = createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
 
@@ -161,7 +161,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1234.0");
         submitAccountParameters.setGracePeriodTypeNone(true);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
     }
@@ -177,7 +177,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("2765.0");
         submitAccountParameters.setGracePeriodTypeNone(true);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_004_dbunit.xml", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
     }
@@ -193,7 +193,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountSubmitParameters submitAccountParameters = new CreateLoanAccountSubmitParameters();
         submitAccountParameters.setAmount("1000");
         submitAccountParameters.setGracePeriodTypeNone(true);
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml", dataSource, selenium);
 
         createLoanAndCheckAmount(searchParameters, submitAccountParameters, null);
     }
@@ -205,7 +205,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         searchParameters.setSearchString("Client - Tesa Mendez");
         searchParameters.setLoanProduct("MIFOS-2636-GKEmergencyLoanWithZeroInterest");
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_010_dbunit.xml", dataSource, selenium);
 
         CreateLoanAccountEntryPage loanAccountEntryPage = loanTestHelper.navigateToCreateLoanAccountEntryPage(searchParameters);
 

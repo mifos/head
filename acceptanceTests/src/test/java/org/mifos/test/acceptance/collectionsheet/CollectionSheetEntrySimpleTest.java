@@ -85,7 +85,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     private void checkForValueObjectConversionErrorWhenEnteringInvalidDate(SubmitFormParameters invalidFormParameters,
             SubmitFormParameters validFormParameters) throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();
@@ -107,7 +107,7 @@ public class CollectionSheetEntrySimpleTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void checkThatPreviewEditButtonWorks() throws Exception {
         SubmitFormParameters formParameters = getFormParameters();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
         selectPage.verifyPage();

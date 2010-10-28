@@ -64,7 +64,7 @@ public class ViewOfficesTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyViewOfficesTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewOfficesPage viewOfficesPage = adminPage.navigateToViewOfficesPage();

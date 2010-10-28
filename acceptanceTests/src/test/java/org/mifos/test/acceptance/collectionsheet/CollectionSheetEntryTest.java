@@ -91,7 +91,7 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
         formParameters.setCenter("Center1");
         formParameters.setPaymentMode("Cash");
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
 
         CollectionSheetEntrySelectPage selectPage =
             new CollectionSheetEntryTestHelper(selenium).loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -108,13 +108,13 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             previewPage.submitAndGotoCollectionSheetEntryConfirmationPage();
         confirmationPage.verifyPage();
 
-        verifyCollectionSheetData("acceptance_small_002_dbunit.xml.zip");
+        verifyCollectionSheetData("acceptance_small_002_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void twoLoansWithSameProductHasMergedLoanAmount() throws Exception {
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryEnterData(formParameters);
         //check amount due for client who has two loan accounts on the same product
         enterDataPage.verifyLoanAmountValue(3, 0, 2088.0);
@@ -131,10 +131,10 @@ public class CollectionSheetEntryTest extends UiTestCaseBase {
             formParameters.setCenter("MyCenter1233266935468");
             formParameters.setPaymentMode("Cash");
 
-            initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml.zip", dataSource, selenium);
+            initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_medium_005_dbunit.xml", dataSource, selenium);
             CollectionSheetEntryConfirmationPage confirmPage = new CollectionSheetEntryTestHelper(selenium).submitDefaultCollectionSheetEntryData(formParameters);
             confirmPage.verifyPage();
-            verifyCollectionSheetData("ColSheetLoanTest_001_result_dbunit.xml.zip");
+            verifyCollectionSheetData("ColSheetLoanTest_001_result_dbunit.xml");
         } catch (Exception e) {
             dbUnitUtilities.dumpDatabaseToTimestampedFileInConfigurationDirectory(dataSource);
             throw e;

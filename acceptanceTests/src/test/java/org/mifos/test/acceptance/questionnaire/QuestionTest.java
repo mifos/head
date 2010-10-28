@@ -52,7 +52,7 @@ public class QuestionTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
-    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
+    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
     private String title;
     private static final String TITLE_MISSING = "must match \"^.*[^\\s]+.*$\"";
     private static final String AT_LEAST_2_CHOICES = "Please specify at least 2 choices.";

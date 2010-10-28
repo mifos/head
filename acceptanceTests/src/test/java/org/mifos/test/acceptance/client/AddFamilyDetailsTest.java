@@ -79,7 +79,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void goToPreviewPageAfterEnteringFamilyDetailsPageTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
@@ -101,7 +101,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyNoLivingStatus() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
@@ -118,7 +118,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyCanAddAndDeleteRow() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         ClientsAndAccountsHomepage clientsAndAccountsPage = navigationHelper.navigateToClientsAndAccountsPage();
@@ -135,7 +135,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void goToPreviewPageTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
@@ -152,7 +152,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void goToEditAfterPreviewPageTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
@@ -170,7 +170,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void canGoTosubmitAfterPreviewPageTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
@@ -191,7 +191,7 @@ public class AddFamilyDetailsTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void canEditAfterSubmit() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
-                "acceptance_small_003_dbunit.xml.zip",
+                "acceptance_small_003_dbunit.xml",
                 dataSource, selenium);
         propertiesHelper.setAreFamilyDetailsRequired(true);
         propertiesHelper.setMaximumNumberOfFamilyMemebers(10);
