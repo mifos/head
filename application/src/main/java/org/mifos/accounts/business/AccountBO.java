@@ -1244,14 +1244,15 @@ public class AccountBO extends AbstractBusinessObject {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
 
+            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+
             if (adjustForHolidays) {
                 HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-                holidays = holidayDao.findAllHolidaysThisYearAndNext(getOffice().getOfficeId());
+                holidays = holidayDao.findAllHolidaysFromDateAndNext(getOffice().getOfficeId(), startFromMeetingDate.toLocalDate().toString());
             }
 
             final int occurrences = noOfInstallments + installmentToSkip;
 
-            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                     workingDays, holidays);

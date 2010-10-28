@@ -33,6 +33,7 @@ import org.mifos.application.admin.servicefacade.SystemInformationDto;
 import org.mifos.application.admin.servicefacade.SystemInformationServiceFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,7 +45,12 @@ public class SystemInformationController {
     @Autowired
     private SystemInformationServiceFacade systemInformationServiceFacade;
 
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NP_UNWRITTEN_FIELD", justification="request is not null")
+    @ModelAttribute("breadcrumbs")
+    public List<BreadCrumbsLinks> showBreadCrumbs() {
+        return new AdminBreadcrumbBuilder().withLink("systemAdministration.viewsysteminformation.systeminformation", "systemInformation.ftl").build();
+    }
+
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = "NP_UNWRITTEN_FIELD", justification = "request is not null")
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView viewSystemInformation(HttpServletRequest request) {
         ServletContext context = request.getSession().getServletContext();

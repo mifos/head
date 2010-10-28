@@ -63,10 +63,10 @@ public class HolidayDaoHibernate implements HolidayDao {
     }
 
     @SuppressWarnings("unchecked")
-    private List<Holiday> retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(final Short officeId) {
+    private List<Holiday> retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(final Short officeId, final String date) {
         List<Holiday> orderedHolidays = new ArrayList<Holiday>();
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CURRENT_DATE", new LocalDate().toString());
+        queryParameters.put("CURRENT_DATE", date);
         queryParameters.put("OFFICE_ID", officeId);
 
         List<HolidayBO> queryResult = (List<HolidayBO>) genericDao.executeNamedQuery("holiday.findCurrentAndFutureOfficeHolidaysEarliestFirst", queryParameters);
@@ -75,9 +75,18 @@ public class HolidayDaoHibernate implements HolidayDao {
         return orderedHolidays;
     }
 
+    private List<Holiday> retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(final Short officeId) {
+        return retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId, new LocalDate().toString());
+    }
+
     @Override
     public final List<Holiday> findAllHolidaysThisYearAndNext(final short officeId) {
         return retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId);
+    }
+
+    @Override
+    public final List<Holiday> findAllHolidaysFromDateAndNext(final short officeId, final String date) {
+        return retrieveCurrentAndFutureHolidaysForOfficeHierarchyInAscendingOrder(officeId, date);
     }
 
     @Override

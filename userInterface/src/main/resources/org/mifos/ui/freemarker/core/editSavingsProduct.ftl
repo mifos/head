@@ -33,24 +33,25 @@
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
   <!--  Main Content Begins-->
   <span id="page.id" title="Edit_SavingsProduct" />
-  <div class="content marginAuto" style="margin-Left:5em;">
-    <div class="borders span-22">
-      <div class="borderbtm span-22">
-        <p class="span-15 arrowIMG orangeheading">[@spring.message "manageProducts.defineSavingsProducts.savingsproductinformation" /]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
-      </div>
-      <div class="subcontent ">
+<div class="content definePageMargin">
+    <div class="borders margin20lefttop width90prc">
+        <div class="borderbtm width100prc height25px">
+            <p class="span-17 timelineboldorange arrowIMG  padding20left" style="width:50%">[@spring.message "manageProducts.defineSavingsProducts.savingsproductinformation" /]</p>
+            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right" style="float:right">[@spring.message "review&Submit" /]</p>
+        </div>
+
+      <div class="margin20lefttop">
         <form method="post" action="editSavingsProduct.ftl" name="createsavingsproduct">
           [@spring.bind "savingsProduct.generalDetails.id" /]
           <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
-          <p class="font15">
+          <p class="font15 margin5bottom">
           	<span class="fontBold">[@spring.message "manageProducts.defineSavingsProducts.addanewSavingsProduct" /]</span>&nbsp;--&nbsp;
           	<span class="orangeheading">[@spring.message "manageProducts.defineSavingsProducts.enterSavingsproductinformation" /]</span>
           </p>
           <div>[@spring.message "manageProducts.defineSavingsProducts.completethefieldsbelow" /]</div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</div>
           [@mifos.showAllErrors "savingsProduct.*"/]
-          <p class="fontBold">[@spring.message "manageProducts.defineSavingsProducts.savingsproductdetails" /]</p>
+          <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineSavingsProducts.savingsproductdetails" /]</p>
           <div class="prepend-3  span-21 last">
           	<div class="span-20 ">
           		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.productinstancename" /]&nbsp;</span>
@@ -107,7 +108,7 @@
 			</div>
           </div>
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">[@spring.message "manageProducts.defineSavingsProducts.targetedDepositsandWithdrawalRestrictions" /]</p>
+          <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineSavingsProducts.targetedDepositsandWithdrawalRestrictions" /]</p>
           <div class="prepend-3  span-21 last">
           	<div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.typeofdeposits" /]&nbsp;:</span>
           		<span class="span-4">
@@ -130,7 +131,7 @@
   			</div>
           </div>
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">[@spring.message "loanProduct.status.description"/]</p>
+          <p class="fontBold margin10topbottom">[@spring.message "loanProduct.status.description"/]</p>
           <div class="prepend-3  span-21 last">
           	<div class="span-20">
 	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "loanProduct.status.description"/]&nbsp;</span>
@@ -139,7 +140,7 @@
           </div>
           
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">[@spring.message "manageProducts.defineSavingsProducts.interestRate" /]</p>
+          <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineSavingsProducts.interestRate" /]</p>
           <div class="prepend-3  span-21 last">
 	      	<div class="span-20">
 	      		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.interestRate" /]&nbsp;</span>
@@ -170,7 +171,7 @@
   			</div>
           </div>
           <div class="clear">&nbsp;</div>
-          <p class="fontBold">[@spring.message "manageProducts.defineSavingsProducts.accounting" /] </p>
+          <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineSavingsProducts.accounting" /] </p>
           <div class="prepend-3  span-21 last">
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.gLcodefordeposits" /]&nbsp;</span>
             	<span class="span-4">
@@ -184,8 +185,7 @@
 			</div>
           </div>
           <div class="clear">&nbsp;</div>
-          <hr />
-          <div class="prepend-9">
+          <div class="buttonsSubmitCancel margin20right">
             	<input class="buttn" type="submit" id="createSavingsProduct.button.preview" class="buttn" name="preview" value="[@spring.message "preview"/]" />
             	<input class="buttn2" type="submit" name="CANCEL" value="[@spring.message "cancel"/]"/>
           </div>
