@@ -67,7 +67,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     public void setUp() throws Exception {
         super.setUp();
         // TODO: please ensure that the database contains Mrs Salutation!
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         // ---
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium);
