@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.struts.actionforms;
 
+import java.sql.Date;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Locale;
@@ -33,6 +34,7 @@ import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
@@ -365,5 +367,14 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 
     public void setWaiverInterest(String waiverInterest) {
         this.waiverInterest = waiverInterest;
+    }
+
+    public LocalDate getReceiptDateAsLocalDate() throws InvalidDateException {
+        Date receiptDateStr = DateUtils.getDateAsSentFromBrowser(getReceiptDate());
+        return (receiptDateStr != null) ? new LocalDate(receiptDateStr.getTime()) : null;
+    }
+
+    public LocalDate getTrxnDateAsLocalDate() throws InvalidDateException {
+        return new LocalDate(DateUtils.getDateAsSentFromBrowser(getTransactionDate()).getTime());
     }
 }

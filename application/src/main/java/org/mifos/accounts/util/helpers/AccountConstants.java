@@ -203,5 +203,5 @@ public interface AccountConstants {
     String CUMULATIVE_CASHFLOW_ZERO = "warning.cumulative_cashflow_zero";
     String INSTALLMENT_BEYOND_CASHFLOW_DATE = "errors.installment_due_date_beyond_cashflow_date";
 
-
+    String NO_COMMENT = "";
 }

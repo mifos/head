@@ -20,17 +20,9 @@
 
 package org.mifos.accounts.struts.action;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.AccountPaymentParametersDto;
 import org.mifos.accounts.api.AccountReferenceDto;
@@ -38,7 +30,6 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.api.PaymentTypeDto;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.api.UserReferenceDto;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
@@ -46,6 +37,7 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -62,6 +54,11 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.List;
 
 public class AccountApplyPaymentAction extends BaseAction {
     private AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
@@ -107,9 +104,9 @@ public class AccountApplyPaymentAction extends BaseAction {
         clearActionForm(actionForm);
         actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
 
+        final AccountReferenceDto accountReferenceDto = new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId()));
         AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(
-                new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId())),
-                request.getParameter(Constants.INPUT), userContext.getLocaleId(),
+                Integer.valueOf(accountReferenceDto.getAccountId()), request.getParameter(Constants.INPUT), userContext.getLocaleId(),
                 new UserReferenceDto(userContext.getId()));
 
         SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.getVersion(), request);
@@ -138,52 +135,49 @@ public class AccountApplyPaymentAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward applyPayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws NumberFormatException, Exception {
-        Integer savedAccountVersion = (Integer)SessionUtils.getAttribute(Constants.ACCOUNT_VERSION, request);
+            HttpServletResponse response) throws Exception {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
-        AccountReferenceDto accountReferenceDto = new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId()));
-        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(
-                accountReferenceDto,
-                request.getParameter(Constants.INPUT), userContext.getLocaleId(),
-                new UserReferenceDto(userContext.getId()));
+        Integer accountId = Integer.valueOf(actionForm.getAccountId());
+        String paymentType = request.getParameter(Constants.INPUT);
+        UserReferenceDto userReferenceDto = new UserReferenceDto(userContext.getId());
+        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountId, paymentType, userContext.getLocaleId(), userReferenceDto);
 
-        checkVersionMismatch(savedAccountVersion, accountPaymentDto.getVersion());
+        validateAccountPayment(accountPaymentDto, accountId, request, userContext);
 
-        if (!accountServiceFacade.isPaymentPermitted(accountReferenceDto, userContext)) {
-            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        PaymentTypeDto paymentTypeDto;
+        String amount = "0";
+        if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
+            amount = actionForm.getAmount();
+            paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
+        } else {
+            amount = accountPaymentDto.getTotalPaymentDue().toString();
+            paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
         }
 
-        try {
-            Date trxnDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTransactionDate());
-            Date receiptDate = DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate());
-            PaymentTypeDto paymentTypeDto;
+        AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
+                userReferenceDto, new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
+                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(), actionForm.getReceiptId());
 
-            String amount = "0";
-            if (accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
-                amount = actionForm.getAmount();
-                paymentTypeDto = getLoanPaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
-            } else {
-                amount = accountPaymentDto.getTotalPaymentDue().toString();
-                paymentTypeDto = getFeePaymentTypeDtoForId(Short.valueOf(actionForm.getPaymentTypeId()));
-            }
+        getAccountService().makePayment(accountPaymentParametersDto);
 
-            AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
-                    new UserReferenceDto(userContext.getId()),
-                    new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId())),
-                    new BigDecimal(amount),
-                    new LocalDate(trxnDate.getTime()),
-                    paymentTypeDto,
-                    "",
-                    (receiptDate == null) ? null : new LocalDate(receiptDate.getTime()),
-                    actionForm.getReceiptId());
+        return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
 
-            getAccountService().makePayment(accountPaymentParametersDto);
+    }
 
-            return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
-        } catch (InvalidDateException ide) {
-            throw new AccountException(ide);
+    private void validateAccountPayment(AccountPaymentDto accountPaymentDto, Integer accountId, HttpServletRequest request, UserContext userContext) throws Exception {
+        checkVersion(request, accountPaymentDto.getVersion());
+        checkPermission(userContext, accountId);
+    }
+
+    private void checkVersion(HttpServletRequest request, int accountVersion) throws Exception {
+        Integer savedAccountVersion = (Integer) SessionUtils.getAttribute(Constants.ACCOUNT_VERSION, request);
+        checkVersionMismatch(savedAccountVersion, accountVersion);
+    }
+
+    private void checkPermission(UserContext userContext, Integer accountId) throws ServiceException, CustomerException {
+        if (!accountServiceFacade.isPaymentPermitted(userContext, accountId)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
     }
 

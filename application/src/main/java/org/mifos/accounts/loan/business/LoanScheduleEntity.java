@@ -463,4 +463,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public boolean isSameAs(AccountActionDateEntity accountActionDateEntity) {
         return getInstallmentId().equals(accountActionDateEntity.getInstallmentId());
     }
+
+    public Money allocateAmount(Money amount) {
+        // 1. check whether this installment is arrear-current or future
+        // 2. if installment is arrear-current
+        // 3. knock off fees, interest, principal
+        // 4. return remaining balance
+        // 5. if installment is future
+        // 6. adjust interest if applicable
+        // 7. 
+    }
 }

@@ -35,10 +35,10 @@ import org.mifos.security.util.UserContext;
  */
 public interface AccountServiceFacade {
 
-    AccountPaymentDto getAccountPaymentInformation(AccountReferenceDto accountReferenceDto,
-            String paymentType, Short localeId, UserReferenceDto userReferenceDto) throws Exception;
+    AccountPaymentDto getAccountPaymentInformation(
+            Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto) throws Exception;
 
-    boolean isPaymentPermitted(final AccountReferenceDto accountReferenceDto, final UserContext userContext) throws ServiceException;
+    boolean isPaymentPermitted(final UserContext userContext, Integer accountId) throws ServiceException;
 
     List<ApplicableCharge> getApplicableFees(Integer accountId, UserContext userContext) throws ServiceException;
 

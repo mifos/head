@@ -40,11 +40,11 @@ import org.springframework.test.annotation.ExpectedException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import static org.mifos.framework.TestUtils.getDate;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -126,14 +126,6 @@ public class LoanBOTest {
         assertLoanScheduleEntity(loanScheduleEntities.get(0), "123.0", "12.0", "2010-10-24");
         assertLoanScheduleEntity(loanScheduleEntities.get(1), "231.0", "23.0", "2010-11-24");
         assertLoanScheduleEntity(loanScheduleEntities.get(2), "312.0", "31.0", "2010-12-24");
-    }
-
-    private Date getDate(int date, int month, int year) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.DAY_OF_MONTH, date);
-        calendar.set(Calendar.MONTH, month - 1);
-        calendar.set(Calendar.YEAR, year);
-        return calendar.getTime();
     }
 
     private void assertLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity, String pricipal, String interest, String dueDate) {

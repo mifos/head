@@ -20,9 +20,9 @@
 
 package org.mifos.accounts.api;
 
-import java.math.BigDecimal;
-
 import org.joda.time.LocalDate;
+
+import java.math.BigDecimal;
 
 /**
  * The Class AccountPaymentParametersDto is a data transfer
@@ -192,4 +192,7 @@ public class AccountPaymentParametersDto {
         return this.comment;
     }
 
+    public int getAccountId() {
+        return account.getAccountId();
+    }
 }

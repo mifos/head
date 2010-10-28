@@ -20,12 +20,13 @@
 
 package org.mifos.accounts.business;
 
-import java.sql.Date;
-
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.business.AbstractEntity;
+import org.mifos.framework.util.helpers.DateUtils;
+
+import java.sql.Date;
 
 public abstract class AccountActionDateEntity extends AbstractEntity implements Comparable<AccountActionDateEntity> {
 
@@ -120,5 +121,10 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
 
     protected MifosCurrency getCurrency() {
         return getAccount().getCurrency();
+    }
+
+    public boolean isDueToday() {
+        return DateUtils.getDateWithoutTimeStamp(getActionDate().getTime()).equals(
+                DateUtils.getCurrentDateWithoutTimeStamp());
     }
 }

@@ -20,11 +20,6 @@
 
 package org.mifos.accounts.api;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
@@ -46,6 +41,11 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
@@ -113,7 +113,7 @@ public class StandardAccountService implements AccountService {
 
     public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto)
             throws PersistenceException, AccountException {
-        final int accountId = accountPaymentParametersDto.getAccount().getAccountId();
+        final int accountId = accountPaymentParametersDto.getAccountId();
         final AccountBO account = getAccountPersistence().getAccount(accountId);
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
         if (validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
@@ -143,7 +143,7 @@ public class StandardAccountService implements AccountService {
     public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception {
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
-            LoanBO loan = getLoanPersistence().getAccount(accountPaymentParametersDto.getAccount().getAccountId());
+            LoanBO loan = getLoanPersistence().getAccount(accountPaymentParametersDto.getAccountId());
 
             PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().getMasterDataEntity(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
@@ -193,7 +193,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public List<InvalidPaymentReason> validateLoanDisbursement(AccountPaymentParametersDto payment) throws Exception {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
-        LoanBO loanAccount = getLoanPersistence().getAccount(payment.getAccount().getAccountId());
+        LoanBO loanAccount = getLoanPersistence().getAccount(payment.getAccountId());
         if ((loanAccount.getState() != AccountState.LOAN_APPROVED)
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
             errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
@@ -223,7 +223,7 @@ public class StandardAccountService implements AccountService {
     public List<InvalidPaymentReason> validatePayment(AccountPaymentParametersDto payment) throws PersistenceException,
             AccountException {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
-        AccountBO accountBo = getAccountPersistence().getAccount(payment.getAccount().getAccountId());
+        AccountBO accountBo = getAccountPersistence().getAccount(payment.getAccountId());
         if (!accountBo.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }

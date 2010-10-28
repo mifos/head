@@ -1154,7 +1154,7 @@ public class LoanBO extends AccountBO {
 
     private void makeEarlyRepaymentForNextInstallment(PersonnelBO currentUser, AccountPaymentEntity accountPaymentEntity, boolean waiveInterest) {
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-        if (nextInstallment != null && !nextInstallment.isPaid()) {
+        if (isInstallmentUnpaid(nextInstallment)) {
             if(waiveInterest){
                 repayInstallmentWithInterestWaiver(nextInstallment,accountPaymentEntity, AccountConstants.PAYMENT_RCVD,
                         AccountActionTypes.LOAN_REPAYMENT, currentUser);
@@ -1505,16 +1505,19 @@ public class LoanBO extends AccountBO {
      */
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
-
         validateForMakePayment(paymentData);
         LoanPaymentTypes loanPaymentTypes = handleLoanPayment(paymentData);
         AccountPaymentEntity accountPayment = getAccountPayment(paymentData);
         applyPaymentsToInstallments(paymentData, loanPaymentTypes, accountPayment);
+        handleLoanArrearsAging(loanPaymentTypes);
+        addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), paymentData.getPersonnel(), AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
+        return accountPayment;
+    }
+
+    private void handleLoanArrearsAging(LoanPaymentTypes loanPaymentTypes) throws AccountException {
         if (isLoanInBadStanding() && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
             handleArrearsAging();
         }
-        addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), paymentData.getPersonnel(), AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
-        return accountPayment;
     }
 
     private void applyPaymentsToInstallments(PaymentData paymentData, LoanPaymentTypes loanPaymentTypes, AccountPaymentEntity accountPayment) throws AccountException {
@@ -2674,8 +2677,7 @@ public class LoanBO extends AccountBO {
         for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
             if (totalAmount.isGreaterThanZero()) {
                 LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate, totalAmount);
-                paymentData.addAccountPaymentData(loanPayment);
-                totalAmount = totalAmount.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
+                totalAmount = allocatePaymentForInstallment(paymentData, totalAmount, loanPayment);
             }
         }
         if (totalAmount.isGreaterThanZero()) {
@@ -2702,8 +2704,7 @@ public class LoanBO extends AccountBO {
     private void addAccountPaymentToNextInstallmentIfNecessary(final PaymentData paymentData,
             final LoanPaymentData loanPaymentData, final AccountActionDateEntity nextInstallment) {
         if (!nextInstallment.isPaid()
-                && DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(
-                        DateUtils.getCurrentDateWithoutTimeStamp())) {
+                && nextInstallment.isDueToday()) {
             paymentData.addAccountPaymentData(loanPaymentData);
         }
     }
@@ -2716,31 +2717,49 @@ public class LoanBO extends AccountBO {
     }
 
     private void handleFuturePayment(final PaymentData paymentData) {
-        Money totalAmount = paymentData.getTotalAmount();
+        Money remainingAmount = allocateAmountForArrears(paymentData);
+        remainingAmount = allocateAmountForNextInstallment(paymentData, remainingAmount);
+        allocateAmountForFutureInstallments(paymentData, remainingAmount);
+    }
+
+    private void allocateAmountForFutureInstallments(PaymentData paymentData, Money remainingAmount) {
+        for (AccountActionDateEntity accountActionDate : getApplicableIdsForFutureInstallments()) {
+            if (remainingAmount.isGreaterThanZero()) {
+                LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate, remainingAmount);
+                remainingAmount = allocatePaymentForInstallment(paymentData, remainingAmount, loanPayment);
+            }
+        }
+    }
+
+    private Money allocateAmountForNextInstallment(PaymentData paymentData, Money remainingAmount) {
+        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
+        if (isInstallmentUnpaid(nextInstallment) && remainingAmount.isGreaterThanZero()) {
+            LoanPaymentData loanPayment = getLoanPayment(remainingAmount, nextInstallment);
+            remainingAmount = allocatePaymentForInstallment(paymentData, remainingAmount, loanPayment);
+        }
+        return remainingAmount;
+    }
+
+    private LoanPaymentData getLoanPayment(Money remainingAmount, AccountActionDateEntity nextInstallment) {
+        return nextInstallment.isDueToday() ? new LoanPaymentData(nextInstallment) : new LoanPaymentData(nextInstallment, remainingAmount);
+    }
+
+    private Money allocatePaymentForInstallment(PaymentData paymentData, Money amount, LoanPaymentData loanPayment) {
+        paymentData.addAccountPaymentData(loanPayment);
+        return amount.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
+    }
+
+    private boolean isInstallmentUnpaid(AccountActionDateEntity nextInstallment) {
+        return nextInstallment != null && !nextInstallment.isPaid();
+    }
+
+    private Money allocateAmountForArrears(PaymentData paymentData) {
+        Money money = paymentData.getTotalAmount();
         for (AccountActionDateEntity accountActionDate : getDetailsOfInstallmentsInArrears()) {
             LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate);
-            paymentData.addAccountPaymentData(loanPayment);
-            totalAmount = totalAmount.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
+            money = allocatePaymentForInstallment(paymentData, money, loanPayment);
         }
-        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-        if (nextInstallment != null && !nextInstallment.isPaid() && totalAmount.isGreaterThanZero()) {
-            LoanPaymentData loanPayment;
-            if (DateUtils.getDateWithoutTimeStamp(nextInstallment.getActionDate().getTime()).equals(
-                    DateUtils.getCurrentDateWithoutTimeStamp())) {
-                loanPayment = new LoanPaymentData(nextInstallment);
-            } else {
-                loanPayment = new LoanPaymentData(nextInstallment, totalAmount);
-            }
-            paymentData.addAccountPaymentData(loanPayment);
-            totalAmount = totalAmount.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
-        }
-        for (AccountActionDateEntity accountActionDate : getApplicableIdsForFutureInstallments()) {
-            if (totalAmount.isGreaterThanZero()) {
-                LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate, totalAmount);
-                paymentData.addAccountPaymentData(loanPayment);
-                totalAmount = totalAmount.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
-            }
-        }
+        return money;
     }
 
     private void changeLoanStatus(final AccountState newAccountState, final PersonnelBO personnel)
@@ -2794,7 +2813,7 @@ public class LoanBO extends AccountBO {
     private void makeEarlyRepaymentForNextInstallment(final AccountPaymentEntity accountPaymentEntity,
                                                       final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-        if (nextInstallment != null && !nextInstallment.isPaid()) {
+        if (isInstallmentUnpaid(nextInstallment)) {
             repayInstallment(nextInstallment, accountPaymentEntity, accountActionTypes, currentUser, comments);
         }
     }

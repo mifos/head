@@ -20,11 +20,7 @@
 
 package org.mifos.accounts.servicefacade;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.api.AccountReferenceDto;
 import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -33,14 +29,17 @@ import org.mifos.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Concrete implementation of service to manipulate accounts from the presentation layer.
@@ -49,22 +48,17 @@ import org.mifos.security.util.UserContext;
 public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
     @Override
-    public AccountPaymentDto getAccountPaymentInformation(AccountReferenceDto accountReferenceDto, String paymentType,
-            Short localeId, UserReferenceDto userReferenceDto) throws Exception {
-        AccountBO account = new AccountBusinessService()
-                .getAccount(Integer.valueOf(accountReferenceDto.getAccountId()));
+    public AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto) throws Exception {
+        AccountBO account = new AccountBusinessService().getAccount(accountId);
 
-        UserReferenceDto accountUser = null;
+        UserReferenceDto accountUser = userReferenceDto;
         if (account.getPersonnel() != null) {
             accountUser = new UserReferenceDto(account.getPersonnel().getPersonnelId());
-        } else {
-            accountUser = userReferenceDto;
         }
-        AccountPaymentDto accountPaymentDto = new AccountPaymentDto(AccountTypeDto.getAccountType(account
-                .getAccountType().getAccountTypeId()), account.getVersionNo(), constructPaymentTypeList(paymentType,
-                localeId), account.getTotalPaymentDue(), accountUser);
 
-        return accountPaymentDto;
+        List<ListItem<Short>> paymentTypeList = constructPaymentTypeList(paymentType, localeId);
+        AccountTypeDto accountType = AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId());
+        return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, account.getTotalPaymentDue(), accountUser);
     }
 
     private List<ListItem<Short>> constructPaymentTypeList(String paymentType, Short localeId) throws Exception {
@@ -87,20 +81,17 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     }
 
     @Override
-    public boolean isPaymentPermitted(final AccountReferenceDto accountReferenceDto, final UserContext userContext)
+    public boolean isPaymentPermitted(final UserContext userContext, Integer accountId)
             throws ServiceException {
-        AccountBO account = new AccountBusinessService()
-                .getAccount(Integer.valueOf(accountReferenceDto.getAccountId()));
+        AccountBO account = new AccountBusinessService().getAccount(accountId);
         CustomerLevel customerLevel = null;
         if (account.getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
             customerLevel = account.getCustomer().getLevel();
         }
 
-        Short personnelId = null;
+        Short personnelId = userContext.getId();
         if (account.getPersonnel() != null) {
             personnelId = account.getPersonnel().getPersonnelId();
-        } else {
-            personnelId = userContext.getId();
         }
 
         return ActivityMapper.getInstance().isPaymentPermittedForAccounts(account.getType(), customerLevel,
