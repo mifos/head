@@ -366,7 +366,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         LocalDate nextPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
         LocalDate startOfPostingPeriod = postingSchedule.findFirstDateOfPeriodForMatchingDate(nextPostingDate);
-        CalendarPeriod postingPeriodAtClosure = new CalendarPeriod(startOfPostingPeriod, closureDate);
+
+        CalendarPeriod postingPeriodAtClosure;
+        if (startOfPostingPeriod.isAfter(closureDate)) {
+            postingPeriodAtClosure = new CalendarPeriod(closureDate, closureDate);
+        } else {
+            postingPeriodAtClosure = new CalendarPeriod(startOfPostingPeriod, closureDate);
+        }
 
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), Long.valueOf(savingsId));
 
@@ -416,7 +422,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         InterestScheduledEvent postingSchedule = savingsInterestScheduledEventFactory.createScheduledEventFrom(savingsAccount.getInterestPostingMeeting());
         LocalDate nextPostingDate = new LocalDate(savingsAccount.getNextIntPostDate());
         LocalDate startOfPostingPeriod = postingSchedule.findFirstDateOfPeriodForMatchingDate(nextPostingDate);
-        CalendarPeriod postingPeriodAtClosure = new CalendarPeriod(startOfPostingPeriod, closureDate);
+
+        CalendarPeriod postingPeriodAtClosure;
+        if (startOfPostingPeriod.isAfter(closureDate)) {
+            postingPeriodAtClosure = new CalendarPeriod(closureDate, closureDate);
+        } else {
+            postingPeriodAtClosure = new CalendarPeriod(startOfPostingPeriod, closureDate);
+        }
 
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), Long.valueOf(savingsId));
 
