@@ -39,6 +39,8 @@ public interface HolidayDao {
 
     List<Holiday> findAllHolidaysThisYearAndNext(short officeId);
 
+    List<Holiday> findAllHolidaysFromDateAndNext(short officeId, String date);
+
     List<HolidayBO> findAllHolidays();
 
     List<String> applicableOffices(Integer id);
