@@ -73,4 +73,12 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
             throw new BusinessRuleException("Duplicate.generalDetails.shortName");
         }
     }
+
+    @Override
+    public boolean activeOrInactiveSavingsAccountsExistForProduct(final Integer productId) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("prdOfferingId", productId.shortValue());
+        Number activeOrInactiveAccounts = (Number) this.genericDao.executeUniqueResultNamedQuery("savingsProduct.openSavingsAccounts", queryParameters);
+        return activeOrInactiveAccounts.intValue() > 0;
+    }
 }

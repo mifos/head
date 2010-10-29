@@ -40,4 +40,6 @@ public interface SavingsProductDao {
     void validateProductWithSameNameDoesNotExist(String name);
 
     void validateProductWithSameShortNameDoesNotExist(String shortName);
+
+    boolean activeOrInactiveSavingsAccountsExistForProduct(Integer productId);
 }

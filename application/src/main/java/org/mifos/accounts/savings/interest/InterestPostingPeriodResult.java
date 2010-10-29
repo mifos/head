@@ -29,9 +29,9 @@ public class InterestPostingPeriodResult {
 
     private Money periodBalance;
     private List<InterestCalculationPeriodResult> interestCalulcationResults = new ArrayList<InterestCalculationPeriodResult>();
-    private final InterestCalculationInterval postingPeriod;
+    private final CalendarPeriod postingPeriod;
 
-    public InterestPostingPeriodResult(InterestCalculationInterval postingPeriod) {
+    public InterestPostingPeriodResult(CalendarPeriod postingPeriod) {
         this.postingPeriod = postingPeriod;
     }
 
@@ -47,7 +47,7 @@ public class InterestPostingPeriodResult {
         this.periodBalance = periodBalance;
     }
 
-    public InterestCalculationInterval getPostingPeriod() {
+    public CalendarPeriod getPostingPeriod() {
         return this.postingPeriod;
     }
 

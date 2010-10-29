@@ -44,8 +44,8 @@
         <form method="post" action="editSavingsProduct.ftl" name="createsavingsproduct">
           [@spring.bind "savingsProduct.generalDetails.id" /]
           <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
-          <p class="font15 margin5bottom">
-          	<span class="fontBold">[@spring.message "manageProducts.defineSavingsProducts.addanewSavingsProduct" /]</span>&nbsp;--&nbsp;
+          <p class="font15">
+          	<span class="fontBold margin5bottom">[@spring.message "manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" /]</span>&nbsp;--&nbsp;
           	<span class="orangeheading">[@spring.message "manageProducts.defineSavingsProducts.enterSavingsproductinformation" /]</span>
           </p>
           <div>[@spring.message "manageProducts.defineSavingsProducts.completethefieldsbelow" /]</div>

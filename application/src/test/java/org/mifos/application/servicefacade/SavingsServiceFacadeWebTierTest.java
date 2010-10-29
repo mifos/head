@@ -33,16 +33,25 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.savings.interest.CalendarPeriod;
+import org.mifos.accounts.savings.interest.CalendarPeriodBuilder;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.MifosUser;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SavingsServiceFacadeWebTierTest {
@@ -71,6 +80,19 @@ public class SavingsServiceFacadeWebTierTest {
         savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, personnelDao, customerDao);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setSavingsInterestScheduledEventFactory(savingsInterestScheduledEventFactory);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setTransactionHelper(transactionHelper);
+
+
+        MifosUser principal = new MifosUserBuilder().build();
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext == null) {
+            securityContext = new SecurityContextImpl();
+            SecurityContextHolder.setContext(securityContext);
+        }
+        if (securityContext.getAuthentication() == null || !securityContext.getAuthentication().isAuthenticated()) {
+            Authentication authentication = new UsernamePasswordAuthenticationToken(principal, principal, principal.getAuthorities());
+            securityContext.setAuthentication(authentication);
+        }
     }
 
     @After
@@ -78,19 +100,19 @@ public class SavingsServiceFacadeWebTierTest {
         Money.setDefaultCurrency(oldCurrency);
     }
 
-    @Test @Ignore
-    public void shouldRetrieveActiveAndInactiveAccountsPendingInterestPostingOnDayOfBatchJob() {
+    /**
+     * FIXME - complete test.
+     */
+    @Ignore
+    @Test
+    public void shouldPostInterestForLastPostingPeriodOnly() {
 
         // setup
         LocalDate dateOfBatchJob = new LocalDate();
+        CalendarPeriod lastPostingPeriod = new CalendarPeriodBuilder().build();
 
-        // stubbing
-
-        // exercise test
-        //savingsServiceFacade.batchPostInterestToSavingsAccount(dateOfBatchJob);
-
-        // verification
-        verify(savingsDao).retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(dateOfBatchJob);
+        // exercise
+        this.savingsServiceFacade.postInterestForLastPostingPeriod(dateOfBatchJob);
     }
 
     @Test

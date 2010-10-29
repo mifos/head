@@ -62,9 +62,7 @@ public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTestCase
                 + "<td width=\"21%\" class=\"drawtablerow\">" + dataType + "</td>\n"
                 + "<td width=\"21%\" class=\"drawtablerow\">" + defaultValue + "</td>\n"
                 + "<td width=\"17%\" class=\"drawtablerow\">" + mandatory + "</td>\n"
-                + "<td width=\"8%\" align=\"right\" class=\"drawtablerow\">"
-                + "<a href=\"action?method=method&amp;customFieldIdStr=" + fieldId
-                + "&amp;currentFlowKey=flow\">Edit</a>" + "</td>\n" + "</tr>\n", link.getOutput());
+                + "</tr>\n", link.getOutput());
     }
 
     @Test

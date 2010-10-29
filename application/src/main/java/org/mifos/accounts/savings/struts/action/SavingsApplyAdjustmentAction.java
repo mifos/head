@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
@@ -163,6 +164,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note);
         try {
             this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
+
+            // TODO - remove this after testing - imitate posting interest on dec-31-2010 of year to test
+//            this.savingsServiceFacade.postInterestForLastPostingPeriod(new LocalDate().withDayOfMonth(1).withMonthOfYear(1).withYear(2011));
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {

@@ -79,11 +79,6 @@ explanation of the license and how it is applied.
 </c:when>
 </c:choose></span>
     </td>
-    <td valign="top" align="right">
-    <br><html-el:link action="questionsAction.do?method=edit_entry&questionId=${sessionScope.question.questionId}">
-	<mifos:mifoslabel name="Surveys.EditQuestion" bundle="SurveysUIResources"/>
-	</html-el:link>
-	</td>
   </tr>
 </table>
 </tiles:put>

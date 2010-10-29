@@ -24,13 +24,13 @@ import org.mifos.framework.util.helpers.Money;
 
 public class InterestCalculationPeriodResult {
 
-    private final InterestCalculationInterval interestCalculationInterval;
+    private final CalendarPeriod interestCalculationInterval;
     private final Money interest;
     private final Money averagePrincipal;
     private final Money totalPrincipal;
     private final Money previousTotalInterestForPeriod;
 
-    public InterestCalculationPeriodResult(InterestCalculationInterval interestCalculationInterval, Money calculatedInterest, Money averagePrincipal, Money totalPrincipal, Money previousTotalInterestForPeriod) {
+    public InterestCalculationPeriodResult(CalendarPeriod interestCalculationInterval, Money calculatedInterest, Money averagePrincipal, Money totalPrincipal, Money previousTotalInterestForPeriod) {
         this.interestCalculationInterval = interestCalculationInterval;
         this.interest = calculatedInterest;
         this.averagePrincipal = averagePrincipal;

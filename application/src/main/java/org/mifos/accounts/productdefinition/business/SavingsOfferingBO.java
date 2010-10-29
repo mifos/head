@@ -21,13 +21,15 @@
 package org.mifos.accounts.productdefinition.business;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
@@ -36,6 +38,10 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
+import org.mifos.accounts.savings.interest.CalendarPeriod;
+import org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail;
+import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
+import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -44,6 +50,8 @@ import org.mifos.dto.domain.SavingsProductDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SavingsOfferingBO extends PrdOfferingBO {
 
@@ -60,6 +68,8 @@ public class SavingsOfferingBO extends PrdOfferingBO {
     private final GLCodeEntity interestGLCode;
 
     private final Set<PrdOfferingMeetingEntity> savingsOfferingMeetings;
+
+    private Set<SavingsProductHistoricalInterestDetail> historicalInterestDetails = new LinkedHashSet<SavingsProductHistoricalInterestDetail>();
 
     /**
      * default constructor for hibernate usuage
@@ -397,26 +407,85 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return savingsProductDto;
     }
 
-    public void updateSavingsDetails(SavingsTypeEntity savingsType, Money recommendedAmount,
-            RecommendedAmntUnitEntity recommendedAmntUnit, Money maxAmntWithdrawl,
-            Double interestRate, InterestCalcTypeEntity interestCalcType,
-            PrdOfferingMeetingEntity timePerForInstcalc, PrdOfferingMeetingEntity freqOfPostIntcalc,
-            Money minAmntForInt) {
-        this.savingsType = savingsType;
+    public void updateSavingsDetails(Money recommendedAmount, RecommendedAmntUnitEntity recommendedAmntUnit,
+            Money maxAmntWithdrawl, Double interestRate, Money minAmountRequiredForInterestToBeCalculated, LocalDate updateDate) {
+
+        this.maxAmntWithdrawl = maxAmntWithdrawl;
         this.recommendedAmount = recommendedAmount;
         this.recommendedAmntUnit = recommendedAmntUnit;
-        this.maxAmntWithdrawl = maxAmntWithdrawl;
-        this.interestRate = interestRate;
-        this.interestCalcType = interestCalcType;
-        this.minAmntForInt = minAmntForInt;
 
+        if (interestDetailsHaveChanged(interestRate, minAmountRequiredForInterestToBeCalculated)) {
+
+            InterestScheduledEvent interestCalculationEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(this.getTimePerForInstcalc().getMeeting());
+            LocalDate nextInterestCalculationDate = interestCalculationEvent.nextMatchingDateAfter(startOfFiscalYear(updateDate), updateDate);
+
+            LocalDate startOfPeriodDate = interestCalculationEvent.findFirstDateOfPeriodForMatchingDate(nextInterestCalculationDate);
+
+            LocalDate previousInterestCalculationDate = startOfPeriodDate.minusDays(1);
+            LocalDate startOfPreviousPeriodDate = interestCalculationEvent.findFirstDateOfPeriodForMatchingDate(previousInterestCalculationDate);
+
+            CalendarPeriod previousInterestCalculationPeriod = new CalendarPeriod(startOfPreviousPeriodDate, previousInterestCalculationDate);
+
+            if (noHistoricalRecordExistsFor(previousInterestCalculationPeriod)) {
+                SavingsProductHistoricalInterestDetail historicalInterestDetail = new SavingsProductHistoricalInterestDetail(previousInterestCalculationPeriod, this.interestRate, this.minAmntForInt);
+                this.historicalInterestDetails.add(historicalInterestDetail);
+            }
+
+            this.interestRate = interestRate;
+            this.minAmntForInt = minAmountRequiredForInterestToBeCalculated;
+        }
+    }
+
+    private boolean noHistoricalRecordExistsFor(CalendarPeriod interestCalculationPeriod) {
+        boolean noRecordFound = true;
+        for (SavingsProductHistoricalInterestDetail interestDetail : this.historicalInterestDetails) {
+            if (interestCalculationPeriod.contains(interestDetail.getStartDate())) {
+                noRecordFound = false;
+            }
+        }
+        return noRecordFound;
+    }
+
+    private LocalDate startOfFiscalYear(LocalDate updateDate) {
+        return updateDate.withDayOfMonth(1).withMonthOfYear(1);
+    }
+
+    public void updateDetailsOfSavingsProductNotInUse(SavingsTypeEntity savingsType, Money recommendedAmount,
+            RecommendedAmntUnitEntity recommendedAmntUnit, Money maxAmntWithdrawl,
+            Double interestRate, InterestCalcTypeEntity interestCalcType,
+            PrdOfferingMeetingEntity interestCalculationFequency, PrdOfferingMeetingEntity interestPostingFrequency,
+            Money minAmountRequiredForInterestToBeCalculated) {
+
+        this.maxAmntWithdrawl = maxAmntWithdrawl;
+        this.recommendedAmount = recommendedAmount;
+        this.recommendedAmntUnit = recommendedAmntUnit;
+        this.interestRate = interestRate;
+        this.minAmntForInt = minAmountRequiredForInterestToBeCalculated;
+
+        this.savingsType = savingsType;
+        this.interestCalcType = interestCalcType;
+        interestCalculationFequency.setPrdOffering(this);
+        interestPostingFrequency.setPrdOffering(this);
         this.savingsOfferingMeetings.remove(getTimePerForInstcalc());
-        timePerForInstcalc.setPrdOffering(this);
-        setTimePerForInstcalc(timePerForInstcalc);
+        setTimePerForInstcalc(interestCalculationFequency);
 
         this.savingsOfferingMeetings.remove(getFreqOfPostIntcalc());
-        freqOfPostIntcalc.setPrdOffering(this);
-        setFreqOfPostIntcalc(freqOfPostIntcalc);
+        setFreqOfPostIntcalc(interestPostingFrequency);
+    }
+
+    private boolean interestDetailsHaveChanged(Double newInterestRate, Money minAmountRequiredForInterestToBeCalculated) {
+
+        boolean interestDetailsUpdated = false;
+
+        if (!this.interestRate.equals(newInterestRate)) {
+            interestDetailsUpdated = true;
+        }
+
+        if (!this.minAmntForInt.equals(minAmountRequiredForInterestToBeCalculated)) {
+            interestDetailsUpdated = true;
+        }
+
+        return interestDetailsUpdated;
     }
 
     public boolean isMaxWithdrawalAmountExceeded(Money amountAdjustedTo) {
@@ -433,5 +502,9 @@ public class SavingsOfferingBO extends PrdOfferingBO {
 
     public boolean isVoluntary() {
       return SavingsType.VOLUNTARY.getValue().equals(this.savingsType.getId());
+    }
+
+    public List<SavingsProductHistoricalInterestDetail> getHistoricalInterestDetails() {
+        return new ArrayList<SavingsProductHistoricalInterestDetail>(this.historicalInterestDetails);
     }
 }

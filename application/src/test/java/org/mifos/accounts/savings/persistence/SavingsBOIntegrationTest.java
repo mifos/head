@@ -177,7 +177,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getInterestRate(), savingsOffering.getInterestRate());
         Assert.assertEquals(savings.getMinAmntForInt(), savingsOffering.getMinAmntForInt());
         Assert.assertEquals(savings.getMinAmntForInt(), savingsOffering.getMinAmntForInt());
-        Assert.assertEquals(savings.getTimePerForInstcalc().getMeetingDetails().getRecurAfter(), savingsOffering
+        Assert.assertEquals(savings.getInterestCalculationMeeting().getMeetingDetails().getRecurAfter(), savingsOffering
                 .getTimePerForInstcalc().getMeeting().getMeetingDetails().getRecurAfter());
         Assert.assertEquals(1, savings.getAccountCustomFields().size());
         Iterator<AccountCustomFieldEntity> itr = savings.getAccountCustomFields().iterator();

@@ -53,7 +53,7 @@ public class InterestCalculationPeriodCalculatorTest {
     @Mock
     private InterestScheduledEvent interestCalculationSchedule;
     @Mock
-    private InterestCalculationIntervalHelper interestCalculationIntervalHelper;
+    private CalendarPeriodHelper interestCalculationIntervalHelper;
 
     private static MifosCurrency oldCurrency;
 
@@ -79,10 +79,10 @@ public class InterestCalculationPeriodCalculatorTest {
         // setup
         List<EndOfDayDetail> endOfDayDetailsForCalculationPeriod =  new ArrayList<EndOfDayDetail>();
 
-        InterestCalculationInterval calculationPeriod = new InterestCalculationIntervalBuilder().build();
+        CalendarPeriod calculationPeriod = new CalendarPeriodBuilder().build();
         Money totalBalanceBeforeCalculationPeriod = TestUtils.createMoney("0");
 
-        List<InterestCalculationInterval> noValidCalculationIntervalsInPeriod = new ArrayList<InterestCalculationInterval>();
+        List<CalendarPeriod> noValidCalculationIntervalsInPeriod = new ArrayList<CalendarPeriod>();
 
         // stubbing
         when(interestCalculationIntervalHelper.determineAllPossiblePeriods(calculationPeriod.getStartDate(), interestCalculationSchedule, calculationPeriod.getEndDate())).thenReturn(noValidCalculationIntervalsInPeriod);
@@ -99,11 +99,11 @@ public class InterestCalculationPeriodCalculatorTest {
         // setup
         List<EndOfDayDetail> endOfDayDetailsForCalculationPeriod =  new ArrayList<EndOfDayDetail>();
 
-        InterestCalculationInterval calculationPeriod = new InterestCalculationIntervalBuilder().build();
+        CalendarPeriod calculationPeriod = new CalendarPeriodBuilder().build();
         Money totalBalanceBeforeCalculationPeriod = TestUtils.createMoney("0");
 
-        InterestCalculationInterval validPeriod1 = new InterestCalculationIntervalBuilder().build();
-        List<InterestCalculationInterval> validCalculationIntervalsInPeriods = new ArrayList<InterestCalculationInterval>();
+        CalendarPeriod validPeriod1 = new CalendarPeriodBuilder().build();
+        List<CalendarPeriod> validCalculationIntervalsInPeriods = new ArrayList<CalendarPeriod>();
         validCalculationIntervalsInPeriods.add(validPeriod1);
 
         InterestCalculationPeriodResult interstResultsForPeriod = new InterestCalculationPeriodResultBuilder().build();

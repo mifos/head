@@ -44,15 +44,15 @@ public class InterestPostingPeriodCalculator implements CompoundingInterestCalcu
     }
 
     @Override
-    public List<InterestPostingPeriodResult> calculatePostingPeriodDetails(List<EndOfDayDetail> endOfDayDetailsForPeriods, List<InterestCalculationInterval> postingPeriods) {
+    public List<InterestPostingPeriodResult> calculateAllPostingPeriodDetails(List<EndOfDayDetail> endOfDayDetailsForPeriods, List<CalendarPeriod> postingPeriods) {
 
         List<InterestPostingPeriodResult> allInterestPostings = new ArrayList<InterestPostingPeriodResult>();
 
         Money zero = Money.zero(currency);
         Money periodAccountBalance = zero;
 
-        for (InterestCalculationInterval postingPeriod : postingPeriods) {
-            InterestPostingPeriodResult postingPeriodResult = calculateInterestForPosting(postingPeriod, endOfDayDetailsForPeriods, periodAccountBalance);
+        for (CalendarPeriod postingPeriod : postingPeriods) {
+            InterestPostingPeriodResult postingPeriodResult = calculateAllCalculationPeriodsForPostingPeriod(postingPeriod, endOfDayDetailsForPeriods, periodAccountBalance);
             allInterestPostings.add(postingPeriodResult);
             periodAccountBalance = postingPeriodResult.getPeriodBalance();
 
@@ -65,8 +65,7 @@ public class InterestPostingPeriodCalculator implements CompoundingInterestCalcu
 
     }
 
-    private InterestPostingPeriodResult calculateInterestForPosting(InterestCalculationInterval postingPeriod,
-            List<EndOfDayDetail> endOfDayDetailsForPostingPeriod, Money periodAccountBalace) {
+    private InterestPostingPeriodResult calculateAllCalculationPeriodsForPostingPeriod(CalendarPeriod postingPeriod, List<EndOfDayDetail> endOfDayDetailsForPostingPeriod, Money periodAccountBalace) {
 
         InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResult(postingPeriod);
 

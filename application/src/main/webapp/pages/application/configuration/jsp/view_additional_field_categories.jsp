@@ -61,10 +61,6 @@ explanation of the license and how it is applied.
 							<tr>
 								<td class="fontnormalbold">
 									<span class="fontnormal"><mifos:mifoslabel name="configuration.select_category" /> 
-										<html-el:link href="customFieldsAction.do?method=loadDefineCustomFields&randomNUm=${sessionScope.randomNUm}">
-											<mifos:mifoslabel name="configuration.add_new_field" >
-										</mifos:mifoslabel>
-										</html-el:link>
 										<br> 
 									</span>
 									<br>

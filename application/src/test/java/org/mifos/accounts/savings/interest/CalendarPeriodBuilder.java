@@ -20,13 +20,24 @@
 
 package org.mifos.accounts.savings.interest;
 
-import java.util.List;
+import org.joda.time.LocalDate;
 
-import org.mifos.framework.util.helpers.Money;
+public class CalendarPeriodBuilder {
 
-public interface NonCompoundingInterestCalculator {
+    private LocalDate startDate = new LocalDate();
+    private LocalDate endDate = new LocalDate();
 
-    List<InterestCalculationPeriodResult> calculateDetails(CalendarPeriod calculationPeriod, Money totalBalanceBeforeCalculationPeriod, List<EndOfDayDetail> endOfDayDetailsForCalculationPeriod);
+    public CalendarPeriod build() {
+        return new CalendarPeriod(startDate, endDate);
+    }
 
-    InterestCalculationPeriodResult calculateCalculationPeriodDetail(InterestCalculationPeriodDetail interestCalculationPeriodDetail);
+    public CalendarPeriodBuilder from(LocalDate intervalStartDate) {
+        this.startDate = intervalStartDate;
+        return this;
+    }
+
+    public CalendarPeriodBuilder to(LocalDate intervalEndDate) {
+        this.endDate = intervalEndDate;
+        return this;
+    }
 }

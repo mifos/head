@@ -33,35 +33,35 @@ public class InterestCalculationPeriodCalculator implements NonCompoundingIntere
 
     private final InterestCalculator interestCalculator;
     private final InterestScheduledEvent interestCalculationSchedule;
-    private final InterestCalculationIntervalHelper interestCalculationIntervalHelper;
+    private final CalendarPeriodHelper interestCalculationIntervalHelper;
 
     public InterestCalculationPeriodCalculator(InterestCalculator interestCalculator,
             InterestScheduledEvent interestCalculationSchedule,
-            InterestCalculationIntervalHelper interestCalculationIntervalHelper) {
+            CalendarPeriodHelper interestCalculationIntervalHelper) {
         this.interestCalculator = interestCalculator;
         this.interestCalculationSchedule = interestCalculationSchedule;
         this.interestCalculationIntervalHelper = interestCalculationIntervalHelper;
     }
 
     /**
-     * I do this by determining all legal 'calculation periods' within a given {@link InterestCalculationInterval} time period.
+     * I do this by determining all legal 'calculation periods' within a given {@link CalendarPeriod} time period.
      *
      * For each 'interest calculation period' derived, I create a {@link InterestCalculationPeriodDetail} which will hold all the information
      * necessary for the {@link InterestCalculator} to return a {@link InterestCalculationPeriodResult}.
      */
     @Override
-    public List<InterestCalculationPeriodResult> calculateDetails(InterestCalculationInterval calculationPeriod,
+    public List<InterestCalculationPeriodResult> calculateDetails(CalendarPeriod calculationPeriod,
             Money totalBalanceBeforeCalculationPeriod, List<EndOfDayDetail> endOfDayDetailsForCalculationPeriod) {
 
         List<InterestCalculationPeriodResult> calculationPeriodResults = new ArrayList<InterestCalculationPeriodResult>();
 
-        List<InterestCalculationInterval> allPossible = interestCalculationIntervalHelper.determineAllPossiblePeriods(
+        List<CalendarPeriod> allPossible = interestCalculationIntervalHelper.determineAllPossiblePeriods(
                                                                                                         calculationPeriod.getStartDate(),
                                                                                                         this.interestCalculationSchedule,
                                                                                                         calculationPeriod.getEndDate());
 
         Money runningBalance = totalBalanceBeforeCalculationPeriod;
-        for (InterestCalculationInterval interestCalculationPeriod : allPossible) {
+        for (CalendarPeriod interestCalculationPeriod : allPossible) {
 
             InterestCalculationPeriodDetail interestCalculationPeriodDetail = InterestCalculationPeriodDetail
                     .populatePeriodDetailBasedOnInterestCalculationInterval(interestCalculationPeriod,
@@ -74,5 +74,10 @@ public class InterestCalculationPeriodCalculator implements NonCompoundingIntere
         }
 
         return calculationPeriodResults;
+    }
+
+    @Override
+    public InterestCalculationPeriodResult calculateCalculationPeriodDetail(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
+        return interestCalculator.calculateSavingsDetailsForPeriod(interestCalculationPeriodDetail);
     }
 }
