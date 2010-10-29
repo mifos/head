@@ -47,6 +47,12 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * WARNING, this is old code, and will be removed.
+ *
+ * @deprecated As of Mifos release Leila E, replaced by
+ *             {@link org.mifos.platform.questionnaire.parsers.QuestionGroupDefinitionParser}.
+ */
 public class XmlPPISurveyParser {
 
     /** TODO: Should be private */
