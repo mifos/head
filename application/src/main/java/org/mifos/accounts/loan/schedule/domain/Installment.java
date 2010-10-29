@@ -109,17 +109,14 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal pay(BigDecimal amount, Date transactionDate) {
-        BigDecimal balance = amount;
-        if (isGreaterThanZero(balance) && isDue()) {
-            InstallmentPayment installmentPayment = new InstallmentPayment();
-            installmentPayment.setPaidDate(transactionDate);
-            balance = payOverdueInterest(balance, installmentPayment);
-            balance = payFees(balance, installmentPayment);
-            balance = payInterest(balance, installmentPayment);
-            balance = payPrincipal(balance, installmentPayment);
-            payments.addPayment(installmentPayment);
-        }
-        return balance;
+        InstallmentPayment installmentPayment = new InstallmentPayment();
+        installmentPayment.setPaidDate(transactionDate);
+        amount = payOverdueInterest(amount, installmentPayment);
+        amount = payFees(amount, installmentPayment);
+        amount = payInterest(amount, installmentPayment);
+        amount = payPrincipal(amount, installmentPayment);
+        payments.addPayment(installmentPayment);
+        return amount;
     }
 
     private BigDecimal payFees(BigDecimal amount, InstallmentPayment installmentPayment) {
@@ -135,20 +132,12 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal payInterestDueTillDate(BigDecimal amount, Date transactionDate, BigDecimal interestDueTillDate) {
-        BigDecimal balance = amount;
-        if (isGreaterThanZero(balance) && isGreaterThanZero(interestDueTillDate)) {
-            InstallmentPayment installmentPayment = new InstallmentPayment();
-            installmentPayment.setPaidDate(transactionDate);
-            if (amount.compareTo(interestDueTillDate) >= 0) {
-                installmentPayment.setInterestPaid(interestDueTillDate);
-                balance = amount.subtract(interestDueTillDate);
-            } else {
-                installmentPayment.setInterestPaid(amount);
-                balance = BigDecimal.ZERO;
-            }
-            payments.addPayment(installmentPayment);
-        }
-        return balance;
+        InstallmentPayment installmentPayment = new InstallmentPayment();
+        installmentPayment.setPaidDate(transactionDate);
+        BigDecimal payable = getLowestOf(interestDueTillDate, amount);
+        installmentPayment.setInterestPaid(installmentPayment.getInterestPaid().add(payable));
+        payments.addPayment(installmentPayment);
+        return amount.subtract(payable);
     }
 
     private BigDecimal payOverdueInterest(BigDecimal amount, InstallmentPayment installmentPayment) {
@@ -170,17 +159,15 @@ public class Installment implements Comparable<Installment> {
     public BigDecimal payPrincipal(BigDecimal amount, Date transactionDate) {
         InstallmentPayment installmentPayment = new InstallmentPayment();
         installmentPayment.setPaidDate(transactionDate);
-        BigDecimal balance = payPrincipal(amount, installmentPayment);
         payments.addPayment(installmentPayment);
-        return balance;
+        return payPrincipal(amount, installmentPayment);
     }
 
     public BigDecimal payOverdueInterest(BigDecimal amount, Date transactionDate) {
         InstallmentPayment installmentPayment = new InstallmentPayment();
         installmentPayment.setPaidDate(transactionDate);
-        BigDecimal balance = payOverdueInterest(amount, installmentPayment);
         payments.addPayment(installmentPayment);
-        return balance;
+        return payOverdueInterest(amount, installmentPayment);
     }
 
     public BigDecimal getPrincipalPaid() {

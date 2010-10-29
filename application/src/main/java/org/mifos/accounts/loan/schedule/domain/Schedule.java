@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
-
 public class Schedule {
     private Map<Integer, Installment> installments;
     private Date disbursementDate;
@@ -57,21 +55,16 @@ public class Schedule {
     }
 
     public BigDecimal payInstallmentsOnOrBefore(Date transactionDate, BigDecimal amount) {
-        BigDecimal balance = amount;
-        if (isGreaterThanZero(balance)) {
-            for (Installment dueInstallment : getInstallmentsOnOrBefore(transactionDate)) {
-                balance = dueInstallment.pay(balance, transactionDate);
-            }
+        for (Installment dueInstallment : getInstallmentsOnOrBefore(transactionDate)) {
+            amount = dueInstallment.pay(amount, transactionDate);
         }
-        return balance;
+        return amount;
     }
 
-    public void adjustFutureInstallments(BigDecimal balance, Date date) {
-        if (isGreaterThanZero(balance)) {
-            List<Installment> futureInstallments = getInstallmentsAfter(date);
-            BigDecimal principalOutstanding = adjustPrincipalsForInstallments(balance, date, futureInstallments);
-            adjustInterestForInstallments(futureInstallments, principalOutstanding);
-        }
+    public void adjustFutureInstallments(BigDecimal balance, Date transactionDate) {
+        List<Installment> futureInstallments = getInstallmentsAfter(transactionDate);
+        BigDecimal principalOutstanding = adjustPrincipalsForInstallments(balance, transactionDate, futureInstallments);
+        adjustInterestForInstallments(futureInstallments, principalOutstanding);
     }
 
     private void adjustInterestForInstallments(List<Installment> futureInstallments, BigDecimal principalOutstanding) {
@@ -101,23 +94,20 @@ public class Schedule {
         return principalDue;
     }
 
-    private BigDecimal adjustPrincipalsForInstallments(BigDecimal balance, Date date, List<Installment> futureInstallments) {
+    private BigDecimal adjustPrincipalsForInstallments(BigDecimal balance, Date transactionDate, List<Installment> futureInstallments) {
         BigDecimal principalOutstanding = this.loanAmount.subtract(getPrincipalPaid());
         for (Installment installment : futureInstallments) {
-            balance = installment.payOverdueInterest(balance, date);
-            if (Utilities.isLesserThanOrEqualToZero(balance)) break;
-            BigDecimal interestDueTillDate = computeInterestTillDueDate(date, principalOutstanding, installment);
-            balance = installment.payInterestDueTillDate(balance, date, interestDueTillDate);
-            if (Utilities.isLesserThanOrEqualToZero(balance)) break;
-            balance = installment.payPrincipal(balance, date);
+            balance = installment.payOverdueInterest(balance, transactionDate);
+            balance = installment.payInterestDueTillDate(balance, transactionDate,
+                    computeInterestTillDueDate(transactionDate, principalOutstanding, installment));
+            balance = installment.payPrincipal(balance, transactionDate);
             principalOutstanding = principalOutstanding.subtract(installment.getPrincipalPaid());
-            if (Utilities.isLesserThanOrEqualToZero(balance)) break;
         }
         return principalOutstanding;
     }
 
-    private BigDecimal computeInterestTillDueDate(Date date, BigDecimal principalOutstanding, Installment installment) {
-        long duration = getDurationForAdjustment(installment, date);
+    private BigDecimal computeInterestTillDueDate(Date transactionDate, BigDecimal principalOutstanding, Installment installment) {
+        long duration = getDurationForAdjustment(installment, transactionDate);
         if (duration <= 0) return BigDecimal.ZERO;
         BigDecimal principalForInterest = computePrincipalForInterest(principalOutstanding, installment);
         return computeInterest(principalForInterest, duration);
