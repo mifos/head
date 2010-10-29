@@ -54,9 +54,6 @@ explanation of the license and how it is applied.
             <br/>
             <span class="fontnormal">
                 <mifos:mifoslabel name="Surveys.viewQuestions_instructions"/>
-                <a href="questionsAction.do?method=defineQuestions">
-                    <mifos:mifoslabel name="Surveys.definequestion"/>
-                </a>
             </span>
             <br />
             <span class="fontnormal">

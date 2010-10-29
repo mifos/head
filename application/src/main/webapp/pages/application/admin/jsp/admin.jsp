@@ -191,10 +191,7 @@ while(enn.hasMoreElements()){
 								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
 								<td width="97%"><html-el:link styleId="admin.link.viewAdditionalFields"
 								action="customFieldsAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link>| <html-el:link
-								styleId="admin.link.defineAdditionalFields"
-								action="customFieldsAction.do?method=loadDefineCustomFields&randomNUm=${sessionScope.randomNUm}" >
-								<mifos:mifoslabel name="admin.defineadditionalfields" /></html-el:link></td>
+								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link></td>
 							</tr>
                             <tr class="fontnormal">
                                 <td><img src="pages/framework/images/bullet_circle.gif" width="9"
@@ -414,11 +411,11 @@ while(enn.hasMoreElements()){
                   <table width="90%" border="0" cellspacing="0" cellpadding="0">
                     <tr class="fontnormal">
                       <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                      <td width="97%"><a id="admin.link.surveys" href="surveysAction.do?method=mainpage"><mifos:mifoslabel name="admin.view.surveys" bundle="adminUIResources"/> </a> | <html-el:link styleId="admin.link.defineNewSurvey" href="surveysAction.do?method=create_entry"><mifos:mifoslabel name="admin.definenewsurvey" /> </html-el:link></td>
+                      <td width="97%"><a id="admin.link.surveys" href="surveysAction.do?method=mainpage"><mifos:mifoslabel name="admin.view.surveys" bundle="adminUIResources"/> </a></td>
                     </tr>
                     <tr class="fontnormal">
                       <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-                      <td width="97%"><a id="admin.link.viewQuestions" href="questionsAction.do?method=viewQuestions"><mifos:mifoslabel name="admin.viewquestions" bundle="adminUIResources"/> </a> | <html-el:link styleId="admin.link.defineQuestions" href="questionsAction.do?method=defineQuestions"><mifos:mifoslabel name="admin.define.questions" bundle="adminUIResources"/> </html-el:link></td>
+                      <td width="97%"><a id="admin.link.viewQuestions" href="questionsAction.do?method=viewQuestions"><mifos:mifoslabel name="admin.viewquestions" bundle="adminUIResources"/> </a></td>
                   </tr>
 
                 </table>

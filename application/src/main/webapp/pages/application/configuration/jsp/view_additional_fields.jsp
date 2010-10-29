@@ -87,9 +87,6 @@ explanation of the license and how it is applied.
 								<td width="17%" class="drawtablehd">
 									<mifos:mifoslabel name="configuration.mandatory" />
 								</td>
-								<td width="8%" class="drawtablehd">
-									&nbsp;
-								</td>
 							</tr>
 							<mifos:CustomFieldsList actionName="customFieldsAction.do" 
 								methodName="editField" flowKey="${requestScope.currentFlowKey}"
@@ -108,9 +105,6 @@ explanation of the license and how it is applied.
 									&nbsp;
 								</td>
 								<td width="17%" class="drawtablerow">
-									&nbsp;
-								</td>
-								<td width="8%" class="drawtablerow">
 									&nbsp;
 								</td>
 							</tr>

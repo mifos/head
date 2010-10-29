@@ -49,9 +49,7 @@ explanation of the license and how it is applied.
             <tr>
               <td class="fontnormalbold"><span class="fontnormal">
               <mifos:mifoslabel name="Surveys.mainpage_instructions"/>
-               <a href="surveysAction.do?method=create_entry">
-               <mifos:mifoslabel name="Surveys.definesurvey"/>
-                </a><br>
+                  <br>
                   <br>
                 </span><span class="fontnormalbold"><span class="fontnormalbold"><br>
                 </span></span>
