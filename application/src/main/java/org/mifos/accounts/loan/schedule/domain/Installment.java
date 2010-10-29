@@ -113,10 +113,10 @@ public class Installment implements Comparable<Installment> {
         if (isGreaterThanZero(balance) && isDue()) {
             InstallmentPayment installmentPayment = new InstallmentPayment();
             installmentPayment.setPaidDate(transactionDate);
+            balance = payOverdueInterest(balance, installmentPayment);
             balance = payFees(balance, installmentPayment);
             balance = payInterest(balance, installmentPayment);
             balance = payPrincipal(balance, installmentPayment);
-            balance = payOverdueInterest(balance, installmentPayment);
             payments.addPayment(installmentPayment);
         }
         return balance;

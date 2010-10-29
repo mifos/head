@@ -70,11 +70,11 @@ public class Schedule {
         if (isGreaterThanZero(balance)) {
             List<Installment> futureInstallments = getInstallmentsAfter(date);
             BigDecimal principalOutstanding = adjustPrincipalsForInstallments(balance, date, futureInstallments);
-            adjustInterestForFutureInstallments(futureInstallments, principalOutstanding);
+            adjustInterestForInstallments(futureInstallments, principalOutstanding);
         }
     }
 
-    private void adjustInterestForFutureInstallments(List<Installment> futureInstallments, BigDecimal principalOutstanding) {
+    private void adjustInterestForInstallments(List<Installment> futureInstallments, BigDecimal principalOutstanding) {
         for (Installment installment : futureInstallments) {
             if (installment.isPrincipalDue()) {
                 long duration = getDurationForAdjustment(installment, installment.getDueDate());
@@ -85,11 +85,11 @@ public class Schedule {
         }
     }
 
-    private long getDurationForAdjustment(Installment installment, Date dueDate) {
+    private long getDurationForAdjustment(Installment installment, Date toDate) {
         Installment previousInstallment = getPreviousInstallment(installment);
         Date prevDueDate = previousInstallment != null ? previousInstallment.getEarliestPaidDate() : this.disbursementDate;
         prevDueDate = (Date) ObjectUtils.max(prevDueDate, installment.getRecentPartialPaymentDate());
-        return Utilities.getDaysInBetween(dueDate, prevDueDate);
+        return Utilities.getDaysInBetween(toDate, prevDueDate);
     }
 
     private BigDecimal getPrincipalDueTill(Installment installment) {
