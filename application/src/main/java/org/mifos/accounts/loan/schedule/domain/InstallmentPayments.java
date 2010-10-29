@@ -59,4 +59,14 @@ public class InstallmentPayments {
         }
         return lastPaymentDate;
     }
+
+    public Date getRecentPrincipalPaidDate() {
+        Date lastPaymentDate = null;
+        for (InstallmentPayment installmentPayment : installmentPayments) {
+            if (installmentPayment.isPrincipalPayment()) {
+                lastPaymentDate = (Date) ObjectUtils.max(lastPaymentDate, installmentPayment.getPaidDate());
+            }
+        }
+        return lastPaymentDate;
+    }
 }

@@ -53,6 +53,10 @@ public class InstallmentPayment {
     }
 
     public boolean isPartialPayment() {
-        return isGreaterThanZero(getFeesPaid()) || isGreaterThanZero(getInterestPaid()) || isGreaterThanZero(getPrincipalPaid());
+        return isGreaterThanZero(getFeesPaid()) || isGreaterThanZero(getInterestPaid()) || isPrincipalPayment();
+    }
+
+    public boolean isPrincipalPayment() {
+        return isGreaterThanZero(getPrincipalPaid());
     }
 }

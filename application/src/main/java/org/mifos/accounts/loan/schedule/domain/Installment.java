@@ -53,7 +53,7 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal getOverdueInterest() {
-        return overdueInterest;
+        return overdueInterest == null ? BigDecimal.ZERO : overdueInterest;
     }
 
     public void setOverdueInterest(BigDecimal overdueInterest) {
@@ -184,5 +184,17 @@ public class Installment implements Comparable<Installment> {
 
     public Date getRecentPartialPaymentDate() {
         return payments.getRecentPartialPaymentDate();
+    }
+
+    public boolean isAnyPrincipalPaid() {
+        return isGreaterThanZero(getPrincipalPaid());
+    }
+
+    public Date getRecentPrincipalPaidDate() {
+        return payments.getRecentPrincipalPaidDate();
+    }
+
+    public void addOverdueInterest(BigDecimal overdueInterest) {
+        setOverdueInterest(getOverdueInterest().add(overdueInterest));
     }
 }

@@ -10,4 +10,8 @@ public class ScheduleCalculator {
         BigDecimal balance = schedule.payInstallmentsOnOrBefore(transactionDate, amount);
         schedule.adjustFutureInstallments(balance, transactionDate);
     }
+
+    public void computeOverdueInterest(Schedule schedule, Date transactionDate) {
+        schedule.computeOverdueInterest(transactionDate);
+    }
 }

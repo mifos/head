@@ -6,10 +6,10 @@ import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -29,7 +29,7 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
-        schedule.setInstallments(Arrays.asList(installment1, installment2, installment3, installment4));
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(280d), getDate(25, 9, 2010));
         assertInstallment(installment1, 0, 20.40);
         assertInstallment(installment2, 230.31, 14.62);
@@ -43,7 +43,7 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
-        schedule.setInstallments(Arrays.asList(installment1, installment2, installment3, installment4));
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(550d), getDate(25, 9, 2010));
         assertInstallment(installment1, 0, 20.40);
         assertInstallment(installment2, 0, 14.96);
@@ -57,7 +57,7 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0.8);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
-        schedule.setInstallments(Arrays.asList(installment1, installment2, installment3, installment4));
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(550d), getDate(30, 9, 2010));
         assertInstallment(installment1, 0, 20.40);
         assertInstallment(installment2, 0, 14.96);
@@ -71,7 +71,7 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
-        schedule.setInstallments(Arrays.asList(installment1, installment2, installment3, installment4));
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(240d), getDate(23, 9, 2010));
         assertInstallment(installment1, 21.32, 1.03);
         assertInstallment(installment2, 247.67, 14.96);
@@ -85,7 +85,7 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0.64);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
-        schedule.setInstallments(Arrays.asList(installment1, installment2, installment3, installment4));
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(240d), getDate(29, 9, 2010));
         assertInstallment(installment1, 22.64, 20.40);
         assertInstallment(installment2, 247.67, 14.96);
@@ -99,12 +99,30 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
-        schedule.setInstallments(Arrays.asList(installment1, installment2, installment3, installment4));
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(280d), getDate(23, 9, 2010));
         assertInstallment(installment1, 0, 20.40);
         assertInstallment(installment2, 228.99, 14.59);
         assertInstallment(installment3, 252.22, 10.40);
         assertInstallment(installment4, 257.87, 5.09);
+    }
+
+    @Test
+    public void shouldComputeOverdueInterest() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        schedule.setInstallments(asList(installment1, installment2));
+        scheduleCalculator.computeOverdueInterest(schedule, getDate(26, 9, 2010));
+        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.16));
+        scheduleCalculator.computeOverdueInterest(schedule, getDate(27, 9, 2010));
+        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.32));
+        installment1.pay(BigDecimal.valueOf(100), getDate(27, 9, 2010));
+        scheduleCalculator.computeOverdueInterest(schedule, getDate(28, 9, 2010));
+        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.43));
+        installment1.pay(BigDecimal.valueOf(200), getDate(27, 9, 2010));
+        scheduleCalculator.computeOverdueInterest(schedule, getDate(28, 9, 2010));
+        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.43));
     }
 
     private Schedule getSchedule(Date disbursementDate, double dailyInterestRate, double loanAmount) {

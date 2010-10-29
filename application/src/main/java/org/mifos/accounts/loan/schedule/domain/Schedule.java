@@ -10,6 +10,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static org.mifos.accounts.loan.schedule.utils.Utilities.getDaysInBetween;
+
 public class Schedule {
     private Map<Integer, Installment> installments;
     private Date disbursementDate;
@@ -82,7 +84,7 @@ public class Schedule {
         Installment previousInstallment = getPreviousInstallment(installment);
         Date prevDueDate = previousInstallment != null ? previousInstallment.getEarliestPaidDate() : this.disbursementDate;
         prevDueDate = (Date) ObjectUtils.max(prevDueDate, installment.getRecentPartialPaymentDate());
-        return Utilities.getDaysInBetween(toDate, prevDueDate);
+        return getDaysInBetween(toDate, prevDueDate);
     }
 
     private BigDecimal getPrincipalDueTill(Installment installment) {
@@ -152,5 +154,35 @@ public class Schedule {
 
     private Installment getPreviousInstallment(Installment installment) {
         return installments.get(installment.getId() - 1);
+    }
+
+    private Installment getNextInstallment(Installment installment) {
+        return installments.get(installment.getId() + 1);
+    }
+
+    public void computeOverdueInterest(Date transactionDate) {
+        for (Installment installment : installments.values()) {
+            Installment nextInstallment = getNextInstallment(installment);
+            if (nextInstallment != null && installment.isPrincipalDue()) {
+                BigDecimal principalDue = installment.getPrincipalDue();
+                if (installment.isAnyPrincipalPaid()) {
+                    updateOverdueInterest(transactionDate, installment, nextInstallment, principalDue);
+                } else {
+                    setOverdueInterest(transactionDate, installment, nextInstallment, principalDue);
+                }
+            }
+        }
+    }
+
+    private void setOverdueInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
+        long duration = getDaysInBetween(transactionDate, installment.getDueDate());
+        if (duration <= 0) return;
+        nextInstallment.setOverdueInterest(computeInterest(principalDue, duration));
+    }
+
+    private void updateOverdueInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
+        long duration = getDaysInBetween(transactionDate, installment.getRecentPrincipalPaidDate());
+        if (duration <= 0) return;
+        nextInstallment.addOverdueInterest(computeInterest(principalDue, duration));
     }
 }
