@@ -20,19 +20,40 @@
 
 package org.mifos.accounts.savings.interest;
 
+import java.util.Date;
+
 import org.joda.time.LocalDate;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.framework.util.helpers.Money;
 
 public class SavingsProductHistoricalInterestDetail {
 
+    private final Integer id;
     private final Double interestRate;
     private final Money minAmntForInt;
-    private final CalendarPeriod calculationPeriod;
+    private final Date periodStartDate;
+    private final Date periodEndDate;
+    private final SavingsOfferingBO savingsProduct;
 
-    public SavingsProductHistoricalInterestDetail(CalendarPeriod calculationPeriod, Double interestRate, Money minAmntForInt) {
-        this.calculationPeriod = calculationPeriod;
+    /*
+     * hibernate constructor
+     */
+    protected SavingsProductHistoricalInterestDetail() {
+        this.id = null;
+        this.interestRate = Double.valueOf("0");
+        this.minAmntForInt = null;
+        this.periodStartDate = null;
+        this.periodEndDate = null;
+        this.savingsProduct = null;
+    }
+
+    public SavingsProductHistoricalInterestDetail(CalendarPeriod calculationPeriod, Double interestRate, Money minAmntForInt, SavingsOfferingBO savingsProduct) {
+        this.id = null;
         this.interestRate = interestRate;
         this.minAmntForInt = minAmntForInt;
+        this.savingsProduct = savingsProduct;
+        this.periodStartDate = calculationPeriod.getStartDate().toDateMidnight().toDate();
+        this.periodEndDate = calculationPeriod.getEndDate().toDateMidnight().toDate();
     }
 
     public Double getInterestRate() {
@@ -44,10 +65,10 @@ public class SavingsProductHistoricalInterestDetail {
     }
 
     public LocalDate getStartDate() {
-        return this.calculationPeriod.getStartDate();
+        return new LocalDate(this.periodStartDate);
     }
 
     public LocalDate getEndDate() {
-        return this.calculationPeriod.getEndDate();
+        return new LocalDate(this.periodEndDate);
     }
 }

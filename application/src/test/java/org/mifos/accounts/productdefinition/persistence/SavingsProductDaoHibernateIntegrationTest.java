@@ -21,21 +21,26 @@ package org.mifos.accounts.productdefinition.persistence;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
+import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
@@ -94,4 +99,33 @@ public class SavingsProductDaoHibernateIntegrationTest extends MifosIntegrationT
         assertThat(queryResult, is(notNullValue()));
 
     }
+
+    @Test
+    public void testShouldFindSavingsProductById() {
+
+        // setup
+        SavingsOfferingBO savingsProduct = new SavingsProductBuilder().appliesToCentersOnly()
+                                                                                 .mandatory()
+                                                                                 .withName("product1")
+                                                                                 .withShortName("1234")
+                                                                                 .withMandatoryAmount("25")
+                                                                                 .buildForIntegrationTests();
+        IntegrationTestObjectMother.saveSavingsProducts(savingsProduct);
+
+        // exercise test
+        SavingsOfferingBO result = savingsProductDao.findById(savingsProduct.getPrdOfferingId().intValue());
+        Money recommendedAmount = TestUtils.createMoney("25");
+        RecommendedAmntUnitEntity recommendedAmntUnit = null;
+        Money maxAmntWithdrawl = TestUtils.createMoney("100");
+        Double interestRate = Double.valueOf("12");
+        Money minAmountRequiredForInterestToBeCalculated = TestUtils.createMoney("100");
+        LocalDate updateDate = new LocalDate();
+        result.updateSavingsDetails(recommendedAmount, recommendedAmntUnit, maxAmntWithdrawl, interestRate, minAmountRequiredForInterestToBeCalculated, updateDate);
+
+        IntegrationTestObjectMother.saveSavingsProducts(result);
+
+        // assertion
+        assertNotNull(result);
+    }
+
 }

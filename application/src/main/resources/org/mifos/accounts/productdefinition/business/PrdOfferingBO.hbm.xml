@@ -208,6 +208,11 @@
 				<one-to-many
 					class="org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity" />
 			</set>
+			
+			<set name="historicalInterestDetails" cascade="all,delete-orphan" inverse="true" table="savings_offering_historical_interest_detail" lazy="true" access="field">
+				<key column="product_id" />
+				<one-to-many class="org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail" />
+			</set>
 		</joined-subclass>
 
 	</class>
