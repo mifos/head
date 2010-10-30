@@ -40,6 +40,11 @@ public class QuestionDtoBuilder {
         return this;
     }
 
+    public QuestionDtoBuilder withNickname(String nickname) {
+        questionDto.setNickname(nickname);
+        return this;
+    }
+
     public QuestionDtoBuilder withChoices(List<ChoiceDto> choices) {
         questionDto.setChoices(choices);
         return this;

@@ -921,5 +921,16 @@ public class QuestionnaireMapperTest {
         instanceBuilder.withQuestionGroup(123).withCompleted(true).withCreator(111).withEventSource(1).withEntity(12345).withVersion(1).addResponses(questionGroupResponseDto);
         return instanceBuilder.build();
     }
+
+    @Test
+    public void xshouldMapQuestionDtoToQuestionEntity() {
+        String text = "question";
+        String nickname = "nickname";
+        QuestionDto questionDto = new QuestionDtoBuilder().withText(text).withNickname(nickname).withMandatory(true).withType(QuestionType.FREETEXT).withOrder(1).build();
+        QuestionEntity questionEntity = questionnaireMapper.mapToQuestion(questionDto);
+        assertThat(questionEntity.getQuestionText(), is(text));
+        assertThat(questionEntity.getNickname(), is(nickname));
+        assertThat(questionEntity.getAnswerTypeAsEnum(), is(AnswerType.FREETEXT));
+    }
 }
 
