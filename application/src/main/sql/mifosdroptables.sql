@@ -213,6 +213,7 @@ drop table if exists client_initial_savings_offering;
 drop table if exists prd_offering_question_group;
 
 drop table if exists prd_offering;
+drop table if exists savings_offering_historical_interest_detail;
 
 drop table if exists customer_detail;
 
