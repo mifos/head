@@ -74,7 +74,6 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
     public XmlBuilder getRow(CustomFieldDefinitionEntity customField, UserContext userContext, int index) {
         Locale locale = userContext.getPreferredLocale();
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE, locale);
-        String editString = resources.getString("configuration.edit");
         XmlBuilder html = new XmlBuilder();
         String url = (actionName + "?method=" + methodName + "&customFieldIdStr=" + customField.getFieldId()
                 + "&currentFlowKey=" + flowKey);
@@ -104,12 +103,6 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
         html.newline();
         html.startTag("td", "width", "17%", "class", "drawtablerow");
         html.text(customField.getMandatoryStringValue(locale));
-        html.endTag("td");
-        html.newline();
-        html.startTag("td", "width", "8%", "align", "right", "class", "drawtablerow");
-        html.startTag("a", "href", url);
-        html.text(editString);
-        html.endTag("a");
         html.endTag("td");
         html.newline();
         html.endTag("tr");

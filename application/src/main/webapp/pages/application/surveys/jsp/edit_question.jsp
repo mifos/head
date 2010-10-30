@@ -46,7 +46,7 @@ explanation of the license and how it is applied.
           <td width="70%" align="left" valign="middle" class="paddingL15T15"><table width="98%" border="0" cellspacing="0" cellpadding="3">
             <tr>
               <td width="35%">
-              <span class="heading"><c:out value="${sessionScope.question.shortName}"/></span> - 
+              <span class="heading"><c:out value="${sessionScope.question.questionText}"/></span> - 
               <span class="headingorange"><mifos:mifoslabel name="Surveys.EditQuestionInfo" bundle="SurveysUIResources"/></span>
               </td>
             </tr>

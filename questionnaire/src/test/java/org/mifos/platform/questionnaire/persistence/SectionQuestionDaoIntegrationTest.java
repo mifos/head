@@ -92,7 +92,7 @@ public class SectionQuestionDaoIntegrationTest {
         List<SectionQuestion> sectionQuestions = sectionQuestionDao.retrieveFromQuestionIdSectionId(sectionId, questionId);
         assertThat(sectionQuestions, is(notNullValue()));
         assertThat(sectionQuestions.size(), is(1));
-        assertThat(sectionQuestions.get(0).getQuestionTitle(), is(sectionDetail2.getQuestionDetail(1).getTitle()));
+        assertThat(sectionQuestions.get(0).getQuestionText(), is(sectionDetail2.getQuestionDetail(1).getText()));
     }
 
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {

@@ -29,6 +29,11 @@
             <artifactId>mifos-serviceInterfaces</artifactId>
             <version>1.7-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>org.markdownj</groupId>
+            <artifactId>markdownj</artifactId>
+            <version>0.3.0-1.0.2b4</version>
+        </dependency>
 
         <!-- from parent pom -->
         <dependency>

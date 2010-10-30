@@ -56,13 +56,15 @@ public class PreviewProductMixController {
         this.adminServiceFacade = adminServiceFacade;
     }
 
+    
+
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = EDIT_PARAM, required = false) String edit,
-            @RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-            @RequestParam(value = "FORMVIEW", required = true) String formView,
-                                    @ModelAttribute("formBean") ProductMixFormBean formBean,
-                                    BindingResult result,
-                                    SessionStatus status) {
+                                          @RequestParam(value = CANCEL_PARAM, required = false) String cancel,
+                                          @RequestParam(value = "FORMVIEW", required = true) String formView,
+                                          @ModelAttribute("formBean") ProductMixFormBean formBean,
+                                          BindingResult result,
+                                          SessionStatus status) {
 
         ModelAndView mav = new ModelAndView(REDIRECT_TO_ADMIN_SCREEN);
 
@@ -92,7 +94,9 @@ public class PreviewProductMixController {
     private List<Integer> toIntegers(String[] allowed) {
         List<Integer> allowedAsInts = new ArrayList<Integer>();
         for (String productId : allowed) {
-            allowedAsInts.add(Integer.parseInt(productId));
+            if (null != productId) {
+                allowedAsInts.add(Integer.parseInt(productId));
+            }
         }
         return allowedAsInts;
     }

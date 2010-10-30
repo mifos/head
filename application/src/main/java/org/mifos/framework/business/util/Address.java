@@ -121,7 +121,7 @@ public class Address implements Serializable {
         return MifosStringUtils.removeNondigits(phoneNumber);
     }
 
-    private void setPhoneNumberStripped(String phoneNumberStripped) {
+    public void setPhoneNumberStripped(String phoneNumberStripped) {
         // This field is computed from phoneNumber so we do nothing here
     }
 

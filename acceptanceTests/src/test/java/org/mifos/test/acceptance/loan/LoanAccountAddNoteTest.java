@@ -54,7 +54,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
-    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
+    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
 
     private static final String TEST_ACCOUNT = "000100000000004";
     private static final String TEST_ACCOUNT_NOTE = "Acceptance Test note for Issue 2456";

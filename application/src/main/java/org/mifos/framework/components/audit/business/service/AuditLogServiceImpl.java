@@ -61,13 +61,13 @@ public class AuditLogServiceImpl implements AuditLogService {
                 sectionName = sectionDetail.getName();
                 for (int questionPosition = 0; questionPosition < sectionDetail.getQuestions().size(); questionPosition++) {
                     SectionQuestionDetail sectionQuestionDetail = sectionDetail.getQuestions().get(questionPosition);
-                    fieldName = sectionQuestionDetail.getTitle();
+                    fieldName = sectionQuestionDetail.getText();
                     fieldValue = sectionQuestionDetail.getAnswer();
                     String oldFieldValue = null;
                     for (SectionDetail oldSectionDetail : oldQuestionGroupDetail.getSectionDetails()) {
                         if (oldSectionDetail.getName().equals(sectionName)) {
                             for (SectionQuestionDetail oldSectionQuestionDetail : oldSectionDetail.getQuestions()) {
-                                if (oldSectionQuestionDetail.getTitle().equals(fieldName)) {
+                                if (oldSectionQuestionDetail.getText().equals(fieldName)) {
                                     oldFieldValue = oldSectionQuestionDetail.getAnswer();
                                     break;
                                 }

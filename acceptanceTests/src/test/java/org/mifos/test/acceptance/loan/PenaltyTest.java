@@ -71,7 +71,7 @@ public class PenaltyTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void applyPenalty() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // the data set contains an approved loan w/ id 000100000000005
         // we use this loan for our test
@@ -82,12 +82,12 @@ public class PenaltyTest extends UiTestCaseBase {
 
         loanTestHelper.applyCharge("000100000000005", params);
 
-        verifyPenalties("PenaltyTest_001_result_dbunit.xml.zip");
+        verifyPenalties("PenaltyTest_001_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void applyAndWaivePenalty() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // this account has an approved but not disbursed loan.
         String accountId = "000100000000005";
@@ -110,7 +110,7 @@ public class PenaltyTest extends UiTestCaseBase {
 
         loanTestHelper.waivePenalty(accountId);
 
-        verifyPenalties("PenaltyTest_002_result_dbunit.xml.zip");
+        verifyPenalties("PenaltyTest_002_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

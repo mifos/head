@@ -76,7 +76,7 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void pendingApprovalToPartialApplication() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // a loan account w/ id 000100000000003 is pending approval in the data set
 
@@ -85,12 +85,12 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         statusParameters.setNote("Test");
 
         loanTestHelper.changeLoanAccountStatus("000100000000003", statusParameters);
-        verifyLoanAccountStatus("ClientLoanStatusChange_001_result_dbunit.xml.zip");
+        verifyLoanAccountStatus("ClientLoanStatusChange_001_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void pendingApprovalToApplicationRejected() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // a loan account w/ id 000100000000003 is pending approval in the data set
 
@@ -100,12 +100,12 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         statusParameters.setNote("Test");
 
         loanTestHelper.changeLoanAccountStatus("000100000000003", statusParameters);
-        verifyLoanAccountStatus("ClientLoanStatusChange_002_result_dbunit.xml.zip");
+        verifyLoanAccountStatus("ClientLoanStatusChange_002_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void pendingApprovalToApplicationApprovedWithQuestionGroup() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         QuestionGroupHelper questionGroupHelper = new QuestionGroupHelper(new NavigationHelper(selenium));
         String questionGroupTitle = "QG1" + random.nextInt(100);
@@ -125,12 +125,12 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         responseParameters.addSingleSelectAnswer("name=questionGroups[0].sectionDetails[0].questions[1].value", choiceAnswer);
 
         loanTestHelper.changeLoanAccountStatusProvidingQuestionGroupResponses("000100000000003", statusParameters,responseParameters);
-        verifyLoanAccountStatus("ClientLoanStatusChange_003_result_dbunit.xml.zip");
+        verifyLoanAccountStatus("ClientLoanStatusChange_003_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void applicationApprovedToApplicationRejected() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // the data set has a loan that's approved w/ id 000100000000005.
 
@@ -140,12 +140,12 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         statusParameters.setNote("Test");
 
         loanTestHelper.changeLoanAccountStatus("000100000000005", statusParameters);
-        verifyLoanAccountStatus("ClientLoanStatusChange_004_result_dbunit.xml.zip");
+        verifyLoanAccountStatus("ClientLoanStatusChange_004_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void partialApplicationToPendingApproval() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // data set contains a loan acct w/ id 000100000000004 that's partially approved.
         EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
@@ -153,7 +153,7 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         statusParameters.setNote("Test");
 
         loanTestHelper.changeLoanAccountStatus("000100000000004", statusParameters);
-        verifyLoanAccountStatus("ClientLoanStatusChange_005_result_dbunit.xml.zip");
+        verifyLoanAccountStatus("ClientLoanStatusChange_005_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

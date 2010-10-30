@@ -27,14 +27,14 @@ import org.joda.time.LocalDate;
 
 public class InterestPostingPeriodResultBuilder {
 
-    private InterestCalculationInterval postingPeriod = new InterestCalculationIntervalBuilder().build();
+    private CalendarPeriod postingPeriod = new CalendarPeriodBuilder().build();
     private List<InterestCalculationPeriodResult> calculationPeriodResults = new ArrayList<InterestCalculationPeriodResult>();
     private LocalDate intervalStartDate = new LocalDate();
     private LocalDate intervalEndDate = new LocalDate();
 
     public InterestPostingPeriodResult build() {
 
-        postingPeriod = new InterestCalculationIntervalBuilder().from(intervalStartDate).to(intervalEndDate).build();
+        postingPeriod = new CalendarPeriodBuilder().from(intervalStartDate).to(intervalEndDate).build();
         InterestPostingPeriodResult result = new InterestPostingPeriodResult(postingPeriod);
 
         for (InterestCalculationPeriodResult periodResult : calculationPeriodResults) {

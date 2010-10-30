@@ -3870,9 +3870,9 @@ create table questions (
   question_text varchar(1000) not null,
   numeric_min integer,
   numeric_max integer,
-  short_name varchar(200) not null,
+  nickname varchar(64) not null,
   primary key(question_id),
-  unique(short_name)
+  unique(nickname)
 ) engine=innodb character set utf8;
 
 
@@ -4605,3 +4605,16 @@ create table prd_offering_question_group(
     foreign key (prd_offering_id) references prd_offering(prd_offering_id),
     foreign key (question_group_id) references question_group(id)
 ) engine=innodb character set utf8;
+
+create table savings_offering_historical_interest_detail (
+  id integer auto_increment not null,
+  period_start_date date not null,
+  period_end_date date not null,
+  interest_rate decimal(13, 10) not null,
+  min_amnt_for_int decimal(21,4) not null,
+  min_amnt_for_int_currency_id smallint not null,
+  product_id smallint not null,
+  primary key(id),
+  foreign key (product_id) references savings_offering (prd_offering_id)
+)
+engine=innodb character set utf8;

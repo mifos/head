@@ -100,7 +100,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     @Override
     public QuestionDto map(CustomFieldDefinitionEntity customField, Integer questionOrder) {
         QuestionDto questionDto = new QuestionDto();
-        questionDto.setTitle(customField.getLabel());
+        questionDto.setText(customField.getLabel());
         questionDto.setType(mapToQuestionType(customField.getFieldTypeAsEnum()));
         questionDto.setMandatory(customField.isMandatory());
         questionDto.setOrder(questionOrder);
@@ -370,7 +370,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     private QuestionDto mapToQuestionDto(SurveyQuestion surveyQuestion) {
         QuestionDto questionDto = new QuestionDto();
         Question question = surveyQuestion.getQuestion();
-        questionDto.setTitle(question.getShortName());
+        questionDto.setText(question.getQuestionText());
         questionDto.setMandatory(surveyQuestion.getMandatory() == 1);
         questionDto.setOrder(surveyQuestion.getOrder());
         AnswerType answerType = question.getAnswerTypeAsEnum();

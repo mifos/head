@@ -20,9 +20,21 @@
 
 package org.mifos.accounts.business;
 
+import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
+import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -75,20 +87,8 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
-import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AccountBO extends AbstractBusinessObject {
 
@@ -1243,14 +1243,15 @@ public class AccountBO extends AbstractBusinessObject {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
 
+            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+
             if (adjustForHolidays) {
                 HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-                holidays = holidayDao.findAllHolidaysThisYearAndNext(getOffice().getOfficeId());
+                holidays = holidayDao.findAllHolidaysFromDateAndNext(getOffice().getOfficeId(), startFromMeetingDate.toLocalDate().toString());
             }
 
             final int occurrences = noOfInstallments + installmentToSkip;
 
-            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                     workingDays, holidays);

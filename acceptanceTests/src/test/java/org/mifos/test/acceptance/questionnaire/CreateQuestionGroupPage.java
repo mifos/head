@@ -80,7 +80,7 @@ public class CreateQuestionGroupPage extends MifosPage {
             if (!selenium.isVisible("id=addQuestionDiv")) {
                 selenium.fireEvent("name=addQuestionFlag", "change");
             }
-            selenium.type("id=currentQuestion.title", questionToAdd);
+            selenium.type("id=currentQuestion.text", questionToAdd);
             selenium.type("id=sectionName", sectionName);
             selenium.click("id=_eventId_addQuestion");
             waitForPageToLoad();

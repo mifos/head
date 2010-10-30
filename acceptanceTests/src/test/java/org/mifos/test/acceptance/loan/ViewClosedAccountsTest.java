@@ -63,7 +63,7 @@ public class ViewClosedAccountsTest extends UiTestCaseBase {
         appLauncher = new AppLauncher(selenium);
         new InitializeApplicationRemoteTestingService().reinitializeApplication(selenium);
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
     }
 
     @AfterMethod

@@ -148,6 +148,13 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertTrue(holidays.get(1).encloses(lastDayOfYear.toDate()));
         assertTrue(holidays.get(2).encloses(secondOfJanNextYear.toDate()));
         assertTrue(holidays.get(3).encloses(thirdOfJanNextYear.toDate()));
+
+        List<Holiday> futureHolidays = holidayDao.findAllHolidaysFromDateAndNext(new Short("1"), secondOfJanNextYear.toLocalDate().toString());
+
+        assertThat(futureHolidays.size(), is(2));
+
+        assertTrue(futureHolidays.get(0).encloses(secondOfJanNextYear.toDate()));
+        assertTrue(futureHolidays.get(1).encloses(thirdOfJanNextYear.toDate()));
     }
 
     @Test

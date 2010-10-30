@@ -65,7 +65,7 @@ public class ViewProductCategoriesTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void verifyViewProductCategoriesTest() throws Exception {
         //initialize with data set
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
 
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewProductCategoriesPage viewProductCategoriesPage =

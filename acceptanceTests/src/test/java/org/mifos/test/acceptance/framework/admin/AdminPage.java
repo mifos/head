@@ -204,12 +204,6 @@ public class AdminPage extends MifosPage {
         return new ViewLoanProductsPage(selenium);
     }
 
-    public DefineAdditionalFieldsPage navigateToDefineAdditionalFieldsPage() {
-        selenium.click("admin.link.defineAdditionalFields");
-        waitForPageToLoad();
-        return new DefineAdditionalFieldsPage(selenium);
-    }
-
     public ViewAdditionalFieldCategoriesPage navigateToViewAdditionalFields() {
         selenium.click("admin.link.viewAdditionalFields");
         waitForPageToLoad();

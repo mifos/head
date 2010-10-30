@@ -26,6 +26,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public interface NonCompoundingInterestCalculator {
 
-    List<InterestCalculationPeriodResult> calculateDetails(InterestCalculationInterval calculationPeriod, Money totalBalanceBeforeCalculationPeriod, List<EndOfDayDetail> endOfDayDetailsForCalculationPeriod);
+    List<InterestCalculationPeriodResult> calculateDetails(CalendarPeriod calculationPeriod, Money totalBalanceBeforeCalculationPeriod, List<EndOfDayDetail> endOfDayDetailsForCalculationPeriod);
 
+    InterestCalculationPeriodResult calculateCalculationPeriodDetail(InterestCalculationPeriodDetail interestCalculationPeriodDetail);
 }

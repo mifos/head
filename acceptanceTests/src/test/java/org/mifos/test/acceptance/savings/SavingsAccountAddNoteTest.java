@@ -55,7 +55,7 @@ public class SavingsAccountAddNoteTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
-    private static final String startDataSet = "acceptance_small_008_dbunit.xml.zip";
+    private static final String startDataSet = "acceptance_small_008_dbunit.xml";
 
     private static final String TEST_ACCOUNT = "000100000000015";
     private static final String TEST_ACCOUNT_NOTE = "Acceptance Test note for SavingsAccountAddNoteTest";

@@ -75,10 +75,10 @@ public class InterestPostingPeriodCalculatorTest {
 
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
-        List<InterestCalculationInterval> postingPeriods = new ArrayList<InterestCalculationInterval>();
+        List<CalendarPeriod> postingPeriods = new ArrayList<CalendarPeriod>();
 
         // exercise test
-        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculatePostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
+        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculateAllPostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
 
         assertTrue(results.isEmpty());
     }
@@ -89,8 +89,8 @@ public class InterestPostingPeriodCalculatorTest {
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
 
-        InterestCalculationInterval today = new InterestCalculationIntervalBuilder().build();
-        List<InterestCalculationInterval> postingPeriods = Arrays.asList(new InterestCalculationInterval[] {today});
+        CalendarPeriod today = new CalendarPeriodBuilder().build();
+        List<CalendarPeriod> postingPeriods = Arrays.asList(new CalendarPeriod[] {today});
 
         List<InterestCalculationPeriodResult> noInterestCalculationResults = new ArrayList<InterestCalculationPeriodResult>();
 
@@ -98,7 +98,7 @@ public class InterestPostingPeriodCalculatorTest {
         when(interestCalculationPeriodCalculator.calculateDetails(today, TestUtils.createMoney("0"), endOfDayDetailsForPeriods)).thenReturn(noInterestCalculationResults);
 
         // exercise test
-        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculatePostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
+        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculateAllPostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
 
         assertFalse(results.isEmpty());
     }
@@ -108,8 +108,8 @@ public class InterestPostingPeriodCalculatorTest {
 
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
-        InterestCalculationInterval today = new InterestCalculationIntervalBuilder().build();
-        List<InterestCalculationInterval> postingPeriods = Arrays.asList(new InterestCalculationInterval[] {today});
+        CalendarPeriod today = new CalendarPeriodBuilder().build();
+        List<CalendarPeriod> postingPeriods = Arrays.asList(new CalendarPeriod[] {today});
 
         InterestCalculationPeriodResult periodResult = new InterestCalculationPeriodResultBuilder().withTotalPrincipal("25").build();
         InterestCalculationPeriodResult periodResult2 = new InterestCalculationPeriodResultBuilder().withTotalPrincipal("42").build();
@@ -121,7 +121,7 @@ public class InterestPostingPeriodCalculatorTest {
         when(interestCalculationPeriodCalculator.calculateDetails(today, TestUtils.createMoney("0"), endOfDayDetailsForPeriods)).thenReturn(interestCalculationResults);
 
         // exercise test
-        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculatePostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
+        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculateAllPostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
 
         assertThat(results.get(0).getPeriodBalance(), is(TestUtils.createMoney("67")));
     }
@@ -131,8 +131,8 @@ public class InterestPostingPeriodCalculatorTest {
 
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
-        InterestCalculationInterval today = new InterestCalculationIntervalBuilder().build();
-        List<InterestCalculationInterval> postingPeriods = Arrays.asList(new InterestCalculationInterval[] {today});
+        CalendarPeriod today = new CalendarPeriodBuilder().build();
+        List<CalendarPeriod> postingPeriods = Arrays.asList(new CalendarPeriod[] {today});
 
         InterestCalculationPeriodResult periodResult = new InterestCalculationPeriodResultBuilder().withPreviousInterest("0")
                                                                                                    .withCalculatedInterest("12.45")
@@ -146,7 +146,7 @@ public class InterestPostingPeriodCalculatorTest {
         when(interestCalculationPeriodCalculator.calculateDetails(today, TestUtils.createMoney("0"), endOfDayDetailsForPeriods)).thenReturn(interestCalculationResults);
 
         // exercise test
-        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculatePostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
+        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculateAllPostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
 
         assertThat(results.get(0).getDifferenceInInterest(), is(TestUtils.createMoney("12.45")));
     }
@@ -156,9 +156,9 @@ public class InterestPostingPeriodCalculatorTest {
 
         // setup
         List<EndOfDayDetail> endOfDayDetailsForPeriods =  new ArrayList<EndOfDayDetail>();
-        InterestCalculationInterval postingPeriod1 = new InterestCalculationIntervalBuilder().build();
-        InterestCalculationInterval postingPeriod2 = new InterestCalculationIntervalBuilder().build();
-        List<InterestCalculationInterval> postingPeriods = Arrays.asList(new InterestCalculationInterval[] {postingPeriod1, postingPeriod2});
+        CalendarPeriod postingPeriod1 = new CalendarPeriodBuilder().build();
+        CalendarPeriod postingPeriod2 = new CalendarPeriodBuilder().build();
+        List<CalendarPeriod> postingPeriods = Arrays.asList(new CalendarPeriod[] {postingPeriod1, postingPeriod2});
 
         InterestCalculationPeriodResult periodResult = new InterestCalculationPeriodResultBuilder().withTotalPrincipal("25")
                                                                                                    .withPreviousInterest("0")
@@ -176,7 +176,7 @@ public class InterestPostingPeriodCalculatorTest {
         when(interestCalculationPeriodCalculator.calculateDetails(postingPeriod2, TestUtils.createMoney("79.45"), endOfDayDetailsForPeriods)).thenReturn(noInterestCalculationResults);
 
         // exercise test
-        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculatePostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
+        List<InterestPostingPeriodResult> results = interestPostingPeriodCalculator.calculateAllPostingPeriodDetails(endOfDayDetailsForPeriods, postingPeriods);
 
         assertThat(results.get(1).getPeriodBalance(), is(TestUtils.createMoney("79.45")));
     }

@@ -79,7 +79,9 @@ public class SurveyUtils {
         surveyQuestion.setMandatory(true);
         surveyQuestion.setOrder(0);
         surveyQuestion.setSurvey(survey);
-        surveyQuestion.setQuestion(new Question(questionTitle, questionTitle, AnswerType.FREETEXT));
+        Question question = new Question(questionTitle, AnswerType.FREETEXT);
+        question.setNickname(questionTitle);
+        surveyQuestion.setQuestion(question);
         return surveyQuestion;
     }
 

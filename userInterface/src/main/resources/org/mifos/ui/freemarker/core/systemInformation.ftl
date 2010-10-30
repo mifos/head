@@ -21,8 +21,11 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
    <span id="page.id" title="SysInfo" />
-   <div class="content" style="margin-left:13px; margin-top:7px;">
-    <div>
+<div class=" content">
+
+[@mifos.crumbs breadcrumbs /]
+
+    <div class="span-24 margin10lefttop">
         <div><span class=" orangeheading">[@spring.message "systemAdministration.viewsysteminformation.systeminformation" /]</span></div>
         <div class="fontBold">[@spring.message "systemAdministration.viewsysteminformation.welcometotheMifossysteminformationarea" /]</div>
         <div class="clear">&nbsp;</div>

@@ -158,7 +158,8 @@ public class PPIPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private SurveyResponse createSurveyResponse(SurveyInstance instance) throws Exception {
-        Question question = new Question("shortName", "questionText", AnswerType.CHOICE);
+        Question question = new Question("questionText", AnswerType.CHOICE);
+        question.setNickname("shortName");
         PPIChoice choice1 = new PPIChoice("choice1");
         choice1.setPoints(5);
         PPIChoice choice2 = new PPIChoice("choice2");

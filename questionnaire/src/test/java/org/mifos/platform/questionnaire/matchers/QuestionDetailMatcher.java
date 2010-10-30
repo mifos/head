@@ -40,9 +40,7 @@ public class QuestionDetailMatcher extends TypeSafeMatcher<QuestionDetail> {
 
     @Override
     public boolean matchesSafely(QuestionDetail questionDetail) {
-        if (StringUtils.equals(questionDetail.getShortName(), this.questionDetail.getShortName())
-                && StringUtils.equals(questionDetail.getText(), this.questionDetail.getText())
-                && StringUtils.equals(questionDetail.getTitle(), this.questionDetail.getTitle())
+        if (StringUtils.equals(questionDetail.getText(), this.questionDetail.getText())
                 && this.questionDetail.getType().equals(questionDetail.getType())) {
             List<ChoiceDto> choiceDtos = this.questionDetail.getAnswerChoices();
             for (int i = 0, choiceDetailsSize = choiceDtos.size(); i < choiceDetailsSize; i++) {

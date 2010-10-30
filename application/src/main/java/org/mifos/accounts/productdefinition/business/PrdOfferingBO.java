@@ -531,15 +531,20 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         return detailsDto;
     }
 
-    public void updateProductDetails(String name, String shortName, String description, ProductCategoryBO productCategory,
+    public void updateDetailsOfProductNotInUse(String name, String shortName, String description, ProductCategoryBO productCategory,
             Date startDate, Date endDate, PrdApplicableMasterEntity applicableMasterEntity, PrdStatusEntity prdStatusEntity) {
+        updateProductDetails(name, shortName, description, productCategory, startDate, endDate, prdStatusEntity);
+        this.prdApplicableMaster = applicableMasterEntity;
+    }
+
+    public void updateProductDetails(String name, String shortName, String description,
+            ProductCategoryBO productCategory, Date startDate, Date endDate, PrdStatusEntity prdStatusEntity) {
         this.prdOfferingName = name;
         this.prdOfferingShortName = shortName;
         this.description = description;
         this.prdCategory = productCategory;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.prdApplicableMaster = applicableMasterEntity;
         this.prdStatus = prdStatusEntity;
     }
 
@@ -568,8 +573,9 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     }
 
     public void mergeQuestionGroups(Set<QuestionGroupReference> questionGroups) {
-        if (this.questionGroups == null || questionGroups == null) setQuestionGroups(questionGroups);
-        else {
+        if (this.questionGroups == null || questionGroups == null) {
+            setQuestionGroups(questionGroups);
+        } else {
             for (Iterator<QuestionGroupReference> iterator = this.questionGroups.iterator(); iterator.hasNext();) {
                 QuestionGroupReference questionGroup = iterator.next();
                 if (questionGroups.contains(questionGroup)) {

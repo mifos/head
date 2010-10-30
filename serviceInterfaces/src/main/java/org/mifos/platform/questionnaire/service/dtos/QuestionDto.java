@@ -35,7 +35,8 @@ import static org.apache.commons.lang.StringUtils.trim;
 public class QuestionDto implements Serializable {
     private static final long serialVersionUID = 4062506731931643620L;
 
-    private String title;
+    private String nickname;
+    private String text;
     private QuestionType type;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     @XStreamImplicit(itemFieldName = "choice")
@@ -50,12 +51,20 @@ public class QuestionDto implements Serializable {
         choices = new ArrayList<ChoiceDto>();
     }
 
-    public String getTitle() {
-        return title;
+    public String getText() {
+        return text;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 
     public QuestionType getType() {
@@ -107,7 +116,7 @@ public class QuestionDto implements Serializable {
     }
 
     public void trimTitle() {
-        this.title = trim(this.title);
+        this.text = trim(this.text);
     }
 
     public boolean isTypeWithChoices() {

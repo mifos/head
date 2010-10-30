@@ -55,7 +55,7 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_ANSWERS
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.NO_QUESTIONS_FOUND_IN_SECTION;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_SECTION_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_NOT_PROVIDED;
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TITLE_NOT_PROVIDED;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_TEXT_NOT_PROVIDED;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.ANSWER_TYPE_NOT_PROVIDED;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
@@ -97,7 +97,7 @@ public class QuestionnaireValidatorTest {
             questionnaireValidator.validateForDefineQuestion(new QuestionDetail(null, QuestionType.FREETEXT));
             fail("Should have thrown the validation exception");
         } catch (SystemException e) {
-            assertEquals(QUESTION_TITLE_NOT_PROVIDED, e.getKey());
+            assertEquals(QUESTION_TEXT_NOT_PROVIDED, e.getKey());
         }
     }
 
@@ -370,7 +370,7 @@ public class QuestionnaireValidatorTest {
     private SectionDetail getSection(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, "Q1", "Q1", QuestionType.INVALID, true), true, null));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, "Q1", QuestionType.INVALID, true), true, null));
         return section;
     }
 
@@ -379,7 +379,7 @@ public class QuestionnaireValidatorTest {
         section.setName(name);
         if (questionIds != null) {
             for (int questionId : questionIds) {
-                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, null, QuestionType.INVALID, true), true, null));
+                section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, null, QuestionType.INVALID, true), true, null));
             }
         }
         return section;

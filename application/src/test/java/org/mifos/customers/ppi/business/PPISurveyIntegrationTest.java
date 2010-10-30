@@ -107,7 +107,8 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
 
         List<SurveyQuestion> questions = new ArrayList<SurveyQuestion>();
 
-        Question question = new Question("Test Question 1", "What is this question?", AnswerType.CHOICE);
+        Question question = new Question("What is this question?", AnswerType.CHOICE);
+        question.setNickname("Test Question 1");
         question.setChoices(new ArrayList<QuestionChoice>());
         PPIChoice choice = new PPIChoice("First choice");
         choice.setChoiceId(1);
@@ -225,7 +226,6 @@ public class PPISurveyIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(Country.INDIA, retrievedSurvey.getCountryAsEnum());
 
        Assert.assertEquals(10, retrievedSurvey.getQuestions().size());
-       Assert.assertEquals("Number of children", retrievedSurvey.getQuestion(0).getShortName());
        Assert.assertEquals("What is the household's primary energy source for cooking?", retrievedSurvey.getQuestion(1)
                 .getQuestionText());
 

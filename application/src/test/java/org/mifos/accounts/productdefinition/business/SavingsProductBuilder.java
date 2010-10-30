@@ -29,7 +29,6 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;
@@ -47,7 +46,7 @@ public class SavingsProductBuilder {
     private MeetingBO scheduleForInterestPostingMeeting = new MeetingBuilder().savingsInterestPostingSchedule()
             .monthly().every(1).build();
     private Money maxAmountOfWithdrawal = new Money(Money.getDefaultCurrency(), "50.0");
-    private final Double interestRate = Double.valueOf("2.0");
+    private Double interestRate = Double.valueOf("2.0");
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
 
@@ -167,6 +166,11 @@ public class SavingsProductBuilder {
 
     public SavingsProductBuilder withInterestPostingSchedule(MeetingBO interestPostingMeeting) {
         this.scheduleForInterestPostingMeeting = interestPostingMeeting;
+        return this;
+    }
+
+    public SavingsProductBuilder withInterestRate(Double withInterestRate) {
+        this.interestRate = withInterestRate;
         return this;
     }
 }

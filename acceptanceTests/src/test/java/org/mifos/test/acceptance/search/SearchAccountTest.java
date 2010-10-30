@@ -50,7 +50,7 @@ public class SearchAccountTest extends SearchTestBase {
     private InitializeApplicationRemoteTestingService initRemote;
 
 
-    private static String dataFileName = "acceptance_small_003_dbunit.xml.zip";
+    private static String dataFileName = "acceptance_small_003_dbunit.xml";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

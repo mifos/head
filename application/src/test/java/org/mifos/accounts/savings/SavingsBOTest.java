@@ -46,6 +46,8 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -326,9 +328,13 @@ public class SavingsBOTest {
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
+        SavingsOfferingBO volSavingsProduct = new SavingsProductBuilder().voluntary().buildForUnitTests();
+
         final Money zero = new Money(defaultCurrency);
-        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().completeGroup().withPayments(
-                unpaidDepositsForPayingCustomer).build();
+        savingsAccount = savingsAccountBuilder.withSavingsProduct(volSavingsProduct)
+                                              .withBalanceOf(zero)
+                                              .completeGroup()
+                                              .withPayments(unpaidDepositsForPayingCustomer).build();
 
         final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
         final Date dateOfDeposit = new DateTime().toDate();
@@ -349,14 +355,17 @@ public class SavingsBOTest {
     public void shouldPayOffAnyPaymentsAssociatedWithPayingCustomerAndMandatorySavingsAccount() throws AccountException {
 
         // setup
-        savingsAccount = savingsAccountBuilder.build();
+        SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().buildForUnitTests();
+        savingsAccount = savingsAccountBuilder.withSavingsProduct(savingsProduct).build();
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withAccount(savingsAccount)
                 .withCustomer(payingCustomer).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
         final Money zero = new Money(defaultCurrency);
-        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).mandatory().withPayments(
+        SavingsOfferingBO manSavingsProduct = new SavingsProductBuilder().mandatory().buildForUnitTests();
+
+        savingsAccount = savingsAccountBuilder.withSavingsProduct(manSavingsProduct).withBalanceOf(zero).withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
         final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
@@ -379,14 +388,16 @@ public class SavingsBOTest {
             throws AccountException {
 
         // setup
-        savingsAccount = savingsAccountBuilder.build();
+        SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().buildForUnitTests();
+        savingsAccount = savingsAccountBuilder.withSavingsProduct(savingsProduct).build();
         final SavingsScheduleEntity unpaidSaving1 = new SavingsScheduleBuilder().withAccount(savingsAccount)
                 .withCustomer(payingCustomer).build();
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
         final Money zero = new Money(defaultCurrency);
-        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).mandatory().withPayments(
+        SavingsOfferingBO manSavingsProduct = new SavingsProductBuilder().mandatory().buildForUnitTests();
+        savingsAccount = savingsAccountBuilder.withSavingsProduct(manSavingsProduct).withBalanceOf(zero).withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
         final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");
@@ -421,7 +432,7 @@ public class SavingsBOTest {
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = Arrays.asList(unpaidSaving1);
 
         final Money zero = new Money(defaultCurrency);
-        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).voluntary().completeGroup().withPayments(
+        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).completeGroup().withPayments(
                 unpaidDepositsForPayingCustomer).build();
 
         final Money amountToDeposit = new Money(TestUtils.RUPEE, "100.0");

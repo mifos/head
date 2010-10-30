@@ -58,9 +58,9 @@ public class UndoLoanDisbursalTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
 
-    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
-    private static final String CLIENT_RESULT_DATA_SET = "UndoLoanDisbursal_001_result_dbunit.xml.zip";
-    private static final String GROUP_RESULT_DATA_SET = "UndoLoanDisbursal_002_result_dbunit.xml.zip";
+    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
+    private static final String CLIENT_RESULT_DATA_SET = "UndoLoanDisbursal_001_result_dbunit.xml";
+    private static final String GROUP_RESULT_DATA_SET = "UndoLoanDisbursal_002_result_dbunit.xml";
 
     private static final String CLIENT_LOAN_ID = "000100000000121";
     private static final String GROUP_LOAN_ID = "000100000000206 ";

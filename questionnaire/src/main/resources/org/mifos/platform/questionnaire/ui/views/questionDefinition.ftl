@@ -20,8 +20,8 @@
       [@mifosmacros.boolRadioButtons "questionDefinition.currentQuestion.active", {"true":active, "false":inActive},'','' /]
     </li>
     <li id="question" class="long_t_box">
-      <label for="currentQuestion.title"><span class="red">*</span>[@spring.message "questionnaire.question.title"/]: </label>
-      [@spring.formInput "questionDefinition.currentQuestion.title", 'maxlength="200"' /]
+      <label for="currentQuestion.text"><span class="red">*</span>[@spring.message "questionnaire.question.title"/]: </label>
+      [@spring.formInput "questionDefinition.currentQuestion.text", 'maxlength="1000"' /]
     </li>
     <li>
       <label for="currentQuestion.type"><span class="red">*</span>[@spring.message "questionnaire.answer.type"/]: </label>

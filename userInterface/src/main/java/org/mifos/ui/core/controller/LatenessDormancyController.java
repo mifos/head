@@ -20,20 +20,23 @@
 
 package org.mifos.ui.core.controller;
 
-import java.util.List;
-
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+
+import javax.validation.Valid;
+import java.util.List;
 
 @Controller
 @RequestMapping("/editLatenessDormancy")
@@ -54,12 +57,17 @@ public class LatenessDormancyController {
         this.adminServiceFacade = adminServiceFacade;
     }
 
-    @RequestMapping(method = RequestMethod.GET)
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(new LatenessDormancyFormValidator());
+    }
+
     @ModelAttribute("breadcrumbs")
     public List<BreadCrumbsLinks> showBreadCrumbs() {
         return new AdminBreadcrumbBuilder().withLink("editLatenessDormancy", "editLatenessDormancy.ftl").build();
     }
 
+    @RequestMapping(method = RequestMethod.GET)
     @ModelAttribute("formBean")
     public LatenessDormancyFormBean showPopulatedForm() {
         ProductConfigurationDto productConfiguration = adminServiceFacade.retrieveProductConfiguration();
@@ -71,7 +79,7 @@ public class LatenessDormancyController {
 
     @RequestMapping(method = RequestMethod.POST)
     public String processFormSubmit(@RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-                                    @ModelAttribute("formBean") LatenessDormancyFormBean formBean,
+                                    @Valid @ModelAttribute("formBean") LatenessDormancyFormBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
 

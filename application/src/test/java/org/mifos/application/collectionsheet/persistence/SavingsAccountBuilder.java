@@ -59,7 +59,7 @@ public class SavingsAccountBuilder {
 
     private final MeetingBO scheduleForInterestCalculation = new MeetingBuilder().savingsInterestCalulationSchedule()
             .monthly().every(1).build();
-    private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().buildForUnitTests();
+    private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().voluntary().withInterestCalcType(InterestCalcType.MINIMUM_BALANCE).withInterestRate(Double.valueOf("4.0")).buildForUnitTests();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final Date createdDate = new DateTime().minusDays(14).toDate();
 
@@ -67,10 +67,6 @@ public class SavingsAccountBuilder {
     private CustomerBO customer;
     private final Integer offsettingAllowable = Integer.valueOf(1);
 
-    private final Double interestRate = Double.valueOf("4.0");
-    private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
-
-    private SavingsType savingsType = SavingsType.VOLUNTARY;
     private RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
     private Money recommendedAmount = new Money(TestUtils.RUPEE, "13.0");
     private CustomerPersistence customerDao;
@@ -88,9 +84,8 @@ public class SavingsAccountBuilder {
 
     public SavingsBO build() {
 
-        final SavingsBO savingsAccount = new SavingsBO(savingsProduct, savingsType, savingsBalanceAmount,
-                savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, interestRate,
-                interestCalcType, accountState, customer, offsettingAllowable,
+        final SavingsBO savingsAccount = new SavingsBO(savingsProduct, savingsBalanceAmount,
+                savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, accountState, customer, offsettingAllowable,
                 scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
                 createdByUserId, holidays, activationDate);
         savingsAccount.setCustomerPersistence(customerDao);
@@ -126,23 +121,8 @@ public class SavingsAccountBuilder {
         return this;
     }
 
-    public SavingsAccountBuilder withInterestCalcType(final InterestCalcType interestCalcType) {
-        this.interestCalcType = interestCalcType;
-        return this;
-    }
-
     public SavingsAccountBuilder withCustomer(final CustomerBO withCustomer) {
         this.customer = withCustomer;
-        return this;
-    }
-
-    public SavingsAccountBuilder mandatory() {
-        this.savingsType = SavingsType.MANDATORY;
-        return this;
-    }
-
-    public SavingsAccountBuilder voluntary() {
-        this.savingsType = SavingsType.VOLUNTARY;
         return this;
     }
 

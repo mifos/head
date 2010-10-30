@@ -48,7 +48,7 @@ public class Question implements Serializable {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> currentSmartChoiceTags;
     private int initialNumberOfChoices;
-    private String originalTitle;
+    private String originalText;
 
     static {
         populateStringToQuestionTypeMap();
@@ -66,18 +66,14 @@ public class Question implements Serializable {
 
     @javax.validation.constraints.NotNull
     @javax.validation.constraints.Pattern(regexp="^.*[^\\s]+.*$")
-    @javax.validation.constraints.Size(max = 200)
-    public String getTitle() {
-        return questionDetail.getTitle();
+    @javax.validation.constraints.Size(max = 1000)
+    public String getText() {
+        return questionDetail.getText();
     }
 
-    public void setTitle(String title) {
-        questionDetail.setTitle(title);
-        trimTitle();
-    }
-
-    public void trimTitle() {
-        questionDetail.trimTitle();
+    public void setText(String text) {
+        questionDetail.setText(text);
+        questionDetail.trimText();
     }
 
     @javax.validation.constraints.Pattern(regexp="^.*[^\\s]+.*$")
@@ -242,7 +238,7 @@ public class Question implements Serializable {
         }
         this.currentSmartChoiceTags = new ArrayList<String>();
         this.initialNumberOfChoices = choices.size();
-        this.originalTitle = getTitle();
+        this.originalText = getText();
         for (int i = 0; i < initialNumberOfChoices; i++) {
             this.currentSmartChoiceTags.add(EMPTY);
         }
@@ -273,12 +269,11 @@ public class Question implements Serializable {
         return resourceBundle.getString(key);
     }
 
-    public boolean titleHasChanged() {
-        return !StringUtils.equals(originalTitle, getTitle());
+    public boolean textHasChanged() {
+        return !StringUtils.equals(originalText, getText());
     }
 
-    void trimTitleAndSetChoices() {
-        trimTitle();
+    void setChoices() {
         setChoicesIfApplicable();
     }
 }

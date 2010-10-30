@@ -261,12 +261,13 @@ public class SavingsScheduleIntegrationTest extends MifosIntegrationTestCase {
 
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToClientsOnly().buildForIntegrationTests();
 
-
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
         List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(client.getOfficeId());
 
-        savingsAccount = new SavingsAccountBuilder().mandatory().withSavingsProduct(savingsProduct)
-                .withCustomer(client).with(holidays).build();
+        savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct)
+                                                    .withCustomer(client)
+                                                    .with(holidays)
+                                                    .build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
     }
 
