@@ -96,21 +96,21 @@ public class LoanProductFormBeanValidator {
             ByLoanCycleBean byLoanCycle, Set<ConstraintViolation<ByLoanCycleBean>> cycleViolations) {
         for (ConstraintViolation<ByLoanCycleBean> constraintViolation : cycleViolations) {
             ObjectError error = new ObjectError("loanProduct", new String[] { buildViolationMessage(
-                    "loanProduct.installmentsByLoanCycle" + loanCycleRow, constraintViolation) }, new Object[] {},
+                    "loanProduct.installmentsByLoanCycle", constraintViolation) }, new Object[] {loanCycleRow + 1},
                     constraintViolation.getMessage());
             result.addError(error);
 
         }
 
         if (cycleViolations.isEmpty() && !byLoanCycle.minIsLessThanMax()) {
-            ObjectError error = new ObjectError("loanProduct", new String[] { "Max.loanProduct.installmentsByLoanCycle"
-                    + loanCycleRow + ".max" }, new Object[] {}, "The min must be less than max.");
+            ObjectError error = new ObjectError("loanProduct", new String[] { "Max.loanProduct.installmentsByLoanCycle.max" },
+                    new Object[] {loanCycleRow + 1}, "The min must be less than max.");
             result.addError(error);
         }
 
         if (cycleViolations.isEmpty() && !byLoanCycle.defaultIsBetweenMinAndMax()) {
-            ObjectError error = new ObjectError("loanProduct", new String[] { "Max.loanProduct.installmentsByLoanCycle"
-                    + loanCycleRow + ".theDefault" }, new Object[] {}, "The default is not within min and max range.");
+            ObjectError error = new ObjectError("loanProduct", new String[] { "Max.loanProduct.installmentsByLoanCycle.theDefault" },
+                    new Object[] {loanCycleRow + 1}, "The default is not within min and max range.");
             result.addError(error);
         }
     }
@@ -119,7 +119,7 @@ public class LoanProductFormBeanValidator {
             ByLastLoanAmountBean byLoanCycle, Set<ConstraintViolation<ByLastLoanAmountBean>> cycleViolations) {
         for (ConstraintViolation<ByLastLoanAmountBean> constraintViolation : cycleViolations) {
             ObjectError error = new ObjectError("loanProduct", new String[] { buildViolationMessage(
-                    "loanProduct.installmentsByLastLoanAmount" + lastLoanRow, constraintViolation) }, new Object[] {},
+                    "loanProduct.installmentsByLastLoanAmount", constraintViolation) }, new Object[] {lastLoanRow + 1},
                     constraintViolation.getMessage());
             result.addError(error);
 
@@ -127,22 +127,22 @@ public class LoanProductFormBeanValidator {
 
         if (cycleViolations.isEmpty() && !byLoanCycle.isRangeValid()) {
             ObjectError error = new ObjectError("loanProduct",
-                    new String[] { "Max.loanProduct.installmentsByLastLoanAmount" + lastLoanRow + ".upper" },
-                    new Object[] {}, "The upper value must be greater than lower.");
+                    new String[] { "Max.loanProduct.installmentsByLastLoanAmount.upper" },
+                    new Object[] {lastLoanRow + 1}, "The upper value must be greater than lower.");
             result.addError(error);
         }
 
         if (cycleViolations.isEmpty() && !byLoanCycle.minIsLessThanMax()) {
             ObjectError error = new ObjectError("loanProduct",
-                    new String[] { "Max.loanProduct.installmentsByLastLoanAmount" + lastLoanRow + ".max" },
-                    new Object[] {}, "The min must be less than max.");
+                    new String[] { "Max.loanProduct.installmentsByLastLoanAmount.max" },
+                    new Object[] {lastLoanRow + 1}, "The min must be less than max.");
             result.addError(error);
         }
 
         if (cycleViolations.isEmpty() && !byLoanCycle.defaultIsBetweenMinAndMax()) {
             ObjectError error = new ObjectError("loanProduct",
-                    new String[] { "Max.loanProduct.installmentsByLastLoanAmount" + lastLoanRow + ".theDefault" },
-                    new Object[] {}, "The default is not within min and max range.");
+                    new String[] { "Max.loanProduct.installmentsByLastLoanAmount.theDefault" },
+                    new Object[] {lastLoanRow + 1}, "The default is not within min and max range.");
             result.addError(error);
         }
     }
@@ -212,21 +212,21 @@ public class LoanProductFormBeanValidator {
             ByLoanCycleBean byLoanCycle, Set<ConstraintViolation<ByLoanCycleBean>> cycleViolations) {
         for (ConstraintViolation<ByLoanCycleBean> constraintViolation : cycleViolations) {
             ObjectError error = new ObjectError("loanProduct", new String[] { buildViolationMessage(
-                    "loanProduct.loanAmountByLoanCycle" + loanCycleRow, constraintViolation) }, new Object[] {},
+                    "loanProduct.loanAmountByLoanCycle", constraintViolation) }, new Object[] {loanCycleRow + 1},
                     constraintViolation.getMessage());
             result.addError(error);
 
         }
 
         if (cycleViolations.isEmpty() && !byLoanCycle.minIsLessThanMax()) {
-            ObjectError error = new ObjectError("loanProduct", new String[] { "Max.loanProduct.loanAmountByLoanCycle"
-                    + loanCycleRow + ".max" }, new Object[] {}, "The min must be less than max.");
+            ObjectError error = new ObjectError("loanProduct", new String[] { "Max.loanProduct.loanAmountByLoanCycle.max" },
+                    new Object[] {loanCycleRow + 1}, "The min must be less than max.");
             result.addError(error);
         }
 
         if (cycleViolations.isEmpty() && !byLoanCycle.defaultIsBetweenMinAndMax()) {
-            ObjectError error = new ObjectError("loanProduct", new String[] { "Max.loanProduct.loanAmountByLoanCycle"
-                    + loanCycleRow + ".theDefault" }, new Object[] {}, "The default is not within min and max range.");
+            ObjectError error = new ObjectError("loanProduct", new String[] { "Max.loanProduct.loanAmountByLoanCycle.theDefault" },
+                    new Object[] {loanCycleRow + 1}, "The default is not within min and max range.");
             result.addError(error);
         }
     }
@@ -235,7 +235,7 @@ public class LoanProductFormBeanValidator {
             ByLastLoanAmountBean byLoanCycle, Set<ConstraintViolation<ByLastLoanAmountBean>> cycleViolations) {
         for (ConstraintViolation<ByLastLoanAmountBean> constraintViolation : cycleViolations) {
             ObjectError error = new ObjectError("loanProduct", new String[] { buildViolationMessage(
-                    "loanProduct.loanAmountByLastLoanAmount" + lastLoanRow, constraintViolation) }, new Object[] {},
+                    "loanProduct.loanAmountByLastLoanAmount", constraintViolation) }, new Object[] {lastLoanRow+1},
                     constraintViolation.getMessage());
             result.addError(error);
 
@@ -243,22 +243,22 @@ public class LoanProductFormBeanValidator {
 
         if (cycleViolations.isEmpty() && !byLoanCycle.isRangeValid()) {
             ObjectError error = new ObjectError("loanProduct",
-                    new String[] { "Max.loanProduct.loanAmountByLastLoanAmount" + lastLoanRow + ".upper" },
-                    new Object[] {}, "The upper value must be greater than lower.");
+                    new String[] { "Max.loanProduct.loanAmountByLastLoanAmount.upper" },
+                    new Object[] {lastLoanRow + 1}, "The upper value must be greater than lower.");
             result.addError(error);
         }
 
         if (cycleViolations.isEmpty() && !byLoanCycle.minIsLessThanMax()) {
             ObjectError error = new ObjectError("loanProduct",
-                    new String[] { "Max.loanProduct.loanAmountByLastLoanAmount" + lastLoanRow + ".max" },
-                    new Object[] {}, "The min must be less than max.");
+                    new String[] { "Max.loanProduct.loanAmountByLastLoanAmount.max" },
+                    new Object[] {lastLoanRow + 1}, "The min must be less than max.");
             result.addError(error);
         }
 
         if (cycleViolations.isEmpty() && !byLoanCycle.defaultIsBetweenMinAndMax()) {
             ObjectError error = new ObjectError("loanProduct",
-                    new String[] { "Max.loanProduct.loanAmountByLastLoanAmount" + lastLoanRow + ".theDefault" },
-                    new Object[] {}, "The default is not within min and max range.");
+                    new String[] { "Max.loanProduct.loanAmountByLastLoanAmount.theDefault" },
+                    new Object[] {lastLoanRow + 1}, "The default is not within min and max range.");
             result.addError(error);
         }
     }
@@ -285,7 +285,6 @@ public class LoanProductFormBeanValidator {
             result.addError(error);
         }
     }
-
     private String buildViolationMessage(String objectName, ConstraintViolation<?> constraintViolation) {
         StringBuilder builder = new StringBuilder();
         String constraintMessage = constraintViolation.getMessageTemplate().substring(30);
