@@ -495,6 +495,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     public QuestionEntity mapToQuestion(QuestionDto questionDto) {
         QuestionEntity questionEntity = new QuestionEntity();
         questionEntity.setQuestionText(questionDto.getText());
+        questionEntity.setNickname(questionDto.getNickname());
         questionEntity.setAnswerType(mapToAnswerType(questionDto.getType()));
         questionEntity.setNumericMin(questionDto.getMinValue());
         questionEntity.setNumericMax(questionDto.getMaxValue());
