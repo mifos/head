@@ -336,6 +336,7 @@
   <applied_upgrades upgrade_id="1286780611"/>
   <applied_upgrades upgrade_id="1287934290"/>
   <applied_upgrades upgrade_id="1288013750"/>
+  <applied_upgrades upgrade_id="1288349766"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -2612,6 +2613,7 @@
   <savings_account/>
   <savings_activity_details/>
   <savings_offering/>
+  <savings_offering_historical_interest_detail/>
   <savings_performance/>
   <savings_trxn_detail/>
   <savings_type savings_type_id="1" lookup_id="118"/>

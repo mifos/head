@@ -1437,6 +1437,7 @@
   <applied_upgrades upgrade_id="1286780611"/>
   <applied_upgrades upgrade_id="1287934290"/>
   <applied_upgrades upgrade_id="1288013750"/>
+  <applied_upgrades upgrade_id="1288349766"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -9244,6 +9245,7 @@
   <savings_account account_id="165" activation_date="2009-01-29" savings_balance="0.0000" savings_balance_currency_id="2" recommended_amount="0.0000" recommended_amount_currency_id="2" savings_type_id="2" int_to_be_posted="0.0000" int_to_be_posted_currency_id="2" next_int_calc_date="2009-02-14" next_int_post_date="2009-12-31" prd_offering_id="5" interest_rate="8.0000000000" interest_calculation_type_id="2" time_per_for_int_calc="122" min_amnt_for_int="100.0000" min_amnt_for_int_currency_id="2"/>
   <savings_activity_details/>
   <savings_offering prd_offering_id="5" interest_calculation_type_id="2" savings_type_id="2" recommended_amount="0.0000" recommended_amount_currency_id="2" interest_rate="8.0000000000" max_amnt_withdrawl="0.0000" max_amnt_withdrawl_currency_id="2" min_amnt_for_int="100.0000" min_amnt_for_int_currency_id="2" deposit_glcode_id="36" interest_glcode_id="55"/>
+  <savings_offering_historical_interest_detail/>
   <savings_performance id="1" account_id="15"/>
   <savings_performance id="2" account_id="19"/>
   <savings_performance id="3" account_id="23"/>

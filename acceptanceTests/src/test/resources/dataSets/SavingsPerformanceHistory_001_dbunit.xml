@@ -1497,6 +1497,7 @@
   <applied_upgrades upgrade_id="1286780611"/>
   <applied_upgrades upgrade_id="1287934290"/>
   <applied_upgrades upgrade_id="1288013750"/>
+  <applied_upgrades upgrade_id="1288349766"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -9647,6 +9648,7 @@
   <savings_offering prd_offering_id="27" interest_calculation_type_id="1" savings_type_id="1" recommended_amnt_unit_id="1" recommended_amount="30.0000" recommended_amount_currency_id="2" interest_rate="4.1000000000" max_amnt_withdrawl="0.0000" max_amnt_withdrawl_currency_id="2" min_amnt_for_int="30.0000" min_amnt_for_int_currency_id="2" deposit_glcode_id="32" interest_glcode_id="55"/>
   <savings_offering prd_offering_id="28" interest_calculation_type_id="1" savings_type_id="1" recommended_amount="50.0000" recommended_amount_currency_id="2" interest_rate="3.8000000000" max_amnt_withdrawl="0.0000" max_amnt_withdrawl_currency_id="2" min_amnt_for_int="0.0000" min_amnt_for_int_currency_id="2" deposit_glcode_id="32" interest_glcode_id="56"/>
   <savings_offering prd_offering_id="29" interest_calculation_type_id="2" savings_type_id="1" recommended_amount="10.0000" recommended_amount_currency_id="2" interest_rate="3.3000000000" max_amnt_withdrawl="0.0000" max_amnt_withdrawl_currency_id="2" min_amnt_for_int="0.0000" min_amnt_for_int_currency_id="2" deposit_glcode_id="32" interest_glcode_id="56"/>
+  <savings_offering_historical_interest_detail/>
   <savings_performance id="1" account_id="15"/>
   <savings_performance id="2" account_id="19"/>
   <savings_performance id="3" account_id="23"/>
