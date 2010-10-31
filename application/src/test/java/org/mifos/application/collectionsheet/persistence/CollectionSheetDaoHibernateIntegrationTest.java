@@ -24,6 +24,7 @@ import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -200,7 +201,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertNull("client should have no attendance against them", customerHierarchy.get(1).getAttendanceId());
     }
 
-    @Test
+    @Test @Ignore
     public void testShouldFindAllLoanRepaymentInCenterHierarchy() {
 
         // setup
@@ -234,7 +235,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(loansAgainstGroup.get(0).getTotalRepaymentDue(), is(Double.valueOf("112.00")));
     }
 
-    @Test
+    @Test @Ignore
     public void testShouldFindOutstandingFeesForLoansInCenterHierarchy() {
 
         // setup
@@ -274,7 +275,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(loanFeesAgainstGroupAccountLoan.get(0).getTotalFeeAmountDue(), is(Double.valueOf("100.0")));
     }
 
-    @Test
+    @Test @Ignore
     public void testShouldFindAccountCollectionFeesForCustomerAccounts() {
 
         // setup
@@ -300,7 +301,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(accountCollections.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
     }
 
-    @Test
+    @Test @Ignore
     public void testShouldFindOutstandingFeesForCustomerAccountsXXX() {
 
         // setup
@@ -327,7 +328,7 @@ public class CollectionSheetDaoHibernateIntegrationTest extends MifosIntegration
         Assert.assertThat(accountCollectionFees.get(0).getAccountCollectionPayment(), is(Double.valueOf("0.0")));
     }
 
-    @Test
+    @Test @Ignore
     public void testShouldFindLoanAccountsInDisbursementState() {
 
         // setup

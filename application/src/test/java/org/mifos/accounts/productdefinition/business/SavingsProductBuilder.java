@@ -47,6 +47,7 @@ public class SavingsProductBuilder {
             .monthly().every(1).build();
     private Money maxAmountOfWithdrawal = new Money(Money.getDefaultCurrency(), "50.0");
     private Double interestRate = Double.valueOf("2.0");
+    private Money minAmntForInt = new Money(Money.getDefaultCurrency(), "500.0");
     private SavingsType savingsType = SavingsType.VOLUNTARY;
     private InterestCalcType interestCalcType = InterestCalcType.MINIMUM_BALANCE;
 
@@ -94,6 +95,7 @@ public class SavingsProductBuilder {
 
         savingsProduct.setTimePerForInstcalc(scheduleForInstcalc);
         savingsProduct.setTimePerForInstcalc(scheduleForInterestPosting);
+        savingsProduct.setMinAmntForInt(minAmntForInt);
 
         if (this.mandatoryGroupTrackingType != null) {
             savingsProduct.setRecommendedAmntUnit(this.mandatoryGroupTrackingType);

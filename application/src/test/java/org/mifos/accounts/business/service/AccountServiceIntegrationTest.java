@@ -23,6 +23,7 @@ package org.mifos.accounts.business.service;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.*;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -173,7 +174,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(2, applicableChargeList.size());
     }
 
-    @Test
+    @Test @Ignore
     public void testGetAppllicableFeesForInstallmentStartingOnCurrentDate() throws Exception {
         AccountBusinessService accountBusinessService = new AccountBusinessService();
         accountBO = getLoanAccountWithAllTypesOfFees();

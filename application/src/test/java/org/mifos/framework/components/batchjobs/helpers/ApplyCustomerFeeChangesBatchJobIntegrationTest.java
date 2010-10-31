@@ -34,6 +34,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
@@ -159,7 +160,7 @@ public class ApplyCustomerFeeChangesBatchJobIntegrationTest extends MifosIntegra
         assertThatFutureScheduleHasFeesDueOf(center.getCustomerAccount().getAccountActionDates(), 0.0);
     }
 
-    @Test
+    @Test @Ignore
     public void givenFeeStatusIsChangedFromInactiveToActiveShouldAssociateFeesWithAllKnownFutureInstallments() throws Exception {
 
         long timeInMillis = new Date().getTime();
