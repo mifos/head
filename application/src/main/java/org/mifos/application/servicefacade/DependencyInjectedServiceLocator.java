@@ -49,6 +49,8 @@ import org.mifos.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDaoHibernate;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsDao;
@@ -145,6 +147,7 @@ public class DependencyInjectedServiceLocator {
     private static CustomerDao customerDao = new CustomerDaoHibernate(genericDao);
     private static LoanProductDao loanProductDao = new LoanProductDaoHibernate(genericDao);
     private static SavingsDao savingsDao = new SavingsDaoHibernate(genericDao);
+    private static SavingsProductDao savingsProductDao = new SavingsProductDaoHibernate(genericDao);
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
     private static GeneralLedgerDao generalLedgerDao = new GeneralLedgerDaoHibernate(genericDao);
 
@@ -350,6 +353,10 @@ public class DependencyInjectedServiceLocator {
 
     public static SavingsDao locateSavingsDao() {
         return savingsDao;
+    }
+
+    public static SavingsProductDao locateSavingsProductDao() {
+        return savingsProductDao;
     }
 
     public static FundDao locateFundDao() {

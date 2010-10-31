@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping default-access="field">
+	<class name="org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail" table="savings_offering_historical_interest_detail">
+		<id name="id" column="id">
+			<generator class="native" />
+		</id>
+		<property name="periodStartDate" column="period_start_date" not-null="true"/>
+		<property name="periodEndDate" column="period_end_date" not-null="true"/>
+		<property name="interestRate" column="interest_rate" type="double" not-null="true" />
+		<property name="minAmntForInt" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="min_amnt_for_int_currency_id" not-null="true"/>
+			<column name="min_amnt_for_int" not-null="true"/>
+		</property>
+		
+		<many-to-one name="savingsProduct" column="product_id" class="org.mifos.accounts.productdefinition.business.PrdOfferingBO" cascade="all" insert="true" update="true" />
+	</class>
+
+</hibernate-mapping>

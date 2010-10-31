@@ -427,7 +427,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
             CalendarPeriod previousInterestCalculationPeriod = new CalendarPeriod(startOfPreviousPeriodDate, previousInterestCalculationDate);
 
             if (noHistoricalRecordExistsFor(previousInterestCalculationPeriod)) {
-                SavingsProductHistoricalInterestDetail historicalInterestDetail = new SavingsProductHistoricalInterestDetail(previousInterestCalculationPeriod, this.interestRate, this.minAmntForInt);
+                SavingsProductHistoricalInterestDetail historicalInterestDetail = new SavingsProductHistoricalInterestDetail(previousInterestCalculationPeriod, this.interestRate, this.minAmntForInt, this);
                 this.historicalInterestDetails.add(historicalInterestDetail);
             }
 

@@ -108,6 +108,7 @@ truncate table  loan_offering;
 truncate table  client_initial_savings_offering;
 truncate table  prd_offering_question_group;
 truncate table  prd_offering;
+truncate table  savings_offering_historical_interest_detail;
 truncate table  customer_detail;
 truncate table  cust_perf_history;
 truncate table  client_perf_history;

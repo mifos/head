@@ -336,6 +336,7 @@
   <applied_upgrades upgrade_id="1286780611"/>
   <applied_upgrades upgrade_id="1287934290"/>
   <applied_upgrades upgrade_id="1288013750"/>
+  <applied_upgrades upgrade_id="1288349766"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -2616,6 +2617,7 @@
   <savings_account/>
   <savings_activity_details/>
   <savings_offering prd_offering_id="1" interest_calculation_type_id="2" savings_type_id="2" recommended_amnt_unit_id="2" recommended_amount="10.0000" recommended_amount_currency_id="2" interest_rate="4.0000000000" max_amnt_withdrawl="0.0000" max_amnt_withdrawl_currency_id="2" min_amnt_for_int="0.0000" min_amnt_for_int_currency_id="2" deposit_glcode_id="36" interest_glcode_id="56"/>
+  <savings_offering_historical_interest_detail/>
   <savings_performance/>
   <savings_trxn_detail/>
   <savings_type savings_type_id="1" lookup_id="118"/>
