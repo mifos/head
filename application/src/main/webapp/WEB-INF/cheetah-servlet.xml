@@ -24,9 +24,10 @@
         <property name="defaultEncoding" value="UTF-8" />
     </bean>
 
-    <bean id="webExceptionResolverHandler" class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+    <bean id="webExceptionResolverHandler" class="org.mifos.framework.servlet.UncaughtExceptionHandler">
     	<property name="exceptionMappings">
     		<props>
+                <prop key="java.lang.Exception">uncaughtException</prop>
     			<prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
     		</props>
     	</property>

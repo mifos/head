@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.ui.core.controller;
+package org.mifos.framework.servlet;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -26,37 +26,30 @@ import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 
-@Controller
-public class UncaughtExceptionController {
+public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
 
-    private static final Logger logger = LoggerFactory.getLogger(UncaughtExceptionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UncaughtExceptionHandler.class);
 
-    @RequestMapping("/uncaughtException.ftl")
-    public ModelAndView handleException(HttpServletRequest request) {
-        // http://java.sun.com/developer/technicalArticles/Servlets/servletapi2.3
-        Object obj = request.getAttribute("javax.servlet.error.exception");
-        Throwable cause = null;
-        if (obj != null) {
-            cause = (Throwable) obj;
-        }
-
+    @Override
+    protected ModelAndView doResolveException(HttpServletRequest request,  HttpServletResponse response, Object handler, Exception ex) {
         String requestUri = request.getRequestURI();
-        logger.error("Uncaught exception while accessing '" + requestUri + "'", cause);
+
+        logger.error("Uncaught exception while accessing '" + requestUri + "'", ex);
 
         ModelAndView mm = new ModelAndView();
         mm.setViewName("uncaughtException");
-        mm.addObject("uncaughtException", cause);
+        mm.addObject("uncaughtException", ex);
         mm.addObject("requestUri", requestUri);
-        if (isDevCookieAvailable(request) && cause != null) {
+        if (isDevCookieAvailable(request) && ex != null) {
             Writer result = new StringWriter();
-            cause.printStackTrace(new PrintWriter(result));
+            ex.printStackTrace(new PrintWriter(result));
             mm.addObject("stackString", result.toString());
         }
         return mm;

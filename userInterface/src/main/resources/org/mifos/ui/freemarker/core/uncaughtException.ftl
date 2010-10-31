@@ -22,17 +22,16 @@
 [@adminLeftPaneLayout]
 <script src="pages/js/uncaughtException.js" type="text/javascript"></script>
 <div class="content_panel">
-    <p class="error">An unknown error has occurred. Please try again later. If the problem persists, contact the system administrator.</p>
-    <a class="stackTrace" href="javascript:void();">View stack trace</a>
-    <a class="stackTrace" href="javascript:void();" style="display:none">Hide stack trace</a>
+    <p class="error">[@spring.message "system.unhandledErrorHeading" /]</p>
+    [#if stackString??]
+        <a class="stackTrace" href="javascript:void();">View stack trace</a>
+        <a class="stackTrace" href="javascript:void();" style="display:none">Hide stack trace</a>
+    [/#if]
     <br/>
     <br/>
     <div class="stackTrace" style="display:none">
         [#if stackString??]
-        <input type="button" class="buttn" value="File a bug report" onclick="alert('not implemented')"/>
-        <pre>${stackString}</pre>
-        [#else]
-        <pre>Stack trace not available.</pre>
+            <pre>${stackString}</pre>
         [/#if]
     </div>
 </div>
