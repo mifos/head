@@ -381,6 +381,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         Money endOfAccountBalance = postingPeriodAtClosureResult.getPeriodBalance();
         Money interestAmountAtClosure = postingPeriodAtClosureResult.getPeriodInterest();
 
+        // FIXME - KEITHW just for testing interest calculation and posting.
+//        postInterestForLastPostingPeriod(nextPostingDate.plusDays(1));
+
         return new SavingsAccountClosureDto(new LocalDate(), endOfAccountBalance.toString(), interestAmountAtClosure.toString());
     }
 

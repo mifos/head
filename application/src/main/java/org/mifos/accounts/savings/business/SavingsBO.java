@@ -709,7 +709,7 @@ public class SavingsBO extends AccountBO {
 
                 Short installmentId = accountAction.getInstallmentId();
                 SavingsTrxnDetailEntity accountTrxn = SavingsTrxnDetailEntity.savingsDeposit(accountPayment, customer, this.savingsBalance,
-                        depositAmount, paymentData.getPersonnel(), accountAction.getActionDate(), accountAction.getActionDate(), paymentData.getTransactionDate(), installmentId);
+                        depositAmount, paymentData.getPersonnel(), accountAction.getActionDate(), paymentData.getTransactionDate(), paymentData.getTransactionDate(), installmentId);
 
                 accountPayment.addAccountTrxn(accountTrxn);
             }

@@ -51,12 +51,12 @@ public class SavingsTrxnDetailEntity extends AccountTrxnEntity {
 
     public static SavingsTrxnDetailEntity savingsDeposit(AccountPaymentEntity newAccountPayment, CustomerBO customer,
             Money savingsBalance, Money depositAmount, PersonnelBO createdBy,
-            Date dueDate, Date oldTrxnDate, Date transactionCreatedDate, Short installmentId) {
+            Date dueDate, Date actionDate, Date transactionCreatedDate, Short installmentId) {
 
         AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.SAVINGS_DEPOSIT);
         SavingsTrxnDetailEntity relatedTrxnNotApplicable = null;
         return new SavingsTrxnDetailEntity(newAccountPayment, customer, accountAction, accountAction, depositAmount, savingsBalance,
-                createdBy, dueDate, oldTrxnDate, installmentId, "", transactionCreatedDate, relatedTrxnNotApplicable);
+                createdBy, dueDate, actionDate, installmentId, "", transactionCreatedDate, relatedTrxnNotApplicable);
     }
 
     public static SavingsTrxnDetailEntity savingsWithdrawal(AccountPaymentEntity newAccountPayment, CustomerBO customer,
