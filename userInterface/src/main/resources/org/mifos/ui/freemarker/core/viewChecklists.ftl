@@ -26,7 +26,7 @@
   	<form method="" action="" name="formname">
   	<div class="marginLeft30">  	
   	<div class="fontBold"><span class="orangeheading">[@spring.message "organizationPreferences.viewChecklists"/]</span></div>
-    <p>[@spring.message "organizationPreferences.viewChecklists.Clickonachecklistbelowtoviewdetailsandmakechangesor"/]<a href="defineNewChecklist.ftl">[@spring.message"organizationPreferences.viewChecklists.defineanewchecklist"/]</a></p>
+    <p>[@spring.message "organizationPreferences.viewChecklists.Clickonachecklistbelowtoviewdetailsandmakechangesor"/] <a href="defineNewChecklist.ftl">[@spring.message"organizationPreferences.viewChecklists.defineanewchecklist"/]</a></p>
     <div class="fontBold">[@spring.message "organizationPreferences.viewChecklists.Center"/]</div>
     <div class="span-22">
     	<ul>
