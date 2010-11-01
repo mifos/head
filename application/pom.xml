@@ -987,6 +987,7 @@
                 <version>2.0.2</version>
                 <configuration>
                     <webResources>
+                        <!-- TODO: reporting seems to have been removed, can the next three be cleaned-up??? -->
                         <resource>
                             <directory>${basedir}/reporting/BirtReportDesign</directory>
                             <targetPath>report</targetPath>
@@ -1003,25 +1004,19 @@
                                 <exclude>**/web.xml</exclude>
                             </excludes>
                         </resource>
+                        <!-- TODO: How about using Maven WAR Overlay instead of this manual listing???
+                            @see http://maven.apache.org/plugins/maven-war-plugin/overlays.html -->
                         <resource>
-                            <directory>${modules.root.dir}/questionnaire/src/main/webapp/pages</directory>
-                            <targetPath>pages</targetPath>
+                            <directory>${modules.root.dir}/userInterface/src/main/webapp</directory>
+                            <targetPath>.</targetPath>
                         </resource>
                         <resource>
-                            <directory>${modules.root.dir}/cashflow/src/main/webapp/pages</directory>
-                            <targetPath>pages</targetPath>
+                            <directory>${modules.root.dir}/cashflow/src/main/webapp</directory>
+                            <targetPath>.</targetPath>
                         </resource>
-                        <resource>
-                            <directory>${modules.root.dir}/userInterface/src/main/webapp/pages</directory>
-                            <targetPath>pages</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>${modules.root.dir}/questionnaire/src/main/webapp/WEB-INF</directory>
-                            <targetPath>WEB-INF</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>${modules.root.dir}/cashflow/src/main/webapp/WEB-INF</directory>
-                            <targetPath>WEB-INF</targetPath>
+                       <resource>
+                            <directory>${modules.root.dir}/questionnaire/src/main/webapp</directory>
+                            <targetPath>.</targetPath>
                         </resource>
                     </webResources>
                 </configuration>
