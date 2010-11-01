@@ -27,9 +27,34 @@ public class CreateQuestionPage extends MifosPage {
 
     protected void enterDetails(CreateQuestionParameters createQuestionParameters) {
         selenium.type("currentQuestion.text", createQuestionParameters.getText());
-        selenium.select("id=currentQuestion.type", "value=" + createQuestionParameters.getType());
+        selenium.select("id=currentQuestion.type", "value=" + translateQuestionType(createQuestionParameters.getType()));
         fillUpChoices(createQuestionParameters);
         fillUpNumericDetails(createQuestionParameters);
+    }
+
+    private String translateQuestionType(String type) {
+        String toReturn = type;
+
+        if ("Free Text".equals(type)) {
+            toReturn = "freeText";
+        }
+        else if ("Date".equals(type)) {
+            toReturn = "date";
+        }
+        else if ("Multi Select".equals(type)) {
+            toReturn = "multiSelect";
+        }
+        else if ("Single Select".equals(type)) {
+            toReturn = "singleSelect";
+        }
+        else if ("Smart Select".equals(type)) {
+            toReturn = "smartSelect";
+        }
+        else if ("Number".equals(type)) {
+            toReturn = "number";
+        }
+
+        return toReturn;
     }
 
     private void fillUpNumericDetails(CreateQuestionParameters createQuestionParameters) {

@@ -471,7 +471,7 @@ public class QuestionGroupControllerTest {
     public void testAddQuestion() {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.getCurrentQuestion().setText("Question1");
-        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        questionGroupForm.getCurrentQuestion().setType("freeText");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
         assertThat(result, is("success"));
@@ -483,7 +483,7 @@ public class QuestionGroupControllerTest {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
         questionGroupForm.getCurrentQuestion().setText(null);
-        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        questionGroupForm.getCurrentQuestion().setType("freeText");
         when(messageContext.hasErrorMessages()).thenReturn(true);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
@@ -511,7 +511,7 @@ public class QuestionGroupControllerTest {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
         questionGroupForm.getCurrentQuestion().setText(TITLE);
-        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        questionGroupForm.getCurrentQuestion().setType("freeText");
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(true);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
@@ -525,7 +525,7 @@ public class QuestionGroupControllerTest {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
         questionGroupForm.getCurrentQuestion().setText(TITLE);
-        questionGroupForm.getCurrentQuestion().setType("Single Select");
+        questionGroupForm.getCurrentQuestion().setType("singleSelect");
         questionGroupForm.getCurrentQuestion().setCurrentChoice("Choice1");
         questionGroupForm.getCurrentQuestion().addAnswerChoice();
         when(requestContext.getMessageContext()).thenReturn(messageContext);
@@ -540,7 +540,7 @@ public class QuestionGroupControllerTest {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
         questionGroupForm.getCurrentQuestion().setText(TITLE);
-        questionGroupForm.getCurrentQuestion().setType("Number");
+        questionGroupForm.getCurrentQuestion().setType("number");
         questionGroupForm.getCurrentQuestion().setNumericMin(100);
         questionGroupForm.getCurrentQuestion().setNumericMax(10);
         when(requestContext.getMessageContext()).thenReturn(messageContext);

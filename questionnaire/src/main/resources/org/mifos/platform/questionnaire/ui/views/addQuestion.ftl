@@ -21,7 +21,8 @@
     </li>
     <li>
       <label for="currentQuestion.type"><span class="red">*</span>[@spring.message "questionnaire.answer.type"/]: </label>
-      [@spring.formSingleSelect "questionGroupForm.currentQuestion.type", [freeText, date, number, multiSelect, singleSelect, smartSelect], ''/]
+      [@spring.formSingleSelect "questionGroupForm.currentQuestion.type",
+      {"freeText":freeText, "date":date, "number":number, "multiSelect":multiSelect, "singleSelect":singleSelect, "smartSelect":smartSelect}, ''/]
     </li>
     <li id="numericDiv">
         <label for="currentQuestion.numericMin">[@spring.message "questionnaire.quesiton.numeric.min"/]: </label>

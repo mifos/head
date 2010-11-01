@@ -58,12 +58,12 @@ public class QuestionTest extends UiTestCaseBase {
     private static final String AT_LEAST_2_CHOICES = "Please specify at least 2 choices.";
     private static final String DUPLICATE_TITLE = "Question already exists.";
     private CreateQuestionParameters createQuestionParameters;
-    private static final String DATE = "Date";
-    private static final String FREE_TEXT = "Free Text";
-    private static final String MULTI_SELECT = "Multi Select";
-    private static final String SINGLE_SELECT = "Single Select";
-    private static final String NUMBER = "Number";
-    private static final String SMART_SELECT = "Smart Select";
+    private static final String DATE = "date";
+    private static final String FREE_TEXT = "freeText";
+    private static final String MULTI_SELECT = "multiSelect";
+    private static final String SINGLE_SELECT = "singleSelect";
+    private static final String NUMBER = "number";
+    private static final String SMART_SELECT = "smartSelect";
     public static final String INVALID_BOUNDS_ERR = "Please ensure maximum value is greater than minimum value.";
     private AdminPage adminPage;
     private ViewAllQuestionsPage viewAllQuestionsPage;

@@ -30,7 +30,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
@@ -246,27 +245,23 @@ public class Question implements Serializable {
 
     private static void populateStringToQuestionTypeMap() {
         stringToQuestionTypeMap = CollectionUtils.asMap(
-                makeEntry(getResource("questionnaire.quesiton.choices.freetext"), QuestionType.FREETEXT),
-                makeEntry(getResource("questionnaire.quesiton.choices.date"), QuestionType.DATE),
-                makeEntry(getResource("questionnaire.quesiton.choices.multiselect"), QuestionType.MULTI_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.singleselect"), QuestionType.SINGLE_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.smartselect"), QuestionType.SMART_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.number"), QuestionType.NUMERIC));
+                makeEntry("freeText", QuestionType.FREETEXT),
+                makeEntry("date", QuestionType.DATE),
+                makeEntry("multiSelect", QuestionType.MULTI_SELECT),
+                makeEntry("singleSelect", QuestionType.SINGLE_SELECT),
+                makeEntry("smartSelect", QuestionType.SMART_SELECT),
+                makeEntry("number", QuestionType.NUMERIC));
     }
 
     private static void populateQuestionTypeToStringMap() {
-        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, getResource("questionnaire.quesiton.choices.freetext")),
-                makeEntry(QuestionType.DATE, getResource("questionnaire.quesiton.choices.date")),
-                makeEntry(QuestionType.NUMERIC, getResource("questionnaire.quesiton.choices.number")),
-                makeEntry(QuestionType.MULTI_SELECT, getResource("questionnaire.quesiton.choices.multiselect")),
-                makeEntry(QuestionType.SMART_SELECT, getResource("questionnaire.quesiton.choices.smartselect")),
-                makeEntry(QuestionType.SINGLE_SELECT, getResource("questionnaire.quesiton.choices.singleselect"))
+        questionTypeToStringMap = CollectionUtils.asMap(
+                makeEntry(QuestionType.FREETEXT, "freeText"),
+                makeEntry(QuestionType.DATE, "date"),
+                makeEntry(QuestionType.NUMERIC, "number"),
+                makeEntry(QuestionType.MULTI_SELECT, "multiSelect"),
+                makeEntry(QuestionType.SMART_SELECT, "smartSelect"),
+                makeEntry(QuestionType.SINGLE_SELECT, "singleSelect")
         );
-    }
-
-    private static String getResource(String key) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages");
-        return resourceBundle.getString(key);
     }
 
     public boolean textHasChanged() {

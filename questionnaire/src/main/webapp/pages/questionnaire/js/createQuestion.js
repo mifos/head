@@ -63,17 +63,17 @@ $(document).ready(function(){
 
     $("#currentQuestion\\.type").bind("change keypress click blur", function(){
         var selectedOption = $(this).val();
-        if(selectedOption == $("#multiSelect").val() || selectedOption == $("#singleSelect").val()) {
+        if(selectedOption == "multiSelect" || selectedOption == "singleSelect") {
             $("#choiceDiv").show();
         }else{
             $("#choiceDiv").hide();
         }
-        if(selectedOption == $("#number").val()) {
+        if(selectedOption == "number") {
             $("#numericDiv").show();
         }else{
             $("#numericDiv").hide();
         }
-        if(selectedOption == $("#smartSelect").val()) {
+        if(selectedOption == "smartSelect") {
             $("#choiceTagsDiv").show();
         }else{
             $("#choiceTagsDiv").hide();
