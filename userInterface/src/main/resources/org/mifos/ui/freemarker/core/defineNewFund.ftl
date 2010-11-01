@@ -30,13 +30,13 @@
         <div class="borderbtm width100prc height25px">
             <p class="span-17 timelineboldorange arrowIMG  padding20left" style="width:50%">[@spring.message "fundinformation"/]</p>
 
-            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right width130px" style="float:right">[@spring.message "reviewAndSubmit"/]</p>
+            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right" style="float:right">[@spring.message "reviewAndSubmit"/]</p>
         </div>
         <div>
             <form method="POST" action="defineNewFund.ftl" name="organizationPreferences.definenewfund.defineNewFund">
                 <div class="margin20lefttop">
                     <p class="font11pt">
-                        <span class="fontBold">[@spring.message "organizationPreferences.definenewfund.defineanewfund"/]&nbsp;-</span>
+                        <span class="fontBold">[@spring.message "organizationPreferences.definenewfund.defineanewfund"/]&nbsp;-&nbsp;</span>
                         <span class="orangeheading">[@spring.message "organizationPreferences.definenewfund.enterfundinformation"/]</span>
                     </p>
 

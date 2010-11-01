@@ -50,6 +50,7 @@
                         class="fontBold">[@spring.message "manageProduct.productMixDetails.notAllowedProducts"/]
                     :</span><span>&nbsp;</span><br/>
 
+                    <div class="clear">&nbsp; </div>
                     [#list mixDetails.notAllowedPrdOfferingNames as notAllowedProducts]
                         [#if notAllowedProducts_has_next]
                             <div>

@@ -22,7 +22,6 @@
 
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-<span id="page.id" title="view_office_hierarchy"/>
 <div class="content">
 [@mifos.crumbs breadcrumbs/]
         <form method="post" name="viewofficehierarchy" action="viewOfficeHierarchy.ftl">

@@ -19,8 +19,7 @@
 *  explanation of the license and how it is applied.
 --]
 [#include "layout.ftl"]
-[@adminLeftPaneLayout] <!--  Main Content Begins-->
-<span id="page.id" title="view_organization_settings"/>
+[@adminLeftPaneLayout] <!--  Main Content Begins-->  
   <div class="content ">
   [@mifos.crumbs breadcrumbs/]
   	<form method="" action="" name="formname">

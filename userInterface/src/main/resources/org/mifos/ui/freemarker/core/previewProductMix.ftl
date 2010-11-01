@@ -32,7 +32,7 @@
             <p class="span-17 completeIMG silverheading  padding20left"
                style="width:50%">[@spring.message "manageProducts.defineProductmix.productmixinformation"/]</p>
 
-            <p class="span-3 timelineboldorange arrowIMG last padding20left10right width130px"
+            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right"
                style="float:right">[@spring.message "reviewAndSubmit" /]</p>
         </div>
         <div class="margin20lefttop">

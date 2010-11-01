@@ -27,7 +27,7 @@
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 completeIMG silverheading">[@spring.message "manageLoanProducts.previewLoanProduct.Loanproductinformation"/]</p>
-        <p class="span-3 arrowIMG orangeheading last width130px">[@spring.message "reviewAndSubmit"/]</p>
+        <p class="span-3 arrowIMG orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
       </div>
       <div class="subcontent ">
         <form method="post" action="previewLoanProducts.ftl" name="previewloanproduct">

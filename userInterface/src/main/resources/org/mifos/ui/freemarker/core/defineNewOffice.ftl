@@ -34,7 +34,7 @@
   	<div class="borders span-23">
   		<div class="borderbtm span-23">
 			<p class="span-18 arrowIMG orangeheading">[@spring.message "offices.defineNewOffice.officeinformation" /]</p>
-			<p class="span-3 arrowIMG1 orangeheading last width130px">[@spring.message "reviewAndSubmit" /]</p>
+			<p class="span-3 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit" /]</p>
 		</div>
 		<div class="subcontent ">
 			<form method="POST" action="defineNewOffice.ftl" name="defineNewOffice" id="defineNewOffice">

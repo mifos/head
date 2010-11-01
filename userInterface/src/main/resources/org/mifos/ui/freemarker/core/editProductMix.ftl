@@ -33,7 +33,7 @@
 }
 
 function deleteOption(root, index)
-{
+{ 
   var rootLength= root.length;
   if(rootLength>0)
   {
@@ -43,13 +43,13 @@ function deleteOption(root, index)
 
 function moveOptions(root, destination)
 {
-
+  
   var rootLength= root.length;
   var rootText = new Array();
   var rootValues = new Array();
   var rootCount = 0;
-
-  var i;
+  
+  var i; 
   for(i=rootLength-1; i>=0; i--)
   {
     if(root.options[i].selected)
@@ -59,11 +59,11 @@ function moveOptions(root, destination)
       deleteOption(root, i);
       rootCount++;
     }
-  }
+  }  
   for(i=rootCount-1; i>=0; i--)
   {
     addOption(destination, rootText[i], rootValues[i]);
-  }
+  }  
 }
 
 function selectAllOptions(outSel)
@@ -76,33 +76,37 @@ function selectAllOptions(outSel)
 			outSel.options[i].selected=true;
 		}
 	}
-}
+}	
 </script>
-
+  
   <div class="container">&nbsp;
+
   <!--  Main Content Begins-->
-  <span id="page.id" title="createProductsMix" />
-  <div class="content definePageMargin">
+  <span id="page.id" title="editProductsMix" />
+<div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
-      <div class="borderbtm width100prc height25px">
-        <p class="span-17 timelineboldorange arrowIMG  padding20left" style="width:50%">[@spring.message "manageProducts.defineProductmix.productmixinformation"/]</p>
-        <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right width130px" style="float:right">[@spring.message "reviewAndSubmit"/]</p>
-      </div>
-      <div class="subcontent padding10topbottom">
-          <p class="font11pt"><span class="fontBold">[@spring.message "manageProducts.defineProductmix.addanewproductmix"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "manageProducts.defineProductmix.enterproductmixinformation"/]</span></p>
-          <div class="font9pt">[@spring.message "manageProducts.defineProductmix.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation"/] </div>
-          <div class="font9pt"><span class="red">* </span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/] </div>
-          [@mifos.showAllErrors "formBean.*"/]
-          <p class="fontBold margin20topbottom">[@spring.message "manageProducts.defineProductmix.productmixdetails"/] </p>
-        <form name="productsmixform" id="productsmixform" method="post" action="defineProductMix.ftl">
-        	<div class="prepend-3  span-21 last width90prc">
+        <div class="borderbtm width100prc height25px">
+            <p class="span-17 timelineboldorange arrowIMG  padding20left"
+               style="width:50%">[@spring.message "manageProducts.defineProductmix.productmixinformation"/]</p>
+
+            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right"
+               style="float:right">[@spring.message "reviewAndSubmit" /]</p>
+        </div>
+        <div class="margin20lefttop">
+          <p class="font15 margin10topbottom"><span class="fontBold">[@spring.message "manageProducts.defineProductmix.addanewproductmix"/]</span>&nbsp;--&nbsp;<span class="orangeheading"> [@spring.message "manageProducts.defineProductmix.enterproductmixinformation"/]</span></p>
+          <div>[@spring.message "manageProducts.defineProductmix.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation"/] </div>
+          <div><span class="red">* </span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/] </div>
+          [@mifos.showAllErrors "formBean.*"/]   
+          <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineProductmix.productmixdetails"/] </p>
+        <form name="productsmixform" id="productsmixform" method="post" action="editProductMix.ftl">
+        	<div class="prepend-3 last">
         		<div class="span-20 ">
 	        		<span class="span-5 rightAlign">
 	        			<span class="red">* </span>[@spring.message "manageProducts.defineProductmix.producttype"/]&nbsp;:&nbsp;
 	        		</span>
         			<span class="span-5">
 	   					[@spring.bind "formBean.productTypeId" /]
-					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();">
+					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();" disabled>
 					        <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
 					        [#if formBean.productTypeOptions?is_hash]
 					            [#list formBean.productTypeOptions?keys as value]
@@ -116,14 +120,14 @@ function selectAllOptions(outSel)
 					    </select>
 				    </span>
 				</div>
-
+				
 				<div class="span-20 ">
 					<span class="span-5 rightAlign">
 						<span class="red">* </span>[@spring.message "manageProducts.defineProductmix.productinstancename"/]&nbsp;:&nbsp;
 					</span>
 					<span class="span-7">
 						[@spring.bind "formBean.productId" /]
-					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();">
+					    <select id="${spring.status.expression}" name="${spring.status.expression}" onchange="return productsmixform.submit();" disabled>
 					        <option value="" [@spring.checkSelected ""/]>${springMacroRequestContext.getMessage("--Select--")}</option>
 					        [#if formBean.productNameOptions?is_hash]
 					            [#list formBean.productNameOptions?keys as value]
@@ -134,42 +138,38 @@ function selectAllOptions(outSel)
 					            <option value="${value?html}"[@spring.checkSelected value/]>${value?html}</option>
 					            [/#list]
 					        [/#if]
-					    </select>
+					    </select>   					
 				    </span>
 				</div>
-
-				<div class="span-20 last margin20topbottom width100prc">
-	          		<div class="span-20 width100prc">
+				
+				<div class="span-20 last margin20topbottom">
+	          		<div class="span-20">
 	          			<span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineProductmix.removenotallowedproducts"/]&nbsp;:&nbsp;</span>
-	            		<span class="span-12 " style="width:auto">
+	            		<span class="span-12 ">
 	                		<span class="span-9">[@spring.message "manageProducts.defineProductmix.clickonaproductintherightboxtoselect.ThenclickRemove"/]</span>
-	                		<br/>
-	                    	<div class="margin10topbottomrgin">
-                                <span class="span-4" style="width:auto">
-                                    [@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]
-                                </span>
-                                <span class="span-3 width80px">
-                                    <br />
-                                    <input class="buttn2 width70px" name="add" type="button" value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.notAllowed, this.form.allowed);"/>
-                                    <br /><br />
-                                    <input class="buttn2 width70px" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.allowed, this.form.notAllowed);"/>
-                                </span>
-                                <span class="span-4" style="width:auto">
-                                    [@spring.formMultiSelect "formBean.allowed", formBean.allowedProductOptions, "class=listSize" /]
-                                </span>
-                            </div>
+	                    	<span class="span-4">
+								[@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]	                    		
+	            			</span>
+	                    	<span class="span-3">
+	                    		<br />
+	                    		<input class="buttn2" name="add" type="button" value="[@spring.message "add"/] >>"  onclick="moveOptions(this.form.notAllowed, this.form.allowed);"/>
+	                    		<br /><br />
+								<input class="buttn2" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.allowed, this.form.notAllowed);"/>
+							</span>
+							<span class="span-4">
+								[@spring.formMultiSelect "formBean.allowed", formBean.allowedProductOptions, "class=listSize" /]
+	            			</span>
 	               		</span>
 	            	</div>
 	          	</div>
-				<div class="clear">&nbsp;</div>
+				<div class="clear">&nbsp;</div>								
         	</div>
-        	<div class="clear">&nbsp;</div>
-	        <div class="buttonsSubmitCancel" style="margin-right:20px;">
+	        <div class="buttonsSubmitCancel margin20right margin10topbottom">
 	            <input class="buttn" type="submit" id="holiday.button.preview" name="preview"  value="[@spring.message "preview"/]" onclick="selectAllOptions(this.form.notAllowed);selectAllOptions(this.form.allowed);" />
 	            <input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
 	        </div>
-            <!--Subcontent Ends-->
-        </form>
+		</form>
+      <!--Subcontent Ends-->
     </div>
   </div>
   <!--Main Content Ends-->
