@@ -25,6 +25,8 @@ public class QuestionChoice {
 
     private String choiceText;
 
+    private int choiceOrder;
+
     // defining the null constructor avoids some harmless hibernate error
     // messages during testing
     public QuestionChoice() {
@@ -48,5 +50,13 @@ public class QuestionChoice {
 
     public void setChoiceText(String choiceText) {
         this.choiceText = choiceText;
+    }
+
+    public int getChoiceOrder() {
+        return choiceOrder;
+    }
+
+    public void setChoiceOrder(int choiceOrder) {
+        this.choiceOrder = choiceOrder;
     }
 }

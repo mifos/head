@@ -51,4 +51,5 @@ public class QuestionnaireConstants {
     public static final int DEFAULT_VERSION = 1;
     public static final int DEFAULT_ORDER = 0;
     public static final char MULTI_SELECT_DELIMITER = ',';
+    public static final String CHOICE_SELECTED = "1";
 }
