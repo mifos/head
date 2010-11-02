@@ -171,7 +171,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
     }
 
     protected boolean isAdjustmentForWithdrawal(SavingsBO savings) {
-        AccountPaymentEntity payment = savings.getLastPmnt();
+        AccountPaymentEntity payment = savings.findMostRecentPaymentByPaymentDate();
 
         boolean isWithdrawal = false;
         if (payment != null) {

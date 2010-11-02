@@ -184,7 +184,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyNoActionMessages();
         verifyNoActionErrors();
         savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        Assert.assertNull(savings.getLastPmnt());
+        Assert.assertNull(savings.findMostRecentPaymentByPaymentDate());
         Assert.assertNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
         Assert.assertNull(SessionUtils.getAttribute(SavingsConstants.CLIENT_NAME, request));
        Assert.assertEquals(Short.valueOf("0"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));

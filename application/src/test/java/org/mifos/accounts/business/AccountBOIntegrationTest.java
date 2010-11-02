@@ -202,7 +202,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         TestObjectFactory.updateObject(loan);
         Assert.assertEquals("The amount returned for the payment should have been 0", 0.0, loan.getLastPmntAmnt());
         LoanTrxnDetailEntity lastLoanTrxn = null;
-        for (AccountTrxnEntity accntTrxn : loan.getLastPmnt().getAccountTrxns()) {
+        for (AccountTrxnEntity accntTrxn : loan.findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
             lastLoanTrxn = (LoanTrxnDetailEntity) accntTrxn;
             break;
         }

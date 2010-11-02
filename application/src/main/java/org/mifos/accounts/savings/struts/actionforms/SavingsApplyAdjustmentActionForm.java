@@ -95,7 +95,7 @@ public class SavingsApplyAdjustmentActionForm extends BaseActionForm {
         try {
             if (method != null && method.equals("preview")) {
                 SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-                AccountPaymentEntity payment = savings.getLastPmnt();
+                AccountPaymentEntity payment = savings.findMostRecentPaymentByPaymentDate();
                 if (payment == null || savings.getLastPmntAmnt() == 0
                     || !(new SavingsHelper().getPaymentActionType(payment).equals(
                                 AccountActionTypes.SAVINGS_WITHDRAWAL.getValue()) || new SavingsHelper()

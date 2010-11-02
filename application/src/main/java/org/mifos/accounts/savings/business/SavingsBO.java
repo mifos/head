@@ -892,7 +892,7 @@ public class SavingsBO extends AccountBO {
         }
 
         try {
-            AccountPaymentEntity lastPayment = getLastPmnt();
+            AccountPaymentEntity lastPayment = findMostRecentPaymentByPaymentDate();
             AccountActionTypes savingsTransactionType = findFirstDepositOrWithdrawalTransaction(lastPayment);
             Date adjustedOn = new DateTimeService().getCurrentJavaDateTime();
 
@@ -1195,7 +1195,7 @@ public class SavingsBO extends AccountBO {
 
         if (this.isActive() || this.isInActive()) {
 
-            AccountPaymentEntity accountPayment = getLastPmnt();
+            AccountPaymentEntity accountPayment = findMostRecentPaymentByPaymentDate();
             if (lastPaymentIsGreaterThanZero(accountPayment) && lastPaymentIsADepositOrWithdrawal(accountPayment)) {
 
                 if (accountPayment.getAmount().equals(amountAdjustedTo)) {
