@@ -93,7 +93,7 @@ public class HolidayTest extends UiTestCaseBase {
         params.setName("Test Holiday 2");
         confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
         confirmationPage.verifyPage();
-        assertTextFoundOnPage("Holidays with the same dates already exist: Test Holiday",
+        assertTextFoundOnPage("Holiday with the same date already exists: Test Holiday",
                 "Text about duplicated holidays was not found.");
     }
 
