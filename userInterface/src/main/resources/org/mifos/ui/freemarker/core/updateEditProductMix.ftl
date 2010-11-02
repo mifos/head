@@ -33,7 +33,7 @@
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 completeIMG silverheading">[@spring.message "manageProducts.previewProductMix.productmixinformation" /]</p>
-        <p class="span-3 arrowIMG orangeheading last">[@spring.message "review&Submit" /]</p>
+        <p class="span-3 arrowIMG orangeheading last">[@spring.message "reviewAndSubmit" /]</p>
       </div>
       <div class="subcontent ">
         <form name="productsmixform" id="productsmixform" method="post" action="previewProductMix.ftl">

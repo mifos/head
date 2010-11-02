@@ -9,11 +9,11 @@
       <div class="borderbtm span-22">
      
         <p class="span-15 completeIMG silverheading">[@spring.message "manageProducts.defineNewCategory.productcategoryinformation"/]</p>
-        <p class="span-3 arrowIMG orangeheading last">[@spring.message "review&Submit"/]</p>
+        <p class="span-3 arrowIMG orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
       </div>
       <div class="subcontent ">
         <form method="POST" action="newProductCategoryPreview.ftl" name="newCategoryPreview">
-          <p class="font15"><span class="fontBold">[@spring.message"admin.definenewcategory"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
+          <p class="font15"><span class="fontBold">[@spring.message"admin.definenewcategory"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "reviewAndSubmit"/]</span></p>
           <div>[@spring.message "manageProduct.editCategory.PreviewTheFieldsBelow.ThenClickSubmit"/]</div>
           <p class="clear">&nbsp; </p>
           <div class="fontBold">[@spring.message "manageProducts.editCategory.categoryDetails"/] </div>

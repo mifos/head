@@ -50,7 +50,7 @@ i=i+counter;numberOfItems=i;}
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-15 arrowIMG orangeheading">[@spring.message "organizationPreferences.defineNewCheckLists.checklistinformation" /]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
+        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit" /]</p>
       </div>
       <div class="subcontent ">
         <form method="" action="" name="formname">

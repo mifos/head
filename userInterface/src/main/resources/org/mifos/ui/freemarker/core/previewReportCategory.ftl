@@ -8,13 +8,13 @@
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-15 arrowIMG orangeheading">[@spring.message "editReportCategory.categoryinformation" /]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
+        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit" /]</p>
       </div>
       <div class="subcontent ">
 		<form method="post" action="previewReportCategory.ftl" name="previewReportCategory">
 		<p>&nbsp;&nbsp;</p>
 		<p class="font15">
-			<span class="fontBold">[@spring.message "admin.definenewreportcategory" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "review&Submit" /]</span>
+			<span class="fontBold">[@spring.message "admin.definenewreportcategory" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "reviewAndSubmit" /]</span>
 		</p>
         <p>&nbsp;&nbsp;</p>
         <div>[@spring.message "editReportCategory.informationmessage" /]</div>

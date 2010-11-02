@@ -8,7 +8,7 @@
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-15 arrowIMG orangeheading">[@spring.message "manageImports.importTransactions.importinformation"/]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit"/]</p>
+        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
       </div>
       <p>&nbsp;&nbsp;</p>
       <div class="subcontent">

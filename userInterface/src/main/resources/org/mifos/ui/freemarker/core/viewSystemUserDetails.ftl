@@ -129,7 +129,7 @@
             [/#if]
             
             <div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.office&Permissions"/]</span></div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.officeAndPermissions"/]</span></div>
             <div class="span-20 "><span>[@spring.message "systemUsers.preview.userTitle"/]&nbsp;:</span><span>${userFormBean.userTitleName?if_exists}</span></div>
             <div class="span-20 "><span>[@spring.message "systemUsers.preview.userHierarchy"/]&nbsp;:</span><span>${userFormBean.userHierarchyName?if_exists}</span></div>
             <div class="span-20 "><span>[@spring.message "systemUsers.preview.roles"/]&nbsp;:</span>

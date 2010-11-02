@@ -8,11 +8,11 @@
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 completeIMG silverheading">[@spring.message "manageLoanProducts.previewLoanProduct.Loanproductinformation"/]</p>
-        <p class="span-3 arrowIMG orangeheading last">[@spring.message "review&Submit"/]</p>
+        <p class="span-3 arrowIMG orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
       </div>
       <div class="subcontent ">
         <form method="post" action="previewLoanProducts.ftl" name="previewloanproduct">
-          <p class="font15"><span class="fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.addanewLoanProduct"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
+          <p class="font15"><span class="fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.addanewLoanProduct"/]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "reviewAndSubmit"/]</span></p>
           <p>[@spring.message "reviewtheinformationbelow.ClickSubmit"/]</p>
           [@mifos.showAllErrors "loanProduct.*" /]
           <p class="fontBold">[@spring.message "manageLoanProducts.previewLoanProduct.loanproductdetails"/] </p>
