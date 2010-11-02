@@ -167,6 +167,14 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         payment.setReceiptNum(savingsWithdrawal.getReceiptId());
         payment.setCustomer(customer);
 
+        List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsWithdrawal.getSavingsId());
+        MifosCurrency currencyInUse = savingsAccount.getCurrency();
+        LocalDate dateOfWithdrawal = new LocalDate(payment.getTransactionDate());
+        Money balanceOnDateOfWithdrawal = calculateAccountBalanceOn(dateOfWithdrawal, allEndOfDayDetailsForAccount, currencyInUse);
+        if (payment.getTotalAmount().isGreaterThan(balanceOnDateOfWithdrawal)) {
+            throw new BusinessRuleException("errors.insufficentbalance", new String[] { savingsAccount.getGlobalAccountNum()});
+        }
+
         try {
             this.transactionHelper.startTransaction();
             savingsAccount.withdraw(payment, false);
@@ -278,11 +286,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
     }
 
-    private Money calculateAccountBalanceOn(LocalDate startOfPeriod, List<EndOfDayDetail> allEndOfDayDetailsForAccount, MifosCurrency currency) {
+    private Money calculateAccountBalanceOn(LocalDate date, List<EndOfDayDetail> allEndOfDayDetailsForAccount, MifosCurrency currency) {
 
         Money balance = Money.zero(currency);
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
-            if (endOfDayDetail.getDate().isBefore(startOfPeriod)) {
+            if (endOfDayDetail.getDate().isBefore(date)) {
                 balance = balance.add(endOfDayDetail.getResultantAmountForDay());
             }
         }
