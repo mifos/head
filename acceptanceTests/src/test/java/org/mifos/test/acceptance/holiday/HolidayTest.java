@@ -86,6 +86,15 @@ public class HolidayTest extends UiTestCaseBase {
         confirmationPage.submitAndNavigateToViewHolidaysPage();
 
         verifyHolidayData(HOLIDAY_RESULT_DATA_SET);
+
+        // try to create second holiday with the same date
+        createHolidayEntryPage = adminPage.navigateToDefineHolidayPage();
+        createHolidayEntryPage.verifyPage();
+        params.setName("Test Holiday 2");
+        confirmationPage = createHolidayEntryPage.submitAndNavigateToHolidayConfirmationPage(params);
+        confirmationPage.verifyPage();
+        assertTextFoundOnPage("Holidays with the same dates already exist: Test Holiday",
+                "Text about duplicated holidays was not found.");
     }
 
     public void viewHolidays() {

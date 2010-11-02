@@ -24,6 +24,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -31,6 +33,8 @@ import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.dto.domain.OfficeHoliday;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
 
@@ -77,5 +81,25 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
         List<String> officeNames = this.holidayDao.retrieveApplicableOfficeNames(officeIds);
 
         return new OfficeHoliday(holidayDetail, officeNames);
+    }
+
+    @Override
+    public List<String> retrieveOtherHolidayNamesWithTheSameDate(HolidayDetails holidayDetail, List<Short> branchIds) {
+        List<String> holidayNames = new ArrayList<String>();
+        // TODO I assume we should look at dates only (without branches). Is this the correct assumption? (MIFOS-3428)
+        //List<String> offices = this.holidayDao.retrieveApplicableOfficeNames(branchIds);
+
+        for (HolidayBO holiday : this.holidayDao.findAllHolidays()) {
+            //List<String> holidayOffices = this.holidayDao.applicableOffices(holiday.getId());
+            //if (!Collections.disjoint(offices, holidayOffices)) {
+                for (LocalDate date = holidayDetail.getFromDate(); date.compareTo(holidayDetail.getThruDate()) <= 0; date = date.plusDays(1)) {
+                    if (holiday.encloses(date.toDateTimeAtStartOfDay())) {
+                        holidayNames.add(holiday.getName());
+                        break;
+                    }
+                }
+            //}
+        }
+        return holidayNames;
     }
 }
