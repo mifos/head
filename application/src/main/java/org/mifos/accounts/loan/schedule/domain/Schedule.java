@@ -71,12 +71,10 @@ public class Schedule {
 
     private void adjustInterestForInstallments(List<Installment> futureInstallments, BigDecimal principalOutstanding) {
         for (Installment installment : futureInstallments) {
-            if (installment.isPrincipalDue()) {
-                long duration = getDurationForAdjustment(installment, installment.getDueDate());
-                if (duration <= 0) continue;
-                BigDecimal principalForInterest = computePrincipalForInterest(principalOutstanding, installment);
-                installment.setInterest(computeInterest(principalForInterest, duration));
-            }
+            long duration = getDurationForAdjustment(installment, installment.getDueDate());
+            if (duration <= 0) continue;
+            BigDecimal principalForInterest = computePrincipalForInterest(principalOutstanding, installment);
+            installment.setEffectiveInterest(computeInterest(principalForInterest, duration));
         }
     }
 
@@ -103,7 +101,7 @@ public class Schedule {
             balance = installment.payInterestDueTillDate(balance, transactionDate,
                     computeInterestTillDueDate(transactionDate, principalOutstanding, installment));
             balance = installment.payPrincipal(balance, transactionDate);
-            principalOutstanding = principalOutstanding.subtract(installment.getPrincipalPaid());
+            principalOutstanding = principalOutstanding.subtract(installment.getRecentPrincipalPayment());
         }
         return principalOutstanding;
     }

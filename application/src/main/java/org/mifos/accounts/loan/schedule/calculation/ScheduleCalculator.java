@@ -7,6 +7,7 @@ import java.util.Date;
 
 public class ScheduleCalculator {
     public void applyPayment(Schedule schedule, BigDecimal amount, Date transactionDate) {
+        computeOverdueInterest(schedule, transactionDate);
         BigDecimal balance = schedule.payInstallmentsOnOrBefore(transactionDate, amount);
         schedule.adjustFutureInstallments(balance, transactionDate);
     }

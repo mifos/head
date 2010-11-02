@@ -69,4 +69,19 @@ public class InstallmentPayments {
         }
         return lastPaymentDate;
     }
+
+    public InstallmentPayment getRecentPrincipalPayment() {
+        InstallmentPayment result = null;
+        Date lastPaymentDate = new Date(1);
+        for (InstallmentPayment installmentPayment : installmentPayments) {
+            if (installmentPayment.isPrincipalPayment()) {
+                Date paidDate = installmentPayment.getPaidDate();
+                if (paidDate.compareTo(lastPaymentDate) >= 0) {
+                    lastPaymentDate = paidDate;
+                    result = installmentPayment;
+                }
+            }
+        }
+        return result;
+    }
 }

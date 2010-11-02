@@ -14,6 +14,7 @@ public class Installment implements Comparable<Installment> {
     private BigDecimal interest;
     private BigDecimal fees;
     private BigDecimal overdueInterest;
+    private BigDecimal effectiveInterest;
     private InstallmentPayments payments;
 
     public Installment() {
@@ -42,10 +43,6 @@ public class Installment implements Comparable<Installment> {
 
     public void setPrincipal(BigDecimal principal) {
         this.principal = principal;
-    }
-
-    public BigDecimal getInterest() {
-        return interest;
     }
 
     public void setInterest(BigDecimal interest) {
@@ -77,11 +74,11 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal getFeesDue() {
-        return fees.subtract(payments.getFeesPaid());
+        return fees.subtract(getFeesPaid());
     }
 
     public BigDecimal getInterestDue() {
-        return interest.subtract(payments.getInterestPaid());
+        return hasEffectiveInterest() ? effectiveInterest : interest.subtract(getInterestPaid());
     }
 
     public BigDecimal getPrincipalDue() {
@@ -89,7 +86,7 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal getOverdueInterestDue() {
-        return overdueInterest.subtract(payments.getOverdueInterestPaid());
+        return overdueInterest.subtract(getOverdueInterestPaid());
     }
 
     public boolean isFeesDue() {
@@ -175,11 +172,11 @@ public class Installment implements Comparable<Installment> {
     }
 
     public Date getEarliestPaidDate() {
-        return (Date) ObjectUtils.min(getTotalPaymentDate(), dueDate);
+        return (Date) ObjectUtils.min(getTotalPrincipalPaymentDate(), dueDate);
     }
 
-    private Date getTotalPaymentDate() {
-        return isDue() ? this.dueDate : getRecentPartialPaymentDate();
+    private Date getTotalPrincipalPaymentDate() {
+        return isPrincipalDue() ? this.dueDate : getRecentPartialPaymentDate();
     }
 
     public Date getRecentPartialPaymentDate() {
@@ -196,5 +193,38 @@ public class Installment implements Comparable<Installment> {
 
     public void addOverdueInterest(BigDecimal overdueInterest) {
         setOverdueInterest(getOverdueInterest().add(overdueInterest));
+    }
+
+    public BigDecimal getRecentPrincipalPayment() {
+        InstallmentPayment installmentPayment = payments.getRecentPrincipalPayment();
+        return installmentPayment == null ? BigDecimal.ZERO : installmentPayment.getPrincipalPaid();
+    }
+
+    public BigDecimal getInterestPaid() {
+        return payments.getInterestPaid();
+    }
+
+    public BigDecimal getOverdueInterestPaid() {
+        return payments.getOverdueInterestPaid();
+    }
+
+    public BigDecimal getFeesPaid() {
+        return payments.getFeesPaid();
+    }
+
+    public BigDecimal getEffectiveInterest() {
+        return effectiveInterest;
+    }
+
+    public void setEffectiveInterest(BigDecimal effectiveInterest) {
+        this.effectiveInterest = effectiveInterest;
+    }
+
+    public boolean hasEffectiveInterest() {
+        return effectiveInterest != null && isGreaterThanZero(effectiveInterest);
+    }
+
+    public BigDecimal getApplicableInterest() {
+        return hasEffectiveInterest() ? effectiveInterest : interest;
     }
 }

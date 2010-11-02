@@ -24,87 +24,128 @@ public class ScheduleCalculatorTest {
     }
 
     @Test
-    public void shouldGenerateLoanSchedule_WithOneInstallmentAdjusted() {
+    public void withOneInstallmentAdjusted() {
         Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
         schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(280d), getDate(25, 9, 2010));
-        assertInstallment(installment1, 0, 20.40);
-        assertInstallment(installment2, 230.31, 14.62);
-        assertInstallment(installment3, 252.22, 10.40);
-        assertInstallment(installment4, 257.87, 5.09);
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 230.31, 17.36);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 0, 20.40);
+        assertInstallmentInterests(installment2, 14.62, 14.62, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
 
     @Test
-    public void shouldGenerateLoanSchedule_WithTwoInstallmentsAdjusted() {
+    public void withTwoInstallmentsAdjusted() {
         Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
         schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(550d), getDate(25, 9, 2010));
-        assertInstallment(installment1, 0, 20.40);
-        assertInstallment(installment2, 0, 14.96);
-        assertInstallment(installment3, 212.53, 9.60);
-        assertInstallment(installment4, 257.87, 5.09);
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 0, 247.67);
+        assertInstallmentPrincipals(installment3, 252.22, 212.53, 39.69);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 0, 20.40);
+        assertInstallmentInterests(installment2, 9.29, 9.29, 0);
+        assertInstallmentInterests(installment3, 18.88, 18.88, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
 
     @Test
-    public void shouldGenerateLoanSchedule_WithOverDueInterests() {
+    public void withOverDueInterests() {
         Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
-        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0.8);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
         schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(550d), getDate(30, 9, 2010));
-        assertInstallment(installment1, 0, 20.40);
-        assertInstallment(installment2, 0, 14.96);
-        assertInstallment(installment3, 215.82, 9.66);
-        assertInstallment(installment4, 257.87, 5.09);
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 0, 247.67);
+        assertInstallmentPrincipals(installment3, 252.22, 215.82, 36.4);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 0, 20.40);
+        assertInstallmentInterests(installment2, 7.79, 7.79, 2.49);
+        assertInstallmentInterests(installment3, 17.45, 17.45, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
 
     @Test
-    public void shouldGenerateLoanSchedule_WithShortPaymentBeforeDueDate() {
+    public void withShortPaymentBeforeDueDate() {
         Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
         schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(240d), getDate(23, 9, 2010));
-        assertInstallment(installment1, 21.32, 1.03);
-        assertInstallment(installment2, 247.67, 14.96);
-        assertInstallment(installment3, 252.22, 10.40);
-        assertInstallment(installment4, 257.87, 5.09);
+
+        assertInstallmentPrincipals(installment1, 242.24, 21.32, 220.92);
+        assertInstallmentPrincipals(installment2, 247.67, 247.67, 0);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 1.03, 1.03, 19.08);
+        assertInstallmentInterests(installment2, 14.96, 14.96, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
 
     @Test
-    public void shouldGenerateLoanSchedule_WithShortPaymentAfterDueDate() {
+    public void withShortPaymentAfterDueDate() {
         Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
-        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0.64);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
         schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(240d), getDate(29, 9, 2010));
-        assertInstallment(installment1, 22.64, 20.40);
-        assertInstallment(installment2, 247.67, 14.96);
-        assertInstallment(installment3, 252.22, 10.40);
-        assertInstallment(installment4, 257.87, 5.09);
+
+        assertInstallmentPrincipals(installment1, 242.24, 22.64, 219.6);
+        assertInstallmentPrincipals(installment2, 247.67, 247.67, 0);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 0, 20.40);
+        assertInstallmentInterests(installment2, 14.96, 14.96, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+
+        assertInstallmentForOverdueInterests(installment1, 0, 0, 0);
+        assertInstallmentForOverdueInterests(installment2, 0.64, 0.64, 0);
+        assertInstallmentForOverdueInterests(installment3, 0, 0, 0);
+        assertInstallmentForOverdueInterests(installment4, 0, 0, 0);
     }
 
     @Test
-    public void shouldGenerateLoanSchedule_WithExcessPaymentBeforeDueDate() {
+    public void withExcessPaymentBeforeDueDate() {
         Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
         schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(280d), getDate(23, 9, 2010));
-        assertInstallment(installment1, 0, 20.40);
-        assertInstallment(installment2, 228.99, 14.59);
-        assertInstallment(installment3, 252.22, 10.40);
-        assertInstallment(installment4, 257.87, 5.09);
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 228.99, 18.68);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 0.97, 0.97, 19.08);
+        assertInstallmentInterests(installment2, 15.56, 15.56, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
 
     @Test
@@ -133,9 +174,22 @@ public class ScheduleCalculatorTest {
         return schedule;
     }
 
-    private void assertInstallment(Installment installment, double principalDue, double interestApplicable) {
+    private void assertInstallmentPrincipals(Installment installment, double principal, double principalDue, double principalPaid) {
+        assertThat(installment.getPrincipal().doubleValue(), is(principal));
         assertThat(installment.getPrincipalDue().doubleValue(), is(principalDue));
-        assertThat(installment.getInterest().doubleValue(), is(interestApplicable));
+        assertThat(installment.getPrincipalPaid().doubleValue(), is(principalPaid));
+    }
+
+    private void assertInstallmentInterests(Installment installment, double interest, double interestDue, double interestPaid) {
+        assertThat(installment.getApplicableInterest().doubleValue(), is(interest));
+        assertThat(installment.getInterestDue().doubleValue(), is(interestDue));
+        assertThat(installment.getInterestPaid().doubleValue(), is(interestPaid));
+    }
+
+    private void assertInstallmentForOverdueInterests(Installment installment, double overdueInterest, double overdueInterestDue, double overdueInterestPaid) {
+        assertThat(installment.getOverdueInterest().doubleValue(), is(overdueInterest));
+        assertThat(installment.getOverdueInterestDue().doubleValue(), is(overdueInterestDue));
+        assertThat(installment.getOverdueInterestPaid().doubleValue(), is(overdueInterestPaid));
     }
 
     private Installment getInstallment(int id, Date dueDate, double principal, double interest, double overdueInterest) {
