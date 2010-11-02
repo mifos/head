@@ -170,7 +170,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         List<EndOfDayDetail> allEndOfDayDetailsForAccount = savingsDao.retrieveAllEndOfDayDetailsFor(savingsAccount.getCurrency(), savingsWithdrawal.getSavingsId());
         MifosCurrency currencyInUse = savingsAccount.getCurrency();
         LocalDate dateOfWithdrawal = new LocalDate(payment.getTransactionDate());
-        Money balanceOnDateOfWithdrawal = calculateAccountBalanceOn(dateOfWithdrawal, allEndOfDayDetailsForAccount, currencyInUse);
+        Money balanceOnDateOfWithdrawal = calculateAccountBalanceOn(dateOfWithdrawal.plusDays(1), allEndOfDayDetailsForAccount, currencyInUse);
         if (payment.getTotalAmount().isGreaterThan(balanceOnDateOfWithdrawal)) {
             throw new BusinessRuleException("errors.insufficentbalance", new String[] { savingsAccount.getGlobalAccountNum()});
         }
