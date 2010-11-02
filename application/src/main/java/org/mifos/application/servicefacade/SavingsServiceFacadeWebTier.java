@@ -341,11 +341,21 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
     private SavingsProductHistoricalInterestDetail findMatchingHistoricalInterestDetail(List<SavingsProductHistoricalInterestDetail> historicalInterestDetails, CalendarPeriod calendarPeriod) {
         SavingsProductHistoricalInterestDetail match = null;
+        SavingsProductHistoricalInterestDetail closestMatch = null;
         for (SavingsProductHistoricalInterestDetail historicalInterestDetail : historicalInterestDetails) {
             if (calendarPeriod.contains(historicalInterestDetail.getStartDate())) {
                 match = historicalInterestDetail;
             }
+
+            if (calendarPeriod.getEndDate().isBefore(historicalInterestDetail.getStartDate())) {
+                closestMatch = historicalInterestDetail;
+            }
         }
+
+        if (match == null) {
+            match = closestMatch;
+        }
+
         return match;
     }
 
