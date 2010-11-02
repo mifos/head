@@ -56,6 +56,21 @@ public abstract class TransactionImport {
      */
     public abstract String getDisplayName();
 
+
+      /**
+	 * If not null, defines name of property to display in Admin "miscellaneous" section
+	 */
+	public String getPropertyNameForAdminDisplay() {
+		return null;
+	}
+
+	/**
+	 * If not null, defines value of property to display in Admin "miscellaneous" section
+	 */
+	public String getPropertyValueForAdminDisplay() {
+		return null;
+	}
+
     /**
      * Mifos will call this method to provide an {@link AccountService} for use
      * by the import plugin prior to calling {@link #parse} and {@link #store}.

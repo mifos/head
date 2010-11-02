@@ -35,8 +35,12 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
+import org.mifos.framework.plugin.PluginManager;
+import org.mifos.spi.TransactionImport;
 
 public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganizationSettingsServiceFacade {
     private static final String DELIMITER = ", ";
@@ -183,4 +187,16 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
 
         return m.lookup(YesNoFlag.NO);
     }
+
+	@Override
+	public Map<String, String> getDisplayablePluginsProperties() {
+		Map<String, String> result = new LinkedHashMap<String, String>();
+		for (TransactionImport ti : new PluginManager().loadImportPlugins()) {
+			String key = ti.getPropertyNameForAdminDisplay();
+			String value = ti.getPropertyValueForAdminDisplay();
+			if (key != null && value != null)
+				result.put(key, value);
+		}
+		return result;
+	}
 }
