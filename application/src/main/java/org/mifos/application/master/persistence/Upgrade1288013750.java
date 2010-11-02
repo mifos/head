@@ -48,25 +48,32 @@ public class Upgrade1288013750 extends Upgrade {
                 "upgrade1288013750_step1.sql");
         upgrade1.runScript(connection);
 
-        Session session = StaticHibernateUtil.getSessionTL();
-        Query query = session.createQuery("from Question");
-        Iterator it = query.iterate();
-        Transaction t = session.beginTransaction();
-        while (it.hasNext()) {
-            Question question = (Question)it.next();
-            String questionText = question.getQuestionText();
-            if (questionText == null) {
-                questionText = "x";
+        try {
+            Session session = StaticHibernateUtil.getSessionTL();
+            Query query = session.createQuery("from Question");
+            Iterator it = query.iterate();
+            Transaction t = session.beginTransaction();
+            while (it.hasNext()) {
+                Question question = (Question)it.next();
+                String questionText = question.getQuestionText();
+                if (questionText == null) {
+                    questionText = "x";
+                }
+                int questionId = question.getQuestionId();
+                boolean updateResults = updateQuestion(session, questionText, questionId);
+                while (!updateResults) {
+                    questionText = questionText + "x";
+                    updateResults = updateQuestion(session, questionText, questionId);
+                }
             }
-            int questionId = question.getQuestionId();
-            boolean updateResults = updateQuestion(session, questionText, questionId);
-            while (!updateResults) {
-                questionText = questionText + "x";
-                updateResults = updateQuestion(session, questionText, questionId);
-            }
+            t.commit();
         }
-
-        t.commit();
+        catch (Exception e) {
+            SqlUpgrade revertUpgrade = SqlUpgradeScriptFinder.findUpgradeScript(
+                    "upgrade1288013750_revert_step1.sql");
+            revertUpgrade.runScript(connection);
+            throw new IOException(e);
+        }
 
         SqlUpgrade upgrade2 = SqlUpgradeScriptFinder.findUpgradeScript(
                 "upgrade1288013750_step2.sql");
