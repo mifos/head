@@ -1045,7 +1045,12 @@ public class CustomerAccountBO extends AccountBO {
     private void updateUpcomingAndFutureInstallments(final AccountFeesEntity fee) {
 
         CustomerScheduleEntity nextInstallment = (CustomerScheduleEntity) getDetailsOfNextInstallment();
-        AccountFeesActionDetailEntity nextAccountFeesActionDetail = nextInstallment.getAccountFeesAction(fee.getAccountFeeId());
+        AccountFeesActionDetailEntity nextAccountFeesActionDetail = null;
+
+        if(nextInstallment != null) {
+        nextAccountFeesActionDetail = nextInstallment.getAccountFeesAction(fee.getAccountFeeId());
+        }
+
         if (nextAccountFeesActionDetail != null) {
             ((CustomerFeeScheduleEntity) nextAccountFeesActionDetail).setFeeAmount(fee.getAccountFeeAmount());
         }
