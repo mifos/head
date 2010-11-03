@@ -1,7 +1,8 @@
+
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
-[@mifos.header "login" /]
+[@mifos.header "mifos" /]
 <!-- Container Begins-->
 <span id="page.id" title="Login" />
 <div class="container" align="center"> &nbsp;
@@ -18,13 +19,13 @@
           <div class="error">
           	<span id="login.error.message">
           		[#if Session.SPRING_SECURITY_LAST_EXCEPTION?? && Session.SPRING_SECURITY_LAST_EXCEPTION.message?has_content]
-		 					<span>${Session.SPRING_SECURITY_LAST_EXCEPTION.message}</span><br/>		
+		 					<span>${Session.SPRING_SECURITY_LAST_EXCEPTION.message}</span><br/>
 				[/#if]
 			</span>
-		</div>					
+		</div>
 		<div>
           	<span class="normalFont"><label for="login.input.username">[@spring.message "login.UserName" /]</label>:</span>
-            <span ><input type="text" name="j_username" id="login.input.username"></span>
+            <span ><input class="focused" type="text" name="j_username" id="login.input.username"></span>
           </div>
           <div class="paddingTop5">
           	<span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "login.password"/]</label>&nbsp;:</span>
@@ -38,6 +39,11 @@
       </form>
     </div>
   <!--Main Login Ends-->
+<span id="chinese-info-on-login-page">
 [@spring.message "login.chinese.translation.attribution" /]
+</span>
+<script type="text/javascript" >
+        $("input.focused").focus();
+</script>
 <!--Container Ends-->
 [@mifos.footer /]

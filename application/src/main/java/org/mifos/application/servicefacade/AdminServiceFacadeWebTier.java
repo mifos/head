@@ -1141,10 +1141,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private List<PaymentTypeDto> populateSelectedPayments(String[] selectedPayments, List<PaymentTypeDto> allPayments) {
 
         List<PaymentTypeDto> selectedPaymentTypes = new ArrayList<PaymentTypeDto>();
-        List<String> acceptedFees = Arrays.asList(selectedPayments);
-        for (PaymentTypeDto paymentType : allPayments) {
-            if (acceptedFees.contains(paymentType.getId().toString())) {
-                selectedPaymentTypes.add(paymentType);
+
+        if (null != allPayments && null != selectedPayments) {
+            List<String> acceptedFees = Arrays.asList(selectedPayments);
+            for (PaymentTypeDto paymentType : allPayments) {
+                if (acceptedFees.contains(paymentType.getId().toString())) {
+                    selectedPaymentTypes.add(paymentType);
+                }
             }
         }
 
