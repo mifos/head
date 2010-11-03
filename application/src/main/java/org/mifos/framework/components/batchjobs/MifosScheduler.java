@@ -136,7 +136,7 @@ public class MifosScheduler {
     @Deprecated
     public void schedule(final String jobName, Date initialTime, long delay,
                          JobRegistry jobRegistry, final JobRepository jobRepository,
-                         Map jobData, ResourcelessTransactionManager transactionManager) throws TaskSystemException {
+                         Map<String, Object> jobData, ResourcelessTransactionManager transactionManager) throws TaskSystemException {
 
         try {
             final TaskletStep step = new TaskletStep();
@@ -194,7 +194,7 @@ public class MifosScheduler {
     @Deprecated
     public void scheduleLoanArrearsAndPortfolioAtRisk(Date initialTime, long delay,
                          JobRegistry jobRegistry, final JobRepository jobRepository,
-                         Map jobData, ResourcelessTransactionManager transactionManager) throws TaskSystemException {
+                         Map<String, Object> jobData, ResourcelessTransactionManager transactionManager) throws TaskSystemException {
         final String jobName = "LoanArrearsAndPortfolioAtRiskTask";
         try {
             final TaskletStep step1 = new TaskletStep();
@@ -350,7 +350,7 @@ public class MifosScheduler {
             JobExplorer jobExplorer = new SimpleJobExplorer(jobInstanceDao, jobExecutionDao, stepExecutionDao, executionContextDao);
             this.jobExplorer = jobExplorer;
 
-            Map jobData = new HashMap();
+            Map<String, Object> jobData = new HashMap<String, Object>();
             jobData.put("jobLocator", jobRegistry);
             jobData.put("jobLauncher", jobLauncher);
             jobData.put("jobExplorer", jobExplorer);
