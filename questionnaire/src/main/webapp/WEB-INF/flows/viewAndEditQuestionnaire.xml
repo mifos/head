@@ -47,5 +47,5 @@
         <transition on="failure" to="questionnaire"/>
     </action-state>
 
-    <end-state id="viewDetails" view="externalRedirect:contextRelative:/${flowScope.backPageUrl}"/>
+    <view-state id="viewDetails" view="externalRedirect:contextRelative:/${flowScope.backPageUrl}"/>
 </flow>
