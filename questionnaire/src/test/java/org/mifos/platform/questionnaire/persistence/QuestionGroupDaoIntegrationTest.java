@@ -80,6 +80,19 @@ public class QuestionGroupDaoIntegrationTest {
         assertThat(sections2Questions.get(2).getQuestionText(), is(sectionDetail2.getQuestionDetail(2).getText()));
     }
 
+    @Test
+    public void shouldRetrieveEventSourcesInOrder() {
+        List<EventSourceDto> eventSources = questionnaireService.getAllEventSources();
+        assertThat(eventSources, is(notNullValue()));
+        assertThat(eventSources.size(), is(15));
+        assertThat(eventSources.get(0).getDescription(), is("Create Client"));
+        assertThat(eventSources.get(1).getDescription(), is("View Client"));
+        assertThat(eventSources.get(2).getDescription(), is("Close Client"));
+        assertThat(eventSources.get(3).getDescription(), is("Create Group"));
+        assertThat(eventSources.get(4).getDescription(), is("View Group"));
+        assertThat(eventSources.get(5).getDescription(), is("Create Office"));
+    }
+
     private QuestionDetail defineQuestion(String questionTitle, QuestionType questionType) throws SystemException {
         return questionnaireService.defineQuestion(new QuestionDetail(questionTitle, questionType));
     }

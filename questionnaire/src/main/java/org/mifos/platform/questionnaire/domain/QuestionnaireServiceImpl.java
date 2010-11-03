@@ -171,7 +171,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public List<EventSourceDto> getAllEventSources() {
-        return questionnaireMapper.mapToEventSources(eventSourceDao.getDetailsAll());
+        return questionnaireMapper.mapToEventSources(eventSourceDao.retrieveAllEventSourcesOrdered());
     }
 
     @Override

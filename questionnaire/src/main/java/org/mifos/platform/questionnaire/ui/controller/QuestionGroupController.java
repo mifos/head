@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import static java.text.MessageFormat.format;
 
@@ -124,7 +125,7 @@ public class QuestionGroupController extends QuestionnaireController {
 
     public Map<String, String> getAllQgEventSources() {
         List<EventSourceDto> eventSourceDtos = questionnaireServiceFacade.getAllEventSources();
-        Map<String, String> evtSourcesMap = new HashMap<String, String>();
+        Map<String, String> evtSourcesMap = new LinkedHashMap<String, String>();
         for (EventSourceDto evtSrc : eventSourceDtos) {
             evtSourcesMap.put(getEventSourceId(evtSrc), evtSrc.getDescription());
         }
