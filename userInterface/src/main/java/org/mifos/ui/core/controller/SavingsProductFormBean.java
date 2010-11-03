@@ -31,7 +31,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * @see SavingsProductFormValidator - manual validatior added to fix MIFOS-3915 (morzechowski@soldevelo.com)  
+ * @see SavingsProductFormValidator - manual validatior added to fix MIFOS-3915 (morzechowski@soldevelo.com)
  */
 @SuppressWarnings("PMD")
 public class SavingsProductFormBean {
@@ -76,6 +76,8 @@ public class SavingsProductFormBean {
 
     private Map<String, String> interestGeneralLedgerOptions;
     private Map<String, String> principalGeneralLedgerOptions;
+
+    private boolean notUpdateable = false;
 
     public boolean isGroupSavingAccount() {
         return ("2").equals(this.generalDetails.getSelectedApplicableFor());
@@ -235,5 +237,13 @@ public class SavingsProductFormBean {
 
     public void setGeneralDetails(GeneralProductBean generalDetails) {
         this.generalDetails = generalDetails;
+    }
+
+    public boolean isNotUpdateable() {
+        return this.notUpdateable;
+    }
+
+    public void setNotUpdateable(boolean notUpdateable) {
+        this.notUpdateable = notUpdateable;
     }
 }

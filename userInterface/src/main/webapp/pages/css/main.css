@@ -263,8 +263,8 @@ input[type="checkbox"], input.checkbox {
 }
 
 .margin30left20top {
-    margin-left:30px;
-    margin-top:20px;
+    margin-left: 30px;
+    margin-top: 20px;
 }
 
 .margin15lefttop {
@@ -422,5 +422,11 @@ input[type="checkbox"], input.checkbox {
 }
 
 #interestCalculationFrequency, #interestPostingMonthlyFrequency, #interestRate {
-    width:76px;
+    width: 76px;
+}
+
+#chinese-info-on-login-page {
+    color: #000000;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 10pt;
 }

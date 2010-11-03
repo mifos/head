@@ -88,7 +88,10 @@
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.numberofdaysinadvancethecollectionsheetshouldbegenerated"/]</span>:&nbsp;<span class="fontnormal">${properties.collectionSheetAdvanceDays}</span></div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.backdatedtransactionsallowed"/]</span>:&nbsp;<span class="fontnormal">${properties.backDatedTransactions}</span></div>
             <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.glim"/]</span>:&nbsp;<span class="fontnormal">${properties.glim}</span></div>
-            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.lsim"/]</span>:&nbsp;<span class="fontnormal">${properties.lsim}</span></div>            
+            <div><span class="fontnormal">[@spring.message "organizationSettings.viewOrganizationSettings.lsim"/]</span>:&nbsp;<span class="fontnormal">${properties.lsim}</span></div>
+			[#list pluginsPropsMap?keys as key]
+			    <div><span class="fontnormal">${key}</span>:&nbsp;<span class="fontnormal">${pluginsPropsMap[key]}</span></div>
+			[/#list]
         </p>
 	</div>
    	</form> 

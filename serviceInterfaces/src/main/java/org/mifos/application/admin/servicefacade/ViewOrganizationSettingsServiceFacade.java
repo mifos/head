@@ -20,6 +20,7 @@
 
 package org.mifos.application.admin.servicefacade;
 
+import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,4 +31,7 @@ public interface ViewOrganizationSettingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
     Properties getOrganizationSettings(HttpSession session);
+
+	 @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_VIEW_SYSTEM_INFO')")
+    Map<String, String> getDisplayablePluginsProperties();
 }
