@@ -305,4 +305,11 @@ public class AdminPage extends MifosPage {
 
         return new BatchJobsPage(selenium);
     }
+
+    public DefineNewOfficePage navigateToDefineANewOfficePage() {
+        selenium.click("admin.link.defineNewOffice");
+        waitForPageToLoad();
+
+        return new DefineNewOfficePage(selenium);
+    }
 }

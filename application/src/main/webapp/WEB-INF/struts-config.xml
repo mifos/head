@@ -48,6 +48,10 @@
                    handler="org.mifos.framework.exceptions.MifosExceptionHandler"
                    key="exception.framework.ApplicationException"
                    scope="request"/>
+        <exception type="org.mifos.service.BusinessRuleException"
+                   handler="org.mifos.framework.exceptions.MifosExceptionHandler"
+                   key="exception.framework.ApplicationException"
+                   scope="request"/>
         <exception type="org.mifos.framework.exceptions.PageExpiredException"
                    handler="org.mifos.framework.exceptions.MifosExceptionHandler"
                    key="exception.framework.PageExpiredException"

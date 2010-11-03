@@ -28,4 +28,5 @@ import java.util.List;
 public interface EventSourceDao extends GenericDao<EventSourceEntity, Integer> {
     List<Long> retrieveCountByEventAndSource(String event, String source);
     List<EventSourceEntity> retrieveByEventAndSource(String event, String source);
+    List<EventSourceEntity> retrieveAllEventSourcesOrdered();
 }

@@ -459,7 +459,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldGetAllEventSources() {
-        when(eventSourceDao.getDetailsAll()).thenReturn(asList(getEventSourceEntity("Create", "Client")));
+        when(eventSourceDao.retrieveAllEventSourcesOrdered()).thenReturn(asList(getEventSourceEntity("Create", "Client")));
         List<EventSourceDto> eventSourceDtos = questionnaireService.getAllEventSources();
         assertThat(eventSourceDtos, notNullValue());
         assertThat(eventSourceDtos.size(), is(1));

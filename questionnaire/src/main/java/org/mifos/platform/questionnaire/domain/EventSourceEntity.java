@@ -44,6 +44,11 @@ import java.io.Serializable;
                 name = "EventSourceEntity.retrieveByEventAndSource",
                 query = "select eventSource from EventSourceEntity eventSource where " +
                         "eventSource.event.name = ? and eventSource.source.entityType = ?"
+        ),
+        @NamedQuery(
+                name = "EventSourceEntity.retrieveAllEventSourcesOrdered",
+                query = "select eventSource from EventSourceEntity eventSource " +
+                        "order by eventSource.source.id, eventSource.event.id"
         )
 })
 

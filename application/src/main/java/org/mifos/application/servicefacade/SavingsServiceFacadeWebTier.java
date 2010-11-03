@@ -104,9 +104,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         userContext.setName(user.getUsername());
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsDeposit.getSavingsId());
+        savingsAccount.updateDetails(userContext);
 
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(Short.valueOf((short) user.getUserId()));
-
         CustomerBO customer = this.customerDao.findCustomerById(savingsDeposit.getCustomerId().intValue());
 
         Money totalAmount = new Money(savingsAccount.getCurrency(), BigDecimal.valueOf(savingsDeposit.getAmount()));
@@ -126,6 +126,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         try {
             this.transactionHelper.startTransaction();
+            this.transactionHelper.beginAuditLoggingFor(savingsAccount);
             savingsAccount.applyPayment(payment);
 
             this.savingsDao.save(savingsAccount);
@@ -153,7 +154,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         userContext.setName(user.getUsername());
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsWithdrawal.getSavingsId());
-
+        savingsAccount.updateDetails(userContext);
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(Short.valueOf((short) user.getUserId()));
 
         CustomerBO customer = this.customerDao.findCustomerById(savingsWithdrawal.getCustomerId().intValue());
@@ -177,6 +178,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         try {
             this.transactionHelper.startTransaction();
+            this.transactionHelper.beginAuditLoggingFor(savingsAccount);
             savingsAccount.withdraw(payment, false);
 
             this.savingsDao.save(savingsAccount);
@@ -208,7 +210,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         try {
             this.transactionHelper.startTransaction();
-
+            this.transactionHelper.beginAuditLoggingFor(savingsAccount);
             savingsAccount.adjustLastUserAction(amountAdjustedTo, savingsAdjustment.getNote(), updatedBy);
 
             this.savingsDao.save(savingsAccount);
@@ -476,6 +478,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             AccountPaymentEntity closeAccount = new AccountPaymentEntity(savingsAccount, amount, closeAccountDto.getReceiptId(), receiptDate, paymentType, closeAccountDto.getDateOfWithdrawal().toDateMidnight().toDate());
 
             this.transactionHelper.startTransaction();
+            this.transactionHelper.beginAuditLoggingFor(savingsAccount);
 
             savingsAccount.closeAccount(closeAccount, notesEntity, customer, createdBy);
             this.savingsDao.save(savingsAccount);
