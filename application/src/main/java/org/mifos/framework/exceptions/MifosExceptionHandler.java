@@ -32,6 +32,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ExceptionHandler;
 import org.apache.struts.config.ExceptionConfig;
+import org.mifos.service.BusinessRuleException;
 
 /**
  * This class extends from ExceptionHandler class provided by Struts.Finally all
@@ -93,8 +94,10 @@ public class MifosExceptionHandler extends ExceptionHandler {
         } else if (ex instanceof PageExpiredException) {
             forwardToBeReturned = new ActionForward(ae.getPath());
             error = new ActionMessage(((PageExpiredException) ex).getKey(), ((PageExpiredException) ex).getValues());
-        } else if (ex instanceof ApplicationException) {
-            error = new ActionMessage(((ApplicationException) ex).getKey(), ((ApplicationException) ex).getValues());
+        } else if (ex instanceof ApplicationException || ex instanceof BusinessRuleException) {
+            String key = ex instanceof ApplicationException ? ((ApplicationException) ex).getKey() : ((BusinessRuleException) ex).getMessageKey();
+            Object[] values = ex instanceof ApplicationException ? ((ApplicationException) ex).getValues() : ((BusinessRuleException) ex).getMessageValues();
+            error = new ActionMessage(key, values);
             parameter = request.getParameter("method");
             // jsp to which the user should be returned is identified by
             // methodname_failure e.g. if there is an exception in create the
