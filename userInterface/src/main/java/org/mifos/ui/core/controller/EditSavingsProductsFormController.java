@@ -87,6 +87,7 @@ public class EditSavingsProductsFormController {
 
         savingsProductBean.setSelectedPrincipalGlCode(savingsProductDto.getDepositGlCode().toString());
         savingsProductBean.setSelectedInterestGlCode(savingsProductDto.getInterestGlCode().toString());
+        savingsProductBean.setNotUpdateable(savingsProductDto.isOpenSavingsAccountsExist());
 
         return savingsProductBean;
     }
