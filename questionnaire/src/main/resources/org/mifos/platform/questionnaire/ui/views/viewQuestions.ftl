@@ -30,7 +30,8 @@
         </p>
 
         <p>
-        [@mifos.mlink dest="createQuestion.ftl"][@spring.message "questionnaire.create.question"/][/@mifos.mlink]
+        [@spring.message "questionnaire.create.question.prompt"/]&nbsp;
+        [@mifos.mlink dest="createQuestion.ftl"][@spring.message "questionnaire.create.question.link"/][/@mifos.mlink]
         </p>
         <ul class="questions">
             [#list questions as question]
