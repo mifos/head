@@ -103,7 +103,11 @@
 			
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.applicablefor" /]&nbsp;</span>
 	            <span class="span-4">
+	                [#if savingsProduct.notUpdateable]
+	            	[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedApplicableFor", savingsProduct.generalDetails.applicableForOptions, "--selectone--", "onchange='fnCheckAppliesTo()' disabled=disabled" /]
+	            	[#else]
 	            	[@mifos.formSingleSelectWithPrompt "savingsProduct.generalDetails.selectedApplicableFor", savingsProduct.generalDetails.applicableForOptions, "--selectone--", "onchange='fnCheckAppliesTo()'" /]
+	            	[/#if]
 				</span>
 			</div>
           </div>
@@ -112,7 +116,11 @@
           <div class="prepend-3  span-21 last">
           	<div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.typeofdeposits" /]&nbsp;:</span>
           		<span class="span-4">
-          		[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedDepositType", savingsProduct.depositTypeOptions, "--selectone--", "onchange='fnCheckRecMand()'" /]
+          		[#if savingsProduct.notUpdateable]
+          		[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedDepositType", savingsProduct.depositTypeOptions, "--selectone--", "onchange='fnCheckRecMand()' disabled=disabled" /]
+          		[#else]
+				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedDepositType", savingsProduct.depositTypeOptions, "--selectone--", "onchange='fnCheckRecMand()'" /]
+          		[/#if]
 				</span>
 			</div>
 			<script>fnCheckRecMand();</script>
@@ -123,7 +131,11 @@
   			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign" id="appliesto"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.amountAppliesto" /]&nbsp;</span>
             	<span class="span-4">
+            	[#if savingsProduct.notUpdateable]
    				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedGroupSavingsApproach", savingsProduct.groupSavingsApproachOptions, "--selectone--", "disabled=disabled" /]
+   				[#else]
+   				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedGroupSavingsApproach", savingsProduct.groupSavingsApproachOptions, "--selectone--", "disabled=disabled" /]
+   				[/#if]
 				</span>
 			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.maxamountperwithdrawal" /]&nbsp;</span>
@@ -148,21 +160,39 @@
             </div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.balanceusedforInterestcalculation" /]&nbsp;</span>
             	<span class="span-4">
+            	[#if savingsProduct.notUpdateable]
+   				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedInterestCalculation", savingsProduct.interestCaluclationOptions, "--selectone--", "disabled=disabled" /]
+   				[#else]
    				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedInterestCalculation", savingsProduct.interestCaluclationOptions, "--selectone--" /]
+   				[/#if]
 				</span>
 			</div>
             <div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.timeperiodforInterestcalculation" /]&nbsp;</span>
             	<span class="span-9">
-                	<span class="span-2">[@spring.formInput "savingsProduct.interestCalculationFrequency" /]</span>
+                	<span class="span-2">
+                	[#if savingsProduct.notUpdateable]
+                	[@spring.formInput "savingsProduct.interestCalculationFrequency", "disabled=disabled" /]
+                	[#else]
+                	[@spring.formInput "savingsProduct.interestCalculationFrequency" /]
+                	[/#if]
+                	</span>
                     <span class="span-4">
+                    [#if savingsProduct.notUpdateable]
+   					[@spring.formSingleSelect "savingsProduct.selectedFequencyPeriod", savingsProduct.frequencyPeriodOptions, "disabled=disabled" /]
+   					[#else]
    					[@spring.formSingleSelect "savingsProduct.selectedFequencyPeriod", savingsProduct.frequencyPeriodOptions /]
+   					[/#if]
 				    </span>
 				</span>
 			</div>
             <div class="span-20 ">
             	<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.frequencyofInterestpostingtoaccounts" /]&nbsp;</span>
             	<span class="span-9">
+            		[#if savingsProduct.notUpdateable]
+                	[@spring.formInput "savingsProduct.interestPostingMonthlyFrequency", "disabled=disabled"/]&nbsp;&nbsp;[@spring.message "manageProducts.defineSavingsProducts.month(s)" /]
+                	[#else]
                 	[@spring.formInput "savingsProduct.interestPostingMonthlyFrequency" /]&nbsp;&nbsp;[@spring.message "manageProducts.defineSavingsProducts.month(s)" /]
+                	[/#if]
                 </span>
 			</div>
             <div class="span-20 ">

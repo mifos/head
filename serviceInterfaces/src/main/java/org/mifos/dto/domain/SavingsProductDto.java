@@ -25,6 +25,7 @@ import java.math.BigDecimal;
 @SuppressWarnings("PMD")
 public class SavingsProductDto {
 
+    private boolean openSavingsAccountsExist = true;
     private final ProductDetailsDto productDetails;
     private final Integer depositType;
     private final Integer interestCalculationType;
@@ -136,5 +137,13 @@ public class SavingsProductDto {
 
     public void setInterestGlCodeValue(String interestGlCodeValue) {
         this.interestGlCodeValue = interestGlCodeValue;
+    }
+
+    public boolean isOpenSavingsAccountsExist() {
+        return this.openSavingsAccountsExist;
+    }
+
+    public void setOpenSavingsAccountsExist(boolean openSavingsAccountsExist) {
+        this.openSavingsAccountsExist = openSavingsAccountsExist;
     }
 }

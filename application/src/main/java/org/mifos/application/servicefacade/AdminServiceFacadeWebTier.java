@@ -1837,7 +1837,12 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public SavingsProductDto retrieveSavingsProductDetails(Integer productId) {
 
         SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(productId);
-        return savingsProduct.toFullDto();
+
+        boolean openSavingsAccountsExist = this.savingsProductDao.activeOrInactiveSavingsAccountsExistForProduct(productId);
+
+        SavingsProductDto dto = savingsProduct.toFullDto();
+        dto.setOpenSavingsAccountsExist(openSavingsAccountsExist);
+        return dto;
     }
 
     @Override
