@@ -21,16 +21,14 @@ BEGIN
                     COUNT(*) into @fkCount
                 from
                     information_schema.table_constraints c
-                    join information_schema.key_column_usage u
-                        on (
-                            c.CONSTRAINT_NAME = u.CONSTRAINT_NAME and
-                            c.TABLE_SCHEMA = u.TABLE_SCHEMA and
-                            c.CONSTRAINT_SCHEMA = u.CONSTRAINT_SCHEMA
-                        )
+                    ,information_schema.key_column_usage u
                 where
-                    c.constraint_schema=SCHEMA() and
-                    c.TABLE_SCHEMA=SCHEMA() and
-                    c.constraint_type=''foreign key'' and
+                    c.CONSTRAINT_NAME = u.CONSTRAINT_NAME and
+                    u.CONSTRAINT_SCHEMA = SCHEMA() and
+                    c.CONSTRAINT_SCHEMA = SCHEMA() and
+                    u.TABLE_SCHEMA = SCHEMA() and
+                    c.TABLE_SCHEMA = SCHEMA() and
+                    c.CONSTRAINT_TYPE=''foreign key'' and
             ',
             ' c.table_name = '''               ,tableName,           ''' and ',
             ' u.column_name = '''              ,columnName,          ''' and ',
