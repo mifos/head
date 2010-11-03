@@ -35,6 +35,7 @@ import org.quartz.TriggerUtils;
 import org.quartz.SimpleTrigger;
 import org.quartz.Scheduler;
 import org.springframework.batch.core.BatchStatus;
+import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
@@ -99,7 +100,7 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
      * @return Batch computation status
      * @throws BatchJobException when something goes wrong
      */
-    private BatchStatus launchJob(Job job, JobParameters jobParameters, BatchStatus forcedStatus) throws BatchJobException {
+    private BatchStatus launchJob(Job job, JobParameters jobParameters) throws BatchJobException {
         BatchStatus exitStatus = BatchStatus.UNKNOWN;
         JobExecution jobExecution = null;
         try {
@@ -114,11 +115,6 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
             throw new BatchJobException(ex);
         } finally {
             batchJobFinished();
-        }
-        if(forcedStatus != null) {
-            jobExecution.upgradeStatus(forcedStatus);
-            jobRepository.update(jobExecution);
-            exitStatus = forcedStatus;
         }
         return exitStatus;
     }
@@ -135,20 +131,16 @@ public abstract class MifosBatchJob extends QuartzJobBean implements StatefulJob
     public BatchStatus checkAndLaunchJob(Job job, JobParameters jobParameters, int lookUpDepth) throws BatchJobException {
         List<JobInstance> jobInstances = jobExplorer.getJobInstances(job.getName(), lookUpDepth, lookUpDepth+1);
         if(jobInstances.size() == 0) {
-            return launchJob(job, jobParameters, null);
+            return launchJob(job, jobParameters);
         }
         JobInstance jobInstance = jobInstances.get(0);
         List<JobExecution> jobExecutions = jobExplorer.getJobExecutions(jobInstance);
         JobExecution jobExecution = jobExecutions.get(0); // latest execution
         if(jobExecution.getStatus() == BatchStatus.COMPLETED) {
-            return launchJob(job, jobParameters, null);
+            return launchJob(job, jobParameters);
         }
-        BatchStatus exitStatus = checkAndLaunchJob(job, jobExecution.getJobInstance().getJobParameters(), lookUpDepth+1);
-        if(exitStatus == BatchStatus.COMPLETED) {
-            return launchJob(job, jobParameters, null);
-        }
-        // It wasn't possible to execute previous job run successfully, so current execution needs to be marked as failed as well:
-        return launchJob(job, jobParameters, BatchStatus.FAILED);
+        checkAndLaunchJob(job, jobExecution.getJobInstance().getJobParameters(), lookUpDepth+1);
+        return launchJob(job, jobParameters);
     }
 
     public void catchUpMissedLaunches(Job job, JobExecutionContext context) throws Exception {
