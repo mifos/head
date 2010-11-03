@@ -93,7 +93,7 @@ public class GroupTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     @Test(sequential = true, groups = {"group","acceptance","ui"})
     public void testHitGroupDashboard() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         LoginPage loginPage = appLauncher.launchMifos();
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         SearchResultsPage searchResultsPage = homePage.search("mygroup");
@@ -107,7 +107,7 @@ public class GroupTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPendingApprovalStateTest() throws Exception {
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
         CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
@@ -120,7 +120,7 @@ public class GroupTest extends UiTestCaseBase {
     @Test(sequential = true, groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void createGroupInPartialApplicationStateTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
         CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForPartialApplication(formParameters);
@@ -133,7 +133,7 @@ public class GroupTest extends UiTestCaseBase {
     @Test(sequential = true, groups = {"group","acceptance","ui"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void changeCenterMembership() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
         CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
@@ -157,7 +157,7 @@ public class GroupTest extends UiTestCaseBase {
         String question1 = "Nu_" + random.nextInt(100);
         String question2 = "SS_" + random.nextInt(100);
         List<Choice> choices = asList(new Choice("Choice1", asList("Tag1", "Tag2")), new Choice("Choice2", asList("Tag3", "Tag4")));
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         createQuestionGroupForCreateGroup(questionGroupTitle, question1, question2, choices);
         CreateGroupEntryPage groupEntryPage = loginAndNavigateToNewGroupPage();
         CreateGroupSubmitParameters formParameters = getGenericGroupFormParameters();
@@ -198,7 +198,7 @@ public class GroupTest extends UiTestCaseBase {
 
     private CreateQuestionParameters getCreateQuestionParams(String title, String type, Integer numericMin, Integer numericMax, List<Choice> choices) {
         CreateQuestionParameters parameters = new CreateQuestionParameters();
-        parameters.setTitle(title);
+        parameters.setText(title);
         parameters.setType(type);
         parameters.setChoices(choices);
         parameters.setNumericMin(numericMin);

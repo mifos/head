@@ -75,7 +75,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void repayLoanAndVerifyPerformanceHistory() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         // find the loan w/ id 000100000000048
         HomePage homePage = appLauncher.launchMifos().loginSuccessfullyUsingDefaultCredentials();
@@ -93,7 +93,7 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
         repayLoanConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
 
         // validate
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("LoanAccountPerformanceHistoryTest_001_result_dbunit.xml.zip");
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("LoanAccountPerformanceHistoryTest_001_result_dbunit.xml");
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, new String[] { CLIENT_PERFORMANCE_HISTORY });
 
         dbUnitUtilities.verifyTable(CLIENT_PERFORMANCE_HISTORY, databaseDataSet, expectedDataSet);

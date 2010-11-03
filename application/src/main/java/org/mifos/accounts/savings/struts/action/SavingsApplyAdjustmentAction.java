@@ -89,7 +89,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         savings = getSavingsService().findById(accountId);
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        AccountPaymentEntity lastPayment = savings.getLastPmnt();
+        AccountPaymentEntity lastPayment = savings.findMostRecentPaymentByPaymentDate();
         if (null != lastPayment
                 && lastPayment.getAmount().isNonZero()
                 && (new SavingsHelper().getPaymentActionType(lastPayment).equals(
@@ -99,7 +99,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
             AccountActionEntity accountAction = (AccountActionEntity) new MasterPersistence().getPersistentObject(
                     AccountActionEntity.class, new SavingsHelper().getPaymentActionType(lastPayment));
             accountAction.setLocaleId(uc.getLocaleId());
-            getSavingsService().initialize(savings.getLastPmnt().getAccountTrxns());
+            getSavingsService().initialize(savings.findMostRecentPaymentByPaymentDate().getAccountTrxns());
             SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION, accountAction, request);
             SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME, getClientName(savings, lastPayment), request);
             SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, Constants.YES, request);
@@ -163,6 +163,9 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         SavingsAdjustmentDto savingsAdjustment = new SavingsAdjustmentDto(savingsId, adjustedAmount, note);
         try {
             this.savingsServiceFacade.adjustTransaction(savingsAdjustment);
+
+            // TODO - remove this after testing - imitate posting interest on dec-31-2010 of year to test
+//            this.savingsServiceFacade.postInterestForLastPostingPeriod(new LocalDate().withDayOfMonth(1).withMonthOfYear(1).withYear(2011));
         } catch (BusinessRuleException e) {
             throw new AccountException(e.getMessageKey(), e);
         } finally {

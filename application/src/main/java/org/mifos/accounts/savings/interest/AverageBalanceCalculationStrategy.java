@@ -32,7 +32,7 @@ public class AverageBalanceCalculationStrategy implements PrincipalCalculationSt
     @Override
     public Money calculatePrincipal(InterestCalculationPeriodDetail interestCalculationPeriodDetail) {
 
-        InterestCalculationInterval interestCalculationInterval = interestCalculationPeriodDetail.getInterval();
+        CalendarPeriod interestCalculationInterval = interestCalculationPeriodDetail.getInterval();
 
         LocalDate startDate = interestCalculationInterval.getStartDate();
         LocalDate endDate = interestCalculationInterval.getEndDate();
@@ -51,7 +51,10 @@ public class AverageBalanceCalculationStrategy implements PrincipalCalculationSt
         //Calculation of effect of previous balance till the first activity in the calculation interval
         int subDuration = Days.daysBetween(prevDate, nextDate).getDays();
 
-        //System.out.print(runningBalance+" * "+subDuration+" + ");
+        // if not a period which has first activity rule, then number of days is inclusive e.g duration for 1st to 10th is 10 days (not 9)
+        if (interestCalculationPeriodDetail.isFirstActivityBeforeInterval()) {
+            subDuration++;
+        }
 
         Money totalBalance = runningBalance.multiply(subDuration);
 
@@ -69,17 +72,16 @@ public class AverageBalanceCalculationStrategy implements PrincipalCalculationSt
 
             if(count==0 && !interestCalculationPeriodDetail.isFirstActivityBeforeInterval()) {
                 subDuration -= 1;
+                duration -= 1;
             }
 
             runningBalance = runningBalance.add(endOfDayDetails.get(count).getResultantAmountForDay());
-
-            //System.out.print(runningBalance+" * "+subDuration+" + ");
 
             totalBalance = totalBalance.add(runningBalance.multiply(subDuration));
 
             prevDate = nextDate;
         }
-        //System.out.println(" / "+duration);
+
         if (duration != 0) {
             totalBalance = totalBalance.divide(duration);
         }

@@ -30,7 +30,6 @@ import org.joda.time.LocalDate;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRulesConstants;
@@ -88,13 +87,14 @@ public class AverageBalanceCalculationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("0")));
     }
 
-    @Test @Ignore
+    @Test
     public void shouldCalculateAverageBalanceGivenOnlyOneDailyBalanceExistsWithinRange() {
 
         EndOfDayDetail endOfDayDetail = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().from(september6th)
                                                                                               .containing(endOfDayDetail)
+                                                                                              .isFirstActivity()
                                                                                               .build();
 
         // exercise test
@@ -103,7 +103,7 @@ public class AverageBalanceCalculationStrategyTest {
         assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1000")));
     }
 
-    @Test @Ignore
+    @Test
     public void shouldCalculateAverageBalanceGivenTwoDailyBalancesExistWithinRange() {
 
         EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("1000").build();
@@ -112,17 +112,19 @@ public class AverageBalanceCalculationStrategyTest {
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                                                                                               .containing(september6thDetails, september13thDetails)
                                                                                               .from(september6th)
+                                                                                              .isFirstActivity()
                                                                                               .build();
 
         // exercise test
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
-        // (1000 x 7 + 2000 x 17)/24 = 1708.333333..
+        // NOT (1000 x 7 + 2000 x 17)/24 = 1708.333333..
+        // But (1000 x 6 + 2000 x 17)/23 = 1708.333333.. due to first activity on 6th of september
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1708.3")));
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney("1739.1")));
     }
 
-    @Test @Ignore
+    @Test
     public void shouldCalculateAverageBalanceGivenOneDepositExistBeforeRange() {
 
         EndOfDayDetail september1stDetails = new EndOfDayBuilder().on(september1st).build();
@@ -132,6 +134,7 @@ public class AverageBalanceCalculationStrategyTest {
 
         interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
                                                                                               .withStartingBalance("1000")
+                                                                                              .isFirstActivity()
                                                 .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails)
                                                 .build();
 
@@ -139,69 +142,6 @@ public class AverageBalanceCalculationStrategyTest {
         Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
 
         // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2533.3"))));
-    }
-
-    @Test @Ignore
-    public void shouldCalculateAverageBalanceSECDEPDataTest() {
-
-        LocalDate apr1st =new LocalDate(new DateTime().withDate(2010, 4, 1));
-        LocalDate apr5 =new LocalDate(new DateTime().withDate(2010, 4, 5));
-        LocalDate apr12 =new LocalDate(new DateTime().withDate(2010, 4, 12));
-        LocalDate apr19 =new LocalDate(new DateTime().withDate(2010, 4, 19));
-        LocalDate apr26 =new LocalDate(new DateTime().withDate(2010, 4, 26));
-
-        LocalDate may3 =new LocalDate(new DateTime().withDate(2010, 5, 3));
-        LocalDate may10 =new LocalDate(new DateTime().withDate(2010, 5, 10));
-        LocalDate may17 =new LocalDate(new DateTime().withDate(2010, 5, 17));
-        LocalDate may24 =new LocalDate(new DateTime().withDate(2010, 5, 24));
-        LocalDate may31 =new LocalDate(new DateTime().withDate(2010, 5, 31));
-
-        LocalDate jun7 =new LocalDate(new DateTime().withDate(2010, 6, 7));
-        LocalDate jun14 =new LocalDate(new DateTime().withDate(2010, 6, 14));
-        LocalDate jun21 =new LocalDate(new DateTime().withDate(2010, 6, 21));
-        LocalDate jun28 =new LocalDate(new DateTime().withDate(2010, 6, 28));
-        LocalDate jun30 =new LocalDate(new DateTime().withDate(2010, 6, 30));
-
-        EndOfDayDetail apr1Details = new EndOfDayBuilder().on(apr1st).withInterestOf("21").build();
-        EndOfDayDetail apr5Details = new EndOfDayBuilder().on(apr5).withDespoitsOf("20").build();
-        EndOfDayDetail apr12Details = new EndOfDayBuilder().on(apr12).withDespoitsOf("20").build();
-        EndOfDayDetail apr19Details = new EndOfDayBuilder().on(apr19).withDespoitsOf("20").build();
-        EndOfDayDetail apr26Details = new EndOfDayBuilder().on(apr26).withDespoitsOf("20").build();
-
-        EndOfDayDetail may3Details = new EndOfDayBuilder().on(may3).withDespoitsOf("20").build();
-        EndOfDayDetail may10Details = new EndOfDayBuilder().on(may10).withDespoitsOf("20").build();
-        EndOfDayDetail may17Details = new EndOfDayBuilder().on(may17).withDespoitsOf("20").build();
-        EndOfDayDetail may24Details = new EndOfDayBuilder().on(may24).withDespoitsOf("20").build();
-        EndOfDayDetail may31Details = new EndOfDayBuilder().on(may31).withDespoitsOf("20").build();
-
-        EndOfDayDetail jun7Details = new EndOfDayBuilder().on(jun7).withDespoitsOf("20").build();
-        EndOfDayDetail jun14Details = new EndOfDayBuilder().on(jun14).withDespoitsOf("20").build();
-        EndOfDayDetail jun21Details = new EndOfDayBuilder().on(jun21).withDespoitsOf("20").build();
-        EndOfDayDetail jun28Details = new EndOfDayBuilder().on(jun28).withDespoitsOf("520").build();
-
-        interestCalculationPeriodDetail = new InterestCalculationPeriodBuilder().from(apr1st).to(jun30)
-                                                                                                .withStartingBalance("1743")
-                                                                                                .containing(apr1Details,
-                                                                                                        apr5Details,
-                                                                                                        apr12Details,
-                                                                                                        apr19Details,
-                                                                                                        apr26Details,
-                                                                                                        may3Details,
-                                                                                                        may10Details,
-                                                                                                        may17Details,
-                                                                                                        may24Details,
-                                                                                                        may31Details,
-                                                                                                        jun7Details,
-                                                                                                        jun14Details,
-                                                                                                        jun21Details,
-                                                                                                        jun28Details)
-                                                                                                .build();
-
-        // exercise test
-        Money averageBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
-
-        // verification
-        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("1902.2"))));
+        assertThat(averageBalancePrincipal, is(TestUtils.createMoney(("2586.2"))));
     }
 }

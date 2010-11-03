@@ -35,7 +35,7 @@
         </p>
         [@mifosmacros.showAllErrors "questionDefinition.*"/]
         <form name="createquestionform" action="createQuestion.ftl?execution=${flowExecutionKey}" method="POST"
-              focus="currentQuestion.title">
+              focus="currentQuestion.text">
             <input type="submit" id="_eventId_removeQuestion" name="_eventId_removeQuestion" value=""
                    style="visibility:hidden"/>
 

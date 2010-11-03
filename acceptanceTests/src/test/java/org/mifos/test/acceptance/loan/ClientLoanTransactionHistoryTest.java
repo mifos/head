@@ -85,7 +85,7 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void transactionHistoryTest() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         /*
          * This test consists of:
@@ -110,7 +110,7 @@ public class ClientLoanTransactionHistoryTest extends UiTestCaseBase {
         paymentParameters.setAmount("183");
         loanTestHelper.applyPayment("000100000000174", paymentParameters);
 
-        verifyCollectionSheetData("ClientLoanTransactionHistory_001_result_dbunit.xml.zip");
+        verifyCollectionSheetData("ClientLoanTransactionHistory_001_result_dbunit.xml");
     }
 
 

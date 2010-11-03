@@ -30,7 +30,7 @@ public class QuestionUtils {
     public static Question getNumericQuestion(String title, int min, int max) {
         Question question = new Question();
         question.setAnswerType(AnswerType.NUMBER);
-        setTitle(title, question);
+        setText(title, question);
         question.setNumericMin(min);
         question.setNumericMax(max);
         question.setQuestionState(QuestionState.ACTIVE);
@@ -39,7 +39,7 @@ public class QuestionUtils {
 
     public static Question getDateQuestion(String title) {
         Question question = new Question();
-        setTitle(title, question);
+        setText(title, question);
         question.setAnswerType(AnswerType.DATE);
         question.setQuestionState(QuestionState.ACTIVE);
         return question;
@@ -53,9 +53,8 @@ public class QuestionUtils {
         return getQuestionWithChoices(title, AnswerType.MULTISELECT, choices);
     }
 
-    private static void setTitle(String title, Question question) {
-        question.setQuestionText(title);
-        question.setShortName(title);
+    private static void setText(String text, Question question) {
+        question.setQuestionText(text);
     }
 
     private static List<QuestionChoice> getQuestionChoices(String[] choices) {
@@ -68,7 +67,7 @@ public class QuestionUtils {
 
     private static Question getQuestionWithChoices(String title, AnswerType answerType, String... choices) {
         Question question = new Question();
-        setTitle(title, question);
+        setText(title, question);
         question.setAnswerType(answerType);
         question.setChoices(getQuestionChoices(choices));
         question.setQuestionState(QuestionState.ACTIVE);

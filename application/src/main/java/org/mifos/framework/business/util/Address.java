@@ -20,12 +20,14 @@
 
 package org.mifos.framework.business.util;
 
+import java.io.Serializable;
+
 import org.apache.commons.lang.StringUtils;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.framework.util.helpers.MifosStringUtils;
 
 
-public class Address {
+public class Address implements Serializable {
 
     private String line1;
 

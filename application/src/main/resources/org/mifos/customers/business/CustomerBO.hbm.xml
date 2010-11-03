@@ -582,6 +582,8 @@
 				inner join customer c on c.customer_id = a.customer_id
 				inner join lookup_value lv on lv.lookup_id = ast.lookup_id
 				where c.customer_id = :CUSTOMER_ID
+				and a.account_state_id not in (15, 17)
+				order by sa.account_id
 		]]>
 	</sql-query>
 	<sql-query name="getCustomerAccountSummaryDto">

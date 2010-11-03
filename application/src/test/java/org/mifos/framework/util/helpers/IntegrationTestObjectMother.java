@@ -31,6 +31,8 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
@@ -86,6 +88,7 @@ public class IntegrationTestObjectMother {
     private static final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
     private static final FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
     private static final SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
+    private static final SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
     private static final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
@@ -238,8 +241,22 @@ public class IntegrationTestObjectMother {
         try {
             StaticHibernateUtil.startTransaction();
             for (SavingsOfferingBO savingsProduct : savingsProducts) {
-                customerPersistence.createOrUpdate(savingsProduct);
+                savingsProductDao.save(savingsProduct);
             }
+            StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static void createSavingsProduct(SavingsProductBuilder savingsProductBuilder) {
+        SavingsOfferingBO savingsProduct = savingsProductBuilder.buildForIntegrationTests();
+        try {
+            StaticHibernateUtil.startTransaction();
+            savingsProductDao.save(savingsProduct);
             StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();

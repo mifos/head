@@ -2,7 +2,7 @@
 [#import "spring.ftl" as spring]
 [#import "newblueprintmacros.ftl" as mifos]
 
-    <h3>[@spring.message "ClientLeftPane.clients&AccountsTasks" /]</h3>
+    <h3>[@spring.message "ClientLeftPane.clientsAndAccountsTasks" /]</h3>
     <ul class="side_nav">
         <li class="title">
             [@spring.message "ClientLeftPane.manageCollectionSheets" /]

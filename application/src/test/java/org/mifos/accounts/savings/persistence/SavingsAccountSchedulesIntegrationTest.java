@@ -139,8 +139,7 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
         createCenterGroupClientHierarchy(aWeeklyMeeting);
 
         SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().withMandatoryAmount("33.0").appliesToCentersOnly().buildForIntegrationTests();
-        SavingsBO savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                              .active()
+        SavingsBO savingsAccount = new SavingsAccountBuilder().active()
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(center)
@@ -159,8 +158,7 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
         createCenterGroupClientHierarchy(aWeeklyMeeting);
 
         SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().withMandatoryAmount("33.0").appliesToGroupsOnly().trackedPerIndividual().buildForIntegrationTests();
-        SavingsBO savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                              .active()
+        SavingsBO savingsAccount = new SavingsAccountBuilder().active()
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(group)
@@ -179,8 +177,7 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
         createCenterGroupClientHierarchy(aWeeklyMeeting);
 
         SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().withMandatoryAmount("33.0").appliesToGroupsOnly().trackedOnCompleteGroup().buildForIntegrationTests();
-        SavingsBO savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                              .active()
+        SavingsBO savingsAccount = new SavingsAccountBuilder().active()
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(group)
@@ -199,8 +196,7 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
         createCenterGroupClientHierarchy(aWeeklyMeeting);
 
         SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().withMandatoryAmount("33.0").appliesToClientsOnly().buildForIntegrationTests();
-        SavingsBO savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                              .active()
+        SavingsBO savingsAccount = new SavingsAccountBuilder().active()
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(client)
@@ -219,8 +215,7 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
         createCenterAndGroupHierarchyWithNoClients(aWeeklyMeeting);
 
         SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().withMandatoryAmount("33.0").appliesToCentersOnly().buildForIntegrationTests();
-        SavingsBO savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                              .active()
+        SavingsBO savingsAccount = new SavingsAccountBuilder().active()
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(center)
@@ -237,8 +232,7 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
         createCenterAndGroupHierarchyWithNoClients(aWeeklyMeeting);
 
         SavingsOfferingBO savingsProduct = new SavingsProductBuilder().mandatory().withMandatoryAmount("33.0").appliesToGroupsOnly().trackedPerIndividual().buildForIntegrationTests();
-        SavingsBO savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                              .active()
+        SavingsBO savingsAccount = new SavingsAccountBuilder().active()
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(group)

@@ -119,7 +119,7 @@ public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCas
         client = customerAccountBO.getCustomer();
 
         PersonnelBO loggedInUser = new PersonnelPersistence().getPersonnel(userContext.getId());
-        List<AccountTrxnEntity> reversedTrxns = customerAccountBO.getLastPmnt().reversalAdjustment(loggedInUser,
+        List<AccountTrxnEntity> reversedTrxns = customerAccountBO.findMostRecentPaymentByPaymentDate().reversalAdjustment(loggedInUser,
                 "adjustment");
         for (AccountTrxnEntity accntTrxn : reversedTrxns) {
             CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;

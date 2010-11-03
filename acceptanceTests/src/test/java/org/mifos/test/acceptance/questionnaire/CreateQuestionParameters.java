@@ -4,19 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateQuestionParameters {
-    private String title;
+    private String text;
 
     private String type;
     private List<Choice> choices;
     private Integer numericMin;
     private Integer numericMax;
 
-    public String getTitle() {
-        return title;
+    public String getText() {
+        return text;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getType() {

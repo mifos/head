@@ -104,6 +104,7 @@ public class DefineProductMixController {
             validateForPreview(formValidator, formBean, result, previewBtn);
 
         } else {
+            checkAndFixFormStringArrys(formBean);
             validateForPreview(formValidator, formBean, result, previewBtn);
             ProductMixPreviewDto preview = this.productMixAssembler.createProductMixPreview(formBean);
 
@@ -140,6 +141,7 @@ public class DefineProductMixController {
             notAllowedProductOptions.put(notAllowedProduct.getPrdOfferingId().toString(), notAllowedProduct.getPrdOfferingName());
         }
 
+
         formBean.setAllowedProductOptions(allowedProductOptions);
         formBean.setNotAllowedProductOptions(notAllowedProductOptions);
     }
@@ -147,6 +149,16 @@ public class DefineProductMixController {
     private void validateForPreview(ProductMixFormValidator formValidator, ProductMixFormBean formBean, BindingResult result, String previewBtn) {
         if (StringUtils.isNotBlank(previewBtn)) {
             formValidator.validate(formBean, result);
+        }
+    }
+
+    private void checkAndFixFormStringArrys(ProductMixFormBean formBean) {
+        if (null == formBean.getAllowed()) {
+            formBean.setAllowed(new String[1]);
+        }
+
+        if (null == formBean.getNotAllowed()) {
+            formBean.setNotAllowed(new String[1]);
         }
     }
 

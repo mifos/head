@@ -59,7 +59,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml.zip", dataSource);
+        dbUnitUtilities.loadDataFromFile("acceptance_small_004_dbunit.xml", dataSource);
         appLauncher = new AppLauncher(selenium);
     }
 
@@ -79,7 +79,7 @@ public class CreateMultipleLoanAccountsWithFeesTest extends UiTestCaseBase {
         formParameters.setCenter("Center1");
         formParameters.setLoanProduct("Flat Interest Loan Product With Fee");
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         CreateLoanAccountsSearchPage createLoanAccountsSearchPage = navigateToCreateLoanAccountsSearchPage();
         createLoanAccountsSearchPage.verifyPage();
         CreateLoanAccountsEntryPage createLoanAccountsEntryPage = createLoanAccountsSearchPage.searchAndNavigateToCreateMultipleLoanAccountsEntryPage(formParameters);

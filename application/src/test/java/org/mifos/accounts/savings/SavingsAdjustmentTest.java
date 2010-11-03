@@ -124,17 +124,16 @@ public class SavingsAdjustmentTest {
         client = new ClientBuilder().active().buildForUnitTests();
 
         savingsProduct = new SavingsProductBuilder().mandatory()
-                                                                        .withMandatoryAmount("33.0")
-                                                                        .appliesToClientsOnly()
-                                                                        .buildForUnitTests();
+                                                    .withMandatoryAmount("33.0")
+                                                    .appliesToClientsOnly()
+                                                    .buildForUnitTests();
     }
 
     @Test
     public void cannotAdjustLastTransactionOfAccountThatIsNotInActiveOrInactiveState() {
 
         Money amountAdjustedTo = TestUtils.createMoney("25");
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .asPendingApproval()
+        savingsAccount = new SavingsAccountBuilder().asPendingApproval()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .build();
@@ -150,8 +149,7 @@ public class SavingsAdjustmentTest {
     public void cannotAdjustLastTransactionThatIsNotADepositOrWithdrawal() {
 
         Money amountAdjustedTo = TestUtils.createMoney("25");
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .build();
@@ -167,8 +165,7 @@ public class SavingsAdjustmentTest {
     public void canAdjustLastTransactionThatIsADeposit() {
 
         Money amountAdjustedTo = TestUtils.createMoney("25");
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withDepositOf("15")
@@ -185,8 +182,7 @@ public class SavingsAdjustmentTest {
     public void cannotAdjustLastTransactionToSameMonetaryAmount() {
 
         Money amountAdjustedTo = TestUtils.createMoney("15");
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withDepositOf("15")
@@ -208,8 +204,7 @@ public class SavingsAdjustmentTest {
                                                     .appliesToClientsOnly()
                                                     .buildForUnitTests();
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(TestUtils.createMoney("100"))
@@ -234,8 +229,7 @@ public class SavingsAdjustmentTest {
                                                     .appliesToClientsOnly()
                                                     .buildForUnitTests();
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(TestUtils.createMoney("100"))
@@ -260,8 +254,7 @@ public class SavingsAdjustmentTest {
                                                     .appliesToClientsOnly()
                                                     .buildForUnitTests();
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(TestUtils.createMoney("100"))
@@ -281,8 +274,7 @@ public class SavingsAdjustmentTest {
     @Test
     public void accountBalanceIsUpdatedWhenLastDepositIsAdjusted() {
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(TestUtils.createMoney("0"))
@@ -306,8 +298,7 @@ public class SavingsAdjustmentTest {
     @Test
     public void savingsPerformanceDetailsAreUpdatedWhenLastDepositIsAdjusted() {
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(TestUtils.createMoney("0"))
@@ -331,8 +322,7 @@ public class SavingsAdjustmentTest {
     @Test
     public void accountActivitysRecordAdjustmentOfLastTransactionWithAReversalAndDepositTransactions() {
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(TestUtils.createMoney("0"))
@@ -358,8 +348,7 @@ public class SavingsAdjustmentTest {
     @Test
     public void accountBalanceIsUpdatedWhenLastWithdrawalIsAdjusted() {
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(TestUtils.createMoney("100"))
@@ -383,8 +372,7 @@ public class SavingsAdjustmentTest {
     @Test
     public void accountActivitysRecordAdjustmentOfLastTransactionWithAReversalAndWithdrawalTransactions() {
 
-        savingsAccount = new SavingsAccountBuilder().mandatory()
-                                                    .active()
+        savingsAccount = new SavingsAccountBuilder().active()
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .withBalanceOf(TestUtils.createMoney("100"))

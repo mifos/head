@@ -25,7 +25,6 @@ import org.mifos.accounts.financial.business.FinancialActionTypeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
@@ -172,7 +171,7 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
     }
 
     protected boolean isAdjustmentForWithdrawal(SavingsBO savings) {
-        AccountPaymentEntity payment = savings.getLastPmnt();
+        AccountPaymentEntity payment = savings.findMostRecentPaymentByPaymentDate();
 
         boolean isWithdrawal = false;
         if (payment != null) {
@@ -185,10 +184,9 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 
     private void adjustWithdrawal(SavingsBO savings, SavingsTrxnDetailEntity savingsTrxn) throws FinancialException {
         FinancialActionTypeEntity finActionWithrawal = null;
-        if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
+        if (savings.isMandatory()) {
             finActionWithrawal = getFinancialAction(FinancialActionConstants.MANDATORYWITHDRAWAL_ADJUSTMENT);
-        }
-        if (savings.getSavingsType().getId().equals(SavingsType.VOLUNTARY.getValue())) {
+        } else if (savings.isVoluntary()) {
             finActionWithrawal = getFinancialAction(FinancialActionConstants.VOLUNTORYWITHDRAWAL_ADJUSTMENT);
         }
         addAccountEntryDetails(savingsTrxn.getWithdrawlAmount(), finActionWithrawal, savings
@@ -199,10 +197,9 @@ public class SavingsAdjustmentAccountingEntry extends BaseAccountingEntry {
 
     private void adjustDeposit(SavingsBO savings, SavingsTrxnDetailEntity savingsTrxn) throws FinancialException {
         FinancialActionTypeEntity finActionDeposit = null;
-        if (savings.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())) {
+        if (savings.isMandatory()) {
             finActionDeposit = getFinancialAction(FinancialActionConstants.MANDATORYDEPOSIT_ADJUSTMENT);
-        }
-        if (savings.getSavingsType().getId().equals(SavingsType.VOLUNTARY.getValue())) {
+        } else if (savings.isVoluntary()) {
             finActionDeposit = getFinancialAction(FinancialActionConstants.VOLUNTORYDEPOSIT_ADJUSTMENT);
         }
         addAccountEntryDetails(savingsTrxn.getDepositAmount(), finActionDeposit, getGLcode(finActionDeposit

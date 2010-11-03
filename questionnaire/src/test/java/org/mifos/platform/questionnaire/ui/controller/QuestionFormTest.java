@@ -30,58 +30,58 @@ public class QuestionFormTest {
 
     @Test
     public void testAddCurrentQuestion(){
-        QuestionForm questionForm = getQuestionForm("  Q1 ", "Free Text", "choice1");
+        QuestionForm questionForm = getQuestionForm("  Q1 ", "freeText", "choice1");
         List<Question> questionList = questionForm.getQuestions();
         assertThat(questionList.size(), is(1));
-        String title = questionList.get(0).getTitle();
+        String text = questionList.get(0).getText();
         String type = questionList.get(0).getType();
         List<ChoiceDto> choices = questionList.get(0).getChoices();
-        assertNotSame(title, questionForm.getCurrentQuestion().getTitle());
+        assertNotSame(text, questionForm.getCurrentQuestion().getText());
         assertNotSame(type, questionForm.getCurrentQuestion().getType());
-        assertThat(title, is("Q1"));
-        assertThat(type, is("Free Text"));
+        assertThat(text, is("Q1"));
+        assertThat(type, is("freeText"));
         assertThat(choices.size(), is(0));
     }
 
     @Test
     public void testAddCurrentMultiSelectQuestion(){
-        QuestionForm questionForm = getQuestionForm("title", "Multi Select", "choice2");
+        QuestionForm questionForm = getQuestionForm("title", "multiSelect", "choice2");
         List<Question> questionList = questionForm.getQuestions();
         assertThat(questionList.size(), is(1));
-        String title = questionList.get(0).getTitle();
+        String text = questionList.get(0).getText();
         String type = questionList.get(0).getType();
         List<ChoiceDto> choices = questionList.get(0).getChoices();
         assertNotSame(type, questionForm.getCurrentQuestion().getType());
-        assertNotSame(title, questionForm.getCurrentQuestion().getTitle());
-        assertThat(type, is("Multi Select"));
-        assertThat(title, is("title"));
+        assertNotSame(text, questionForm.getCurrentQuestion().getText());
+        assertThat(type, is("multiSelect"));
+        assertThat(text, is("title"));
         assertThat(choices.get(0).getValue(), is("choice2"));
     }
 
     @Test
     public void testAddCurrentSingleSelectQuestion(){
-        QuestionForm questionForm = getQuestionForm("title1", "Single Select", "choice");
+        QuestionForm questionForm = getQuestionForm("title1", "singleSelect", "choice");
         List<Question> questionList = questionForm.getQuestions();
         assertThat(questionList.size(), is(1));
-        String title = questionList.get(0).getTitle();
+        String text = questionList.get(0).getText();
         String type = questionList.get(0).getType();
         List<ChoiceDto> choices = questionList.get(0).getChoices();
-        assertNotSame(title, questionForm.getCurrentQuestion().getTitle());
+        assertNotSame(text, questionForm.getCurrentQuestion().getText());
         assertNotSame(type, questionForm.getCurrentQuestion().getType());
         assertThat(choices.get(0).getValue(), is("choice"));
-        assertThat(title, is("title1"));
-        assertThat(type, is("Single Select"));
+        assertThat(text, is("title1"));
+        assertThat(type, is("singleSelect"));
     }
 
     private Question getQuestion(String title) {
         Question question = new Question(new QuestionDetail());
-        question.setTitle(title);
+        question.setText(title);
         return question;
     }
 
     private QuestionForm getQuestionForm(String title, String type, String choice) {
         QuestionForm questionForm = new QuestionForm();
-        questionForm.getCurrentQuestion().setTitle(title);
+        questionForm.getCurrentQuestion().setText(title);
         questionForm.getCurrentQuestion().setType(type);
         questionForm.getCurrentQuestion().setCurrentChoice(choice);
         questionForm.getCurrentQuestion().addAnswerChoice();

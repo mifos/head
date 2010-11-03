@@ -35,8 +35,13 @@ public class QuestionDtoBuilder {
         questionDto = new QuestionDto();
     }
 
-    public QuestionDtoBuilder withTitle(String title) {
-        questionDto.setTitle(title);
+    public QuestionDtoBuilder withText(String text) {
+        questionDto.setText(text);
+        return this;
+    }
+
+    public QuestionDtoBuilder withNickname(String nickname) {
+        questionDto.setNickname(nickname);
         return this;
     }
 

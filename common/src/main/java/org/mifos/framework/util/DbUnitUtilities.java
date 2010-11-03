@@ -20,21 +20,15 @@
 
 package org.mifos.framework.util;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 import junit.framework.Assert;
 
@@ -246,7 +240,7 @@ public class DbUnitUtilities {
         FlatXmlDataSetBuilder fb = new FlatXmlDataSetBuilder();
         fb.setColumnSensing(true);
         fb.setDtdMetadata(false);
-        return fb.build(getUncompressed(file));
+        return fb.build(file);
     }
 
     public IDataSet getDataSetFromFile(String filename)
@@ -255,7 +249,7 @@ public class DbUnitUtilities {
         FlatXmlDataSetBuilder fb = new FlatXmlDataSetBuilder();
         fb.setColumnSensing(true);
         fb.setDtdMetadata(false);
-        return fb.build(getUncompressed(file));
+        return fb.build(file);
     }
 
     /**
@@ -320,52 +314,6 @@ public class DbUnitUtilities {
         String databaseDumpPathName = configurationDirectory + '/' + "databaseDump-" + timeStamp;
         dumpDatabase(databaseDumpPathName, dataSource);
     }
-
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "OS_OPEN_STREAM_EXCEPTION_PATH" }, justification = "buffered streams close streams they wrap")
-    private URL getUncompressed(File file) throws IOException {
-        /* Buffer size based on this tutorial:
-         * http://java.sun.com/developer/technicalArticles/Programming/compression/
-         */
-        int bufferSize = 2048;
-        byte data[] = new byte[bufferSize];
-        File tempFile = File.createTempFile("mifosDbUnitTempfile", ".tmp");
-        tempFile.deleteOnExit();
-
-        ZipFile zipFile = new ZipFile(file);
-        BufferedInputStream src = null;
-        BufferedOutputStream dest = null;
-
-        try {
-            Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
-            ZipEntry zipEntry = zipEntries.nextElement();
-            if (zipEntries.hasMoreElements()) {
-                throw new MifosRuntimeException(
-                "only expecting one file entry per dataSet zip archive");
-            }
-            src = new BufferedInputStream(zipFile.getInputStream(zipEntry));
-            dest = new BufferedOutputStream(new FileOutputStream(tempFile), bufferSize);
-
-            int count;
-            while (true) {
-                count = src.read(data, 0, bufferSize);
-                if (count == -1) {
-                    break;
-                }
-                dest.write(data, 0, count);
-            }
-        } finally {
-            if (dest != null) {
-                dest.close();
-            }
-            if (src != null) {
-                src.close();
-            }
-            zipFile.close();
-        }
-
-        return tempFile.toURI().toURL();
-    }
-
 
     public void verifyTableWithSort(String[] columnOrder, String tableName, IDataSet expectedDataSet, IDataSet databaseDataSet) throws DataSetException,
             DatabaseUnitException {

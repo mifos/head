@@ -126,7 +126,7 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         AccountTestUtils.addAccountPayment(accountPaymentEntity, customerAccountBO);
 
         PersonnelBO loggedInUser = new PersonnelPersistence().getPersonnel(userContext.getId());
-        for (AccountTrxnEntity accntTrxn : customerAccountBO.getLastPmnt().getAccountTrxns()) {
+        for (AccountTrxnEntity accntTrxn : customerAccountBO.findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
             AccountTrxnEntity reverseAccntTrxn = ((CustomerTrxnDetailEntity) accntTrxn).generateReverseTrxn(
                     loggedInUser, "adjustment");
             Assert.assertEquals(reverseAccntTrxn.getAmount(), accntTrxn.getAmount().negate());

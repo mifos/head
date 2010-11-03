@@ -83,7 +83,7 @@ public class MpesaImportTest extends UiTestCaseBase {
     @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.SystemPrintln"})
     @Test(enabled=false)
     public void importMpesaTransactions() throws Exception {
-		String dataset = "mpesa_export.xml.zip";
+		String dataset = "mpesa_export.xml";
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, dataset, dataSource, selenium);
 
 		for (String importFile : TEST_FILES) {

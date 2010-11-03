@@ -10,7 +10,7 @@
         <p class="span-5 arrowIMG orangeheading ">[@spring.message "manageLoanAccounts.redoLoanDisbursal.selectCustomer" /]</p>
         <p class="span-5 arrowIMG1 orangeheading ">[@spring.message "manageLoanAccounts.redoLoanDisbursal.loanaccountinformation" /]</p>
         <p class="span-5 arrowIMG1 orangeheading ">[@spring.message "manageLoanAccounts.redoLoanDisbursal.review/editinstallments" /]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit" /]</p>
+        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit" /]</p>
       </div>
       <div class="subcontent ">
       <form method="" action="" name="formname">

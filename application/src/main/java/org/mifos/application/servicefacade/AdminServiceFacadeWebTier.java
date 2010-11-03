@@ -59,7 +59,6 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.accounts.productdefinition.business.service.ProductService;
 import org.mifos.accounts.productdefinition.business.service.SavingsPrdBusinessService;
-import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
@@ -84,7 +83,6 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
-import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
@@ -1143,10 +1141,13 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private List<PaymentTypeDto> populateSelectedPayments(String[] selectedPayments, List<PaymentTypeDto> allPayments) {
 
         List<PaymentTypeDto> selectedPaymentTypes = new ArrayList<PaymentTypeDto>();
-        List<String> acceptedFees = Arrays.asList(selectedPayments);
-        for (PaymentTypeDto paymentType : allPayments) {
-            if (acceptedFees.contains(paymentType.getId().toString())) {
-                selectedPaymentTypes.add(paymentType);
+
+        if (null != allPayments && null != selectedPayments) {
+            List<String> acceptedFees = Arrays.asList(selectedPayments);
+            for (PaymentTypeDto paymentType : allPayments) {
+                if (acceptedFees.contains(paymentType.getId().toString())) {
+                    selectedPaymentTypes.add(paymentType);
+                }
             }
         }
 
@@ -1642,7 +1643,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             transactionHelper.startTransaction();
             transactionHelper.beginAuditLoggingFor(loanProductForUpdate);
 
-            loanProductForUpdate.updateProductDetails(newLoanProductDetails.getPrdOfferingName(), newLoanProductDetails.getPrdOfferingShortName(),
+            loanProductForUpdate.updateDetailsOfProductNotInUse(newLoanProductDetails.getPrdOfferingName(), newLoanProductDetails.getPrdOfferingShortName(),
                     newLoanProductDetails.getDescription(), newLoanProductDetails.getPrdCategory(), newLoanProductDetails.getStartDate(), newLoanProductDetails.getEndDate(),
                     newLoanProductDetails.getPrdApplicableMaster(), newLoanProductDetails.getPrdStatus());
 
@@ -1706,6 +1707,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             validateEndDateIsPastStartDate(savingsProductRequest.getProductDetails().getStartDate(), savingsProductRequest.getProductDetails().getEndDate());
         }
 
+        boolean activeOrInactiveSavingsAccountExist = this.savingsProductDao.activeOrInactiveSavingsAccountsExistForProduct(savingsProductRequest.getProductDetails().getId());
+
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         SavingsOfferingBO newSavingsDetails = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
@@ -1723,13 +1726,26 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             transactionHelper.startTransaction();
             transactionHelper.beginAuditLoggingFor(savingsProductForUpdate);
 
-            savingsProductForUpdate.updateProductDetails(newSavingsDetails.getPrdOfferingName(), newSavingsDetails.getPrdOfferingShortName(),
-                    newSavingsDetails.getDescription(), newSavingsDetails.getPrdCategory(), newSavingsDetails.getStartDate(), newSavingsDetails.getEndDate(),
-                    newSavingsDetails.getPrdApplicableMaster(), newSavingsDetails.getPrdStatus());
+            if (activeOrInactiveSavingsAccountExist) {
+                LocalDate updateDate = new LocalDate();
+                savingsProductForUpdate.updateProductDetails(newSavingsDetails.getPrdOfferingName(), newSavingsDetails.getPrdOfferingShortName(),
+                        newSavingsDetails.getDescription(), newSavingsDetails.getPrdCategory(), newSavingsDetails.getStartDate(), newSavingsDetails.getEndDate(),
+                        newSavingsDetails.getPrdStatus());
 
-            savingsProductForUpdate.updateSavingsDetails(newSavingsDetails.getSavingsType(), newSavingsDetails.getRecommendedAmount(), newSavingsDetails.getRecommendedAmntUnit(),
-                    newSavingsDetails.getMaxAmntWithdrawl(), newSavingsDetails.getInterestRate(), newSavingsDetails.getInterestCalcType(),
-                    newSavingsDetails.getTimePerForInstcalc(), newSavingsDetails.getFreqOfPostIntcalc(), newSavingsDetails.getMinAmntForInt());
+                savingsProductForUpdate.updateSavingsDetails(newSavingsDetails.getRecommendedAmount(),
+                        newSavingsDetails.getRecommendedAmntUnit(), newSavingsDetails.getMaxAmntWithdrawl(),
+                        newSavingsDetails.getInterestRate(), newSavingsDetails.getMinAmntForInt(), updateDate);
+            } else {
+                savingsProductForUpdate.updateDetailsOfProductNotInUse(newSavingsDetails.getPrdOfferingName(), newSavingsDetails.getPrdOfferingShortName(),
+                        newSavingsDetails.getDescription(), newSavingsDetails.getPrdCategory(), newSavingsDetails.getStartDate(), newSavingsDetails.getEndDate(),
+                        newSavingsDetails.getPrdApplicableMaster(), newSavingsDetails.getPrdStatus());
+
+                savingsProductForUpdate.updateDetailsOfSavingsProductNotInUse(newSavingsDetails.getSavingsType(), newSavingsDetails
+                        .getRecommendedAmount(), newSavingsDetails.getRecommendedAmntUnit(), newSavingsDetails
+                        .getMaxAmntWithdrawl(), newSavingsDetails.getInterestRate(), newSavingsDetails
+                        .getInterestCalcType(), newSavingsDetails.getTimePerForInstcalc(), newSavingsDetails
+                        .getFreqOfPostIntcalc(), newSavingsDetails.getMinAmntForInt());
+            }
 
             this.savingsProductDao.save(savingsProductForUpdate);
             transactionHelper.commitTransaction();

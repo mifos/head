@@ -52,7 +52,7 @@ public class AddNoteTest extends UiTestCaseBase {
 
     private HomePage homePage;
 
-    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
+    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

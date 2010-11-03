@@ -24,6 +24,6 @@ import java.util.List;
 
 public interface CompoundingInterestCalculator {
 
-    List<InterestPostingPeriodResult> calculatePostingPeriodDetails(List<EndOfDayDetail> endOfDayDetailsForPeriods, List<InterestCalculationInterval> postingPeriods);
+    List<InterestPostingPeriodResult> calculateAllPostingPeriodDetails(List<EndOfDayDetail> endOfDayDetailsForPeriods, List<CalendarPeriod> postingPeriods);
 
 }

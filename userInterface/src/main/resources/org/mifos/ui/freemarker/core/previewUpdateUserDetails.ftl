@@ -22,7 +22,7 @@
 [@adminLeftPaneLayout]
 <div class="content">
 	<div class="subcontent ">
-		<p class="font15"><span class="fontBold">[@spring.message "systemUsers.preview.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
+		<p class="font15"><span class="fontBold">[@spring.message "systemUsers.preview.addanewuser"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "reviewAndSubmit"/]</span></p>
 		<div>[@spring.message "systemUsers.preview.reviewtheinformationbelow"/]</div>
 		<p>&nbsp;</p>
 		<p><span class="fontBold">[@spring.message "systemUsers.preview.office"/] </span><span>${userFormBean.officeName}</span></p>
@@ -82,7 +82,7 @@
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.telephone"/]&nbsp;</span><span>${userFormBean.address.telephoneNumber?if_exists}</span>
             </div>
             <div class="clear">&nbsp;</div>
-            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.office&Permissions"/]</span></div>
+            <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.officeAndPermissions"/]</span></div>
           
             <div class="span-20 "><span class="fontBold">[@spring.message "systemUsers.preview.userTitle"/]&nbsp;</span><span>${userFormBean.userTitleName?if_exists}</span>
             </div>

@@ -1354,7 +1354,10 @@ public class TestObjectFactory {
 
             SavingsBO savings = (SavingsBO) account;
             session.delete(account);
-            session.delete(savings.getTimePerForInstcalc());
+
+            // FIXME - no longer create a meeting to track intereswt calculation for each savings account, instead we always use value from savigns product.
+//            session.delete(savings.getTimePerForInstcalc());
+
                 PrdOfferingMeetingEntity prdOfferingMeeting1 = savings.getSavingsOffering().getTimePerForInstcalc();
                 prdOfferingMeeting1.setMeeting(null);
                 session.delete(prdOfferingMeeting1);

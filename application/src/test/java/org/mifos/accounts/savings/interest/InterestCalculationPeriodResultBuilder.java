@@ -26,7 +26,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class InterestCalculationPeriodResultBuilder {
 
-    private InterestCalculationInterval interval;
+    private CalendarPeriod interval;
     private LocalDate intervalStartDate = new LocalDate(2010, 1, 1);
     private LocalDate intervalEndDate = new LocalDate(2010, 12, 31);
     private Money averagePrincipal = TestUtils.createMoney("0");
@@ -35,7 +35,7 @@ public class InterestCalculationPeriodResultBuilder {
     private Money previousTotalInterestForPeriod = TestUtils.createMoney("0");
 
     public InterestCalculationPeriodResult build() {
-        interval = new InterestCalculationIntervalBuilder().from(intervalStartDate).to(intervalEndDate).build();
+        interval = new CalendarPeriodBuilder().from(intervalStartDate).to(intervalEndDate).build();
         return new InterestCalculationPeriodResult(interval, calculatedInterest, averagePrincipal, totalPrincipal, previousTotalInterestForPeriod);
     }
 

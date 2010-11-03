@@ -23,6 +23,8 @@ package org.mifos.accounts.savings.interest.schedule.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 
@@ -93,5 +95,22 @@ public class MonthlyOnLastDayOfMonthInterestScheduledEvent implements InterestSc
             }
         }
         return nextMatchingDate;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof MonthlyOnLastDayOfMonthInterestScheduledEvent == false) {
+            return false;
+        }
+        if (this == obj) {
+            return true;
+        }
+        MonthlyOnLastDayOfMonthInterestScheduledEvent rhs = (MonthlyOnLastDayOfMonthInterestScheduledEvent) obj;
+        return new EqualsBuilder().append(this.every, rhs.every).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+      return new HashCodeBuilder(17, 37).append(this.every).toHashCode();
     }
 }

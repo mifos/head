@@ -118,14 +118,14 @@ public class QuestionsAction extends PersistenceAction {
                 && choices.get(0) instanceof PPIChoice) {
 
             ActionMessages errors = new ActionMessages();
-            errors.add(question.getShortName(), new ActionMessage("errors.readonly", question.getShortName()));
+            errors.add(question.getQuestionText(), new ActionMessage("errors.readonly", question.getQuestionText()));
             saveErrors(request, errors);
             return mapping.findForward(ActionForwards.get_success.toString());
         }
 
         request.setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
         GenericActionForm actionForm = (GenericActionForm) form;
-        actionForm.setValue("shortName", question.getShortName());
+        actionForm.setValue("shortName", question.getQuestionText());
         actionForm.setValue("questionText", question.getQuestionText());
         actionForm.setValue("questionState", Integer.toString(question.getQuestionState()));
 
@@ -156,7 +156,6 @@ public class QuestionsAction extends PersistenceAction {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
         GenericActionForm actionForm = (GenericActionForm) form;
-        question.setShortName(actionForm.getValue("shortName"));
         question.setQuestionText(actionForm.getValue("questionText"));
         question.setQuestionState(Integer.parseInt(actionForm.getValue("questionState")));
 
@@ -209,6 +208,11 @@ public class QuestionsAction extends PersistenceAction {
                 SurveysConstants.KEY_NEW_QUESTIONS);
         SurveysPersistence persistence = new SurveysPersistence();
         for (Question question : questions) {
+            // TODO remove this code completely in MIFOS-3926
+            if (question.getNickname() == null) {
+                question.setNickname(question.getQuestionText().length() > 60 ?
+                question.getQuestionText().substring(0, 60) : question.getQuestionText());
+            }
             persistence.createOrUpdate(question);
         }
         List<Question> questionList = persistence.getQuestionsByQuestionType(SurveysConstants.QUESTION_TYPE_GENERAL);
@@ -231,19 +235,6 @@ public class QuestionsAction extends PersistenceAction {
 
         LinkedList<Question> newQuestions = (LinkedList<Question>) request.getSession().getAttribute(
                 SurveysConstants.KEY_NEW_QUESTIONS);
-        LinkedList<String> questionNames = new LinkedList<String>();
-        for (Question q : newQuestions) {
-            questionNames.add(q.getShortName());
-        }
-        String shortName = actionForm.getValue("shortName");
-        if (questionNames.contains(shortName)) {
-            errors.add("shortName", new ActionMessage(SurveysConstants.NAME_EXISTS));
-        } else {
-            List<Question> retrievedQuestions = surveysPersistence.retrieveQuestionsByName(shortName);
-            if (retrievedQuestions.size() > 0) {
-                errors.add("shortName", new ActionMessage(SurveysConstants.NAME_EXISTS));
-            }
-        }
 
         AnswerType type = AnswerType.fromInt(Integer.parseInt(actionForm.getValue("answerType")));
         if (type == AnswerType.CHOICE || type == AnswerType.MULTISELECT) {
@@ -258,7 +249,7 @@ public class QuestionsAction extends PersistenceAction {
             return mapping.findForward(ActionForwards.load_success.toString());
         }
 
-        Question question = new Question(shortName, actionForm.getValue("questionText"), type);
+        Question question = new Question(actionForm.getValue("questionText"), type);
         if (type == AnswerType.CHOICE || type == AnswerType.MULTISELECT) {
             List<QuestionChoice> choices = new LinkedList<QuestionChoice>();
             List<String> newQuestionChoices = (List<String>) request.getSession().getAttribute(

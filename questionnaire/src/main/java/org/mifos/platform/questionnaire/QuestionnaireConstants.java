@@ -2,7 +2,7 @@ package org.mifos.platform.questionnaire;
 
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public class QuestionnaireConstants {
-    public static final String QUESTION_TITLE_NOT_PROVIDED = "questionnaire.error.QuestionTitleNotProvided";
+    public static final String QUESTION_TEXT_NOT_PROVIDED = "questionnaire.error.QuestionTitleNotProvided";
     public static final String ANSWER_TYPE_NOT_PROVIDED = "questionnaire.error.AnswerTypeNotProvided";
     public static final String QUESTION_TITLE_DUPLICATE = "questionnaire.error.DuplicateQuestion";
     public static final String QUESTION_TITILE_MATCHES_EXISTING_QUESTION = "questionnaire.error.QuestionTitleMatchesExistingQuestion";
@@ -51,4 +51,5 @@ public class QuestionnaireConstants {
     public static final int DEFAULT_VERSION = 1;
     public static final int DEFAULT_ORDER = 0;
     public static final char MULTI_SELECT_DELIMITER = ',';
+    public static final String CHOICE_SELECTED = "1";
 }

@@ -63,7 +63,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
     public void enteringAnInvalidAmountAndClickingPreviewShouldCauseAReturnToCollectionSheetEntryPage()
     throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
         enterDataPage.verifyPage();
@@ -80,7 +80,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void enteringOverpaymentForLoanAndClickingSubmitShouldWarnUserOfOverpayment() throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
         enterDataPage.verifyPage();
@@ -113,7 +113,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void enteringExcessiveWithdrawalAmountAndClickingSubmitShouldWarnUserOfInvalidWithdrawal() throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
         SubmitFormParameters formParameters = getFormParametersForTestOffice();
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
         enterDataPage.verifyPage();
@@ -138,7 +138,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void clickingContinueInBulkEntryPageWithNoInputShouldResultInErrorMessage() throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
         .loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -154,7 +154,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
     // one of the dependent methods throws Exception
     public void clickingContinueInBulkEntryPageAndOnlyEnteringBranchShouldResultInErrorMessage() throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
         .loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -175,7 +175,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
     public void clickingContinueInBulkEntryPageAndOnlyEnteringBranchAndLoanOfficerShouldResultInErrorMessage()
     throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
         .loginAndNavigateToCollectionSheetEntrySelectPage();
@@ -196,7 +196,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
     public void clickingContinueInBulkEntryPageAndOnlyEnteringBranchAndLoanOfficerAndCenterShouldResultInErrorMessage()
     throws Exception {
         initRemote
-        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        .dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         CollectionSheetEntrySelectPage selectPage = new CollectionSheetEntryTestHelper(selenium)
         .loginAndNavigateToCollectionSheetEntrySelectPage();

@@ -10,7 +10,7 @@
 		<form method="post" action="deleteReportCategory.ftl" name="deleteReportCategory">
 		<p>&nbsp;&nbsp;</p>
 		<p class="font15">
-			<span class="fontBold">[@spring.message "admin.definenewreportcategory" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "review&Submit" /]</span>
+			<span class="fontBold">[@spring.message "admin.definenewreportcategory" /]</span>&nbsp;--&nbsp;<span class="orangeheading">[@spring.message "reviewAndSubmit" /]</span>
 		</p>
         <p>&nbsp;&nbsp;</p>
         <div>[@spring.message "editReportCategory.informationmessage" /]</div>

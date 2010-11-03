@@ -8,11 +8,11 @@
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-17 completeIMG silverheading">[@spring.message "offices.previewNewOffice.officeinformation"/]</p>
-        <p class="span-3 arrowIMG orangeheading last">[@spring.message "review&Submit"/]</p>
+        <p class="span-3 arrowIMG orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
       </div>
       <div class="subcontent">
       <form method="POST" action="previewOfficeDetails.ftl" name="previewOfficeDetails">
-        <p class="font15"><span class="fontBold">[@spring.message "offices.previewNewOffice.addanewoffice"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "review&Submit"/]</span></p>
+        <p class="font15"><span class="fontBold">[@spring.message "offices.previewNewOffice.addanewoffice"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "reviewAndSubmit"/]</span></p>
         <p>&nbsp;&nbsp;</p>
         <div class="orangeheading">[@spring.message "offices.previewNewOffice.officeinformation"/]</div>
         <div class="prepend-1  span-21 last">

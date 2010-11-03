@@ -65,7 +65,7 @@ function selectAllOptions(outSel)
       <div class="borderbtm span-22">
         <p class="span-6 arrowIMG1 orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.chooseOffice"/]</p>
         <p class="span-6 arrowIMG orangeheading ">[@spring.message "systemUsers.defineNewSystemUser.userInformation"/]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "review&Submit"/]</p>
+        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
       </div>
       
       <div class="subcontent">

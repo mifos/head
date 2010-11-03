@@ -30,7 +30,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.ResourceBundle;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.apache.commons.lang.StringUtils.isNotEmpty;
@@ -48,7 +47,7 @@ public class Question implements Serializable {
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private List<String> currentSmartChoiceTags;
     private int initialNumberOfChoices;
-    private String originalTitle;
+    private String originalText;
 
     static {
         populateStringToQuestionTypeMap();
@@ -66,18 +65,14 @@ public class Question implements Serializable {
 
     @javax.validation.constraints.NotNull
     @javax.validation.constraints.Pattern(regexp="^.*[^\\s]+.*$")
-    @javax.validation.constraints.Size(max = 200)
-    public String getTitle() {
-        return questionDetail.getTitle();
+    @javax.validation.constraints.Size(max = 1000)
+    public String getText() {
+        return questionDetail.getText();
     }
 
-    public void setTitle(String title) {
-        questionDetail.setTitle(title);
-        trimTitle();
-    }
-
-    public void trimTitle() {
-        questionDetail.trimTitle();
+    public void setText(String text) {
+        questionDetail.setText(text);
+        questionDetail.trimText();
     }
 
     @javax.validation.constraints.Pattern(regexp="^.*[^\\s]+.*$")
@@ -242,7 +237,7 @@ public class Question implements Serializable {
         }
         this.currentSmartChoiceTags = new ArrayList<String>();
         this.initialNumberOfChoices = choices.size();
-        this.originalTitle = getTitle();
+        this.originalText = getText();
         for (int i = 0; i < initialNumberOfChoices; i++) {
             this.currentSmartChoiceTags.add(EMPTY);
         }
@@ -250,35 +245,30 @@ public class Question implements Serializable {
 
     private static void populateStringToQuestionTypeMap() {
         stringToQuestionTypeMap = CollectionUtils.asMap(
-                makeEntry(getResource("questionnaire.quesiton.choices.freetext"), QuestionType.FREETEXT),
-                makeEntry(getResource("questionnaire.quesiton.choices.date"), QuestionType.DATE),
-                makeEntry(getResource("questionnaire.quesiton.choices.multiselect"), QuestionType.MULTI_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.singleselect"), QuestionType.SINGLE_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.smartselect"), QuestionType.SMART_SELECT),
-                makeEntry(getResource("questionnaire.quesiton.choices.number"), QuestionType.NUMERIC));
+                makeEntry("freeText", QuestionType.FREETEXT),
+                makeEntry("date", QuestionType.DATE),
+                makeEntry("multiSelect", QuestionType.MULTI_SELECT),
+                makeEntry("singleSelect", QuestionType.SINGLE_SELECT),
+                makeEntry("smartSelect", QuestionType.SMART_SELECT),
+                makeEntry("number", QuestionType.NUMERIC));
     }
 
     private static void populateQuestionTypeToStringMap() {
-        questionTypeToStringMap = CollectionUtils.asMap(makeEntry(QuestionType.FREETEXT, getResource("questionnaire.quesiton.choices.freetext")),
-                makeEntry(QuestionType.DATE, getResource("questionnaire.quesiton.choices.date")),
-                makeEntry(QuestionType.NUMERIC, getResource("questionnaire.quesiton.choices.number")),
-                makeEntry(QuestionType.MULTI_SELECT, getResource("questionnaire.quesiton.choices.multiselect")),
-                makeEntry(QuestionType.SMART_SELECT, getResource("questionnaire.quesiton.choices.smartselect")),
-                makeEntry(QuestionType.SINGLE_SELECT, getResource("questionnaire.quesiton.choices.singleselect"))
+        questionTypeToStringMap = CollectionUtils.asMap(
+                makeEntry(QuestionType.FREETEXT, "freeText"),
+                makeEntry(QuestionType.DATE, "date"),
+                makeEntry(QuestionType.NUMERIC, "number"),
+                makeEntry(QuestionType.MULTI_SELECT, "multiSelect"),
+                makeEntry(QuestionType.SMART_SELECT, "smartSelect"),
+                makeEntry(QuestionType.SINGLE_SELECT, "singleSelect")
         );
     }
 
-    private static String getResource(String key) {
-        ResourceBundle resourceBundle = ResourceBundle.getBundle("org.mifos.platform.questionnaire.ui.localizedProperties.questionnaire_messages");
-        return resourceBundle.getString(key);
+    public boolean textHasChanged() {
+        return !StringUtils.equals(originalText, getText());
     }
 
-    public boolean titleHasChanged() {
-        return !StringUtils.equals(originalTitle, getTitle());
-    }
-
-    void trimTitleAndSetChoices() {
-        trimTitle();
+    void setChoices() {
         setChoicesIfApplicable();
     }
 }

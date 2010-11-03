@@ -129,3 +129,8 @@
   		[/#list]
  </div>
 [/#macro]
+
+[#-- Directive for filtering text with String.format() and MarkdownJ. --]
+[#-- Useful (and very specific) to parse i18n messages containing links. --]
+[#-- usage [@mifos.mlink dest="viewQuestions.ftl"][@spring.message "view.questions.mlink"][/@mifos.mlink] --]
+[#assign mlink="org.mifos.ui.ftl.MarkdownLinker"?new()]

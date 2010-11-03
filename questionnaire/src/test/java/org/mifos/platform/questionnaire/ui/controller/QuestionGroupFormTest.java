@@ -123,7 +123,7 @@ public class QuestionGroupFormTest {
         assertThat(nameOfAddedSection, is(sectionName));
         List<SectionQuestionDetailForm> questions = sectionDetailForms.get(0).getSectionQuestions();
         assertThat(questions.size(), is(1));
-        assertThat(questions.get(0).getTitle(), is("Q1"));
+        assertThat(questions.get(0).getText(), is("Q1"));
         assertThat(questions.get(0).isMandatory(), is(true));
         assertThat(questionGroupForm.getSectionName(), is(nameOfAddedSection));
         assertNotSame(questionGroupForm.getSelectedQuestionIds().size(), is(0));
@@ -138,9 +138,9 @@ public class QuestionGroupFormTest {
         assertThat(nameOfAddedSection, is(sectionName));
         questions = sectionDetailForms.get(0).getSectionQuestions();
         assertThat(questions.size(), is(2));
-        assertThat(questions.get(0).getTitle(), is("Q1"));
+        assertThat(questions.get(0).getText(), is("Q1"));
         assertThat(questions.get(0).isMandatory(), is(true));
-        assertThat(questions.get(1).getTitle(), is("Q2"));
+        assertThat(questions.get(1).getText(), is("Q2"));
         assertThat(questions.get(1).isMandatory(), is(false));
         assertThat(questionGroupForm.getSectionName(), is(nameOfAddedSection));
         assertNotSame(questionGroupForm.getSelectedQuestionIds().size(), is(0));
@@ -179,8 +179,8 @@ public class QuestionGroupFormTest {
         questionGroupForm.setTitle(title);
         String sectionName = "SectionWithNewQuestion";
         Question currentQuestion = new Question(new QuestionDetail());
-        currentQuestion.setTitle(" Question1 ");
-        currentQuestion.setType("Free Text");
+        currentQuestion.setText(" Question1 ");
+        currentQuestion.setType("freeText");
         questionGroupForm.setCurrentQuestion(currentQuestion);
         questionGroupForm.setAddQuestionFlag(true);
         questionGroupForm.setSectionName(sectionName);
@@ -189,7 +189,7 @@ public class QuestionGroupFormTest {
         assertThat(sections.size(), is(1));
         SectionDetailForm section1 = sections.get(0);
         assertThat(section1.getName(), is(sectionName));
-        assertThat(section1.getSectionQuestionDetails().get(0).getTitle(), is("Question1"));
+        assertThat(section1.getSectionQuestionDetails().get(0).getText(), is("Question1"));
         assertThat(questionGroupForm.getSectionName(), is(section1.getName()));
     }
 
@@ -203,10 +203,10 @@ public class QuestionGroupFormTest {
 
         assertThat(questionGroupForm.getSections().size(), is(1));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().size(), is(1));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getTitle(), is("Q2"));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getText(), is("Q2"));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).isMandatory(), is(true));
         assertThat(questionGroupForm.getQuestionPool().size(), is(1));
-        assertThat(questionGroupForm.getQuestionPool().get(0).getTitle(), is("Q1"));
+        assertThat(questionGroupForm.getQuestionPool().get(0).getText(), is("Q1"));
         assertThat(questionGroupForm.getQuestionPool().get(0).isMandatory(), is(false));
 
         questionGroupForm.removeQuestion("sectionName", "2");
@@ -221,9 +221,9 @@ public class QuestionGroupFormTest {
 
         assertThat(questionGroupForm.getSections().size(), is(1));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().size(), is(2));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getTitle(), is("Q1"));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).getText(), is("Q1"));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(0).isMandatory(), is(false));
-        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).getTitle(), is("Q2"));
+        assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).getText(), is("Q2"));
         assertThat(questionGroupForm.getSections().get(0).getSectionQuestions().get(1).isMandatory(), is(true));
         assertThat(questionGroupForm.getQuestionPool().size(), is(0));
     }
@@ -245,23 +245,23 @@ public class QuestionGroupFormTest {
         questionGroupForm.setTitle(title);
         String sectionName = "SectionWithNewQuestion";
         Question currentQuestion = new Question(new QuestionDetail());
-        currentQuestion.setTitle(" Question1 ");
-        currentQuestion.setType("Free Text");
+        currentQuestion.setText(" Question1 ");
+        currentQuestion.setType("freeText");
         questionGroupForm.setCurrentQuestion(currentQuestion);
         questionGroupForm.setAddQuestionFlag(true);
         questionGroupForm.setSectionName(sectionName);
         questionGroupForm.addCurrentSection();
-        questionGroupForm.getCurrentQuestion().setTitle("Question2 ");
+        questionGroupForm.getCurrentQuestion().setText("Question2 ");
         questionGroupForm.addCurrentSection();
-        assertThat(questionGroupForm.isDuplicateTitle("Question1"), is(true));
+        assertThat(questionGroupForm.isDuplicateText("Question1"), is(true));
     }
 
     private void assertThatQuestionFormHasNoSection(QuestionGroupForm questionGroupForm) {
         assertThat(questionGroupForm.getSections().size(), is(0));
         assertThat(questionGroupForm.getQuestionPool().size(), is(2));
-        assertThat(questionGroupForm.getQuestionPool().get(0).getTitle(), is("Q1"));
+        assertThat(questionGroupForm.getQuestionPool().get(0).getText(), is("Q1"));
         assertThat(questionGroupForm.getQuestionPool().get(0).isMandatory(), is(false));
-        assertThat(questionGroupForm.getQuestionPool().get(1).getTitle(), is("Q2"));
+        assertThat(questionGroupForm.getQuestionPool().get(1).getText(), is("Q2"));
         assertThat(questionGroupForm.getQuestionPool().get(1).isMandatory(), is(false));
     }
 
@@ -273,7 +273,7 @@ public class QuestionGroupFormTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title, boolean mandatory) {
-        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT, true), mandatory);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, QuestionType.FREETEXT, true), mandatory);
     }
 
     private void assertEventSource(EventSourceDto eventSourceDto, String event, String source) {

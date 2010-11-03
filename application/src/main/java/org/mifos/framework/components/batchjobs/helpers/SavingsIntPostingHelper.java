@@ -50,7 +50,6 @@ public class SavingsIntPostingHelper extends TaskHelper {
     @Override
     public void execute(final long scheduledFireTime) throws BatchJobException {
 
-        // FIXME - keithw - batch jobs should authenticate before being triggered/invoked.
         MifosUser principal = createMifosAdminUser();
 
         SecurityContext securityContext = SecurityContextHolder.getContext();
@@ -67,7 +66,7 @@ public class SavingsIntPostingHelper extends TaskHelper {
 
         List<String> errorList = new ArrayList<String>();
         try {
-            this.savingsServiceFacade.batchRecalculateInterestToBePostedForSavingsAccount(dateOfBatchJob);
+            this.savingsServiceFacade.postInterestForLastPostingPeriod(dateOfBatchJob);
         } catch (BusinessRuleException e) {
             errorList.add(e.getMessageKey());
         }

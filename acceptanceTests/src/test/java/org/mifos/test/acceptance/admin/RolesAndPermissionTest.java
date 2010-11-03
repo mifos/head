@@ -66,7 +66,7 @@ public class RolesAndPermissionTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void disableSystemInfoPermission() throws Exception {
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_001_dbunit.xml", dataSource, selenium);
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewRolesPage viewRolesPage = adminPage.navigateToViewRolesPage();
         ManageRolePage manageRolePage = viewRolesPage.navigateToManageRolePage("Admin");

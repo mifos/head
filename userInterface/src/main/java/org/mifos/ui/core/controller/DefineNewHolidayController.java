@@ -97,9 +97,12 @@ public class DefineNewHolidayController {
 
             OfficeHoliday officeHoliday = holidayServiceFacade.retrieveHolidayDetailsForPreview(holidayDetail, branchIds);
 
+            List<String> otherHolidays = holidayServiceFacade.retrieveOtherHolidayNamesWithTheSameDate(holidayDetail, branchIds);
+
             mav = new ModelAndView("previewHoliday");
             mav.addObject("formBean", formBean);
             mav.addObject("officeHoliday", officeHoliday);
+            mav.addObject("otherHolidays", otherHolidays);
         }
 
         return mav;

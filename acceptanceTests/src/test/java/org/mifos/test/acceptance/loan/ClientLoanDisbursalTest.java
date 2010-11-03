@@ -74,7 +74,7 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2009,7,11,13,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
 
         // account w/ id 000100000000005 has an approved but not disbursed loan.
 
@@ -89,7 +89,7 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
 
         String[] tablesToValidate = { "ACCOUNT_PAYMENT",  "ACCOUNT_TRXN", "ACCOUNT_STATUS_CHANGE_HISTORY" };
 
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("ClientLoanDisbursalTest_001_result_dbunit.xml.zip");
+        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile("ClientLoanDisbursalTest_001_result_dbunit.xml");
         IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
 
         dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
@@ -103,7 +103,7 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2010,2,12,1,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml.zip",
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml",
                 dataSource, selenium);
 
         DisburseLoanPage loanAccountPage = loanTestHelper.prepareToDisburseLoan("000100000000004");
@@ -118,7 +118,7 @@ public class ClientLoanDisbursalTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2010,2,12,1,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml.zip",
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_013_dbunit.xml",
                 dataSource, selenium);
 
         DisburseLoanPage loanAccountPage = loanTestHelper.prepareToDisburseLoan("000100000000004");

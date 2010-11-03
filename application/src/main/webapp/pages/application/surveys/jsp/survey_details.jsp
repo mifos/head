@@ -89,7 +89,7 @@ explanation of the license and how it is applied.
                   <c:when test="${itemCount !=0}">
 		  <c:forEach var="question" items="${sessionScope.BusinessKey.questions}">
                   <tr>
-                  	<td class="drawtablerow"><c:out value="${question.question.shortName}"/></td>
+                  	<td class="drawtablerow"><c:out value="${question.question.questionText}"/></td>
                     <td width="39%" class="drawtablerow"><c:out value="${question.question.questionText}"/></td>
                     <td width="14%" class="drawtablerow">
                     <c:choose>
@@ -120,12 +120,6 @@ explanation of the license and how it is applied.
               </tr>
             </table>              
             <br></td>
-            <c:if test="${!requestScope.isPPISurvey}">
-	            <td valign="top" align="right"><br><html-el:link action="surveysAction.do?method=edit_entry&value(surveyId)=${sessionScope.BusinessKey.surveyId}">
-	            <mifos:mifoslabel name="Surveys.EditSurvey" bundle="SurveysUIResources"/>
-	            </html-el:link>
-	            </td>
-            </c:if>
           </tr>
         </table>    
 

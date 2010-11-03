@@ -10,6 +10,7 @@
                </id>
                <discriminator column="ppi" type="yes_no"/>
                <property name="choiceText" column="choice_text" not-null="true"/>
+               <property name="choiceOrder" column="choice_order" not-null="true" insert="false" update="false"/>
                <subclass name="org.mifos.customers.ppi.business.PPIChoice" discriminator-value="Y">
                		<property name="points" column="ppi_points" />
                </subclass>

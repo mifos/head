@@ -4,7 +4,7 @@
 
  <!--  Left Sidebar Begins-->
   <div class="sidebar ht750">
-    <p class="orangetab">[@spring.message "ClientLeftPane.clients&AccountsTasks" /]</p>
+    <p class="orangetab">[@spring.message "ClientLeftPane.clientsAndAccountsTasks" /]</p>
     <p class="paddingLeft"><span class="fontBold">[@spring.message "ClientLeftPane.manageCollectionSheets" /]</span><br />
       <a href="#">[@spring.message "ClientLeftPane.enterCollectionSheetData" /]</a> </p>
     <p class="paddingLeft"><span class="fontBold">[@spring.message "ClientLeftPane.createnewClients" /]</span><br />

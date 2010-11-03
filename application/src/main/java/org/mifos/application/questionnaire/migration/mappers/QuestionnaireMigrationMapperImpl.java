@@ -21,6 +21,7 @@
 package org.mifos.application.questionnaire.migration.mappers;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountBO;
@@ -56,6 +57,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +102,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     @Override
     public QuestionDto map(CustomFieldDefinitionEntity customField, Integer questionOrder) {
         QuestionDto questionDto = new QuestionDto();
-        questionDto.setTitle(customField.getLabel());
+        questionDto.setText(customField.getLabel());
         questionDto.setType(mapToQuestionType(customField.getFieldTypeAsEnum()));
         questionDto.setMandatory(customField.isMandatory());
         questionDto.setOrder(questionOrder);
@@ -307,29 +309,43 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtos(SurveyInstance surveyInstance, Integer questionGroupId) {
         List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
         for (SurveyResponse surveyResponse : surveyInstance.getSurveyResponses()) {
-            if (surveyResponse.getQuestion().getAnswerTypeAsEnum() != AnswerType.MULTISELECT) {
-                questionGroupResponseDtos.add(mapToQuestionGroupResponse(questionGroupId, surveyResponse));
+            if (surveyResponse.getQuestion().getAnswerTypeAsEnum() == AnswerType.MULTISELECT) {
+                questionGroupResponseDtos.addAll(mapToMultiSelectQuestionGroupResponses(questionGroupId, surveyResponse));
             } else {
-                questionGroupResponseDtos.addAll(mapToQuestionGroupResponses(questionGroupId, surveyResponse));
+                questionGroupResponseDtos.add(mapToQuestionGroupResponse(questionGroupId, surveyResponse));
             }
         }
         return questionGroupResponseDtos;
     }
 
-    private List<QuestionGroupResponseDto> mapToQuestionGroupResponses(Integer questionGroupId, SurveyResponse surveyResponse) {
+    private List<QuestionGroupResponseDto> mapToMultiSelectQuestionGroupResponses(Integer questionGroupId, SurveyResponse surveyResponse) {
         List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
         String multiSelectValue = surveyResponse.getMultiSelectValue();
         if (StringUtils.isNotEmpty(multiSelectValue)) {
+            Map<Integer, QuestionChoice> choiceLookup = getChoiceLookup(surveyResponse);
             Integer questionId = surveyResponse.getQuestion().getQuestionId();
             Integer sectionQuestionId = getSectionQuestionId(questionGroupId, questionId);
             String[] answers = StringUtils.split(multiSelectValue, MULTI_SELECT_DELIMITER);
-            for (String answer : answers) {
-                if (StringUtils.isNotEmpty(answer)) {
+            for (int ansIndex = 0; ansIndex < answers.length; ansIndex++) {
+                if (isChoiceSelected(answers[ansIndex])) {
+                    String answer = choiceLookup.get(ansIndex).getChoiceText();
                     questionGroupResponseDtos.add(mapToQuestionGroupResponse(sectionQuestionId, answer));
                 }
             }
         }
         return questionGroupResponseDtos;
+    }
+
+    private boolean isChoiceSelected(String answer) {
+        return StringUtils.isNotEmpty(answer) && QuestionnaireConstants.CHOICE_SELECTED.equals(answer);
+    }
+
+    private Map<Integer, QuestionChoice> getChoiceLookup(SurveyResponse surveyResponse) {
+        Map<Integer, QuestionChoice> questionChoiceLookup = new HashMap<Integer, QuestionChoice>();
+        for (QuestionChoice questionChoice : surveyResponse.getSurveyQuestion().getQuestion().getChoices()) {
+            questionChoiceLookup.put(questionChoice.getChoiceOrder(), questionChoice);
+        }
+        return questionChoiceLookup;
     }
 
     private QuestionGroupResponseDto mapToQuestionGroupResponse(Integer sectionQuestionId, String answer) {
@@ -370,7 +386,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     private QuestionDto mapToQuestionDto(SurveyQuestion surveyQuestion) {
         QuestionDto questionDto = new QuestionDto();
         Question question = surveyQuestion.getQuestion();
-        questionDto.setTitle(question.getShortName());
+        questionDto.setText(question.getQuestionText());
         questionDto.setMandatory(surveyQuestion.getMandatory() == 1);
         questionDto.setOrder(surveyQuestion.getOrder());
         AnswerType answerType = question.getAnswerTypeAsEnum();

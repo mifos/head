@@ -41,7 +41,7 @@ explanation of the license and how it is applied.
         </html-el:link>  /
       </span>
       <span class="fontnormal8ptbold">
-          <c:out value="${question.shortName}"/>
+          <c:out value="${question.questionText}"/>
       </span>
     </td>
   </tr>
@@ -49,7 +49,7 @@ explanation of the license and how it is applied.
 <table width="95%" border="0" cellpadding="0" cellspacing="0">
   <tr>
     <td width="70%" align="left" valign="middle" class="paddingL15T15"> <!-- this td represents the entire central content area -->
-			<div style="padding:3px" class="headingorange"><c:out value="${question.shortName}"/></div>
+			<div style="padding:3px" class="headingorange"><c:out value="${question.questionText}"/></div>
 			<c:if test="${question.questionState == 0}">
           <img src="pages/framework/images/status_closedblack.gif" width="8" height="9"> <mifos:mifoslabel bundle="SurveysUIResources" name="Surveys.Inactive"/><br/></span>
 	        </c:if>
@@ -79,11 +79,6 @@ explanation of the license and how it is applied.
 </c:when>
 </c:choose></span>
     </td>
-    <td valign="top" align="right">
-    <br><html-el:link action="questionsAction.do?method=edit_entry&questionId=${sessionScope.question.questionId}">
-	<mifos:mifoslabel name="Surveys.EditQuestion" bundle="SurveysUIResources"/>
-	</html-el:link>
-	</td>
   </tr>
 </table>
 </tiles:put>

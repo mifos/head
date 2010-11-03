@@ -83,6 +83,10 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
         comments = null;
     }
 
+    /**
+     * use constructor that does not need to use persistence
+     */
+    @Deprecated
     public AccountTrxnEntity(final AccountPaymentEntity accountPayment, final AccountActionTypes accountActionType,
             final Short installmentId, final Date dueDate, final PersonnelBO personnel, final CustomerBO customer, final Date actionDate,
             final Money amount, final String comments, final AccountTrxnEntity relatedTrxn, final Persistence persistence) {

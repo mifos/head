@@ -21,12 +21,12 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
   <div class=" content">
-    <div class="span-21">
+    <div class="width100prc">
   		[@mifos.crumbs breadcrumbs/]
-        <div class="clear">&nbsp;</div>
-    	<div class="span-20">
-        	<div class="span-19">
+    	<div class="width95prc margin20lefttop">
+        	<div class="">
             	<span class="orangeheading">${detailsDto.productCategoryName}</span><br />
+                  <div style="position:relative;top:-20px; text-align:right; height:10px;"><a href="editCategoryInformation.ftl?globalPrdCategoryNum=${globalPrdCategoryNum}">[@spring.message "manageProducts.editCategory.editcategoryinformation"/]</a></div>
                 <span>
                 [#switch detailsDto.productCategoryStatusId]
                 	[#case 1]
@@ -37,7 +37,7 @@
                 	[#break]
                 [/#switch]
                 </span><br />
-                <span><span>[@spring.message "manageProducts.defineNewCategory.productType"/]</span>&nbsp;:
+                <span><span>[@spring.message "manageProducts.defineNewCategory.productType"/]:</span>&nbsp;
                 	  <span>
                 	  		[#list typeDto as type]
                 	  			[#if type.productTypeID == detailsDto.productTypeId]
@@ -46,11 +46,10 @@
                 	  		[/#list]
                 	  </span>
                 </span>
-                <span class="span-19 rightAlign"><a href="editCategoryInformation.ftl?globalPrdCategoryNum=${globalPrdCategoryNum}">[@spring.message "manageProducts.editCategory.editcategoryinformation"/]</a></span>                
         	</div>        	
         </div>        
-        <div class="clear">&nbsp;</div>
-        <p class="span-20 ">
+        <p class="margin20lefttop">
+        [@spring.message "manageProducts.editCategory.description"/]<br />
         [#if detailsDto.productCategoryDesc?exists && detailsDto.productCategoryDesc != "null" && detailsDto.productCategoryDesc!='']
 		${detailsDto.productCategoryDesc}
 		[/#if]

@@ -60,7 +60,7 @@ public class SearchClientTest extends UiTestCaseBase {
         super.setUp();
         appLauncher = new AppLauncher(selenium);
 
-        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml.zip", dataSource, selenium);
+        initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
     }
 
     @AfterMethod

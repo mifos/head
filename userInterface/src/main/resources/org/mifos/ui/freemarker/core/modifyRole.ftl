@@ -180,7 +180,7 @@ var index=0;
   		<div class="span-22 bluedivs paddingLeft"><a href="admin.ftl">[@spring.message "admin"/]</a>&nbsp;/&nbsp;<a href="manageRolesAndPermissions.ftl">[@spring.message "systemusers.managerolesandpermissions.rolesandpermissions"/]</a>&nbsp;/&nbsp;<span class="fontBold">[@spring.message "admin"/]</span></div>
         <div class="clear">&nbsp;</div>
         <p class="font15"><span class=" orangeheading">[@spring.message "manageRoles.modifyRole"/]</span></p>
-        <div>[@spring.message "manageRoles.Checktheboxesbelowtoallowpermissionsforthespecifiedrole."/]<br />[@spring.message "manageRoles.roles&Permissionswithoutsavingchanges"/]</div>
+        <div>[@spring.message "manageRoles.Checktheboxesbelowtoallowpermissionsforthespecifiedrole."/]<br />[@spring.message "manageRoles.rolesAndPermissionswithoutsavingchanges"/]</div>
         <div class="error">${errorMessage?if_exists}</div>
         <div><span>[@spring.message "manageRoles.roleName"/] </span><span><input type="text" name="roleName" value="${user}" /></span><span><input type="hidden" name="roleId" value="${roleId}" /></span></div>
         <div class="clear">&nbsp;</div>

@@ -29,7 +29,7 @@ import org.mifos.framework.util.helpers.Money;
 
 public class InterestCalculationPeriodBuilder {
 
-    private InterestCalculationInterval interval;
+    private CalendarPeriod interval;
     private List<EndOfDayDetail> dailyDetails = new ArrayList<EndOfDayDetail>();
     private Money balanceBeforeInterval = TestUtils.createMoney("10");
     private LocalDate intervalStartDate = new LocalDate(2010, 1, 1);
@@ -37,7 +37,7 @@ public class InterestCalculationPeriodBuilder {
     private boolean isFirstActivityBeforeInterval = true;
 
     public InterestCalculationPeriodDetail build() {
-        interval = new InterestCalculationIntervalBuilder().from(intervalStartDate).to(intervalEndDate).build();
+        interval = new CalendarPeriodBuilder().from(intervalStartDate).to(intervalEndDate).build();
         return new InterestCalculationPeriodDetail(interval, dailyDetails, balanceBeforeInterval, isFirstActivityBeforeInterval);
     }
 
@@ -65,6 +65,11 @@ public class InterestCalculationPeriodBuilder {
         for (EndOfDayDetail dailyDetail : endOfDayDetails) {
             this.dailyDetails.add(dailyDetail);
         }
+        return this;
+    }
+
+    public InterestCalculationPeriodBuilder isFirstActivity() {
+        this.isFirstActivityBeforeInterval = false;
         return this;
     }
 }

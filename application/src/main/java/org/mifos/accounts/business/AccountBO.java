@@ -20,9 +20,21 @@
 
 package org.mifos.accounts.business;
 
+import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
+import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -75,20 +87,8 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
-import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AccountBO extends AbstractBusinessObject {
 
@@ -543,7 +543,7 @@ public class AccountBO extends AbstractBusinessObject {
         if (isAdjustPossibleOnLastTrxn()) {
             logger.debug(
                     "Adjustment is possible hence attempting to adjust.");
-            adjustPayment(getLastPmnt(), getLoggedInUser(), adjustmentComment);
+            adjustPayment(findMostRecentPaymentByPaymentDate(), getLoggedInUser(), adjustmentComment);
             try {
                 getAccountPersistence().createOrUpdate(this);
             } catch (PersistenceException e) {
@@ -788,7 +788,7 @@ public class AccountBO extends AbstractBusinessObject {
 
     public double getLastPmntAmnt() {
         if (null != accountPayments && accountPayments.size() > 0) {
-            return getLastPmnt().getAmount().getAmountDoubleValue();
+            return findMostRecentPaymentByPaymentDate().getAmount().getAmountDoubleValue();
         }
         return 0;
     }
@@ -800,13 +800,29 @@ public class AccountBO extends AbstractBusinessObject {
         return 0;
     }
 
+    /*
+     * called from ui
+     */
     public AccountPaymentEntity getLastPmnt() {
-        AccountPaymentEntity lastPmnt = null;
-        for (AccountPaymentEntity accntPayment : accountPayments) {
-            lastPmnt = accntPayment;
-            break;
+        return findMostRecentPaymentByPaymentDate();
+    }
+
+    public AccountPaymentEntity findMostRecentPaymentByPaymentDate() {
+
+        AccountPaymentEntity mostRecentPayment = null;
+
+        List<AccountPaymentEntity> recentAccountPayments = new ArrayList<AccountPaymentEntity>(this.accountPayments);
+        if (!recentAccountPayments.isEmpty()) {
+            mostRecentPayment = recentAccountPayments.get(0);
+            for (AccountPaymentEntity accountPaymentEntity : recentAccountPayments) {
+                LocalDate paymentDate = new LocalDate(accountPaymentEntity.getPaymentDate());
+                if (paymentDate.isAfter(new LocalDate(mostRecentPayment.getPaymentDate())) && paymentDate.isBefore(new LocalDate().plusDays(1))) {
+                    mostRecentPayment = accountPaymentEntity;
+                }
+            }
         }
-        return lastPmnt;
+
+        return mostRecentPayment;
     }
 
     public AccountPaymentEntity getLastPmntToBeAdjusted() {
@@ -1243,14 +1259,15 @@ public class AccountBO extends AbstractBusinessObject {
             List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
             List<Holiday> holidays = new ArrayList<Holiday>();
 
+            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
+
             if (adjustForHolidays) {
                 HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-                holidays = holidayDao.findAllHolidaysThisYearAndNext(getOffice().getOfficeId());
+                holidays = holidayDao.findAllHolidaysFromDateAndNext(getOffice().getOfficeId(), startFromMeetingDate.toLocalDate().toString());
             }
 
             final int occurrences = noOfInstallments + installmentToSkip;
 
-            DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
             ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
             ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(
                     workingDays, holidays);

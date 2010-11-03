@@ -55,7 +55,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
 
-    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml.zip";
+    private static final String START_DATA_SET = "acceptance_small_003_dbunit.xml";
     private String qgTitle1, qgTitle2, qgTitle3;
     private String qTitle1, qTitle2, qTitle3, qTitle4, qTitle5;
     private static final String TITLE_MISSING = "Please specify Question Group title.";
@@ -129,7 +129,7 @@ public class QuestionGroupTest extends UiTestCaseBase {
         CreateQuestionPage createQuestionPage = getAdminPage().navigateToCreateQuestionPage().verifyPage();
         CreateQuestionParameters parameters = new CreateQuestionParameters();
         for (String qTitle : qTitles) {
-            parameters.setTitle(qTitle);
+            parameters.setText(qTitle);
             parameters.setType("Free Text");
             createQuestionPage.addQuestion(parameters);
         }

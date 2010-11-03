@@ -47,7 +47,7 @@
                         [#list sectionDetail.questions as sectionQuestionDetail]
                         <li>
                             <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-                            ${sectionQuestionDetail.title}:</label>${sectionQuestionDetail.answer}
+                            ${sectionQuestionDetail.text}:</label>${sectionQuestionDetail.answer}
                         </li>
                         [/#list]
                     </ol>

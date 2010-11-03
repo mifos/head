@@ -36,4 +36,6 @@ public interface HolidayServiceFacade {
     Map<String, List<OfficeHoliday>> holidaysByYear();
 
     OfficeHoliday retrieveHolidayDetailsForPreview(HolidayDetails holidayDetail, List<Short> officeIds);
+
+    List<String> retrieveOtherHolidayNamesWithTheSameDate(HolidayDetails holidayDetail, List<Short> branchIds);
 }

@@ -128,7 +128,7 @@ public class QuestionGroupControllerTest {
         assertThat(questionGroup.getSections().size(), Is.is(1));
         assertThat(questionGroup.getSections().get(0).getName(), Is.is("sectionName"));
         assertThat(questionGroup.getSections().get(0).getSectionQuestions().size(), Is.is(1));
-        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getTitle(), Is.is("Q1"));
+        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getText(), Is.is("Q1"));
         assertThat(result, Is.is("success"));
     }
 
@@ -141,7 +141,7 @@ public class QuestionGroupControllerTest {
         assertThat(questionGroup.getSections().size(), Is.is(1));
         assertThat(questionGroup.getSections().get(0).getName(), Is.is("Misc"));
         assertThat(questionGroup.getSections().get(0).getSectionQuestions().size(), Is.is(1));
-        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getTitle(), Is.is("Q2"));
+        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getText(), Is.is("Q2"));
         assertThat(result, Is.is("success"));
     }
 
@@ -155,8 +155,8 @@ public class QuestionGroupControllerTest {
         assertThat(questionGroup.getSections().size(), Is.is(1));
         assertThat(questionGroup.getSections().get(0).getName(), Is.is("Misc"));
         assertThat(questionGroup.getSections().get(0).getSectionQuestions().size(), Is.is(2));
-        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getTitle(), Is.is("Q1"));
-        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(1).getTitle(), Is.is("Q2"));
+        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getText(), Is.is("Q1"));
+        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(1).getText(), Is.is("Q2"));
         assertThat(result, Is.is("success"));
     }
 
@@ -181,14 +181,14 @@ public class QuestionGroupControllerTest {
 
         assertThat(questionGroup.getSections().size(), CoreMatchers.is(1));
         assertThat(questionGroup.getSections().get(0).getSectionQuestions().size(), CoreMatchers.is(2));
-        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getTitle(), CoreMatchers.is("Q1"));
-        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(1).getTitle(), CoreMatchers.is("Q2"));
+        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getText(), CoreMatchers.is("Q1"));
+        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(1).getText(), CoreMatchers.is("Q2"));
 
         questionGroupController.deleteQuestion(questionGroup, "sectionName", "1");
 
         assertThat(questionGroup.getSections().size(), CoreMatchers.is(1));
         assertThat(questionGroup.getSections().get(0).getSectionQuestions().size(), CoreMatchers.is(1));
-        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getTitle(), CoreMatchers.is("Q2"));
+        assertThat(questionGroup.getSections().get(0).getSectionQuestions().get(0).getText(), CoreMatchers.is("Q2"));
 
         questionGroupController.deleteQuestion(questionGroup, "sectionName", "2");
 
@@ -353,9 +353,9 @@ public class QuestionGroupControllerTest {
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(2));
         assertThat(sectionQuestions.get(0).getQuestionId(), Is.is(1));
-        assertThat(sectionQuestions.get(0).getTitle(), Is.is("Q1"));
+        assertThat(sectionQuestions.get(0).getText(), Is.is("Q1"));
         assertThat(sectionQuestions.get(1).getQuestionId(), Is.is(2));
-        assertThat(sectionQuestions.get(1).getTitle(), Is.is("Q2"));
+        assertThat(sectionQuestions.get(1).getText(), Is.is("Q2"));
         verify(questionnaireServiceFacade).getAllActiveQuestions();
     }
 
@@ -369,9 +369,9 @@ public class QuestionGroupControllerTest {
         assertThat(sectionQuestions, Is.is(notNullValue()));
         assertThat(sectionQuestions.size(), Is.is(2));
         assertThat(sectionQuestions.get(0).getQuestionId(), Is.is(1));
-        assertThat(sectionQuestions.get(0).getTitle(), Is.is("Q1"));
+        assertThat(sectionQuestions.get(0).getText(), Is.is("Q1"));
         assertThat(sectionQuestions.get(1).getQuestionId(), Is.is(2));
-        assertThat(sectionQuestions.get(1).getTitle(), Is.is("Q2"));
+        assertThat(sectionQuestions.get(1).getText(), Is.is("Q2"));
         verify(questionnaireServiceFacade).getAllActiveQuestions(excludedQuestions);
     }
 
@@ -470,8 +470,8 @@ public class QuestionGroupControllerTest {
     @Test
     public void testAddQuestion() {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
-        questionGroupForm.getCurrentQuestion().setTitle("Question1");
-        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        questionGroupForm.getCurrentQuestion().setText("Question1");
+        questionGroupForm.getCurrentQuestion().setType("freeText");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
         assertThat(result, is("success"));
@@ -482,21 +482,21 @@ public class QuestionGroupControllerTest {
     public void testAddQuestionForEmptyTitle() {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
-        questionGroupForm.getCurrentQuestion().setTitle(null);
-        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        questionGroupForm.getCurrentQuestion().setText(null);
+        questionGroupForm.getCurrentQuestion().setType("freeText");
         when(messageContext.hasErrorMessages()).thenReturn(true);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
         assertThat(result, is("failure"));
         verify(requestContext, times(1)).getMessageContext();
-        verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionGroupForm.currentQuestion.title")));
+        verify(messageContext).addMessage(argThat(new MessageMatcher("NotNull.QuestionGroupForm.currentQuestion.text")));
     }
 
     @Test
     public void testAddQuestionForEmptyType() {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
-        questionGroupForm.getCurrentQuestion().setTitle(TITLE);
+        questionGroupForm.getCurrentQuestion().setText(TITLE);
         questionGroupForm.getCurrentQuestion().setType(null);
         when(messageContext.hasErrorMessages()).thenReturn(true);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
@@ -510,8 +510,8 @@ public class QuestionGroupControllerTest {
     public void testAddQuestionForDuplicateTitle() {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
-        questionGroupForm.getCurrentQuestion().setTitle(TITLE);
-        questionGroupForm.getCurrentQuestion().setType("Free Text");
+        questionGroupForm.getCurrentQuestion().setText(TITLE);
+        questionGroupForm.getCurrentQuestion().setType("freeText");
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(true);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionGroupController.addQuestion(questionGroupForm, requestContext);
@@ -524,8 +524,8 @@ public class QuestionGroupControllerTest {
     public void testAddQuestionForInvalidAnswerChoices() {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
-        questionGroupForm.getCurrentQuestion().setTitle(TITLE);
-        questionGroupForm.getCurrentQuestion().setType("Single Select");
+        questionGroupForm.getCurrentQuestion().setText(TITLE);
+        questionGroupForm.getCurrentQuestion().setType("singleSelect");
         questionGroupForm.getCurrentQuestion().setCurrentChoice("Choice1");
         questionGroupForm.getCurrentQuestion().addAnswerChoice();
         when(requestContext.getMessageContext()).thenReturn(messageContext);
@@ -539,8 +539,8 @@ public class QuestionGroupControllerTest {
     public void testAddQuestionForInvalidNumericBounds() {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "Default");
         questionGroupForm.setValidator(validator);
-        questionGroupForm.getCurrentQuestion().setTitle(TITLE);
-        questionGroupForm.getCurrentQuestion().setType("Number");
+        questionGroupForm.getCurrentQuestion().setText(TITLE);
+        questionGroupForm.getCurrentQuestion().setType("number");
         questionGroupForm.getCurrentQuestion().setNumericMin(100);
         questionGroupForm.getCurrentQuestion().setNumericMax(10);
         when(requestContext.getMessageContext()).thenReturn(messageContext);
@@ -596,11 +596,11 @@ public class QuestionGroupControllerTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title) {
-        return new SectionQuestionDetail(new QuestionDetail(id, title, title, QuestionType.FREETEXT, true), true);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, QuestionType.FREETEXT, true), true);
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, title, title, type, true);
+        return new QuestionDetail(id, title, type, true);
     }
 
 
