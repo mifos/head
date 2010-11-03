@@ -11,14 +11,14 @@
                style="width:50%">[@spring.message "fundinformation"/]</p>
 
             <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right"
-               style="float:right">[@spring.message "review&Submit"/]</p>
+               style="float:right">[@spring.message "reviewAndSubmit"/]</p>
         </div>
         <div>
             <form method="post" action="newFundPreview.ftl" name="newFundPreview">
                 <div class="margin30left20top">
                     <p class="font15"><span
                             class="fontBold">[@spring.message "defineanewfund"/]</span>&nbsp;--&nbsp;<span
-                            class="orangeheading">[@spring.message "review&Submit"/]</span></p>
+                            class="orangeheading">[@spring.message "reviewAndSubmit"/]</span></p>
 
                     <div>[@spring.message "reviewtheinformationbelow.ClickSubmitifyouaresatisfiedorclickEdittomakechanges.ClickCanceltoreturntoAdminpagewithoutsubmittinginformation"/]</div>
                 [@spring.bind "formBean"/]

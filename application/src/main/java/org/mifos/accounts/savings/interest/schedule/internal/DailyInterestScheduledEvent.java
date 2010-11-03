@@ -27,14 +27,12 @@ import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 
 /**
  * I represent an {@link InterestScheduledEvent} that occurs every number of days.
  */
 public class DailyInterestScheduledEvent implements InterestScheduledEvent {
 
-    private final RecurrenceType recurrenceType = RecurrenceType.DAILY;
     private final int every;
 
     public DailyInterestScheduledEvent(int every) {

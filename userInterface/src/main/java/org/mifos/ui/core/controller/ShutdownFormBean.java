@@ -23,10 +23,13 @@ package org.mifos.ui.core.controller;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import javax.validation.constraints.NotNull;
+
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EQ_UNUSUAL", justification="using commons equals builder")
 public class ShutdownFormBean {
 
-    private Integer timeout = 0;
+    @NotNull
+    private Integer timeout;
 
     public Integer getTimeout() {
         return timeout;

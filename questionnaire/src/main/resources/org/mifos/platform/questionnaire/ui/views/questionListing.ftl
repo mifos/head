@@ -1,4 +1,10 @@
 [#ftl]
+[#assign freeText][@spring.message "questionnaire.quesiton.choices.freetext"/][/#assign]
+[#assign date][@spring.message "questionnaire.quesiton.choices.date"/][/#assign]
+[#assign number][@spring.message "questionnaire.quesiton.choices.number"/][/#assign]
+[#assign multiSelect][@spring.message "questionnaire.quesiton.choices.multiselect"/][/#assign]
+[#assign singleSelect][@spring.message "questionnaire.quesiton.choices.singleselect"/][/#assign]
+[#assign smartSelect][@spring.message "questionnaire.quesiton.choices.smartselect"/][/#assign]
 <div class="question_list">
     <table class="table_common " id="questions.table" name="questions.table">
       <thead>
@@ -13,7 +19,7 @@
       [#list questionDefinition.questions as question]
         <tr>
             <td class="title">${question.text}</td>
-            <td class="ans_type">${question.type}</td>
+            <td class="ans_type">${{"freeText":freeText, "date":date, "number":number, "multiSelect":multiSelect, "singleSelect":singleSelect, "smartSelect":smartSelect}[question.type]}</td>
             <td class="choices">
               [#if question.commaSeparateChoices?has_content]
                 ${question.commaSeparateChoices}

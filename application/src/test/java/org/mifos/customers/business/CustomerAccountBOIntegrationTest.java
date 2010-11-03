@@ -221,7 +221,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         client = customerAccountBO.getCustomer();
         customerAccountBO.setUserContext(userContext);
         List<AccountTrxnEntity> reversedTrxns = AccountTestUtils.reversalAdjustment("payment adjustment done",
-                customerAccountBO.getLastPmnt());
+                customerAccountBO.findMostRecentPaymentByPaymentDate());
         customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns);
         for (AccountTrxnEntity accntTrxn : reversedTrxns) {
             CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
@@ -247,7 +247,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccountBO.adjustPmnt("payment adjusted");
         TestObjectFactory.updateObject(customerAccountBO);
         int countFinTrxns = 0;
-        for (AccountTrxnEntity accountTrxnEntity : customerAccountBO.getLastPmnt().getAccountTrxns()) {
+        for (AccountTrxnEntity accountTrxnEntity : customerAccountBO.findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
             countFinTrxns += accountTrxnEntity.getFinancialTransactions().size();
 
         }
@@ -255,7 +255,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(countFinTrxns, 6);
 
         CustomerTrxnDetailEntity custTrxn = null;
-        for (AccountTrxnEntity accTrxn : customerAccountBO.getLastPmnt().getAccountTrxns()) {
+        for (AccountTrxnEntity accTrxn : customerAccountBO.findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
             custTrxn = (CustomerTrxnDetailEntity) accTrxn;
             break;
         }

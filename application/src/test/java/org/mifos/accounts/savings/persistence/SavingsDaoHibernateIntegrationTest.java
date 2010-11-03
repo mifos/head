@@ -19,6 +19,12 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import static org.junit.Assert.*;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
+
+import java.util.List;
+
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Assert;
@@ -28,7 +34,13 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.application.collectionsheet.persistence.*;
+import org.mifos.accounts.savings.interest.EndOfDayDetail;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.ClientBuilder;
+import org.mifos.application.collectionsheet.persistence.FeeBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
@@ -37,15 +49,11 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 
-import java.util.List;
-
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 /**
  * I test integration of {@link SavingsDaoHibernate}, hibernate mapping
@@ -130,15 +138,20 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     }
 
     @Test
-    public void shouldXX() {
+    public void shouldRetrieveAllEndOfDayActvityOnSavingsAccount() {
 
         // setup
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToClientsOnly().buildForIntegrationTests();
-        savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct)
+        savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct).withDepositOf("50")
                 .withCustomer(client).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
-        this.savingsDao.retrieveAllEndOfDayDetailsFor(Money.getDefaultCurrency(), Long.valueOf(savingsAccount.getAccountId().toString()));
+        // exercise test
+        List<EndOfDayDetail> accountActivity = this.savingsDao.retrieveAllEndOfDayDetailsFor(Money.getDefaultCurrency(), Long.valueOf(savingsAccount.getAccountId().toString()));
+
+        // verification
+        assertFalse(accountActivity.isEmpty());
+        assertThat(accountActivity.get(0).getResultantAmountForDay(), is(TestUtils.createMoney("50")));
     }
 
     @Test

@@ -26,7 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
@@ -90,7 +89,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         savings = getSavingsService().findById(accountId);
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        AccountPaymentEntity lastPayment = savings.getLastPmnt();
+        AccountPaymentEntity lastPayment = savings.findMostRecentPaymentByPaymentDate();
         if (null != lastPayment
                 && lastPayment.getAmount().isNonZero()
                 && (new SavingsHelper().getPaymentActionType(lastPayment).equals(
@@ -100,7 +99,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
             AccountActionEntity accountAction = (AccountActionEntity) new MasterPersistence().getPersistentObject(
                     AccountActionEntity.class, new SavingsHelper().getPaymentActionType(lastPayment));
             accountAction.setLocaleId(uc.getLocaleId());
-            getSavingsService().initialize(savings.getLastPmnt().getAccountTrxns());
+            getSavingsService().initialize(savings.findMostRecentPaymentByPaymentDate().getAccountTrxns());
             SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION, accountAction, request);
             SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME, getClientName(savings, lastPayment), request);
             SessionUtils.setAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, Constants.YES, request);

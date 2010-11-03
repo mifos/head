@@ -180,7 +180,7 @@ public class QuestionGroupFormTest {
         String sectionName = "SectionWithNewQuestion";
         Question currentQuestion = new Question(new QuestionDetail());
         currentQuestion.setText(" Question1 ");
-        currentQuestion.setType("Free Text");
+        currentQuestion.setType("freeText");
         questionGroupForm.setCurrentQuestion(currentQuestion);
         questionGroupForm.setAddQuestionFlag(true);
         questionGroupForm.setSectionName(sectionName);
@@ -246,7 +246,7 @@ public class QuestionGroupFormTest {
         String sectionName = "SectionWithNewQuestion";
         Question currentQuestion = new Question(new QuestionDetail());
         currentQuestion.setText(" Question1 ");
-        currentQuestion.setType("Free Text");
+        currentQuestion.setType("freeText");
         questionGroupForm.setCurrentQuestion(currentQuestion);
         questionGroupForm.setAddQuestionFlag(true);
         questionGroupForm.setSectionName(sectionName);

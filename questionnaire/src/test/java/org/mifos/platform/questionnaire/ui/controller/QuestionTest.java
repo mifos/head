@@ -83,28 +83,28 @@ public class QuestionTest {
 
     @Test
     public void shouldGetTitleAndType() {
-        assertQuestion("Question Title1", QuestionType.NUMERIC, "Number", new LinkedList<String>());
-        assertQuestion("Question Title2", QuestionType.FREETEXT, "Free Text", new LinkedList<String>());
-        assertQuestion("Question Title3", QuestionType.DATE, "Date", new LinkedList<String>());
-        assertQuestion("Question Title4", QuestionType.SINGLE_SELECT, "Single Select", Arrays.asList("choice-1", "choice-2"));
-        assertQuestion("Question Title5", QuestionType.MULTI_SELECT, "Multi Select", Arrays.asList("choice1", "choice2"));
+        assertQuestion("Question Title1", QuestionType.NUMERIC, "number", new LinkedList<String>());
+        assertQuestion("Question Title2", QuestionType.FREETEXT, "freeText", new LinkedList<String>());
+        assertQuestion("Question Title3", QuestionType.DATE, "date", new LinkedList<String>());
+        assertQuestion("Question Title4", QuestionType.SINGLE_SELECT, "singleSelect", Arrays.asList("choice-1", "choice-2"));
+        assertQuestion("Question Title5", QuestionType.MULTI_SELECT, "multiSelect", Arrays.asList("choice1", "choice2"));
     }
 
     @Test
     public void testQuestionTypeConversion() {
         Question question = new Question(new QuestionDetail());
-        question.setType("Number");
-        assertThat(question.getType(), is("Number"));
-        question.setType("Free Text");
-        assertThat(question.getType(), is("Free Text"));
-        question.setType("Date");
-        assertThat(question.getType(), is("Date"));
-        question.setType("Single Select");
-        assertThat(question.getType(), is("Single Select"));
-        question.setType("Number");
-        assertThat(question.getType(), is("Number"));
-        question.setType("Multi Select");
-        assertThat(question.getType(), is("Multi Select"));
+        question.setType("number");
+        assertThat(question.getType(), is("number"));
+        question.setType("freeText");
+        assertThat(question.getType(), is("freeText"));
+        question.setType("date");
+        assertThat(question.getType(), is("date"));
+        question.setType("singleSelect");
+        assertThat(question.getType(), is("singleSelect"));
+        question.setType("number");
+        assertThat(question.getType(), is("number"));
+        question.setType("multiSelect");
+        assertThat(question.getType(), is("multiSelect"));
         question.setType("Multi Selects");
         Assert.assertNull(question.getType());
     }

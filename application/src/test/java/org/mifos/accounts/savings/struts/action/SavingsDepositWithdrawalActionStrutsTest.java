@@ -23,9 +23,9 @@ package org.mifos.accounts.savings.struts.action;
 import junit.framework.Assert;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.savings.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -33,6 +33,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountStates;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -46,6 +47,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -324,18 +326,13 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
 
     public void testSuccessfulMakePayment_Withdrawal() throws Exception {
         createCenterAndGroup();
-        savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
-        savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
-        SavingBOTestUtils.setBalance(savings, new Money(getCurrency(), "500"));
 
-        savings.update();
-        StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savingsOffering = new SavingsProductBuilder().mandatory().appliesToCentersOnly().buildForIntegrationTests();
+        savings = new SavingsAccountBuilder().withSavingsProduct(savingsOffering).withDepositOf("500")
+                .withCustomer(center).build();
+        IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsOffering, savings);
 
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+        savings = IntegrationTestObjectMother.findSavingsAccountById(savings.getAccountId().longValue());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
@@ -354,10 +351,12 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "makePayment");
         actionPerform();
+
         verifyForward(ActionForwards.account_details_page.toString());
-        StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
-       Assert.assertEquals(new Money(getCurrency(), "470"), savings.getSavingsBalance());
+
+        savings = IntegrationTestObjectMother.findSavingsAccountById(savings.getAccountId().longValue());
+
+        Assert.assertEquals(new Money(getCurrency(), "470"), savings.getSavingsBalance());
     }
 
     public void testSuccessfullPrevious() throws Exception {

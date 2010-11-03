@@ -34,6 +34,7 @@ import org.mifos.application.admin.servicefacade.ShutdownServiceFacade;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -41,7 +42,7 @@ import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/shutdown")
-@SessionAttributes("formBean")
+@SessionAttributes("shutdownFormBean")
 public class ShutdownController {
 
     private static final Integer DEFAULT_SHUTDOWN_TIMEOUT = 600; // 10 minutes
@@ -64,7 +65,7 @@ public class ShutdownController {
         return new AdminBreadcrumbBuilder().withLink("admin.shutdown", "shutdown.ftl").build();
     }
 
-    @ModelAttribute("formBean")
+    @ModelAttribute("shutdownFormBean")
     public ShutdownFormBean showPopulatedForm() {
         ShutdownFormBean formBean = new ShutdownFormBean();
         formBean.setTimeout(DEFAULT_SHUTDOWN_TIMEOUT);
@@ -96,7 +97,7 @@ public class ShutdownController {
     public ModelAndView processFormSubmit(HttpServletRequest request,
                                     @RequestParam(value = START_PARAM, required = false) String start,
                                     @RequestParam(value = CANCEL_PARAM, required = false) String cancel,
-                                    @ModelAttribute("formBean") ShutdownFormBean formBean,
+                                    @ModelAttribute("shutdownFormBean") @Valid ShutdownFormBean formBean,
                                     BindingResult result,
                                     SessionStatus status) {
         if (!result.hasErrors()) {

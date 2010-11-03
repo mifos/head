@@ -96,7 +96,7 @@ public class QuestionControllerTest {
         ArrayList<Question> questions = new ArrayList<Question>();
         questionForm.setQuestions(questions);
         String title = "title";
-        questions.add(getQuestion("1", title, "Free Text"));
+        questions.add(getQuestion("1", title, "freeText"));
         questionController.removeQuestion(questionForm, "");
         questionController.removeQuestion(questionForm, "junk");
         Assert.assertThat(questionForm.getQuestions().size(), is(1));
@@ -106,7 +106,7 @@ public class QuestionControllerTest {
 
     @Test
     public void testAddQuestionForSuccess() throws Exception {
-        QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
+        QuestionForm questionForm = getQuestionForm(TITLE, "numeric");
         when(questionnaireServiceFacade.isDuplicateQuestion(TITLE)).thenReturn(false);
         when(messageContext.getAllMessages()).thenReturn(new Message[]{});
         when(requestContext.getMessageContext()).thenReturn(messageContext);
@@ -134,7 +134,7 @@ public class QuestionControllerTest {
 
     @Test
     public void testAddQuestionForFailureWhenInvalidNumericBoundsGiven() throws Exception {
-        QuestionForm questionForm = getQuestionForm(TITLE, "Number");
+        QuestionForm questionForm = getQuestionForm(TITLE, "number");
         questionForm.getCurrentQuestion().setNumericMin(100);
         questionForm.getCurrentQuestion().setNumericMax(10);
         questionForm.setValidator(validator);
@@ -152,7 +152,7 @@ public class QuestionControllerTest {
         QuestionForm qform = new QuestionForm();
         qform.setValidator(validator);
         qform.getCurrentQuestion().setText("   ");
-        qform.getCurrentQuestion().setType("Free Text");
+        qform.getCurrentQuestion().setType("freeText");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         when(messageContext.hasErrorMessages()).thenReturn(true);
         String result = questionController.addQuestion(qform, requestContext, true);
@@ -183,7 +183,7 @@ public class QuestionControllerTest {
     public void testAddQuestionForFailureWhenQuestionTitleIsDuplicateInForm() throws Exception {
         QuestionForm questionForm = new QuestionForm();
         questionForm.getCurrentQuestion().setText("  " + TITLE + "    ");
-        questionForm.setQuestions(Arrays.asList(getQuestion("0", TITLE, "Number")));
+        questionForm.setQuestions(Arrays.asList(getQuestion("0", TITLE, "number")));
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         String result = questionController.addQuestion(questionForm, requestContext, true);
         Assert.assertThat(questionForm.getQuestions().size(), is(1));
@@ -250,7 +250,7 @@ public class QuestionControllerTest {
     public void testAddQuestionForFailureWhenLessThanTwoChoicesAreGivenForMultiSelect() throws Exception {
         QuestionForm questionForm = new QuestionForm();
         questionForm.getCurrentQuestion().setText("  " + TITLE + "    ");
-        questionForm.getCurrentQuestion().setType("Multi Select");
+        questionForm.getCurrentQuestion().setType("multiSelect");
         questionForm.getCurrentQuestion().setCurrentChoice("C1");
         questionForm.getCurrentQuestion().addAnswerChoice();
         when(requestContext.getMessageContext()).thenReturn(messageContext);
@@ -265,7 +265,7 @@ public class QuestionControllerTest {
     public void testAddQuestionForSuccessWhenTwoChoicesAreGivenForSigleSelect() throws Exception {
         QuestionForm questionForm = new QuestionForm();
         questionForm.getCurrentQuestion().setText("  " + TITLE + "    ");
-        questionForm.getCurrentQuestion().setType("Single Select");
+        questionForm.getCurrentQuestion().setType("singleSelect");
         questionForm.getCurrentQuestion().setCurrentChoice("C1");
         questionForm.getCurrentQuestion().addAnswerChoice();
         questionForm.getCurrentQuestion().setCurrentChoice("C2");
@@ -280,7 +280,7 @@ public class QuestionControllerTest {
     @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     @Test
     public void testCreateQuestionFailure() throws Exception {
-        QuestionForm questionForm = getQuestionForm(TITLE, "Numeric");
+        QuestionForm questionForm = getQuestionForm(TITLE, "numeric");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
         Mockito.doThrow(new SystemException("db.write.failure")).when(questionnaireServiceFacade).createQuestions(Matchers.<List<QuestionDetail>>anyObject());
         String result = questionController.createQuestions(questionForm, requestContext);
@@ -292,7 +292,7 @@ public class QuestionControllerTest {
 
     @Test
     public void testCreateQuestionSuccess() throws Exception {
-        QuestionForm questionForm = getQuestionForm(TITLE, "Date");
+        QuestionForm questionForm = getQuestionForm(TITLE, "date");
         String result = questionController.createQuestions(questionForm, requestContext);
         Assert.assertThat(result, is("success"));
         Mockito.verify(questionnaireServiceFacade).createQuestions(anyListOf(QuestionDetail.class));

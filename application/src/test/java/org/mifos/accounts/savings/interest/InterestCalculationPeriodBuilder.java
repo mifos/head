@@ -67,4 +67,9 @@ public class InterestCalculationPeriodBuilder {
         }
         return this;
     }
+
+    public InterestCalculationPeriodBuilder isFirstActivity() {
+        this.isFirstActivityBeforeInterval = false;
+        return this;
+    }
 }

@@ -25,8 +25,7 @@
 <div class="content">
     <form method="post" name="shutdown" action="shutdown.ftl">
         [@mifos.crumbs breadcrumbs /]
-        [@spring.bind "formBean" /]
-        [@spring.showErrors "<br>" /]
+        [@spring.bind "shutdownFormBean" /]
         <div class="marginLeft30">
             <div class="span-24">
                 <div class="clear">&nbsp;</div>
@@ -34,21 +33,23 @@
                     <p class="font15"><span class="orangeheading">[@spring.message "systemAdministration.shutdown.shutdownInformation" /]</span></p>
                     <div class="span-23">
                         <span class="span-11">[@spring.message "systemAdministration.shutdown.welcometotheMifosshutdownmanagementArea" /].</span>
-                        [@spring.showErrors "<br>" /]
                     </div>
+                    [@mifos.showAllErrors "shutdownFormBean.*"/]
                     <div class="clear">&nbsp;</div>
                     <div class="span-23">
                         <span class="span-7">[@spring.message "systemAdministration.shutdown.shutdownStatus" /]</span>
     	            <span class="span-11">${model.shutdownStatus}</span>
-                        [@spring.showErrors "<br>" /]
                     </div>
                     <div class="span-23">
                         <span class="span-7">[@spring.message "systemAdministration.shutdown.scheduleIn" /]</span>
     	            <span class="span-11">
-    	            	[@spring.bind "formBean.timeout" /]
-						<input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="${formBean.timeout?c}" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
+    	            	[@spring.bind "shutdownFormBean.timeout" /]
+                        [#if shutdownFormBean.timeout??]
+                        <input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="${shutdownFormBean.timeout?c}" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
+                        [#else]
+                        <input type="text" maxlength="7" id="timeout" name="${spring.status.expression}" value="" />&nbsp;[@spring.message "systemAdministration.shutdown.seconds" /]
+                        [/#if]
 					</span>
-                        [@spring.showErrors "<br>" /]
                     </div>
                     <div class="clear">&nbsp;</div>
                 </div>

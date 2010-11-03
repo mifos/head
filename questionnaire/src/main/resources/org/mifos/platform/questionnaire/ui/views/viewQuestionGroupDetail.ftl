@@ -42,7 +42,7 @@
                         [@spring.message "questionnaire.questionGroup"/]: ${questionGroupForm.questionGroupDetail.title}
                     </li>
                     <li id="questionGroup.appliesTo">
-                        [@spring.message "questionnaire.questionGroupAppliesTo"/]: [#list questionGroupForm.questionGroupDetail.eventSources as eventSource]${eventSource.description}, [/#list]
+                        [@spring.message "questionnaire.questionGroupAppliesTo"/]: [#list questionGroupForm.questionGroupDetail.eventSources as eventSource][#if eventSource_index != 0], [/#if]${eventSource.description}[/#list]
 
                     </li>
                     <li id="questionGroup.editable">

@@ -131,7 +131,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         standardAccountService.makePayment(accountPaymentParametersDto);
 
         TestObjectFactory.updateObject(groupLoan);
-        Assert.assertEquals("We should get the comment back", comment, groupLoan.getLastPmnt().getComment());
+        Assert.assertEquals("We should get the comment back", comment, groupLoan.findMostRecentPaymentByPaymentDate().getComment());
     }
 
     @Test

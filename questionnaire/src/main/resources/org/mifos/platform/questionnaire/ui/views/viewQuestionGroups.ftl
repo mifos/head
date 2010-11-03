@@ -30,7 +30,8 @@
         </p>
 
         <p>
-        [@mifos.mlink dest="createQuestionGroup.ftl"][@spring.message "questionnaire.create.question.group"/][/@mifos.mlink]
+        [@spring.message "questionnaire.create.question.group.prompt"/]&nbsp;
+        [@mifos.mlink dest="createQuestionGroup.ftl"][@spring.message "questionnaire.create.question.group.link"/][/@mifos.mlink]
         </p>
 
         <div id="questionGroupList">

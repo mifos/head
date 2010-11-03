@@ -27,6 +27,9 @@
         <div class="margin20lefttop">
             <p class="font15 margin15bottom"><span
                     class="orangeheading">[@spring.message "organizationPreferences.previewHoliday" /]</span></p>
+            [#if otherHolidays?size > 0]
+                <p class="error">[@spring.message "organizationPreferences.otherHolidaysWithTheSameDate" /]: [#list otherHolidays as holiday][#if holiday_index != 0], [/#if]<strong>${holiday}</strong>[/#list]</p>
+            [/#if]
 
             <table class="lineheight1p2" cellspacing="0" cellpadding="3" border="0" width="98%">
                 <tbody>

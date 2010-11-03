@@ -33,6 +33,8 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.business.CustomFieldUtils;
+import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.business.QuestionUtils;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
@@ -173,10 +175,12 @@ public class QuestionnaireMigrationMapperTest {
     @Test
     public void shouldMapToQuestionGroupInstanceDtoForMultiSelect() throws ApplicationException {
         Survey survey = getSurvey("Sur1", "Ques1");
-        survey.getQuestions().get(0).getQuestion().setAnswerType(AnswerType.MULTISELECT);
-        SurveyInstance surveyInstance = getSurveyInstance(survey, 12, 101, ",Answer1,Answer2,,Answer3");
+        Question question = survey.getQuestions().get(0).getQuestion();
+        question.setAnswerType(AnswerType.MULTISELECT);
+        question.setChoices(asList(getChoice("Answer1", 0), getChoice("Answer2", 1), getChoice("Answer3", 2)));
+        SurveyInstance surveyInstance = getSurveyInstance(survey, 12, 101, ",1,0,,1");
         Integer questionGroupId = 11, sectionQuestionId = 112233;
-        Integer questionId = survey.getQuestions().get(0).getQuestion().getQuestionId();
+        Integer questionId = question.getQuestionId();
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", questionId, questionGroupId)).thenReturn(sectionQuestionId);
         QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(surveyInstance, questionGroupId, 3);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
@@ -187,14 +191,18 @@ public class QuestionnaireMigrationMapperTest {
         assertThat(questionGroupInstanceDto.getDateConducted(), is(surveyInstance.getDateConducted()));
         List<QuestionGroupResponseDto> questionGroupResponses = questionGroupInstanceDto.getQuestionGroupResponseDtos();
         assertThat(questionGroupResponses, is(notNullValue()));
-        assertThat(questionGroupResponses.size(), is(3));
+        assertThat(questionGroupResponses.size(), is(2));
         assertThat(questionGroupResponses.get(0).getResponse(), is("Answer1"));
         assertThat(questionGroupResponses.get(0).getSectionQuestionId(), is(sectionQuestionId));
-        assertThat(questionGroupResponses.get(1).getResponse(), is("Answer2"));
+        assertThat(questionGroupResponses.get(1).getResponse(), is("Answer3"));
         assertThat(questionGroupResponses.get(1).getSectionQuestionId(), is(sectionQuestionId));
-        assertThat(questionGroupResponses.get(2).getResponse(), is("Answer3"));
-        assertThat(questionGroupResponses.get(2).getSectionQuestionId(), is(sectionQuestionId));
         verify(questionnaireServiceFacade, times(1)).getSectionQuestionId("Misc", questionId, questionGroupId);
+    }
+
+    private QuestionChoice getChoice(String text, int choiceOrder) {
+        QuestionChoice questionChoice = new QuestionChoice(text);
+        questionChoice.setChoiceOrder(choiceOrder);
+        return questionChoice;
     }
 
     @Test

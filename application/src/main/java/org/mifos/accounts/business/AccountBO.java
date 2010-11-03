@@ -544,7 +544,7 @@ public class AccountBO extends AbstractBusinessObject {
         if (isAdjustPossibleOnLastTrxn()) {
             logger.debug(
                     "Adjustment is possible hence attempting to adjust.");
-            adjustPayment(getLastPmnt(), getLoggedInUser(), adjustmentComment);
+            adjustPayment(findMostRecentPaymentByPaymentDate(), getLoggedInUser(), adjustmentComment);
             try {
                 getAccountPersistence().createOrUpdate(this);
             } catch (PersistenceException e) {
@@ -789,7 +789,7 @@ public class AccountBO extends AbstractBusinessObject {
 
     public double getLastPmntAmnt() {
         if (null != accountPayments && accountPayments.size() > 0) {
-            return getLastPmnt().getAmount().getAmountDoubleValue();
+            return findMostRecentPaymentByPaymentDate().getAmount().getAmountDoubleValue();
         }
         return 0;
     }
@@ -801,13 +801,29 @@ public class AccountBO extends AbstractBusinessObject {
         return 0;
     }
 
+    /*
+     * called from ui
+     */
     public AccountPaymentEntity getLastPmnt() {
-        AccountPaymentEntity lastPmnt = null;
-        for (AccountPaymentEntity accntPayment : accountPayments) {
-            lastPmnt = accntPayment;
-            break;
+        return findMostRecentPaymentByPaymentDate();
+    }
+
+    public AccountPaymentEntity findMostRecentPaymentByPaymentDate() {
+
+        AccountPaymentEntity mostRecentPayment = null;
+
+        List<AccountPaymentEntity> recentAccountPayments = new ArrayList<AccountPaymentEntity>(this.accountPayments);
+        if (!recentAccountPayments.isEmpty()) {
+            mostRecentPayment = recentAccountPayments.get(0);
+            for (AccountPaymentEntity accountPaymentEntity : recentAccountPayments) {
+                LocalDate paymentDate = new LocalDate(accountPaymentEntity.getPaymentDate());
+                if (paymentDate.isAfter(new LocalDate(mostRecentPayment.getPaymentDate())) && paymentDate.isBefore(new LocalDate().plusDays(1))) {
+                    mostRecentPayment = accountPaymentEntity;
+                }
+            }
         }
-        return lastPmnt;
+
+        return mostRecentPayment;
     }
 
     public AccountPaymentEntity getLastPmntToBeAdjusted() {

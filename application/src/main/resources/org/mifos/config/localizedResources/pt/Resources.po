@@ -1,10 +1,9 @@
-# extracted from Resources.properties
-#. extracted from Resources.properties
+#. extracted from Resources.properties, Resources_pt.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-11-01 13:19-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -12,217 +11,219 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Translate Toolkit 1.7.0\n"
-"X-Accelerator-Marker: &\n"
 
 #: Next
 msgid "Next"
-msgstr ""
+msgstr "Próximo"
 
 #: Previous
 msgid "Previous"
-msgstr ""
+msgstr "Anterior"
 
 #: Results
 msgid "Results %s1-%s2 of %s3"
-msgstr ""
+msgstr "Resultados %s1-%s2 de %s3"
 
 #: alsosee
 msgid "Also See"
-msgstr ""
+msgstr "Veja também"
 
 #: center
 msgid "Center"
-msgstr ""
+msgstr "Centro"
 
 #: client
 msgid "Client"
-msgstr ""
+msgstr "Cliente"
 
 #: error.fwdkey
 msgid "forward key not found"
-msgstr ""
+msgstr "forward key não encontrada"
 
 #: error.noaction
 msgid "action not found"
-msgstr ""
+msgstr "ação não encontrada"
 
 #: error.noxmlfile
 msgid "xml file not found in properties file"
-msgstr ""
+msgstr "ficheiro xml não encontrado no ficheiro de propriedades"
 
 #: error.tablenotfound
 msgid "table not found"
-msgstr ""
+msgstr "tabela não encontrada"
 
 #: error.wrongtype
 msgid "type entered is wrong"
-msgstr ""
+msgstr "o tipo introduzido está errado"
 
 #: errors.unexpected
 msgid ""
 "An unexpected error has occured during the operation. Please try again "
 "later."
 msgstr ""
+"Um erro inesperado ocorreu durante a operação. Por favor tente novamente "
+"mais tarde."
 
 #: group
 msgid "Group"
-msgstr ""
+msgstr "Grupo"
 
 #: loan
 msgid "Loan"
-msgstr ""
+msgstr "Emprestimo"
 
 #: loanaccount_stateid_1
 msgctxt "loanaccount_stateid_1"
 msgid "Partial Application"
-msgstr ""
+msgstr "Aplicação Parcial"
 
 #: loanaccount_stateid_10
 msgctxt "loanaccount_stateid_10"
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: loanaccount_stateid_2
 msgctxt "loanaccount_stateid_2"
 msgid "Pending Approval"
-msgstr ""
+msgstr "Pendente de Aprovação"
 
 #: loanaccount_stateid_3
 msgid "Approved"
-msgstr ""
+msgstr "Aprovado"
 
 #: loanaccount_stateid_4
 msgid "Disbursed to LO"
-msgstr ""
+msgstr "Desembolsado para LO"
 
 #: loanaccount_stateid_5
 msgid "Active in Good Standing"
-msgstr ""
+msgstr "Activo em Bom Estado"
 
 #: loanaccount_stateid_6
 msgid "Closed- Obligation met"
-msgstr ""
+msgstr "Fechado- Obrigação cumprida"
 
 #: loanaccount_stateid_7
 msgid "Closed- Written Off"
-msgstr ""
+msgstr "Fechado- Apagado"
 
 #: loanaccount_stateid_8
 msgid "Closed- Rescheduled"
-msgstr ""
+msgstr "Fechado- Remarcados"
 
 #: loanaccount_stateid_9
 msgid "Active in Bad Standing"
-msgstr ""
+msgstr "Activo em Mau Estado"
 
 #: loanofficer
 msgid "Loan Officer"
-msgstr ""
+msgstr "Agente de Empréstimo"
 
 #: savings
 msgid "Savings"
-msgstr ""
+msgstr "Poupanças"
 
 #: savings_stateid_13
 msgctxt "savings_stateid_13"
 msgid "Partial Application"
-msgstr ""
+msgstr "Aplicação Parcial"
 
 #: savings_stateid_14
 msgctxt "savings_stateid_14"
 msgid "Pending Approval"
-msgstr ""
+msgstr "Pendente de Aprovação"
 
 #: savings_stateid_15
 msgctxt "savings_stateid_15"
 msgid "Cancel"
-msgstr ""
+msgstr "Cancelar"
 
 #: savings_stateid_16
 msgctxt "savings_stateid_16"
+"savings_stateid_16"
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: savings_stateid_17
 msgctxt "savings_stateid_17"
 msgid "Closed"
-msgstr ""
+msgstr "Fechado"
 
 #: savings_stateid_18
 msgctxt "savings_stateid_18"
 msgid "Inactive"
-msgstr ""
+msgstr "Inativo"
 
 #: status
 msgid "Status"
-msgstr ""
+msgstr "Estado"
 
 #: value_1
 msgctxt "value_1"
 msgid "PartialApplication"
-msgstr ""
+msgstr "Aplicação Parcial"
 
 #: value_10
 msgctxt "value_10"
 msgid "Hold"
-msgstr ""
+msgstr "Espera"
 
 #: value_11
 msgctxt "value_11"
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #: value_12
 msgctxt "value_12"
 msgid "Closed"
-msgstr ""
+msgstr "Fechado"
 
 #: value_13
 msgctxt "value_13"
 msgid "Active"
-msgstr ""
+msgstr "Ativo"
 
 #: value_14
 msgctxt "value_14"
 msgid "Inactive"
-msgstr ""
+msgstr "Inativo"
 
 #: value_2
 msgctxt "value_2"
 msgid "PendingApproval"
-msgstr ""
+msgstr "Pendente de Aprovação"
 
 #: value_3
 msgctxt "value_3"
 msgid "Active"
-msgstr ""
+msgstr "Activo"
 
 #: value_4
 msgctxt "value_4"
 msgid "Hold"
-msgstr ""
+msgstr "Espera"
 
 #: value_5
 msgctxt "value_5"
 msgid "Cancelled"
-msgstr ""
+msgstr "Cancelado"
 
 #: value_6
 msgctxt "value_6"
 msgid "Closed"
-msgstr ""
+msgstr "Fechado"
 
 #: value_7
 msgctxt "value_7"
 msgid "PartialApplication"
-msgstr ""
+msgstr "Aplicação Parcial"
 
 #: value_8
 msgctxt "value_8"
 msgid "PendingApproval"
-msgstr ""
+msgstr "Pendente de Aprovação"
 
 #: value_9
 msgctxt "value_9"
 msgid "Active"
-msgstr ""
+msgstr "Activo"
