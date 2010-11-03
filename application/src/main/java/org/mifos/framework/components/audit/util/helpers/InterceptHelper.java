@@ -126,12 +126,10 @@ public class InterceptHelper {
         setPrimaryKeyValues(customMeta, object, customMeta.getIdentifierPropertyName(), state);
 
         for (int i = 0; i < propertyNames.length; i++) {
-            logger.debug("hibernateMeta property name : " + propertyNames[i] + " and value : " + propertyValues[i]);
             if (!propertyTypes[i].isEntityType() && !propertyTypes[i].isCollectionType()
                     && !propertyTypes[i].isComponentType()) {
                 if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {
                     String name = propertyNames[i];
-                    logger.debug("i hibernateMeta " + name + " : " + propertyValues[i]);
                     if (AuditConfigurtion.checkForPropertyName(entityName, name, localeId)) {
                         String value = AuditConfigurtion.getValueOfCorrespondingId(entityName, name, propertyValues[i],
                                 localeId);
