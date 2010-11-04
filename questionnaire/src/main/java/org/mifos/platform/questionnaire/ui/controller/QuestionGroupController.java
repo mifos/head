@@ -112,7 +112,12 @@ public class QuestionGroupController extends QuestionnaireController {
                 if (createMode) {
                     questionGroupForm.setActive(true);
                 }
-                questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
+                if (questionGroupForm.isActive()) {
+                    questionnaireServiceFacade.createActiveQuestionGroup(questionGroupForm.getQuestionGroupDetail());
+                }
+                else {
+                    questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
+                }
             } catch (SystemException e) {
                 constructAndLogSystemError(requestContext.getMessageContext(), e);
                 result = "failure";

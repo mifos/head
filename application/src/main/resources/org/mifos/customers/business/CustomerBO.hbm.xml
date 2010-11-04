@@ -116,6 +116,13 @@
 			<one-to-many class="org.mifos.customers.business.CustomerBO" />
 		</set>
 
+                <set name="nameDetailSet" cascade="all" table="customer_name_detail"
+                        order-by="CUSTOMER_NAME_ID" access="field">
+                        <key column="customer_id" />
+                        <one-to-many
+                                class="org.mifos.customers.client.business.ClientNameDetailEntity" />
+                </set>
+
 		<subclass name="org.mifos.customers.center.business.CenterBO"
 			discriminator-value="CENTER"></subclass>
 
@@ -144,12 +151,6 @@
 			<one-to-one name="clientPerformanceHistory"
 				class="org.mifos.customers.client.business.ClientPerformanceHistoryEntity"
 				cascade="all" property-ref="client" />
-			<set name="nameDetailSet" cascade="all" table="customer_name_detail"
-				order-by="CUSTOMER_NAME_ID" access="field">
-				<key column="customer_id" />
-				<one-to-many
-					class="org.mifos.customers.client.business.ClientNameDetailEntity" />
-			</set>
 
 			<set name="familyDetailSet" cascade="all" access="field">
 				<key column="customer_id" />
@@ -815,8 +816,10 @@
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING
 	        	              or c.displayName like :SEARCH_STRING
-	        	              or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
-	        	              
+	        	              or (
+                                          :SEARCH_STRING2 in (select cnd.name.middleName from org.mifos.customers.client.business.ClientNameDetailEntity cnd
+                                                              where cnd.customer.id = c.customerId and cnd.nameType = 3) and
+                                          c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
 	        	              )
 	        	              
 	        	               )
@@ -841,9 +844,12 @@
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING
 	        	              or c.displayName like :SEARCH_STRING
-	        	              or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
+                                      or (
+                                          :SEARCH_STRING2 in (select cnd.name.middleName from org.mifos.customers.client.business.ClientNameDetailEntity cnd
+                                                              where cnd.customer.id = c.customerId and cnd.nameType = 3) and
+                                          c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
 	        	              )
-	        	               )
+                                      )
 	        	         ) order by c.customerLevel.id,c.lastName,c.firstName]]>
 	</query>
 	<query name="Customer.cust_search_noofficeid">
@@ -861,7 +867,10 @@
                     		   or (c.customerLevel.id =:LEVELID and 
                     		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
 	        	              			or c.displayName like :SEARCH_STRING
-                    		   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
+                    		   or (
+                                          :SEARCH_STRING2 in (select cnd.name.middleName from org.mifos.customers.client.business.ClientNameDetailEntity cnd
+                                                              where cnd.customer.id = c.customerId and cnd.nameType = 3) and
+                                          c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
                     		   ))
                     		   )
                     		 ) 
@@ -881,7 +890,10 @@
                     		   or (c.customerLevel.id =:LEVELID and 
                     		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
 	        	              			or c.displayName like :SEARCH_STRING
-                    		   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2 )
+                    		   or (
+                                          :SEARCH_STRING2 in (select cnd.name.middleName from org.mifos.customers.client.business.ClientNameDetailEntity cnd
+                                                              where cnd.customer.id = c.customerId and cnd.nameType = 3) and
+                                          c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
                     		   ))
                     		   )
                     		 ) 

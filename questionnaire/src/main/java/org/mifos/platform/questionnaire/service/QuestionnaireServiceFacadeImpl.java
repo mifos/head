@@ -71,6 +71,11 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
+    public void createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
+        questionnaireService.defineQuestionGroup(questionGroupDetail);
+    }
+
+    @Override
     public List<QuestionDetail> getAllQuestions() {
         return questionnaireService.getAllQuestions();
     }

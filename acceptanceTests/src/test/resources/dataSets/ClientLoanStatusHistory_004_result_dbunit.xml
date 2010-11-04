@@ -286,6 +286,7 @@
   <activity activity_id="240" parent_id="203" activity_name_lookup_id="630" description_lookup_id="630"/>
   <activity activity_id="241" parent_id="227" activity_name_lookup_id="631" description_lookup_id="631"/>
   <activity activity_id="242" parent_id="227" activity_name_lookup_id="632" description_lookup_id="632"/>
+  <activity activity_id="243" parent_id="203" activity_name_lookup_id="633" description_lookup_id="633"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -348,6 +349,7 @@
   <applied_upgrades upgrade_id="1287934290"/>
   <applied_upgrades upgrade_id="1288013750"/>
   <applied_upgrades upgrade_id="1288349766"/>
+  <applied_upgrades upgrade_id="1288869198"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -1896,6 +1898,7 @@
   <lookup_value lookup_id="630" entity_id="87" lookup_name="Permissions-CanManageQuestionGroups"/>
   <lookup_value lookup_id="631" entity_id="87" lookup_name="Permissions-CanRunBatchJobsOnDemand"/>
   <lookup_value lookup_id="632" entity_id="87" lookup_name="Permissions-CanUpdateBatchJobsConfiguration"/>
+  <lookup_value lookup_id="633" entity_id="87" lookup_name="Permissions-CanActivateQuestionGroups"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -2439,6 +2442,7 @@
   <lookup_value_locale lookup_value_id="962" locale_id="1" lookup_id="630"/>
   <lookup_value_locale lookup_value_id="963" locale_id="1" lookup_id="631"/>
   <lookup_value_locale lookup_value_id="964" locale_id="1" lookup_id="632"/>
+  <lookup_value_locale lookup_value_id="965" locale_id="1" lookup_id="633"/>
   <max_min_interest_rate account_id="3" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="4" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
   <max_min_interest_rate account_id="5" min_interest_rate="3.0000" max_interest_rate="30.0000"/>
@@ -2752,6 +2756,7 @@
   <roles_activity activity_id="240" role_id="1"/>
   <roles_activity activity_id="241" role_id="1"/>
   <roles_activity activity_id="242" role_id="1"/>
+  <roles_activity activity_id="243" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>

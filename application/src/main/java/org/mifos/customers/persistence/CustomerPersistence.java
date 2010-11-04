@@ -25,6 +25,7 @@ import java.sql.Connection;
 import java.sql.Date;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -405,13 +406,27 @@ public class CustomerPersistence extends Persistence {
         }
         paramList.add(typeNameValue("String", "SEARCH_STRING", "%" + searchString + "%"));
         if (searchString.contains(" ")) {
-            paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString
-                    .substring(0, searchString.indexOf(" "))));
-            paramList.add(typeNameValue("String", "SEARCH_STRING2", searchString.substring(
-                    searchString.indexOf(" ") + 1, searchString.length())));
+			List<String> words = new ArrayList<String>(Arrays.asList(searchString.split(" +")));
+			// we support up to 3 words for client search, so join more words with spaces or fill with empty
+			// strings to get exactly 3 words
+			if (words.size() > 3) {
+				for (int i = 3; i < words.size(); ++i) {
+					words.set(2, words.get(2) + " " + words.get(i));
+				}
+				words = words.subList(0, 2);
+			} else if (words.size() < 3) {
+				int elementsToAdd = 3 - words.size();
+				for (int i = 0; i < elementsToAdd; ++i) {
+					words.add("");
+				}
+			}
+            paramList.add(typeNameValue("String", "SEARCH_STRING1", words.get(0)));
+            paramList.add(typeNameValue("String", "SEARCH_STRING2", words.get(1)));
+			paramList.add(typeNameValue("String", "SEARCH_STRING3", words.get(2)));
         } else {
             paramList.add(typeNameValue("String", "SEARCH_STRING1", searchString));
             paramList.add(typeNameValue("String", "SEARCH_STRING2", ""));
+			paramList.add(typeNameValue("String", "SEARCH_STRING3", ""));
         }
         setParams(paramList, userId);
         queryResult.setQueryInputs(queryInputs);
