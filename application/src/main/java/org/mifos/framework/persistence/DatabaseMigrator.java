@@ -158,8 +158,10 @@ public class DatabaseMigrator {
 
         for (int i : availableUpgrades.keySet()) {
             if (!appliedUpgrades.contains(i)) {
-                System.out.println("applying upgrade with timestamp: " + i);
+                System.out.print("applying upgrade with timestamp: " + i);
+                long startTimeMillis = System.currentTimeMillis();
                 applyUpgrade(i, availableUpgrades.get(i));
+                System.out.println(": Finished in " + (System.currentTimeMillis() - startTimeMillis) + " msec");
             }
         }
 

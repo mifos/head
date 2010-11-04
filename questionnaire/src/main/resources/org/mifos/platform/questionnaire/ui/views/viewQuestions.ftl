@@ -38,6 +38,8 @@
                 <li>
                     <a href="viewAndEditQuestion.ftl?questionId=${question.id}"
                        id="questionId_${question.id}">${question.text}</a>
+                    [#if question.active == false]&nbsp;<img
+                        src="pages/framework/images/status_closedblack.gif" width="8" height="9">&nbsp;inactive[/#if]
                 </li>
             [/#list]
         </ul>

@@ -39,20 +39,22 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
 
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request,  HttpServletResponse response, Object handler, Exception ex) {
-        String requestUri = request.getRequestURI();
+        ModelAndView modelAndView = super.doResolveException(request, response, handler, ex);
 
-        logger.error("Uncaught exception while accessing '" + requestUri + "'", ex);
+        if (modelAndView != null) {
+            String requestUri = request.getRequestURI();
+            logger.error("Uncaught exception while accessing '" + requestUri + "'", ex);
 
-        ModelAndView mm = new ModelAndView();
-        mm.setViewName("uncaughtException");
-        mm.addObject("uncaughtException", ex);
-        mm.addObject("requestUri", requestUri);
-        if (isDevCookieAvailable(request) && ex != null) {
-            Writer result = new StringWriter();
-            ex.printStackTrace(new PrintWriter(result));
-            mm.addObject("stackString", result.toString());
+            modelAndView.addObject("uncaughtException", ex);
+            modelAndView.addObject("requestUri", requestUri);
+            if (isDevCookieAvailable(request) && ex != null) {
+                Writer result = new StringWriter();
+                ex.printStackTrace(new PrintWriter(result));
+                modelAndView.addObject("stackString", result.toString());
+            }
         }
-        return mm;
+
+        return modelAndView;
     }
 
     private boolean isDevCookieAvailable(HttpServletRequest request) {
