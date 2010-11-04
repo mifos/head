@@ -99,7 +99,6 @@ public class ClientBO extends CustomerBO {
     private String secondLastName;
     private ClientDetailEntity customerDetail;
 
-    private final Set<ClientNameDetailEntity> nameDetailSet;
     private Set<ClientFamilyDetailEntity> familyDetailSet;
     private final Set<ClientAttendanceBO> clientAttendances;
     private Set<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate;
@@ -201,7 +200,7 @@ public class ClientBO extends CustomerBO {
      */
     protected ClientBO() {
         super();
-        this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
+        
         this.clientAttendances = new HashSet<ClientAttendanceBO>();
         this.clientPerformanceHistory = null;
         this.offeringsAssociatedInCreate = null;
@@ -218,7 +217,6 @@ public class ClientBO extends CustomerBO {
         super(userContext, clientName, CustomerLevel.CLIENT, clientStatus, mfiJoiningDate, office, meeting,
                 loanOfficer, formedBy);
 
-        this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
         this.clientAttendances = new HashSet<ClientAttendanceBO>();
         this.offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
         this.clientPerformanceHistory = new ClientPerformanceHistoryEntity(this);
@@ -301,7 +299,6 @@ public class ClientBO extends CustomerBO {
                 customFields, fees, formedBy, office, parentCustomer, meeting, loanOfficer);
         validateOffice(office);
         validateNoDuplicateSavings(offeringsSelected);
-        nameDetailSet = new HashSet<ClientNameDetailEntity>();
         clientAttendances = new HashSet<ClientAttendanceBO>();
         offeringsAssociatedInCreate = new HashSet<ClientInitialSavingsOfferingEntity>();
         this.clientPerformanceHistory = new ClientPerformanceHistoryEntity(this);
@@ -363,10 +360,6 @@ public class ClientBO extends CustomerBO {
             this.addFamilyDetailSet(new ClientFamilyDetailEntity(this, nameEntity, clientFamilyDetailView2));
         }
 
-    }
-
-    public Set<ClientNameDetailEntity> getNameDetailSet() {
-        return nameDetailSet;
     }
 
     public Set<ClientFamilyDetailEntity> getFamilyDetailSet() {
@@ -472,7 +465,7 @@ public class ClientBO extends CustomerBO {
 
         if (customerNameDetail != null) {
             customerNameDetail.setClient(this);
-            this.nameDetailSet.add(customerNameDetail);
+            getNameDetailSet().add(customerNameDetail);
         }
     }
 
@@ -596,7 +589,7 @@ public class ClientBO extends CustomerBO {
             if (primaryKeys.get(key) != null) {
 
                 List<ClientNameDetailDto> clientNameDetailDto = clientFamilyInfoUpdate.getFamilyNames();
-                for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
+                for (ClientNameDetailEntity clientNameDetailEntity : getNameDetailSet()) {
                     if (clientNameDetailEntity.getCustomerNameId().intValue() == primaryKeys.get(key).intValue()) {
 
                         ClientNameDetailDto nameView = clientNameDetailDto.get(key);
@@ -665,7 +658,7 @@ public class ClientBO extends CustomerBO {
         }
         // get all the name entities to delete
         List<ClientNameDetailEntity> deleteNameDetailEntity = new ArrayList<ClientNameDetailEntity>();
-        for (ClientNameDetailEntity clientNameDetailEntity : nameDetailSet) {
+        for (ClientNameDetailEntity clientNameDetailEntity : getNameDetailSet()) {
             // Ignoring name entities of client type
             if (!ClientConstants.CLIENT_NAME_TYPE.equals(clientNameDetailEntity.getNameType())) {
                 if (!isKeyExists(clientNameDetailEntity.getCustomerNameId(), primaryKeys)) {
@@ -680,7 +673,7 @@ public class ClientBO extends CustomerBO {
         }
         // Delete ClientNameDetailEntity
         for (int i = 0; i < deleteNameDetailEntity.size(); i++) {
-            nameDetailSet.remove(deleteNameDetailEntity.get(i));
+            getNameDetailSet().remove(deleteNameDetailEntity.get(i));
             getCustomerPersistence().delete(deleteNameDetailEntity.get(i));
         }
     }
@@ -696,7 +689,7 @@ public class ClientBO extends CustomerBO {
             if (primaryKeys.get(i) == null) {
                 ClientNameDetailEntity nameDetail = new ClientNameDetailEntity(this, null, clientFamilyInfoUpdate
                         .getFamilyNames().get(i));
-                nameDetailSet.add(nameDetail);
+                getNameDetailSet().add(nameDetail);
                 familyDetailSet.add(new ClientFamilyDetailEntity(this, nameDetail, clientFamilyInfoUpdate
                         .getFamilyDetails().get(i)));
             }
@@ -753,7 +746,7 @@ public class ClientBO extends CustomerBO {
     }
 
     public ClientNameDetailEntity getClientName() {
-        for (ClientNameDetailEntity nameDetail : nameDetailSet) {
+        for (ClientNameDetailEntity nameDetail : getNameDetailSet()) {
             if (ClientConstants.CLIENT_NAME_TYPE.equals(nameDetail.getNameType())) {
                 return nameDetail;
             }
@@ -762,7 +755,7 @@ public class ClientBO extends CustomerBO {
     }
 
     public ClientNameDetailEntity getSpouseName() {
-        for (ClientNameDetailEntity nameDetail : nameDetailSet) {
+        for (ClientNameDetailEntity nameDetail : getNameDetailSet()) {
             if (!ClientConstants.CLIENT_NAME_TYPE.equals(nameDetail.getNameType())) {
                 return nameDetail;
             }
@@ -1111,7 +1104,7 @@ public class ClientBO extends CustomerBO {
     public final List<ClientNameDetailDto> toClientNameDetailViews() {
 
         List<ClientNameDetailDto> clientNameDetailDtos = new ArrayList<ClientNameDetailDto>();
-        for (ClientNameDetailEntity clientNameDetail : this.nameDetailSet) {
+        for (ClientNameDetailEntity clientNameDetail : getNameDetailSet()) {
 
             ClientNameDetailDto clientNameDetailDto = clientNameDetail.toDto();
             clientNameDetailDtos.add(clientNameDetailDto);

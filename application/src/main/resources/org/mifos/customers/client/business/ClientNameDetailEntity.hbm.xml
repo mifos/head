@@ -23,7 +23,7 @@
 	        <property name="lastName" column="last_name" type="string" />
 	        <property name="secondLastName" column="second_last_name" type="string"   />
 		</component>
-        <many-to-one name="client" column="customer_id" class="org.mifos.customers.client.business.ClientBO" insert="true" update="true"  access="field"/>
+        <many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" insert="true" update="true"  access="field"/>
     </class>
     
 </hibernate-mapping>

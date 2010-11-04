@@ -28,7 +28,7 @@ import org.mifos.framework.business.util.Name;
 public class ClientNameDetailEntity extends AbstractEntity {
 
     private final Integer customerNameId;
-    private ClientBO client;
+    private CustomerBO customer;
     private Short nameType;
     private Integer salutation;
     private String secondMiddleName;
@@ -38,7 +38,7 @@ public class ClientNameDetailEntity extends AbstractEntity {
     public ClientNameDetailEntity(ClientBO client, String secondMiddleName, ClientNameDetailDto view) {
         super();
         this.customerNameId = null;
-        this.client = client;
+        this.customer = client;
         this.nameType = view.getNameType();
         this.salutation = view.getSalutation();
         this.secondMiddleName = secondMiddleName;
@@ -49,7 +49,7 @@ public class ClientNameDetailEntity extends AbstractEntity {
     protected ClientNameDetailEntity() {
         super();
         this.customerNameId = null;
-        this.client = null;
+        this.customer = null;
         this.nameType = null;
         this.salutation = null;
         this.secondMiddleName = null;
@@ -81,8 +81,8 @@ public class ClientNameDetailEntity extends AbstractEntity {
         this.secondMiddleName = secondMiddleName;
     }
 
-    public CustomerBO getClient() {
-        return client;
+    public CustomerBO getCustomer() {
+        return customer;
     }
 
     public Short getNameType() {
@@ -128,6 +128,6 @@ public class ClientNameDetailEntity extends AbstractEntity {
     }
 
     public void setClient(ClientBO client) {
-        this.client = client;
+        this.customer = client;
     }
 }

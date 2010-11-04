@@ -20,6 +20,7 @@
 
 package org.mifos.customers.business;
 
+import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,6 +124,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     public Short blackListed = YesNoFlag.NO.getValue();
     private Set<CustomerNoteEntity> customerNotes;
     private Set<CustomerBO> children;
+	private final Set<ClientNameDetailEntity> nameDetailSet;
+
 
     private CustomerPersistence customerPersistence = null;
     private PersonnelPersistence personnelPersistence = null;
@@ -143,6 +146,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
             final CustomerBO parentCustomer) {
         super();
+		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
         this.customerId = null;
         this.displayName = name;
         this.office = office;
@@ -169,6 +173,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     protected CustomerBO(final Integer customerId, final CustomerLevelEntity customerLevel,
             final PersonnelBO formedByPersonnel, final PersonnelBO personnel, final String displayName) {
         super();
+		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
         this.customerId = customerId;
         this.customerLevel = customerLevel;
         this.formedByPersonnel = formedByPersonnel;
@@ -183,6 +188,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             CustomerStatus customerStatus, DateTime mfiJoiningDate, OfficeBO office, MeetingBO meeting,
             PersonnelBO loanOfficer, PersonnelBO formedBy) {
         super(userContext);
+		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
         this.customerId = null;
         this.customerHierarchies = new HashSet<CustomerHierarchyEntity>();
         this.customerMovements = new HashSet<CustomerMovementEntity>();
@@ -219,6 +225,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         super(userContext);
 
+		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
         customerHierarchies = new HashSet<CustomerHierarchyEntity>();
         customerMovements = new HashSet<CustomerMovementEntity>();
         customerPositions = new HashSet<CustomerPositionEntity>();
@@ -264,6 +271,10 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public Integer getCustomerId() {
         return customerId;
+    }
+
+	public Set<ClientNameDetailEntity> getNameDetailSet() {
+        return nameDetailSet;
     }
 
     /**
