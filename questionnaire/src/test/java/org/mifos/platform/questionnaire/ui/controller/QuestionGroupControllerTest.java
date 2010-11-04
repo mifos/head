@@ -202,7 +202,7 @@ public class QuestionGroupControllerTest {
         assertThat(result, Is.is("success"));
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", "S1", "S2");
         questionGroupDetail.setActive(true);
-        verify(questionnaireServiceFacade).createQuestionGroup(argThat(new QuestionGroupDetailMatcher(questionGroupDetail)));
+        verify(questionnaireServiceFacade).createActiveQuestionGroup(argThat(new QuestionGroupDetailMatcher(questionGroupDetail)));
     }
 
     @Test
@@ -267,10 +267,10 @@ public class QuestionGroupControllerTest {
     public void testCreateQuestionGroupFailure() throws Exception {
         QuestionGroupForm questionGroupForm = getQuestionGroupForm(TITLE, "Create.Client", "S1", "S2");
         when(requestContext.getMessageContext()).thenReturn(messageContext);
-        doThrow(new SystemException("questionnaire.error.duplicate.question.found.in.section")).when(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
+        doThrow(new SystemException("questionnaire.error.duplicate.question.found.in.section")).when(questionnaireServiceFacade).createActiveQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
         String result = questionGroupController.defineQuestionGroup(questionGroupForm, requestContext, true);
         assertThat(result, Is.is("failure"));
-        verify(questionnaireServiceFacade).createQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
+        verify(questionnaireServiceFacade).createActiveQuestionGroup(Matchers.<QuestionGroupDetail>anyObject());
         verify(requestContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher("questionnaire.error.duplicate.question.found.in.section")));
     }

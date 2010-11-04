@@ -77,6 +77,7 @@ insert into applied_upgrades(upgrade_id) values(1286780611);
 insert into applied_upgrades(upgrade_id) values(1287934290);
 insert into applied_upgrades(upgrade_id) values(1288013750);
 insert into applied_upgrades(upgrade_id) values(1288349766);
+insert into applied_upgrades(upgrade_id) values(1288869198);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3307,3 +3308,13 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 insert into event_sources (id, entity_type_id, event_id, description) values
     (15, (select entity_type_id from entity_master where entity_type = 'Personnel'), 1, 'Create Personnel');
 /* Upgrade - 1284986654 */
+
+/* Upgrade - 1288869198 Permissions to activate question groups*/
+insert into lookup_value (lookup_id, entity_id, lookup_name) values
+(635,87,'Permissions-CanActivateQuestionGroups');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(965, 1, 635, null);
+insert into activity (activity_id, parent_id, activity_name_lookup_id, description_lookup_id) values
+(243,203,635,635);
+insert into roles_activity (activity_id, role_id) values
+(243,1);
+/* Upgrade - 1288869198*/

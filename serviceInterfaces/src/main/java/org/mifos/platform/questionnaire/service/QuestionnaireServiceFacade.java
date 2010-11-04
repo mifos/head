@@ -36,6 +36,9 @@ public interface QuestionnaireServiceFacade {
 
     void createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ACTIVATE_QUESTION_GROUPS')")
+    void createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
+
     List<QuestionDetail> getAllQuestions();
 
     List<QuestionDetail> getAllActiveQuestions();
