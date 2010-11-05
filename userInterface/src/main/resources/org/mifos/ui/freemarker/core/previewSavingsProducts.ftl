@@ -134,7 +134,7 @@
                     <div class="clear">&nbsp;</div>
                     <div class="span-20">
                         <input type="hidden" name="editFormview" value="${editFormview}"/>
-                        <input class="buttn2" type="submit" name="EDIT"
+                        <input class="insidebuttn margin30top" type="submit" name="EDIT"
                                value="[@spring.message "manageSavngsProducts.editsavingsproduct.editSavingsproductinformation"/]"/>
                     </div>
                 </div>

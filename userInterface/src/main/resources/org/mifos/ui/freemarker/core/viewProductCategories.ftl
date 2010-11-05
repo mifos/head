@@ -31,7 +31,10 @@
             <a href="defineNewCategory.ftl">[@spring.message "admin.definenewproductcategory"/]</a></p>
 
         <div class="lineheight1p2">
-            <span class="fontBold">[@spring.message "manageProducts.viewProductCategories.loans"/]</span>
+            <span class="fontBold">
+                [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
+                [@spring.messageArgs "ftlDefinedLabels.manageProducts.viewProductCategories.loans" , [loan]  /]
+            </span>
             <ul>
                 [#list dto.productCategoryTypeList as typeList]
                     [#list dto.productCategoryDtoList as dtoList]
@@ -45,7 +48,10 @@
             </ul>
         </div>
         <div class="lineheight1p2">
-            <span class="fontBold">[@spring.message "manageProducts.viewProductCategories.savings"/]</span>
+            <span class="fontBold">
+                [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
+                [@spring.messageArgs "ftlDefinedLabels.manageProducts.viewProductCategories.savings" , [savings]  /]
+            </span>
             <ul>
                 [#list dto.productCategoryTypeList as typeList]
                     [#list dto.productCategoryDtoList as dtoList]

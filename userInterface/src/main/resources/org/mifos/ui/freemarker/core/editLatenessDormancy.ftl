@@ -24,8 +24,8 @@
 <div class=" content">
     <style type="text/css">
         .error {
-            margin-bottom:0;
-            margin-top:15px;
+            margin-bottom: 0;
+            margin-top: 15px;
         }
     </style>
     <form method="post" name="latenessanddormancy" action="editLatenessDormancy.ftl">
@@ -33,15 +33,22 @@
     [@spring.bind "formBean" /]
         <div class="marginLeft30">
             <div class="span-24">
-                [@mifos.showAllErrors "formBean.*"/]
+            [@mifos.showAllErrors "formBean.*"/]
                 <div class="span-23 borderbtm width95prc">
-                    <p class="font15 margin10topbottom"><span
-                            class="orangeheading">[@spring.message "manageProducts.editLatenessDormancy.setLatenessDefinition" /]</span>
+                    <p class="font15 margin10topbottom">
+                        <span class="orangeheading">
+                            [@spring.message "manageProducts.editLatenessDormancy.setLatenessDefinition" /]
+                        </span>
                     </p>
 
-                    <div class="fontBold">[@spring.message "manageProducts.editLatenessDormancy.loan" /]</div>
+                    <div class="fontBold">
+                        [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
+                        [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.loan" , [loan]  /]
+                    </div>
                     <div class="span-23 width95prc">
-                        <span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" /]</span>
+                        <span class="span-11 width50prc">
+                            [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.specifyTheNumberOfDaysOfNonPayment" , [loan]  /]
+                        </span>
     	            <span class="span-8">
     	            	[@spring.bind "formBean.latenessDays" /]
                             <input size="4" maxlength="4" type="text" id="lateness" name="${spring.status.expression}"
@@ -54,9 +61,14 @@
                 <div class="span-23 width95prc">
                     <p class="font15 orangeheading margin10topbottom">[@spring.message "manageProducts.editLatenessDormancy.setDormancyDefinition" /] </p>
 
-                    <div class="fontBold">[@spring.message "manageProducts.editLatenessDormancy.savings" /]</div>
+                    <div class="fontBold">
+                        [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
+                        [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.savings" , [savings]  /]
+                    </div>
                     <div class="span-23 width95prc">
-                        <span class="span-11 width50prc">[@spring.message "manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy"/]</span>
+                        <span class="span-11 width50prc">
+                            [@spring.messageArgs "ftlDefinedLabels.manageProducts.editLatenessDormancy.specifyTheNumberOfDaysToDefineDormancy" , [savings]  /]
+                        </span>
                 <span class="span-8">
                 	[@spring.bind "formBean.dormancyDays" /]
                         <input size="4" maxlength="4" type="text" id="dormancy" name="${spring.status.expression}"

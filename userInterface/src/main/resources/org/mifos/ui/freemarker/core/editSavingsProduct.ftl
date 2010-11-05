@@ -1,6 +1,7 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
+[#assign mifostag=JspTaglibs["/tags/mifos-html"]]
 [@mifos.header "title" /]
 <script type="text/javascript">
   	$(document).ready(function () {
@@ -31,12 +32,15 @@
 	}
 </script>
 [@mifos.topNavigationNoSecurity currentTab="Admin" /]
+[#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
   <!--  Main Content Begins-->
   <span id="page.id" title="Edit_SavingsProduct" />
 <div class="content definePageMargin">
     <div class="borders margin20lefttop width90prc">
         <div class="borderbtm width100prc height25px">
-            <p class="span-17 timelineboldorange arrowIMG  padding20left" style="width:50%">[@spring.message "manageProducts.defineSavingsProducts.savingsproductinformation" /]</p>
+            <p class="span-17 timelineboldorange arrowIMG  padding20left" style="width:50%">
+                 [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductinformation" , [savings]  /]                
+            </p>
             <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right" style="float:right">[@spring.message "reviewAndSubmit" /]</p>
         </div>
 
@@ -45,13 +49,18 @@
           [@spring.bind "savingsProduct.generalDetails.id" /]
           <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?if_exists}" />
           <p class="font15">
-          	<span class="fontBold margin5bottom">[@spring.message "manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" /]</span>&nbsp;--&nbsp;
-          	<span class="orangeheading">[@spring.message "manageProducts.defineSavingsProducts.enterSavingsproductinformation" /]</span>
+            [@spring.bind "savingsProduct.generalDetails.name" /]
+          	<span class="fontBold margin5bottom">${spring.status.value?if_exists}</span>&nbsp;-
+          	<span class="orangeheading">
+                [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.enterSavingsproductinformation" , [savings]  /]                
+              </span>
           </p>
           <div>[@spring.message "manageProducts.defineSavingsProducts.completethefieldsbelow" /]</div>
           <div><span class="red">* </span>[@spring.message "fieldsmarkedwithanasteriskarerequired." /]</div>
           [@mifos.showAllErrors "savingsProduct.*"/]
-          <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineSavingsProducts.savingsproductdetails" /]</p>
+          <p class="fontBold margin10topbottom">
+                [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductdetails" , [savings]  /]                
+          </p>
           <div class="prepend-3  span-21 last">
           	<div class="span-20 ">
           		<span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.productinstancename" /]&nbsp;</span>

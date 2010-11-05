@@ -30,10 +30,18 @@
                 <span>
                 [#switch detailsDto.productCategoryStatusId]
                 	[#case 1]
-                		<span><img src="pages/framework/images/status_activegreen.gif" /></span>&nbsp;<span>Active</span>
+                		<span><img src="pages/framework/images/status_activegreen.gif" /></span>&nbsp;
+                        <span>
+                            [#assign active][@mifostag.mifoslabel name="ProductState-Active" /][/#assign]
+                            [@spring.messageArgs "ftlDefinedLabels.active" , [active] /]
+                        </span>
                 	[#break]
                 	[#case 2]
-                		<span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;<span>Inactive</span>
+                		<span><img src="pages/framework/images/status_closedblack.gif" /></span>&nbsp;
+                        <span>
+                            [#assign inactive][@mifostag.mifoslabel name="ProductState-Inactive" /][/#assign]
+                            [@spring.messageArgs "ftlDefinedLabels.inactive" , [inactive] /] 
+                        </span>
                 	[#break]
                 [/#switch]
                 </span><br />
@@ -41,7 +49,7 @@
                 	  <span>
                 	  		[#list typeDto as type]
                 	  			[#if type.productTypeID == detailsDto.productTypeId]
-                	  				${type.productName}
+                	  				[@mifostag.mifoslabel name="${type.productName}" /]
                 	  			[/#if]
                 	  		[/#list]
                 	  </span>

@@ -3,6 +3,7 @@
 [#import "newblueprintmacros.ftl" as mifos]
 [#import "macros.ftl" as mifosmacros]
 [#assign security=JspTaglibs["http://www.springframework.org/security/tags"]]
+[#assign mifostag=JspTaglibs["/tags/mifos-html"]]
 
 [#macro adminLeftPaneLayout]
     [@mifos.header "title" /]

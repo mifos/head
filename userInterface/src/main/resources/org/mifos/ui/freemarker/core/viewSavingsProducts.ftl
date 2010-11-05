@@ -26,11 +26,18 @@
 [@mifos.crumb url="admin.viewSavingsproducts" /]
     <p>&nbsp;&nbsp;</p>
 
-    <p class="font15 orangeheading" style="margin-left:18px;">[@spring.message "admin.viewSavingsproducts"/]</p>
+    <p class="font15 orangeheading" style="margin-left:18px;">
+         [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
+         [@spring.messageArgs "ftlDefinedLabels.admin.viewSavingsproducts" , [savings]  /]
+    </p>
 
     <div style="margin-left:18px; margin-top:2px;">
-        <p>[@spring.message "manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor"/]
-            <a href="defineSavingsProduct.ftl">[@spring.message "manageLoanProducts.viewSavingsProducts.defineNewSavingPorduct"/]</a></p>
+        <p>
+            [@spring.messageArgs "ftlDefinedLabels.manageLoanProducts.viewSavingsProducts.clickonaSavingsproductbelowtoviewdetailsandmakechangesor" , [savings]  /]
+            <a href="defineSavingsProduct.ftl">
+                [@spring.messageArgs "ftlDefinedLabels.manageLoanProducts.viewSavingsProducts.defineNewSavingPorduct" , [savings]  /]
+            </a>
+        </p>
         [#list products as product]
             <div style="margin-top:10px;">
                 <img src="pages/framework/images/bullet_circle.gif" width="9" height="11"/> <a
