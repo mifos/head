@@ -49,6 +49,12 @@ public class SavingsProductFormValidator implements Validator {
             errors.reject("NotEmpty.generalDetails.startDateYear");
         }
 
+		if (formBean.getGeneralDetails().getStartDateAsDateTime() != null &&
+				formBean.getGeneralDetails().getEndDateAsDateTime() != null &&
+				formBean.getGeneralDetails().getStartDateAsDateTime().compareTo(formBean.getGeneralDetails().getEndDateAsDateTime()) > 0) {
+			errors.reject("Min.generalDetails.endDate");
+		}
+
         if (formBean.getGeneralDetails().getSelectedApplicableFor().trim().isEmpty()) {
             errors.reject("NotEmpty.generalDetails.selectedApplicableFor");
         }

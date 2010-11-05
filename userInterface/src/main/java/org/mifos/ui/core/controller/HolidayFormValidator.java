@@ -20,6 +20,7 @@
 
 package org.mifos.ui.core.controller;
 
+import java.util.Date;
 import org.joda.time.DateTime;
 import org.mifos.dto.domain.OfficeHoliday;
 import org.springframework.util.StringUtils;
@@ -27,6 +28,7 @@ import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
 
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
 public class HolidayFormValidator implements Validator {
 
     @Override
@@ -35,6 +37,7 @@ public class HolidayFormValidator implements Validator {
     }
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value = { "REC_CATCH_EXCEPTION"}, justification = "Using catch all to detect invalid dates.")
+	@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
     @Override
     public void validate(Object target, Errors errors) {
 
@@ -45,19 +48,25 @@ public class HolidayFormValidator implements Validator {
         HolidayFormBean formBean = (HolidayFormBean) target;
         rejectIfEmptyOrWhitespace(errors, formBean.getName(), "error.holiday.mandatory_field", "Please specify Holiday Name.");
 
+		Date dateFrom = null;
+		Date dateTo = null;
         try {
-            new DateTime().withDate(Integer.parseInt(formBean.getFromYear()), formBean.getFromMonth(), formBean.getFromDay()).toDate();
+            dateFrom = new DateTime().withDate(Integer.parseInt(formBean.getFromYear()), formBean.getFromMonth(), formBean.getFromDay()).toDate();
         } catch (Exception e) {
             errors.reject("holiday.fromDate.invalid", "Please specify From Date.");
         }
 
         try {
             if (formBean.getToDay() != null) {
-                new DateTime().withDate(Integer.parseInt(formBean.getToYear()), formBean.getToMonth(), formBean.getToDay()).toDate();
+                dateTo = new DateTime().withDate(Integer.parseInt(formBean.getToYear()), formBean.getToMonth(), formBean.getToDay()).toDate();
             }
         } catch (Exception e) {
             errors.reject("holiday.thruDate.invalid", "Please specify thru Date.");
         }
+
+		if (dateFrom != null && dateTo != null && new DateTime(dateFrom).compareTo(new DateTime(dateTo)) > 0) {
+			errors.reject("holiday.fromDateGreaterThanThruDate", "From Date is greater than thru Date.");
+		}
 
         if (formBean.getRepaymentRuleId() == null || Integer.parseInt(formBean.getRepaymentRuleId()) < 0) {
             errors.reject("holiday.repaymentrule.required", "Please specify Repayment Rule.");
