@@ -789,6 +789,27 @@ public class QuestionnaireServiceTest {
         verify(questionGroupDao).create(argThat(new QuestionGroupContainsQuestionMatcher(questionEntity)));
     }
 
+    /*
+     * If we pass try creating a question group with a question that has a unique nickname,
+     * then a new question should be created even if the two questions are exactly the same.
+     */
+    @Test
+    public void shouldDefineQuestionGroupFromDto_WithExistingQuestionTextMatchAndNicknameMismatch() {
+        QuestionEntity newQuestionEntityFromDto = new QuestionEntity("Ques2");
+        newQuestionEntityFromDto.setAnswerType(AnswerType.SINGLESELECT);
+        newQuestionEntityFromDto.setNickname("Ques2_nick");
+        newQuestionEntityFromDto.setChoices(asList(new QuestionChoiceEntity("Ch1"), new QuestionChoiceEntity("Ch2"), new QuestionChoiceEntity("Ch3")));
+        QuestionEntity existingQuestionEntityWithMatchingName = new QuestionEntity("Ques2");
+        existingQuestionEntityWithMatchingName.setAnswerType(AnswerType.SINGLESELECT);
+        existingQuestionEntityWithMatchingName.setNickname("nick2");
+        existingQuestionEntityWithMatchingName.setChoices(asList(new QuestionChoiceEntity("Ch1"), new QuestionChoiceEntity("Ch2"), new QuestionChoiceEntity("Ch3")));
+        when(questionDao.retrieveByText("Ques2")).thenReturn(asList(existingQuestionEntityWithMatchingName));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDtoWithNicknames();
+        questionnaireService.defineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionGroupDao).create(argThat(new QuestionGroupContainsQuestionNicknameMatcher(newQuestionEntityFromDto)));
+    }
+
     private QuestionGroupDto getQuestionGroupDto() {
         QuestionDto question1 = new QuestionDtoBuilder().withText("Ques1").withMandatory(true).withType(QuestionType.FREETEXT).build();
         ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
@@ -799,6 +820,15 @@ public class QuestionnaireServiceTest {
         return new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
     }
 
+    private QuestionGroupDto getQuestionGroupDtoWithNicknames() {
+        QuestionDto question1 = new QuestionDtoBuilder().withText("Ques1").withNickname("Ques1_nick").withMandatory(true).withType(QuestionType.FREETEXT).build();
+        ChoiceDto choice1 = new ChoiceDetailBuilder().withValue("Ch1").withOrder(1).build();
+        ChoiceDto choice2 = new ChoiceDetailBuilder().withValue("Ch2").withOrder(2).build();
+        ChoiceDto choice3 = new ChoiceDetailBuilder().withValue("Ch3").withOrder(3).build();
+        QuestionDto question2 = new QuestionDtoBuilder().withText("Ques2").withNickname("Ques2_nick").withType(QuestionType.SINGLE_SELECT).addChoices(choice1, choice2, choice3).build();
+        SectionDto section = new SectionDtoBuilder().withName("Sec1").withOrder(1).addQuestions(question1, question2).build();
+        return new QuestionGroupDtoBuilder().withTitle("QG1").withEventSource("Create", "Client").addSections(section).build();
+    }
     @Test
     public void shouldGetAllCountriesForPPI() throws IOException {
         when(ppiSurveyLocator.getAllPPISurveyFiles()).thenReturn(asList("PPISurveyINDIA.xml", "PPISurveyCHINA.xml", "PPISurveyCANADA.xml"));
@@ -917,6 +947,36 @@ public class QuestionnaireServiceTest {
         }
         sectionDetail.setQuestionDetails(sectionQuestionDetails);
         return sectionDetail;
+    }
+
+    /*
+     * Matches if a question entity with the same text and nickname is in the questino group passed in.
+     */
+    private class QuestionGroupContainsQuestionNicknameMatcher extends TypeSafeMatcher<QuestionGroup> {
+        private final QuestionEntity questionEntity;
+
+        public QuestionGroupContainsQuestionNicknameMatcher(QuestionEntity questionEntity) {
+            this.questionEntity = questionEntity;
+        }
+
+        @Override
+        public boolean matchesSafely(QuestionGroup questionGroup) {
+            for (Section section : questionGroup.getSections()) {
+                for (SectionQuestion sectionQuestion : section.getQuestions()) {
+                    QuestionEntity questionEntity = sectionQuestion.getQuestion();
+                    if (StringUtils.equals(this.questionEntity.getQuestionText(), questionEntity.getQuestionText()) &&
+                    StringUtils.equals(this.questionEntity.getNickname(), questionEntity.getNickname())) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("QuestionGroup doesn't contain the given Question");
+        }
     }
 
     private class QuestionGroupContainsQuestionMatcher extends TypeSafeMatcher<QuestionGroup> {

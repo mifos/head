@@ -31,4 +31,5 @@ public interface QuestionDao extends GenericDao<QuestionEntity, Integer> {
     List<QuestionEntity> retrieveByStateExcluding(List<Integer> questionsToExclude, int questionState);
     List<QuestionEntity> retrieveAll();
     List<QuestionEntity> retrieveByText(String questionText);
+    List<QuestionEntity> retrieveByNickname(String nickname);
 }
