@@ -30,6 +30,8 @@ import org.mifos.dto.screen.SavingsProductFormDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,6 +56,11 @@ public class EditSavingsProductsFormController {
 
     public EditSavingsProductsFormController(final AdminServiceFacade adminServicefacade){
         this.adminServiceFacade=adminServicefacade;
+    }
+
+	@InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        binder.setValidator(new SavingsProductFormValidator());
     }
 
     @RequestMapping(method = RequestMethod.GET)

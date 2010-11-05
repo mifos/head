@@ -279,7 +279,7 @@
             <artifactId>spring-security-taglibs</artifactId>
         </dependency>
         <dependency>
-	    <groupId>org.springframework</groupId>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
         </dependency>
         <dependency>
@@ -291,17 +291,17 @@
             <artifactId>ognl</artifactId>
         </dependency>
         <dependency>
-	        <groupId>org.springframework.webflow</groupId>
-	        <artifactId>spring-binding</artifactId>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.springframework.webflow</groupId>
-	        <artifactId>spring-js</artifactId>
-	    </dependency>
-	    <dependency>
-	        <groupId>org.springframework.webflow</groupId>
-	        <artifactId>spring-webflow</artifactId>
-	    </dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-binding</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-js</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-webflow</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
@@ -334,10 +334,10 @@
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-envers</artifactId>
             <exclusions>
-            	<exclusion>
-            		<artifactId>freemarker</artifactId>
-            		<groupId>freemarker</groupId>
-            	</exclusion>
+                <exclusion>
+                    <artifactId>freemarker</artifactId>
+                    <groupId>freemarker</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -625,9 +625,9 @@
             <version>1.1</version>
         </dependency>
         <dependency>
-        	<groupId>org.quartz-scheduler</groupId>
-        	<artifactId>quartz</artifactId>
-        	<version>1.8.3</version>
+            <groupId>org.quartz-scheduler</groupId>
+            <artifactId>quartz</artifactId>
+            <version>1.8.3</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.batch</groupId>
@@ -728,7 +728,7 @@
                     <statistics>false</statistics>
                     <!-- Files to exclude -->
                     <excludes>
-                      <exclude>**/**.min.js</exclude>
+                        <exclude>**/**.min.js</exclude>
                     </excludes>
                 </configuration>
                 <executions>

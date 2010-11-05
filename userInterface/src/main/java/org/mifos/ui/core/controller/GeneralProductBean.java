@@ -28,6 +28,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.joda.time.DateTime;
 
 @SuppressWarnings("PMD")
 public class GeneralProductBean {
@@ -143,6 +144,17 @@ public class GeneralProductBean {
         this.startDateYear = startDateYear;
     }
 
+	public DateTime getStartDateAsDateTime() {
+		if (startDateDay != null && startDateMonth != null && startDateYear != null) {
+			try {
+				return new DateTime(Integer.parseInt(startDateYear), startDateMonth, startDateDay, 0, 0, 0, 0);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+		return null;
+	}
+
     public Integer getEndDateDay() {
         return this.endDateDay;
     }
@@ -166,6 +178,17 @@ public class GeneralProductBean {
     public void setEndDateYear(String endDateYear) {
         this.endDateYear = endDateYear;
     }
+
+	public DateTime getEndDateAsDateTime() {
+		if (endDateDay != null && endDateMonth != null && endDateYear != null) {
+			try {
+				return new DateTime(Integer.parseInt(endDateYear), endDateMonth, endDateDay, 0, 0, 0, 0);
+			} catch (NumberFormatException e) {
+				return null;
+			}
+		}
+		return null;
+	}
 
     public String getSelectedApplicableFor() {
         return this.selectedApplicableFor;

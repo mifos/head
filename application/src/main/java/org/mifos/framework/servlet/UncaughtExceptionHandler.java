@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
+import org.springframework.security.access.AccessDeniedException;
 
 public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
 
@@ -39,7 +40,11 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
 
     @Override
     protected ModelAndView doResolveException(HttpServletRequest request,  HttpServletResponse response, Object handler, Exception ex) {
-        ModelAndView modelAndView = super.doResolveException(request, response, handler, ex);
+        ModelAndView modelAndView = checkForAccessDenied(ex, request);
+
+        if (modelAndView == null) {
+            modelAndView = super.doResolveException(request, response, handler, ex);
+        }
 
         if (modelAndView != null) {
             String requestUri = request.getRequestURI();
@@ -55,6 +60,23 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
         }
 
         return modelAndView;
+    }
+
+    private ModelAndView checkForAccessDenied(Exception ex, HttpServletRequest request) {
+        if (ex instanceof AccessDeniedException) {
+            ModelAndView modelAndView = null;
+            String viewName = determineViewName(ex, request);
+            if(viewName != null) {
+                modelAndView = getModelAndView(viewName, ex, request);
+            }
+            return modelAndView;
+        }
+
+        if (ex.getCause() != null && ex.getCause() instanceof Exception) {
+            return checkForAccessDenied((Exception) ex.getCause(), request);
+        }
+
+        return null;
     }
 
     private boolean isDevCookieAvailable(HttpServletRequest request) {

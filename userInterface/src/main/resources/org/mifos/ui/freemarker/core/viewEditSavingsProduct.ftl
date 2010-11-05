@@ -20,35 +20,52 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
+[#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
 <!--  Main Content Begins-->
 <div class="content">
     <div>
         <div class="breadcrumb">
-            <a href="AdminAction.do?method=load">[@spring.message "admin" /]</a>&nbsp;/&nbsp;<a
-                href="viewSavingsProducts.ftl">[@spring.message "manageSavngsProducts.editsavingsproduct.viewSavingsproducts" /]</a>&nbsp;/&nbsp;<span
-                class="fontBold">[@spring.message "manageSavngsProducts.editsavingsproduct.savingsProductName" /]</span>
+            <a href="AdminAction.do?method=load">
+            [@spring.message "admin" /]</a>
+            &nbsp;/
+            <a href="viewSavingsProducts.ftl">
+               [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.viewSavingsproducts" , [savings]  /]                
+            </a>&nbsp;/
+            <span class="fontBold">${savingsProductDetails.productDetails.name}</span>
         </div>
         <div class="clear">&nbsp;</div>
         <div class="marginLeft30" style="line-height:1.2">
             <div class="span-18 width90prc" style="margin-bottom:7px;">
                 <span class="orangeheading">${savingsProductDetails.productDetails.name}</span>
                 <div style="position:relative;top:-17px; text-align:right;">
-                    <a href="editSavingsProduct.ftl?productId=${savingsProductDetails.productDetails.id}">[@spring.message "manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" /]</a>
+                    <a href="editSavingsProduct.ftl?productId=${savingsProductDetails.productDetails.id}">
+                        [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.editSavingsproductinformation" , [savings]  /]
+                    </a>
                 </div>
                 [#switch savingsProductDetails.productDetails.status]
                     [#case 2]
                         <span><img
-                                src="pages/framework/images/status_activegreen.gif"/></span>&nbsp;<span>[@spring.message "active" /]</span>
+                                src="pages/framework/images/status_activegreen.gif"/></span>&nbsp;
+                                <span>
+                                    [#assign active][@mifostag.mifoslabel name="ProductState-Active" /][/#assign]
+                                    [@spring.messageArgs "ftlDefinedLabels.active" , [active] /]
+                                </span>
                         [#break]
                     [#case 5]
                         <span><img
-                                src="pages/framework/images/status_closedblack.gif"/></span>&nbsp;<span>[@spring.message "inactive"/]</span>
+                                src="pages/framework/images/status_closedblack.gif"/></span>&nbsp;
+                                <span>
+                                    [#assign inactive][@mifostag.mifoslabel name="ProductState-Inactive" /][/#assign]
+                                    [@spring.messageArgs "ftlDefinedLabels.inactive" , [inactive] /]                                     
+                                </span>
                         [#break]
                 [/#switch]
             </div>
             <div style="height:5px;" class="clear">&nbsp;</div>
             <p class="span-24 ">
-            <div class="fontBold black-subheading">[@spring.message "manageSavngsProducts.editsavingsproduct.savingsproductdetails" /]</div>
+            <div class="fontBold black-subheading">
+                [@spring.messageArgs "ftlDefinedLabels.manageSavngsProducts.editsavingsproduct.savingsproductdetails" , [savings]  /]                
+            </div>
             <div>
                 <span>[@spring.message "manageSavngsProducts.editsavingsproduct.productinstancename" /]</span>
                 <span>${savingsProductDetails.productDetails.name}</span>
