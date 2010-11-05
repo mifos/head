@@ -69,27 +69,21 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
                 }
                 Double totalDueAmount = accountView.getTotalAmountDue();
                 Double totalDisburtialAmount = accountView.getTotalDisburseAmount();
-                if (totalDueAmount.doubleValue() <= 0.0 && totalDisburtialAmount > 0.0) {
-                    if (!accountView.isValidDisbursementAmount()
-                            || !enteredDisbursalAmount.equals(totalDisburtialAmount)
+                if (totalDisburtialAmount > 0.0) {
+                    if ((!accountView.isValidDisbursementAmount()
+                            || accountView.getDisBursementAmountEntered() == null
+                            || !enteredDisbursalAmount.equals(totalDisburtialAmount))
                             && !enteredDisbursalAmount.equals(0.0)) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
                     }
                 }
-                if (totalDisburtialAmount <= 0.0 && totalDueAmount > 0.0) {
-                    if (!accountView.isValidAmountEntered() || !enteredAmount.equals(totalDueAmount)
-                            && !enteredAmount.equals(0.0)) {
-                        errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
-                                CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
-                                        .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
-                    }
-                }
-                if (totalDueAmount.doubleValue() > 0.0 && totalDisburtialAmount > 0.0) {
-                    if ((!accountView.isValidAmountEntered()) || (!accountView.isValidDisbursementAmount())
+                if (totalDueAmount > 0.0) {
+                    if ((!accountView.isValidAmountEntered()
                             || accountView.getEnteredAmount() == null
-                            || accountView.getDisBursementAmountEntered() == null) {
+                            || !enteredAmount.equals(totalDueAmount))
+                            && !enteredAmount.equals(0.0)) {
                         errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, new ActionMessage(
                                 CollectionSheetEntryConstants.BULKENTRYINVALIDAMOUNT, accountView
                                         .getPrdOfferingShortName(), parent.getCustomerDetail().getDisplayName()));
