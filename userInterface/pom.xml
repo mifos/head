@@ -114,9 +114,9 @@
             <artifactId>asm-all</artifactId>
         </dependency>
         <dependency>
-        	<groupId>org.mockito</groupId>
-        	<artifactId>mockito-all</artifactId>
-        	<scope>test</scope>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
         </dependency>
         <!-- #### #### Hibernate Validator #### #### -->
         <dependency>
@@ -223,7 +223,7 @@
                     </execution>
                 </executions>
             </plugin>
-            
+
         </plugins>
     </build>
     <reporting>
