@@ -94,7 +94,7 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
         html.endTag("td");
         html.newline();
         html.startTag("td", "width", "21%", "class", "drawtablerow");
-        if (customField.getDefaultValue() == null) {
+        if (customField.getDefaultValue() == null || "".equals(customField.getDefaultValue())) {
             html.nonBreakingSpace();
         } else {
             html.text(getDefaultValue(customField, userContext));
