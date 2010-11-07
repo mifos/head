@@ -48,6 +48,10 @@
                     "questionnaire.questionGroupAppliesTo"/]:</label>
                 [@mifosmacros.formMultiSelect "questionGroupForm.eventSourceIds", EventSources, '' /]
             </li>
+            <li id="applyToAllLoansDiv">
+                <label for="applyToAllLoanProducts">[@spring.message "questionnaire.applyToAllLoanProducts"/]:</label>
+                [@mifosmacros.formCheckbox "questionGroupForm.applyToAllLoanProducts", ""/]
+            </li>
             <li>
                 <label for="editable">[@spring.message "questionnaire.editable"/]:</label>
                 [@mifosmacros.formCheckbox "questionGroupForm.editable", ""/]

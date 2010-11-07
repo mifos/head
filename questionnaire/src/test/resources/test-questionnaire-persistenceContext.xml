@@ -71,4 +71,6 @@
     </bean>
     
     <bean name="auditLogService" class="org.mifos.platform.questionnaire.service.AuditLogServiceImpl"/>
+
+    <bean name="qgFlowsService" class="org.mifos.platform.questionnaire.service.QGFlowsServiceImpl"/>
 </beans>
