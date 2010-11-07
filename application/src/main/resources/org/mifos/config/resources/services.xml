@@ -141,6 +141,8 @@
 
     <bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl"/>
 
+    <bean name="qgFlowsService" class="org.mifos.application.questionnaire.service.QGFlowsServiceImpl"/>
+
     <bean name="questionnaireMigration" class="org.mifos.application.questionnaire.migration.QuestionnaireMigration"/>
 
     <bean name="questionnaireMigrationMapper" class="org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapperImpl"/>

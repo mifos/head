@@ -54,6 +54,7 @@ public class QuestionGroupForm extends ScreenObject {
     private int initialCountOfSections;
     private List<String> sectionsToAdd = new ArrayList<String>();
     private List<Integer> questionsToAdd = new ArrayList<Integer>();
+	private boolean applyToAllLoanProducts;
 
     public QuestionGroupForm() {
         this(new QuestionGroupDetail());
@@ -477,4 +478,13 @@ public class QuestionGroupForm extends ScreenObject {
     public int getInitialCountOfSections() {
         return initialCountOfSections;
     }
+
+	public boolean getApplyToAllLoanProducts() {
+		return applyToAllLoanProducts;
+	}
+
+	public void setApplyToAllLoanProducts(boolean applyToAllLoanProducts) {
+		this.applyToAllLoanProducts = applyToAllLoanProducts;
+	}
+
 }

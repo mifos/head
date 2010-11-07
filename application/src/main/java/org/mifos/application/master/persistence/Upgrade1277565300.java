@@ -28,7 +28,6 @@ public class Upgrade1277565300 extends Upgrade {
         SqlUpgrade upgrade = SqlUpgradeScriptFinder.findUpgradeScript("upgrade1277565300_conditional.sql");
         upgrade.runScript(connection);
 
-        connection.setAutoCommit(true);
         connection.createStatement().execute("set foreign_key_checks=0");
 
         // delete Hungarian lookupValue
@@ -88,8 +87,6 @@ public class Upgrade1277565300 extends Upgrade {
 
         rs.close();
         connection.createStatement().execute("set foreign_key_checks=1");
-        connection.setAutoCommit(false);
-
     }
 
     @SuppressWarnings("PMD.CloseResource") // resource gets closed

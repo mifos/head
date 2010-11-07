@@ -118,6 +118,12 @@ explanation of the license and how it is applied.
 								bundle="ClientUIResources"></mifos:mifoslabel></span></td>
 							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.middleName" keyhm="Client.MiddleName" name="clientCustActionForm"	property="clientName.middleName" maxlength="200" /></td>
 						</tr>
+						<%-- Last Name --%>
+						<tr class="fontnormal">
+							<td align="right"><span id="edit_ClientPersonalInfo.label.lastName"><mifos:mifoslabel name="client.LastName"
+								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
+							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.lastName" name="clientCustActionForm" property="clientName.lastName" maxlength="200" /></td>
+						</tr>
 						<%-- Second Last Name --%>
 						<tr class="fontnormal">
 							<td align="right"><span id="edit_ClientPersonalInfo.label.secondLastName"><mifos:mifoslabel keyhm="Client.SecondLastName" name="client.SecondLastName"
@@ -125,12 +131,6 @@ explanation of the license and how it is applied.
 							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.secondLastName" keyhm="Client.SecondLastName" name="clientCustActionForm"
 								 property="clientName.secondLastName" maxlength="200" />
 							</td>
-						</tr>
-						<%-- Last Name --%>
-						<tr class="fontnormal">
-							<td align="right"><span id="edit_ClientPersonalInfo.label.lastName"><mifos:mifoslabel name="client.LastName"
-								mandatory="yes" bundle="ClientUIResources"></mifos:mifoslabel></span></td>
-							<td><mifos:mifosalphanumtext styleId="edit_ClientPersonalInfo.input.lastName" name="clientCustActionForm" property="clientName.lastName" maxlength="200" /></td>
 						</tr>
 						<html-el:hidden property="clientName.nameType" value="3" />
 

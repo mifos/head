@@ -75,6 +75,7 @@ public class QuestionnaireServiceFacadeTest {
     @Test
     public void shouldCreateQuestionGroup() throws SystemException {
         QuestionGroupDetail questionGroupDetail = getQuestionGroupDetail(TITLE, "Create", "Client", asList(getSectionDetailWithQuestionIds("S1", 123), getSectionDetailWithQuestionIds("S2", 123)));
+        when(questionnaireService.defineQuestionGroup(questionGroupDetail)).thenReturn(questionGroupDetail);
         questionnaireServiceFacade.createQuestionGroup(questionGroupDetail);
         Mockito.verify(questionnaireService, times(1)).defineQuestionGroup(argThat(
                 new QuestionGroupDetailMatcher(questionGroupDetail)));

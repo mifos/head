@@ -18,18 +18,12 @@
  *  explanation of the license and how it is applied.
  */
 
-package org.mifos.platform.questionnaire.persistence;
+package org.mifos.platform.questionnaire.service;
 
-import org.mifos.platform.persistence.GenericDao;
-import org.mifos.platform.questionnaire.domain.QuestionEntity;
+import org.mifos.platform.questionnaire.QGFlowsService;
 
-import java.util.List;
-
-public interface QuestionDao extends GenericDao<QuestionEntity, Integer> {
-    List<Long> retrieveCountOfQuestionsWithText(String questionText);
-    List<QuestionEntity> retrieveByState(int questionState);
-    List<QuestionEntity> retrieveByStateExcluding(List<Integer> questionsToExclude, int questionState);
-    List<QuestionEntity> retrieveAll();
-    List<QuestionEntity> retrieveByText(String questionText);
-    List<QuestionEntity> retrieveByNickname(String nickname);
+public class QGFlowsServiceImpl implements QGFlowsService {
+    @Override
+    public void applyToAllLoanProducts(Integer entityId) {
+    }
 }
