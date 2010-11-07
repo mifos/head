@@ -21,7 +21,6 @@
 package org.mifos.platform.questionnaire.service;
 
 import org.mifos.platform.questionnaire.AuditLogService;
-import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
 public class AuditLogServiceImpl implements AuditLogService {
 
