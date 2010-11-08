@@ -22,6 +22,7 @@ package org.mifos.platform.questionnaire.service;
 
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.AuditLogService;
+import org.mifos.platform.questionnaire.QGFlowsService;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -39,13 +40,18 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Autowired
     private AuditLogService auditLogService;
 
+    @Autowired
+    private QGFlowsService qgFlowsService;
+
     public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService) {
         this.questionnaireService = questionnaireService;
     }
 
-    public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService, AuditLogService auditLogService) {
+    public QuestionnaireServiceFacadeImpl(QuestionnaireService questionnaireService, AuditLogService auditLogService,
+                                          QGFlowsService qgFlowsService) {
         this.questionnaireService = questionnaireService;
         this.auditLogService = auditLogService;
+        this.qgFlowsService = qgFlowsService;
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -66,13 +72,13 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     }
 
     @Override
-    public void createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
-        questionnaireService.defineQuestionGroup(questionGroupDetail);
+    public Integer createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
+        return questionnaireService.defineQuestionGroup(questionGroupDetail).getId();
     }
 
     @Override
-    public void createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
-        questionnaireService.defineQuestionGroup(questionGroupDetail);
+    public Integer createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException {
+        return questionnaireService.defineQuestionGroup(questionGroupDetail).getId();
     }
 
     @Override
@@ -200,6 +206,13 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
     @Override
     public Integer createQuestion(QuestionDto questionDto) {
         return questionnaireService.defineQuestion(questionDto);
+    }
+
+    @Override
+    public void applyToAllLoanProducts(Integer entityId) {
+        if (qgFlowsService != null) {
+            qgFlowsService.applyToAllLoanProducts(entityId);
+        }
     }
 
     private EventSourceDto getEventSource(String event, String source) {

@@ -18,6 +18,8 @@
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
 --]
+
+
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
 <div class="content">
@@ -39,27 +41,32 @@
 
     <span>
     [@spring.formCheckbox "formBean.headOffice" "disabled=disabled"/]
-    [@spring.message "viewOfficeHierarchy.headOffice"/]
+    [#assign headOffice][@mifostag.mifoslabel name="OfficeLevels-HeadOffice" /][/#assign]
+    [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.headOffice" , [headOffice]  /]
     </span><br/>
 	        
     <span>
     [@spring.formCheckbox "formBean.regionalOffice" /]
-    [@spring.message "viewOfficeHierarchy.regionalOffice"/]
+    [#assign regionalOffice][@mifostag.mifoslabel name="OfficeLevels-RegionalOffice" /][/#assign]
+    [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.regionalOffice" , [regionalOffice]  /]
     </span><br/>
        	       
      <span>
      [@spring.formCheckbox "formBean.subRegionalOffice" /]
-     [@spring.message "viewOfficeHierarchy.divisionalOffice"/]
+     [#assign divisionalOffice][@mifostag.mifoslabel name="OfficeLevels-DivisionalOffice" /][/#assign]
+     [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.divisionalOffice" , [divisionalOffice] /]
      </span><br/>
           
      <span>
      [@spring.formCheckbox "formBean.areaOffice" /]
-     [@spring.message "viewOfficeHierarchy.areaOffice"/]
+     [#assign areaOffice][@mifostag.mifoslabel name="OfficeLevels-AreaOffice" /][/#assign]
+     [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.areaOffice" , [areaOffice] /]     
      </span><br/>
           
      <span>
      [@spring.formCheckbox "formBean.branchOffice" "disabled"/]
-     [@spring.message "viewOfficeHierarchy.branchOffice"/]
+     [#assign branchOffice][@mifostag.mifoslabel name="OfficeLevels-BranchOffice" /][/#assign]
+     [@spring.messageArgs "ftlDefinedLabels.viewOfficeHierarchy.branchOffice" , [branchOffice] /]     
      </span><br/>
 
                     </div>

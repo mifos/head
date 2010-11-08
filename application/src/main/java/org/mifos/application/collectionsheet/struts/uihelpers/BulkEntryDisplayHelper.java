@@ -459,8 +459,10 @@ public class BulkEntryDisplayHelper {
                     totalAmount = getDoubleValue(enteredAmount);
                 }
             }
-            if (totalAmount.doubleValue() < amountToBeShown.doubleValue()) {
-                builder.append("<font color=\"#FF0000\">" + enteredAmount + "</font>");
+            if (!almostEqual(totalAmount, amountToBeShown)) {
+                builder.append("<font color=\"#FF0000\">");
+                builder.append(enteredAmount);
+                builder.append("</font>");
             } else {
                 builder.append(totalAmount);
             }
@@ -566,10 +568,12 @@ public class BulkEntryDisplayHelper {
 
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
             if (isDeposit
-                    && totalAmount.doubleValue() < accountView.getTotalDepositDue().doubleValue()
+                    && !almostEqual(totalAmount, accountView.getTotalDepositDue())
                     && accountView.getSavingsTypeId().equals(
                             SavingsType.MANDATORY.getValue())) {
-                builder.append("<font color=\"#FF0000\">" + amount + "</font>");
+                builder.append("<font color=\"#FF0000\">");
+                builder.append(amount);
+                builder.append("</font>");
             } else if ("".equals(amount)) {
                 builder.append("&nbsp;");
             } else {
@@ -631,8 +635,10 @@ public class BulkEntryDisplayHelper {
             }
 
         } else if (method.equals(CollectionSheetEntryConstants.PREVIEWMETHOD)) {
-            if (! totalAmount.equals(customerAccountDto.getTotalAmountDue())) {
-                builder.append("<font color=\"#FF0000\">" + amount + "</font>");
+            if (!almostEqual(totalAmount, customerAccountDto.getTotalAmountDue().getAmountDoubleValue())) {
+                builder.append("<font color=\"#FF0000\">");
+                builder.append(amount);
+                builder.append("</font>");
             } else {
                 builder.append(amount);
             }
@@ -874,7 +880,7 @@ public class BulkEntryDisplayHelper {
             builder.append("<td class=\"fontnormal8ptbold\">" + total + "</td>");
             builder.append("<td width=\"10%\" class=\"fontnormal8ptbold\">" + totIssue + "</td>");
             builder.append("<td width=\"6%\" class=\"fontnormal8ptbold\">" + netCashStr + "</td>");
-            if (Double.valueOf(netCash.toString()).doubleValue() < 0) {
+            if (Double.valueOf(netCash.toString()) < 0) {
                 builder.append("<td width=\"54%\" class=\"fontnormal8ptbold\">" + "<font color=\"#FF0000\">" + netCash
                         + "</font></td>");
             } else {
@@ -890,4 +896,7 @@ public class BulkEntryDisplayHelper {
         return MessageLookup.getInstance().lookupLabel(key, userContext);
     }
 
+    private boolean almostEqual(double x, double y) {
+        return Math.abs(x - y) <= 0.0001;
+    }
 }

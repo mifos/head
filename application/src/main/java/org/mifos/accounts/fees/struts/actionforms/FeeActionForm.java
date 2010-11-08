@@ -384,4 +384,23 @@ public class FeeActionForm extends BaseActionForm {
         }
     }
 
+    public void clear() {
+        feeId = null;
+        feeName = null;
+        categoryType = null;
+        customerDefaultFee = false;
+        feeFrequencyType  = null;
+        feeRecurrenceType = null;
+        currencyId = null;
+        amount = null;
+        rate = null;
+        feeFormula = null;
+        glCode = null;
+        loanCharge = null;
+        customerCharge = null;
+        weekRecurAfter = null;
+        monthRecurAfter = null;
+        feeStatus = null;
+    }
+
 }

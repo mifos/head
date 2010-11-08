@@ -1,6 +1,7 @@
 [#ftl]
 [#import "spring.ftl" as spring]
 [#import "blueprintmacros.ftl" as mifos]
+[#assign mifostag=JspTaglibs["/tags/mifos-html"]]
 [@mifos.header "title" /]
   [@mifos.topNavigationNoSecurity currentTab="Admin" /]
     <!--  Main Content Begins-->
@@ -21,10 +22,16 @@
           <p class="span-22">          
           	<span class="fontBold">[@spring.message "manageProducts.defineNewCategory.productType"/] </span><span>&nbsp;:[#switch formBean.productTypeId]
                 	[#case "1"]
-                		<span></span>&nbsp;<span>[@spring.message "Loan-Loan"/]</span>
+                		<span></span>&nbsp;<span>
+                            [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
+                            [@spring.messageArgs "ftlDefinedLabels.manageProducts.editCategory.loan" , [loan]  /]
+                        </span>
                 	[#break]
                 	[#case "2"]
-                		<span></span>&nbsp;<span>[@spring.message "Savings-Savings"/]</span>
+                		<span></span>&nbsp;<span>
+                             [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
+                             [@spring.messageArgs "ftlDefinedLabels.manageProducts.editCategory.savings" , [savings]  /]
+                        </span>
                 	[#break]
                 [/#switch] [@spring.bind "formBean.productTypeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/></span><br />
             <span class="fontBold">

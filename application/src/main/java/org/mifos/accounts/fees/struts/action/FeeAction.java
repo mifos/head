@@ -72,9 +72,8 @@ public class FeeAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         form.reset(mapping, request);
-
+        ((FeeActionForm) form).clear();
         FeeDetailsForLoadDto feeDetailsForLoad = this.feeServiceFacade.retrieveDetailsForFeeLoad(getUserContext(request).getLocaleId());
-
         request.getSession().setAttribute("isMultiCurrencyEnabled", feeDetailsForLoad.isMultiCurrencyEnabled());
         request.getSession().setAttribute("currencies", feeDetailsForLoad.getCurrencies());
         request.getSession().setAttribute(FeeParameters.class.getSimpleName(), feeDetailsForLoad.getFeeParameters());
@@ -118,7 +117,6 @@ public class FeeAction extends BaseAction {
                 actionForm.getWeekRecurAfterValue());
 
         FeeDto feeDto = this.feeServiceFacade.createFee(feeCreateRequest, userContext);
-
         actionForm.setFeeId(feeDto.getId().toString());
         return mapping.findForward(ActionForwards.create_success.toString());
     }

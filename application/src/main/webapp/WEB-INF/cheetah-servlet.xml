@@ -17,7 +17,8 @@
             <list>
                 <value>classpath:org/mifos/ui/localizedProperties/messages</value>
                 <value>classpath:org/mifos/ui/localizedProperties/LookupValueMessages</value>
-                <value>classpath:org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages</value>                
+                <value>classpath:org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages</value>
+                <value>classpath:org/mifos/ui/localizedProperties/FtlDefinedLabelsMessages</value>
             </list>
         </property>
         <property name="fileEncodings" value="UTF-8" />

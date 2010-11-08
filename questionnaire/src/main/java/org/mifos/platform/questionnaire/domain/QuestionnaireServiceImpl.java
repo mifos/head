@@ -251,10 +251,25 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         return persistQuestionGroup(questionGroup);
     }
 
+    /*
+     * When creating questions, if a question has no nickname (nickname == null),
+     * then try to find an existing question with the same text and use it
+     * instead.  If a question we're about to create has a unique nickname,
+     * then go ahead and create a new question even if there is an existing
+     * question with the same text.  If there is an an existing question with
+     * a nickname that matches the new question nickname, then use the existing
+     * question instead.
+     */
     private Integer persistQuestionGroup(QuestionGroup questionGroup) {
         List<SectionQuestion> sectionQuestions = questionGroup.getAllSectionQuestions();
         for (SectionQuestion sectionQuestion : sectionQuestions) {
-            List<QuestionEntity> questionEntities = questionDao.retrieveByText(sectionQuestion.getQuestionText());
+            List<QuestionEntity> questionEntities = null;
+            if (sectionQuestion.getQuestion().getNickname() == null) {
+                questionEntities = questionDao.retrieveByText(sectionQuestion.getQuestionText());
+            } else {
+                questionEntities = questionDao.retrieveByNickname(sectionQuestion.getQuestion().getNickname());
+            }
+
             if (isNotEmpty(questionEntities)) {
                 QuestionEntity questionEntity = questionEntities.get(0);
                 questionEntity.setQuestionState(QuestionState.ACTIVE);
@@ -430,8 +445,8 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     private String convertToHex(byte[] data) {
         StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < data.length; i++) {
-            int halfbyte = (data[i] >>> 4) & 0x0F;
+        for (byte element : data) {
+            int halfbyte = (element >>> 4) & 0x0F;
             int two_halfs = 0;
             do {
                 if ((0 <= halfbyte) && (halfbyte <= 9)) {
@@ -439,7 +454,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
                 } else {
                     buf.append((char) ('a' + (halfbyte - 10)));
                 }
-                halfbyte = data[i] & 0x0F;
+                halfbyte = element & 0x0F;
             } while(two_halfs++ < 1);
         }
         return buf.toString();

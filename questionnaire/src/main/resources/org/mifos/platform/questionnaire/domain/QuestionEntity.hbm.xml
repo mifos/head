@@ -34,7 +34,10 @@
     <query name="QuestionEntity.retrieveByText">
        <![CDATA[from QuestionEntity as question where question.questionText=:QUESTION_TEXT]]>
     </query>
-     <query name="QuestionEntity.retrieveByAnswerType">
+    <query name="QuestionEntity.retrieveByNickname">
+       <![CDATA[from QuestionEntity as question where question.nickname=:NICKNAME]]>
+    </query>
+    <query name="QuestionEntity.retrieveByAnswerType">
        <![CDATA[from QuestionEntity as question where question.answerType=:ANSWER_TYPE]]>
     </query>
      <query name="QuestionEntity.retrieveCountOfQuestionsWithText">

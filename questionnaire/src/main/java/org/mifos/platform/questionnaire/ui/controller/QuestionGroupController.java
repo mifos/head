@@ -108,15 +108,19 @@ public class QuestionGroupController extends QuestionnaireController {
     public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext, boolean createMode) {
         String result = "success";
         if (!questionGroupHasErrors(questionGroupForm, requestContext)) {
+            Integer questionGroupId;
             try {
                 if (createMode) {
                     questionGroupForm.setActive(true);
                 }
                 if (questionGroupForm.isActive()) {
-                    questionnaireServiceFacade.createActiveQuestionGroup(questionGroupForm.getQuestionGroupDetail());
+                    questionGroupId = questionnaireServiceFacade.createActiveQuestionGroup(questionGroupForm.getQuestionGroupDetail());
                 }
                 else {
-                    questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
+                    questionGroupId = questionnaireServiceFacade.createQuestionGroup(questionGroupForm.getQuestionGroupDetail());
+                }
+                if (containsCreateLoanEventSource(questionGroupForm.getEventSources()) && questionGroupForm.getApplyToAllLoanProducts()) {
+                    questionnaireServiceFacade.applyToAllLoanProducts(questionGroupId);
                 }
             } catch (SystemException e) {
                 constructAndLogSystemError(requestContext.getMessageContext(), e);
@@ -126,6 +130,15 @@ public class QuestionGroupController extends QuestionnaireController {
             result = "failure";
         }
         return result;
+    }
+
+    private boolean containsCreateLoanEventSource(List<EventSourceDto> eventSources) {
+        for (EventSourceDto eventSource : eventSources) {
+            if ("Create.Loan".equals(eventSource.getDescription())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public Map<String, String> getAllQgEventSources() {

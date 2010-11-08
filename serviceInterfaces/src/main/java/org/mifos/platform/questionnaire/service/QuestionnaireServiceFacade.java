@@ -34,10 +34,10 @@ public interface QuestionnaireServiceFacade {
 
     boolean isDuplicateQuestion(String title);
 
-    void createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
+    Integer createQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ACTIVATE_QUESTION_GROUPS')")
-    void createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
+    Integer createActiveQuestionGroup(QuestionGroupDetail questionGroupDetail) throws SystemException;
 
     List<QuestionDetail> getAllQuestions();
 
@@ -81,4 +81,6 @@ public interface QuestionnaireServiceFacade {
 
     // Added for data migration. Shouldn't be used outside.
     Integer createQuestion(QuestionDto questionDto);
+
+	void applyToAllLoanProducts(Integer entityId);
 }
