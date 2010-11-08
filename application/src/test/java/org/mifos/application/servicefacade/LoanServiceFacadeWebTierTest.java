@@ -36,8 +36,10 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.ValueListElement;
@@ -300,7 +302,7 @@ public class LoanServiceFacadeWebTierTest {
     }
 
     @Test
-    public void shouldComputeVariableInstallmentScheduleForVariableInstallments() {
+    public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabled() {
         RepaymentScheduleInstallment installment1 =
                 getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
         RepaymentScheduleInstallment installment2 =
@@ -314,16 +316,41 @@ public class LoanServiceFacadeWebTierTest {
         when(loanAccountActionForm.getInterestRate()).thenReturn("24");
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(true);
         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
-        ((LoanServiceFacadeWebTier) loanServiceFacade).computeVariableInstallmentSchedule(loanAccountActionForm, loanBO, getDate(2010, 8, 22), locale);
+        ((LoanServiceFacadeWebTier) loanServiceFacade).computeInstallmentScheduleUsingDailyInterest(loanAccountActionForm, loanBO, getDate(2010, 8, 22), locale);
         verify(loanBO).copyInstallmentSchedule(installments);
         verify(loanBO).toRepaymentScheduleDto(locale);
     }
+    
+    @Test
+     public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfInterestTypeIsDecliningPrincipalBalance() {
+         RepaymentScheduleInstallment installment1 =
+                 getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+         RepaymentScheduleInstallment installment2 =
+                 getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+         RepaymentScheduleInstallment installment3 =
+                 getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+         LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
+         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
+         when(loanAccountActionForm.getLoanAmount()).thenReturn("1000");
+         when(loanAccountActionForm.getLoanAmountValue()).thenReturn(new Money(rupee, "1000"));
+         when(loanAccountActionForm.getInterestRate()).thenReturn("24");
+         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
+         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
+         InterestTypesEntity interestTypesEntity = new InterestTypesEntity(InterestType.DECLINING_PB);
+         when(loanBO.getInterestType()).thenReturn(interestTypesEntity);
+         ((LoanServiceFacadeWebTier) loanServiceFacade).computeInstallmentScheduleUsingDailyInterest(loanAccountActionForm, loanBO, getDate(2010, 8, 22), locale);
+         verify(loanBO).copyInstallmentSchedule(installments);
+         verify(loanBO).toRepaymentScheduleDto(locale);
+     }
+
 
     @Test
     public void shouldNotComputeVariableInstallmentSchedule() {
         LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
-        ((LoanServiceFacadeWebTier) loanServiceFacade).computeVariableInstallmentSchedule(loanAccountActionForm, loanBO, getDate(2010, 8, 22), null);
+        InterestTypesEntity interestTypesEntity = new InterestTypesEntity(InterestType.DECLINING);
+        when(loanBO.getInterestType()).thenReturn(interestTypesEntity);
+        ((LoanServiceFacadeWebTier) loanServiceFacade).computeInstallmentScheduleUsingDailyInterest(loanAccountActionForm, loanBO, getDate(2010, 8, 22), null);
         verify(loanBO, never()).copyInstallmentSchedule(any(List.class));
     }
 

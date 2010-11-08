@@ -65,6 +65,7 @@ import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsB
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -340,7 +341,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
                 isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
-        List<RepaymentScheduleInstallment> installments = computeVariableInstallmentSchedule(loanActionForm, loan, 
+        List<RepaymentScheduleInstallment> installments = computeInstallmentScheduleUsingDailyInterest(loanActionForm, loan,
                                                     disbursementDate.toDate(), userContext.getPreferredLocale());
 
         if (isRepaymentIndependentOfMeetingEnabled) {
@@ -358,10 +359,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     // Intentionally made package accessible to aid testing !
-    List<RepaymentScheduleInstallment> computeVariableInstallmentSchedule(LoanAccountActionForm loanActionForm, LoanBO loanBO,
+    List<RepaymentScheduleInstallment> computeInstallmentScheduleUsingDailyInterest(LoanAccountActionForm loanActionForm, LoanBO loanBO,
                                                                           Date disbursementDate, Locale locale) {
         List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
-        if (loanActionForm.isVariableInstallmentsAllowed()) {
+        if (loanActionForm.isVariableInstallmentsAllowed()|| loanBO.getInterestType().asEnum() == InterestType.DECLINING_PB) {
             Money loanAmountValue = loanActionForm.getLoanAmountValue();
             Double interestRate = loanActionForm.getInterestDoubleValue();
             generateInstallmentSchedule(installments, loanAmountValue, interestRate, disbursementDate);

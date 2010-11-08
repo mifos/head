@@ -1884,11 +1884,11 @@ public class LoanBO extends AccountBO {
 
         logger.debug("Fee amount..." + feeAmount);
 
-        if (accountFees.getFees().getFeeType().equals(RateAmountFlag.AMOUNT)) {
+        if (accountFees.getFees().getFeeType() == RateAmountFlag.AMOUNT) {
             accountFeeAmount = new Money(getCurrency(), feeAmount.toString());
             logger.debug(
                     "AccountFeeAmount for amount fee.." + feeAmount);
-        } else if (accountFees.getFees().getFeeType().equals(RateAmountFlag.RATE)) {
+        } else if (accountFees.getFees().getFeeType()== RateAmountFlag.RATE) {
             RateFeeBO rateFeeBO = new FeePersistence().getRateFee(accountFees.getFees().getFeeId());
             accountFeeAmount = new Money(getCurrency(), getRateBasedOnFormula(feeAmount, rateFeeBO.getFeeFormula(),
                     loanInterest));
@@ -3221,12 +3221,15 @@ public class LoanBO extends AccountBO {
                  * (getLoanOffering().getInterestTypes().getId().equals( InterestType.DECLINING_EPI.getValue()))) {
                  * return principalInLastPaymentDecliningInterest_v2(loanInterest); }
                  */
-            } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.FLAT.getValue())) {
-                return allFlatInstallments_v2(loanInterest);
-            } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING.getValue())) {
-                return allDecliningInstallments_v2();
-            } else if (getLoanOffering().getInterestTypes().getId().equals(InterestType.DECLINING_EPI.getValue())) {
-                return allDecliningEPIInstallments_v2();
+            } else {
+                Short interestTypeId = getLoanOffering().getInterestTypes().getId();
+                if (interestTypeId.equals(InterestType.FLAT.getValue())) {
+                    return allFlatInstallments_v2(loanInterest);
+                } else if (interestTypeId.equals(InterestType.DECLINING.getValue())||interestTypeId.equals(InterestType.DECLINING_PB.getValue())) {
+                    return allDecliningInstallments_v2();
+                } else if (interestTypeId.equals(InterestType.DECLINING_EPI.getValue())) {
+                    return allDecliningEPIInstallments_v2();
+                }
             }
         }
 
@@ -3625,8 +3628,6 @@ public class LoanBO extends AccountBO {
 
         double period = 0;
 
-        double numInterestDays = getInterestDays();
-        double numDaysInWeek = getDaysInWeek();
         if (meetingFrequency.equals(RecurrenceType.WEEKLY)) {
             period = (double) getInterestDays() / (double) (getDaysInWeek() * recurAfter);
 

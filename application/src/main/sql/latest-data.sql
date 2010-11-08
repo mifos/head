@@ -82,6 +82,7 @@ insert into applied_upgrades(upgrade_id) values(1287934290);
 insert into applied_upgrades(upgrade_id) values(1288013750);
 insert into applied_upgrades(upgrade_id) values(1288349766);
 insert into applied_upgrades(upgrade_id) values(1288869198);
+insert into applied_upgrades(upgrade_id) values(1289125815);
 
 /* The table Currency holds configuration related items for a currency like
  * display symbol, rounding mode etc which is to be applied on a currency.
@@ -3315,10 +3316,24 @@ insert into event_sources (id, entity_type_id, event_id, description) values
 
 /* Upgrade - 1288869198 Permissions to activate question groups*/
 insert into lookup_value (lookup_id, entity_id, lookup_name) values
-(635,87,'Permissions-CanActivateQuestionGroups');
-insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(965, 1, 635, null);
+    ((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanActivateQuestionGroups');
+insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value) values(965, 1,
+                (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanActivateQuestionGroups'),
+                null);
 insert into activity (activity_id, parent_id, activity_name_lookup_id, description_lookup_id) values
-(243,203,635,635);
+(243,203,
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanActivateQuestionGroups'),
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanActivateQuestionGroups'));
 insert into roles_activity (activity_id, role_id) values
 (243,1);
 /* Upgrade - 1288869198*/
+
+/* Upgrade - 1289125815 Interest type declining principle type*/
+insert into lookup_value(lookup_id,entity_id,lookup_name)
+    values((select max(lv.lookup_id)+1 from lookup_value lv), 37, 'InterestTypes-DecliningPrincipalBalance');
+insert into interest_types (interest_type_id, lookup_id, category_id, descripton)
+    values(5,
+            (select lookup_id from lookup_value
+                where entity_id =37 and lookup_name='InterestTypes-DecliningPrincipalBalance'),
+           1,'InterestTypes-DecliningPrincipalBalance');
+/* Upgrade - 1289125815 */
