@@ -108,6 +108,7 @@ explanation of the license and how it is applied.
 		<html-el:hidden property="input" value="LoginChangePW" />
 		<html-el:hidden property="method" value="updatePassword" />
 		<html-el:hidden property="userId" value="${sessionScope.UserContext.id}" />
+        <html-el:hidden property="userName" value='<%=request.getParameter("userName")%>' />
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 	</table>
 	<table width="93%" border="0" cellpadding="0" cellspacing="0">
