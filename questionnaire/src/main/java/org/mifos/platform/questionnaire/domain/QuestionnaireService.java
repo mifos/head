@@ -63,6 +63,8 @@ public interface QuestionnaireService {
 
     Integer defineQuestionGroup(QuestionGroupDto questionGroupDto);
 
+    Integer defineQuestionGroup(QuestionGroupDto questionGroupDto, boolean withDuplicateQuestionTextCheck);
+
     List<String> getAllCountriesForPPI();
 
     Integer uploadPPIQuestionGroup(String country);
@@ -78,4 +80,5 @@ public interface QuestionnaireService {
     EventSourceDto getEventSource(int eventSourceId);
 
     Integer getEventSourceId(String event, String source);
+
 }

@@ -311,6 +311,16 @@ public class QuestionnaireValidatorForDtoTest {
     }
 
     @Test
+    public void shouldValidateForValidQuestionGroupDto_DuplicateQuestionTitle() {
+        when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
+        QuestionGroupDto questionGroupDto = getQuestionGroupDto();
+        questionGroupDto.getSections().get(0).getQuestions().get(0).setText(" Ques ");
+        questionGroupDto.getSections().get(0).getQuestions().get(1).setText("quEs");
+        boolean withDuplicateQuestionTextCheck = false;
+        questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto, withDuplicateQuestionTextCheck);
+    }
+
+    @Test
     public void shouldValidateForInvalidQuestionGroupDto_MissingQuestionOrder() {
         when(eventSourceDao.retrieveCountByEventAndSource("Create", "Client")).thenReturn(asList(1L));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();

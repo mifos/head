@@ -773,7 +773,7 @@ public class QuestionnaireServiceTest {
     public void shouldDefineQuestionGroupFromDto() {
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
         questionnaireService.defineQuestionGroup(questionGroupDto);
-        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto, true);
         verify(questionGroupDao).create(any(QuestionGroup.class));
     }
 
@@ -785,7 +785,7 @@ public class QuestionnaireServiceTest {
         when(questionDao.retrieveByText("Ques2")).thenReturn(asList(questionEntity));
         QuestionGroupDto questionGroupDto = getQuestionGroupDto();
         questionnaireService.defineQuestionGroup(questionGroupDto);
-        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto, true);
         verify(questionGroupDao).create(argThat(new QuestionGroupContainsQuestionMatcher(questionEntity)));
     }
 
@@ -806,7 +806,7 @@ public class QuestionnaireServiceTest {
         when(questionDao.retrieveByText("Ques2")).thenReturn(asList(existingQuestionEntityWithMatchingName));
         QuestionGroupDto questionGroupDto = getQuestionGroupDtoWithNicknames();
         questionnaireService.defineQuestionGroup(questionGroupDto);
-        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto, true);
         verify(questionGroupDao).create(argThat(new QuestionGroupContainsQuestionNicknameMatcher(newQuestionEntityFromDto)));
     }
 
@@ -851,7 +851,7 @@ public class QuestionnaireServiceTest {
         questionnaireService.uploadPPIQuestionGroup(country);
         verify(ppiSurveyLocator).getPPIUploadFileForCountry(country);
         verify(questionGroupDefinitionParser).parse(ppiXmlPath);
-        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto);
+        verify(questionnaireValidator).validateForDefineQuestionGroup(questionGroupDto, false);
         verify(questionGroupDao).create(any(QuestionGroup.class));
     }
 

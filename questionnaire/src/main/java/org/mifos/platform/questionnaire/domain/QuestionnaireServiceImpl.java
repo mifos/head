@@ -246,7 +246,12 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
     @Override
     public Integer defineQuestionGroup(QuestionGroupDto questionGroupDto) {
-        questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto);
+        return defineQuestionGroup(questionGroupDto, true);
+    }
+
+    @Override
+    public Integer defineQuestionGroup(QuestionGroupDto questionGroupDto, boolean withDuplicateQuestionTextCheck) {
+        questionnaireValidator.validateForDefineQuestionGroup(questionGroupDto, withDuplicateQuestionTextCheck);
         QuestionGroup questionGroup = questionnaireMapper.mapToQuestionGroup(questionGroupDto);
         return persistQuestionGroup(questionGroup);
     }
@@ -325,7 +330,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Integer uploadPPIQuestionGroup(String country) {
         String ppiXmlForCountry = ppiSurveyLocator.getPPIUploadFileForCountry(country);
         QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(ppiXmlForCountry);
-        return defineQuestionGroup(questionGroupDto);
+        return defineQuestionGroup(questionGroupDto, false);
     }
 
     @Override
