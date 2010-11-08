@@ -816,7 +816,7 @@ msgid "Add Note"
 msgstr "Megjegyzés hozzáadása"
 
 #: loan.additionalFee
-msgid "addtional fee"
+msgid "additional fee"
 msgstr ""
 
 #: loan.additionalInfo

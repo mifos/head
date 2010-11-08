@@ -789,7 +789,7 @@ msgid "Add Note"
 msgstr "ថែមកំណត់ចំនាំ"
 
 #: loan.additionalFee
-msgid "addtional fee"
+msgid "additional fee"
 msgstr ""
 
 #: loan.additionalInfo

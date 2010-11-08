@@ -740,7 +740,7 @@ msgid "Add Note"
 msgstr "添加注释"
 
 #: loan.additionalFee
-msgid "addtional fee"
+msgid "additional fee"
 msgstr "附加费用"
 
 #: loan.additionalInfo

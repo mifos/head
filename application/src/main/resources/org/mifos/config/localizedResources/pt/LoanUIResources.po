@@ -825,7 +825,7 @@ msgid "Add Note"
 msgstr "Adicionar Nota"
 
 #: loan.additionalFee
-msgid "addtional fee"
+msgid "additional fee"
 msgstr "comissão adicional"
 
 #: loan.additionalInfo
