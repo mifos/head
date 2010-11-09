@@ -171,12 +171,14 @@ public class EditStatusAction extends BaseAction {
             newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
         }
 
+        checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
+
         if (accountBO.isLoanAccount()) {
             checkVersionMismatch(accountBOInSession.getVersionNo(), accountBO.getVersionNo());
             accountBO.setUserContext(userContext);
             accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
             setInitialObjectForAuditLogging(accountBO);
-            checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
+//            checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
             initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
             approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
             accountBO.changeStatus(newStatusId, flagId, updateComment);

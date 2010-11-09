@@ -20,7 +20,15 @@
 
 package org.mifos.accounts.struts.action;
 
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
+
+import java.sql.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.joda.time.DateTime;
 import org.junit.Ignore;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -33,26 +41,36 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.ClientBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import java.sql.Date;
-import java.util.List;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     public EditStatusActionStrutsTest() throws Exception {
@@ -63,16 +81,11 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     private UserContext userContext;
 
-    private CustomerBO client;
-
-    private CustomerBO group;
-
-    private CustomerBO center;
-
+    private ClientBO client;
+    private GroupBO group;
+    private CenterBO center;
     private MeetingBO meeting;
-
     private SavingsOfferingBO savingsOffering;
-
     private String flowKey;
 
     @Override
@@ -90,6 +103,12 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recordOfficeId", "1");
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
         flowKey = createFlow(request, EditStatusAction.class);
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Override
@@ -105,7 +124,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     @Ignore("Convert to unit test")
     public void load() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
         setRequestPathInfo("/editStatusAction.do");
         addRequestParameter("method", "load");
@@ -126,7 +146,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     @Ignore("Convert to unit test")
     public void previewSuccess() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         setRequestPathInfo("/editStatusAction.do");
@@ -161,7 +182,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     @Ignore("Convert to unit test")
     public void previewFailure() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         setRequestPathInfo("/editStatusAction.do");
@@ -189,7 +211,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testPrevious() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
         setRequestPathInfo("/editStatusAction.do");
         addRequestParameter("method", "previous");
@@ -217,7 +240,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     public void updateSuccessForLoan() throws Exception {
 
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING);
 
         setRequestPathInfo("/editStatusAction.do");
@@ -269,12 +293,13 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
                 Assert.assertEquals("Closed- Rescheduled", auditLogRecord.getNewValue());
             }
         }
-        
+
     }
 
     public void testUpdateStatusForLoanToCancel() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         accountBO = getLoanAccount(client, meeting, AccountState.LOAN_PARTIAL_APPLICATION);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         setRequestPathInfo("/editStatusAction.do");
@@ -294,7 +319,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testUpdateSuccessForSavings() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         savingsOffering = createSavingsOffering();
         accountBO = createSavingsAccount("000X00000000019", savingsOffering, AccountState.SAVINGS_PARTIAL_APPLICATION);
 
@@ -335,7 +361,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testUpdateStatusForSavingsToCancel() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         savingsOffering = createSavingsOffering();
         accountBO = createSavingsAccount("000X00000000019", savingsOffering, AccountState.SAVINGS_PARTIAL_APPLICATION);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
@@ -356,7 +383,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     public void testUpdateStatusFailureNoPermission() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        createInitialObjects();
+//        createInitialObjects();
+        createCenterGroupClientHierarchy();
         savingsOffering = createSavingsOffering();
         accountBO = createSavingsAccount("000X00000000019", savingsOffering, AccountState.SAVINGS_PARTIAL_APPLICATION);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
@@ -378,11 +406,37 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         return userContext;
     }
 
-    private void createInitialObjects() {
-        meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("Client", CustomerStatus.CLIENT_ACTIVE, group);
+    private void createCenterGroupClientHierarchy() throws CustomerException {
+        meeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
+        IntegrationTestObjectMother.saveMeeting(meeting);
+
+        center = new CenterBuilder().withName("Savings Center")
+                                    .with(meeting)
+                                    .with(sampleBranchOffice())
+                                    .withLoanOfficer(testUser())
+                                    .withActivationDate(mondayTwoWeeksAgo())
+                                    .build();
+        IntegrationTestObjectMother.createCenter(center, meeting);
+
+        group = new GroupBuilder().withName("Group")
+                                  .withMeeting(meeting)
+                                  .withOffice(sampleBranchOffice())
+                                  .withLoanOfficer(testUser())
+                                  .withParentCustomer(center)
+                                  .build();
+        IntegrationTestObjectMother.createGroup(group, meeting);
+
+        client = new ClientBuilder().withName("Client 1").active()
+                                    .withMeeting(meeting)
+                                    .withOffice(sampleBranchOffice())
+                                    .withLoanOfficer(testUser())
+                                    .withParentCustomer(group)
+                                    .buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient(client, meeting);
+    }
+
+    private DateTime mondayTwoWeeksAgo() {
+        return new DateTime();
     }
 
     private LoanBO getLoanAccount(CustomerBO customer, MeetingBO meeting, AccountState accountState) {
