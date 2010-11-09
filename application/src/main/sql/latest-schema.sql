@@ -1612,6 +1612,7 @@ create table customer_address_detail (
 )
 engine=innodb character set utf8;
 create index cust_address_idx on customer_address_detail (customer_id);
+create index customer_address_detail_phone_number_stripped_idx on customer_address_detail (phone_number_stripped);
 
 create table customer_custom_field (
   customer_customfield_id integer auto_increment not null,

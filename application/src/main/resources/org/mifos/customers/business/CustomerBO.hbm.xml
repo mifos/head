@@ -798,12 +798,13 @@
 
 
 	<query name="Customer.cust_count_search">
-	        	   <![CDATA[select count(*) 
+	        	   <![CDATA[select count(distinct c.customerId) 
 	        	   from org.mifos.customers.business.CustomerBO as c  
 	        	   left join c.parentCustomer as pa 
 	        	   left join pa.parentCustomer as papa 
 	        	   left join c.office as off  
 	        	   left join c.personnel as per 
+                           left join c.nameDetailSet as cnd
 	        	   where ( 
 	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
 	        	         or :USERLEVEL_ID!=:LOID) 
@@ -817,8 +818,7 @@
 	        	              or c.secondLastName like :SEARCH_STRING
 	        	              or c.displayName like :SEARCH_STRING
 	        	              or (
-                                          :SEARCH_STRING2 in (select cnd.name.middleName from org.mifos.customers.client.business.ClientNameDetailEntity cnd
-                                                              where cnd.customer.id = c.customerId and cnd.nameType = 3) and
+                                          cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
 	        	              )
 	        	              
@@ -826,12 +826,13 @@
 	        	         ) ]]>
 	</query>
 	<query name="Customer.cust_search">
-	        	   <![CDATA[select  c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum 
+	        	   <![CDATA[select distinct c.customerId  ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum 
 	        	   from org.mifos.customers.business.CustomerBO as c  
 	        	   left join c.parentCustomer as pa 
 	        	   left join pa.parentCustomer as papa 
 	        	   left join c.office as off  
 	        	   left join c.personnel as per  
+                           left join c.nameDetailSet as cnd
 	        	   where ( 
 	        	         (:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) 
 	        	         or :USERLEVEL_ID!=:LOID) 
@@ -845,20 +846,20 @@
 	        	              or c.secondLastName like :SEARCH_STRING
 	        	              or c.displayName like :SEARCH_STRING
                                       or (
-                                          :SEARCH_STRING2 in (select cnd.name.middleName from org.mifos.customers.client.business.ClientNameDetailEntity cnd
-                                                              where cnd.customer.id = c.customerId and cnd.nameType = 3) and
+                                          cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
 	        	              )
                                       )
 	        	         ) order by c.customerLevel.id,c.lastName,c.firstName]]>
 	</query>
 	<query name="Customer.cust_search_noofficeid">
-	        	   <![CDATA[select   c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from 
+	        	   <![CDATA[select distinct c.customerId ,c.displayName ,c.globalCustNum,c.customerLevel.id,off.officeId,off.officeName,per.displayName,per.personnelId,c.customerStatus.id,pa.displayName, pa.globalCustNum,papa.displayName,papa.globalCustNum from 
 	        	    org.mifos.customers.business.CustomerBO as c 
 	        	    left join c.parentCustomer as pa 
 	        	    left join pa.parentCustomer as papa  
 	        	    left join c.office as off  
 	        	    left join c.personnel as per
+                            left join c.nameDetailSet as cnd
                     where ( 
                     		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
                          and (off.searchId like :OFFICE_SEARCH_ID) 
@@ -868,8 +869,7 @@
                     		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
 	        	              			or c.displayName like :SEARCH_STRING
                     		   or (
-                                          :SEARCH_STRING2 in (select cnd.name.middleName from org.mifos.customers.client.business.ClientNameDetailEntity cnd
-                                                              where cnd.customer.id = c.customerId and cnd.nameType = 3) and
+                                          cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
                     		   ))
                     		   )
@@ -877,11 +877,12 @@
                     order by c.customerLevel.id,c.lastName,c.firstName]]>
 	</query>
 	<query name="Customer.cust_count_search_noofficeid">
-	        	   <![CDATA[select  count(c.customerId) from  
+	        	   <![CDATA[select  count(distinct c.customerId) from  
 	        	    org.mifos.customers.business.CustomerBO as c 
 	        	    left join c.parentCustomer as pa left join pa.parentCustomer as papa  
 	        	    left join c.office as off  
 	        	    left join c.personnel as per 
+                            left join c.nameDetailSet as cnd
                     where ( 
                     		((:USERLEVEL_ID=:LOID and c.personnel.personnelId=:USERID) or (:USERLEVEL_ID!=:LOID)) 
                          and (off.searchId like :OFFICE_SEARCH_ID) 
@@ -891,8 +892,7 @@
                     		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
 	        	              			or c.displayName like :SEARCH_STRING
                     		   or (
-                                          :SEARCH_STRING2 in (select cnd.name.middleName from org.mifos.customers.client.business.ClientNameDetailEntity cnd
-                                                              where cnd.customer.id = c.customerId and cnd.nameType = 3) and
+                                          cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
                     		   ))
                     		   )

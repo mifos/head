@@ -39,7 +39,10 @@ public interface QuestionnaireValidator {
 
     void validateForQuestionGroupResponses(List<QuestionGroupDetail> questionGroupDetails);
 
+    void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto, boolean withDuplicateQuestionTextCheck);
+
     void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto);
 
     void validateForDefineQuestion(QuestionDto questionDto);
+
 }

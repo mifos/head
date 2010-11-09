@@ -23,8 +23,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
+import org.hibernate.CacheMode;
 import org.hibernate.Query;
+import org.hibernate.ScrollMode;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.mifos.customers.business.CustomerAddressDetailEntity;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlUpgrade;
@@ -55,23 +59,36 @@ public class Upgrade1286195484 extends Upgrade {
 		}
 	}
 
+	public static int COMMIT_EVERY = 100;
+
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
 		conditionalAlter(connection);
 
         Session session = StaticHibernateUtil.getSessionTL();
-        Query query = session.createQuery("from CustomerAddressDetailEntity");
-        Iterator it = query.iterate();
-        while (it.hasNext()) {
-            CustomerAddressDetailEntity address = (CustomerAddressDetailEntity)it.next();
+        ScrollableResults results = session.createQuery("from CustomerAddressDetailEntity").setCacheMode(CacheMode.IGNORE).scroll(ScrollMode.FORWARD_ONLY);
+		Transaction t = session.beginTransaction();
+		int count = 0;
+        while (results.next()) {
+            CustomerAddressDetailEntity address = (CustomerAddressDetailEntity)results.get(0);
 			if (address.getAddress().getPhoneNumber() != null && !address.getAddress().getPhoneNumber().isEmpty()) {
 				Query update = session.createQuery("update CustomerAddressDetailEntity set address.phoneNumberStripped = :phoneNumberStripped where " +
 						"customerAddressId = :id");
 				update.setString("phoneNumberStripped", address.getAddress().getPhoneNumberStripped());
 				update.setInteger("id", address.getCustomerAddressId());
 				update.executeUpdate();
+				++count;
+				if (count % COMMIT_EVERY == 0) {
+					t.commit();
+					session.flush();
+					session.clear();
+					t = session.beginTransaction();
+				}
 			}
         }
+		session.flush();
+		t.commit();
     }
 
 }
+

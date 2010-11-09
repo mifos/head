@@ -115,6 +115,12 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
 
     @Override
     public void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto) {
+        validateForDefineQuestionGroup(questionGroupDto, true);
+    }
+
+    @Override
+    public void validateForDefineQuestionGroup(QuestionGroupDto questionGroupDto,
+            boolean withDuplicateQuestionTextCheck) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
         validateQuestionGroupTitle(questionGroupDto, parentException);
         List<EventSourceDto> eventSourceDtos = questionGroupDto.getEventSourceDtos();
@@ -126,27 +132,29 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
                 validateEventSource(eventSourceDto, parentException);
             }
         }
-        validateSections(questionGroupDto.getSections(), parentException);
+        validateSections(questionGroupDto.getSections(), parentException, withDuplicateQuestionTextCheck);
         if (parentException.hasChildExceptions()) {
             throw parentException;
         }
     }
 
-    private void validateSections(List<SectionDto> sections, ValidationException parentException) {
+    private void validateSections(List<SectionDto> sections, ValidationException parentException,
+            boolean withDuplicateQuestionTextCheck) {
         if (isEmpty(sections)) {
             parentException.addChildException(new ValidationException(QUESTION_GROUP_SECTION_NOT_PROVIDED));
         } else {
             if (!sectionsHaveInvalidNames(sections, parentException) && !sectionsHaveInvalidOrders(sections, parentException)) {
                 for (SectionDto section : sections) {
-                    validateSection(section, parentException);
+                    validateSection(section, parentException, withDuplicateQuestionTextCheck);
                 }
             }
         }
     }
 
-    private void validateSection(SectionDto section, ValidationException parentException) {
+    private void validateSection(SectionDto section, ValidationException parentException,
+            boolean withDuplicateQuestionTextCheck) {
         validateSectionName(section, parentException);
-        validateQuestions(section.getQuestions(), parentException);
+        validateQuestions(section.getQuestions(), parentException, withDuplicateQuestionTextCheck);
     }
 
     private void validateSectionName(SectionDto section, ValidationException parentException) {
@@ -156,13 +164,14 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         }
     }
 
-    private void validateQuestions(List<QuestionDto> questions, ValidationException parentException) {
+    private void validateQuestions(List<QuestionDto> questions, ValidationException parentException,
+            boolean withDuplicateQuestionTextCheck) {
         if (isEmpty(questions)) {
             parentException.addChildException(new ValidationException(NO_QUESTIONS_FOUND_IN_SECTION));
         } else {
-            if (!questionsHaveInvalidNames(questions, parentException) && !questionsHaveInvalidOrders(questions, parentException)) {
+            if (!questionsHaveInvalidNames(questions, parentException, withDuplicateQuestionTextCheck) && !questionsHaveInvalidOrders(questions, parentException)) {
                 for (QuestionDto question : questions) {
-                    validateQuestion(question, parentException, true);
+                    validateQuestion(question, parentException, true, withDuplicateQuestionTextCheck);
                 }
             }
         }
@@ -171,18 +180,19 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     @Override
     public void validateForDefineQuestion(QuestionDto questionDto) {
         ValidationException parentException = new ValidationException(GENERIC_VALIDATION);
-        validateQuestion(questionDto, parentException, false);
+        validateQuestion(questionDto, parentException, false, true);
         if (parentException.hasChildExceptions()) {
             throw parentException;
         }
     }
 
-    private void validateQuestion(QuestionDto question, ValidationException parentException, boolean withDuplicateQuestionTypeCheck) {
+    private void validateQuestion(QuestionDto question, ValidationException parentException,
+            boolean withDuplicateQuestionTypeCheck, boolean withDuplicateQuestionTextCheck) {
         if (StringUtils.isEmpty(question.getText())) {
             parentException.addChildException(new ValidationException(QUESTION_TEXT_NOT_PROVIDED));
         } else if (question.getText().length() >= MAX_LENGTH_FOR_QUESTION_TEXT) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_TOO_BIG));
-        } else if (questionHasDuplicateTitle(question, withDuplicateQuestionTypeCheck)) {
+        } else if (withDuplicateQuestionTextCheck && questionHasDuplicateTitle(question, withDuplicateQuestionTypeCheck)) {
             parentException.addChildException(new ValidationException(QUESTION_TITILE_MATCHES_EXISTING_QUESTION));
         } else {
             if (QuestionType.INVALID == question.getType()) {
@@ -348,15 +358,17 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
         return invalid;
     }
 
-    private boolean questionsHaveInvalidNames(List<QuestionDto> questions, ValidationException parentException) {
+    private boolean questionsHaveInvalidNames(List<QuestionDto> questions, ValidationException parentException,
+            boolean withDuplicateQuestionTextCheck) {
         boolean invalid = false;
         if (!allQuestionsHaveNames(questions)) {
             parentException.addChildException(new ValidationException(QUESTION_TEXT_NOT_PROVIDED));
             invalid = true;
-        } else if(!allQuestionsHaveUniqueNames(questions)) {
+        } else if(withDuplicateQuestionTextCheck && !allQuestionsHaveUniqueNames(questions)) {
             parentException.addChildException(new ValidationException(QUESTION_TITLE_DUPLICATE));
             invalid = true;
         }
+
         return invalid;
     }
 
@@ -604,4 +616,5 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
             throw new SystemException(QUESTION_TEXT_NOT_PROVIDED);
         }
     }
+
 }
