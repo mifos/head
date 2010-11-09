@@ -53,7 +53,8 @@
 					<input class="insidebuttn margin30top" type="submit" class="buttn2" name="EDIT" value="[@spring.message "manageProduct.productMixDetails.editproductmixinformation"/]"/>
 				</div>										
         	</div>
-	        <div class="buttonsSubmitCancel margin20right">
+            <div class="clear">&nbsp;</div>
+	        <div class="buttonsSubmitCancel margin20right margin15bottom">
 	        	<input class="buttn" type="submit" id="holiday.button.submit" name="submit" value="[@spring.message "submit"/]" />
         		<input class="buttn2" type="submit" id="CANCEL" name="CANCEL" value="[@spring.message "cancel"/]"/>
 	        </div>        	

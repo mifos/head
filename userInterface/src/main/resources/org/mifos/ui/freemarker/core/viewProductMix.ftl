@@ -32,7 +32,6 @@
 	   	 			<span class="fontBold">
                         [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
                         [@spring.messageArgs "ftlDefinedLabels.manageProduct.viewProductMix.loan" , [loan]  /]
-                        [@spring.message "manageProduct.viewProductMix.loan" /]
                         </span>
 	   	 			<ul>
 	   	 			[#list mixList.mix as text]
@@ -48,7 +47,6 @@
    	 			<span class="fontBold">
                     [#assign savings][@mifostag.mifoslabel name="Savings" /][/#assign]
                     [@spring.messageArgs "ftlDefinedLabels.manageProduct.viewProductMix.savings" , [savings]  /]
-                    [@spring.message "manageProduct.viewProductMix.savings" /]
                 </span>
    	 		</form>
    	 	</div>

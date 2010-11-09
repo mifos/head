@@ -111,10 +111,10 @@ function selectAllOptions(outSel)
             </div>
     	</div>       
         
-        <p class="span-21 fontBold">[@spring.message"OrganizationPreferences.defineAcceptedPaymentTypes.loans"/]:</p>
+        <p class="span-21 fontBold">[@spring.message"OrganizationPreferences.defineAcceptedPaymentTypes.loans"/]</p>
         <div class="span-22 last"> 
         	<div class="span-21 prepend-3 ">
-        		<span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.disbursements" /]:</span>
+        		<span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.disbursements" /]</span>
         		<span class="span-4">
 	            [@spring.formMultiSelect "formBean.chosenNonAcceptedLoanDisbursements", formBean.nonAcceptedLoanDisbursementPaymentTypes, "class=listSize" /]
 	            [@spring.showErrors "<br/>"/] 	
@@ -132,7 +132,7 @@ function selectAllOptions(outSel)
             </div>
             
             <div class="span-21 prepend-3 ">
-            	<span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.repayments"/]:</span>
+            	<span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.repayments"/]</span>
         		<span class="span-4">
 	            [@spring.formMultiSelect "formBean.chosenNonAcceptedLoanRepayments", formBean.nonAcceptedLoanRepaymentPaymentTypes, "class=listSize" /]
 	            [@spring.showErrors "<br/>"/] 	
@@ -150,10 +150,10 @@ function selectAllOptions(outSel)
             </div>
     	</div>
     	
-        <p class="span-21 fontBold">Savings :</p>
+        <p class="span-21 fontBold">[@spring.message"OrganizationPreferences.defineAcceptedPaymentTypes.savings"/]</p>
         <div class="span-22 last"> 
         	<div class="span-21 prepend-3 ">
-        		<span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.withdrawals"/] : </span>
+        		<span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.withdrawals"/]</span>
             	<span class="span-4">
 	            [@spring.formMultiSelect "formBean.chosenNonAcceptedSavingWithdrawals", formBean.nonAcceptedSavingWithdrawalPaymentTypes, "class=listSize" /]
 	            [@spring.showErrors "<br/>"/] 	
@@ -170,7 +170,7 @@ function selectAllOptions(outSel)
 				</span>
             </div>
             <div class="span-21 prepend-3 ">
-            	<span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.deposits"/] : </span>
+            	<span class="span-4 rightAlign">[@spring.message "OrganizationPreferences.defineAcceptedPaymentTypes.deposits"/]</span>
             	<span class="span-4">
 	            [@spring.formMultiSelect "formBean.chosenNonAcceptedSavingDeposits", formBean.nonAcceptedSavingDepositsPaymentTypes, "class=listSize" /]
 	            [@spring.showErrors "<br/>"/] 	

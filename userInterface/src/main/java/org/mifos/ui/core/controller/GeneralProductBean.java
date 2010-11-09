@@ -29,6 +29,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.joda.time.DateTime;
+import org.joda.time.IllegalFieldValueException;
 
 @SuppressWarnings("PMD")
 public class GeneralProductBean {
@@ -38,7 +39,7 @@ public class GeneralProductBean {
     @NotEmpty
     private String name;
 
-    @Size(max=4)
+    @Size(max = 4)
     @NotEmpty
     private String shortName;
 
@@ -48,29 +49,29 @@ public class GeneralProductBean {
     private String selectedCategory;
     private Map<String, String> categoryOptions;
 
-    @Min(value=1)
-    @Max(value=31)
+    @Min(value = 1)
+    @Max(value = 31)
     @NotNull
     private Integer startDateDay;
 
-    @Min(value=1)
-    @Max(value=12)
+    @Min(value = 1)
+    @Max(value = 12)
     @NotNull
     private Integer startDateMonth;
 
-    @Size(max=4)
+    @Size(max = 4)
     @NotEmpty
     private String startDateYear;
 
-    @Min(value=1)
-    @Max(value=31)
+    @Min(value = 1)
+    @Max(value = 31)
     private Integer endDateDay;
 
-    @Min(value=1)
-    @Max(value=12)
+    @Min(value = 1)
+    @Max(value = 12)
     private Integer endDateMonth;
 
-    @Size(max=4)
+    @Size(max = 4)
     private String endDateYear;
 
     @NotEmpty
@@ -144,16 +145,18 @@ public class GeneralProductBean {
         this.startDateYear = startDateYear;
     }
 
-	public DateTime getStartDateAsDateTime() {
-		if (startDateDay != null && startDateMonth != null && startDateYear != null) {
-			try {
-				return new DateTime(Integer.parseInt(startDateYear), startDateMonth, startDateDay, 0, 0, 0, 0);
-			} catch (NumberFormatException e) {
-				return null;
-			}
-		}
-		return null;
-	}
+    public DateTime getStartDateAsDateTime() {
+        if (startDateDay != null && startDateMonth != null && startDateYear != null) {
+            try {
+                return new DateTime(Integer.parseInt(startDateYear), startDateMonth, startDateDay, 0, 0, 0, 0);
+            } catch (IllegalFieldValueException e) {
+                return null;
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
 
     public Integer getEndDateDay() {
         return this.endDateDay;
@@ -179,16 +182,18 @@ public class GeneralProductBean {
         this.endDateYear = endDateYear;
     }
 
-	public DateTime getEndDateAsDateTime() {
-		if (endDateDay != null && endDateMonth != null && endDateYear != null) {
-			try {
-				return new DateTime(Integer.parseInt(endDateYear), endDateMonth, endDateDay, 0, 0, 0, 0);
-			} catch (NumberFormatException e) {
-				return null;
-			}
-		}
-		return null;
-	}
+    public DateTime getEndDateAsDateTime() {
+        if (endDateDay != null && endDateMonth != null && endDateYear != null) {
+            try {
+                return new DateTime(Integer.parseInt(endDateYear), endDateMonth, endDateDay, 0, 0, 0, 0);
+            } catch (IllegalFieldValueException e) {
+                return null;
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+        return null;
+    }
 
     public String getSelectedApplicableFor() {
         return this.selectedApplicableFor;

@@ -27,6 +27,7 @@ import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.MandatoryHiddenFieldsDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 
@@ -40,6 +41,7 @@ public class MandatoryHiddenFieldServiceImpl implements MandatoryHiddenFieldServ
             transactionHelper.startTransaction();
             updateFieldConfiguration(dto, confFieldList);
             transactionHelper.commitTransaction();
+            FieldConfig.getInstance().init();
         } catch (Exception e) {
             transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
