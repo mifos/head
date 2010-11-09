@@ -42,6 +42,46 @@ public class ScheduleCalculatorTest {
         assertInstallmentInterests(installment3, 10.40, 10.40, 0);
         assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
+    
+    @Test
+    public void withExactPaymentOnTime() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(262.64d), getDate(25, 9, 2010));
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 247.67, 0);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 0, 20.40);
+        assertInstallmentInterests(installment2, 14.96, 14.96, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+    }
+    
+    @Test
+    public void withShortPaymentOnTime() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(240d), getDate(25, 9, 2010));
+
+        assertInstallmentPrincipals(installment1, 242.24, 22.64, 219.6);
+        assertInstallmentPrincipals(installment2, 247.67, 247.67, 0);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 0, 20.40);
+        assertInstallmentInterests(installment2, 14.96, 14.96, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+    }
 
     @Test
     public void withTwoInstallmentsAdjusted() {
@@ -127,6 +167,82 @@ public class ScheduleCalculatorTest {
         assertInstallmentForOverdueInterests(installment3, 0, 0, 0);
         assertInstallmentForOverdueInterests(installment4, 0, 0, 0);
     }
+    
+    @Test
+    public void withExcessPaymentAfterDueDate() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(280d), getDate(29, 9, 2010));
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 232.94, 14.73);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 0, 20.40);
+        assertInstallmentInterests(installment2, 12.71, 12.71, 1.99);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+
+        assertInstallmentForOverdueInterests(installment1, 0, 0, 0);
+        assertInstallmentForOverdueInterests(installment2, 0.64, 0, 0.64);
+        assertInstallmentForOverdueInterests(installment3, 0, 0, 0);
+        assertInstallmentForOverdueInterests(installment4, 0, 0, 0);
+    }
+
+    @Test
+    public void withExactPaymentAfterDueDate() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(262.64d), getDate(29, 9, 2010));
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 247.67, 0);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 0, 20.40);
+        assertInstallmentInterests(installment2, 14.96, 14.96, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+
+        assertInstallmentForOverdueInterests(installment1, 0, 0, 0);
+        assertInstallmentForOverdueInterests(installment2, 0.64, 0.64, 0);
+        assertInstallmentForOverdueInterests(installment3, 0, 0, 0);
+        assertInstallmentForOverdueInterests(installment4, 0, 0, 0);
+    }
+
+    @Test
+    public void withNoPaymentPaymentAfterDueDate() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.computeOverdueInterest(schedule, getDate(26, 12, 2010));
+
+        assertInstallmentPrincipals(installment1, 242.24, 242.24, 0);
+        assertInstallmentPrincipals(installment2, 247.67, 247.67, 0);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 20.40, 20.40, 0);
+        assertInstallmentInterests(installment2, 14.96, 14.96, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+
+        assertInstallmentForOverdueInterests(installment1, 0, 0, 0);
+        assertInstallmentForOverdueInterests(installment2, 14.66, 14.66, 0);
+        assertInstallmentForOverdueInterests(installment3, 10.1, 10.1, 0);
+        assertInstallmentForOverdueInterests(installment4, 5.14, 5.14, 0);
+    }
+    
 
     @Test
     public void withExcessPaymentBeforeDueDate() {
@@ -144,6 +260,46 @@ public class ScheduleCalculatorTest {
 
         assertInstallmentInterests(installment1, 0.97, 0.97, 19.08);
         assertInstallmentInterests(installment2, 15.56, 15.56, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+    }
+
+    @Test
+    public void withExactPaymentBeforeDueDate() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(261.32d), getDate(23, 9, 2010));
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 247.67, 0);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 1, 1, 19.08);
+        assertInstallmentInterests(installment2, 15.96, 15.96, 0);
+        assertInstallmentInterests(installment3, 10.40, 10.40, 0);
+        assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+    }
+    
+    @Test
+    public void withInitialInstallmentAmountBeforeDueDate() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule.setInstallments(asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(262.64d), getDate(23, 9, 2010));
+
+        assertInstallmentPrincipals(installment1, 242.24, 0, 242.24);
+        assertInstallmentPrincipals(installment2, 247.67, 246.35, 1.32);
+        assertInstallmentPrincipals(installment3, 252.22, 252.22, 0);
+        assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
+
+        assertInstallmentInterests(installment1, 1, 1, 19.08);
+        assertInstallmentInterests(installment2, 15.93, 15.93, 0);
         assertInstallmentInterests(installment3, 10.40, 10.40, 0);
         assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
