@@ -330,6 +330,8 @@ public class DatabaseMigrator {
             up.upgrade(connection);
         }
 
+        // force switching off autocommit after upgrade run
+        connection.setAutoCommit(false);
         Statement stmt = connection.createStatement();
         stmt.execute("insert into " + APPLIED_UPGRADES + " values (" + upgradeNumber + ")");
         stmt.close();
