@@ -23,6 +23,7 @@ package org.mifos.ui.core.controller;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+@SuppressWarnings("PMD")
 public class HolidayFormBean {
 
     private String name;
@@ -92,6 +93,32 @@ public class HolidayFormBean {
     public void setToYear(String toYear) {
         this.toYear = toYear;
     }
+
+	public boolean allToDateFieldsFilled() {
+		if (getToDay() == null) {
+			return false;
+		}
+		if (getToMonth() == null) {
+			return false;
+		}
+		if (getToYear() == null || getToYear().isEmpty()) {
+			return false;
+		}
+		return true;
+	}
+
+	public boolean anyToDateFieldFilled() {
+		if (getToDay() != null) {
+			return true;
+		}
+		if (getToMonth() != null) {
+			return true;
+		}
+		if (getToYear() != null && !getToYear().isEmpty()) {
+			return true;
+		}
+		return false;
+	}
 
     public String getRepaymentRuleId() {
         return this.repaymentRuleId;

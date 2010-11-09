@@ -56,16 +56,22 @@ public class HolidayFormValidator implements Validator {
             errors.reject("holiday.fromDate.invalid", "Please specify From Date.");
         }
 
+		if (formBean.anyToDateFieldFilled() && !formBean.allToDateFieldsFilled()) {
+			errors.reject("holiday.thruDate.invalid", "Please specify thru Date.");
+		}
+		
         try {
             if (formBean.getToDay() != null) {
                 dateTo = new DateTime().withDate(Integer.parseInt(formBean.getToYear()), formBean.getToMonth(), formBean.getToDay()).toDate();
             }
         } catch (Exception e) {
-            errors.reject("holiday.thruDate.invalid", "Please specify thru Date.");
+			if (!errors.hasFieldErrors("holiday.thruDate.invalid")) {
+				errors.reject("holiday.thruDate.invalid", "Please specify thru Date.");
+			}
         }
 
 		if (dateFrom != null && dateTo != null && new DateTime(dateFrom).compareTo(new DateTime(dateTo)) > 0) {
-			errors.reject("holiday.fromDateGreaterThanThruDate", "From Date is greater than thru Date.");
+			errors.reject("holiday.fromDateGreaterThanThruDate", "From Date is greater than To Date.");
 		}
 
         if (formBean.getRepaymentRuleId() == null || Integer.parseInt(formBean.getRepaymentRuleId()) < 0) {
