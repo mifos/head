@@ -281,6 +281,28 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     // see issue MIFOS-2154
     @Test
     public void testVerifyNoDateShiftWhenDisbursingAnLsimLoanWithModifiedDisbursalDate() throws Exception {
+        changeDisbursalDateOfLoan(new DateMidnight(2010, 3, 5).toDate(),
+                new LocalDate(2010, 3, 8).toDateTimeAtStartOfDay(),
+                new LocalDate(2010, 4, 1), new LocalDate(2010, 4, 1));
+    }
+
+    // see issue MIFOS-3986
+    @Test
+    public void testVerifyNoDateShiftWhenDisbursingAnLsimLoanWithModifiedDisbursalDateToFirstRepayment() throws Exception {
+        changeDisbursalDateOfLoan(new DateMidnight(2010, 3, 5).toDate(),
+                new LocalDate(2010, 3, 1).toDateTimeAtStartOfDay(),
+                new LocalDate(2010, 4, 1), new LocalDate(2010, 4, 1));
+    }
+
+    @Test
+    public void testVerifyNoDateShiftWhenDisbursingAnLsimLoanWithModifiedDisbursalDateAfterOriginalDate() throws Exception {
+        changeDisbursalDateOfLoan(new DateMidnight(2010, 2, 26).toDate(),
+                new LocalDate(2010, 3, 1).toDateTimeAtStartOfDay(),
+                new LocalDate(2010, 3, 1), new LocalDate(2010, 4, 1));
+    }
+
+    private void changeDisbursalDateOfLoan(Date origDisbursalDate, DateTime realDisbursalDate,
+                                           LocalDate origRepaymentDate, LocalDate newRepaymentDate) throws Exception {
         short graceDuration = (short) 0;
 
         new DateTimeService().setCurrentDateTime(new LocalDate(2010, 2, 25).toDateTimeAtStartOfDay());
@@ -304,37 +326,37 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 .withLoanOfficer(testUser).withParentCustomer(group).buildForIntegrationTests();
         IntegrationTestObjectMother.createClient((ClientBO)client, weeklyMeeting);
 
-         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.CLIENTS,
-                 new DateTimeService().getCurrentJavaDateTime(), PrdStatus.LOAN_ACTIVE, 300.0, 12.0,
-                 (short) 3, InterestType.DECLINING, center.getCustomerMeeting().getMeeting());
+        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan", ApplicableTo.CLIENTS,
+                new DateTimeService().getCurrentJavaDateTime(), PrdStatus.LOAN_ACTIVE, 300.0, 12.0,
+                (short) 3, InterestType.DECLINING, center.getCustomerMeeting().getMeeting());
 
-         List<FeeDto> feeViewList = new ArrayList<FeeDto>();
+        List<FeeDto> feeViewList = new ArrayList<FeeDto>();
 
-         boolean loanScheduleIndependentOfMeeting = true;
-         accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, client,
-                 AccountState.LOAN_APPROVED, new Money(getCurrency(), "1000.0"), Short.valueOf("6"),
-                 new DateMidnight(2010, 3, 5).toDate(), false, // 6 installments
-                 12.0, graceDuration, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
-                 loanScheduleIndependentOfMeeting);
-         new TestObjectPersistence().persist(accountBO);
-         Assert.assertEquals(6, accountBO.getAccountActionDates().size());
+        boolean loanScheduleIndependentOfMeeting = true;
+        accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, client,
+                AccountState.LOAN_APPROVED, new Money(getCurrency(), "1000.0"), Short.valueOf("6"),
+                origDisbursalDate, false, // 6 installments
+                12.0, graceDuration, null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
+                loanScheduleIndependentOfMeeting);
+        new TestObjectPersistence().persist(accountBO);
+        Assert.assertEquals(6, accountBO.getAccountActionDates().size());
 
-         Set<AccountActionDateEntity> actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
-         LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
-         Assert.assertEquals(new LocalDate(2010,4,1), new LocalDate(paymentsArray[0].getActionDate().getTime()));
+        Set<AccountActionDateEntity> actionDateEntities = accountBO.getAccountActionDates();
+        LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
+        Assert.assertEquals(origRepaymentDate, new LocalDate(paymentsArray[0].getActionDate().getTime()));
 
-         new DateTimeService().setCurrentDateTime(new LocalDate(2010, 3, 8).toDateTimeAtStartOfDay());
-         List<PaymentTypeEntity> paymentTypeEntities = new AcceptedPaymentTypeService().getAcceptedPaymentTypes(TestObjectFactory.TEST_LOCALE);
+        new DateTimeService().setCurrentDateTime(realDisbursalDate);
+        List<PaymentTypeEntity> paymentTypeEntities = new AcceptedPaymentTypeService().getAcceptedPaymentTypes(TestObjectFactory.TEST_LOCALE);
 
-         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO,
-                 new Money(Money.getDefaultCurrency(), new BigDecimal(1000)), "", new DateTimeService().getCurrentJavaDateTime(),
-                 paymentTypeEntities.get(0), new DateTimeService().getCurrentJavaDateTime());
-         ((LoanBO)accountBO).disburseLoan(accountPaymentEntity);
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO,
+                new Money(Money.getDefaultCurrency(), new BigDecimal(1000)), "", new DateTimeService().getCurrentJavaDateTime(),
+                paymentTypeEntities.get(0), new DateTimeService().getCurrentJavaDateTime());
+        ((LoanBO)accountBO).disburseLoan(accountPaymentEntity);
 
-         actionDateEntities = ((LoanBO) accountBO).getAccountActionDates();
-         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
-         Assert.assertEquals(new LocalDate(2010,4,1), new LocalDate(paymentsArray[0].getActionDate().getTime()));
- }
+        actionDateEntities = accountBO.getAccountActionDates();
+        paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities);
+        Assert.assertEquals(newRepaymentDate, new LocalDate(paymentsArray[0].getActionDate().getTime()));
+    }
 
     @Test
     public void testCreateLoanAccountWithDecliningInterestGraceAllRepaymentsWithLsimOn() throws Exception {
