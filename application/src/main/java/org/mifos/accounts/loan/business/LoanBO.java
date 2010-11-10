@@ -54,6 +54,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.LoanPaymentTypes;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -1008,8 +1009,16 @@ public class LoanBO extends AccountBO {
         // regenerate the installments
         if (!DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime()).equals(
                 DateUtils.getDateWithoutTimeStamp(transactionDate.getTime()))) {
-            this.disbursementDate = transactionDate;
-            regeneratePaymentSchedule(getConfigurationPersistence().isRepaymentIndepOfMeetingEnabled(), null);
+            final boolean lsimEnabled = getConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+            if (lsimEnabled) {
+                final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(
+                        MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+                this.disbursementDate = new DateTime(transactionDate).plusDays(minDaysInterval).toDate();
+            }
+            else {
+                this.disbursementDate = transactionDate;
+            }
+            regeneratePaymentSchedule(lsimEnabled, null);
         }
         this.disbursementDate = transactionDate;
 

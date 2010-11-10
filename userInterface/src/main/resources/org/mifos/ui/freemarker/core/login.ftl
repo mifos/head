@@ -24,11 +24,11 @@
 			</span>
 		</div>
 		<div>
-          	<span class="normalFont"><label for="login.input.username">[@spring.message "login.UserName" /]</label>:</span>
+          	<span class="normalFont"><label for="login.input.username">[@spring.message "login.UserName" /]</label>:&nbsp;</span>
             <span ><input class="focused" type="text" name="j_username" id="login.input.username"></span>
           </div>
           <div class="paddingTop5">
-          	<span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "login.password"/]</label>&nbsp;:</span>
+          	<span class="normalFont">&nbsp;<label for="login.input.password">[@spring.message "login.password"/]</label>:&nbsp;</span>
             <span><input type="password" name="j_password" id="login.input.password"></span>
         </div>
           <div>&nbsp;</div>

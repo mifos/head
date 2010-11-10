@@ -1,18 +1,21 @@
 package org.mifos.ui.core.controller;
 
+import org.joda.time.MutableDateTime;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import java.util.Date;
 
 /**
  * User: morzechowski@soldevelo.com
  * Date: 2010-10-21
  */
-@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity", "PMD.ExcessiveMethodLength"})
 public class SavingsProductFormValidator implements Validator {
 
     @Override
     public boolean supports(Class<?> clazz) {
-        return  SavingsProductFormBean.class.isAssignableFrom(clazz);
+        return SavingsProductFormBean.class.isAssignableFrom(clazz);
     }
 
     @Override
@@ -44,16 +47,34 @@ public class SavingsProductFormValidator implements Validator {
             errors.reject("Min.generalDetails.startDateMonth");
         }
 
-        if (null == formBean.getGeneralDetails().getStartDateYear() ||
+
+        if (null == formBean.getGeneralDetails().getStartDateAsDateTime() ||
                 !(formBean.getGeneralDetails().getStartDateYear().length() == 4)) {
-            errors.reject("NotEmpty.generalDetails.startDateYear");
+            errors.reject("Min.generalDetails.startDate");
+        } else {
+            MutableDateTime nextYear = new MutableDateTime();
+            nextYear.setDate(new Date().getTime());
+            nextYear.addYears(1);
+
+            if (formBean.getGeneralDetails().getStartDateAsDateTime() != null &&
+                    formBean.getGeneralDetails().getStartDateAsDateTime().compareTo(nextYear) > 0) {
+                errors.reject("Min.generalDetails.startDate");
+            }
         }
 
-		if (formBean.getGeneralDetails().getStartDateAsDateTime() != null &&
-				formBean.getGeneralDetails().getEndDateAsDateTime() != null &&
-				formBean.getGeneralDetails().getStartDateAsDateTime().compareTo(formBean.getGeneralDetails().getEndDateAsDateTime()) > 0) {
-			errors.reject("Min.generalDetails.endDate");
-		}
+        if ((null != formBean.getGeneralDetails().getEndDateDay() ||
+                null != formBean.getGeneralDetails().getEndDateMonth() ||
+                null != formBean.getGeneralDetails().getEndDateMonth()) &&
+                formBean.getGeneralDetails().getEndDateAsDateTime() == null) {
+                errors.reject("Min.generalDetails.endDate");         
+        }
+        
+        if (formBean.getGeneralDetails().getStartDateAsDateTime() != null &&
+                formBean.getGeneralDetails().getEndDateAsDateTime() != null &&
+                formBean.getGeneralDetails().getStartDateAsDateTime().compareTo(formBean.getGeneralDetails().getEndDateAsDateTime()) > 0) {
+            errors.reject("Min.generalDetails.endDate");
+        }
+
 
         if (formBean.getGeneralDetails().getSelectedApplicableFor().trim().isEmpty()) {
             errors.reject("NotEmpty.generalDetails.selectedApplicableFor");
