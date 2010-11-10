@@ -165,16 +165,14 @@ public class LoanRepayTest extends UiTestCaseBase {
     }
 
     private RepayLoanPage navigateToRepayLoanPage() {
-        LoanAccountPage accountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        RepayLoanPage repayLoanPage = accountPage.navigateToRepayLoan();
-        return repayLoanPage;
+        return navigationHelper.navigateToLoanAccountPage(loanId).navigateToRepayLoan();
     }
 
     private void verifySelectionInConfirmationPage(RepayLoanPage repayLoanPage, String waiveInterestConfirmationText) {
         RepayLoanConfirmationPage repayLoanConfirmationPage = repayLoanPage.submitAndNavigateToRepayLoanConfirmationPage(getRepayLoanParameters());
         Assert.assertEquals(repayLoanConfirmationPage.getSelectedValueForInterestWaiver(), waiveInterestConfirmationText);
         repayLoanPage = repayLoanConfirmationPage.edit();
-        boolean stateToBeRetainedDuringEdit = StringUtils.equals("Yes", waiveInterestConfirmationText) ? true : false;
+        boolean stateToBeRetainedDuringEdit = StringUtils.equals("Yes", waiveInterestConfirmationText);
         Assert.assertEquals(repayLoanPage.isWaiveInterestSelected(), stateToBeRetainedDuringEdit);
     }
 

@@ -209,4 +209,5 @@ public interface LoanConstants {
 
     int GLIM_DISABLED_VALUE = 0;
     String INSTALLMENTS = "installments";
+    String WAIVER_INTEREST_SELECTED = "waiverInterestSelected";
 }

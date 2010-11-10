@@ -90,7 +90,11 @@
                           <fieldset class="right_section" style="width:70%">
                             <ol  class="noPadding">
                               <li class="noPadding">
-                                [@mifosmacros.formRadioButtons "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices ,'</li><li class="noPadding">', ''/]
+                                  [#if question.answerChoices?size > 6]
+                                  [@mifosmacros.formSingleSelectWithPrompt "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices, "--selectone--", ''/]
+                                  [#else]
+                                  [@mifosmacros.formRadioButtons "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", question.answerChoices,' </li><li class="noPadding">', ''/]
+                                  [/#if]
                               </li>
                             </ol>
                           </fieldset>
