@@ -49,7 +49,7 @@ public class RepayLoanPage extends MifosPage {
 
 
     public boolean isWaiverInterestSelectorVisible() {
-        return !StringUtils.equals("hidden", selenium.getEval("window.$(\"input:radio[name=waiverInterest]\").css(\"visibility\")"));
+        return selenium.isElementPresent("name=waiverInterestChckBox");
     }
 
     public boolean isWaiverInterestWarningVisible() {
@@ -73,10 +73,15 @@ public class RepayLoanPage extends MifosPage {
     }
 
     public boolean isWaiveInterestSelected() {
-        return StringUtils.equals("true", selenium.getEval("window.$(\"input:radio[name=waiverInterest]:checked\").val()"));
+        return StringUtils.equals("true", selenium.getEval("window.$(\"input:checkbox[name=waiverInterestChckBox]:checked\").val()"));
     }
 
     public void interestWaiver(boolean value) {
-        selenium.click("name=waiverInterest value="+ value);
+        if (value) {
+            selenium.check("name=waiverInterestChckBox");
+        } else {
+            selenium.uncheck("name=waiverInterestChckBox");
+        }
+        selenium.fireEvent("name=waiverInterestChckBox", "change");
     }
 }
