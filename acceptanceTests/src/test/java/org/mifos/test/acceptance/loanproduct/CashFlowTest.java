@@ -96,7 +96,7 @@ public class CashFlowTest extends UiTestCaseBase {
                 clickContinueToNavigateToCashFlowPage().
 //                verifyPage().
                 validateCashFlowMonths(disbursalDate,installment,frequency).
-                enterValidData(cashFlowIncremental).
+                enterValidData(cashFlowIncremental, 100).
                 clickContinue().
                 verifyCashFlow(cashFlowIncremental);
 

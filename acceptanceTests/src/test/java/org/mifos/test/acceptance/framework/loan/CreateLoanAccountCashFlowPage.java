@@ -44,11 +44,11 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         return this;
     }
 
-    public CreateLoanAccountCashFlowPage enterValidData(int incremental) {
+    public CreateLoanAccountCashFlowPage enterValidData(int incremental, int cashFlowBase) {
         int noOfMonths = selenium.getXpathCount("//input[contains(@id,'expense')]").intValue();
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
             selenium.type("//tr[" + rowIndex + "]/td[2]/input","100");
-            selenium.type("//tr[" + rowIndex + "]/td[3]/input", String.valueOf(100+ incremental));
+            selenium.type("//tr[" + rowIndex + "]/td[3]/input", String.valueOf(cashFlowBase + incremental));
             selenium.type("//tr[" + rowIndex + "]/td[4]/input","notes" + rowIndex);
         }
         return this;

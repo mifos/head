@@ -311,7 +311,7 @@ explanation of the license and how it is applied.
                                                         <c:choose>
                                                             <c:when test="${loanAccountActionForm.variableInstallmentsAllowed}">
                                                                 <td valign="top" align="center">
-                                                                    <table width="100%" border="0" cellpadding="3" cellspacing="0">
+                                                                    <table width="100%" border="0" cellpadding="3" cellspacing="0" id="installments">
                                                                     <tr  class="drawtablerowbold"  >
                                                                         <td width="10%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.installments" /></b></td>
                                                                         <td width="22%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.duedate" /></b></td>
@@ -456,7 +456,7 @@ explanation of the license and how it is applied.
                                                     </tr>
                                                     <tr>
                                                         <td valign="top" align="center">
-                                                            <table width="100%" border="0" cellpadding="3" cellspacing="0">
+                                                            <table width="100%" border="0" cellpadding="3" cellspacing="0" id="cashflow" name="cashflow">
                                                             <tr  class="drawtablerowbold"  >
                                                                 <td width="10%" class="drawtablerow" align="left" ><b><mifos:mifoslabel name="loan.months" /></b></td>
                                                                 <td width="22%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.cumulativecashflow" /></b></td>
