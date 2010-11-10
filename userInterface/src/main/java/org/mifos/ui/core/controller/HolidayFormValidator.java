@@ -21,6 +21,7 @@
 package org.mifos.ui.core.controller;
 
 import java.util.Date;
+import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.dto.domain.OfficeHoliday;
 import org.springframework.util.StringUtils;
@@ -71,8 +72,12 @@ public class HolidayFormValidator implements Validator {
         }
 
 		if (dateFrom != null && dateTo != null && new DateTime(dateFrom).compareTo(new DateTime(dateTo)) > 0) {
-			errors.reject("holiday.fromDateGreaterThanThruDate", "From Date is greater than To Date.");
+			errors.reject("holiday.fromDate.invalid", "From Date is greater than To Date.");
 		}
+
+        if (dateFrom != null && new DateMidnight(dateFrom).compareTo(new DateMidnight()) < 0) {
+            errors.reject("holiday.fromDate.invalid", "From Date cannot be in the past.");
+        }
 
         if (formBean.getRepaymentRuleId() == null || Integer.parseInt(formBean.getRepaymentRuleId()) < 0) {
             errors.reject("holiday.repaymentrule.required", "Please specify Repayment Rule.");
