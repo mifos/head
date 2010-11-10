@@ -378,6 +378,10 @@ explanation of the license and how it is applied.
 												<br>
 												<mifos:mifoslabel name="loan.charged_applied" />
 												<br>
+												<span class="fontnormal"> <br/> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnEdit(this.form)">
+													<mifos:mifoslabel name="loan.edit_loan_acc" />
+												</html-el:button> </span>
+												<br/>
 												<c:forEach var="fee" items="${requestScope.feeFormulaList}" varStatus="loopStatus3">
 													<input type="hidden" id="FEE_${fee.feeFormulaId}" value="${fee.feeFormulaName}" />
 												</c:forEach>
@@ -453,9 +457,11 @@ explanation of the license and how it is applied.
 														</td>
 													</tr>
 												</table>
-												<span class="fontnormal"> <br> <br> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnEdit(this.form)">
-														<mifos:mifoslabel name="loan.edit_loan_acc" />
+												<c:if test="${loanAccountActionForm.variableInstallmentsAllowed}">
+													<span class="fontnormal"> <br> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnScheduleEdit(this.form)">
+														<mifos:mifoslabel name="loan.edit_loan_schedule" />
 													</html-el:button> </span>
+												</c:if>
 											</td>
 										</tr>
 									</table>

@@ -28,6 +28,11 @@ function fnEdit(form) {
 	form.action="loanAccountAction.do";
 	form.submit();
 }
+function fnScheduleEdit(form) {
+	form.method.value="showPreview";
+	form.action="loanAccountAction.do";
+	form.submit();
+}
 function fun_submitForApproval(form) {
 	form.method.value="create";
 	form.stateSelected.value="2";
