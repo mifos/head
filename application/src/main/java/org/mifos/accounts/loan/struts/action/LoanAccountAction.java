@@ -537,7 +537,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 boolean lowerBound = MonthYearComparator.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDateTime().toDate(),installments.get(0).getDueDateValue());
                 boolean upperBound = MonthYearComparator.firstLessOrEqualSecond(installments.get(installments.size()-1).getDueDateValue(),monthlyCashFlows.get(monthlyCashFlows.size()-1).getDateTime().toDate());
 
-                SimpleDateFormat df = new SimpleDateFormat("MMMM",installments.get(0).getLocale());
+                SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy",installments.get(0).getLocale());
 
                 if(!lowerBound) {
                     errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(0).getDueDateValue())));
@@ -712,11 +712,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                                     ActionForwards.preview_failure;
 
         //----to display errors on second page
-        ActionErrors validateCashflowForInstallments = validateCashflowForInstallments(request, (LoanAccountActionForm) form);
-        if(!validateCashflowForInstallments.isEmpty()) {
-            addErrors(request,validateCashflowForInstallments);
+        if(forward.equals(ActionForwards.preview_success)) {
+            ActionErrors validateCashflowForInstallments = validateCashflowForInstallments(request, (LoanAccountActionForm) form);
+            if(!validateCashflowForInstallments.isEmpty()) {
+                addErrors(request,validateCashflowForInstallments);
+            }
         }
-        //-----------------------------
 
         return mapping.findForward(forward.name());
     }
