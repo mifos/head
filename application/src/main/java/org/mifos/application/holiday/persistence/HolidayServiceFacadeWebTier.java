@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -71,7 +72,20 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
             holidaysInYear.add(new OfficeHoliday(holidayDetail, this.holidayDao.applicableOffices(holiday.getId())));
             holidaysByYear.put(Integer.toString(year), holidaysInYear);
         }
+        sortValuesByFromDate(holidaysByYear);
         return holidaysByYear;
+    }
+
+    private void sortValuesByFromDate(Map<String, List<OfficeHoliday>> holidays) {
+        for (String year : holidays.keySet()) {
+            List<OfficeHoliday> holidayList = holidays.get(year);
+            Collections.sort(holidayList, new Comparator<OfficeHoliday>() {
+                @Override
+                public int compare(OfficeHoliday o1, OfficeHoliday o2) {
+                    return o1.getHolidayDetails().getFromDate().compareTo(o2.getHolidayDetails().getFromDate());
+                }
+            });
+        }
     }
 
     @Override
