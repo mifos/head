@@ -89,21 +89,19 @@ explanation of the license and how it is applied.
 						</div>
 						<table width="95%" border="0" cellspacing="0" cellpadding="3">
 						    <tr>
+                                <c:if test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waiverInterest')==true}">
+                                    <td align="right" class="fontnormal"><mifos:mifoslabel name="loan.waiverInterestMessage"/> :</td>
+                                    <td align="left" class="fontnormal">
                                     <c:choose>
-                                        <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waiverInterest')==true}">
-            						        <td align="right" class="fontnormal">
-                                                <html-el:radio property="waiverInterest" value="true"/>
-                                                <mifos:mifoslabel name="loan.waiverInterest"/>
-                                            </td>
-						                    <td align="left" class="fontnormal">
-                                                <html-el:radio property="waiverInterest" value="false"/>
-                                                <mifos:mifoslabel name="loan.donotwaiverInterest"/>
-                                            </td>
-                                         </c:when>
-                                         <c:otherwise>
-                                            <input type="radio" style="visibility: hidden;" value="false" name="waiverInterest" checked="checked">
-                                         </c:otherwise>
+                                        <c:when test="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waiverInterestSelected')==true}">
+                                            <input type="checkbox" value="true" name="waiverInterestChckBox" checked="checked">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <input type="checkbox" value="true" name="waiverInterestChckBox">
+                                        </c:otherwise>
                                     </c:choose>
+                                    </td>
+                                 </c:if>
 						    </tr>
 							<tr>
 								<td colspan="2" align="right" class="fontnormal">
@@ -201,6 +199,7 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="repaymentAmount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'totalRepaymentAmount')}" />
 			<html-el:hidden property="waivedAmount" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waivedRepaymentAmount')}" />
 			<html-el:hidden property="dateOfPayment" value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
+			<html-el:hidden property="waiverInterest" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'waiverInterest')}" />
 		</html-el:form>
 	</tiles:put>
 </tiles:insert>

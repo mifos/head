@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
@@ -73,6 +74,7 @@ public class RepayLoanAction extends BaseAction {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         RepayLoanDto repayLoanDto = loanServiceFacade.getRepaymentDetails(request.getParameter("globalAccountNum"), userContext.getLocaleId(), new AcceptedPaymentTypePersistence());
         SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST, repayLoanDto.shouldWaiverInterest(), request);
+        SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, repayLoanDto.shouldWaiverInterest(), request);
         SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, repayLoanDto.getEarlyRepaymentMoney(), request);
         SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, repayLoanDto.getWaivedRepaymentMoney(), request);
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, repayLoanDto.getPaymentTypeEntities(), request);
@@ -90,7 +92,7 @@ public class RepayLoanAction extends BaseAction {
 
         RepayLoanActionForm repayLoanActionForm = (RepayLoanActionForm) form;
         Date receiptDate = null;
-        if (repayLoanActionForm.getReceiptDate() != null && repayLoanActionForm.getReceiptDate() != "") {
+        if (StringUtils.isNotEmpty(repayLoanActionForm.getReceiptDate())) {
             receiptDate = new Date(DateUtils.getLocaleDate(userContext.getPreferredLocale(),
                     repayLoanActionForm.getReceiptDate()).getTime());
         }
@@ -106,12 +108,14 @@ public class RepayLoanAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, ((RepayLoanActionForm) form).isWaiverInterest(), request);
         return mapping.findForward(Constants.PREVIEW_SUCCESS);
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        SessionUtils.setAttribute(LoanConstants.WAIVER_INTEREST_SELECTED, ((RepayLoanActionForm) form).isWaiverInterest(), request);
         return mapping.findForward(Constants.PREVIOUS_SUCCESS);
     }
 
