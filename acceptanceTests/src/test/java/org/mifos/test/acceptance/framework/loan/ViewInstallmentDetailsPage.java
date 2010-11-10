@@ -368,9 +368,9 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         setFirstAndSecondInstallmentTotal("10000");
         selenium.click(button);
         selenium.waitForPageToLoad("3000");
-        Assert.assertTrue(selenium.isTextPresent("Installment amount for September as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
+        Assert.assertTrue(selenium.isTextPresent("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
 //        Assert.assertTrue(selenium.isTextPresent("Installment amount for October as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
-        Assert.assertTrue(selenium.isTextPresent("Installment amount for November as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
+        Assert.assertTrue(selenium.isTextPresent("Installment amount for November 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
     }
 
     private void verifyErrorMessageOnDatesOutOfCashFlow(String button) {
