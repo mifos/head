@@ -46,11 +46,16 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.SqlExecutor;
 import org.mifos.framework.persistence.SqlResource;
+import org.mifos.platform.questionnaire.builders.QuestionGroupInstanceDtoBuilder;
+import org.mifos.platform.questionnaire.builders.QuestionGroupResponseDtoBuilder;
 import org.mifos.platform.questionnaire.domain.QuestionnaireService;
 import org.mifos.platform.questionnaire.domain.QuestionnaireServiceImpl;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl;
+import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.mifos.service.test.TestingService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -106,9 +111,28 @@ public class PPITestDataGenerator {
         List<QuestionGroupDetail> list = questionnaireServiceFacade.getAllQuestionGroups();
         assert(list.size() == 1);
 
-        System.out.println(" upgrade done!");
+        QuestionGroupDetail qg = list.get(0);
+        Integer creatorId = 1;
 
-        // StaticHibernateUtil.closeSession();
+        QuestionGroupInstanceDtoBuilder instanceBuilder = new QuestionGroupInstanceDtoBuilder();
+        instanceBuilder.withQuestionGroup(qg.getId()).withCompleted(true).withCreator(creatorId).
+            withEventSource(1).withEntity(customer.getCustomerId()).withVersion(1);
+        List<SectionQuestionDetail> questions = qg.getSectionDetail(0).getQuestions();
+        for (SectionQuestionDetail question: questions) {
+            QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
+            if (question.getQuestionType() == QuestionType.DATE) {
+                responseBuilder.withSectionQuestion(question.getQuestionId()).withResponse("11/11/2010");
+            } else {
+                responseBuilder.withSectionQuestion(question.getQuestionId()).withResponse(
+                        question.getAnswerChoices().get(0).getValue());
+            }
+            instanceBuilder.addResponses(responseBuilder.build());
+        }
+
+        questionnaireServiceFacade.saveQuestionGroupInstance(instanceBuilder.build());
+
+        System.out.println("done!");
+
     }
 
     public static ApplicationContext initializeSpring() {
