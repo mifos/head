@@ -375,7 +375,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
 
         StaticHibernateUtil.shutdown();
         unregisterMySQLDriver();
-        cancleMySQLStatement();
+        cancelMySQLStatement();
 
         // kill ehcache threads
         // (net.sf.ehcache.store.DiskStore$SpoolAndExpiryThread)
@@ -397,7 +397,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         }
     }
 
-    private void cancleMySQLStatement() {
+    private void cancelMySQLStatement() {
         // mysql statement cancellation timer (mysql bug 36565)
         ClassLoader myClassLoader = this.getClass().getClassLoader();
         Class clazz;
