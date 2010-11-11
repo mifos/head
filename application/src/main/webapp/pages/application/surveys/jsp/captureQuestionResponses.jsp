@@ -30,6 +30,7 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/tags/date" prefix="date"%>
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <tiles:insert definition=".withoutmenu">
 	<tiles:put name="body" type="string">
@@ -113,11 +114,21 @@ explanation of the license and how it is applied.
                                      </c:if>
                                      
                                      <c:if test="${question.questionType == 'SINGLE_SELECT'}">
-                                         <mifos:select	property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value" size="1">
-										   <c:forEach var="choiceValue" items="${question.answerChoices}" >
-											  <html-el:option value="${choiceValue}">${choiceValue}</html-el:option>
-										   </c:forEach>
-									     </mifos:select>
+                                         <c:if test="${fn:length(question.answerChoices) > 6}">
+                                             <mifos:select	property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value" size="1">
+                                                 <c:forEach var="choiceValue" items="${question.answerChoices}" >
+                                                     <html-el:option value="${choiceValue}">${choiceValue}</html-el:option>
+                                                 </c:forEach>
+                                             </mifos:select>
+                                         </c:if>
+                                         <c:if test="${fn:length(question.answerChoices) <= 6}">
+                                             <c:forEach var="choiceValue" items="${question.answerChoices}">
+                                                 <html-el:radio property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value" value="${choiceValue}">
+                                                     <c:out value="${choiceValue}"/>
+                                                 </html-el:radio>
+                                                 <br>
+                                             </c:forEach>
+                                         </c:if>
                                      </c:if>
                                      
                                       <c:if test="${question.questionType == 'MULTI_SELECT'}">
