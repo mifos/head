@@ -165,6 +165,6 @@ public class QuestionDetail implements Serializable {
     }
 
     public boolean isNewQuestion() {
-        return id == null || id == 0;
+        return id == null || id <= 0;
     }
 }

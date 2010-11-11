@@ -79,6 +79,6 @@ public class SectionQuestion implements Serializable {
     }
 
     public boolean isNewSectionQuestion() {
-        return id == 0;
+        return id <= 0;
     }
 }
