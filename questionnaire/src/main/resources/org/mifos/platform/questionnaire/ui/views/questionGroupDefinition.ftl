@@ -130,18 +130,7 @@
                     [@mifosmacros.formCheckbox "questionGroupForm.sections[${section_index}].sectionQuestions[${sectionQuestion_index}].mandatory", ""/]
                 </td>
                 <td class="remove orderCenter">
-                    [#assign questionRemovable = false]
-                    [#list questionGroupForm.questionsToAdd as questionToAdd]
-                        [#if sectionQuestion.questionId == questionToAdd]
-                            [#assign questionRemovable = true]
-                            [#break]
-                        [/#if]
-                    [/#list]
-                    [#if questionRemovable == true]
-                        <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a>
-                    [#else]
-                        <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')" style="visibility:hidden">[@spring.message "questionnaire.remove.link"/]</a>
-                    [/#if]
+                    <a href="javascript:CreateQuestionGroup.removeQuestion('${section.name}','${sectionQuestion.questionId}')">[@spring.message "questionnaire.remove.link"/]</a>
                 </td>
                 <td class="order orderCenter">
                     <a href="javascript:CreateQuestionGroup.moveQuestionUp('${section.name}','${sectionQuestion.questionId}')">

@@ -177,6 +177,7 @@ public class QuestionGroupForm extends ScreenObject {
         currentQuestion.setChoices();
         SectionQuestionDetail sectionQuestionDetail = new SectionQuestionDetail(currentQuestion.getQuestionDetail(), false);
         currentSection.addSectionQuestion(sectionQuestionDetail);
+        sectionQuestionDetail.getQuestionDetail().setId(-1 * currentSection.getSectionQuestionDetails().size());
         currentQuestion = new Question(new QuestionDetail());
     }
 

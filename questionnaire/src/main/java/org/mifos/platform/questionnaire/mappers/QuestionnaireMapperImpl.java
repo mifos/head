@@ -144,7 +144,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
     @Override
     public QuestionEntity mapToQuestion(QuestionDetail questionDetail) {
         QuestionEntity question = getQuestion(questionDetail);
-        question.setQuestionId(questionDetail.getId());
+        question.setQuestionId(questionDetail.getId() > 0 ? questionDetail.getId() : 0);
         question.setNickname(questionDetail.getNickname());
         question.setQuestionText(questionDetail.getText());
         question.setAnswerType(mapToAnswerType(questionDetail.getType()));
