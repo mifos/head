@@ -132,7 +132,6 @@
                 <version>2.4</version>
                 <configuration>
                     <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
                     <targetJdk>1.6</targetJdk>
                     <includeTests>true</includeTests>
                     <rulesets>
