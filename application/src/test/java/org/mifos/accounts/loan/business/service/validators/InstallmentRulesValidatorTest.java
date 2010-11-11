@@ -162,22 +162,6 @@ public class InstallmentRulesValidatorTest {
         assertErrorEntry(errorEntries.get(2), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "3");
     }
 
-    @Test
-    public void shouldValidateForTotalIsGreaterOrEqualToFeeAndInterest() {
-        RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "498.1", "1.9", "0", "500.0");
-        RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "501.9", "1.0", "0", "502.9");
-        RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "0.0", "-0.0", "0.0", "0.0");
-        RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("22-Sep-2010", 4, "-0.0", "-0.0", "0", "-0.0");
-        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(installments);
-        assertThat(errorEntries.size(), is(0));
-
-    }
-
     private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
                                                                          String principal, String interest,
                                                                          String fees, String total) {

@@ -77,6 +77,6 @@ public class InstallmentFormatValidatorImpl implements InstallmentFormatValidato
     }
 
     private boolean isInvalidTotalAmount(RepaymentScheduleInstallment installment) {
-        return (StringUtils.isEmpty(installment.getTotal())&&(installment.getTotalValue().getAmount().doubleValue() > 0));
+        return StringUtils.isEmpty(installment.getTotal());
     }
 }
