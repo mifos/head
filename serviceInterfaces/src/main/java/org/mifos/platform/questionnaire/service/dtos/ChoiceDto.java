@@ -78,12 +78,16 @@ public class ChoiceDto implements Serializable {
     }
 
     public void addTag(String tag) {
-        if (tags.size() < 5 && !isDuplicateTag(tag)) {
+        if (!isTagsLimitReached() && !isDuplicateTag(tag)) {
             tags.add(tag);
         }
     }
 
-    private boolean isDuplicateTag(String tag) {
+    public boolean isTagsLimitReached() {
+        return tags.size() >= 5;
+    }
+
+    public boolean isDuplicateTag(String tag) {
         boolean result = false;
         for (String _tag : tags) {
             if (StringUtils.equalsIgnoreCase(_tag, tag)) {
