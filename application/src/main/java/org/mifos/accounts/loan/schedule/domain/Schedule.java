@@ -1,14 +1,29 @@
+/*
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ *  All rights reserved.
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ *  implied. See the License for the specific language governing
+ *  permissions and limitations under the License.
+ *
+ *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ *  explanation of the license and how it is applied.
+ */
 package org.mifos.accounts.loan.schedule.domain;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.mifos.accounts.loan.schedule.utils.Utilities;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static org.mifos.accounts.loan.schedule.utils.Utilities.getDaysInBetween;
 
@@ -18,11 +33,15 @@ public class Schedule {
     private Double dailyInterestRate;
     private BigDecimal loanAmount;
 
-    public Schedule() {
-        installments = new TreeMap<Integer, Installment>();
+    public Schedule(Date disbursementDate, Double dailyInterestRate, BigDecimal loanAmount, List<Installment> installments) {
+        this.disbursementDate = disbursementDate;
+        this.dailyInterestRate = dailyInterestRate;
+        this.loanAmount = loanAmount;
+        this.installments = new TreeMap<Integer, Installment>();
+        setInstallments(installments);
     }
 
-    public void setInstallments(List<Installment> installments) {
+    private void setInstallments(List<Installment> installments) {
         for (Installment installment : installments) {
             this.installments.put(installment.getId(), installment);
         }
@@ -32,28 +51,12 @@ public class Schedule {
         return disbursementDate;
     }
 
-    public void setDisbursementDate(Date disbursementDate) {
-        this.disbursementDate = disbursementDate;
-    }
-
     public Double getDailyInterestRate() {
         return dailyInterestRate;
     }
 
-    public void setDailyInterestRate(Double dailyInterestRate) {
-        this.dailyInterestRate = dailyInterestRate;
-    }
-
     public BigDecimal getLoanAmount() {
         return loanAmount;
-    }
-
-    public void setLoanAmount(BigDecimal loanAmount) {
-        this.loanAmount = loanAmount;
-    }
-
-    public void addInstallment(Installment installment) {
-        this.installments.put(installment.getId(), installment);
     }
 
     public BigDecimal payInstallmentsOnOrBefore(Date transactionDate, BigDecimal amount) {
@@ -161,7 +164,7 @@ public class Schedule {
     public void computeOverdueInterest(Date transactionDate) {
         for (Installment installment : installments.values()) {
             Installment nextInstallment = getNextInstallment(installment);
-            if (nextInstallment != null && installment.isPrincipalDue()) {
+            if (installment.isPrincipalDue()) {
                 BigDecimal principalDue = installment.getPrincipalDue();
                 if (installment.isAnyPrincipalPaid()) {
                     updateOverdueInterest(transactionDate, installment, nextInstallment, principalDue);
@@ -175,12 +178,26 @@ public class Schedule {
     private void setOverdueInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
         long duration = getDaysInBetween(transactionDate, installment.getDueDate());
         if (duration <= 0) return;
-        nextInstallment.setOverdueInterest(computeInterest(principalDue, duration));
+        if (nextInstallment != null) {
+            nextInstallment.setOverdueInterest(computeInterest(principalDue, duration));
+        }
+        else {
+            installment.addOverdueInterest(computeInterest(principalDue, duration));
+        }
     }
 
     private void updateOverdueInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
         long duration = getDaysInBetween(transactionDate, installment.getRecentPrincipalPaidDate());
         if (duration <= 0) return;
-        nextInstallment.addOverdueInterest(computeInterest(principalDue, duration));
+        if (nextInstallment != null) {
+            nextInstallment.addOverdueInterest(computeInterest(principalDue, duration));
+        }
+        else {
+            installment.addOverdueInterest(computeInterest(principalDue, duration));
+        }
+    }
+
+    public Map<Integer, Installment> getInstallments() {
+        return installments;
     }
 }

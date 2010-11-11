@@ -450,7 +450,7 @@ public class LoanBO extends AccountBO {
                 newMeetingForRepaymentDay);
     }
 
-    private Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(){
+    public Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(){
         Collection<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         return CollectionUtils.asValueMap(loanScheduleEntities, new Transformer<LoanScheduleEntity, Integer>() {
             @Override
@@ -460,7 +460,7 @@ public class LoanBO extends AccountBO {
         });
     }
 
-    Collection<LoanScheduleEntity> getLoanScheduleEntities() {
+    public Collection<LoanScheduleEntity> getLoanScheduleEntities() {
         return CollectionUtils.collect(this.getAccountActionDates(), new Transformer<AccountActionDateEntity, LoanScheduleEntity>() {
             @Override
             public LoanScheduleEntity transform(AccountActionDateEntity input) {

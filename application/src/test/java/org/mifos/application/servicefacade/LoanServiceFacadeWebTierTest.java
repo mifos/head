@@ -19,6 +19,7 @@
  */
 package org.mifos.application.servicefacade;
 
+import org.joda.time.DateMidnight;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,7 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePer
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
@@ -58,6 +60,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.platform.validations.Errors;
+import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -128,6 +131,9 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private InstallmentsValidator installmentsValidator;
 
+    @Mock
+    ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+
     private RepaymentScheduleInstallmentBuilder installmentBuilder;
 
     private Locale locale;
@@ -136,7 +142,7 @@ public class LoanServiceFacadeWebTierTest {
 
     @Before
     public void setupAndInjectDependencies() {
-        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao, installmentsValidator);
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor);
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
@@ -363,7 +369,17 @@ public class LoanServiceFacadeWebTierTest {
         assertThat(errors, is(expectedErrors));
         verify(installmentsValidator).validateInstallmentSchedule(installments);
     }
-    
+
+    @Test
+    public void retrieveLoanRepaymentScheduleShouldComputeOverdue() {
+        LoanBO loanBO = new LoanBO() {};
+        Mockito.when(loanDao.findById(1)).thenReturn(loanBO);
+        loanServiceFacade.retrieveLoanRepaymentSchedule(new UserContext(),1, new DateMidnight().toDate());
+        Mockito.verify(scheduleCalculatorAdaptor, Mockito.times(1)).computeOverdue(Mockito.eq(loanBO), Mockito.<Date>any());
+        Mockito.verify(loanDao, Mockito.times(1)).findById(1);
+    }
+
+
     private Date getDate(int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month - 1, day);

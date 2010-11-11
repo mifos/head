@@ -33,6 +33,7 @@ import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidator;
 import org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl;
 import org.mifos.accounts.loan.business.service.validators.InstallmentRulesValidator;
@@ -243,7 +244,7 @@ public class DependencyInjectedServiceLocator {
 
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
-            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao, locateInstallmentsValidator());
+            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor());
         }
         return loanServiceFacade;
     }

@@ -92,7 +92,7 @@ public interface LoanServiceFacade {
 
     boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException;
 
-    LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId);
+    LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId, Date asOfDate);
 
     List<AccountStatusChangeHistoryEntity> retrieveLoanAccountStatusChangeHistory(UserContext userContext, String globalAccountNum);
 

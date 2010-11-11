@@ -34,10 +34,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.LoanActivityDto;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.*;
 import org.mifos.accounts.loan.business.service.AccountFeesDto;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
@@ -150,15 +147,17 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final FundDao fundDao;
     private final LoanDao loanDao;
     private final InstallmentsValidator installmentsValidator;
+    private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-                                    PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, InstallmentsValidator installmentsValidator) {
+                                    PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, InstallmentsValidator installmentsValidator, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.fundDao = fundDao;
         this.loanDao = loanDao;
         this.installmentsValidator = installmentsValidator;
+        this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
     }
 
     @Override
@@ -850,8 +849,9 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId) {
+    public LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId, Date asOfDate) {
         LoanBO loan = this.loanDao.findById(loanId);
+        scheduleCalculatorAdaptor.computeOverdue(loan, asOfDate);
         loan.updateDetails(userContext);
         return loan;
     }

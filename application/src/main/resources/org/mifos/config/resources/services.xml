@@ -57,6 +57,7 @@
     	<constructor-arg ref="fundDao" />
     	<constructor-arg ref="loanDao" />
     	<constructor-arg ref="installmentsValidator" />
+    	<constructor-arg ref="scheduleCalculatorAdaptor" />
     </bean>
     
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" >
@@ -154,5 +155,7 @@
     <bean name="installmentRulesValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentRulesValidatorImpl"/>
 
     <bean name="installmentsValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentsValidatorImpl"/>
+
+    <bean name="scheduleCalculatorAdaptor" class="org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor"/>
 
 </beans>
