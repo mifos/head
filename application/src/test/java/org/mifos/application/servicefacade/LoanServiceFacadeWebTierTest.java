@@ -19,6 +19,7 @@
  */
 package org.mifos.application.servicefacade;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +30,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -60,10 +62,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -180,6 +182,7 @@ public class LoanServiceFacadeWebTierTest {
         assertEquals(repayLoanDto.getPaymentTypeEntities(), paymentTypeEntities);
     }
 
+
     @Test
     public void testMakeEarlyRepayment() throws AccountException {
         Mockito.when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
@@ -187,11 +190,50 @@ public class LoanServiceFacadeWebTierTest {
         Mockito.when(loanBO.getCurrency()).thenReturn(dollar);
         Date date = new Date(new java.util.Date().getTime());
         boolean waiveInterest = true;
+        Mockito.when(loanBO.isInterestWaived()).thenReturn(waiveInterest);
         String paymentMethod = "Cash";
         String receiptNumber = "001";
-        loanServiceFacade.makeEarlyRepayment("1", "100", receiptNumber,
-                date, paymentMethod, (short) 1, waiveInterest);
+        try {
+            loanServiceFacade.makeEarlyRepayment("1", "100", receiptNumber, date, paymentMethod, (short) 1, waiveInterest);
+        } catch (AccountException e) {
+            Assert.fail("Accounting exception should not have been thrown");
+        }
+        verify(loanBO).makeEarlyRepayment(new Money(dollar, "100"), receiptNumber, date, paymentMethod, (short) 1, waiveInterest);
+    }
+    
+    @Test
+    public void testMakeEarlyRepaymentForNotWaiverInterestLoanProduct() throws AccountException {
+        Mockito.when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
+        MifosCurrency dollar = new MifosCurrency(Short.valueOf("1"), "Dollar", BigDecimal.valueOf(1), "USD");
+        boolean waiveInterest = false;
+        Mockito.when(loanBO.isInterestWaived()).thenReturn(waiveInterest);
+        Mockito.when(loanBO.getCurrency()).thenReturn(dollar);
+        java.sql.Date date = mock(Date.class);
+        String paymentMethod = "Cash";
+        String receiptNumber = "001";
+        try {
+            loanServiceFacade.makeEarlyRepayment("1", "100", receiptNumber,
+                    date, paymentMethod, (short) 1, waiveInterest);
+        } catch (AccountException e) {
+            Assert.fail("Accounting exception should not have been thrown");
+        }
         short userId = (short) 1;
-        Mockito.verify(loanBO).makeEarlyRepayment(new Money(dollar, "100"), receiptNumber, date, paymentMethod, userId, waiveInterest);
+        verify(loanBO).makeEarlyRepayment(new Money(dollar, "100"), receiptNumber, date, paymentMethod, userId, waiveInterest);
+    }
+
+    @Test
+    public void testValidateMakeEarlyRepayment() throws AccountException {
+        Mockito.when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
+        boolean actualWaiveInterestValue = false;
+        Mockito.when(loanBO.isInterestWaived()).thenReturn(actualWaiveInterestValue);
+        try {
+            loanServiceFacade.makeEarlyRepayment("1", "100", "001", mock(Date.class),
+                    "Cash", (short) 1, true);
+        } catch (AccountException e) {
+            verify(loanBO,never()).makeEarlyRepayment((Money) anyObject(), anyString(), (Date)anyObject(), anyString(), (Short)anyObject(),
+                            anyBoolean());
+            verify(loanBO,never()).getCurrency();
+            assertThat(e.getKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));
+        }
     }
 }

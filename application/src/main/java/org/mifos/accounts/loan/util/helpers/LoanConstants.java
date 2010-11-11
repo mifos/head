@@ -209,4 +209,5 @@ public interface LoanConstants {
 
     int GLIM_DISABLED_VALUE = 0;
     String WAIVER_INTEREST_SELECTED = "waiverInterestSelected";
+    String WAIVER_INTEREST_NOT_CONFIGURED= "loan.waiverInterest.not.configured";
 }

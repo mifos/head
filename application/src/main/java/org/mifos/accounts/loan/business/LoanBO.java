@@ -3908,7 +3908,7 @@ public class LoanBO extends AccountBO {
         return totalFees;
     }
 
-    public boolean shouldWaiverInterest() {
+    public boolean isInterestWaived() {
         return loanOffering.isInterestWaived();
     }
 

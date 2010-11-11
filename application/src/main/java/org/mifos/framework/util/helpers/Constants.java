@@ -34,6 +34,7 @@ public interface Constants {
     String PATH = "path";
     String CREATE_SUCCESS = "create_success";
     String UPDATE_SUCCESS = "update_success";
+    String UPDATE_FAILURE = "update_failure";
     String NEXT_SUCCESS = "next_success";
     String PREVIEW_SUCCESS = "preview_success";
     String SEARCH_SUCCESS = "search_success";
