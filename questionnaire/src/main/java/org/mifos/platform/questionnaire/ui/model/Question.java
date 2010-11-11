@@ -271,4 +271,19 @@ public class Question implements Serializable {
     void setChoices() {
         setChoicesIfApplicable();
     }
+
+    public boolean isSmartChoiceDuplicated(int choiceIndex) {
+        boolean result = false;
+
+        String currentSmartChoiceTag = getCurrentSmartChoiceTag(choiceIndex);
+        if (isNotEmpty(currentSmartChoiceTag)) {
+            result = questionDetail.isSmartChoiceDuplicated(choiceIndex, currentSmartChoiceTag);
+        }
+
+        return result;
+    }
+
+    public boolean isTagsLimitReached(int choiceIndex) {
+        return questionDetail.isTagsLimitReached(choiceIndex);
+    }
 }

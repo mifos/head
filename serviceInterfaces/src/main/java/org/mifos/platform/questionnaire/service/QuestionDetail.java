@@ -171,4 +171,24 @@ public class QuestionDetail implements Serializable {
     public boolean isNewQuestion() {
         return id == null || id == 0;
     }
+
+    public boolean isSmartChoiceDuplicated(int choiceIndex, String tag) {
+        boolean result = false;
+
+        if (choiceIndex < answerChoices.size()) {
+            result = answerChoices.get(choiceIndex).isDuplicateTag(tag);
+        }
+
+        return result;
+    }
+
+    public boolean isTagsLimitReached(int choiceIndex) {
+        boolean result = false;
+
+        if (choiceIndex < answerChoices.size()) {
+            result = answerChoices.get(choiceIndex).isTagsLimitReached();
+        }
+
+        return result;
+    }
 }

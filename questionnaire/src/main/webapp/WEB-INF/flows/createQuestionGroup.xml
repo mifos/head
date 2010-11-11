@@ -99,7 +99,7 @@
     </action-state>
 
     <action-state id="addSmartChoiceTag">
-    	<evaluate expression="questionGroupForm.currentQuestion.addSmartChoiceTag(requestParameters._eventId_addSmartChoiceTag)"/>
+        <evaluate expression="questionGroupController.addSmartChoiceTag(questionGroupForm, flowRequestContext, requestParameters._eventId_addSmartChoiceTag)"/>
         <transition to="createQuestionGroup" />
     </action-state>
 

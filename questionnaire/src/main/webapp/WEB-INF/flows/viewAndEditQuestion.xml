@@ -47,7 +47,7 @@
     </action-state>
 
     <action-state id="addSmartChoiceTag">
-    	<evaluate expression="questionDefinition.currentQuestion.addSmartChoiceTag(requestParameters._eventId_addSmartChoiceTag)"/>
+        <evaluate expression="questionController.addSmartChoiceTag(questionDefinition, flowRequestContext, requestParameters._eventId_addSmartChoiceTag)"/>
         <transition to="editQuestion" />
     </action-state>
 

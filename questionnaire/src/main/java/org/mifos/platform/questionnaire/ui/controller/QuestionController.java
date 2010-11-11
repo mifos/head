@@ -62,6 +62,38 @@ public class QuestionController extends QuestionnaireController {
         return result? "success": "failure";
     }
 
+    public String addSmartChoiceTag(QuestionForm questionForm, RequestContext requestContext, int choiceIndex) {
+        MessageContext context = requestContext.getMessageContext();
+        boolean result = validateSmartChoice(questionForm, context, choiceIndex);
+        if (result) questionForm.getCurrentQuestion().addSmartChoiceTag(choiceIndex);
+        return result? "success": "failure";
+    }
+
+    private boolean validateSmartChoice(QuestionForm questionForm, MessageContext context, int choiceIndex) {
+        boolean result = true;
+        Question question = questionForm.getCurrentQuestion();
+
+        if (context.hasErrorMessages()) {
+            result = false;
+        }
+
+        else if (question.isSmartChoiceDuplicated(choiceIndex)) {
+            constructErrorMessage(
+                    context, "questionnaire.error.question.tags.duplicate",
+                    "currentQuestion.answerChoices", "The tag with the same name already exists.");
+            result = false;
+        }
+
+        else if (question.isTagsLimitReached(choiceIndex)) {
+            constructErrorMessage(
+                    context, "questionnaire.error.question.tags.limit",
+                    "currentQuestion.answerChoices", "You cannot add more than five tags.");
+            result = false;
+        }
+
+        return result;
+    }
+
     private boolean validateQuestion(QuestionForm questionForm, MessageContext context, boolean createMode) {
         questionForm.validateConstraints(context);
         boolean result = true;

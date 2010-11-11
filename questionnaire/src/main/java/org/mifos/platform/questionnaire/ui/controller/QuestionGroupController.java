@@ -34,6 +34,7 @@ import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.ui.model.QuestionGroupForm;
 import org.mifos.platform.questionnaire.ui.model.SectionDetailForm;
+import org.mifos.platform.questionnaire.ui.model.Question;
 import org.mifos.platform.util.CollectionUtils;
 import org.springframework.binding.message.MessageContext;
 import org.springframework.stereotype.Controller;
@@ -302,6 +303,38 @@ public class QuestionGroupController extends QuestionnaireController {
             questionGroupForm.addCurrentSection();
         }
         return result? "success": "failure";
+    }
+
+    public String addSmartChoiceTag(QuestionGroupForm questionGroupForm, RequestContext requestContext, int choiceIndex) {
+        MessageContext context = requestContext.getMessageContext();
+        boolean result = validateSmartChoice(questionGroupForm, context, choiceIndex);
+        if (result) questionGroupForm.getCurrentQuestion().addSmartChoiceTag(choiceIndex);
+        return result? "success": "failure";
+    }
+
+    private boolean validateSmartChoice(QuestionGroupForm questionGroupForm, MessageContext context, int choiceIndex) {
+        boolean result = true;
+        Question question = questionGroupForm.getCurrentQuestion();
+
+        if (context.hasErrorMessages()) {
+            result = false;
+        }
+
+        else if (question.isSmartChoiceDuplicated(choiceIndex)) {
+            constructErrorMessage(
+                    context, "questionnaire.error.question.tags.duplicate",
+                    "currentQuestion.answerChoices", "The tag with the same name already exists.");
+            result = false;
+        }
+
+        else if (question.isTagsLimitReached(choiceIndex)) {
+            constructErrorMessage(
+                    context, "questionnaire.error.question.tags.limit",
+                    "currentQuestion.answerChoices", "You cannot add more than five tags.");
+            result = false;
+        }
+
+        return result;
     }
 
     private boolean validateQuestion(QuestionGroupForm questionGroupForm, MessageContext context) {
