@@ -20,187 +20,146 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
-import junit.framework.Assert;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
+
+import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
-import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.accounts.savings.SavingBOTestUtils;
-import org.mifos.accounts.savings.business.SavingsActivityEntity;
+import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.collectionsheet.persistence.CenterBuilder;
+import org.mifos.application.collectionsheet.persistence.ClientBuilder;
+import org.mifos.application.collectionsheet.persistence.GroupBuilder;
+import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
+import org.mifos.application.collectionsheet.persistence.SavingsAccountBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.business.Configuration;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.calendar.DayOfWeek;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.util.UserContext;
-
-import java.util.Calendar;
-import java.util.Date;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_CALCULATION_TIME_PERIOD;
-import static org.mifos.application.meeting.util.helpers.MeetingType.SAVINGS_INTEREST_POSTING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.test.framework.util.DatabaseCleaner;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTestCase {
 
-    private UserContext userContext;
-
-    private CustomerBO group;
-
-    private CustomerBO center;
+    private CenterBO center;
+    private GroupBO group;
+    private ClientBO client;
 
     private SavingsBO savings1;
 
-    private SavingsBO savings2;
+    @Autowired
+    private DatabaseCleaner databaseCleaner;
 
-    private SavingsBO savings3;
-
-    private SavingsBO savings4;
-
-    private SavingsOfferingBO savingsOffering1;
-
-    private SavingsOfferingBO savingsOffering2;
-
-    private SavingsOfferingBO savingsOffering3;
-
-    private SavingsOfferingBO savingsOffering4;
-
-    private SavingsTestHelper helper = new SavingsTestHelper();
-
-    private MifosCurrency currency;
-
-    SavingsPersistence persistence = new SavingsPersistence();
+    @After
+    public void cleanDatabaseTablesAfterTest() {
+        // NOTE: - only added to stop older integration tests failing due to brittleness
+        databaseCleaner.clean();
+    }
 
     @Before
     public void setUp() throws Exception {
-        userContext = TestUtils.makeUser();
-        currency = Configuration.getInstance().getSystemConfig().getCurrency();
+        databaseCleaner.clean();
+
+        DateTime startOfFiscalYear = new DateTime().withDate(2010, 1, 1);
+        MeetingBO meetingFrequency = new MeetingBuilder().customerMeeting()
+                                                         .startingFrom(startOfFiscalYear.toDate())
+                                                         .monthly()
+                                                         .every(1)
+                                                         .onDayOfMonth(1)
+                                                         .build();
+        createCenterGroupClientHierarchy(meetingFrequency);
+
+        MeetingBO interestCalculationFrequency = new MeetingBuilder().savingsInterestCalulationSchedule().monthly().every(2).build();
+        IntegrationTestObjectMother.saveMeeting(interestCalculationFrequency);
+
+        MeetingBO interestPostingFrequency = new MeetingBuilder().savingsInterestPostingSchedule().monthly().every(2).build();
+        IntegrationTestObjectMother.saveMeeting(interestPostingFrequency);
+
+        SavingsOfferingBO mandatoryMinimumBalance = new SavingsProductBuilder().appliesToClientsOnly()
+                                                    .withName("mandatoryMinimumBalance1")
+                                                    .withShortName("mm01")
+                                                    .mandatory()
+                                                    .minimumBalance()
+                                                    .withInterestCalculationSchedule(interestPostingFrequency)
+                                                    .withInterestPostingSchedule(interestPostingFrequency)
+                                                    .withMandatoryAmount("300")
+                                                    .withInterestRate(Double.valueOf("12"))
+                                                    .withMaxWithdrawalAmount(TestUtils.createMoney("200"))
+                                                    .withMinAmountRequiredForInterestCalculation("200")
+                                                    .buildForIntegrationTests();
+        IntegrationTestObjectMother.saveSavingsProducts(mandatoryMinimumBalance);
+
+        savings1 = new SavingsAccountBuilder().active()
+                                              .withSavingsProduct(mandatoryMinimumBalance)
+                                              .withCustomer(client)
+                                              .withActivationDate(startOfFiscalYear)
+                                              .withBalanceOf(TestUtils.createMoney("0"))
+                                              .withDepositOn("300", startOfFiscalYear)
+                                              .withDepositOn("200", startOfFiscalYear.plusMonths(1))
+                                              .build();
+        IntegrationTestObjectMother.saveSavingsAccount(savings1);
     }
 
-    @After
-    public void tearDown() throws Exception {
-        savings1 = null;
-        savings2 = null;
-        savings3 = null;
-        savings4 = null;
-        group = null;
-        center = null;
-        StaticHibernateUtil.flushSession();
+    private void createCenterGroupClientHierarchy(MeetingBO meetingFrequency) throws CustomerException {
+        center = new CenterBuilder().withName("Savings Center")
+                                    .with(meetingFrequency)
+                                    .with(sampleBranchOffice())
+                                    .withLoanOfficer(testUser())
+                                    .withActivationDate(mondayTwoWeeksAgo())
+                                    .build();
+        IntegrationTestObjectMother.createCenter(center, meetingFrequency);
+
+        group = new GroupBuilder().withName("Group")
+                                  .withMeeting(meetingFrequency)
+                                  .withOffice(sampleBranchOffice())
+                                  .withLoanOfficer(testUser())
+                                  .withParentCustomer(center)
+                                  .build();
+        IntegrationTestObjectMother.createGroup(group, meetingFrequency);
+
+        client = new ClientBuilder().withName("Client 1").active()
+                                    .withMeeting(meetingFrequency)
+                                    .withOffice(sampleBranchOffice())
+                                    .withLoanOfficer(testUser())
+                                    .withParentCustomer(group)
+                                    .buildForIntegrationTests();
+        IntegrationTestObjectMother.createClient(client, meetingFrequency);
+    }
+
+    private DateTime mondayTwoWeeksAgo() {
+        DateTime mondayTwoWeeksAgo = new DateTime().withDayOfWeek(DayOfWeek.monday());
+        if (mondayTwoWeeksAgo.isAfter(new DateTime()) || mondayTwoWeeksAgo.equals(new DateTime())) {
+            mondayTwoWeeksAgo = mondayTwoWeeksAgo.minusWeeks(2);
+        } else {
+            mondayTwoWeeksAgo = mondayTwoWeeksAgo.minusWeeks(1);
+        }
+        return mondayTwoWeeksAgo;
     }
 
     @Test
-    @Ignore
-    public void testInterestPosting() throws Exception {
-        createInitialObjects();
-        SavingBOTestUtils.setNextIntPostDate(savings1, helper.getDate("31/03/2006"));
-        SavingBOTestUtils.setActivationDate(savings1, helper.getDate("05/03/2006"));
-        SavingBOTestUtils.setInterestToBePosted(savings1, new Money(currency, "500"));
-        SavingBOTestUtils.setBalance(savings1, new Money(getCurrency(), "250"));
+    public void givenActiveSavingsAccountIsDueForPostingSavingsInterestPostingBatchJobShouldPopulateLastInterestPostingDate() throws Exception {
 
-        savings1.update();
+        // pre verification
+        assertNull(savings1.getLastIntPostDate());
+        assertNotNull(savings1.getNextIntPostDate());
 
-        SavingBOTestUtils.setNextIntPostDate(savings4, helper.getDate("31/03/2006"));
-        SavingBOTestUtils.setActivationDate(savings4, helper.getDate("15/03/2006"));
-        SavingBOTestUtils.setInterestToBePosted(savings4, new Money(currency, "800.40"));
-        SavingBOTestUtils.setBalance(savings4, new Money(getCurrency(), "250"));
-        savings4.update();
-
-        StaticHibernateUtil.flushSession();
-
-        Calendar cal = Calendar.getInstance(Configuration.getInstance().getSystemConfig().getMifosTimeZone());
-        cal.setTime(helper.getDate("01/05/2006"));
+        // exercise test
         SavingsIntPostingTask savingsIntPostingTask = new SavingsIntPostingTask();
-        ((SavingsIntPostingHelper) savingsIntPostingTask.getTaskHelper()).execute(cal.getTimeInMillis());
+        ((SavingsIntPostingHelper) savingsIntPostingTask.getTaskHelper()).execute(new DateTime().getMillis());
 
-        savings1 = persistence.findById(savings1.getAccountId());
-        savings2 = persistence.findById(savings2.getAccountId());
-        savings3 = persistence.findById(savings3.getAccountId());
-        savings4 = persistence.findById(savings4.getAccountId());
-
-        Assert.assertEquals(TestUtils.createMoney(), savings1.getInterestToBePosted());
-        Assert.assertEquals(TestUtils.createMoney(750.0), savings1.getSavingsBalance());
-        Assert.assertEquals(1, savings1.getAccountPayments().size());
-        AccountPaymentEntity payment1 = savings1.getAccountPayments().iterator().next();
-        Assert.assertEquals(TestUtils.createMoney(500.0), payment1.getAmount());
-
-        // FIXME - looks like this was wrong all the time - savings offering is every two months and starts off on end
-        // of march 2006
-        // so next interest posting should of being end of may 2006.
-        // Assert.assertEquals(helper.getDate("30/04/2006"), savings1.getNextIntPostDate());
-        Assert.assertEquals(helper.getDate("31/05/2006"), savings1.getNextIntPostDate());
-
-        Assert.assertEquals(1, savings1.getSavingsActivityDetails().size());
-        for (SavingsActivityEntity activity : savings1.getSavingsActivityDetails()) {
-            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
-                    .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
-        }
-
-        Assert.assertEquals(TestUtils.createMoney(1050.4), savings4.getSavingsBalance());
-        Assert.assertEquals(TestUtils.createMoney(), savings4.getInterestToBePosted());
-        Assert.assertEquals(1, savings4.getAccountPayments().size());
-
-        AccountPaymentEntity payment4 = savings4.getAccountPayments().iterator().next();
-        Assert.assertEquals(TestUtils.createMoney(800.4), payment4.getAmount());
-        // FIXME - SAME AS ABOVE.
-        // Assert.assertEquals(helper.getDate("30/04/2006"), savings4.getNextIntPostDate());
-        Assert.assertEquals(helper.getDate("31/05/2006"), savings4.getNextIntPostDate());
-
-        Assert.assertEquals(1, savings1.getSavingsActivityDetails().size());
-        for (SavingsActivityEntity activity : savings1.getSavingsActivityDetails()) {
-            Assert.assertEquals(DateUtils.getDateWithoutTimeStamp(getDate("31/03/2006").getTime()), DateUtils
-                    .getDateWithoutTimeStamp(activity.getTrxnCreatedDate().getTime()));
-        }
-
-        Assert.assertEquals(0, savings2.getAccountPayments().size());
-        Assert.assertEquals(0, savings3.getAccountPayments().size());
+        // verification
+        savings1 = IntegrationTestObjectMother.findSavingsAccountById(savings1.getAccountId().longValue());
+        assertNotNull(savings1.getLastIntPostDate());
+        assertNotNull(savings1.getNextIntPostDate());
     }
-
-    private void createInitialObjects() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,
-                center);
-
-        savingsOffering1 = createSavingsOffering("prd1", "ssdr", InterestCalcType.MINIMUM_BALANCE);
-        savingsOffering2 = createSavingsOffering("prd2", "aser", InterestCalcType.MINIMUM_BALANCE);
-        savingsOffering3 = createSavingsOffering("prd3", "zx23", InterestCalcType.MINIMUM_BALANCE);
-        savingsOffering4 = createSavingsOffering("prd4", "wsas", InterestCalcType.AVERAGE_BALANCE);
-        savings1 = helper.createSavingsAccount(savingsOffering1, group, AccountState.SAVINGS_ACTIVE, userContext);
-        savings2 = helper.createSavingsAccount(savingsOffering2, group, AccountState.SAVINGS_PARTIAL_APPLICATION,
-                userContext);
-        savings3 = helper.createSavingsAccount(savingsOffering3, group, AccountState.SAVINGS_PENDING_APPROVAL,
-                userContext);
-        savings4 = helper.createSavingsAccount(savingsOffering4, group, AccountState.SAVINGS_ACTIVE, userContext);
-    }
-
-    private SavingsOfferingBO createSavingsOffering(String offeringName, String shortName,
-            InterestCalcType interestCalcType) throws Exception {
-        MeetingBO meetingIntCalc = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY,
-                EVERY_SECOND_MONTH, SAVINGS_INTEREST_CALCULATION_TIME_PERIOD, MONDAY));
-        MeetingBO meetingIntPost = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeeting(MONTHLY,
-                EVERY_SECOND_MONTH, SAVINGS_INTEREST_POSTING, MONDAY));
-        return TestObjectFactory.createSavingsProduct(offeringName, shortName, ApplicableTo.GROUPS, new Date(System
-                .currentTimeMillis()), PrdStatus.SAVINGS_ACTIVE, 300.0, RecommendedAmountUnit.PER_INDIVIDUAL, 12.0,
-                200.0, 200.0, SavingsType.VOLUNTARY, interestCalcType, meetingIntCalc, meetingIntPost);
-    }
-
 }

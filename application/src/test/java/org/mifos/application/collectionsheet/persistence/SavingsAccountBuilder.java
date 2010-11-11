@@ -59,7 +59,7 @@ public class SavingsAccountBuilder {
 
     private final MeetingBO scheduleForInterestCalculation = new MeetingBuilder().savingsInterestCalulationSchedule()
             .monthly().every(1).build();
-    private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().voluntary().withInterestCalcType(InterestCalcType.MINIMUM_BALANCE).withInterestRate(Double.valueOf("4.0")).buildForUnitTests();
+    private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().voluntary().minimumBalance().withInterestRate(Double.valueOf("4.0")).buildForUnitTests();
     private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
     private final Date createdDate = new DateTime().minusDays(14).toDate();
 
@@ -215,6 +215,17 @@ public class SavingsAccountBuilder {
         Date receiptDate = null;
         PaymentTypeEntity paymentType = new PaymentTypeEntity(PaymentTypes.CASH.getValue());
         Date paymentDate = new DateTime().toDate();
+        AccountPaymentEntity deposit = new AccountPaymentEntity(null, amount, receiptNumber, receiptDate, paymentType, paymentDate);
+        this.deposits.add(deposit);
+        return this;
+    }
+
+    public SavingsAccountBuilder withDepositOn(String depositAmount, DateTime paymentDateTime) {
+        Money amount = TestUtils.createMoney(depositAmount);
+        String receiptNumber = null;
+        Date receiptDate = null;
+        PaymentTypeEntity paymentType = new PaymentTypeEntity(PaymentTypes.CASH.getValue());
+        Date paymentDate = paymentDateTime.toDate();
         AccountPaymentEntity deposit = new AccountPaymentEntity(null, amount, receiptNumber, receiptDate, paymentType, paymentDate);
         this.deposits.add(deposit);
         return this;
