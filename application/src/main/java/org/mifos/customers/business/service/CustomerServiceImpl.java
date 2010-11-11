@@ -872,11 +872,11 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO oldParent = group.getParentCustomer();
 
-        boolean regenerateSchedules = group.transferTo(receivingCenter);
-
         try {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(group);
+
+            boolean regenerateSchedules = group.transferTo(receivingCenter);
 
             if (oldParent != null) {
                 oldParent.updateDetails(group.getUserContext());
@@ -896,20 +896,21 @@ public class CustomerServiceImpl implements CustomerService {
                 client.setUpdateDetails();
                 customerDao.save(client);
             }
-            hibernateTransactionHelper.commitTransaction();
+            hibernateTransactionHelper.flushSession();
 
+            GroupBO groupInitialised = group;
             if (regenerateSchedules) {
-                hibernateTransactionHelper.startTransaction();
                 CalendarEvent calendarEvents = holidayDao.findCalendarEventsForThisYearAndNext(group.getOfficeId());
-                handleChangeInMeetingSchedule(group, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
-                hibernateTransactionHelper.commitTransaction();
+                groupInitialised = customerDao.findGroupBySystemId(group.getGlobalCustNum());
+                handleChangeInMeetingSchedule(groupInitialised, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
             }
-            return group;
+            hibernateTransactionHelper.commitTransaction();
+            return groupInitialised;
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            //hibernateTransactionHelper.closeSession();
+            hibernateTransactionHelper.closeSession();
         }
     }
 
