@@ -65,6 +65,7 @@ public class SavingsProductBuilder {
     private PrdStatusEntity productStatusEntity;
     private RecommendedAmountUnit mandatoryGroupTrackingType = null;
     private Money mandatoryOrRecommendedAmount = TestUtils.createMoney("25.0");
+    private Money minAmountForInterestCalculation = TestUtils.createMoney("1000");
 
     public SavingsOfferingBO buildForUnitTests() {
         return build();
@@ -84,6 +85,7 @@ public class SavingsProductBuilder {
         final SavingsOfferingBO savingsProduct = new SavingsOfferingBO(savingsType, name, shortName,
                 globalProductNumber, startDate, applicableToCustomer, category, productStatusEntity, interestCalcType,
                 interestRate, maxAmountOfWithdrawal, depositGLCode, interesetGLCode, createdDate, createdByUserId);
+        savingsProduct.setMinAmntForInt(minAmountForInterestCalculation);
 
         final PrdOfferingMeetingEntity scheduleForInstcalc = new PrdOfferingMeetingEntity(
                 scheduleForInterestCalculationMeeting, savingsProduct,
@@ -105,12 +107,6 @@ public class SavingsProductBuilder {
     public SavingsProductBuilder withName(final String withName) {
         this.name = withName;
         this.globalProductNumber = "XXX-" + withName;
-        return this;
-    }
-
-
-    public SavingsProductBuilder withInterestCalcType(final InterestCalcType interestCalcType) {
-        this.interestCalcType = interestCalcType;
         return this;
     }
 
@@ -164,6 +160,16 @@ public class SavingsProductBuilder {
         return this;
     }
 
+    public SavingsProductBuilder withMinAmountRequiredForInterestCalculation(String minAmountRequired) {
+        this.minAmountForInterestCalculation = TestUtils.createMoney(minAmountRequired);
+        return this;
+    }
+
+    public SavingsProductBuilder withInterestCalculationSchedule(MeetingBO interestCalculationFrequency) {
+        this.scheduleForInterestCalculationMeeting = interestCalculationFrequency;
+        return this;
+    }
+
     public SavingsProductBuilder withInterestPostingSchedule(MeetingBO interestPostingMeeting) {
         this.scheduleForInterestPostingMeeting = interestPostingMeeting;
         return this;
@@ -171,6 +177,16 @@ public class SavingsProductBuilder {
 
     public SavingsProductBuilder withInterestRate(Double withInterestRate) {
         this.interestRate = withInterestRate;
+        return this;
+    }
+
+    public SavingsProductBuilder averageBalance() {
+        this.interestCalcType = InterestCalcType.AVERAGE_BALANCE;
+        return this;
+    }
+
+    public SavingsProductBuilder minimumBalance() {
+        this.interestCalcType = InterestCalcType.MINIMUM_BALANCE;
         return this;
     }
 }
