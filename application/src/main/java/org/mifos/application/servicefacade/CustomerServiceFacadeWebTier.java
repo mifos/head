@@ -33,6 +33,7 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
@@ -640,9 +641,9 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     private void checkPermissionForCreate(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) {
+            Short recordLoanOfficerId) throws ApplicationException {
         if (!isPermissionAllowed(newState, userContext, recordOfficeId, recordLoanOfficerId)) {
-            throw new MifosRuntimeException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
     }
 
