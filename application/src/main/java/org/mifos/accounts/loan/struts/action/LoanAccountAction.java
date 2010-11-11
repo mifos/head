@@ -557,7 +557,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId());
         if (loanOffering.isVariableInstallmentsAllowed()) {
             List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
-            VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
+            //VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
             java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
             ActionErrors actionErrors = getActionErrors(loanServiceFacade.validateInputInstallments(disbursementDate,
                                                 loanOffering.getVariableInstallmentDetails(), installments));
@@ -567,16 +567,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             if (!actionErrors.isEmpty()) {
                 addErrors(request, actionErrors);
                 result = false;
-            } else {
-                loanServiceFacade.generateInstallmentSchedule(installments, loanActionForm.getLoanAmountValue(),
-                                                        loanActionForm.getInterestDoubleValue(), disbursementDate);
-                // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
-                setInstallmentsOnSession(request, loanActionForm);
-                actionErrors = getActionErrors(loanServiceFacade.validateInstallmentSchedule(installments));
-                if (!actionErrors.isEmpty()) {
-                    addErrors(request, actionErrors);
-                    result = false;
-                }
+            }
+
+            loanServiceFacade.generateInstallmentSchedule(installments, loanActionForm.getLoanAmountValue(),
+                                                    loanActionForm.getInterestDoubleValue(), disbursementDate);
+            // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
+            setInstallmentsOnSession(request, loanActionForm);
+            actionErrors = getActionErrors(loanServiceFacade.validateInstallmentSchedule(installments));
+            if (!actionErrors.isEmpty()) {
+                addErrors(request, actionErrors);
+                result = false;
             }
         }
         return result;
