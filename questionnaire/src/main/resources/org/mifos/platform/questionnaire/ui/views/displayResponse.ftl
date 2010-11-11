@@ -47,7 +47,17 @@
                     [#list sectionDetail.questions as sectionQuestionDetail]
                     <li>
                         <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
-                            ${sectionQuestionDetail.text}:</label>${sectionQuestionDetail.answer}
+                            ${sectionQuestionDetail.text}:</label>[#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
+                        <ol>
+                            [#list sectionQuestionDetail.values as answer]
+                            <li>
+                                ${answer}
+                            </li>
+                            [/#list]
+                        </ol>
+                        [#else]
+                            ${sectionQuestionDetail.answer}
+                        [/#if]
                     </li>
                     [/#list]
                 </ol>
