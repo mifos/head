@@ -255,7 +255,9 @@ public class ClientTest extends UiTestCaseBase {
         questionGroupResponsePage.verifyPage();
         String msg = response + " not found for question " + question1 + ". Instead found " + questionGroupResponsePage.getAnswerHtml(question1);
         Assert.assertTrue(msg, questionGroupResponsePage.getAnswerHtml(question1).contains(response));
-        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1, Choice3, Choice4"));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice1"));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice3"));
+        Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice4"));
         viewClientDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
         viewClientDetailsPage.verifyPage();
     }
