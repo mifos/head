@@ -30,6 +30,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -177,6 +178,27 @@ public class SavingsAdjustmentTest {
         // verification
         assertTrue(result);
     }
+
+    @Test
+    public void cannotAdjustLastTransactionThatWhoosePaymentDateIsNotWithinCurrentInterestPostingPeriod() {
+
+        Money amountAdjustedTo = TestUtils.createMoney("25");
+        DateTime activationDate = new DateTime().withDate(2010, 1, 1);
+        savingsAccount = new SavingsAccountBuilder().active()
+                                                    .withSavingsProduct(savingsProduct)
+                                                    .withCustomer(client)
+                                                    .withActivationDate(activationDate)
+                                                    .withBalanceOf(TestUtils.createMoney("0"))
+                                                    .withDepositOn("15", activationDate.minusDays(1))
+                                                    .build();
+
+        // exercise test
+        boolean result = savingsAccount.isAdjustPossibleOnLastTrxn(amountAdjustedTo);
+
+        // verification
+        assertFalse(result);
+    }
+
 
     @Test
     public void cannotAdjustLastTransactionToSameMonetaryAmount() {

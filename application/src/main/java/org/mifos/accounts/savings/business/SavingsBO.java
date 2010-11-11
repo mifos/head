@@ -1198,18 +1198,28 @@ public class SavingsBO extends AccountBO {
             AccountPaymentEntity accountPayment = findMostRecentPaymentByPaymentDate();
             if (lastPaymentIsGreaterThanZero(accountPayment) && lastPaymentIsADepositOrWithdrawal(accountPayment)) {
 
-                if (accountPayment.getAmount().equals(amountAdjustedTo)) {
-                    adjustmentIsPossible = false;
-                } else {
-                    adjustmentIsPossible = true;
-                }
+                LocalDate paymentDate = new LocalDate(accountPayment.getPaymentDate());
 
-                if (adjustmentIsPossible &&
-                        withdrawalAdjustmentIsValid(accountPayment, amountAdjustedTo) &&
-                        withdrawalAdjustmentDoesNotMakeBalanceNegative(accountPayment, amountAdjustedTo)) {
-                    adjustmentIsPossible = true;
-                } else {
+                InterestScheduledEvent postingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(this.getInterestPostingMeeting());
+                LocalDate nextPostingDate = new LocalDate(this.nextIntPostDate);
+                LocalDate currentPostingPeriodStartDate = postingEvent.findFirstDateOfPeriodForMatchingDate(nextPostingDate);
+
+                if (paymentDate.isBefore(currentPostingPeriodStartDate)) {
+                    // cannot adjust transactions outside of current posting period.
                     adjustmentIsPossible = false;
+                } else {
+                    if (accountPayment.getAmount().equals(amountAdjustedTo)) {
+                        adjustmentIsPossible = false;
+                    } else {
+                        adjustmentIsPossible = true;
+                    }
+
+                    if (adjustmentIsPossible && withdrawalAdjustmentIsValid(accountPayment, amountAdjustedTo)
+                            && withdrawalAdjustmentDoesNotMakeBalanceNegative(accountPayment, amountAdjustedTo)) {
+                        adjustmentIsPossible = true;
+                    } else {
+                        adjustmentIsPossible = false;
+                    }
                 }
             }
         }
