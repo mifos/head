@@ -30,6 +30,7 @@ import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Iterator;
 import java.util.List;
 
 public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacade {
@@ -170,7 +171,22 @@ public class QuestionnaireServiceFacadeImpl implements QuestionnaireServiceFacad
 
     @Override
     public List<QuestionGroupInstanceDetail> getQuestionGroupInstancesWithUnansweredQuestionGroups(Integer entityId, String event, String source) {
-        return questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), true, true);
+        return filterInActiveQuestions(questionnaireService.getQuestionGroupInstances(entityId, getEventSource(event, source), true, true));
+    }
+
+    private List<QuestionGroupInstanceDetail> filterInActiveQuestions(List<QuestionGroupInstanceDetail> instanceDetails) {
+        for (QuestionGroupInstanceDetail instanceDetail : instanceDetails) {
+            for (SectionDetail sectionDetail : instanceDetail.getQuestionGroupDetail().getSectionDetails()) {
+                List<SectionQuestionDetail> sectionQuestionDetails = sectionDetail.getQuestions();
+                for (Iterator<SectionQuestionDetail> iterator = sectionQuestionDetails.iterator(); iterator.hasNext();) {
+                    SectionQuestionDetail sectionQuestionDetail = iterator.next();
+                    if (sectionQuestionDetail.isNotActive()) {
+                        iterator.remove();
+                    }
+                }
+            }
+        }
+        return instanceDetails;
     }
 
     @Override
