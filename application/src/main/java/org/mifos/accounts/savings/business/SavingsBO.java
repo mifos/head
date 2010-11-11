@@ -32,6 +32,7 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.joda.time.ReadablePartial;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -1596,25 +1597,35 @@ public class SavingsBO extends AccountBO {
 
     @Override
     public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
+        LocalDate transactionLocalDate = new LocalDate(trxnDate);
+        LocalDate today = new LocalDate();
+
         if (AccountingRules.isBackDatedTxnAllowed()) {
-            Date meetingDate = null;
-            trxnDate = DateUtils.getDateWithoutTimeStamp(trxnDate.getTime());
+
+            InterestScheduledEvent postingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(this.getInterestPostingMeeting());
+            LocalDate nextPostingDate = new LocalDate(this.nextIntPostDate);
+            LocalDate currentPostingPeriodStartDate = postingEvent.findFirstDateOfPeriodForMatchingDate(nextPostingDate);
+
+            if (transactionLocalDate.isBefore(currentPostingPeriodStartDate)) {
+                return false;
+            }
+
             try {
-                meetingDate = getCustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId());
-                if (meetingDate != null) {
-                    meetingDate = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
-                    return trxnDate.compareTo(meetingDate) >= 0 ? true : false;
+                Date lastMeetingDate = getCustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId());
+                if (lastMeetingDate != null) {
+                    LocalDate meetingDate = new LocalDate(lastMeetingDate);
+                    return transactionLocalDate.isAfter(meetingDate);
                 }
-                Date activationDate = DateUtils.getDateWithoutTimeStamp(getActivationDate().getTime());
-                return trxnDate.compareTo(activationDate) >= 0
-                        && trxnDate.compareTo(DateUtils.getCurrentDateWithoutTimeStamp()) <= 0 ? true : false;
+
+                LocalDate activationDate = new LocalDate(this.activationDate);
+                return (transactionLocalDate.isAfter(activationDate) || transactionLocalDate.isEqual(activationDate)) &&
+                       (transactionLocalDate.isBefore(today) || transactionLocalDate.isEqual(today));
 
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
         }
-        return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
-
+        return transactionLocalDate.isEqual(today);
     }
 
     public boolean isOfProductOffering(final SavingsOfferingBO productOffering) {

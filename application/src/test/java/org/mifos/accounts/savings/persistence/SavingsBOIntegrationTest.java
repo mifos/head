@@ -204,30 +204,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testIsTrxnDateValid_BeforeFirstMeeting() throws Exception {
-        createInitialObjects();
-        savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = helper.createSavingsAccount(savingsOffering, group, AccountState.SAVINGS_ACTIVE, userContext);
-
-
-        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
-        int i = -5;
-        for (AccountActionDateEntity actionDate : savings.getAccountActionDates()) {
-            ((SavingsScheduleEntity) actionDate).setActionDate(offSetCurrentDate(i--));
-        }
-        savings.update();
-
-
-        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
-
-        Assert.assertTrue(savings.isTrxnDateValid(savings.getActivationDate()));
-        Assert.assertFalse(savings.isTrxnDateValid(offSetCurrentDate(1)));
-
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-    }
-
-    @Test
     public void testIsTrxnDateValid_AfterFirstMeeting() throws Exception {
         createInitialObjects();
         savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
