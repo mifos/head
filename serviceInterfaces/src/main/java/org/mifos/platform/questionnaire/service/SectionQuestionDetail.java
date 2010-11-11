@@ -254,4 +254,8 @@ public class SectionQuestionDetail implements Serializable {
     public void setSequenceNumber(Integer sequenceNumber) {
         this.sequenceNumber = sequenceNumber;
     }
+
+    public boolean isNotActive() {
+        return questionDetail.isNotActive();
+    }
 }

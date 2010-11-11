@@ -57,7 +57,7 @@ public interface QuestionnaireService {
 
     void validateResponses(List<QuestionGroupDetail> questionGroupDetails);
 
-    List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSourceDto eventSourceDto, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion);
+    List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSourceDto eventSourceDto, boolean includeUnansweredQuestionGroups, boolean fetchLastVersion);
 
     QuestionGroupInstanceDetail getQuestionGroupInstance(int questionGroupInstanceId);
 

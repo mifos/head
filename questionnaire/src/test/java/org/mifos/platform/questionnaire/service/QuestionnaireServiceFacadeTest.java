@@ -49,6 +49,8 @@ import java.util.Arrays;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
@@ -302,8 +304,24 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testGetQuestionGroupInstancesIncludingNoResponses() {
-        when(questionnaireService.getQuestionGroupInstances(101, new EventSourceDto("Create", "Client", "Create.Client"), true, false)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
+        when(questionnaireService.getQuestionGroupInstances(101, new EventSourceDto("Create", "Client", "Create.Client"), true, true)).thenReturn(new ArrayList<QuestionGroupInstanceDetail>());
         questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client");
+        verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSourceDto.class), eq(true), eq(true));
+    }
+
+    @Test
+    public void testGetQuestionGroupInstancesIncludingNoResponsesFilterInactiveQuestions() {
+        QuestionGroupInstanceDetail detail = getQuestionGroupInstanceDetail();
+        SectionDetail sectionDetail = getSectionDetailWithQuestionIds("Misc", 1, 2, 3);
+        sectionDetail.getQuestionDetail(1).getQuestionDetail().setActive(false);
+        detail.getQuestionGroupDetail().setSectionDetails(asList(sectionDetail));
+        when(questionnaireService.getQuestionGroupInstances(eq(101), any(EventSourceDto.class), eq(true), eq(true))).thenReturn(asList(detail));
+        List<QuestionGroupInstanceDetail> details = questionnaireServiceFacade.getQuestionGroupInstancesWithUnansweredQuestionGroups(101, "Create", "Client");
+        assertThat(details, is(not(nullValue())));
+        List<Integer> questionIds = details.get(0).getQuestionGroupDetail().getAllQuestionIds();
+        assertThat(questionIds.size(), is(2));
+        assertThat(questionIds.get(0), is(1));
+        assertThat(questionIds.get(1), is(3));
         verify(questionnaireService).getQuestionGroupInstances(eq(101), any(EventSourceDto.class), eq(true), eq(true));
     }
 

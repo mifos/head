@@ -195,7 +195,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSourceDto eventSourceDto, Boolean includeUnansweredQuestionGroups, boolean fetchLastVersion) {
+    public List<QuestionGroupInstanceDetail> getQuestionGroupInstances(Integer entityId, EventSourceDto eventSourceDto, boolean includeUnansweredQuestionGroups, boolean fetchLastVersion) {
         questionnaireValidator.validateForEventSource(eventSourceDto);
         Integer eventSourceId = getEventSourceEntity(eventSourceDto).getId();
         List<QuestionGroupInstance> questionGroupInstances = getQuestionGroupInstanceEntities(entityId, eventSourceId, fetchLastVersion);
