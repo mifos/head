@@ -77,7 +77,8 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
     public void logOut() {
         (new MifosPage(selenium)).logout();
     }
-    
+
+    @Ignore
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowRecalculation() throws Exception {
         int noOfInstallments = 3;
