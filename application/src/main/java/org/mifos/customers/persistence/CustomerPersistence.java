@@ -146,7 +146,7 @@ public class CustomerPersistence extends Persistence {
 
 		QueryResult doSearch()
 				throws HibernateSearchException, SystemException, PersistenceException {
-			
+
 			String[] namedQuery = new String[2];
 			List<Param> paramList = new ArrayList<Param>();
 			QueryInputs queryInputs = new QueryInputs();
@@ -533,8 +533,9 @@ public class CustomerPersistence extends Persistence {
 			throws HibernateSearchException, SystemException, PersistenceException {
 
 		String phoneNumberWithStrippedNonnumerics = MifosStringUtils.removeNondigits(searchString);
-		if (phoneNumberWithStrippedNonnumerics.isEmpty())
-			return null;
+		if (phoneNumberWithStrippedNonnumerics.isEmpty()) {
+            return null;
+        }
 		List<CustomerDto> customersWithThisPhoneNumber = new CustomerDaoHibernate((new GenericDaoHibernate())).
 				findCustomersWithGivenPhoneNumber(phoneNumberWithStrippedNonnumerics);
 		if (customersWithThisPhoneNumber == null || customersWithThisPhoneNumber.isEmpty()) {
@@ -625,7 +626,7 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
-    protected List<CustomerBO> getActiveAndOnHoldChildren(final String parentSearchId, final Short parentOfficeId,
+    public List<CustomerBO> getActiveAndOnHoldChildren(final String parentSearchId, final Short parentOfficeId,
             final CustomerLevel childrenLevel) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", parentSearchId + ".%");

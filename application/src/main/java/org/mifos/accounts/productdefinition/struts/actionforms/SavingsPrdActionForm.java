@@ -52,6 +52,12 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
+/**
+ * @deprecated this entire class is no longer used and will be deleted after localisation of messages.properties files is complete.
+ *
+ * note: all struts/jsp and tests around this will also be removed.
+ */
+@Deprecated
 public class SavingsPrdActionForm extends BaseActionForm {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsPrdActionForm.class);

@@ -50,4 +50,9 @@ public class ListElement implements Serializable {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return new StringBuilder(this.id).append(' ').append(this.name).toString();
+    }
 }

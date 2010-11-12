@@ -26,9 +26,12 @@ import java.util.Date;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -47,24 +50,29 @@ import org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetai
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
+import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
+import org.mifos.dto.screen.ListElement;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -460,7 +468,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         try {
             CustomerBO customer = savingsAccount.getCustomer();
             if (closeAccountDto.getCustomerId() != null) {
-                List<CustomerBO> clientList = savingsAccount.getCustomer().getChildren(CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
+                List<CustomerBO> clientList = new CustomerPersistence().getActiveAndOnHoldChildren(savingsAccount.getCustomer().getSearchId(), savingsAccount.getCustomer().getOfficeId(), CustomerLevel.CLIENT);
+
                 for (CustomerBO client : clientList) {
                     if (closeAccountDto.getCustomerId().intValue() == client.getCustomerId().intValue()) {
                         customer = client;
@@ -486,11 +495,68 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         } catch (BusinessRuleException e) {
             this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getMessageKey(), e);
-        } catch (CustomerException e) {
+        } catch (PersistenceException e) {
             this.transactionHelper.rollbackTransaction();
-            throw new BusinessRuleException(e.getKey(), e);
+            throw new MifosRuntimeException(e);
         } finally {
             this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public DepositWithdrawalReferenceDto retrieveDepositWithdrawalReferenceData(Long savingsId, Integer customerId, Short localeId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+        userContext.setLocaleId(localeId);
+
+        try {
+            SavingsBO savingsAccount = savingsDao.findById(savingsId);
+
+            String depositDue = savingsAccount.getTotalPaymentDue(customerId).toString();
+            String withdrawalDue = "0";
+
+            List<ListElement> clients = new ArrayList<ListElement>();
+            if (savingsAccount.isGroupModelWithIndividualAccountability()) {
+                List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(savingsAccount.getCustomer().getSearchId(), savingsAccount.getCustomer().getOfficeId(), CustomerLevel.CLIENT);
+                for (CustomerBO client : activeAndOnHoldClients) {
+                    clients.add(new ListElement(client.getCustomerId(), client.getDisplayName()));
+                }
+            }
+
+            List<AccountActionEntity> trxnTypes = new ArrayList<AccountActionEntity>();
+            trxnTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.SAVINGS_DEPOSIT.getValue(),userContext.getLocaleId()));
+            trxnTypes.add(new AccountBusinessService().getAccountAction(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(),userContext.getLocaleId()));
+
+            List<ListElement> transactionTypes = new ArrayList<ListElement>();
+            for (AccountActionEntity accountActionEntity : trxnTypes) {
+                transactionTypes.add(new ListElement(accountActionEntity.getId().intValue(), accountActionEntity.getLookUpValue().getMessageText()));
+            }
+
+            List<ListElement> depositPaymentTypes = new ArrayList<ListElement>();
+            List<PaymentTypeEntity> acceptedPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_deposit.getValue());
+            for (PaymentTypeEntity paymentTypeEntity : acceptedPaymentEntityTypes) {
+                depositPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), paymentTypeEntity.getLookUpValue().getMessageText()));
+            }
+
+            List<ListElement> withdrawalPaymentTypes = new ArrayList<ListElement>();
+            List<PaymentTypeEntity> withdrawalPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
+            for (PaymentTypeEntity paymentTypeEntity : withdrawalPaymentEntityTypes) {
+                withdrawalPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), paymentTypeEntity.getLookUpValue().getMessageText()));
+            }
+
+            boolean backDatedTransactionsAllowed = AccountingRules.isBackDatedTxnAllowed();
+            LocalDate defaultTransactionDate = new LocalDate();
+
+            return new DepositWithdrawalReferenceDto(transactionTypes, depositPaymentTypes, withdrawalPaymentTypes, clients, backDatedTransactionsAllowed, defaultTransactionDate, depositDue, withdrawalDue);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
         }
     }
 }

@@ -20,7 +20,12 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import junit.framework.Assert;
+
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
@@ -38,8 +43,6 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MifosUserBuilder;
@@ -58,10 +61,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -143,7 +142,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
 
         List<CustomerBO> clientList = (List<CustomerBO>) SessionUtils.getAttribute(SavingsConstants.CLIENT_LIST,
                 request);
-        Assert.assertNull(clientList);
+        Assert.assertTrue(clientList.isEmpty());
 
         Boolean isBackDatedAllowed = (Boolean) SessionUtils.getAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED,
                 request);

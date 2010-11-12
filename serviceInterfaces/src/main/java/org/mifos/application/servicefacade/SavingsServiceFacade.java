@@ -25,14 +25,15 @@ import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
+import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SavingsServiceFacade {
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     void deposit(SavingsDepositDto savingsDeposit);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     void withdraw(SavingsWithdrawalDto savingsWithdrawal);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -46,4 +47,7 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void postInterestForLastPostingPeriod(LocalDate dateOfBatchJob);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    DepositWithdrawalReferenceDto retrieveDepositWithdrawalReferenceData(Long savingsId, Integer customerId, Short localeId);
 }

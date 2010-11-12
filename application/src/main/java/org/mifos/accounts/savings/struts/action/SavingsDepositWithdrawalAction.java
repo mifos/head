@@ -37,40 +37,41 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePer
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.config.AccountingRules;
-import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
+import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * @deprecated - this struts action should be replaced by ftl/spring web flow or spring mvc implementation.
+ *             - note: service facade is in place to return all information needed and spring security is set up on service facade
+ */
+@Deprecated
 public class SavingsDepositWithdrawalAction extends BaseAction {
-
-    private static final Logger logger = LoggerFactory.getLogger(SavingsDepositWithdrawalAction.class);
 
     private SavingsBusinessService savingsService;
     private AccountBusinessService accountsService;
@@ -93,34 +94,38 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        logger.debug("In SavingsDepositWithdrawalAction::load(), accountId: " + savings.getAccountId());
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+
         SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm) form;
         clearActionForm(actionForm);
 
+        Long savingsId = savings.getAccountId().longValue();
+        Integer customerId = savings.getCustomer().getCustomerId();
+        if (StringUtils.isNotBlank(actionForm.getCustomerId())) {
+            customerId = Integer.valueOf(actionForm.getCustomerId());
+        }
+        DepositWithdrawalReferenceDto depositWithdrawalReferenceDto = this.savingsServiceFacade.retrieveDepositWithdrawalReferenceData(savingsId, customerId, uc.getLocaleId());
+
+        savings = this.savingsDao.findById(savingsId);
+        if (savings.isGroupModelWithIndividualAccountability()) {
+            List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(savings.getCustomer().getSearchId(), savings.getCustomer().getOfficeId(), CustomerLevel.CLIENT);
+            SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, activeAndOnHoldClients, request);
+        } else {
+            SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, new ArrayList<CustomerBO>(), request);
+        }
+
+        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+        List<PaymentTypeEntity> acceptedPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit.getValue());
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, acceptedPaymentTypes, request);
+
         List<AccountActionEntity> trxnTypes = new ArrayList<AccountActionEntity>();
-        trxnTypes.add(getAccountsService().getAccountAction(AccountActionTypes.SAVINGS_DEPOSIT.getValue(),
-                uc.getLocaleId()));
-        trxnTypes.add(getAccountsService().getAccountAction(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(),
-                uc.getLocaleId()));
+        trxnTypes.add(getAccountsService().getAccountAction(AccountActionTypes.SAVINGS_DEPOSIT.getValue(),uc.getLocaleId()));
+        trxnTypes.add(getAccountsService().getAccountAction(AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(),uc.getLocaleId()));
         SessionUtils.setCollectionAttribute(AccountConstants.TRXN_TYPES, trxnTypes, request);
 
-        if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.CENTER.getValue()
-                || savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue()
-                && savings.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())) {
-            SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings.getCustomer().getChildren(
-                    CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request);
-        } else {
-            SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null, request);
-        }
-        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
-        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
-                .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit.getValue()),
-                request);
-
-        SessionUtils.setAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED, new Boolean(AccountingRules
-                .isBackDatedTxnAllowed()), request);
+        SessionUtils.setAttribute(SavingsConstants.IS_BACKDATED_TRXN_ALLOWED, depositWithdrawalReferenceDto.isBackDatedTransactionsAllowed(), request);
 
         actionForm.setTrxnDate(DateUtils.getCurrentDate(uc.getPreferredLocale()));
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -129,30 +134,35 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward reLoad(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
-        SavingsBO savingsInSession = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        SavingsBO savings = getSavingsService().findById(savingsInSession.getAccountId());
-        savings.setVersionNo(savingsInSession.getVersionNo());
-        savingsInSession = null;
-        logger.debug("In SavingsDepositWithdrawalAction::reload(), accountId: " + savings.getAccountId());
+
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm) form;
+        SavingsBO savingsInSession = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+
         if (actionForm.getTrxnTypeId() != null && actionForm.getTrxnTypeId() != Constants.EMPTY_STRING) {
+
+            Long savingsId = savingsInSession.getAccountId().longValue();
+            SavingsBO savings = this.savingsDao.findById(savingsId);
+
+            Integer customerId = savings.getCustomer().getCustomerId();
+            if (StringUtils.isNotBlank(actionForm.getCustomerId())) {
+                customerId = Integer.valueOf(actionForm.getCustomerId());
+            }
+            DepositWithdrawalReferenceDto depositWithdrawalReferenceDto = this.savingsServiceFacade.retrieveDepositWithdrawalReferenceData(savingsId, customerId, uc.getLocaleId());
+
             Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
             // added for defect 1587 [start]
             AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
-            UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
             if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
-                if (actionForm.getCustomerId() != null && actionForm.getCustomerId() != Constants.EMPTY_STRING) {
-                    actionForm.setAmount(savings.getTotalPaymentDue(Integer.valueOf(actionForm.getCustomerId()))
-                            .toString());
+                if (StringUtils.isNotBlank(actionForm.getCustomerId())) {
+                    actionForm.setAmount(depositWithdrawalReferenceDto.getDepositDue());
                 }
-                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-                        persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit
-                                .getValue()), request);
+                List<PaymentTypeEntity> depositPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit.getValue());
+                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, depositPaymentTypes, request);
             } else {
-                actionForm.setAmount(new Money(savings.getCurrency(), "0").toString());
-                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
-                        .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal
-                                .getValue()), request);
+                actionForm.setAmount(depositWithdrawalReferenceDto.getWithdrawalDue());
+                List<PaymentTypeEntity> withdrawalPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
+                SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, withdrawalPaymentTypes, request);
             }
         }
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -185,7 +195,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         SavingsBO savings = getSavingsService().findById(savedAccount.getAccountId());
         checkVersionMismatch(savedAccount.getVersionNo(), savings.getVersionNo());
         savings.setVersionNo(savedAccount.getVersionNo());
-        logger.debug("In SavingsDepositWithdrawalAction::makePayment(), accountId: " + savings.getAccountId());
+
         SavingsDepositWithdrawalActionForm actionForm = (SavingsDepositWithdrawalActionForm) form;
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc.getPreferredLocale());
