@@ -296,6 +296,10 @@ input[type="checkbox"], input.checkbox {
     margin-bottom: 15px;
 }
 
+.margin30bottom {
+    margin-bottom: 30px;
+}
+
 .margin10top {
     margin-top: 10px;
 }

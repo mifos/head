@@ -35,17 +35,16 @@
 				</div>
 				
 				<div class="span-20">
-					<span class="fontBold">[@spring.message "manageProduct.productMixDetails.allowedProducts"/]</span>&nbsp;:
+					<div class="fontBold margin10top">[@spring.message "manageProduct.productMixDetails.allowedProducts"/]&nbsp;:</div>
 					[#list ref.allowedProductMix as allowed]
 					<div>${allowed}</div>
-					[/#list]
-					<br />
-					<span class="fontBold">[@spring.message "manageProduct.productMixDetails.notAllowedProducts"/]</span>&nbsp;:
+					[/#list]					
+                    
+					<div class="fontBold margin10top">[@spring.message "manageProduct.productMixDetails.notAllowedProducts"/]&nbsp;:</div>
 					[#list ref.notAllowedProductMix as notAllowed]
 					<div>${notAllowed}</div>
 					[/#list]
 	          	</div>
-				<div class="clear">&nbsp;</div>
 				
 				<input type="hidden" name="FORMVIEW" id="formview" value="${formView}" />						
 				
