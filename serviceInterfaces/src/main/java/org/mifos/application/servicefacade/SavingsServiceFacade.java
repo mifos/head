@@ -40,7 +40,7 @@ public interface SavingsServiceFacade {
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
     @PreAuthorize("isFullyAuthenticated()")
-    SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate);
+    SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate, Short localeId);
 
     @PreAuthorize("isFullyAuthenticated()")
     void closeSavingsAccount(Long savingsId, String notes, SavingsWithdrawalDto closeAccount);

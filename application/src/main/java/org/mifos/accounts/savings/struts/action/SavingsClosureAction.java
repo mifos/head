@@ -40,15 +40,8 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.customers.util.helpers.ChildrenStateType;
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -60,12 +53,8 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class SavingsClosureAction extends BaseAction {
-
-    private static final Logger logger = LoggerFactory.getLogger(SavingsClosureAction.class);
 
     public SavingsClosureAction() {
     }
@@ -88,7 +77,6 @@ public class SavingsClosureAction extends BaseAction {
 
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        logger.debug("In SavingsClosureAction::load(), accountId: " + savings.getAccountId());
 
         Long savingsId = Long.valueOf(savings.getAccountId());
         savings = this.savingsDao.findById(savingsId);
@@ -99,7 +87,7 @@ public class SavingsClosureAction extends BaseAction {
         new SavingsPersistence().initialize(savings);
 
         LocalDate accountCloseDate = new LocalDate();
-        SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, accountCloseDate);
+        SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, accountCloseDate, uc.getLocaleId());
 
         AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
         List<PaymentTypeEntity> acceptedPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
@@ -109,7 +97,6 @@ public class SavingsClosureAction extends BaseAction {
         Date transactionDate = closureDetails.getClosureDate().toDateMidnight().toDate();
 
         Money withdrawalAmountAtClosure = endOfAccountBalance.add(interestAmountDue);
-        Money oldValue = savings.getSavingsBalance().add(interestAmountDue);
         AccountPaymentEntity payment = new AccountPaymentEntity(savings, withdrawalAmountAtClosure, null, null, null, transactionDate);
 
         actionForm.setAmount(withdrawalAmountAtClosure.toString());
@@ -119,25 +106,21 @@ public class SavingsClosureAction extends BaseAction {
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, acceptedPaymentTypes, request);
         SessionUtils.setAttribute(SavingsConstants.ACCOUNT_PAYMENT, payment, request);
 
-        logger.debug("In SavingsClosureAction::load(), Interest calculated:  " + interestAmountDue);
-
         return mapping.findForward("load_success");
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        logger.debug("In SavingsClosureAction::preview()");
+
         SavingsClosureActionForm actionForm = (SavingsClosureActionForm) form;
-        AccountPaymentEntity payment = (AccountPaymentEntity) SessionUtils.getAttribute(
-                SavingsConstants.ACCOUNT_PAYMENT, request);
+        AccountPaymentEntity payment = (AccountPaymentEntity) SessionUtils.getAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);
         AccountPaymentEntity accountPaymentEntity = null;
         Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
         if (actionForm.getReceiptDate() != null && actionForm.getReceiptDate() != "") {
             accountPaymentEntity = new AccountPaymentEntity(payment.getAccount(), payment.getAmount(), actionForm
                     .getReceiptId(), new java.util.Date(DateUtils.getDateAsSentFromBrowser(actionForm.getReceiptDate())
-                    .getTime()), new PaymentTypeEntity(Short.valueOf(actionForm.getPaymentTypeId())),
-                    transactionDate);
+                    .getTime()), new PaymentTypeEntity(Short.valueOf(actionForm.getPaymentTypeId())), transactionDate);
         } else {
             if (actionForm.getPaymentTypeId() != null && !actionForm.getPaymentTypeId().equals("")) {
                 if (!(actionForm.getPaymentTypeId().equals(""))) {
@@ -160,7 +143,6 @@ public class SavingsClosureAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        logger.debug("In SavingsClosureAction::previous()");
         return mapping.findForward("previous_success");
     }
 
@@ -176,8 +158,6 @@ public class SavingsClosureAction extends BaseAction {
 
         Long savingsId = Long.valueOf(savingsInSession.getAccountId());
         SavingsBO savings = this.savingsDao.findById(savingsId);
-
-        logger.debug("In SavingsClosureAction::close(), accountId: " + savings.getAccountId());
 
         checkVersionMismatch(savingsInSession.getVersionNo(), savings.getVersionNo());
         savings.setUserContext(getUserContext(request));
@@ -203,16 +183,12 @@ public class SavingsClosureAction extends BaseAction {
 
         SessionUtils.removeAttribute(SavingsConstants.ACCOUNT_PAYMENT, request);
 
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.getSessionTL().evict(savings);
-
         return mapping.findForward("close_success");
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        logger.debug("In SavingsClosureAction::cancel()");
         return mapping.findForward("close_success");
     }
 
@@ -220,7 +196,6 @@ public class SavingsClosureAction extends BaseAction {
     public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
-        logger.debug("In SavingsClosureAction::validate(), method: " + method);
         String forward = null;
         if (method != null && method.equals("preview")) {
             forward = "preview_faliure";

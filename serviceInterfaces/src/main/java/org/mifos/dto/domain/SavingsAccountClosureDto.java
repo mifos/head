@@ -20,18 +20,23 @@
 
 package org.mifos.dto.domain;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
+import org.mifos.dto.screen.ListElement;
 
 public class SavingsAccountClosureDto {
 
     private final LocalDate closureDate;
     private final String balance;
     private final String interestAmountAtClosure;
+    private final List<ListElement> depositPaymentTypes;
 
-    public SavingsAccountClosureDto(LocalDate closureDate, String balance, String interestAmountAtClosure) {
+    public SavingsAccountClosureDto(LocalDate closureDate, String balance, String interestAmountAtClosure, List<ListElement> depositPaymentTypes) {
         this.closureDate = closureDate;
         this.balance = balance;
         this.interestAmountAtClosure = interestAmountAtClosure;
+        this.depositPaymentTypes = depositPaymentTypes;
     }
 
     public String getBalance() {
@@ -44,5 +49,9 @@ public class SavingsAccountClosureDto {
 
     public String getInterestAmountAtClosure() {
         return this.interestAmountAtClosure;
+    }
+
+    public List<ListElement> getDepositPaymentTypes() {
+        return this.depositPaymentTypes;
     }
 }

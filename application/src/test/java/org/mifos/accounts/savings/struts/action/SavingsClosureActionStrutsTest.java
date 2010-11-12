@@ -71,27 +71,15 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private UserContext userContext;
-
     private CustomerBO group;
-
     private CustomerBO center;
-
     private SavingsBO savings;
-
-    private SavingsBO newSavings;
-
     private SavingsOfferingBO savingsOffering;
-
     private CustomerBO client1;
-
     private CustomerBO client2;
-
     private CustomerBO client3;
-
     private CustomerBO client4;
-
     private SavingsTestHelper helper = new SavingsTestHelper();
-
     private String flowKey;
 
     @Override
@@ -128,7 +116,6 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         client2 = null;
         client3 = null;
         client4 = null;
-        newSavings = null;
         group = null;
         center = null;
         super.tearDown();

@@ -387,7 +387,15 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate) {
+    public SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate, Short localeId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+        userContext.setLocaleId(localeId);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
@@ -409,7 +417,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         Money endOfAccountBalance = postingPeriodAtClosureResult.getPeriodBalance();
         Money interestAmountAtClosure = postingPeriodAtClosureResult.getPeriodInterest();
 
-        return new SavingsAccountClosureDto(new LocalDate(), endOfAccountBalance.toString(), interestAmountAtClosure.toString());
+        List<ListElement> depositPaymentTypes = retrieveDepositPaymentTypes(userContext);
+
+        return new SavingsAccountClosureDto(new LocalDate(), endOfAccountBalance.toString(), interestAmountAtClosure.toString(), depositPaymentTypes);
     }
 
     private InterestPostingPeriodResult determinePostingPeriodResult(CalendarPeriod postingPeriod, SavingsBO savingsAccount, List<EndOfDayDetail> allEndOfDayDetailsForAccount) {
@@ -537,11 +547,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 transactionTypes.add(new ListElement(accountActionEntity.getId().intValue(), accountActionEntity.getLookUpValue().getMessageText()));
             }
 
-            List<ListElement> depositPaymentTypes = new ArrayList<ListElement>();
-            List<PaymentTypeEntity> acceptedPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_deposit.getValue());
-            for (PaymentTypeEntity paymentTypeEntity : acceptedPaymentEntityTypes) {
-                depositPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), paymentTypeEntity.getLookUpValue().getMessageText()));
-            }
+            List<ListElement> depositPaymentTypes = retrieveDepositPaymentTypes(userContext);
 
             List<ListElement> withdrawalPaymentTypes = new ArrayList<ListElement>();
             List<PaymentTypeEntity> withdrawalPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
@@ -555,6 +561,19 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             return new DepositWithdrawalReferenceDto(transactionTypes, depositPaymentTypes, withdrawalPaymentTypes, clients, backDatedTransactionsAllowed, defaultTransactionDate, depositDue, withdrawalDue);
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    private List<ListElement> retrieveDepositPaymentTypes(UserContext userContext) {
+        try {
+            List<ListElement> depositPaymentTypes = new ArrayList<ListElement>();
+            List<PaymentTypeEntity> acceptedPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_deposit.getValue());
+            for (PaymentTypeEntity paymentTypeEntity : acceptedPaymentEntityTypes) {
+                depositPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), paymentTypeEntity.getLookUpValue().getMessageText()));
+            }
+            return depositPaymentTypes;
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
