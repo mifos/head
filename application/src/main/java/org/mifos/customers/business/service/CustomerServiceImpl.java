@@ -926,11 +926,11 @@ public class CustomerServiceImpl implements CustomerService {
 
         CustomerBO oldParent = client.getParentCustomer();
 
-        boolean regenerateSchedules = client.transferTo(receivingGroup);
-
         try {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(client);
+
+            boolean regenerateSchedules = client.transferTo(receivingGroup);
 
             if (oldParent != null) {
                 client.resetPositions(oldParent);
@@ -976,10 +976,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), transferToOffice.getOfficeId());
 
-        if (group.isActive()) {
-            group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
-        }
-
         group.makeCustomerMovementEntries(transferToOffice);
         group.setPersonnel(null);
 
@@ -994,11 +990,13 @@ public class CustomerServiceImpl implements CustomerService {
             searchId = GroupConstants.PREFIX_SEARCH_STRING + (newSearchIdSuffix + 1);
         }
         group.setSearchId(searchId);
-
+        group.setUpdateDetails();
         try {
             hibernateTransactionHelper.startTransaction();
-
-            group.setUpdateDetails();
+            hibernateTransactionHelper.beginAuditLoggingFor(group);
+            if (group.isActive()) {
+                group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
+            }
 
             if (oldParentOfGroup != null) {
                 customerDao.save(oldParentOfGroup);
