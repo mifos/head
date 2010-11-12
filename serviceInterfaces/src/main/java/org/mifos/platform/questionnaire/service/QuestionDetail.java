@@ -191,24 +191,4 @@ public class QuestionDetail implements Serializable {
 
         return result;
     }
-
-    public boolean isSmartChoiceDuplicated(int choiceIndex, String tag) {
-        boolean result = false;
-
-        if (choiceIndex < answerChoices.size()) {
-            result = answerChoices.get(choiceIndex).isDuplicateTag(tag);
-        }
-
-        return result;
-    }
-
-    public boolean isTagsLimitReached(int choiceIndex) {
-        boolean result = false;
-
-        if (choiceIndex < answerChoices.size()) {
-            result = answerChoices.get(choiceIndex).isTagsLimitReached();
-        }
-
-        return result;
-    }
 }
