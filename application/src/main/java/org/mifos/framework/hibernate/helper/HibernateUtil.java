@@ -51,6 +51,8 @@ public class HibernateUtil implements FactoryBean<HibernateUtil> {
     public void shutdown() {
         try {
             sessionFactory.close();
+            sessionTL.remove();
+            interceptorTL.remove();
         } catch (HibernateException e) {
            e.printStackTrace(System.out);
         }
