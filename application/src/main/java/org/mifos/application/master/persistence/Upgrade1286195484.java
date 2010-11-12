@@ -60,6 +60,7 @@ public class Upgrade1286195484 extends Upgrade {
 	}
 
 	public static int COMMIT_EVERY = 100;
+    public static int PRINT_EVERY = 10000;
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
@@ -67,13 +68,13 @@ public class Upgrade1286195484 extends Upgrade {
 
         Session session = StaticHibernateUtil.getSessionTL();
         ScrollableResults results = session.createQuery("from CustomerAddressDetailEntity").setCacheMode(CacheMode.IGNORE).scroll(ScrollMode.FORWARD_ONLY);
+        Query update = session.createQuery("update CustomerAddressDetailEntity set address.phoneNumberStripped = :phoneNumberStripped where " +
+						"customerAddressId = :id");
 		Transaction t = session.beginTransaction();
 		int count = 0;
         while (results.next()) {
             CustomerAddressDetailEntity address = (CustomerAddressDetailEntity)results.get(0);
 			if (address.getAddress().getPhoneNumber() != null && !address.getAddress().getPhoneNumber().isEmpty()) {
-				Query update = session.createQuery("update CustomerAddressDetailEntity set address.phoneNumberStripped = :phoneNumberStripped where " +
-						"customerAddressId = :id");
 				update.setString("phoneNumberStripped", address.getAddress().getPhoneNumberStripped());
 				update.setInteger("id", address.getCustomerAddressId());
 				update.executeUpdate();
@@ -84,6 +85,10 @@ public class Upgrade1286195484 extends Upgrade {
 					session.clear();
 					t = session.beginTransaction();
 				}
+                if (count % PRINT_EVERY == 0) {
+                    System.out.print(".");
+                    System.out.flush();
+                }
 			}
         }
 		session.flush();
