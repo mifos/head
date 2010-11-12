@@ -26,6 +26,7 @@ import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
+import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SavingsServiceFacade {
@@ -36,13 +37,16 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     void withdraw(SavingsWithdrawalDto savingsWithdrawal);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
+    SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CLOSE_SAVINGS_ACCOUNT')")
     SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate, Short localeId);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CLOSE_SAVINGS_ACCOUNT')")
     void closeSavingsAccount(Long savingsId, String notes, SavingsWithdrawalDto closeAccount);
 
     @PreAuthorize("isFullyAuthenticated()")

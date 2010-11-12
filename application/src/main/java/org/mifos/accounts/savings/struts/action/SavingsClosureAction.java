@@ -54,6 +54,11 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+/**
+ * @deprecated - this struts action should be replaced by ftl/spring web flow or spring mvc implementation.
+ *             - note: service facade is in place to return all information needed and spring security is set up on service facade
+ */
+@Deprecated
 public class SavingsClosureAction extends BaseAction {
 
     public SavingsClosureAction() {

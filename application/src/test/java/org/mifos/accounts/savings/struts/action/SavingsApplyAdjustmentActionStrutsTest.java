@@ -20,7 +20,11 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import java.util.Date;
+import java.util.Locale;
+
 import junit.framework.Assert;
+
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -33,8 +37,6 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -44,24 +46,17 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.Locale;
-
 public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
+
     public SavingsApplyAdjustmentActionStrutsTest() throws Exception {
         super();
     }
 
     private UserContext userContext;
-
     private CustomerBO group;
-
     private CustomerBO center;
-
     private SavingsBO savings;
-
     private SavingsOfferingBO savingsOffering;
-
     private String flowKey;
 
     @Override
@@ -94,65 +89,6 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         center = null;
         super.tearDown();
     }
-
-//    public void testSuccessfullLoad_WithValidLastPaymentDeposit() throws Exception {
-//        createInitialObjects();
-//        savingsOffering = createSavingsOffering();
-//        savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACTIVE);
-//        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-//        Money depositAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000");
-//        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, depositAmount, depositAmount,
-//                helper.getDate("20/05/2006"), AccountActionTypes.SAVINGS_DEPOSIT.getValue(), savings, createdBy, group);
-//        AccountTestUtils.addAccountPayment(payment, savings);
-//        SavingBOTestUtils.setBalance(savings, depositAmount);
-//        savings.update();
-//        StaticHibernateUtil.commitTransaction();
-//        StaticHibernateUtil.closeSession();
-//        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-//        setRequestPathInfo("/savingsApplyAdjustmentAction.do");
-//        addRequestParameter("method", "load");
-//        actionPerform();
-//        verifyForward("load_success");
-//        verifyNoActionMessages();
-//        verifyNoActionErrors();
-//        savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-//        Assert.assertNotNull(savings.getLastPmnt());
-//        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
-//        AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(
-//                SavingsConstants.ACCOUNT_ACTION, request);
-//       Assert.assertEquals(AccountActionTypes.SAVINGS_DEPOSIT, accountAction.asEnum());
-//       Assert.assertEquals(Short.valueOf("1"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
-//    }
-//
-//    public void testSuccessfullLoad_WithValidLastPaymentWithdrawal() throws Exception {
-//        createInitialObjects();
-//        savingsOffering = createSavingsOffering();
-//        savings = createSavingsAccount("000X00000000017", savingsOffering, group, AccountState.SAVINGS_ACTIVE);
-//        PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(userContext.getId());
-//        Money withdrawalAmount = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "1000.0");
-//        Money balance = new Money(Configuration.getInstance().getSystemConfig().getCurrency(), "2000.0");
-//        AccountPaymentEntity payment = helper.createAccountPaymentToPersist(savings, withdrawalAmount, balance, helper
-//                .getDate("20/05/2006"), AccountActionTypes.SAVINGS_WITHDRAWAL.getValue(), savings, createdBy, group);
-//        AccountTestUtils.addAccountPayment(payment, savings);
-//        SavingBOTestUtils.setBalance(savings, balance);
-//        savings.update();
-//        StaticHibernateUtil.commitTransaction();
-//        StaticHibernateUtil.closeSession();
-//        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-//        setRequestPathInfo("/savingsApplyAdjustmentAction.do");
-//        addRequestParameter("method", "load");
-//        actionPerform();
-//        verifyForward("load_success");
-//        verifyNoActionMessages();
-//        verifyNoActionErrors();
-//        savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-//        Assert.assertNotNull(savings.getLastPmnt());
-//        Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.ACCOUNT_ACTION, request));
-//        AccountActionEntity accountAction = (AccountActionEntity) SessionUtils.getAttribute(
-//                SavingsConstants.ACCOUNT_ACTION, request);
-//       Assert.assertEquals(AccountActionTypes.SAVINGS_WITHDRAWAL, accountAction.asEnum());
-//       Assert.assertEquals(Short.valueOf("1"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
-//    }
 
     public void testSuccessfullLoad_WithoutValidLastPayment() throws Exception {
         createInitialObjects();

@@ -31,6 +31,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
@@ -71,6 +72,7 @@ import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -577,5 +579,35 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId, Short localeId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+        userContext.setLocaleId(localeId);
+
+        SavingsBO savings = savingsDao.findById(savingsId);
+
+        AccountPaymentEntity lastPayment = savings.findMostRecentPaymentByPaymentDate();
+
+        String clientName = null;
+        if (!savings.getCustomer().isClient()) {
+            CustomerBO customer = null;
+            for (AccountTrxnEntity accountTrxn : lastPayment.getAccountTrxns()) {
+                customer = accountTrxn.getCustomer();
+                break;
+            }
+            if (customer != null && customer.isClient()) {
+                clientName = customer.getDisplayName();
+            }
+        }
+
+       return new SavingsAdjustmentReferenceDto(clientName, lastPayment.getAmount().toString(), lastPayment.isSavingsDepositOrWithdrawal());
     }
 }
