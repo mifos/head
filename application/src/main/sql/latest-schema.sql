@@ -2711,6 +2711,13 @@ create table loan_schedule (
   payment_date date,
   parent_flag smallint,
   version_no integer not null,
+
+  extra_interest decimal(21,4),
+  extra_interest_currency_id smallint,
+
+  extra_interest_paid decimal(21,4),
+  extra_interest_paid_currency_id smallint,
+
   primary key(id),
   foreign key(account_id)
     references account(account_id)
@@ -2774,6 +2781,16 @@ create table loan_schedule (
 
   foreign key(customer_id)
     references customer(customer_id)
+      on delete no action
+      on update no action,
+
+  foreign key(extra_interest_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(extra_interest_paid_currency_id)
+    references currency(currency_id)
       on delete no action
       on update no action
 )

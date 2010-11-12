@@ -1722,6 +1722,7 @@
   <batch_staffing_level_summary staffing_level_summary_id="8" branch_report_id="8" role_id="-1" role_name="Total Staff" personnel_count="0"/>
   <batch_staffing_level_summary staffing_level_summary_id="9" branch_report_id="9" role_id="-1" role_name="Total Staff" personnel_count="0"/>
   <branch_ho_update/>
+  <cash_flow/>
   <category_type category_id="1" category_lookup_id="81"/>
   <category_type category_id="2" category_lookup_id="82"/>
   <category_type category_id="3" category_lookup_id="83"/>
@@ -4347,6 +4348,7 @@
   <loan_amount_same_for_all_loan loan_amount_same_for_all_loan_id="11" prd_offering_id="8" min_loan_amount="100.0000" max_loan_amnt="200000.0000" default_loan_amount="1255.0000"/>
   <loan_amount_same_for_all_loan loan_amount_same_for_all_loan_id="12" prd_offering_id="9" min_loan_amount="100.0000" max_loan_amnt="300000.0000" default_loan_amount="3000.0000"/>
   <loan_arrears_aging/>
+  <loan_cash_flow/>
   <loan_counter loan_counter_id="1" client_perf_id="3" loan_offering_id="3" loan_cycle_counter="1"/>
   <loan_counter loan_counter_id="2" client_perf_id="3" loan_offering_id="4" loan_cycle_counter="2"/>
   <loan_counter loan_counter_id="3" client_perf_id="4" loan_offering_id="3" loan_cycle_counter="1"/>
@@ -4605,14 +4607,14 @@
   <loan_fee_schedule account_fees_detail_id="238" id="1514" installment_id="52" fee_id="9" account_fee_id="82" amount="8.0000" amount_currency_id="2" amount_paid="0.0000" amount_paid_currency_id="2" version_no="0"/>
   <loan_fee_schedule account_fees_detail_id="239" id="1515" installment_id="1" fee_id="7" account_fee_id="84" amount="900.0000" amount_currency_id="2" amount_paid="0.0000" amount_paid_currency_id="2" version_no="0"/>
   <loan_fee_schedule account_fees_detail_id="240" id="1515" installment_id="1" fee_id="6" account_fee_id="83" amount="90.0000" amount_currency_id="2" amount_paid="0.0000" amount_paid_currency_id="2" version_no="0"/>
-  <loan_offering prd_offering_id="1" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="3.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="13" interest_glcode_id="41" interest_waiver_flag="0"/>
-  <loan_offering prd_offering_id="2" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="3.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="13" interest_glcode_id="41" interest_waiver_flag="0"/>
-  <loan_offering prd_offering_id="3" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="3.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="13" interest_glcode_id="41" interest_waiver_flag="0"/>
-  <loan_offering prd_offering_id="4" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="3.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="13" interest_glcode_id="41" interest_waiver_flag="0"/>
-  <loan_offering prd_offering_id="6" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="14.0000000000" min_interest_rate="10.0000000000" def_interest_rate="12.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="16" interest_glcode_id="42" interest_waiver_flag="0"/>
-  <loan_offering prd_offering_id="7" interest_type_id="2" graceperiod_type_id="1" max_interest_rate="99.0000000000" min_interest_rate="1.0000000000" def_interest_rate="18.4000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="18" interest_glcode_id="40" interest_waiver_flag="0"/>
-  <loan_offering prd_offering_id="8" interest_type_id="2" graceperiod_type_id="1" max_interest_rate="99.0000000000" min_interest_rate="1.0000000000" def_interest_rate="11.6000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="19" interest_glcode_id="42" interest_waiver_flag="0"/>
-  <loan_offering prd_offering_id="9" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="99.0000000000" min_interest_rate="1.0000000000" def_interest_rate="10.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="15" interest_glcode_id="40" interest_waiver_flag="0"/>
+  <loan_offering prd_offering_id="1" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="3.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="13" interest_glcode_id="41" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
+  <loan_offering prd_offering_id="2" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="3.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="13" interest_glcode_id="41" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
+  <loan_offering prd_offering_id="3" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="3.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="13" interest_glcode_id="41" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
+  <loan_offering prd_offering_id="4" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="3.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="13" interest_glcode_id="41" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
+  <loan_offering prd_offering_id="6" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="14.0000000000" min_interest_rate="10.0000000000" def_interest_rate="12.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="16" interest_glcode_id="42" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
+  <loan_offering prd_offering_id="7" interest_type_id="2" graceperiod_type_id="1" max_interest_rate="99.0000000000" min_interest_rate="1.0000000000" def_interest_rate="18.4000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="18" interest_glcode_id="40" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
+  <loan_offering prd_offering_id="8" interest_type_id="2" graceperiod_type_id="1" max_interest_rate="99.0000000000" min_interest_rate="1.0000000000" def_interest_rate="11.6000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="19" interest_glcode_id="42" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
+  <loan_offering prd_offering_id="9" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="99.0000000000" min_interest_rate="1.0000000000" def_interest_rate="10.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="15" interest_glcode_id="40" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
   <loan_offering_fund/>
   <loan_penalty/>
   <loan_perf_history id="1" account_id="4" no_of_payments="0"/>
@@ -8259,6 +8261,7 @@
   <mfi_attribute attribute_id="3" office_id="1" attribute_name="CENTER" attribute_value="GROUP"/>
   <mfi_attribute attribute_id="4" office_id="1" attribute_name="CENTER" attribute_value="GROUP"/>
   <mfi_attribute attribute_id="5" office_id="1" attribute_name="CENTER" attribute_value="GROUP"/>
+  <monthly_cash_flow_details/>
   <no_of_install_from_last_loan/>
   <no_of_install_from_loan_cycle/>
   <no_of_install_same_for_all_loan no_of_install_same_for_all_loan_id="1" prd_offering_id="1" min_no_install="1.0000" max_no_install="1000.0000" default_no_install="11.0000"/>
@@ -9434,6 +9437,7 @@
   <transaction_type transaction_id="3" transaction_name="Savings Deposit"/>
   <transaction_type transaction_id="4" transaction_name="Savings Withdrawals"/>
   <transaction_type transaction_id="5" transaction_name="Client Fees/penalty payments"/>
+  <variable_installment_details/>
   <waive_off_history/>
   <yes_no_master yes_no_master_id="1" lookup_id="124"/>
   <yes_no_master yes_no_master_id="2" lookup_id="125"/>
