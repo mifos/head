@@ -27,7 +27,7 @@
     	[@mifos.editPageBreadcrumbs breadcrumb/]
   		  	<p class="font15 fontBold marginTop15"><span class="">${auditLog.name}</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "changeLog"/]</span></p>
 	  	<div class="marginTop15">
-	  		<span>[@spring.message "recordCreationDate"/]&nbsp;:</span><span>${auditLog.createdDate}</span>
+	  		<span>[@spring.message "recordCreationDate"/]:&nbsp;</span><span>${auditLog.createdDate}</span>
 	  	</div>
 	  	<div>
 		  	<div class="fontBold span-16 bluedivs marginTop15">

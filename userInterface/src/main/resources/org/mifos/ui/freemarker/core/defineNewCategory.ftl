@@ -16,7 +16,6 @@
         </div>
         <div class="margin20lefttop">
 		<form method="post" action="defineNewCategory.ftl" name="defineNewCategory">
-		<p>&nbsp;&nbsp;</p>
 		<p class="font15">
 			<span class="fontBold">[@spring.message "admin.definenewcategory" /]</span>&nbsp;-<span class="orangeheading">[@spring.message "manageProducts.defineNewCategory.enterProductcategoryinformation" /]</span>
 		</p>

@@ -56,7 +56,6 @@ public class PreviewProductMixController {
         this.adminServiceFacade = adminServiceFacade;
     }
 
-    
 
     @RequestMapping(method = RequestMethod.POST)
     public ModelAndView processFormSubmit(@RequestParam(value = EDIT_PARAM, required = false) String edit,
@@ -70,7 +69,7 @@ public class PreviewProductMixController {
 
         if (StringUtils.isNotBlank(edit)) {
             updateAllowedNotAllowedProductMix(formBean);
-
+            resetAllowedAndNotAllowed(formBean);
             mav = new ModelAndView(formView);
             mav.addObject("formBean", formBean);
 
@@ -93,9 +92,11 @@ public class PreviewProductMixController {
 
     private List<Integer> toIntegers(String[] allowed) {
         List<Integer> allowedAsInts = new ArrayList<Integer>();
-        for (String productId : allowed) {
-            if (null != productId) {
-                allowedAsInts.add(Integer.parseInt(productId));
+        if (null != allowed) {
+            for (String productId : allowed) {
+                if (null != productId) {
+                    allowedAsInts.add(Integer.parseInt(productId));
+                }
             }
         }
         return allowedAsInts;
@@ -106,8 +107,10 @@ public class PreviewProductMixController {
         for (String allowedKey : allowed) {
             if (!formBean.getAllowedProductOptions().containsKey(allowedKey)) {
                 String productName = formBean.getNotAllowedProductOptions().get(allowedKey);
-                formBean.getAllowedProductOptions().put(allowedKey, productName);
-                formBean.getNotAllowedProductOptions().remove(allowedKey);
+                if (null != allowedKey && null != productName) {
+                    formBean.getAllowedProductOptions().put(allowedKey, productName);
+                    formBean.getNotAllowedProductOptions().remove(allowedKey);
+                }
             }
         }
 
@@ -115,9 +118,17 @@ public class PreviewProductMixController {
         for (String notAllowedKey : notAllowed) {
             if (!formBean.getNotAllowedProductOptions().containsKey(notAllowedKey)) {
                 String productName = formBean.getAllowedProductOptions().get(notAllowedKey);
-                formBean.getNotAllowedProductOptions().put(notAllowedKey, productName);
-                formBean.getAllowedProductOptions().remove(notAllowedKey);
+                if (null != notAllowedKey && null != productName) {
+                    formBean.getNotAllowedProductOptions().put(notAllowedKey, productName);
+                    formBean.getAllowedProductOptions().remove(notAllowedKey);
+                }
             }
         }
+    }
+
+    /* Need to reset those attributes manually due to problem with reset them by Spring when select box is empty - morzechowski@soldevelo.com */
+    private void resetAllowedAndNotAllowed(ProductMixFormBean formBean) {
+        formBean.setAllowed(null);
+        formBean.setNotAllowed(null);
     }
 }

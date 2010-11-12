@@ -61,12 +61,13 @@ public class ProductMixAssembler {
 
     private List<String> findMatchingProducts(ProductMixFormBean formBean, String[] allowed) {
         List<String> allowedProductNames = new ArrayList<String>();
-
-        for (String allowedKey : allowed) {
-            if (formBean.getAllowedProductOptions().containsKey(allowedKey)) {
-                allowedProductNames.add(formBean.getAllowedProductOptions().get(allowedKey));
-            } else if (formBean.getNotAllowedProductOptions().containsKey(allowedKey)) {
-                allowedProductNames.add(formBean.getNotAllowedProductOptions().get(allowedKey));
+        if (null != allowed) {
+            for (String allowedKey : allowed) {
+                if (formBean.getAllowedProductOptions().containsKey(allowedKey)) {
+                    allowedProductNames.add(formBean.getAllowedProductOptions().get(allowedKey));
+                } else if (formBean.getNotAllowedProductOptions().containsKey(allowedKey)) {
+                    allowedProductNames.add(formBean.getNotAllowedProductOptions().get(allowedKey));
+                }
             }
         }
 
