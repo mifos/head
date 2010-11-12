@@ -200,7 +200,7 @@ public class ClientBO extends CustomerBO {
      */
     protected ClientBO() {
         super();
-        
+
         this.clientAttendances = new HashSet<ClientAttendanceBO>();
         this.clientPerformanceHistory = null;
         this.offeringsAssociatedInCreate = null;
@@ -741,7 +741,9 @@ public class ClientBO extends CustomerBO {
 
         if (getParentCustomer() != null) {
             setPersonnel(getParentCustomer().getPersonnel());
-            this.setCustomerMeeting(this.getParentCustomer().getCustomerMeeting());
+
+            CustomerMeetingEntity clientMeetingEntity = this.getCustomerMeeting();
+            clientMeetingEntity.setMeeting(this.getParentCustomer().getCustomerMeetingValue());
         }
     }
 
