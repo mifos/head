@@ -595,9 +595,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         SavingsBO savings = savingsDao.findById(savingsId);
 
         AccountPaymentEntity lastPayment = savings.findMostRecentPaymentByPaymentDate();
-
         String clientName = null;
-        if (!savings.getCustomer().isClient()) {
+        String amount = null;
+        boolean depositOrWithdrawal = false;
+        if (!savings.getCustomer().isClient() && lastPayment != null) {
+            amount = lastPayment.getAmount().toString();
+            depositOrWithdrawal = lastPayment.isSavingsDepositOrWithdrawal();
             CustomerBO customer = null;
             for (AccountTrxnEntity accountTrxn : lastPayment.getAccountTrxns()) {
                 customer = accountTrxn.getCustomer();
@@ -608,6 +611,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             }
         }
 
-       return new SavingsAdjustmentReferenceDto(clientName, lastPayment.getAmount().toString(), lastPayment.isSavingsDepositOrWithdrawal());
+       return new SavingsAdjustmentReferenceDto(clientName, amount, depositOrWithdrawal);
     }
 }
