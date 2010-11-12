@@ -21,11 +21,10 @@
 package org.mifos.accounts.loan.struts.action;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.*;
+import org.mifos.accounts.exceptions.AccountException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -97,12 +96,25 @@ public class RepayLoanAction extends BaseAction {
                     repayLoanActionForm.getReceiptDate()).getTime());
         }
 
-        String globalAccountNum = request.getParameter("globalAccountNum");
-        loanServiceFacade
-                .makeEarlyRepayment(globalAccountNum, repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
-                        receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(), repayLoanActionForm.isWaiverInterest());
+        String forward = makeEarlyRepayment(request, userContext, repayLoanActionForm, receiptDate);
+        return mapping.findForward(forward);
+    }
 
-        return mapping.findForward(Constants.UPDATE_SUCCESS);
+    private String makeEarlyRepayment(HttpServletRequest request, UserContext userContext, RepayLoanActionForm repayLoanActionForm,
+                                      Date receiptDate) {
+        String globalAccountNum = request.getParameter("globalAccountNum");
+        String forward = Constants.UPDATE_SUCCESS;
+        try {
+            loanServiceFacade
+                    .makeEarlyRepayment(globalAccountNum, repayLoanActionForm.getAmount(), repayLoanActionForm.getReceiptNumber(),
+                            receiptDate, repayLoanActionForm.getPaymentTypeId(), userContext.getId(), repayLoanActionForm.isWaiverInterest());
+        } catch (AccountException e) {
+            ActionErrors actionErrors = new ActionErrors();
+            actionErrors.add("waiverInterest", new ActionMessage(e.getKey()));
+            addErrors(request, actionErrors);
+            forward = Constants.UPDATE_FAILURE;
+        }
+        return forward;
     }
 
     @TransactionDemarcate(joinToken = true)

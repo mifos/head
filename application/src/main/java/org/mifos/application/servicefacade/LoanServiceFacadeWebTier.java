@@ -34,7 +34,6 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.*;
 import org.mifos.accounts.loan.business.service.AccountFeesDto;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
@@ -43,6 +42,11 @@ import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.business.service.LoanSummaryDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanActivityDto;
+import org.mifos.accounts.loan.business.LoanActivityEntity;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -51,6 +55,7 @@ import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -123,12 +128,13 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.ArrayList;
+
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
@@ -867,11 +873,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public void makeEarlyRepayment(String globalAccountNum, String earlyRepayAmountStr, String receiptNumber,
-                                   java.sql.Date receiptDate, String paymentTypeId, Short userId, boolean waiveInterest) throws AccountException {
+                                   java.sql.Date receiptDate, String paymentTypeId, Short userId, boolean waiveOffInterest) throws AccountException {
 
         LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        if (waiveOffInterest && !loan.isInterestWaived()) {
+            throw new AccountException(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED);
+        }
         Money earlyRepayAmount = new Money(loan.getCurrency(), earlyRepayAmountStr);
-        loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId, waiveInterest);
+        loan.makeEarlyRepayment(earlyRepayAmount, receiptNumber, receiptDate, paymentTypeId, userId, waiveOffInterest);
     }
 
     public LoanInformationDto getLoanInformationDto(String globalAccountNum, UserContext userContext) throws ServiceException {
@@ -1086,7 +1095,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         Money waivedRepaymentAmount = repaymentAmount.subtract(loan.waiverAmount());
         return new RepayLoanDto(repaymentAmount, waivedRepaymentAmount,
                 acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(localeId, TrxnTypes.loan_repayment.getValue()),
-                loan.shouldWaiverInterest());
+                loan.isInterestWaived());
     }
 
     @Override

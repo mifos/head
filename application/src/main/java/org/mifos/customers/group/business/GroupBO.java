@@ -525,9 +525,8 @@ public class GroupBO extends CustomerBO {
             if (groupMeeting != null) {
                 regenerateGroupSchedules = receivingCenter.hasMeetingDifferentTo(groupMeeting);
 
-                CustomerMeetingEntity centerMeetingEntity = receivingCenter.getCustomerMeeting();
-                centerMeetingEntity.setCustomer(this);
-                this.setCustomerMeeting(centerMeetingEntity);
+                CustomerMeetingEntity groupMeetingEntity = this.getCustomerMeeting();
+                groupMeetingEntity.setMeeting(receivingCenter.getCustomerMeetingValue());
             } else {
                 CustomerMeetingEntity customerMeeting = this.createCustomerMeeting(centerMeeting);
                 this.setCustomerMeeting(customerMeeting);
