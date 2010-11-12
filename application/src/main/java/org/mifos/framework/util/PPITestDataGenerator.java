@@ -176,15 +176,24 @@ public class PPITestDataGenerator {
         questionnaireServiceFacade.uploadPPIQuestionGroup(properties.getProperty("questionGroup.xml.filename"));
 
         QuestionGroupDetail qg = findQuestionGroup(properties.getProperty("questionGroup.name"));
+
+        int surveyCount = Integer.parseInt(properties.getProperty("survey.count"));
+        for (int surveyNum = 1; surveyNum <= surveyCount; ++surveyNum) {
+            createSurveyInstance(customer, properties, qg, surveyNum);
+        }
+
+        System.out.println("done!");
+
+    }
+
+    private void createSurveyInstance(CustomerBO customer, Properties properties, QuestionGroupDetail qg, int surveyNum) {
         Integer creatorId = 1;
-
-
         QuestionGroupInstanceDtoBuilder instanceBuilder = new QuestionGroupInstanceDtoBuilder();
         instanceBuilder.withQuestionGroup(qg.getId()).withCompleted(true).withCreator(creatorId).
             withEventSource(1).withEntity(customer.getCustomerId()).withVersion(1);
         List<SectionQuestionDetail> questions = qg.getSectionDetail(0).getQuestions();
         for (SectionQuestionDetail question: questions) {
-            String responseKey = "survey.1.question." + question.getSequenceNumber() + ".response.text";
+            String responseKey = "survey." + surveyNum + ".question." + question.getSequenceNumber() + ".response.text";
             String questionResponse = properties.getProperty(responseKey);
             QuestionGroupResponseDtoBuilder responseBuilder = new QuestionGroupResponseDtoBuilder();
             responseBuilder.withSectionQuestion(question.getQuestionId()).withResponse(questionResponse);
@@ -192,9 +201,6 @@ public class PPITestDataGenerator {
         }
 
         questionnaireServiceFacade.saveQuestionGroupInstance(instanceBuilder.build());
-
-        System.out.println("done!");
-
     }
 
     public static ApplicationContext initializeSpring() {
