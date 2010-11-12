@@ -118,7 +118,7 @@
             <tr>
                 <th class="name" >[@spring.message "questionnaire.question.name"/]</th>
                 <th class="mandatory orderCenter">[@spring.message "questionnaire.question.mandatory"/]</th>
-                <th class="remove orderCenter">[@spring.message "questionnaire.question.delete"/]</th>
+                <th class="remove orderCenter">[@spring.message "questionnaire.remove"/]</th>
                 <th class="order orderCenter">[@spring.message "questionnaire.question.order"/]</th>
             </tr>
             </thead>
