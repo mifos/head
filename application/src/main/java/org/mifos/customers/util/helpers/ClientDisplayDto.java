@@ -34,6 +34,7 @@ public class ClientDisplayDto implements DataTransferObject {
     private final String globalCustNum;
     private final String displayName;
     private final String parentCustomerDisplayName;
+    private final Integer branchId;
     private final String branchName;
     private final String externalId;
     private final String customerFormedByDisplayName;
@@ -68,7 +69,7 @@ public class ClientDisplayDto implements DataTransferObject {
     private final List<ClientFamilyDetailDto> familyDetails;
 
     public ClientDisplayDto(final Integer customerId, final String globalCustNum, final String displayName,
-            final String parentCustomerDisplayName, final String branchName, final String externalId,
+            final String parentCustomerDisplayName, final Integer branchId, final String branchName, final String externalId,
             final String customerFormedByDisplayName, final Date customerActivationDate, final Short customerLevelId,
             final Short customerStatusId, final String customerStatusName, final Date trainedDate,
             final Date dateOfBirth, final String governmentId, final Boolean clientUnderGroup,
@@ -83,6 +84,7 @@ public class ClientDisplayDto implements DataTransferObject {
         this.globalCustNum = globalCustNum;
         this.displayName = displayName;
         this.parentCustomerDisplayName = parentCustomerDisplayName;
+        this.branchId = branchId;
         this.branchName = branchName;
         this.externalId = externalId;
         this.customerFormedByDisplayName = customerFormedByDisplayName;
@@ -133,6 +135,10 @@ public class ClientDisplayDto implements DataTransferObject {
 
     public String getParentCustomerDisplayName() {
         return this.parentCustomerDisplayName;
+    }
+
+    public Integer getBranchId() {
+        return branchId;
     }
 
     public String getBranchName() {

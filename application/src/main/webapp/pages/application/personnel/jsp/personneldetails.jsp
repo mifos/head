@@ -281,6 +281,9 @@ explanation of the license and how it is applied.
 						</c:if>
 						<span class="fontnormal">
 						<c:set var="questionnaireFor" scope="session" value="${personnelInformationDto.displayName}"/>
+                        <c:remove var="urlMap" />
+                        <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
+                        <c:set target="${urlMap}" property="${personnelInformationDto.displayName}" value="PersonAction.do?method=get&globalPersonnelNum=${personnelInformationDto.globalPersonnelNum}"/>
 						<a id="personnelDetail.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${personnelInformationDto.personnelId}&event=Create&source=Personnel&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
                         	<mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
                         </a> 

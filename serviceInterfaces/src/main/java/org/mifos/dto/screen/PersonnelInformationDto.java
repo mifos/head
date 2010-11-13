@@ -35,6 +35,7 @@ import org.mifos.dto.domain.CustomFieldDto;
 public class PersonnelInformationDto implements Serializable {
 
     private final Integer id;
+    private final String globalPersonnelNum;
     private final String displayName;
     private final ListElement status;
     private final Boolean locked;
@@ -52,12 +53,13 @@ public class PersonnelInformationDto implements Serializable {
     private final Set<CustomFieldDto> customFields;
     private final Set<PersonnelNoteDto> personnelNotes;
 
-    public PersonnelInformationDto(Integer id, String displayName, ListElement status, Boolean locked,
+    public PersonnelInformationDto(Integer id, String globalPersonnelNum, String displayName, ListElement status, Boolean locked,
                                    PersonnelDetailsDto personnelDetails, String emailId, String preferredLocaleLanguageName,
                                    Integer preferredLanguageId, Short levelId, Integer officeId, String officeName, Integer title, Set<ListElement> personnelRoles,
                                    Short personnelId, String userName, Set<CustomFieldDto> customFields,
                                    Set<PersonnelNoteDto> personnelNotes) {
         this.id = id;
+        this.globalPersonnelNum = globalPersonnelNum;
         this.displayName = displayName;
         this.status = status;
         this.locked = locked;
@@ -74,6 +76,10 @@ public class PersonnelInformationDto implements Serializable {
         this.userName = userName;
         this.customFields = customFields;
         this.personnelNotes = personnelNotes;
+    }
+
+    public String getGlobalPersonnelNum() {
+        return globalPersonnelNum;
     }
 
     public String getDisplayName() {

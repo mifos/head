@@ -17,6 +17,8 @@ public class LoanInformationDto implements DataTransferObject {
     private final String globalAccountNum;
     private final Short accountStateId;
     private final String accountStateName;
+    private final String customerName;
+    private final String globalCustNum;
     private final Integer customerId;
     private final String prdOfferingName;
     private final Set<String> accountFlagNames;
@@ -27,6 +29,7 @@ public class LoanInformationDto implements DataTransferObject {
     private final String interestTypeName;
     private final List<AccountNotesEntity> recentAccountNotes;
     private final Short accountTypeId;
+    private final String officeName;
     private final Short officeId;
     private final Short personnelId;
     private final Date nextMeetingDate;
@@ -67,7 +70,8 @@ public class LoanInformationDto implements DataTransferObject {
                               Short noOfInstallments, Short minNoOfInstall, Short maxNoOfInstall, Short gracePeriodDuration, String fundName,
                               Integer collateralTypeId,String collateralNote, String externalId, Set<AccountCustomFieldEntity> accountCustomFields,
                               Set<AccountFeesDto> accountFees, Date createdDate, LoanPerformanceHistoryDto performanceHistory, boolean group,
-                              List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys) {
+                              List<LoanActivityDto> recentAccountActivities, final Boolean activeSurveys, final List<SurveyDto> accountSurveys,
+                              String customerName, String globalCustNum, String officeName) {
 
         this.prdOfferingName = prdOfferingName;
         this.globalAccountNum = globalAccountNum;
@@ -112,6 +116,10 @@ public class LoanInformationDto implements DataTransferObject {
 
         this.activeSurveys = activeSurveys;
         this.accountSurveys = accountSurveys;
+
+        this.customerName = customerName;
+        this.globalCustNum = globalCustNum;
+        this.officeName = officeName;
     }
 
     public String getPrdOfferingName() {
@@ -280,5 +288,17 @@ public class LoanInformationDto implements DataTransferObject {
 
     public List<SurveyDto> getAccountSurveys() {
         return this.accountSurveys;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public String getGlobalCustNum() {
+        return globalCustNum;
+    }
+
+    public String getOfficeName() {
+        return officeName;
     }
 }
