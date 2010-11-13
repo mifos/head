@@ -91,6 +91,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -919,6 +920,7 @@ public class CustomerServiceImpl implements CustomerService {
 
         ClientBO client = customerDao.findClientBySystemId(clientGlobalCustNum);
         client.validateVersion(previousClientVersionNo);
+        client.validateIsSameGroup(groupId);
         client.updateDetails(userContext);
 
         GroupBO receivingGroup = (GroupBO) customerDao.findCustomerById(groupId);
