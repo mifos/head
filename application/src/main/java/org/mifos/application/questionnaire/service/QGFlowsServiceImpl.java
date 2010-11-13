@@ -29,6 +29,8 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
+import java.util.List;
+
 public class QGFlowsServiceImpl implements QGFlowsService {
 
     @Override
@@ -36,13 +38,18 @@ public class QGFlowsServiceImpl implements QGFlowsService {
         LoanPrdBusinessService loanPrdBusinessService = new LoanPrdBusinessService();
 
         try {
-            for (LoanOfferingBO offering : loanPrdBusinessService.getAllLoanOfferings((short)1)) {
+            List<LoanOfferingBO> offerings = loanPrdBusinessService.getAllLoanOfferings((short)1);
+            if (offerings.size() > 0) {
                 QuestionGroupReference questionGroupReference = new QuestionGroupReference();
                 questionGroupReference.setQuestionGroupId(questionGroupId);
-                offering.getQuestionGroups().add(questionGroupReference);
-                offering.save();
+
+                for (LoanOfferingBO offering : offerings) {
+                    offering.getQuestionGroups().add(questionGroupReference);
+                    offering.save();
+                }
+
+                StaticHibernateUtil.commitTransaction();
             }
-            StaticHibernateUtil.commitTransaction();
         } catch (ServiceException e) {
             throw new SystemException(e);
         } catch (ProductDefinitionException e) {

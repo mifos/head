@@ -1259,6 +1259,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         final String povertyStatusName = (String) queryResult.get(0)[24];
         final Short numChildren = (Short) queryResult.get(0)[25];
         final Integer pictureLength = (Integer) queryResult.get(0)[26];
+        final Integer branchId = (Integer) queryResult.get(0)[27];
 
         Boolean clientUnderGroup = false;
         if (groupFlag.compareTo(Short.valueOf("0")) > 0) {
@@ -1314,7 +1315,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             }
         }
 
-        return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchName,
+        return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchId, branchName,
                 externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
                 customerStatusName, trainedDate, dateOfBirth, governmentId, clientUnderGroup, blackListed,
                 loanOfficerId, loanOfficerName, businessActivities, handicapped, maritalStatus, citizenship, ethnicity,

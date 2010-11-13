@@ -48,6 +48,8 @@ explanation of the license and how it is applied.
 		<!-- The new way to send data is using a data transfer object -->
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'clientInformationDto')}"
 			   var="clientInformationDto" />
+        <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'containsQGForCloseClient')}"
+			   var="containsQGForCloseClient" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05"><span class="fontnormal8pt"> <customtags:headerLink
@@ -692,6 +694,11 @@ explanation of the license and how it is applied.
 								<a id="viewClientDetails.link.questionGroups" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Create&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
 								    <mifos:mifoslabel name="client.ViewQuestionGroupResponsesLink" bundle="ClientUIResources" />
 								</a> <br>
+                                <c:if test="${containsQGForCloseClient}">
+                                    <a id="viewClientDetails.link.questionGroupsClose" href="viewAndEditQuestionnaire.ftl?creatorId=${sessionScope.UserContext.id}&entityId=${clientInformationDto.clientDisplay.customerId}&event=Close&source=Client&backPageUrl=<c:out value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'currentPageUrl')}"/>%26method%3Dget">
+                                        <mifos:mifoslabel name="client.ViewQuestionGroupForClosedClientResponsesLink" bundle="ClientUIResources" />
+                                    </a> <br>
+                                </c:if>
 								<a id="viewClientDetails.link.historicalDataLink" href="custHistoricalDataAction.do?method=getHistoricalData&globalCustNum=<c:out value="${clientInformationDto.clientDisplay.globalCustNum}"/>&currentFlowKey=${requestScope.currentFlowKey}&randomNUm=${sessionScope.randomNUm}">
 								    <mifos:mifoslabel name="client.HistoricalDataLink" bundle="ClientUIResources" />
 								</a> <br>
@@ -823,7 +830,7 @@ explanation of the license and how it is applied.
                   <c:set var="questionnaireFor" scope="session" value="${clientInformationDto.clientDisplay.displayName}"/>
                   <c:remove var="urlMap" />
                   <jsp:useBean id="urlMap" class="java.util.LinkedHashMap"  type="java.util.HashMap" scope="session"/>
-                  <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.branchName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${UserContext.branchId}"/>
+                  <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.branchName}" value="custSearchAction.do?method=getOfficeHomePage&officeId=${clientInformationDto.clientDisplay.branchId}"/>
                   <c:set target="${urlMap}" property="${clientInformationDto.clientDisplay.displayName}" value="clientCustAction.do?method=get&globalCustNum=${clientInformationDto.clientDisplay.globalCustNum}"/>
                   <a id="viewClientDetails.link.attachSurvey" href="questionnaire.ftl?source=Client&event=View&entityId=${clientInformationDto.clientDisplay.customerId}&creatorId=${sessionScope.UserContext.id}&backPageUrl=clientCustAction.do%3Fmethod%3Dget">
                     <mifos:mifoslabel name="Surveys.attachasurvey" bundle="SurveysUIResources"/>

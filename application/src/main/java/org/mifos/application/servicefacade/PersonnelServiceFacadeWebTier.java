@@ -257,7 +257,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             personnelNotes.add(new PersonnelNoteDto(new DateTime(entity.getCommentDate()), entity.getComment(), entity
                     .getPersonnelName()));
         }
-        return new PersonnelInformationDto(personnel.getPersonnelId().intValue(), displayName, status, locked,
+        return new PersonnelInformationDto(personnel.getPersonnelId().intValue(), personnel.getGlobalPersonnelNum(), displayName, status, locked,
                 personnelDetails, emailId, preferredLocale.getLanguageName(), preferredLocale.getLanguage()
                         .getLookUpValue().getLookUpId(), level.getId(), office.getOfficeId().intValue(), office
                         .getOfficeName(), title, personnelRoles, personnelId, userName, customFields, personnelNotes);

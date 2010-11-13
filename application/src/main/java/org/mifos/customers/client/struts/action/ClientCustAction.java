@@ -55,6 +55,7 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -499,9 +500,14 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
     private void setQuestionGroupInstances(HttpServletRequest request, ClientBO clientBO) throws PageExpiredException {
         QuestionnaireServiceFacade questionnaireServiceFacade = questionnaireServiceFacadeLocator.getService(request);
+        boolean containsQGForCloseClient = false;
         if (questionnaireServiceFacade != null) {
             setQuestionGroupInstances(questionnaireServiceFacade, request, clientBO.getCustomerId());
+            if (clientBO.getCustomerStatus().getId().equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
+                containsQGForCloseClient = questionnaireServiceFacade.getQuestionGroupInstances(clientBO.getCustomerId(), "Close", "Client").size() > 0;
+            }
         }
+        SessionUtils.removeThenSetAttribute("containsQGForCloseClient", containsQGForCloseClient, request);
     }
 
     // Intentionally made public to aid testing !
