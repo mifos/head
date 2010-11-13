@@ -277,7 +277,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
             if (isNotEmpty(questionEntities)) {
                 QuestionEntity questionEntity = questionEntities.get(0);
-                questionEntity.setQuestionState(QuestionState.ACTIVE);
+                questionEntity.setQuestionState(sectionQuestion.getQuestion().getQuestionState());
                 sectionQuestion.setQuestion(questionEntity);
             }
         }

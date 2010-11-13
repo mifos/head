@@ -44,11 +44,13 @@ public class QuestionDto implements Serializable {
     private Integer minValue;
     private Integer maxValue;
     private boolean mandatory;
+    private boolean active;
     @XStreamAsAttribute
     private Integer order;
 
     public QuestionDto() {
         choices = new ArrayList<ChoiceDto>();
+        active = true;
     }
 
     public String getText() {
@@ -105,6 +107,14 @@ public class QuestionDto implements Serializable {
 
     public void setMandatory(boolean mandatory) {
         this.mandatory = mandatory;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Integer getOrder() {

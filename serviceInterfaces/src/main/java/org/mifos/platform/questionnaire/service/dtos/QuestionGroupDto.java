@@ -39,9 +39,11 @@ public class QuestionGroupDto implements Serializable {
     private List<EventSourceDto> eventSourceDtos;
     private boolean editable;
     private boolean ppi;
+    private boolean active;
 
     public QuestionGroupDto() {
         sections = new ArrayList<SectionDto>();
+        active = true;
     }
 
     public String getTitle() {
@@ -86,5 +88,13 @@ public class QuestionGroupDto implements Serializable {
 
     public void setPpi(boolean ppi) {
         this.ppi = ppi;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 }

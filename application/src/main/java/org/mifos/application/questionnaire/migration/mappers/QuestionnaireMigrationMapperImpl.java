@@ -142,6 +142,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         questionGroupDto.setTitle(survey.getName());
         questionGroupDto.setEditable(false);
         questionGroupDto.setPpi(false);
+        questionGroupDto.setActive(survey.getState() == 1);
         questionGroupDto.setEventSourceDtos(Arrays.asList(mapEventSourceForSurvey(survey)));
         questionGroupDto.addSection(mapToSectionForSurvey(survey.getQuestions()));
         return questionGroupDto;
@@ -388,6 +389,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         Question question = surveyQuestion.getQuestion();
         questionDto.setText(question.getQuestionText());
         questionDto.setMandatory(surveyQuestion.getMandatory() == 1);
+        questionDto.setActive(question.getQuestionState() == 1);
         questionDto.setOrder(surveyQuestion.getOrder());
         AnswerType answerType = question.getAnswerTypeAsEnum();
         questionDto.setType(answerToQuestionType.get(answerType));
