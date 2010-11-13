@@ -75,7 +75,7 @@
                             <dependency>
                                 <groupId>mysql</groupId>
                                 <artifactId>mysql-connector-java</artifactId>
-                                <version>5.1.11</version>
+                                <version>5.1.13</version>
                             </dependency>
                         </dependencies>
                         <configuration>
@@ -165,7 +165,7 @@
                             <dependency>
                                 <groupId>mysql</groupId>
                                 <artifactId>mysql-connector-java</artifactId>
-                                <version>5.1.11</version>
+                                <version>5.1.13</version>
                             </dependency>
                         </dependencies>
                         <configuration>
@@ -342,26 +342,16 @@
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-jmx</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
             <artifactId>hibernate-c3p0</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
         </dependency>
-        <!-- #### #### Hibernate Validator #### #### -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
         </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <!-- #### #### Hibernate Validator #### #### -->
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -791,7 +781,7 @@
                     <dependency>
                         <groupId>mysql</groupId>
                         <artifactId>mysql-connector-java</artifactId>
-                        <version>5.1.11</version>
+                        <version>5.1.13</version>
                     </dependency>
                 </dependencies>
                 <configuration>

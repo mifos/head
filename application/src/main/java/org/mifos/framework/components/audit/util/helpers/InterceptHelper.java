@@ -34,7 +34,7 @@ import org.hibernate.EntityMode;
 import org.hibernate.metadata.ClassMetadata;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
-import org.hibernate.type.AbstractComponentType;
+import org.hibernate.type.ComponentType;
 import org.hibernate.type.Type;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
@@ -473,10 +473,10 @@ public class InterceptHelper {
 
     private void readFurtherComponenetMeta(Object obj, String firstName, String state, Type propertyType) {
 
-        AbstractComponentType abstractComponentType = (AbstractComponentType) propertyType;
+        ComponentType componentType = (ComponentType) propertyType;
 
-        Object[] propertyValues = abstractComponentType.getPropertyValues(obj, EntityMode.POJO);
-        String[] propertyNames = abstractComponentType.getPropertyNames();
+        Object[] propertyValues = componentType.getPropertyValues(obj, EntityMode.POJO);
+        String[] propertyNames = componentType.getPropertyNames();
 
         for (int i = 0; i < propertyNames.length; i++) {
 
@@ -1214,10 +1214,10 @@ public class InterceptHelper {
     private void readComponenetTypeInCollectionTypeWithMerge(Object obj, String firstName, String state,
             Type propertyType) {
 
-        AbstractComponentType abstractComponentType = (AbstractComponentType) propertyType;
+        ComponentType componentType = (ComponentType) propertyType;
 
-        Object[] propertyValues = abstractComponentType.getPropertyValues(obj, EntityMode.POJO);
-        String[] propertyNames = abstractComponentType.getPropertyNames();
+        Object[] propertyValues = componentType.getPropertyValues(obj, EntityMode.POJO);
+        String[] propertyNames = componentType.getPropertyNames();
 
         for (int i = 0; i < propertyNames.length; i++) {
             logger.debug("property Name : " + propertyNames[i] + "  value  : " + propertyValues[i]);
@@ -1275,10 +1275,10 @@ public class InterceptHelper {
     private void readComponenetTypeInCollectionTypeWithoutMerge(Object obj, String firstName, String state,
             Type propertyType) {
 
-        AbstractComponentType abstractComponentType = (AbstractComponentType) propertyType;
+        ComponentType componentType = (ComponentType) propertyType;
 
-        Object[] propertyValues = abstractComponentType.getPropertyValues(obj, EntityMode.POJO);
-        String[] propertyNames = abstractComponentType.getPropertyNames();
+        Object[] propertyValues = componentType.getPropertyValues(obj, EntityMode.POJO);
+        String[] propertyNames = componentType.getPropertyNames();
 
         for (int i = 0; i < propertyNames.length; i++) {
             if (state.equalsIgnoreCase(AuditConstants.TRANSACTIONBEGIN)) {

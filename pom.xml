@@ -30,8 +30,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <hibernate.version>3.5.2-Final</hibernate.version>
-        <spring.version>3.0.2.RELEASE</spring.version>
+        <hibernate.version>3.6.0.Final</hibernate.version>
+        <spring.version>3.0.5.RELEASE</spring.version>
+        <spring.sec.version>3.0.4.RELEASE</spring.sec.version>
+        <spring.web.version>2.2.1.RELEASE</spring.web.version>
         <slf4j.version>1.5.8</slf4j.version>
     </properties>
     <modules>
@@ -145,12 +147,12 @@
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-acl</artifactId>
-                <version>${spring.version}</version>
+                <version>${spring.sec.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-taglibs</artifactId>
-                <version>${spring.version}</version>
+                <version>${spring.sec.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -175,27 +177,27 @@
             <dependency>
                 <groupId>org.springframework.webflow</groupId>
                 <artifactId>spring-binding</artifactId>
-                <version>2.1.0.RELEASE</version>
+                <version>${spring.web.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.webflow</groupId>
                 <artifactId>spring-js</artifactId>
-                <version>2.1.0.RELEASE</version>
+                <version>${spring.web.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.webflow</groupId>
                 <artifactId>spring-webflow</artifactId>
-                <version>2.1.0.RELEASE</version>
+                <version>${spring.web.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-core</artifactId>
-                <version>${spring.version}</version>
+                <version>${spring.sec.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
-                <version>${spring.version}</version>
+                <version>${spring.sec.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.aspectj</groupId>
@@ -265,7 +267,7 @@
             <dependency>
                 <groupId>mysql</groupId>
                 <artifactId>mysql-connector-java</artifactId>
-                <version>5.1.11</version>
+                <version>5.1.13</version>
             </dependency>
             <dependency>
                 <groupId>findbugs</groupId>
@@ -295,11 +297,6 @@
             </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
-                <artifactId>hibernate-jmx</artifactId>
-                <version>${hibernate.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-c3p0</artifactId>
                 <version>${hibernate.version}</version>
             </dependency>
@@ -312,7 +309,7 @@
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-validator</artifactId>
-                <version>4.0.2.GA</version>
+                <version>4.1.0.Final</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
