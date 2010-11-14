@@ -67,7 +67,7 @@ public class ScheduleCalculatorAdaptorTest {
     @Test
     public void shouldComputeExtraInterestForDecliningPrincipalBalance() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Mockito.when(loanBO.getInterestType()).thenReturn(new InterestTypesEntity(InterestType.DECLINING_PB));
+        Mockito.when(loanBO.isDecliningPrincipalBalance()).thenReturn(true);
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         Mockito.when(loanBO.getDisbursementDate()).thenReturn(getDate(23, 9, 2010));
         Mockito.when(loanBO.getLoanAmount()).thenReturn(new Money(rupee,LOAN_AMOUNT));
@@ -76,7 +76,7 @@ public class ScheduleCalculatorAdaptorTest {
 
         scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
 
-        Mockito.verify(loanBO, Mockito.times(1)).getInterestRate();
+        Mockito.verify(loanBO, Mockito.times(1)).isDecliningPrincipalBalance();
         Mockito.verify(loanBO, Mockito.times(1)).getLoanScheduleEntities();
         Mockito.verify(loanBO, Mockito.times(1)).getDisbursementDate();
         Mockito.verify(loanBO, Mockito.times(1)).getLoanAmount();
@@ -90,59 +90,9 @@ public class ScheduleCalculatorAdaptorTest {
     }
     
     @Test
-    public void shouldNotComputeExtraInterestForFlatInterestType() {
+    public void shouldNotComputeExtraInterestForNonPrincipalBalanceInterestTypes() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Mockito.when(loanBO.getInterestType()).thenReturn(new InterestTypesEntity(InterestType.FLAT));
-        Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
-        Mockito.when(loanBO.getDisbursementDate()).thenReturn(getDate(23, 9, 2010));
-        Mockito.when(loanBO.getLoanAmount()).thenReturn(new Money(rupee,LOAN_AMOUNT));
-        Mockito.when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
-        Mockito.when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
-
-        scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
-
-        Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
-        Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntities();
-        Mockito.verify(loanBO, Mockito.times(0)).getDisbursementDate();
-        Mockito.verify(loanBO, Mockito.times(0)).getLoanAmount();
-        Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
-        Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntityMap();
-
-        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithExtraInterest = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
-        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(0), 0.0);
-        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(1), 0.0);
-        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(2), 0.0);
-    }
-
-    @Test
-    public void shouldNotComputeExtraInterestForEqualPrincipalInstallments() {
-        ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Mockito.when(loanBO.getInterestType()).thenReturn(new InterestTypesEntity(InterestType.DECLINING_EPI));
-        Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
-        Mockito.when(loanBO.getDisbursementDate()).thenReturn(getDate(23, 9, 2010));
-        Mockito.when(loanBO.getLoanAmount()).thenReturn(new Money(rupee,LOAN_AMOUNT));
-        Mockito.when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
-        Mockito.when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
-
-        scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
-
-        Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
-        Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntities();
-        Mockito.verify(loanBO, Mockito.times(0)).getDisbursementDate();
-        Mockito.verify(loanBO, Mockito.times(0)).getLoanAmount();
-        Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
-        Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntityMap();
-
-        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithExtraInterest = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
-        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(0), 0.0);
-        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(1), 0.0);
-        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(2), 0.0);
-    }
-
-    @Test
-    public void shouldNotComputeExtraInterestForCompoundInterestType() {
-        ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Mockito.when(loanBO.getInterestType()).thenReturn(new InterestTypesEntity(InterestType.COMPOUND));
+        Mockito.when(loanBO.isDecliningPrincipalBalance()).thenReturn(false);
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         Mockito.when(loanBO.getDisbursementDate()).thenReturn(getDate(23, 9, 2010));
         Mockito.when(loanBO.getLoanAmount()).thenReturn(new Money(rupee,LOAN_AMOUNT));
