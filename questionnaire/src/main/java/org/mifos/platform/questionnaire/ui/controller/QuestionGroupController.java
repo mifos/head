@@ -41,6 +41,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
+import org.springframework.security.access.AccessDeniedException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -106,6 +107,7 @@ public class QuestionGroupController extends QuestionnaireController {
         return "viewQuestionGroupDetail";
     }
 
+    @SuppressWarnings({"ThrowableInstanceNeverThrown"})
     public String defineQuestionGroup(QuestionGroupForm questionGroupForm, RequestContext requestContext, boolean createMode) {
         String result = "success";
         if (!questionGroupHasErrors(questionGroupForm, requestContext)) {
@@ -123,7 +125,13 @@ public class QuestionGroupController extends QuestionnaireController {
                 if (containsCreateLoanEventSource(questionGroupForm.getEventSources()) && questionGroupForm.getApplyToAllLoanProducts()) {
                     questionnaireServiceFacade.applyToAllLoanProducts(questionGroupId);
                 }
-            } catch (SystemException e) {
+            }
+            catch (AccessDeniedException e) {
+                constructAndLogSystemError(requestContext.getMessageContext(),
+                        new SystemException(QuestionnaireConstants.MISSING_PERMISSION_TO_ACTIVATE_QG, e));
+                result = "failure";
+            }
+            catch (SystemException e) {
                 constructAndLogSystemError(requestContext.getMessageContext(), e);
                 result = "failure";
             }

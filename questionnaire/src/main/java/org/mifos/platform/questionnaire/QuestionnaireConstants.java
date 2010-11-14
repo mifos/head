@@ -6,6 +6,7 @@ public class QuestionnaireConstants {
     public static final String ANSWER_TYPE_NOT_PROVIDED = "questionnaire.error.AnswerTypeNotProvided";
     public static final String QUESTION_TITLE_DUPLICATE = "questionnaire.error.DuplicateQuestion";
     public static final String QUESTION_TITILE_MATCHES_EXISTING_QUESTION = "questionnaire.error.QuestionTitleMatchesExistingQuestion";
+    public static final String MISSING_PERMISSION_TO_ACTIVATE_QG = "questionnaire.error.activation.not.allowed";
     public static final String QUESTION_GROUP_TITLE_NOT_PROVIDED = "questionnaire.error.QuestionGroupTitleNotProvided";
     public static final String QUESTION_GROUP_SECTION_NOT_PROVIDED = "questionnaire.error.QuestionGroupSectionNotProvided";
     public static final String QUESTION_GROUP_NOT_FOUND = "questionnaire.error.questionGroup.notFound";

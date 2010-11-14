@@ -78,12 +78,12 @@ public class AuditLogServiceImpl implements AuditLogService {
                     if (!fieldValue.equals("")) {
                         if (oldFieldValue != null && !oldFieldValue.equals("")) {
                             if (!oldFieldValue.equals(fieldValue)) {
-                                auditLogRecords.add(new AuditLogRecord(questionGroupName + "/" + sectionName + "/" + fieldName,
+                                auditLogRecords.add(new AuditLogRecord(trimFieldName(questionGroupName + "/" + sectionName + "/" + fieldName),
                                         oldFieldValue, fieldValue, auditLog));
                             }
                         }
                         else {
-                            auditLogRecords.add(new AuditLogRecord(questionGroupName + "/" + sectionName + "/" + fieldName,
+                            auditLogRecords.add(new AuditLogRecord(trimFieldName(questionGroupName + "/" + sectionName + "/" + fieldName),
                                     "-", fieldValue, auditLog));
                         }
                     }
@@ -94,6 +94,10 @@ public class AuditLogServiceImpl implements AuditLogService {
                 auditLog.save();
             }
         }
+    }
+
+    private String trimFieldName(String fieldName) {
+        return fieldName.length() > 100 ? fieldName.substring(0, 97) + "..." : fieldName;
     }
 
 }
