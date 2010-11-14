@@ -815,22 +815,29 @@ public class ClientBO extends CustomerBO {
     }
 
     private boolean isSameGroup(final GroupBO group) {
+        return isSameGroup(group.getCustomerId());
+    }
+
+    private boolean isSameGroup(final Integer groupId) {
 
         boolean isSameGroup = false;
         if (this.getParentCustomer() != null) {
-            isSameGroup = getParentCustomer().getCustomerId().equals(group.getCustomerId());
+            isSameGroup = getParentCustomer().getCustomerId().equals(groupId);
         }
 
         return isSameGroup;
     }
 
+
+    public void validateIsSameGroup(Integer groupId) throws CustomerException {
+        if (isSameGroup(groupId)) {
+            throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
+        }
+    }
+
     public void validateReceivingGroup(final GroupBO toGroup) throws CustomerException {
         if (toGroup == null) {
             throw new CustomerException(CustomerConstants.INVALID_PARENT);
-        }
-
-        if (isSameGroup(toGroup)) {
-            throw new CustomerException(CustomerConstants.ERRORS_SAME_PARENT_TRANSFER);
         }
 
         validateForGroupStatus(toGroup.getStatus());

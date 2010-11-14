@@ -421,7 +421,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionGroup.setPpi(questionGroupDto.isPpi());
         questionGroup.setEventSources(mapEventSourceDtoToEntity(questionGroupDto.getEventSourceDtos()));
         questionGroup.setTitle(questionGroupDto.getTitle());
-        questionGroup.setState(QuestionGroupState.ACTIVE);
+        questionGroup.setState(questionGroupDto.isActive() ? QuestionGroupState.ACTIVE : QuestionGroupState.INACTIVE);
         questionGroup.setSections(mapToSectionsFromDtos(questionGroupDto.getSections()));
         return questionGroup;
     }
@@ -499,7 +499,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionEntity.setAnswerType(mapToAnswerType(questionDto.getType()));
         questionEntity.setNumericMin(questionDto.getMinValue());
         questionEntity.setNumericMax(questionDto.getMaxValue());
-        questionEntity.setQuestionState(QuestionState.ACTIVE);
+        questionEntity.setQuestionState(questionDto.isActive() ? QuestionState.ACTIVE : QuestionState.INACTIVE);
         questionEntity.setChoices(mapToChoices(questionDto.getChoices()));
         return questionEntity;
     }
