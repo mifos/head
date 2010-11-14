@@ -235,6 +235,7 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-testFramework</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
@@ -498,6 +499,7 @@
         <dependency>
             <groupId>org.dbunit</groupId>
             <artifactId>dbunit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>commons-lang</groupId>

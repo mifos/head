@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import junit.framework.Assert;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -51,7 +50,7 @@ import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 import org.dbunit.operation.DatabaseOperation;
 import org.dbunit.util.TableFormatter;
 import org.joda.time.DateTime;
-import org.mifos.core.MifosRuntimeException;
+import org.junit.Assert;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -235,7 +234,7 @@ public class DbUnitUtilities {
         ClassPathResource resource = new ClassPathResource(directory + filename);
         File file = resource.getFile();
         if (file == null) {
-            throw new MifosRuntimeException("Couldn't find file:" + filename);
+            throw new RuntimeException("Couldn't find file:" + filename);
         }
         FlatXmlDataSetBuilder fb = new FlatXmlDataSetBuilder();
         fb.setColumnSensing(true);
