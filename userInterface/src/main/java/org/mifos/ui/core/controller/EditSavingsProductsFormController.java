@@ -60,7 +60,9 @@ public class EditSavingsProductsFormController {
 
 	@InitBinder
     protected void initBinder(WebDataBinder binder) {
-        binder.setValidator(new SavingsProductFormValidator());
+        LazyBindingErrorProcessor errorProcessor = new LazyBindingErrorProcessor();
+        binder.setValidator(new SavingsProductFormValidator(errorProcessor));
+        binder.setBindingErrorProcessor(errorProcessor);
     }
 
     @RequestMapping(method = RequestMethod.GET)
