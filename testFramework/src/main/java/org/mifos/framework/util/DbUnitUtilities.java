@@ -234,7 +234,7 @@ public class DbUnitUtilities {
         ClassPathResource resource = new ClassPathResource(directory + filename);
         File file = resource.getFile();
         if (file == null) {
-            throw new RuntimeException("Couldn't find file:" + filename);
+            throw new FileNotFoundException("Couldn't find file:" + filename);
         }
         FlatXmlDataSetBuilder fb = new FlatXmlDataSetBuilder();
         fb.setColumnSensing(true);
