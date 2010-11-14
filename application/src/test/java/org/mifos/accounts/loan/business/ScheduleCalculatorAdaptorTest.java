@@ -65,7 +65,7 @@ public class ScheduleCalculatorAdaptorTest {
     }
 
     @Test
-    public void shouldComputeOverdueForDecliningPrincipalBalance() {
+    public void shouldComputeExtraInterestForDecliningPrincipalBalance() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         Mockito.when(loanBO.getInterestType()).thenReturn(new InterestTypesEntity(InterestType.DECLINING_PB));
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
@@ -74,7 +74,7 @@ public class ScheduleCalculatorAdaptorTest {
         Mockito.when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
         Mockito.when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
 
-        scheduleCalculatorAdaptor.computeOverdue(loanBO, getDate(30, 10, 2010));
+        scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
 
         Mockito.verify(loanBO, Mockito.times(1)).getInterestRate();
         Mockito.verify(loanBO, Mockito.times(1)).getLoanScheduleEntities();
@@ -83,14 +83,14 @@ public class ScheduleCalculatorAdaptorTest {
         Mockito.verify(loanBO, Mockito.times(1)).getInterestRate();
         Mockito.verify(loanBO, Mockito.times(1)).getLoanScheduleEntityMap();
 
-        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithPenalties = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(0), 0.0);
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(1), 0.46);
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(2), 0.0);
+        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithExtraInterest = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(0), 0.0);
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(1), 0.46);
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(2), 0.0);
     }
     
     @Test
-    public void shouldComputeNotOverdueForFlatInterestType() {
+    public void shouldNotComputeExtraInterestForFlatInterestType() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         Mockito.when(loanBO.getInterestType()).thenReturn(new InterestTypesEntity(InterestType.FLAT));
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
@@ -99,7 +99,7 @@ public class ScheduleCalculatorAdaptorTest {
         Mockito.when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
         Mockito.when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
 
-        scheduleCalculatorAdaptor.computeOverdue(loanBO, getDate(30, 10, 2010));
+        scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
 
         Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
         Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntities();
@@ -108,14 +108,14 @@ public class ScheduleCalculatorAdaptorTest {
         Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
         Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntityMap();
 
-        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithPenalties = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(0), 0.0);
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(1), 0.0);
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(2), 0.0);
+        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithExtraInterest = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(0), 0.0);
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(1), 0.0);
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(2), 0.0);
     }
 
     @Test
-    public void shouldComputeNotOverdueForEqualPrincipalInstallments() {
+    public void shouldNotComputeExtraInterestForEqualPrincipalInstallments() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         Mockito.when(loanBO.getInterestType()).thenReturn(new InterestTypesEntity(InterestType.DECLINING_EPI));
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
@@ -124,7 +124,7 @@ public class ScheduleCalculatorAdaptorTest {
         Mockito.when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
         Mockito.when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
 
-        scheduleCalculatorAdaptor.computeOverdue(loanBO, getDate(30, 10, 2010));
+        scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
 
         Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
         Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntities();
@@ -133,14 +133,14 @@ public class ScheduleCalculatorAdaptorTest {
         Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
         Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntityMap();
 
-        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithPenalties = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(0), 0.0);
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(1), 0.0);
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(2), 0.0);
+        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithExtraInterest = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(0), 0.0);
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(1), 0.0);
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(2), 0.0);
     }
 
     @Test
-    public void shouldComputeNotOverdueForCompoundInterestType() {
+    public void shouldNotComputeExtraInterestForCompoundInterestType() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         Mockito.when(loanBO.getInterestType()).thenReturn(new InterestTypesEntity(InterestType.COMPOUND));
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
@@ -149,7 +149,7 @@ public class ScheduleCalculatorAdaptorTest {
         Mockito.when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
         Mockito.when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
 
-        scheduleCalculatorAdaptor.computeOverdue(loanBO, getDate(30, 10, 2010));
+        scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
 
         Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
         Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntities();
@@ -158,14 +158,14 @@ public class ScheduleCalculatorAdaptorTest {
         Mockito.verify(loanBO, Mockito.times(0)).getInterestRate();
         Mockito.verify(loanBO, Mockito.times(0)).getLoanScheduleEntityMap();
 
-        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithPenalties = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(0), 0.0);
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(1), 0.0);
-        assertPenalty(loanScheduleEntitiesWithPenalties.get(2), 0.0);
+        ArrayList<LoanScheduleEntity> loanScheduleEntitiesWithExtraInterest = new ArrayList<LoanScheduleEntity>(loanBO.getLoanScheduleEntities());
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(0), 0.0);
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(1), 0.0);
+        assertExtraInterest(loanScheduleEntitiesWithExtraInterest.get(2), 0.0);
     }
 
-    private void assertPenalty(LoanScheduleEntity loanScheduleEntity, double penalty) {
-        Assert.assertThat(loanScheduleEntity.getPenalty().getAmount().doubleValue(), is(penalty));
+    private void assertExtraInterest(LoanScheduleEntity loanScheduleEntity, double extraInterest) {
+        Assert.assertThat(loanScheduleEntity.getExtraInterest().getAmount().doubleValue(), is(extraInterest));
     }
 
     @Test
@@ -183,33 +183,33 @@ public class ScheduleCalculatorAdaptorTest {
     }
 
     @Test
-    public void shouldCopyInstallmentOverdueToPenaltyInLoanScheduleEntities() {
+    public void shouldPopulateExtraInterestInLoanScheduleEntities() {
         List<Installment> installments = getInstallments();
         Schedule schedule = new Schedule(getDate(23, 9, 2010), DAILY_INTEREST_RATE, LOAN_AMOUNT, installments);
         for (int i = 0; i < installments.size(); i++) {
-            installments.get(i).setOverdueInterest(new BigDecimal(i));
+            installments.get(i).setExtraInterest(new BigDecimal(i));
         }
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         Map<Integer, LoanScheduleEntity> loanScheduleEntityMap = getLoanScheduleEntityMap(loanScheduleEntities);
-        scheduleCalculatorAdaptor.copyInstallmentOverdueToPenaltyInLoanScheduleEntities(schedule, loanScheduleEntityMap);
-        Assert.assertEquals(loanScheduleEntityMap.get(1).getPenalty(), new Money(rupee, 0d));
-        Assert.assertEquals(loanScheduleEntityMap.get(2).getPenalty(), new Money(rupee, 1d));
-        Assert.assertEquals(loanScheduleEntityMap.get(3).getPenalty(), new Money(rupee, 2d));
+        scheduleCalculatorAdaptor.populateExtraInterestInLoanScheduleEntities(schedule, loanScheduleEntityMap);
+        assertExtraInterest(loanScheduleEntityMap.get(1),0d);
+        assertExtraInterest(loanScheduleEntityMap.get(2),1d);
+        assertExtraInterest(loanScheduleEntityMap.get(3),2d);
     }
 
     @Test
-    public void shouldComputeAndAddOverdueInterestToLoanScheduleEntities() {
+    public void shouldComputeAndExtraInterestToLoanScheduleEntities() {
         List<Installment> installments = getInstallments();
         Schedule schedule = new Schedule(getDate(23, 9, 2010), DAILY_INTEREST_RATE, LOAN_AMOUNT, installments);
-        new ScheduleCalculator().computeOverdueInterest(schedule, getDate(30, 10, 2010));
+        new ScheduleCalculator().computeExtraInterest(schedule, getDate(30, 10, 2010));
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         Map<Integer, LoanScheduleEntity> loanScheduleEntityMap = getLoanScheduleEntityMap(loanScheduleEntities);
-        Assert.assertThat(schedule.getInstallments().get(2).getOverdueInterest().doubleValue(), is(0.46));
+        Assert.assertThat(schedule.getInstallments().get(2).getExtraInterest().doubleValue(), is(0.46));
 
-        scheduleCalculatorAdaptor.copyInstallmentOverdueToPenaltyInLoanScheduleEntities(schedule, loanScheduleEntityMap);
+        scheduleCalculatorAdaptor.populateExtraInterestInLoanScheduleEntities(schedule, loanScheduleEntityMap);
         for (Installment installment : installments) {
             LoanScheduleEntity loanScheduleEntity = loanScheduleEntityMap.get(installment.getId());
-            Assert.assertEquals(loanScheduleEntity.getPenalty(), new Money(rupee, installment.getOverdueInterest()));
+            assertExtraInterest(loanScheduleEntity,installment.getExtraInterest().doubleValue());
         }
     }
 
@@ -236,9 +236,9 @@ public class ScheduleCalculatorAdaptorTest {
         return installments;
     }
 
-    private Installment getInstallment(int id, Date dueDate, double principal, double interest, double overdueInterest) {
+    private Installment getInstallment(int id, Date dueDate, double principal, double interest, double extraInterest) {
         Installment installment = new Installment(id, dueDate, BigDecimal.valueOf(principal), BigDecimal.valueOf(interest), BigDecimal.ZERO);
-        installment.setOverdueInterest(BigDecimal.valueOf(overdueInterest));
+        installment.setExtraInterest(BigDecimal.valueOf(extraInterest));
         return installment;
     }
 

@@ -29,14 +29,15 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <tiles:insert definition=".clientsacclayoutsearchmenu">
 	<tiles:put name="body" type="string">
-	<span id="page.id" title="LoanRepayment" />	
-	<script>
-			function fun_return(form)
-					{
-						form.action="loanAccountAction.do?method=get";
-						form.submit();
-					}
-	</script>
+	<span id="page.id" title="LoanRepayment" />
+        <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
+        <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="pages/js/datejs/date.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
+		<script type="text/javascript" src="pages/application/loan/js/loanRepayment.js"></script>
+
 		<html-el:form method="post" action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
@@ -57,17 +58,27 @@ explanation of the license and how it is applied.
 								<c:out value="${BusinessKey.loanOffering.prdOfferingName}"/>&nbsp;#
 								<c:out value="${BusinessKey.globalAccountNum}"/>-
 								</span>
-								<mifos:mifoslabel name="loan.repayment_sched" bundle="loanUIResources" /> 
-								<c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
-
+								<mifos:mifoslabel name="loan.repayment_sched" bundle="loanUIResources" />
+                                <c:choose>
+                                        <c:when test="${BusinessKey.decliningPrincipalBalance}">
+                                            <html-el:text property="scheduleViewDate" styleId="scheduleViewDate" name="loanAccountActionForm" styleClass="date-pick required" size="10" />
+                                            <html-el:button styleId="loanRepayment.view" property="viewScheduleButton"
+                                                onclick="LoanRepayment.submit(this.form,'getLoanRepaymentSchedule&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}');" styleClass="buttn" >
+                                                    <mifos:mifoslabel name="loan.view_schedule" bundle="loanUIResources" />
+                                            </html-el:button>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:out value="${loanfn:getCurrrentDate(sessionScope.UserContext.preferredLocale)}" />
+                                        </c:otherwise>
+                                </c:choose>
 							</td>
 						</tr>
-						            	<tr>
-					<logic:messagesPresent>
-					<td><br><font class="fontnormalRedBold"><span id="loanRepayment.error.message"><html-el:errors
-							bundle="accountsUIResources" /></span></font></td>
-						</logic:messagesPresent>
-				</tr>
+                        <tr>
+                        <logic:messagesPresent>
+                            <td><br><font class="fontnormalRedBold"><span id="loanRepayment.error.message"><html-el:errors
+                                    bundle="accountsUIResources" /></span></font></td>
+                        </logic:messagesPresent>
+                        </tr>
 						
 					</table>
 					<c:if test="${BusinessKey.accountState.id != 6 and BusinessKey.accountState.id != 7 and BusinessKey.accountState.id !=8 and BusinessKey.accountState.id !=10}">
@@ -120,7 +131,7 @@ explanation of the license and how it is applied.
 					<table width="95%" border="0" cellpadding="0" cellspacing="0">
 						<tr>
 							<td align="center"><html-el:button styleId="loanRepayment.button.return" property="returnToAccountDetailsbutton"
-								onclick="javascript:fun_return(this.form);"
+								onclick="LoanRepayment.submit(this.form,'get');"
 								styleClass="buttn" >
 								<mifos:mifoslabel name="loan.returnToAccountDetails"
 									bundle="loanUIResources" />

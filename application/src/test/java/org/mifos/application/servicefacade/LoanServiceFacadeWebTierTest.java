@@ -402,7 +402,7 @@ public class LoanServiceFacadeWebTierTest {
         LoanBO loanBO = new LoanBO() {};
         Mockito.when(loanDao.findById(1)).thenReturn(loanBO);
         loanServiceFacade.retrieveLoanRepaymentSchedule(new UserContext(),1, new DateMidnight().toDate());
-        Mockito.verify(scheduleCalculatorAdaptor, Mockito.times(1)).computeOverdue(Mockito.eq(loanBO), Mockito.<Date>any());
+        Mockito.verify(scheduleCalculatorAdaptor, Mockito.times(1)).computeExtraInterest(Mockito.eq(loanBO), Mockito.<Date>any());
         Mockito.verify(loanDao, Mockito.times(1)).findById(1);
     }
 

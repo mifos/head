@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.business;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 
@@ -33,12 +34,12 @@ import java.util.Map;
 
 public class ScheduleCalculatorAdaptor {
 
-    public void computeOverdue(LoanBO loan, Date asOfDate) {
-        if (loan.getInterestType().asEnum() == InterestType.DECLINING_PB) {
+    public void computeExtraInterest(LoanBO loan, Date asOfDate) {
+        if (loan.isDecliningPrincipalBalance()) {
             Schedule schedule = mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
                     loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
-            schedule.computeOverdueInterest(asOfDate);
-            copyInstallmentOverdueToPenaltyInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
+            schedule.computeExtraInterest(asOfDate);
+            populateExtraInterestInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
         }
     }
 
@@ -64,11 +65,11 @@ public class ScheduleCalculatorAdaptor {
                 loanScheduleEntity.getInterest().getAmount(), loanScheduleEntity.getTotalFees().getAmount());
     }
 
-    void copyInstallmentOverdueToPenaltyInLoanScheduleEntities(Schedule schedule, Map<Integer, LoanScheduleEntity> loanScheduleEntities) {
+    void populateExtraInterestInLoanScheduleEntities(Schedule schedule, Map<Integer, LoanScheduleEntity> loanScheduleEntities) {
         for (Installment installment : schedule.getInstallments().values()) {
             LoanScheduleEntity loanScheduleEntity = loanScheduleEntities.get(installment.getId());
-            Money penalty = loanScheduleEntity.getPenalty();
-            loanScheduleEntity.setPenalty(new Money(penalty.getCurrency(), installment.getOverdueInterest()));
+            MifosCurrency mifosCurrency = loanScheduleEntity.getPrincipal().getCurrency();
+            loanScheduleEntity.setExtraInterest(new Money(mifosCurrency, installment.getExtraInterest()));
         }
     }
 }

@@ -278,7 +278,8 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.endTag("td");
 
         html.startTag("td", "width", "15%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? installment.getInterestPaid() : installment.getInterestDue()).toString());
+        html.text((isPaymentMade ? installment.getEffectiveInterestPaid() :
+                installment.getEffectiveInterestDue()).toString());
         html.endTag("td");
 
         html.startTag("td", "width", "15%", "align", "right", "class", "drawtablerow");
@@ -287,9 +288,9 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.endTag("td");
 
         html.startTag("td", "width", "18%", "align", "right", "class", "drawtablerow");
-        html.text((isPaymentMade ? installment.getPrincipalPaid().add(installment.getInterestPaid()).add(
+        html.text((isPaymentMade ? installment.getPrincipalPaid().add(installment.getEffectiveInterestPaid()).add(
                 installment.getTotalFeeAmountPaidWithMiscFee()) : installment.getPrincipalDue().add(
-                installment.getInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue())).toString());
+                installment.getEffectiveInterestDue()).add(installment.getTotalFeeDueWithMiscFeeDue())).toString());
         html.endTag("td");
 
         html.endTag("tr");
@@ -304,14 +305,14 @@ public class LoanRepaymentTag extends BodyTagSupport {
         html.text(totalPrincipal.subtract(installment.getPrincipalPaid()).toString());
         html.endTag("td");
         html.startTag("td", "width", "25%", "align", "right", "class", "drawtablerow");
-        html.text(totalInterest.subtract(installment.getInterestPaid()).toString());
+        html.text(totalInterest.subtract(installment.getEffectiveInterestPaid()).toString());
         html.endTag("td");
         html.startTag("td", "width", "25%", "align", "right", "class", "drawtablerow");
         html.text(totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee()).toString());
         html.endTag("td");
         html.startTag("td", "width", "25%", "align", "right", "class", "drawtablerow");
         html.text(totalPrincipal.add(totalInterest).add(totalFees).subtract(installment.getPrincipalPaid()).subtract(
-                installment.getInterestPaid()).subtract(installment.getTotalFeeAmountPaidWithMiscFee()).toString());
+                installment.getEffectiveInterestPaid()).subtract(installment.getTotalFeeAmountPaidWithMiscFee()).toString());
         html.endTag("td");
         html.endTag("tr");
         return html;

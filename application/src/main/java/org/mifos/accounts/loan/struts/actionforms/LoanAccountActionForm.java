@@ -40,11 +40,13 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
+import org.joda.time.DateMidnight;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.uihelpers.CashflowDataHtmlBean;
+import org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -91,7 +93,6 @@ import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
-
     public LoanAccountActionForm() {
         super();
         defaultFees = new ArrayList<FeeDto>();
@@ -159,8 +160,8 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList<PaymentDataHtmlBean>();
 
     // For Repayment day
-    private String monthRank;
 
+    private String monthRank;
     private String weekRank;
 
     private String monthWeek;
@@ -214,6 +215,8 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     private CashFlowForm cashFlowForm;
 
     private List<CashflowDataHtmlBean> cashflowDataHtmlBeans;
+
+    private String scheduleViewDate;
 
     private Money loanAmountValue;
 
@@ -434,8 +437,16 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         return disbursementDate;
     }
 
+    public String getScheduleViewDate() {
+        return scheduleViewDate;
+    }
+
     public void setDisbursementDate(String disbursementDate) {
         this.disbursementDate = disbursementDate;
+    }
+
+    public void setScheduleViewDate(String scheduleViewDate) {
+        this.scheduleViewDate = scheduleViewDate;
     }
 
     public String getGracePeriodDuration() {
@@ -547,6 +558,13 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     public Date getDisbursementDateValue(Locale locale) throws InvalidDateException {
         return DateUtils.getLocaleDate(locale, getDisbursementDate());
+    }
+
+    public Date getScheduleViewDateValue(Locale locale) throws InvalidDateException {
+        if(scheduleViewDate==null){
+            scheduleViewDate = LoanUIHelperFn.getCurrrentDate(locale);
+        }
+        return DateUtils.getLocaleDate(locale, scheduleViewDate);
     }
 
     public Date getFirstRepaymentDayValue(Locale locale) throws InvalidDateException {
@@ -1490,6 +1508,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         this.installments = installments;
     }
 
+
     private static class RemoveEmptyClientDetailsForUncheckedClients implements Predicate {
 
         private final List<String> clients2;
@@ -1511,6 +1530,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         this.businessActivityId = null;
         this.collateralTypeId = null;
         this.questionGroups = null;
+        this.scheduleViewDate = null;
     }
 
     @Override

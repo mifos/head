@@ -100,7 +100,7 @@ public class Schedule {
     private BigDecimal adjustPrincipalsForInstallments(BigDecimal balance, Date transactionDate, List<Installment> futureInstallments) {
         BigDecimal principalOutstanding = this.loanAmount.subtract(getPrincipalPaid());
         for (Installment installment : futureInstallments) {
-            balance = installment.payOverdueInterest(balance, transactionDate);
+            balance = installment.payExtraInterest(balance, transactionDate);
             balance = installment.payInterestDueTillDate(balance, transactionDate,
                     computeInterestTillDueDate(transactionDate, principalOutstanding, installment));
             balance = installment.payPrincipal(balance, transactionDate);
@@ -161,39 +161,39 @@ public class Schedule {
         return installments.get(installment.getId() + 1);
     }
 
-    public void computeOverdueInterest(Date transactionDate) {
+    public void computeExtraInterest(Date transactionDate) {
         for (Installment installment : installments.values()) {
             Installment nextInstallment = getNextInstallment(installment);
             if (installment.isPrincipalDue()) {
                 BigDecimal principalDue = installment.getPrincipalDue();
                 if (installment.isAnyPrincipalPaid()) {
-                    updateOverdueInterest(transactionDate, installment, nextInstallment, principalDue);
+                    updateExtraInterest(transactionDate, installment, nextInstallment, principalDue);
                 } else {
-                    setOverdueInterest(transactionDate, installment, nextInstallment, principalDue);
+                    setExtraInterest(transactionDate, installment, nextInstallment, principalDue);
                 }
             }
         }
     }
 
-    private void setOverdueInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
+    private void setExtraInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
         long duration = getDaysInBetween(transactionDate, installment.getDueDate());
         if (duration <= 0) return;
         if (nextInstallment != null) {
-            nextInstallment.setOverdueInterest(computeInterest(principalDue, duration));
+            nextInstallment.setExtraInterest(computeInterest(principalDue, duration));
         }
         else {
-            installment.addOverdueInterest(computeInterest(principalDue, duration));
+            installment.addExtraInterest(computeInterest(principalDue, duration));
         }
     }
 
-    private void updateOverdueInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
+    private void updateExtraInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
         long duration = getDaysInBetween(transactionDate, installment.getRecentPrincipalPaidDate());
         if (duration <= 0) return;
         if (nextInstallment != null) {
-            nextInstallment.addOverdueInterest(computeInterest(principalDue, duration));
+            nextInstallment.addExtraInterest(computeInterest(principalDue, duration));
         }
         else {
-            installment.addOverdueInterest(computeInterest(principalDue, duration));
+            installment.addExtraInterest(computeInterest(principalDue, duration));
         }
     }
 

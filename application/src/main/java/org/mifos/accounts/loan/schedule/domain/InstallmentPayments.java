@@ -57,12 +57,12 @@ public class InstallmentPayments {
         return principalPaid;
     }
 
-    public BigDecimal getOverdueInterestPaid() {
-        BigDecimal overdueInterestPaid = BigDecimal.ZERO;
+    public BigDecimal getExtraInterestPaid() {
+        BigDecimal extraInterestPaid = BigDecimal.ZERO;
         for (InstallmentPayment installmentPayment : installmentPayments) {
-            overdueInterestPaid = overdueInterestPaid.add(installmentPayment.getOverdueInterestPaid());
+            extraInterestPaid = extraInterestPaid.add(installmentPayment.getExtraInterestPaid());
         }
-        return overdueInterestPaid;
+        return extraInterestPaid;
     }
 
     public void addPayment(InstallmentPayment installmentPayment) {

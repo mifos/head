@@ -72,7 +72,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
@@ -812,7 +811,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
             final HttpServletResponse response) throws Exception {
-
+        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm)form;
+        loanAccountActionForm.clearDetailsForLoan();
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum, getUserContext(request));
 
@@ -914,10 +914,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
             @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
+        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm)form;
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
-        Date asOfDate = new DateMidnight().toDate();
-        LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId, asOfDate);
+        LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId,
+                loanAccountActionForm.getScheduleViewDateValue(userContext.getPreferredLocale()));
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 

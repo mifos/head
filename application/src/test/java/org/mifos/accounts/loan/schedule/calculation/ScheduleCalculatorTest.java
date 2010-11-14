@@ -19,7 +19,6 @@
  */
 package org.mifos.accounts.loan.schedule.calculation;
 
-import org.joda.time.DateMidnight;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -27,7 +26,6 @@ import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
 
 import static java.util.Arrays.asList;
@@ -256,7 +254,7 @@ public class ScheduleCalculatorTest {
         Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
         schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
                 asList(installment1, installment2, installment3, installment4));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(26, 12, 2010));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(26, 12, 2010));
 
         assertInstallmentPrincipals(installment1, 242.24, 242.24, 0);
         assertInstallmentPrincipals(installment2, 247.67, 247.67, 0);
@@ -344,9 +342,9 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
                 asList(installment1, installment2));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(20, 8, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.0));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(20, 8, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.0));
     }
 
     @Test
@@ -355,9 +353,9 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
                 asList(installment1, installment2));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(25, 8, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.0));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(25, 8, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.0));
     }
 
     @Test
@@ -366,9 +364,9 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
                 asList(installment1, installment2));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(25, 9, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.0));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(25, 9, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.0));
     }
 
     @Test
@@ -377,9 +375,9 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
                 asList(installment1, installment2));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(26, 9, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.16));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(26, 9, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.16));
     }
 
     @Test
@@ -388,9 +386,9 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
                 asList(installment1, installment2));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(27, 9, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.32));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(27, 9, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.32));
     }
 
     @Test
@@ -399,13 +397,13 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
                 asList(installment1, installment2));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(27, 9, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.32));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(27, 9, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.32));
         installment1.pay(BigDecimal.valueOf(100), getDate(27, 9, 2010));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(28, 9, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.43));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(28, 9, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.43));
     }
 
     @Test @Ignore("Uncomment and verify the algorithm during payment")
@@ -416,15 +414,15 @@ public class ScheduleCalculatorTest {
                 asList(installment1, installment2));
 
         scheduleCalculator.applyPayment(schedule, new BigDecimal(100), getDate(27, 9, 2010));
-        assertThat(installment2.getOverdueInterestPaid().doubleValue(), is(0.0));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.43));
+        assertThat(installment2.getExtraInterestPaid().doubleValue(), is(0.0));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.43));
 
         scheduleCalculator.applyPayment(schedule, new BigDecimal(200), getDate(27, 9, 2010));
         // overdue computed on at time of payment remains same
         // irrespective of paying off the installment through multiple payments
-        assertThat(installment2.getOverdueInterestPaid().doubleValue(), is(0.43));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.43));
+        assertThat(installment2.getExtraInterestPaid().doubleValue(), is(0.43));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.43));
     }
 
     @Test
@@ -436,9 +434,9 @@ public class ScheduleCalculatorTest {
         scheduleCalculator.applyPayment(schedule, new BigDecimal(262.64), getDate(25, 9, 2010));
         scheduleCalculator.applyPayment(schedule, new BigDecimal(262.63), getDate(25, 10, 2010));
 
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(30, 12, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(0.0));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(30, 12, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.0));
     }
 
     @Test
@@ -447,9 +445,9 @@ public class ScheduleCalculatorTest {
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
         schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
                 asList(installment1, installment2));
-        scheduleCalculator.computeOverdueInterest(schedule, getDate(20, 11, 2010));
-        assertThat(installment1.getOverdueInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getOverdueInterest().doubleValue(), is(13.17));
+        scheduleCalculator.computeExtraInterest(schedule, getDate(20, 11, 2010));
+        assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(13.17));
     }
 
     private void assertInstallmentPrincipals(Installment installment, double principal, double principalDue, double principalPaid) {
@@ -465,14 +463,14 @@ public class ScheduleCalculatorTest {
     }
 
     private void assertInstallmentForOverdueInterests(Installment installment, double overdueInterest, double overdueInterestDue, double overdueInterestPaid) {
-        assertThat(installment.getOverdueInterest().doubleValue(), is(overdueInterest));
-        assertThat(installment.getOverdueInterestDue().doubleValue(), is(overdueInterestDue));
-        assertThat(installment.getOverdueInterestPaid().doubleValue(), is(overdueInterestPaid));
+        assertThat(installment.getExtraInterest().doubleValue(), is(overdueInterest));
+        assertThat(installment.getExtraInterestDue().doubleValue(), is(overdueInterestDue));
+        assertThat(installment.getExtraInterestPaid().doubleValue(), is(overdueInterestPaid));
     }
 
     private Installment getInstallment(int id, Date dueDate, double principal, double interest, double overdueInterest) {
         Installment installment = new Installment(id, dueDate, BigDecimal.valueOf(principal), BigDecimal.valueOf(interest), BigDecimal.ZERO);
-        installment.setOverdueInterest(BigDecimal.valueOf(overdueInterest));
+        installment.setExtraInterest(BigDecimal.valueOf(overdueInterest));
         return installment;
     }
 }

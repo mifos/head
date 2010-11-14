@@ -857,7 +857,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     @Override
     public LoanBO retrieveLoanRepaymentSchedule(UserContext userContext, Integer loanId, Date asOfDate) {
         LoanBO loan = this.loanDao.findById(loanId);
-        scheduleCalculatorAdaptor.computeOverdue(loan, asOfDate);
+        scheduleCalculatorAdaptor.computeExtraInterest(loan, asOfDate);
         loan.updateDetails(userContext);
         return loan;
     }

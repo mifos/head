@@ -51,6 +51,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     // remove.
     private Money penalty;
 
+    private Money extraInterest;
+
     private Money miscFee;
 
     private Money miscPenalty;
@@ -60,6 +62,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     private Money interestPaid;
 
     private Money penaltyPaid;
+
+    private Money extraInterestPaid;
 
     private Money miscFeePaid;
 
@@ -80,11 +84,13 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         this.interest = interest;
         accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
         this.penalty = new Money(account.getCurrency());
+        this.extraInterest = new Money(account.getCurrency());
         this.miscFee = new Money(account.getCurrency());
         this.miscPenalty = new Money(account.getCurrency());
         this.principalPaid = new Money(account.getCurrency());
         this.interestPaid = new Money(account.getCurrency());
         this.penaltyPaid = new Money(account.getCurrency());
+        this.extraInterestPaid = new Money(account.getCurrency());
         this.miscFeePaid = new Money(account.getCurrency());
         this.miscPenaltyPaid = new Money(account.getCurrency());
     }
@@ -134,11 +140,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getPrincipalDue() {
-        return getPrincipal().subtract(getPrincipalPaid());
+        return principal.subtract(principalPaid);
     }
 
     public Money getInterestDue() {
-        return getInterest().subtract(getInterestPaid());
+        return interest.subtract(interestPaid);
     }
 
     public Money getPenalty() {
@@ -182,7 +188,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getMiscPenaltyDue() {
-        return getMiscPenalty().subtract(getMiscPenaltyPaid());
+        return miscPenalty.subtract(miscPenaltyPaid);
     }
 
     void setMiscPenaltyPaid(Money miscPenaltyPaid) {
@@ -190,11 +196,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getPenaltyDue() {
-        return (getPenalty().add(getMiscPenalty())).subtract(getPenaltyPaid().add(getMiscPenaltyPaid()));
+        return (penalty.add(miscPenalty)).subtract(penaltyPaid.add(miscPenaltyPaid));
     }
 
     public Money getTotalDue() {
-        return getPrincipalDue().add(getInterestDue()).add(getPenaltyDue()).add(getMiscFeeDue());
+        return principal.subtract(principalPaid).add(getInterestDue()).add(getPenaltyDue()).add(getMiscFeeDue());
 
     }
 
@@ -203,7 +209,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalPenalty() {
-        return getPenalty().add(getMiscPenalty());
+        return penalty.add(miscPenalty);
     }
 
     public Money getTotalDueWithFees() {
@@ -211,8 +217,8 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalScheduleAmountWithFees() {
-        return getPrincipal().add(
-                getInterest().add(getPenalty()).add(getTotalScheduledFeeAmountWithMiscFee()).add(getMiscPenalty()));
+        return principal.add(
+                interest.add(penalty).add(getTotalScheduledFeeAmountWithMiscFee()).add(miscPenalty));
     }
 
     void setPaymentDetails(LoanPaymentData loanPaymentData, Date paymentDate) {
@@ -334,7 +340,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalFees() {
-        return getMiscFee().add(getTotalFeeDue());
+        return miscFee.add(getTotalFeeDue());
     }
 
     public Money getTotalFeeDueWithMiscFeeDue() {
@@ -446,13 +452,13 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return versionNo;
     }
 
-
     public List<AccountFeesActionDetailEntity> getAccountFeesActionDetailsSortedByFeeId() {
         List<AccountFeesActionDetailEntity> sortedList = new ArrayList<AccountFeesActionDetailEntity>();
         sortedList.addAll(this.getAccountFeesActionDetails());
         Collections.sort(sortedList);
         return sortedList;
     }
+
 
     public RepaymentScheduleInstallment toDto(Locale userLocale) {
         return new RepaymentScheduleInstallment(this.installmentId,
@@ -462,5 +468,33 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     public boolean isSameAs(AccountActionDateEntity accountActionDateEntity) {
         return getInstallmentId().equals(accountActionDateEntity.getInstallmentId());
+    }
+
+    public Money getExtraInterest() {
+        return extraInterest==null? Money.zero():extraInterest;
+    }
+
+    public void setExtraInterest(Money extraInterest) {
+        this.extraInterest = extraInterest;
+    }
+
+    public Money getExtraInterestPaid() {
+        return extraInterestPaid==null? Money.zero():extraInterestPaid;
+    }
+
+    public void setExtraInterestPaid(Money extraInterestPaid) {
+        this.extraInterestPaid = extraInterestPaid;
+    }
+
+    public Money getExtraInterestDue() {
+        return getExtraInterest().subtract(getExtraInterestPaid());
+    }
+
+    public Money getEffectiveInterestPaid() {
+        return interestPaid.add(getExtraInterestPaid());
+    }
+
+    public Money getEffectiveInterestDue() {
+        return getInterestDue().add(getExtraInterestDue());
     }
 }

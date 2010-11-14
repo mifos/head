@@ -29,7 +29,7 @@ public class InstallmentPayment {
     private BigDecimal principalPaid;
     private BigDecimal interestPaid;
     private BigDecimal feesPaid;
-    private BigDecimal overdueInterestPaid;
+    private BigDecimal extraInterestPaid;
 
     public Date getPaidDate() {
         return paidDate;
@@ -63,12 +63,12 @@ public class InstallmentPayment {
         this.feesPaid = feesPaid;
     }
 
-    public BigDecimal getOverdueInterestPaid() {
-        return overdueInterestPaid == null ? BigDecimal.ZERO : overdueInterestPaid;
+    public BigDecimal getExtraInterestPaid() {
+        return extraInterestPaid == null ? BigDecimal.ZERO : extraInterestPaid;
     }
 
-    public void setOverdueInterestPaid(BigDecimal overdueInterestPaid) {
-        this.overdueInterestPaid = overdueInterestPaid;
+    public void setExtraInterestPaid(BigDecimal extraInterestPaid) {
+        this.extraInterestPaid = extraInterestPaid;
     }
 
     public boolean isPartialPayment() {

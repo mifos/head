@@ -26,12 +26,12 @@ import java.util.Date;
 
 public class ScheduleCalculator {
     public void applyPayment(Schedule schedule, BigDecimal amount, Date transactionDate) {
-        computeOverdueInterest(schedule, transactionDate);
+        computeExtraInterest(schedule, transactionDate);
         BigDecimal balance = schedule.payInstallmentsOnOrBefore(transactionDate, amount);
         schedule.adjustFutureInstallments(balance, transactionDate);
     }
 
-    public void computeOverdueInterest(Schedule schedule, Date transactionDate) {
-        schedule.computeOverdueInterest(transactionDate);
+    public void computeExtraInterest(Schedule schedule, Date transactionDate) {
+        schedule.computeExtraInterest(transactionDate);
     }
 }
