@@ -119,7 +119,6 @@ public class ApplyChargeActionForm extends BaseActionForm {
             if ((Methods.update.toString()).equals(methodCalled)) {
                 if (StringUtils.isNotBlank(selectedChargeFormula)) {
                     validateRate(errors, request);
-
                 }
                 validateAmount(errors, locale);
                 errors.add(super.validate(mapping, request));
@@ -141,6 +140,13 @@ public class ApplyChargeActionForm extends BaseActionForm {
     }
 
     protected void validateAmount(ActionErrors errors, Locale locale) {
+
+        if(StringUtils.isBlank(getChargeType())){
+            addError(errors, FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE, "errors.mandatoryselect",
+                    lookupLocalizedPropertyValue("account.chargetype",locale,FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE));
+            return;
+        }
+
         DoubleConversionResult conversionResult;
 
         if (isRateType()) {

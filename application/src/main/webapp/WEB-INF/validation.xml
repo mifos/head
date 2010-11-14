@@ -364,10 +364,6 @@
 		<!-- Account apply charges Action-->
 		<form name="/applyChargeAction">
 			<!-- Comment -->
-			<field property="chargeType" depends="required">
-				<msg name="required" key="errors.mandatory" bundle="accountsUIResources" />
-				<arg0 key="account.chargetype" />
-			</field>
 			<field property="charge" depends="required,validwhen">
 				<msg name="required" key="errors.mandatory" bundle="accountsUIResources" />
 				<arg0 key="account.amount" />
