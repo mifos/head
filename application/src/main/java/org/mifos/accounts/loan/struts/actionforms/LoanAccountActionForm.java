@@ -55,6 +55,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.AmountRange;
 import org.mifos.accounts.productdefinition.business.InstallmentRange;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
@@ -747,40 +748,53 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     protected void validateAdditionalFee(ActionErrors errors, Locale locale, MifosCurrency currency, HttpServletRequest request)
             throws PageExpiredException {
-        List<FeeDto> additionalFeeList = (List<FeeDto>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<FeeDto> additionalFeeList = (List<FeeDto>) SessionUtils.getAttribute(LoanConstants.ADDITIONAL_FEES_LIST,request);
         for (FeeDto additionalFee : additionalFees) {
             if (additionalFee.getAmount() != null && !additionalFee.getAmount().equals("")) {
-                if (getAdditionalFeeType(additionalFeeList, additionalFee.getFeeId()).equals(RateAmountFlag.AMOUNT)) {
 
+                FeeDto additionalFeeDetails = getAdditionalFeeType(additionalFeeList, additionalFee.getFeeId());
+
+                if (additionalFeeDetails.getFeeType().equals(RateAmountFlag.AMOUNT)) {
                     DoubleConversionResult conversionResult = validateAmount(additionalFee.getAmount(),
                             currency, LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale,
                             FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
-                    if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-                        addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
-                                LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, lookupLocalizedPropertyValue(
-                                        LoanConstants.LOAN_ADDITIONAL_FEE_KEY, locale,
-                                        FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                    if(validPositiveValue(errors, locale, conversionResult)) {
+                        validateFeeTypeIfVariableInstallmentLoanType(errors, additionalFeeDetails);
                     }
                 } else {
                     DoubleConversionResult conversionResult = validateInterest(additionalFee.getAmount(),
                             LoanConstants.LOAN_ADDITIONAL_FEE_KEY, errors, locale,
                             FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE);
-                    if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
-                        addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
-                                LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, lookupLocalizedPropertyValue(
-                                        LoanConstants.LOAN_ADDITIONAL_FEE_KEY, locale,
-                                        FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+                    if(validPositiveValue(errors, locale, conversionResult)) {
+                        validateFeeTypeIfVariableInstallmentLoanType(errors, additionalFeeDetails);
                     }
                 }
             }
         }
     }
 
-    private  RateAmountFlag getAdditionalFeeType(List<FeeDto> additionalFeeList, String feeId) {
+    private void validateFeeTypeIfVariableInstallmentLoanType(ActionErrors errors, FeeDto additionalFeeDetails) {
+        if(isVariableInstallmentsAllowed() && additionalFeeDetails.isPeriodic()) {
+            addError(errors, "AdditionalFee", ProductDefinitionConstants.PERIODIC_FEE_NOT_APPLICABLE, additionalFeeDetails.getFeeName());
+        }
+    }
+
+    private boolean validPositiveValue(ActionErrors errors, Locale locale, DoubleConversionResult conversionResult) {
+        boolean result = true;
+        if (conversionResult.getErrors().size() == 0 && !(conversionResult.getDoubleValue() > 0.0)) {
+            addError(errors, LoanConstants.LOAN_ADDITIONAL_FEE_KEY,
+                    LoanConstants.ERRORS_MUST_BE_GREATER_THAN_ZERO, lookupLocalizedPropertyValue(
+                            LoanConstants.LOAN_ADDITIONAL_FEE_KEY, locale,
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE));
+            result = false;
+        }
+        return result;
+    }
+
+    private  FeeDto getAdditionalFeeType(List<FeeDto> additionalFeeList, String feeId) {
         for (FeeDto fee : additionalFeeList) {
             if (fee.getFeeId().equals(feeId)) {
-                return fee.getFeeType();
+                return fee;
             }
         }
         return null;
