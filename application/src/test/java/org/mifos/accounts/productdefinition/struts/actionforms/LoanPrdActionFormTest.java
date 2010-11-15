@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -42,6 +43,10 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeBOTest;
+import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -68,6 +73,18 @@ public class LoanPrdActionFormTest {
     @Mock
     private ActionErrors errors;
 
+
+    @Mock
+    FeeBO periodicFeeRate;
+
+    @Mock
+    FeeBO periodicFeeAmount;
+
+    @Mock
+    FeeBO nonPeriodicFeeRate;
+
+    @Mock
+    FeeBO oneTimeFee;
 
 
     private LoanPrdActionForm loanPrdActionForm;
@@ -171,7 +188,60 @@ public class LoanPrdActionFormTest {
         loanPrdActionForm.setInterestTypes(DECLINING_PB);
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
         Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
     }
+
+    @Test
+    public void shouldNotAllowPeriodicFeeForVariableInstallmentLoanProduct() {
+        String PERIODIC_FEE_1 = "1";
+        String PERIODIC_FEE_2 = "2";
+        String NON_PERIODIC_FEE = "3";
+
+        when(periodicFeeAmount.getFeeType()).thenReturn(RateAmountFlag.AMOUNT);
+        when(periodicFeeAmount.getFeeId()).thenReturn(Short.valueOf(PERIODIC_FEE_1));
+        when(periodicFeeAmount.getFeeName()).thenReturn("periodic fee1");
+        when(periodicFeeAmount.isPeriodic()).thenReturn(true);
+
+        when(periodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
+        when(periodicFeeRate.getFeeId()).thenReturn(Short.valueOf(PERIODIC_FEE_2));
+        when(periodicFeeRate.getFeeName()).thenReturn("periodic fee2");
+        when(periodicFeeRate.isPeriodic()).thenReturn(true);
+
+        when(nonPeriodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
+        when(nonPeriodicFeeRate.getFeeId()).thenReturn(Short.valueOf(NON_PERIODIC_FEE));
+        when(nonPeriodicFeeRate.getFeeName()).thenReturn("non Periodic fee");
+        when(nonPeriodicFeeRate.isPeriodic()).thenReturn(false);
+
+
+        List<FeeBO> allPrdFees = new ArrayList<FeeBO>();
+        allPrdFees.add(periodicFeeAmount);
+        allPrdFees.add(periodicFeeRate);
+
+
+        when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute(Constants.FLOWMANAGER)).thenReturn(flowManager);
+        when(session.getAttribute(ProductDefinitionConstants.LOANPRDFEE)).thenReturn(allPrdFees);
+
+        Flow flow = new Flow();
+        try {
+            when(flowManager.getFromFlow(Mockito.anyString(),Mockito.anyString())).thenReturn(allPrdFees);
+            when(flowManager.getFlowWithValidation(FLOW_KEY)).thenReturn(flow);
+        } catch (PageExpiredException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        ActionMessageMatcher actionMessageMatcher = new ActionMessageMatcher(ProductDefinitionConstants.PERIODIC_FEE_NOT_APPLICABLE);
+
+        loanPrdActionForm.setCanConfigureVariableInstallments(true);
+        loanPrdActionForm.setPrdOfferinFees(new String[] {PERIODIC_FEE_1, PERIODIC_FEE_2, NON_PERIODIC_FEE});
+
+        loanPrdActionForm.validateSelectedFeeForVariableInstallment(request, errors);
+        Mockito.verify(errors, Mockito.times(2)).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+    }
+
+
 
     @Test
     public void anyInterestTypeCanBeSelectedForNonVariableInstallmentProductTypes() {
@@ -209,6 +279,7 @@ public class LoanPrdActionFormTest {
         loanPrdActionForm.setInterestTypes(DECLINING_PB);
         loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
         Mockito.verifyZeroInteractions(errors);
+        Mockito.reset(errors);
     }
 
     private class ActionMessageMatcher extends TypeSafeMatcher<ActionMessage> {

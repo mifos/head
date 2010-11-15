@@ -1860,6 +1860,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateVariableInstallmentPeriods(errors, locale);
         validateCashFlow(errors, locale);
         validateInterestTypeForVariableInstallment(errors, locale);
+        validateSelectedFeeForVariableInstallment(request, errors);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -1917,6 +1918,8 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateInterestGLCode(request, errors);
         validateVariableInstallmentPeriods(errors, locale);
         validateCashFlow(errors, locale);
+        validateInterestTypeForVariableInstallment(errors, locale);
+        validateSelectedFeeForVariableInstallment(request, errors);
         logger.debug("validateForEditPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
 
@@ -1991,6 +1994,51 @@ public class LoanPrdActionForm extends BaseActionForm {
                         + endDate);
     }
 
+
+
+    @SuppressWarnings("unchecked")
+    //made default access to assist testing
+    void validateSelectedFeeForVariableInstallment(HttpServletRequest request, ActionErrors errors) {
+        request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
+        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
+        try {
+            if (getPrdOfferinFees() != null && getPrdOfferinFees().length > 0) {
+
+                List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request);
+                for (String selectedFee : getPrdOfferinFees()) {
+                    FeeBO fee = getFeeFromList(fees, selectedFee);
+                    if (fee != null) {
+                       validateFeeTypeNotPeriodic(fee, errors);
+                      // validateFeeIsNotDependentOnPercentOfInterest(fee, errors);
+                    }
+                }
+            }
+            setSelectedFeeDtoOnSession(request, feeDtos);
+        } catch (PageExpiredException e) {
+        }
+    }
+
+/*    private void validateFeeIsNotDependentOnPercentOfInterest(FeeBO fee, ActionErrors errors) {
+        if((fee.getFeeType().equals(RateAmountFlag.RATE) &&
+
+    }*/
+
+    private void validateFeeTypeNotPeriodic(FeeBO fee, ActionErrors errors) {
+        if(fee.isPeriodic()) {
+            addError(errors, "Fee", ProductDefinitionConstants.PERIODIC_FEE_NOT_APPLICABLE, fee.getFeeName());
+        }
+    }
+
+    void setSelectedFeeDtoOnSession(HttpServletRequest request, List<FeeDto> feeDtos)
+            throws PageExpiredException {
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, feeDtos, request);
+    }
+
+    @SuppressWarnings("unchecked")
+    List<FeeBO> getAllLoanPrdFee(HttpServletRequest request) throws PageExpiredException {
+        return (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request);
+    }
+
     private void setSelectedFeesAndFundsAndValidateForFrequency(HttpServletRequest request, ActionErrors errors) {
         logger.debug("start setSelectedFeesAndFundsAndValidateForFrequency method "
                 + "of Loan Product Action form method :");
@@ -1999,7 +2047,7 @@ public class LoanPrdActionForm extends BaseActionForm {
         try {
             if (getPrdOfferinFees() != null && getPrdOfferinFees().length > 0) {
 
-                List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request);
+                List<FeeBO> fees = getAllLoanPrdFee(request);
                 for (String selectedFee : getPrdOfferinFees()) {
                     FeeBO fee = getFeeFromList(fees, selectedFee);
                     if (fee != null) {
@@ -2011,7 +2059,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                     }
                 }
             }
-            SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRDFEESELECTEDLIST, feeDtos, request);
+            setSelectedFeeDtoOnSession(request, feeDtos);
         } catch (PageExpiredException e) {
         }
         List<FundBO> selectedFunds = new ArrayList<FundBO>();

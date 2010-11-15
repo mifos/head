@@ -311,4 +311,5 @@ public interface ProductDefinitionConstants {
     int MAX_ALLOWED_INSTALLMENT_GAP = 999;
     String CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT = "errors.cashflowwarninginvalidformat";
     String INVALID_INTEREST_TYPE = "errors.interestTypeInvalidForVariableInstallment";
+    String PERIODIC_FEE_NOT_APPLICABLE = "errors.periodicFeeNotApplicableForVariableInstallment";
 }
