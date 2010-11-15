@@ -310,7 +310,6 @@ public class LoanPrdActionForm extends BaseActionForm {
     private Double cashFlowWarningThresholdValue;
 
 
-
     public Double getLastLoanDefaultLoanAmt1Value() {
         if (lastLoanDefaultLoanAmt1Value != null) {
             return lastLoanDefaultLoanAmt1Value;
@@ -1860,8 +1859,11 @@ public class LoanPrdActionForm extends BaseActionForm {
         validateInterestGLCode(request, errors);
         validateVariableInstallmentPeriods(errors, locale);
         validateCashFlow(errors, locale);
+        validateInterestTypeForVariableInstallment(errors, locale);
         logger.debug("validateForPreview method of Loan Product Action form method called :" + prdOfferingName);
     }
+
+
 
     // Intentionally made public to aid testing !!!
     public void setSelectedQuestionGroups(HttpServletRequest request) {
@@ -2408,6 +2410,20 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     }
 
+    void validateInterestTypeForVariableInstallment(ActionErrors errors, Locale locale) {
+        if(canConfigureVariableInstallments()) {
+            if(interestTypes != null) {
+                try {
+                    if(InterestType.fromInt(Integer.parseInt(interestTypes)).equals(InterestType.DECLINING)) {
+                        return;
+                    }
+                }catch(NumberFormatException nfe) {
+                    addError(errors,interestTypes,ProductDefinitionConstants.INVALID_INTEREST_TYPE);
+                }
+            }
+            addError(errors,interestTypes,ProductDefinitionConstants.INVALID_INTEREST_TYPE);
+        }
+    }
 
     private void validateCashFlow(ActionErrors actionErrors, Locale locale) {
 

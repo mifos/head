@@ -20,7 +20,25 @@
 
 package org.mifos.accounts.productdefinition.struts.actionforms;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import junit.framework.Assert;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,17 +50,8 @@ import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanPrdActionFormTest {
@@ -55,6 +64,11 @@ public class LoanPrdActionFormTest {
 
     @Mock
     private FlowManager flowManager;
+
+    @Mock
+    private ActionErrors errors;
+
+
 
     private LoanPrdActionForm loanPrdActionForm;
     private static final String FLOW_KEY = "FlowKey";
@@ -118,5 +132,100 @@ public class LoanPrdActionFormTest {
         questionGroupDetail.setId(id);
         questionGroupDetail.setTitle(title);
         return questionGroupDetail;
+    }
+
+    @Test
+    public void onlyDecliningInterestTypeShouldBeSelectedForVariableInstallmentLoanProduct() {
+        ActionMessageMatcher actionMessageMatcher = new ActionMessageMatcher(ProductDefinitionConstants.INVALID_INTEREST_TYPE);
+        String FLAT = "1";
+        String DECLINING = "2";
+        String COMPOUND = "3";
+        String DECLINING_EPI = "4";
+        String DECLINING_PB = "5";
+
+        loanPrdActionForm.setCanConfigureVariableInstallments(true);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(FLAT);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(DECLINING);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verifyZeroInteractions(errors);
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(COMPOUND);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(DECLINING_EPI);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(DECLINING_PB);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verify(errors).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+    }
+
+    @Test
+    public void anyInterestTypeCanBeSelectedForNonVariableInstallmentProductTypes() {
+        String FLAT = "1";
+        String DECLINING = "2";
+        String COMPOUND = "3";
+        String DECLINING_EPI = "4";
+        String DECLINING_PB = "5";
+
+        loanPrdActionForm.setCanConfigureVariableInstallments(false);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verifyZeroInteractions(errors);
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(FLAT);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verifyZeroInteractions(errors);
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(DECLINING);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verifyZeroInteractions(errors);
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(COMPOUND);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verifyZeroInteractions(errors);
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(DECLINING_EPI);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verifyZeroInteractions(errors);
+        Mockito.reset(errors);
+
+        loanPrdActionForm.setInterestTypes(DECLINING_PB);
+        loanPrdActionForm.validateInterestTypeForVariableInstallment(errors, Locale.getDefault());
+        Mockito.verifyZeroInteractions(errors);
+    }
+
+    private class ActionMessageMatcher extends TypeSafeMatcher<ActionMessage> {
+        private String errorCode;
+
+        public ActionMessageMatcher(String errorCode) {
+            this.errorCode = errorCode;
+        }
+
+        @Override
+        public boolean matchesSafely(ActionMessage actionMessage) {
+            return actionMessage != null && StringUtils.equals(actionMessage.getKey(), errorCode);
+        }
+
+        @Override
+        public void describeTo(Description arg0) {
+            arg0.appendText("ActionMessage error code should be " + errorCode);
+        }
     }
 }
