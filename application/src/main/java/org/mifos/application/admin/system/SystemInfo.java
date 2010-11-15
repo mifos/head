@@ -336,9 +336,10 @@ public class SystemInfo implements Serializable {
                 }
                 if (!line.startsWith("release")) {
                     upgradeId = Integer.parseInt(line);
+                    releaseUpgrades.add(upgradeId);
                 }
 
-                releaseUpgrades.add(upgradeId);
+
             }
 
         } catch (IOException e) {
