@@ -99,7 +99,7 @@ public class SavingsActionForm extends AccountAppActionForm implements QuestionR
             if (method.equals("preview") || method.equals("editPreview")) {
                 try {
                     SavingsOfferingBO savingsOffering = (SavingsOfferingBO) SessionUtils.getAttribute(
-                            SavingsConstants.PRDOFFCERING, request);
+                            SavingsConstants.PRDOFFERING, request);
                     if (savingsOffering.getSavingsType().getId().equals(SavingsType.MANDATORY.getValue())
                             && StringUtils.isBlank(getRecommendedAmount())) {
                         // check for mandatory amount

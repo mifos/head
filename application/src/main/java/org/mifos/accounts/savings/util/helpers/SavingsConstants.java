@@ -54,7 +54,7 @@ public class SavingsConstants {
 
     public static final String CLIENT = "client";
 
-    public static final String PRDOFFCERING = "prd";
+    public static final String PRDOFFERING = "prd";
 
     public static final String GLOBALACCOUNTNUM = "globalAccountNum";
 

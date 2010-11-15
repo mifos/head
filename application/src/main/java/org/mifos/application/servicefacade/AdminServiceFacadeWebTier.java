@@ -1488,7 +1488,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             }
 
             List<ListElement> interestCalcTypeOptions = new ArrayList<ListElement>();
-            List<InterestCalcTypeEntity> interestCalcTypes = this.loanProductDao.retrieveInterestCalcTypes();
+            List<InterestCalcTypeEntity> interestCalcTypes = this.savingsProductDao.retrieveInterestCalculationTypes();
             for (InterestCalcTypeEntity entity : interestCalcTypes) {
                 interestCalcTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
             }
@@ -1711,7 +1711,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        SavingsOfferingBO newSavingsDetails = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
+        SavingsOfferingBO newSavingsDetails = new SavingsProductAssembler(this.loanProductDao, this.savingsProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
 
         UserContext userContext = new UserContext();
         userContext.setBranchId(user.getBranchId());
@@ -1772,7 +1772,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        SavingsOfferingBO savingsProduct = new SavingsProductAssembler(this.loanProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
+        SavingsOfferingBO savingsProduct = new SavingsProductAssembler(this.loanProductDao, this.savingsProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
 
         HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 

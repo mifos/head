@@ -20,10 +20,14 @@
 
 package org.mifos.accounts.productdefinition.persistence;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
-import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
@@ -32,7 +36,6 @@ import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
-import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -50,11 +53,6 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -147,23 +145,6 @@ public class LoanProductDaoHibernate implements LoanProductDao {
     @Override
     public List<GracePeriodTypeEntity> retrieveGracePeriodTypes() {
         return doFetchListOfMasterDataFor(GracePeriodTypeEntity.class);
-    }
-
-    @Override
-    public List<InterestCalcTypeEntity> retrieveInterestCalcTypes() {
-        return doFetchListOfMasterDataFor(InterestCalcTypeEntity.class);
-    }
-
-    @Override
-    public InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType) {
-        InterestCalcTypeEntity result = null;
-        List<InterestCalcTypeEntity> allSavingsTypes = retrieveInterestCalcTypes();
-        for (InterestCalcTypeEntity entity : allSavingsTypes) {
-            if (entity.getId().equals(interestCalcType.getValue())) {
-                result = entity;
-            }
-        }
-        return result;
     }
 
     @Override

@@ -20,7 +20,13 @@
 
 package org.mifos.accounts.savings.persistence;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +42,11 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
-import org.mifos.accounts.util.helpers.*;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountStates;
+import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.business.Configuration;
@@ -46,7 +56,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -55,37 +64,21 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
 public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private final int SAVINGS_CUSTOMFIELDS_NUMBER = 1;
 
     private UserContext userContext;
-
     private SavingsPersistence savingsPersistence;
-
     private AccountPersistence accountPersistence;
-
     private CustomerBO group;
-
     private CustomerBO center;
-
     private SavingsBO savings;
-
     private SavingsBO savings1;
-
     private SavingsBO savings2;
-
     private SavingsOfferingBO savingsOffering;
-
-    private SavingsOfferingBO savingsOffering1;
-
     private SavingsOfferingBO savingsOffering2;
-
+    @SuppressWarnings("unused")
     private AccountCheckListBO accountCheckList;
 
     @Before
@@ -101,7 +94,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savings = null;
         if (savings1 != null) {
             savings1 = null;
-            savingsOffering1 = null;
         }
         if (savings2 != null) {
             savings2 = null;
@@ -111,27 +103,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         group = null;
         center = null;
         accountCheckList = null;
-        savingsOffering1 = null;
         TestObjectFactory.removeObject(savingsOffering2);
         StaticHibernateUtil.flushSession();
-    }
-
-    @Test
-    public void testGetSavingsProducts() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "sdcf", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "1asq", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        List<PrdOfferingDto> products = savingsPersistence.getSavingsProducts(null, group.getCustomerLevel(),
-                new Short("2"));
-        Assert.assertEquals(2, products.size());
-        Assert.assertEquals("Offerng name for the first product do not match.", products.get(0).getPrdOfferingName(),
-                "SavingPrd1");
-        Assert.assertEquals("Offerng name for the second product do not match.", products.get(1).getPrdOfferingName(),
-                "SavingPrd2");
-
     }
 
     @Test
@@ -180,7 +153,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     public void testGetStatusChecklist() throws Exception {
         accountCheckList = TestObjectFactory.createAccountChecklist(AccountTypes.SAVINGS_ACCOUNT.getValue(),
                 AccountState.SAVINGS_PARTIAL_APPLICATION, Short.valueOf("1"));
-        List statusCheckList = accountPersistence.getStatusChecklist(Short.valueOf("13"), AccountTypes.SAVINGS_ACCOUNT
+        List<AccountCheckListBO> statusCheckList = accountPersistence.getStatusChecklist(Short.valueOf("13"), AccountTypes.SAVINGS_ACCOUNT
                 .getValue());
         Assert.assertNotNull(statusCheckList);
 

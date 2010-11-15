@@ -36,6 +36,7 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -58,9 +59,11 @@ public class SavingsProductAssembler {
 
     private final LoanProductDao loanProductDao;
     private final GeneralLedgerDao generalLedgerDao;
+    private final SavingsProductDao savingsProductDao;
 
-    public SavingsProductAssembler(LoanProductDao loanProductDao, GeneralLedgerDao generalLedgerDao) {
+    public SavingsProductAssembler(LoanProductDao loanProductDao, SavingsProductDao savingsProductDao, GeneralLedgerDao generalLedgerDao) {
         this.loanProductDao = loanProductDao;
+        this.savingsProductDao = savingsProductDao;
         this.generalLedgerDao = generalLedgerDao;
     }
 
@@ -108,7 +111,7 @@ public class SavingsProductAssembler {
             BigDecimal interestRate = savingsProductRequest.getInterestRate();
 
             InterestCalcType interestCalcType = InterestCalcType.fromInt(savingsProductRequest.getInterestCalculationType());
-            InterestCalcTypeEntity interestCalcTypeEntity = this.loanProductDao.retrieveInterestCalcType(interestCalcType);
+            InterestCalcTypeEntity interestCalcTypeEntity = this.savingsProductDao.retrieveInterestCalcType(interestCalcType);
 
             RecurrenceType recurrence = RecurrenceType.fromInt(savingsProductRequest.getInterestCalculationFrequencyPeriod().shortValue());
             Integer every = savingsProductRequest.getInterestCalculationFrequency();

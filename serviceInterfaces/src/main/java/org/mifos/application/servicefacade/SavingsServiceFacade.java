@@ -20,13 +20,17 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
+import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
+import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SavingsServiceFacade {
@@ -54,4 +58,10 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     DepositWithdrawalReferenceDto retrieveDepositWithdrawalReferenceData(Long savingsId, Integer customerId, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<PrdOfferingDto> retrieveApplicableSavingsProductsForCustomer(Integer customerId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsProductReferenceDto retrieveSavingsProductReferenceData(Integer productId);
 }

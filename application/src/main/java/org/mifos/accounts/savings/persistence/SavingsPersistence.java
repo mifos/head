@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.accounts.business.AccountBO;
@@ -45,24 +43,24 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Money;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SavingsPersistence extends Persistence {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsPersistence.class);
 
-    public List<PrdOfferingDto> getSavingsProducts(OfficeBO branch, CustomerLevelEntity customerLevel,
-            short savingsTypeId) throws PersistenceException {
-        logger.debug("In SavingsPersistence::getSavingsProducts(), customerLevelId: " + customerLevel.getId());
+    @SuppressWarnings("unchecked")
+    public List<PrdOfferingDto> getSavingsProducts(CustomerLevelEntity customerLevel) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(AccountConstants.PRDTYPEID, ProductType.SAVINGS.getValue());
         queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
         queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO, customerLevel.getProductApplicableType());
-        return executeNamedQuery(NamedQueryConstants.GET_APPLICABLE_SAVINGS_PRODUCT_OFFERINGS, queryParameters);
+        return executeNamedQuery("accounts.getApplicableSavingsProductOfferings", queryParameters);
     }
 
     public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(Short entityType)

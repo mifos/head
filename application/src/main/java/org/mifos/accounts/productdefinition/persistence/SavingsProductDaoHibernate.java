@@ -4,13 +4,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
 
 public class SavingsProductDaoHibernate implements SavingsProductDao {
@@ -80,5 +86,32 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
         queryParameters.put("prdOfferingId", productId.shortValue());
         Number activeOrInactiveAccounts = (Number) this.genericDao.executeUniqueResultNamedQuery("savingsProduct.openSavingsAccounts", queryParameters);
         return activeOrInactiveAccounts.intValue() > 0;
+    }
+
+    @Override
+    public InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType) {
+        InterestCalcTypeEntity result = null;
+        List<InterestCalcTypeEntity> allSavingsTypes = retrieveInterestCalculationTypes();
+        for (InterestCalcTypeEntity entity : allSavingsTypes) {
+            if (entity.getId().equals(interestCalcType.getValue())) {
+                result = entity;
+            }
+        }
+        return result;
+    }
+
+    @Override
+    public List<InterestCalcTypeEntity> retrieveInterestCalculationTypes() {
+        return doFetchListOfMasterDataFor(InterestCalcTypeEntity.class);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends MasterDataEntity> List<T> doFetchListOfMasterDataFor(Class<T> type) {
+        Session session = StaticHibernateUtil.getSessionTL();
+        List<T> masterEntities = session.createQuery("from " + type.getName()).list();
+        for (MasterDataEntity masterData : masterEntities) {
+            Hibernate.initialize(masterData.getNames());
+        }
+        return masterEntities;
     }
 }

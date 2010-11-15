@@ -22,8 +22,10 @@ package org.mifos.accounts.productdefinition.persistence;
 
 import java.util.List;
 
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 
 public interface SavingsProductDao {
 
@@ -34,6 +36,10 @@ public interface SavingsProductDao {
     void save(ProductTypeEntity savingsProductConfiguration);
 
     List<Object[]> findAllSavingsProducts();
+
+    InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType);
+
+    List<InterestCalcTypeEntity> retrieveInterestCalculationTypes();
 
     void save(SavingsOfferingBO savingsProduct);
 

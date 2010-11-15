@@ -54,16 +54,6 @@ public class SavingsBusinessService implements BusinessService {
         return null;
     }
 
-    public List<PrdOfferingDto> getSavingProducts(OfficeBO branch, CustomerLevelEntity customerLevel, short accountType)
-            throws ServiceException {
-        logger.debug("In SavingsBusinessService::getSavingProducts()");
-        try {
-            return savingsPersistence.getSavingsProducts(branch, customerLevel, accountType);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
     public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition() throws ServiceException {
         logger.debug("In SavingsBusinessService::retrieveCustomFieldsDefinition()");
         try {

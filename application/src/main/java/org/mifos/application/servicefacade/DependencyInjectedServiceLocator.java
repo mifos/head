@@ -330,7 +330,7 @@ public class DependencyInjectedServiceLocator {
 
     public static SavingsServiceFacade locateSavingsServiceFacade() {
         if (savingsServiceFacade == null) {
-            savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, personnelDao, customerDao);
+            savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, savingsProductDao, personnelDao, customerDao);
         }
         return savingsServiceFacade;
     }

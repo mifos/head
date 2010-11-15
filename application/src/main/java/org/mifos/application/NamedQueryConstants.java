@@ -159,7 +159,6 @@ public interface NamedQueryConstants {
     String GET_CUSTOMER_STATE_CHECKLIST = "customer.checklist";
     String GET_LAST_MEETINGDATE_FOR_CUSTOMER = "accounts.getLastMeetingDateforCustomer";
 
-    String GET_APPLICABLE_SAVINGS_PRODUCT_OFFERINGS = "accounts.getApplicableSavingsProductOfferings";
     String RETRIEVE_SAVINGS_ACCCOUNT = "accounts.retrieveSavingsAccounts";
     String RETRIEVE_SAVINGS_ACCCOUNT_FOR_CUSTOMER = "accounts.retrieveSavingsAccountsForCustomer";
     String RETRIEVE_ACCCOUNTS_FOR_CUSTOMER = "accounts.retrieveAccountsForCustomer";

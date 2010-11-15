@@ -130,7 +130,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
         SessionUtils.setAttribute(SavingsConstants.CLIENT, group, request);
-        SessionUtils.setAttribute(SavingsConstants.PRDOFFCERING, savingsOffering, request);
+        SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savingsOffering, request);
     }
 
     private void createAndAddObjects(AccountState state) throws Exception {
@@ -245,7 +245,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.SAVINGS_TYPE, request));
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, request));
         Assert.assertNotNull(SessionUtils.getAttribute(SavingsConstants.CUSTOM_FIELDS, request));
-       Assert.assertEquals(SessionUtils.getAttribute(SavingsConstants.PRDOFFCERING, request), savingsOffering);
+       Assert.assertEquals(SessionUtils.getAttribute(SavingsConstants.PRDOFFERING, request), savingsOffering);
 
     }
 
@@ -259,7 +259,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyForward("load_success");
 
-       Assert.assertEquals(SessionUtils.getAttribute(SavingsConstants.PRDOFFCERING, request), savingsOffering1);
+       Assert.assertEquals(SessionUtils.getAttribute(SavingsConstants.PRDOFFERING, request), savingsOffering1);
 
     }
 

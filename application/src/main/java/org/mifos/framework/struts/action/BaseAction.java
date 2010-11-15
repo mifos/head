@@ -41,6 +41,7 @@ import org.hibernate.HibernateException;
 import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
@@ -106,6 +107,7 @@ public abstract class BaseAction extends DispatchAction {
 
     protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     protected SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
+    protected SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
     protected MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
     protected CenterDetailsServiceFacade centerDetailsServiceFacade = DependencyInjectedServiceLocator.locateCenterDetailsServiceFacade();
@@ -132,6 +134,7 @@ public abstract class BaseAction extends DispatchAction {
         if (springAppContext != null) {
             this.customerDao = springAppContext.getBean(CustomerDao.class);
             this.savingsDao = springAppContext.getBean(SavingsDao.class);
+            this.savingsProductDao = springAppContext.getBean(SavingsProductDao.class);
             this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
             this.meetingServiceFacade = springAppContext.getBean(MeetingServiceFacade.class);
             this.centerDetailsServiceFacade = springAppContext.getBean(CenterDetailsServiceFacade.class);
@@ -245,7 +248,7 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     private void joinToken(HttpServletRequest request) throws PageExpiredException {
-        String flowKey = (String) request.getParameter(Constants.CURRENTFLOWKEY);
+        String flowKey = request.getParameter(Constants.CURRENTFLOWKEY);
         if(null == flowKey){
             flowKey = (String) request.getAttribute(Constants.CURRENTFLOWKEY);
         }

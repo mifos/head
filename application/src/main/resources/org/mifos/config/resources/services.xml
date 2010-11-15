@@ -62,6 +62,7 @@
     
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" >
         <constructor-arg ref="savingsDao" />
+        <constructor-arg ref="savingsProductDao" />
         <constructor-arg ref="personnelDao" />
         <constructor-arg ref="customerDao" />
     </bean>

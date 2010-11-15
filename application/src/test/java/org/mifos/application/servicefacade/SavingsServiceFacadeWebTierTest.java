@@ -30,11 +30,9 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.savings.interest.CalendarPeriod;
-import org.mifos.accounts.savings.interest.CalendarPeriodBuilder;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.master.business.MifosCurrency;
@@ -63,6 +61,8 @@ public class SavingsServiceFacadeWebTierTest {
     @Mock
     private SavingsDao savingsDao;
     @Mock
+    private SavingsProductDao savingsProductDao;
+    @Mock
     private PersonnelDao personnelDao;
     @Mock
     private CustomerDao customerDao;
@@ -77,7 +77,7 @@ public class SavingsServiceFacadeWebTierTest {
     public void setupAndInjectDependencies() {
         oldCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
-        savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, personnelDao, customerDao);
+        savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, savingsProductDao, personnelDao, customerDao);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setSavingsInterestScheduledEventFactory(savingsInterestScheduledEventFactory);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setTransactionHelper(transactionHelper);
 
@@ -100,21 +100,6 @@ public class SavingsServiceFacadeWebTierTest {
         Money.setDefaultCurrency(oldCurrency);
     }
 
-    /**
-     * FIXME - complete test.
-     */
-    @Ignore
-    @Test
-    public void shouldPostInterestForLastPostingPeriodOnly() {
-
-        // setup
-        LocalDate dateOfBatchJob = new LocalDate();
-        CalendarPeriod lastPostingPeriod = new CalendarPeriodBuilder().build();
-
-        // exercise
-        this.savingsServiceFacade.postInterestForLastPostingPeriod(dateOfBatchJob);
-    }
-
     @Test
     public void shouldNotTryToPostWhenNoAccountsArePendingPosting() {
 
@@ -126,7 +111,7 @@ public class SavingsServiceFacadeWebTierTest {
         when(savingsDao.retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(dateOfBatchJob)).thenReturn(emptyList);
 
         // exercise test
-        //savingsServiceFacade.batchPostInterestToSavingsAccount(dateOfBatchJob);
+        savingsServiceFacade.postInterestForLastPostingPeriod(dateOfBatchJob);
 
         // verification
         verify(savingsDao, never()).findById(anyLong());

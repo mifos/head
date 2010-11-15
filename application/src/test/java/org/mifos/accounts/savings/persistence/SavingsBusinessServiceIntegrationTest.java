@@ -20,7 +20,11 @@
 
 package org.mifos.accounts.savings.persistence;
 
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,32 +41,19 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.List;
-
 public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     private SavingsBusinessService service;
-
     private CustomerBO center;
-
     private CustomerBO group;
-
     private SavingsBO savings;
-
     private SavingsOfferingBO savingsOffering;
-
-    private SavingsOfferingBO savingsOffering1;
-
     private SavingsOfferingBO savingsOffering2;
 
     @Before
@@ -75,26 +66,8 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         savings = null;
         group = null;
         center = null;
-        savingsOffering1 = null;
         TestObjectFactory.removeObject(savingsOffering2);
         StaticHibernateUtil.flushSession();
-    }
-
-    @Test
-    public void testGetSavingProducts() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering1 = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savingsOffering2 = TestObjectFactory.createSavingsProduct("SavingPrd2", "a1lt", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        List<PrdOfferingDto> products = service.getSavingProducts(null, group.getCustomerLevel(), CustomerLevel.GROUP
-                .getValue());
-        Assert.assertEquals(Integer.valueOf("2").intValue(), products.size());
-        Assert.assertEquals("Offerng name for the first product do not match.", products.get(0).getPrdOfferingName(),
-                "SavingPrd1");
-        Assert.assertEquals("Offerng name for the second product do not match.", products.get(1).getPrdOfferingName(),
-                "SavingPrd2");
     }
 
     @Test

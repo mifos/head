@@ -34,6 +34,9 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.CalendarPeriod;
@@ -51,6 +54,7 @@ import org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetai
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -66,6 +70,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
@@ -73,6 +78,7 @@ import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
+import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -91,14 +97,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private static final Logger logger = LoggerFactory.getLogger(SavingsServiceFacadeWebTier.class);
 
     private final SavingsDao savingsDao;
+    private final SavingsProductDao savingsProductDao;
     private final PersonnelDao personnelDao;
     private final CustomerDao customerDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     private CalendarPeriodHelper interestCalculationIntervalHelper = new CalendarPeriodHelper();
     private SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory = new SavingsInterestScheduledEventFactory();
 
-    public SavingsServiceFacadeWebTier(SavingsDao savingsDao, PersonnelDao personnelDao, CustomerDao customerDao) {
+    public SavingsServiceFacadeWebTier(SavingsDao savingsDao, SavingsProductDao savingsProductDao, PersonnelDao personnelDao, CustomerDao customerDao) {
         this.savingsDao = savingsDao;
+        this.savingsProductDao = savingsProductDao;
         this.personnelDao = personnelDao;
         this.customerDao = customerDao;
     }
@@ -612,5 +620,37 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         }
 
        return new SavingsAdjustmentReferenceDto(clientName, amount, depositOrWithdrawal);
+    }
+
+    @Override
+    public List<PrdOfferingDto> retrieveApplicableSavingsProductsForCustomer(Integer customerId) {
+
+        try {
+            List<PrdOfferingDto> applicableSavingsProducts = new ArrayList<PrdOfferingDto>();
+
+            CustomerBO customer = this.customerDao.findCustomerById(customerId);
+
+            applicableSavingsProducts = new SavingsPersistence().getSavingsProducts(customer.getCustomerLevel());
+
+            return applicableSavingsProducts;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+
+
+    }
+
+    @Override
+    public SavingsProductReferenceDto retrieveSavingsProductReferenceData(Integer productId) {
+
+        SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(productId);
+
+        List<ListElement> interestCalcTypeOptions = new ArrayList<ListElement>();
+        List<InterestCalcTypeEntity> interestCalculationTypes = this.savingsProductDao.retrieveInterestCalculationTypes();
+        for (InterestCalcTypeEntity entity : interestCalculationTypes) {
+            interestCalcTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
+        }
+
+        return new SavingsProductReferenceDto(interestCalcTypeOptions, savingsProduct.toFullDto());
     }
 }

@@ -20,6 +20,17 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -60,6 +71,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -80,16 +92,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class SavingsAction extends AccountAppAction {
 
@@ -144,59 +146,56 @@ public class SavingsAction extends AccountAppAction {
         return savingsService;
     }
 
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
-
     @TransactionDemarcate(saveToken = true)
     public ActionForward getPrdOfferings(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         SavingsActionForm savingsActionForm = ((SavingsActionForm) form);
-        logger.debug(" customerId: " + savingsActionForm.getCustomerId());
         doCleanUp(savingsActionForm, request);
-        CustomerBO customer = getCustomer(getIntegerValue(savingsActionForm.getCustomerId()));
+
+        Integer customerId = Integer.valueOf(savingsActionForm.getCustomerId());
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
         SessionUtils.setAttribute(SavingsConstants.CLIENT, customer, request);
-        List<PrdOfferingDto> savingPrds = savingsService.getSavingProducts(customer.getOffice(), customer
-                .getCustomerLevel(), SavingsConstants.SAVINGS_ALL);
+
+        List<PrdOfferingDto> savingPrds = this.savingsServiceFacade.retrieveApplicableSavingsProductsForCustomer(customerId);
+
         SessionUtils.setCollectionAttribute(SavingsConstants.SAVINGS_PRD_OFFERINGS, savingPrds, request);
-        logger.info(" Retrieved " + savingPrds.size() + " Products for customerId: " + customer.getCustomerId());
+
         return mapping.findForward(AccountConstants.GET_PRDOFFERINGS_SUCCESS);
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         SavingsActionForm savingsActionForm = ((SavingsActionForm) form);
         logger.debug(" selectedPrdOfferingId: " + savingsActionForm.getSelectedPrdOfferingId());
-        loadMasterData(savingsActionForm, request);
-        loadPrdoffering(savingsActionForm, request);
-        logger.info(" Data loaded successfully ");
-        return mapping.findForward("load_success");
-    }
-
-    private void loadMasterData(SavingsActionForm actionForm, HttpServletRequest request) throws Exception {
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        SessionUtils.setCollectionAttribute(MasterConstants.INTEREST_CAL_TYPES, masterDataService
-                .retrieveMasterEntities(InterestCalcTypeEntity.class, uc.getLocaleId()), request);
-        loadMasterDataPartial(actionForm, request);
-        loadCustomFieldsForCreate(actionForm, request);
-    }
 
-    private void loadMasterDataPartial(SavingsActionForm actionForm, HttpServletRequest request) throws Exception {
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        List<InterestCalcTypeEntity> interestCalculationTypes = this.savingsProductDao.retrieveInterestCalculationTypes();
+        SessionUtils.setCollectionAttribute(MasterConstants.INTEREST_CAL_TYPES, interestCalculationTypes, request);
+
+        Integer productId = Integer.valueOf(savingsActionForm.getSelectedPrdOfferingId());
+        SavingsOfferingBO savingsOfferingBO = this.savingsProductDao.findById(productId);
+        SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savingsOfferingBO, request);
+
+        // NOTE - these details are included in SavingsProductReferenceDto but left as is to satisfy JSP at present
         SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, masterDataService.retrieveMasterEntities(
                 SavingsTypeEntity.class, uc.getLocaleId()), request);
         SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, masterDataService
                 .retrieveMasterEntities(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService
-                .retrieveCustomFieldsDefinition(), request);
-    }
 
-    private void loadCustomFieldsForCreate(SavingsActionForm actionForm, HttpServletRequest request) throws Exception {
+
+        SavingsProductReferenceDto savingsProductReferenceDto = this.savingsServiceFacade.retrieveSavingsProductReferenceData(productId);
+
+        savingsActionForm.setRecommendedAmount(savingsProductReferenceDto.getSavingsProductDetails().getAmountForDeposit().toString());
+
+
+        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService.retrieveCustomFieldsDefinition(), request);
+
         // Set Default values for custom fields
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
                 .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
@@ -209,7 +208,18 @@ public class SavingsAction extends AccountAppAction {
                         .getFieldType()));
             }
         }
-        actionForm.setAccountCustomFieldSet(customFields);
+        savingsActionForm.setAccountCustomFieldSet(customFields);
+
+        return mapping.findForward("load_success");
+    }
+
+    private void loadMasterDataPartial(UserContext uc, HttpServletRequest request) throws Exception {
+        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, masterDataService.retrieveMasterEntities(
+                SavingsTypeEntity.class, uc.getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, masterDataService
+                .retrieveMasterEntities(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService
+                .retrieveCustomFieldsDefinition(), request);
     }
 
     private void loadPrdoffering(SavingsActionForm savingsActionForm, HttpServletRequest request)
@@ -217,7 +227,7 @@ public class SavingsAction extends AccountAppAction {
 
         SavingsOfferingBO savingsOfferingBO = savingsPrdService.getSavingsProduct(getShortValue(savingsActionForm
                 .getSelectedPrdOfferingId()));
-        SessionUtils.setAttribute(SavingsConstants.PRDOFFCERING, savingsOfferingBO, request);
+        SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savingsOfferingBO, request);
 
         savingsActionForm.setRecommendedAmount(savingsOfferingBO.getRecommendedAmount().toString());
 
@@ -235,26 +245,21 @@ public class SavingsAction extends AccountAppAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         SavingsActionForm savingActionForm = (SavingsActionForm) form;
-        logger.debug("In SavingsAction::preview()");
-        CustomerBO customer = (CustomerBO) SessionUtils.getAttribute(SavingsConstants.CLIENT, request);
-        customer = getCustomer(customer.getCustomerId());
-        SessionUtils.setAttribute(SavingsConstants.IS_PENDING_APPROVAL, ProcessFlowRules
-                .isSavingsPendingApprovalStateEnabled(), request.getSession());
+        SessionUtils.setAttribute(SavingsConstants.IS_PENDING_APPROVAL, ProcessFlowRules.isSavingsPendingApprovalStateEnabled(), request.getSession());
         return createGroupQuestionnaire.fetchAppliedQuestions(mapping, savingActionForm, request, ActionForwards.preview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("In SavingsAction:previous()");
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward("previous_success");
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         SavingsActionForm savingsActionForm = ((SavingsActionForm) form);
         logger.debug("In SavingsAction::create(), accountStateId: " + savingsActionForm.getStateSelected());
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
@@ -264,7 +269,7 @@ public class SavingsAction extends AccountAppAction {
         customer.setVersionNo(version);
 
         SavingsOfferingBO savingsOfferingBO = (SavingsOfferingBO) SessionUtils.getAttribute(
-                SavingsConstants.PRDOFFCERING, request);
+                SavingsConstants.PRDOFFERING, request);
         version = savingsOfferingBO.getVersionNo();
         savingsOfferingBO = savingsPrdService.getSavingsProduct(savingsOfferingBO.getPrdOfferingId());
         savingsOfferingBO.setVersionNo(version);
@@ -294,7 +299,7 @@ public class SavingsAction extends AccountAppAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         SavingsActionForm actionForm = (SavingsActionForm) form;
         actionForm.setInput(null);
@@ -310,9 +315,9 @@ public class SavingsAction extends AccountAppAction {
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 
-        loadMasterDataPartial(actionForm, request);
+        loadMasterDataPartial(uc, request);
 
-        SessionUtils.setAttribute(SavingsConstants.PRDOFFCERING, savings.getSavingsOffering(), request);
+        SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savings.getSavingsOffering(), request);
         actionForm.setRecommendedAmount(savings.getSavingsOffering().getRecommendedAmount().toString());
 
         actionForm.clear();
@@ -559,16 +564,15 @@ public class SavingsAction extends AccountAppAction {
 
     private void doCleanUp(SavingsActionForm savingsActionForm, HttpServletRequest request) throws Exception {
         savingsActionForm.clear();
-        // remove old savings object
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
     }
 
     private String removeSign(Money amount) {
         if (amount.isLessThanZero()) {
             return amount.negate().toString();
-        } else {
-            return amount.toString();
         }
+
+        return amount.toString();
     }
 
     protected void checkPermissionForCreate(Short newState, UserContext userContext, Short flagSelected,
