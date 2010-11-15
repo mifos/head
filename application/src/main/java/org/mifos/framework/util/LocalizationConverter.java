@@ -28,6 +28,7 @@ import org.mifos.framework.util.helpers.DoubleConversionResult;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
@@ -48,7 +49,6 @@ public class LocalizationConverter {
     private short digitsBeforeDecimalForInterest;
     private short digitsBeforeDecimalForCashFlowThreshold;
     private short digitsAfterDecimalForCashFlowThreshold;
-    private double cashFlowWarningThreshold;
     // the decimalFormatLocale is introduced because the double format is not
     // supported for
     // 1.1 realease yet and the English format is still used no matter what the
@@ -58,6 +58,7 @@ public class LocalizationConverter {
     // 1.1 realease yet and the English format is still used no matter what the
     // configured locale is
     private Locale dateLocale;
+    private char minusSign;
 
     public LocalizationConverter() {
         digitsAfterDecimalForMoney = AccountingRules.getDigitsAfterDecimal();
@@ -74,7 +75,6 @@ public class LocalizationConverter {
         digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
         digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
         digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
-        cashFlowWarningThreshold = AccountingRules.getCashFlowWarningThreshold();
         digitsBeforeDecimalForCashFlowThreshold = AccountingRules.getDigitsBeforeDecimalForCashFlowThreshold();
         digitsAfterDecimalForCashFlowThreshold = AccountingRules.getDigitsAfterDecimalForCashFlowThreshold();
         currentLocale = Localization.getInstance().getMainLocale();
@@ -106,9 +106,9 @@ public class LocalizationConverter {
         dateSeparator = getDateSeparator();
     }
 
-    private boolean supportThisLocale(Locale[] locales, Locale locale) {
+    private boolean isLocaleSupported(Locale[] locales, Locale locale) {
 
-        Locale tempLocale = null;
+        Locale tempLocale;
         boolean find = false;
 
         for (Locale locale2 : locales) {
@@ -144,10 +144,9 @@ public class LocalizationConverter {
         if (currentLocale == null) {
             throw new RuntimeException("The current locale is not set for LocalizationConverter.");
         }
-        Locale[] locales = NumberFormat.getInstance().getAvailableLocales();
         // use this English locale for decimal format for 1.1 release
-        boolean find = supportThisLocale(locales, decimalFormatLocale);
-        if (find == false) {
+        boolean localeSupported = isLocaleSupported(NumberFormat.getAvailableLocales(), decimalFormatLocale);
+        if (!localeSupported) {
             throw new RuntimeException("NumberFormat class doesn't support this country code: "
                     + decimalFormatLocale.getCountry() + " and language code: " + decimalFormatLocale.getLanguage());
         }
@@ -156,10 +155,11 @@ public class LocalizationConverter {
             currentDecimalFormat = (DecimalFormat) format;
             currentDecimalFormatForMoney = buildDecimalFormat(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
                     (DecimalFormat) currentDecimalFormat.clone(), Boolean.TRUE);
-            //
             currentDecimalFormatForInterest = buildDecimalFormat(digitsBeforeDecimalForInterest,
                     digitsAfterDecimalForInterest, (DecimalFormat) currentDecimalFormat.clone(), Boolean.FALSE);
-            decimalFormatSymbol = currentDecimalFormat.getDecimalFormatSymbols().getDecimalSeparator();
+            DecimalFormatSymbols decimalFormatSymbols = currentDecimalFormat.getDecimalFormatSymbols();
+            decimalFormatSymbol = decimalFormatSymbols.getDecimalSeparator();
+            minusSign = decimalFormatSymbols.getMinusSign();
         }
     }
 
@@ -173,13 +173,38 @@ public class LocalizationConverter {
         }
         List<ConversionError> errors = checkDigits(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY,
-                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, doubleStr);
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, doubleStr, false);
         result.setErrors(errors);
         if (errors.size() > 0) {
             return result;
         }
         try {
             result.setDoubleValue(getDoubleValueForCurrentLocale(doubleStr));
+        } catch (Exception ex) {
+            // after all the checkings this is not likely to happen, but just in
+            // case
+            result.getErrors().add(ConversionError.CONVERSION_ERROR);
+        }
+        return result;
+    }
+
+    public DoubleConversionResult parseDoubleForInstallmentTotalAmount(String totalAmountStr) {
+        DoubleConversionResult result = new DoubleConversionResult();
+        if (totalAmountStr == null) {
+            List<ConversionError> errors = new ArrayList<ConversionError>();
+            errors.add(ConversionError.CONVERSION_ERROR);
+            result.setErrors(errors);
+            return result;
+        }
+        List<ConversionError> errors = checkDigits(digitsBeforeDecimalForMoney, digitsAfterDecimalForMoney,
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY,
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY, totalAmountStr, true);
+        result.setErrors(errors);
+        if (errors.size() > 0) {
+            return result;
+        }
+        try {
+            result.setDoubleValue(getDoubleValueForCurrentLocale(totalAmountStr));
         } catch (Exception ex) {
             // after all the checkings this is not likely to happen, but just in
             // case
@@ -199,7 +224,7 @@ public class LocalizationConverter {
 
         List<ConversionError> errors = checkDigits(digitsBeforeDecimalForInterest, digitsAfterDecimalForInterest,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST,
-                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST, doubleStr);
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST, doubleStr, false);
         result.setErrors(errors);
 
         if (errors.size() > 0) {
@@ -232,7 +257,7 @@ public class LocalizationConverter {
 
         List<ConversionError> errors = checkDigits(digitsBeforeDecimalForCashFlowThreshold, digitsAfterDecimalForCashFlowThreshold,
                 ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD,
-                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD, doubleStr);
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD, doubleStr, false);
         result.setErrors(errors);
 
         if (errors.size() > 0) {
@@ -261,18 +286,16 @@ public class LocalizationConverter {
     }
 
     private List<ConversionError> checkDigits(Short digitsBefore, Short digitsAfter, ConversionError errorDigitsBefore,
-            ConversionError errorDigitsAfter, String number) {
+                                              ConversionError errorDigitsAfter, String number, boolean allowNegativeValue) {
         List<ConversionError> errors = new ArrayList<ConversionError>();
-        char temp;
-        ConversionError error = null;
+        ConversionError error;
         for (int i = 0; i < number.length(); i++) {
-            if (Character.isDigit(number.charAt(i)) == false) {
-                temp = number.charAt(i);
-                if (temp != decimalFormatSymbol) {
-                    error = ConversionError.NOT_ALL_NUMBER;
-                    errors.add(error);
-                    return errors;
-                }
+            if (!Character.isDigit(number.charAt(i))) {
+                char charAt = number.charAt(i);
+                if (charAt == decimalFormatSymbol || (allowNegativeValue && charAt == minusSign)) continue;
+                error = ConversionError.NOT_ALL_NUMBER;
+                errors.add(error);
+                return errors;
 
             }
         }
@@ -356,7 +379,7 @@ public class LocalizationConverter {
         // decimalFormatLocale is the English locale used temporarily because
         // 1.1 release doesn't
         // support date/time/double localization yet
-        if (!supportThisLocale(locales, dateLocale)) {
+        if (!isLocaleSupported(locales, dateLocale)) {
             throw new RuntimeException("DateFormat class doesn't support this country code: " + dateLocale.getCountry()
                     + " and language code: " + dateLocale.getLanguage());
         }
@@ -384,7 +407,7 @@ public class LocalizationConverter {
         // doesn't
         // support date/time/double localization yet
         Locale[] locales = DateFormat.getInstance().getAvailableLocales();
-        if (!supportThisLocale(locales, dateLocale)) {
+        if (!isLocaleSupported(locales, dateLocale)) {
             throw new RuntimeException("DateFormat class doesn't support this country code: " + dateLocale.getCountry()
                     + " and language code: " + dateLocale.getLanguage());
         }

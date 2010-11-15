@@ -1,6 +1,7 @@
 package org.mifos.accounts.loan.business.service.validators;
 
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.platform.validations.Errors;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -40,9 +41,9 @@ public class InstallmentsValidatorImpl implements InstallmentsValidator {
     }
 
     @Override
-    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
+    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
         Errors errors = new Errors();
-        errors.addErrors(installmentRulesValidator.validateForMinimumInstallmentAmount(installments));
+        errors.addErrors(installmentRulesValidator.validateForMinimumInstallmentAmount(installments, variableInstallmentDetailsBO));
         return errors;
     }
 
@@ -62,7 +63,7 @@ public class InstallmentsValidatorImpl implements InstallmentsValidator {
                                                       InstallmentValidationContext installmentValidationContext,
                                                       Errors errors) {
         errors.addErrors(installmentRulesValidator.validateForDisbursementDate(installments, installmentValidationContext.getDisbursementDate()));
-        errors.addErrors(installmentRulesValidator.validateForVariableInstallments(installments, installmentValidationContext.getVariableInstallmentDetails()));
+        errors.addErrors(installmentRulesValidator.validateDueDatesForVariableInstallments(installments, installmentValidationContext.getVariableInstallmentDetails()));
         errors.addErrors(installmentRulesValidator.validateForHolidays(installments, installmentValidationContext.getFiscalCalendarRules()));
     }
 }

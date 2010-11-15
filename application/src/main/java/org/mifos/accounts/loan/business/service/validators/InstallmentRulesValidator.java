@@ -11,9 +11,9 @@ import java.util.List;
 public interface InstallmentRulesValidator {
     List<ErrorEntry> validateForDisbursementDate(List<RepaymentScheduleInstallment> installments, Date disbursementDate);
 
-    List<ErrorEntry> validateForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
+    List<ErrorEntry> validateDueDatesForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
 
     List<ErrorEntry> validateForHolidays(List<RepaymentScheduleInstallment> installments, FiscalCalendarRules fiscalCalendarRules);
 
-    List<ErrorEntry> validateForMinimumInstallmentAmount(List<RepaymentScheduleInstallment> installments);
+    List<ErrorEntry> validateForMinimumInstallmentAmount(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
 }

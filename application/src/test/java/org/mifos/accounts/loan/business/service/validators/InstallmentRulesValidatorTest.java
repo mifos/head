@@ -88,7 +88,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment7 = installmentBuilder.reset(locale).withInstallment(7).withDueDateValue("01-Dec-2010").build();
         VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(5, null, 100, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments, variableInstallmentDetails);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, "3");
         assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, "7");
     }
@@ -104,7 +104,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment7 = installmentBuilder.reset(locale).withInstallment(7).withDueDateValue("01-Dec-2010").build();
         VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, 5, 100, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments, variableInstallmentDetails);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "4");
         assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "5");
         assertErrorEntry(errorEntries.get(2), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "6");
@@ -115,7 +115,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment = installmentBuilder.reset(locale).withInstallment(1).
                 withPrincipal(new Money(rupee, "49")).withTotalValue("50").build();
         VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, null, 100, rupee);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForVariableInstallments(asList(installment), variableInstallmentDetails);
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(asList(installment), variableInstallmentDetails);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, "1");
     }
 
@@ -129,7 +129,7 @@ public class InstallmentRulesValidatorTest {
                 withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("06-Nov-2010").build();
         VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(2, 5, 50, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForVariableInstallments(installments, variableInstallmentDetails);
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments, variableInstallmentDetails);
         assertThat(errorEntries.isEmpty(), is(true));
     }
 
@@ -155,7 +155,7 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment4 =
                 getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(installments);
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForMinimumInstallmentAmount(installments, getVariableInstallmentDetails(2, 5, 50, rupee));
         assertThat(errorEntries.size(), is(3));
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "1");
         assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, "2");

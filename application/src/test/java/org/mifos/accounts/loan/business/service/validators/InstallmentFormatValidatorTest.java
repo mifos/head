@@ -112,11 +112,12 @@ public class InstallmentFormatValidatorTest {
     }
 
     @Test
-    public void shouldValidateInstallmentScheduleForTotalAmountWithLessThanZero() {
+    public void shouldNotValidateInstallmentScheduleForTotalAmountLessThanZero() {
         RepaymentScheduleInstallment installment = installmentBuilder.withInstallment(3).withDueDate("30-Nov-2010")
                 .withPrincipal(new Money(rupeeCurrency, "499.9")).withInterest(new Money(rupeeCurrency, "22.1"))
                 .withFees(new Money(rupeeCurrency, "0.0")).withTotal("-499.9").build();
-        assertForValidTotalAmount(installment, "3");
+        List<ErrorEntry> errorEntries = installmentFormatValidator.validateTotalAmountFormat(installment);
+        assertThat(errorEntries.isEmpty(), is(true));
     }
 
     @Test

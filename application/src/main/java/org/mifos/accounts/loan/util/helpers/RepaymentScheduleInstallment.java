@@ -195,4 +195,17 @@ public class RepaymentScheduleInstallment implements Serializable {
         setPrincipal(principal);
         setInterest(interest);
     }
+
+    public boolean isTotalAmountInValid() {
+        if (totalValue == null) return true;
+        if (interest != null && fees != null) {
+            Money minPayable = interest.add(fees);
+            return totalValue.compareTo(minPayable) <= 0;
+        }
+        return totalValue.isLessThanOrEqualZero();
+    }
+
+    public boolean isTotalAmountLessThan(Money minInstallmentAmount) {
+        return minInstallmentAmount != null && (totalValue == null || totalValue.isLessThan(minInstallmentAmount));
+    }
 }

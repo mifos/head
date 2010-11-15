@@ -74,7 +74,7 @@ public class InstallmentsValidatorTest {
         verify(listOfInstallmentsValidator).validateOrderingOfDueDates(installments);
 
         verify(installmentRulesValidator).validateForDisbursementDate(eq(installments), any(Date.class));
-        verify(installmentRulesValidator).validateForVariableInstallments(eq(installments), any(VariableInstallmentDetailsBO.class));
+        verify(installmentRulesValidator).validateDueDatesForVariableInstallments(eq(installments), any(VariableInstallmentDetailsBO.class));
         verify(installmentRulesValidator).validateForHolidays(eq(installments), any(FiscalCalendarRules.class));
         assertThat(errors.hasErrors(), is(false));
     }
@@ -86,8 +86,9 @@ public class InstallmentsValidatorTest {
         RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withInstallment(3).withDueDateValue("08-Nov-2010").build();
 
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
-        installmentsValidator.validateInstallmentSchedule(installments);
-        verify(installmentRulesValidator).validateForMinimumInstallmentAmount(installments);
+        VariableInstallmentDetailsBO variableInstallmentDetailsBO = new VariableInstallmentDetailsBO();
+        installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
+        verify(installmentRulesValidator).validateForMinimumInstallmentAmount(installments, variableInstallmentDetailsBO);
     }
     
     private InstallmentValidationContext getValidationContext(Date disbursementDate) {

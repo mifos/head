@@ -59,7 +59,7 @@ public class InstallmentFormatValidatorImpl implements InstallmentFormatValidato
 
     private void setTotalAmountValue(RepaymentScheduleInstallment installment, String identifier, List<ErrorEntry> errorEntries) {
         LocalizationConverter localizationConverter = new LocalizationConverter(installment.getCurrency());
-        DoubleConversionResult conversionResult = localizationConverter.parseDoubleForMoney(installment.getTotal());
+        DoubleConversionResult conversionResult = localizationConverter.parseDoubleForInstallmentTotalAmount(installment.getTotal());
         List<ConversionError> conversionErrors = conversionResult.getErrors();
         if (conversionErrors.isEmpty()) {
             installment.setTotalValue(conversionResult.getDoubleValue());

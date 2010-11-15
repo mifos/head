@@ -31,8 +31,16 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
     }
 
     @Override
-    public List<ErrorEntry> validateForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
-        return validateForVariableInstallmentDetails(installments, variableInstallmentDetailsBO);
+    public List<ErrorEntry> validateDueDatesForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
+        List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
+        if (CollectionUtils.isNotEmpty(installments)) {
+            for (int i = 1, installmentsSize = installments.size(); i < installmentsSize; i++) {
+                Date previousDueDate = installments.get(i - 1).getDueDateValue();
+                RepaymentScheduleInstallment installment = installments.get(i);
+                validateForDifferenceInDays(installment, previousDueDate, variableInstallmentDetailsBO, errorEntries);
+            }
+        }
+        return errorEntries;
     }
 
     @Override
@@ -49,39 +57,18 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
     }
 
     @Override
-    public List<ErrorEntry> validateForMinimumInstallmentAmount(List<RepaymentScheduleInstallment> installments) {
+    public List<ErrorEntry> validateForMinimumInstallmentAmount(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
         List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
+        Money minInstallmentAmount = variableInstallmentDetailsBO.getMinInstallmentAmount();
         for (RepaymentScheduleInstallment installment : installments) {
-            if(installment.getTotalValue().compareTo(installment.getInterest().add(installment.getFees())) <= 0 ){
-                String identifier = installment.getInstallmentNumberAsString();
-                errorEntries.add(new ErrorEntry(AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, identifier));
-            }
-        }
-        return errorEntries;
-    }
-
-    private List<ErrorEntry> validateForVariableInstallmentDetails(List<RepaymentScheduleInstallment> installments,
-                                                                   VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
-        List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
-        if (CollectionUtils.isNotEmpty(installments)) {
-            Money minInstallmentAmount = variableInstallmentDetailsBO.getMinInstallmentAmount();
-            validateForMinInstallmentAmount(minInstallmentAmount, installments.get(0), errorEntries);
-            for (int i = 1, installmentsSize = installments.size(); i < installmentsSize; i++) {
-                Date previousDueDate = installments.get(i - 1).getDueDateValue();
-                RepaymentScheduleInstallment installment = installments.get(i);
-                validateForDifferenceInDays(installment, previousDueDate, variableInstallmentDetailsBO, errorEntries);
-                validateForMinInstallmentAmount(minInstallmentAmount, installment, errorEntries);
-            }
-        }
-        return errorEntries;
-    }
-
-    private void validateForMinInstallmentAmount(Money minInstallmentAmount, RepaymentScheduleInstallment installment, List<ErrorEntry> errorEntries) {
-        Money total = installment.getTotalValue();
-        if (total != null && total.isLessThan(minInstallmentAmount)) {
             String identifier = installment.getInstallmentNumberAsString();
-            errorEntries.add(new ErrorEntry(INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, identifier));
+            if (installment.isTotalAmountInValid()) {
+                errorEntries.add(new ErrorEntry(AccountConstants.INSTALLMENT_AMOUNT_LESS_THAN_INTEREST_FEE, identifier));
+            } else if (installment.isTotalAmountLessThan(minInstallmentAmount)) {
+                errorEntries.add(new ErrorEntry(INSTALLMENT_AMOUNT_LESS_THAN_MIN_AMOUNT, identifier));
+            }
         }
+        return errorEntries;
     }
 
     private void validateForDifferenceInDays(RepaymentScheduleInstallment installment, Date previousDueDate,

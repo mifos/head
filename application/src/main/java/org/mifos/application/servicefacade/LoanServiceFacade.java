@@ -111,5 +111,5 @@ public interface LoanServiceFacade {
 
     void generateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, Money loanAmount, Double interestRate, Date disbursementDate);
 
-    Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments);
+    Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
 }

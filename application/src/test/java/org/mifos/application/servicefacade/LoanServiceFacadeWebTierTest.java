@@ -39,6 +39,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -391,10 +392,11 @@ public class LoanServiceFacadeWebTierTest {
     public void shouldValidateInstallmentSchedule() {
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
         Errors expectedErrors = new Errors();
-        when(installmentsValidator.validateInstallmentSchedule(installments)).thenReturn(expectedErrors);
-        Errors errors = loanServiceFacade.validateInstallmentSchedule(installments);
+        VariableInstallmentDetailsBO variableInstallmentDetailsBO = new VariableInstallmentDetailsBO();
+        when(installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO)).thenReturn(expectedErrors);
+        Errors errors = loanServiceFacade.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
         assertThat(errors, is(expectedErrors));
-        verify(installmentsValidator).validateInstallmentSchedule(installments);
+        verify(installmentsValidator).validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
     }
 
     @Test

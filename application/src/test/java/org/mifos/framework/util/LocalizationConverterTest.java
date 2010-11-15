@@ -20,20 +20,24 @@
 
 package org.mifos.framework.util;
 
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
 import org.junit.Ignore;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.testng.annotations.Test;
+
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
 public class LocalizationConverterTest extends TestCase {
@@ -160,6 +164,19 @@ public class LocalizationConverterTest extends TestCase {
         AccountingRules.setDigitsAfterDecimal(digitsAfterForMoneySaved);
         converter.setCurrentLocale(locale);
 
+    }
+
+    public void testParseDoubleForInstallmentTotalAmount() {
+        MifosCurrency mifosCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        LocalizationConverter localizationConverter = new LocalizationConverter(mifosCurrency);
+        DoubleConversionResult result = localizationConverter.parseDoubleForInstallmentTotalAmount("-478.2");
+        assertThat(result.getDoubleValue(), is(-478.2));
+        result = localizationConverter.parseDoubleForInstallmentTotalAmount("478.2");
+        assertThat(result.getDoubleValue(), is(478.2));
+        result = localizationConverter.parseDoubleForInstallmentTotalAmount("2,59");
+        assertThat(result.getErrors().get(0), is(ConversionError.NOT_ALL_NUMBER));
+        result = localizationConverter.parseDoubleForInstallmentTotalAmount("222222222111111.5");
+        assertThat(result.getErrors().get(0), is(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY));
     }
 
     public void testParseDoubleForInterest() {

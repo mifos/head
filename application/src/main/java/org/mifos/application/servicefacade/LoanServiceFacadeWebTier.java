@@ -1140,8 +1140,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
-        return installmentsValidator.validateInstallmentSchedule(installments);
+    public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
+        return installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
     }
 
     private Money computeInterestAmount(Double dailyInterestFactor, Money principalOutstanding,
