@@ -979,27 +979,28 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), transferToOffice.getOfficeId());
 
-        group.makeCustomerMovementEntries(transferToOffice);
-        group.setPersonnel(null);
-
-        CustomerBO oldParentOfGroup = group.getParentCustomer();
-
-        String searchId = null;
-        if (oldParentOfGroup != null) {
-            oldParentOfGroup.incrementChildCount();
-            searchId = oldParentOfGroup.getSearchId() + "." + oldParentOfGroup.getMaxChildCount();
-        } else {
-            int newSearchIdSuffix = this.customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(group.getOfficeId());
-            searchId = GroupConstants.PREFIX_SEARCH_STRING + (newSearchIdSuffix + 1);
-        }
-        group.setSearchId(searchId);
-        group.setUpdateDetails();
         try {
             hibernateTransactionHelper.startTransaction();
             hibernateTransactionHelper.beginAuditLoggingFor(group);
+
+            group.makeCustomerMovementEntries(transferToOffice);
+            group.setPersonnel(null);
             if (group.isActive()) {
                 group.setCustomerStatus(new CustomerStatusEntity(CustomerStatus.GROUP_HOLD));
             }
+
+            CustomerBO oldParentOfGroup = group.getParentCustomer();
+
+            String searchId = null;
+            if (oldParentOfGroup != null) {
+                oldParentOfGroup.incrementChildCount();
+                searchId = oldParentOfGroup.getSearchId() + "." + oldParentOfGroup.getMaxChildCount();
+            } else {
+                int newSearchIdSuffix = this.customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(group.getOfficeId());
+                searchId = GroupConstants.PREFIX_SEARCH_STRING + (newSearchIdSuffix + 1);
+            }
+            group.setSearchId(searchId);
+            group.setUpdateDetails();
 
             if (oldParentOfGroup != null) {
                 customerDao.save(oldParentOfGroup);
