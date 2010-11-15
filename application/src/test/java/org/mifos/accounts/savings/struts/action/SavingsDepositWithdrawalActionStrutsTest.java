@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
@@ -330,8 +331,11 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         createCenterAndGroup();
 
         savingsOffering = new SavingsProductBuilder().mandatory().appliesToCentersOnly().buildForIntegrationTests();
-        savings = new SavingsAccountBuilder().withSavingsProduct(savingsOffering).withDepositOf("500")
-                .withCustomer(center).build();
+        savings = new SavingsAccountBuilder().withSavingsProduct(savingsOffering)
+                                             .withCustomer(center)
+                                             .withActivationDate(new DateTime().minusDays(7))
+                                             .withDepositOn("500", new DateTime().minusDays(2))
+                                             .build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsOffering, savings);
 
         savings = IntegrationTestObjectMother.findSavingsAccountById(savings.getAccountId().longValue());
