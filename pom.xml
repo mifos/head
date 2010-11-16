@@ -35,7 +35,6 @@
         <spring.sec.version>3.0.4.RELEASE</spring.sec.version>
         <spring.web.version>2.2.1.RELEASE</spring.web.version>
         <slf4j.version>1.5.8</slf4j.version>
-        <aspectj.version>1.6.7</aspectj.version>
     </properties>
     <modules>
         <module>common</module>
@@ -203,12 +202,7 @@
             <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
-                <version>${aspectj.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.aspectj</groupId>
-                <artifactId>aspectjweaver</artifactId>
-                <version>${aspectj.version}</version>
+                <version>1.5.4</version>
             </dependency>
             <dependency>
                 <groupId>org.dbunit</groupId>
@@ -264,6 +258,11 @@
                         <artifactId>ehcache</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>1.6.1</version>
             </dependency>
             <dependency>
                 <groupId>mysql</groupId>
