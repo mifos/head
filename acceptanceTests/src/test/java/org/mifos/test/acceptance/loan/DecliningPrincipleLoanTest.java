@@ -75,7 +75,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         dataSetup.createClient(clientName, officeName, userName);
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyDecliningPrincipleLoan() throws Exception {
 
