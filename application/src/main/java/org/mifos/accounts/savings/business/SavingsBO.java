@@ -58,6 +58,7 @@ import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
 import org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -83,6 +84,7 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -134,8 +136,7 @@ public class SavingsBO extends AccountBO {
 
     private final SavingsHelper helper = new SavingsHelper();
     private SavingsTransactionActivityHelper savingsTransactionActivityHelper = new SavingsTransactionActivityHelperImpl();
-    private SavingsPaymentStrategy savingsPaymentStrategy = new SavingsPaymentStrategyImpl(
-            savingsTransactionActivityHelper);
+    private SavingsPaymentStrategy savingsPaymentStrategy = new SavingsPaymentStrategyImpl(savingsTransactionActivityHelper);
     private SavingsPersistence savingsPersistence = null;
 
     @Deprecated
@@ -186,15 +187,133 @@ public class SavingsBO extends AccountBO {
     }
 
     /**
-     * default constructor for hibernate usage
+     * Responsible for creating savings account in valid initial state.
      */
-    public SavingsBO() {
-        // default constructor for hibernate
+    public static SavingsBO createIndividalSavingsAccount(CustomerBO customer, SavingsOfferingBO savingsProduct,
+            Money recommendedOrMandatoryAmount, AccountState savingsAccountState,
+            List<CustomerCustomFieldEntity> savingsCustomFields, LocalDate createdDate, Integer createdById,
+            CalendarEvent calendarEvents, PersonnelBO createdBy) {
+
+        SavingsAccountActivationDetail activationDetails = determineAccountActivationDetails(customer, savingsProduct, recommendedOrMandatoryAmount, savingsAccountState, calendarEvents);
+
+        RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
+        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy);
+
+        return savingsAccount;
+    }
+
+    public static SavingsBO createJointSavingsAccount(CustomerBO customer, SavingsOfferingBO savingsProduct,
+            Money recommendedOrMandatoryAmount, AccountState savingsAccountState,
+            List<CustomerCustomFieldEntity> savingsCustomFields, LocalDate createdDate, Integer createdById,
+            CalendarEvent calendarEvents, PersonnelBO createdBy, List<CustomerBO> activeAndOnHoldClients) {
+
+        SavingsAccountActivationDetail activationDetails = determineAccountActivationDetails(customer, savingsProduct, recommendedOrMandatoryAmount, savingsAccountState, calendarEvents, activeAndOnHoldClients);
+
+        RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.PER_INDIVIDUAL;
+        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy);
+
+        return savingsAccount;
     }
 
     /**
-     * minimal constructor for builder (will be deprecated after accounts refactoring)
+     * valid minimal legal constructor
      */
+    public SavingsBO(AccountState savingsAccountState, CustomerBO customer, SavingsAccountActivationDetail activationDetails, LocalDate createdDate, Integer createdById, SavingsOfferingBO savingsProduct,
+            RecommendedAmountUnit recommendedAmountUnit, Money recommendedOrMandatoryAmount, PersonnelBO createdBy) {
+        super(AccountTypes.SAVINGS_ACCOUNT, savingsAccountState, customer, activationDetails, createdDate.toDateMidnight().toDate(), createdById.shortValue());
+        this.savingsOffering = savingsProduct;
+        this.recommendedAmntUnit = new RecommendedAmntUnitEntity(recommendedAmountUnit);
+        this.recommendedAmount = recommendedOrMandatoryAmount;
+        this.savingsPerformance = new SavingsPerformanceEntity(this);
+
+        // inherited from savings product for now but should be removed and cleaned up.
+        this.interestRate = this.savingsOffering.getInterestRate();
+        this.interestCalcType = new InterestCalcTypeEntity(InterestCalcType.fromInt(this.savingsOffering.getInterestCalcType().getId()));
+        this.savingsType = new SavingsTypeEntity(this.savingsOffering.getSavingsTypeAsEnum());
+
+        if (savingsAccountState.isActiveSavingsAccountState()) {
+            this.activationDate = activationDetails.getActivationDate().toDateMidnight().toDate();
+            this.nextIntPostDate = activationDetails.getNextInterestPostingDate().toDateMidnight().toDate();
+        }
+
+        AccountStateEntity newStatus = new AccountStateEntity(savingsAccountState);
+        AccountStatusChangeHistoryEntity statusChange = new AccountStatusChangeHistoryEntity(null, newStatus, createdBy, this);
+        this.accountStatusChangeHistory.add(statusChange);
+    }
+
+    /**
+     * default constructor for hibernate usage
+     */
+    protected SavingsBO() {
+        // default constructor for hibernate
+    }
+
+    private static SavingsAccountActivationDetail determineAccountActivationDetails(CustomerBO customer,
+            SavingsOfferingBO savingsProduct, Money recommendedOrMandatoryAmount, AccountState savingsAccountState,
+            CalendarEvent calendarEvents, List<CustomerBO> activeAndOnHoldClients) {
+
+        List<AccountActionDateEntity> scheduledPayments = new ArrayList<AccountActionDateEntity>();
+        LocalDate activationDate = new LocalDate();
+        LocalDate nextInterestPostingDate = new LocalDate();
+
+        if (savingsAccountState.isActiveSavingsAccountState()) {
+            activationDate = new LocalDate();
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+
+            for (CustomerBO client : activeAndOnHoldClients) {
+                List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, activationDate.toDateTimeAtStartOfDay(), scheduledEvent);
+
+                short installmentNumber = 1;
+                for (DateTime date : depositDates) {
+                    java.sql.Date depositDueDate = new java.sql.Date(date.toDate().getTime());
+                    AccountActionDateEntity scheduledSavingsDeposit = new SavingsScheduleEntity(null, client, installmentNumber,
+                            depositDueDate, PaymentStatus.UNPAID, recommendedOrMandatoryAmount);
+                    scheduledPayments.add(scheduledSavingsDeposit);
+                }
+            }
+
+            InterestScheduledEvent interestPostingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(savingsProduct.getFreqOfPostIntcalc().getMeeting());
+            nextInterestPostingDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),activationDate);
+        }
+
+        return new SavingsAccountActivationDetail(activationDate, nextInterestPostingDate, scheduledPayments);
+
+    }
+
+    private static SavingsAccountActivationDetail determineAccountActivationDetails(CustomerBO customer, SavingsOfferingBO savingsProduct,
+            Money recommendedOrMandatoryAmount, AccountState savingsAccountState, CalendarEvent calendarEvents) {
+
+        List<AccountActionDateEntity> scheduledPayments = new ArrayList<AccountActionDateEntity>();
+        LocalDate activationDate = new LocalDate();
+        LocalDate nextInterestPostingDate = new LocalDate();
+
+        if (savingsAccountState.isActiveSavingsAccountState()) {
+            activationDate = new LocalDate();
+            ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(customer.getCustomerMeetingValue());
+            ScheduledDateGeneration dateGeneration = new HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
+
+            List<DateTime> depositDates = dateGeneration.generateScheduledDates(10, activationDate.toDateTimeAtStartOfDay(), scheduledEvent);
+
+            short installmentNumber = 1;
+            for (DateTime date : depositDates) {
+                java.sql.Date depositDueDate = new java.sql.Date(date.toDate().getTime());
+                AccountActionDateEntity scheduledSavingsDeposit = new SavingsScheduleEntity(null, customer, installmentNumber,
+                        depositDueDate, PaymentStatus.UNPAID, recommendedOrMandatoryAmount);
+                scheduledPayments.add(scheduledSavingsDeposit);
+            }
+
+            InterestScheduledEvent interestPostingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(savingsProduct.getFreqOfPostIntcalc().getMeeting());
+            nextInterestPostingDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),activationDate);
+        }
+
+        return new SavingsAccountActivationDetail(activationDate, nextInterestPostingDate, scheduledPayments);
+    }
+
+    /**
+     * @deprecated use minimal legal constructor from builder
+     */
+    @Deprecated
     public SavingsBO(final SavingsOfferingBO savingsProduct, final Money savingsBalanceAmount, final SavingsPaymentStrategy savingsPaymentStrategy,
             final SavingsTransactionActivityHelper savingsTransactionActivityHelper,
             final Set<AccountActionDateEntity> scheduledPayments, final AccountState accountState,
@@ -229,6 +348,7 @@ public class SavingsBO extends AccountBO {
     }
 
     /**
+     * @deprecated use minimal legal constructor from builder
      * create a constructor that doesnt take customFields or delegate to goActiveForFristTimeAndGenerateSavingsSchedule which contains persistence.
      */
     @Deprecated
@@ -380,6 +500,10 @@ public class SavingsBO extends AccountBO {
                 .getId().equals(AccountState.SAVINGS_CLOSED.getValue()));
     }
 
+    /**
+     * @deprecated use {@link SavingsDao#save(SavingsBO)} to persist savings account.
+     */
+    @Deprecated
     public void save() throws AccountException {
         logger.info("In SavingsBO::save(), Before Saving , accountId: " + getAccountId());
 
@@ -584,6 +708,9 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    /**
+     */
+    @Deprecated
     private void generateDepositAccountActions(final List<Days> workingDays, final List<Holiday> holidays)
             throws AccountException {
         logger.debug("In SavingsBO::generateDepositAccountActions()");
@@ -857,6 +984,10 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    /**
+     * remove when all construction of savings is through factory methods and appropriate minimal legal constructor.
+     */
+    @Deprecated
     private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays, DateTime activationDate)
             throws AccountException {
         this.activationDate = activationDate.toDate();
@@ -1735,7 +1866,7 @@ public class SavingsBO extends AccountBO {
         return validHistoricalDetails;
     }
 
-    private Date startOfFiscalYear() {
+    private static Date startOfFiscalYear() {
         return new LocalDate().withMonthOfYear(1).withDayOfYear(1).toDateMidnight().toDate();
     }
 
@@ -1747,5 +1878,13 @@ public class SavingsBO extends AccountBO {
         SavingsPerformanceEntity savingsPerformance = new SavingsPerformanceEntity(this);
         logger.info("In SavingsBO::createSavingsPerformance(), SavingsPerformanceEntity created successfully ");
         return savingsPerformance;
+    }
+
+    public void generateSystemId(String officeSearchId) {
+        try {
+            this.globalAccountNum = generateId(officeSearchId);
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 }

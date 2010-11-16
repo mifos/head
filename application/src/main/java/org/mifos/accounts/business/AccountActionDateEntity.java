@@ -32,7 +32,7 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
 
     protected final Integer actionDateId;
 
-    protected final AccountBO account;
+    protected AccountBO account;
 
     protected final CustomerBO customer;
 
@@ -126,5 +126,9 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
     public boolean isDueToday() {
         return DateUtils.getDateWithoutTimeStamp(getActionDate().getTime()).equals(
                 DateUtils.getCurrentDateWithoutTimeStamp());
+    }
+
+    public void setAccount(AccountBO account) {
+        this.account = account;
     }
 }

@@ -37,6 +37,7 @@ public class SavingsHelper {
     public SavingsHelper() {
     }
 
+    @Deprecated
     public AccountActionDateEntity createActionDateObject(AccountBO account, CustomerBO customer, Short installmentId,
             Date date, Short userId, Money amount) {
         AccountActionDateEntity actionDate = new SavingsScheduleEntity(account, customer, installmentId,

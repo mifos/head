@@ -28,10 +28,12 @@ public class SavingsProductReferenceDto {
 
     private final List<ListElement> interestCalcTypeOptions;
     private final SavingsProductDto savingsProductDetails;
+    private final boolean savingsPendingApprovalEnabled;
 
-    public SavingsProductReferenceDto(List<ListElement> interestCalcTypeOptions, SavingsProductDto savingsProductDetails) {
+    public SavingsProductReferenceDto(List<ListElement> interestCalcTypeOptions, SavingsProductDto savingsProductDetails, boolean savingsPendingApprovalEnabled) {
         this.interestCalcTypeOptions = interestCalcTypeOptions;
         this.savingsProductDetails = savingsProductDetails;
+        this.savingsPendingApprovalEnabled = savingsPendingApprovalEnabled;
     }
 
     public List<ListElement> getInterestCalcTypeOptions() {
@@ -40,5 +42,9 @@ public class SavingsProductReferenceDto {
 
     public SavingsProductDto getSavingsProductDetails() {
         return this.savingsProductDetails;
+    }
+
+    public boolean isSavingsPendingApprovalEnabled() {
+        return this.savingsPendingApprovalEnabled;
     }
 }

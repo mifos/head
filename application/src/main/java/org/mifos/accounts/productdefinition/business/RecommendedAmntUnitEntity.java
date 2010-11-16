@@ -89,4 +89,8 @@ public class RecommendedAmntUnitEntity extends MasterDataEntity {
     public boolean isPerIndividual() {
         return RecommendedAmountUnit.PER_INDIVIDUAL.getValue().equals(this.id);
     }
+
+    public boolean isCompleteGroup() {
+        return RecommendedAmountUnit.COMPLETE_GROUP.getValue().equals(this.id);
+    }
 }

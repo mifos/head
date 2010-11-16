@@ -32,6 +32,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -207,6 +208,25 @@ public class SavingsDaoHibernate implements SavingsDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
         return (Iterator<AccountCustomFieldEntity>) baseDao.executeNamedQueryIterator("AccountCustomFieldEntity.getResponses", queryParameters);
+    }
+
+
+    @Override
+    public SavingsBO findBySystemId(String globalAccountNum) {
+
+//        SavingsBO savings = queryResult == null ? null : (SavingsBO) queryResult;
+//        if (savings != null && savings.getRecommendedAmount() == null) {
+//            savings.setRecommendedAmount(new Money(savings.getCurrency()));
+//            initialize(savings.getAccountActionDates());
+//            initialize(savings.getAccountNotes());
+//            initialize(savings.getAccountFlags());
+//        }
+//        return savings;
+
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(AccountConstants.GLOBAL_ACCOUNT_NUMBER, globalAccountNum);
+
+        return (SavingsBO) this.baseDao.executeUniqueResultNamedQuery("accounts.findBySystemId", queryParameters);
     }
 
     @Override

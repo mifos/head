@@ -40,8 +40,7 @@ public class HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration implements
     private final List<Days> workingDays;
     private final List<Holiday> upcomingHolidays;
 
-    public HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration
-                    (final List<Days> workingDays, final List<Holiday> upcomingHolidays) {
+    public HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration(final List<Days> workingDays, final List<Holiday> upcomingHolidays) {
         this.workingDays = workingDays;
         this.upcomingHolidays = upcomingHolidays;
     }

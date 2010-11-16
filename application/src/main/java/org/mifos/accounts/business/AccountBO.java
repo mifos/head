@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -47,6 +48,7 @@ import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.business.SavingsAccountActivationDetail;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -257,6 +259,40 @@ public class AccountBO extends AbstractBusinessObject {
         this.accountPayments = new ArrayList<AccountPaymentEntity>();
     }
 
+    /**
+     * minimal legal constructor for savings accounts
+     */
+    public AccountBO(AccountTypes accountType, AccountState accountState, CustomerBO customer,
+                     SavingsAccountActivationDetail savingsAccountActivationDetail, Date createdDate, Short createdByUserId) {
+        this.accountId = null;
+        this.accountType = new AccountTypeEntity(accountType.getValue());
+        this.accountState = new AccountStateEntity(accountState);
+        this.customer = customer;
+        this.createdDate = createdDate;
+        this.createdBy = createdByUserId;
+
+        // ensure scheduled payments are linked to this account.
+        for (AccountActionDateEntity scheduledPayment : savingsAccountActivationDetail.getScheduledPayments()) {
+            scheduledPayment.setAccount(this);
+        }
+
+        this.accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
+        if (customer != null) {
+            this.office = customer.getOffice();
+            this.personnel = customer.getPersonnel();
+        }
+        this.accountFlags = new LinkedHashSet<AccountFlagMapping>();
+        this.accountCustomFields = new LinkedHashSet<AccountCustomFieldEntity>();
+        this.accountPayments = new ArrayList<AccountPaymentEntity>();
+
+        this.offsettingAllowable = Integer.valueOf(1);
+        this.accountFees = new HashSet<AccountFeesEntity>();
+    }
+
+    /**
+     * @deprecated use minimal legal constructor
+     */
+    @Deprecated
     AccountBO(final Integer accountId) {
         this.accountId = accountId;
         globalAccountNum = null;
@@ -274,6 +310,10 @@ public class AccountBO extends AbstractBusinessObject {
         offsettingAllowable = new Integer(1);
     }
 
+    /**
+     * @deprecated use minimal legal constructor
+     */
+    @Deprecated
     protected AccountBO(final UserContext userContext, final CustomerBO customer, final AccountTypes accountType,
             final AccountState accountState) throws AccountException {
         super(userContext);

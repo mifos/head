@@ -31,6 +31,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
@@ -38,6 +39,7 @@ import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.savings.business.SavingsAccountTypeInspector;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.CalendarPeriod;
 import org.mifos.accounts.savings.interest.CalendarPeriodHelper;
@@ -57,21 +59,27 @@ import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
+import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
@@ -100,15 +108,17 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private final SavingsProductDao savingsProductDao;
     private final PersonnelDao personnelDao;
     private final CustomerDao customerDao;
+    private final HolidayDao holidayDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
     private CalendarPeriodHelper interestCalculationIntervalHelper = new CalendarPeriodHelper();
     private SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory = new SavingsInterestScheduledEventFactory();
 
-    public SavingsServiceFacadeWebTier(SavingsDao savingsDao, SavingsProductDao savingsProductDao, PersonnelDao personnelDao, CustomerDao customerDao) {
+    public SavingsServiceFacadeWebTier(SavingsDao savingsDao, SavingsProductDao savingsProductDao, PersonnelDao personnelDao, CustomerDao customerDao, HolidayDao holidayDao) {
         this.savingsDao = savingsDao;
         this.savingsProductDao = savingsProductDao;
         this.personnelDao = personnelDao;
         this.customerDao = customerDao;
+        this.holidayDao = holidayDao;
     }
 
     @Override
@@ -636,8 +646,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
-
-
     }
 
     @Override
@@ -651,6 +659,59 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             interestCalcTypeOptions.add(new ListElement(entity.getId().intValue(), entity.getName()));
         }
 
-        return new SavingsProductReferenceDto(interestCalcTypeOptions, savingsProduct.toFullDto());
+        boolean savingsPendingApprovalEnabled = ProcessFlowRules.isSavingsPendingApprovalStateEnabled();
+
+        return new SavingsProductReferenceDto(interestCalcTypeOptions, savingsProduct.toFullDto(), savingsPendingApprovalEnabled);
+    }
+
+    @Override
+    public Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        LocalDate createdDate = new LocalDate();
+        Integer createdById = user.getUserId();
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(createdById.shortValue());
+
+        CustomerBO customer = this.customerDao.findCustomerById(savingsAccountCreation.getCustomerId());
+        SavingsOfferingBO savingsProduct = this.savingsProductDao.findById(savingsAccountCreation.getProductId());
+
+        Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(), savingsAccountCreation.getRecommendedOrMandatoryAmount());
+        AccountState savingsAccountState = AccountState.fromShort(savingsAccountCreation.getAccountState());
+
+        List<CustomerCustomFieldEntity> savingsCustomFields = CustomerCustomFieldEntity.fromDto(savingsAccountCreation.getCustomFields(), null);
+
+        CalendarEvent calendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
+
+        SavingsAccountTypeInspector savingsAccountWrapper = new SavingsAccountTypeInspector(customer, savingsProduct.getRecommendedAmntUnit());
+
+        try {
+            SavingsBO savingsAccount = null;
+            if (savingsAccountWrapper.isIndividualSavingsAccount()) {
+                savingsAccount = SavingsBO.createIndividalSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState, savingsCustomFields, createdDate, createdById, calendarEvents, createdBy);
+            } else if (savingsAccountWrapper.isJointSavingsAccountWithClientTracking()) {
+
+                List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(customer.getSearchId(),
+                        customer.getOfficeId(), CustomerLevel.CLIENT);
+                savingsAccount = SavingsBO.createJointSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState,
+                        savingsCustomFields, createdDate, createdById, calendarEvents, createdBy, activeAndOnHoldClients);
+            }
+
+            this.transactionHelper.startTransaction();
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.flushSession();
+            savingsAccount.generateSystemId(createdBy.getOffice().getGlobalOfficeNum());
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.commitTransaction();
+            return savingsAccount.getAccountId().longValue();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
     }
 }

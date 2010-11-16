@@ -65,6 +65,7 @@
         <constructor-arg ref="savingsProductDao" />
         <constructor-arg ref="personnelDao" />
         <constructor-arg ref="customerDao" />
+        <constructor-arg ref="holidayDao" />
     </bean>
     
     <bean id="customerServiceFacade" class="org.mifos.application.servicefacade.CustomerServiceFacadeWebTier" >

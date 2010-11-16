@@ -64,4 +64,6 @@ public interface SavingsDao {
 
     List<Integer> retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(LocalDate interestPostingDate);
 
+    SavingsBO findBySystemId(String globalAccountNum);
+
 }

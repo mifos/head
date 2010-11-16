@@ -35,6 +35,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -67,6 +68,8 @@ public class SavingsServiceFacadeWebTierTest {
     @Mock
     private CustomerDao customerDao;
     @Mock
+    private HolidayDao holidayDao;
+    @Mock
     private SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory;
     @Mock
     private HibernateTransactionHelper transactionHelper;
@@ -77,7 +80,7 @@ public class SavingsServiceFacadeWebTierTest {
     public void setupAndInjectDependencies() {
         oldCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
-        savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, savingsProductDao, personnelDao, customerDao);
+        savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, savingsProductDao, personnelDao, customerDao, holidayDao);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setSavingsInterestScheduledEventFactory(savingsInterestScheduledEventFactory);
         ((SavingsServiceFacadeWebTier)savingsServiceFacade).setTransactionHelper(transactionHelper);
 
