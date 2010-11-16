@@ -41,6 +41,7 @@ import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mifos.platform.questionnaire.validators.QuestionnaireValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -268,7 +269,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private Integer persistQuestionGroup(QuestionGroup questionGroup) {
         List<SectionQuestion> sectionQuestions = questionGroup.getAllSectionQuestions();
         for (SectionQuestion sectionQuestion : sectionQuestions) {
-            List<QuestionEntity> questionEntities = null;
+            List<QuestionEntity> questionEntities;
             if (sectionQuestion.getQuestion().getNickname() == null) {
                 questionEntities = questionDao.retrieveByText(sectionQuestion.getQuestionText());
             } else {
@@ -330,7 +331,17 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Integer uploadPPIQuestionGroup(String country) {
         String ppiXmlForCountry = ppiSurveyLocator.getPPIUploadFileForCountry(country);
         QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(ppiXmlForCountry);
+        activateQGWithQuestions(questionGroupDto); // according to MIFOS-4146 all uploaded PPI should be active
         return defineQuestionGroup(questionGroupDto, false);
+    }
+
+    private void activateQGWithQuestions(QuestionGroupDto questionGroupDto) {
+        questionGroupDto.setActive(true);
+        for (SectionDto section : questionGroupDto.getSections()) {
+            for (QuestionDto question : section.getQuestions()) {
+                question.setActive(true);
+            }
+        }
     }
 
     @Override
