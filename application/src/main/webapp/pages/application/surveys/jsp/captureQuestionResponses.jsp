@@ -52,6 +52,32 @@ explanation of the license and how it is applied.
 	        color:#FF0000;
 	        float:left;
           }
+          /* used for altering background */
+       tr.bg1 {
+            font-family: Arial, Verdana, Helvetica, sans-serif;
+            font-size: 9pt;
+            font-weight: normal;
+            text-decoration: none;
+            background-color: #FFFFFF;
+            padding-top: 2px;
+            padding-right: 5px;
+            padding-bottom: 2px;
+            padding-left: 5px;
+            border-top-width: 1px;
+            border-top-style: solid;
+            border-top-color: #D7DEEE;
+        }
+        tr.bg0 {
+            font-family: Arial, Verdana, Helvetica, sans-serif;
+            font-size: 9pt;
+            font-weight: normal;
+            text-decoration: none;
+            background-color: #F2F2F2;
+            padding-top: 0px;
+            padding-right: 0px;
+            padding-bottom: 0px;
+            padding-left: 0px;
+        }
 		</STYLE>
             
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
@@ -87,7 +113,7 @@ explanation of the license and how it is applied.
                                  <bean:define id="questionIdx">
                                      <c:out value="${questionLoopStatus.index}" />
                                  </bean:define>
-                                 <tr class="fontnormal">
+                                 <tr class="fontnormal bg${(questionLoopStatus.index + 1) % 2}">
                                      <td width="17%" align="right" valign="top">
                                          <span id="create_ClientPersonalInfo.label.question">
                                              <c:if test="${question.mandatory}">

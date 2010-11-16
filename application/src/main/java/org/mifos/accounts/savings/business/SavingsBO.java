@@ -1614,7 +1614,7 @@ public class SavingsBO extends AccountBO {
                 Date lastMeetingDate = getCustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId());
                 if (lastMeetingDate != null) {
                     LocalDate meetingDate = new LocalDate(lastMeetingDate);
-                    return transactionLocalDate.isAfter(meetingDate);
+                    return transactionLocalDate.isAfter(meetingDate) || transactionLocalDate.isEqual(meetingDate);
                 }
 
                 LocalDate activationDate = new LocalDate(this.activationDate);

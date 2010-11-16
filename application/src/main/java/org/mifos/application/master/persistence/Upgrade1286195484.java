@@ -60,6 +60,7 @@ public class Upgrade1286195484 extends Upgrade {
 	}
 
 	public static int COMMIT_EVERY = 100;
+    public static int FLUSH_EVERY = 1000;
     public static int PRINT_EVERY = 10000;
 
     @Override
@@ -71,25 +72,29 @@ public class Upgrade1286195484 extends Upgrade {
         Query update = session.createQuery("update CustomerAddressDetailEntity set address.phoneNumberStripped = :phoneNumberStripped where " +
 						"customerAddressId = :id");
 		Transaction t = session.beginTransaction();
-		int count = 0;
+		int modifyCount = 0;
+        int resultCount = 0;
         while (results.next()) {
+            ++resultCount;
             CustomerAddressDetailEntity address = (CustomerAddressDetailEntity)results.get(0);
 			if (address.getAddress().getPhoneNumber() != null && !address.getAddress().getPhoneNumber().isEmpty()) {
 				update.setString("phoneNumberStripped", address.getAddress().getPhoneNumberStripped());
 				update.setInteger("id", address.getCustomerAddressId());
 				update.executeUpdate();
-				++count;
-				if (count % COMMIT_EVERY == 0) {
+				++modifyCount;
+				if (modifyCount % COMMIT_EVERY == 0) {
 					t.commit();
-					session.flush();
-					session.clear();
 					t = session.beginTransaction();
 				}
-                if (count % PRINT_EVERY == 0) {
-                    System.out.print(".");
-                    System.out.flush();
-                }
 			}
+            if (resultCount % FLUSH_EVERY == 0) {
+                session.flush();
+                session.clear();
+            }
+            if (resultCount % PRINT_EVERY == 0) {
+                System.out.print(".");
+                System.out.flush();
+            }
         }
 		session.flush();
 		t.commit();
