@@ -145,7 +145,7 @@ public class TableTag extends BodyTagSupport {
 
             }
 
-            table.getTable(tableInfo, obj, locale, prefferedLocale, mfiLocale, pageContext,
+            table.getTable(source, tableInfo, obj, locale, prefferedLocale, mfiLocale, pageContext,
                     getResourcebundleName(moduleName));
 
         } catch (URISyntaxException e) {

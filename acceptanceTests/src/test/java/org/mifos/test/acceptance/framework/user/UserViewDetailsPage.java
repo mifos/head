@@ -105,4 +105,9 @@ public class UserViewDetailsPage extends MifosPage {
         return this;
         
     }
+
+    public UserViewDetailsPage verifyInterestTypeInSummary(String interestType) {
+        Assert.assertTrue(selenium.isTextPresent("Interest rate type: " + interestType));
+        return this;
+    }
 }

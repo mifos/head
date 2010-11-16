@@ -50,10 +50,9 @@ public class Table {
         return row;
     }
 
-    public void getTable(StringBuilder tableInfo, List obj, Locale locale, Locale prefferedLocale, Locale mfiLocale,
-            PageContext pageContext, String bundle) throws TableTagParseException, JspException {
-        tableInfo.append("<table width=\"" + getRow().getTotWidth()
-                + "%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" >");
+    public void getTable(String id, StringBuilder tableInfo, List obj, Locale locale, Locale prefferedLocale, Locale mfiLocale,
+                         PageContext pageContext, String bundle) throws TableTagParseException, JspException {
+        tableInfo.append(String.format("<table id=\"%s%\" width=\"%s%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" >", id, getRow().getTotWidth()));
 
         // Start :: Generating Header
         tableInfo.append("<tr ");

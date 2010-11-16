@@ -363,13 +363,14 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     }
 
     private void verifyWarningThresholdMessageOnReviewSchedulePage(String button, double warningThreshold) {
-        setInstallmentDate("1","02-Sep-2010");
-        setInstallmentDate("2","02-Oct-2010");
-        setFirstAndSecondInstallmentTotal("10000");
+        setInstallmentDate("0","19-Oct-2010");
+        setInstallmentDate("1","26-Oct-2010");
+        setInstallmentDate("2","02-Nov-2010");
+        setFirstAndSecondInstallmentTotal("336.0");
         selenium.click(button);
         selenium.waitForPageToLoad("3000");
-        Assert.assertTrue(selenium.isTextPresent("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
-//        Assert.assertTrue(selenium.isTextPresent("Installment amount for October as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
+//        Assert.assertTrue(selenium.isTextPresent("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
+        Assert.assertTrue(selenium.isTextPresent("Installment amount for October 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
         Assert.assertTrue(selenium.isTextPresent("Installment amount for November 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%"));
     }
 
@@ -406,5 +407,25 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
 
     private void setInstallmentTotal(int installment, String total) {
         selenium.type("installments["+ (installment-1) +"].total",total);
+    }
+
+    public ViewInstallmentDetailsPage verifyLoanScheduleForDecliningPrincipal() {
+        verifyCellValueOfInstallments(1,3,"332.2");
+        verifyCellValueOfInstallments(2,3,"333.4");
+        verifyCellValueOfInstallments(3,3,"334.4");
+        verifyCellValueOfInstallments(1,4,"3.8");
+        verifyCellValueOfInstallments(2,4,"2.6");
+        verifyCellValueOfInstallments(3,4,"1.3");
+        verifyCellValueOfInstallments(1,5,"336.0");
+        verifyCellValueOfInstallments(2,5,"336.0");
+        verifyCellValueOfInstallments(3,5,"335.7");
+        return this;
+        //To change body of created methods use File | Settings | File Templates.
+    }
+
+    public CreateLoanAccountPreviewPage clickPreviewAndGoToReviewLoanAccountPage() {
+        selenium.click(previewButton);
+        selenium.waitForPageToLoad("3000");
+        return new CreateLoanAccountPreviewPage(selenium);
     }
 }

@@ -21,10 +21,9 @@
 package org.mifos.test.acceptance.framework.loanproduct;
 
 
+import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.testng.Assert;
-
-import com.thoughtworks.selenium.Selenium;
 
 public class DefineNewLoanProductPreviewPage extends AbstractPage {
 
@@ -90,6 +89,11 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
     public DefineNewLoanProductPreviewPage verifyCashFlowUnCheckedInPreview() {
         Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
         Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
+        return this;
+    }
+
+    public DefineNewLoanProductPreviewPage verifyInterestTypeInPreview(String interestType) {
+        Assert.assertTrue(selenium.isTextPresent("Interest rate type: " + interestType));
         return this;
     }
 }

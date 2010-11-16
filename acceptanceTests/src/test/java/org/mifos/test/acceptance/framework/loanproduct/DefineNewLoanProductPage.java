@@ -61,6 +61,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public static final int FLAT = 1;
         public static final int DECLINING_BALANCE = 2;
         public static final int DECLINING_BALANCE_EPI = 4;
+        public static final int DECLINING_PRINCIPLE_BALANCE = 5;
 
         // applicable for
         public static final int CLIENTS = 1;

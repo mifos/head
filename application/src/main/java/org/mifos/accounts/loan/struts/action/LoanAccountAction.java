@@ -507,13 +507,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 for(CashflowDataHtmlBean cashflowDataHtmlBean: cashflowDataHtmlBeans) {
                     String cashflowAndInstallmentDiffPercent = cashflowDataHtmlBean.getDiffCumulativeCashflowAndInstallmentPercent();
                     if(StringUtils.isNotEmpty(cashflowAndInstallmentDiffPercent) && Double.valueOf(cashflowAndInstallmentDiffPercent) > cashflowThresholdPercent) {
-                       errors.add(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new ActionMessage(AccountConstants.BEYOND_CASHFLOW_THRESHOLD ,cashflowDataHtmlBean.getMonth(),String.valueOf(cashflowThresholdPercent)));
+                       errors.add(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new ActionMessage(AccountConstants.BEYOND_CASHFLOW_THRESHOLD ,cashflowDataHtmlBean.getMonth()+" "+cashflowDataHtmlBean.getYear(),String.valueOf(cashflowThresholdPercent)));
                     }
                     String cumulativeCashflow = cashflowDataHtmlBean.getCumulativeCashFlow();
                     if(StringUtils.isNotEmpty(cumulativeCashflow) && Double.valueOf(cumulativeCashflow) < 0) {
-                        errors.add(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE ,cashflowDataHtmlBean.getMonth()));
+                        errors.add(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE ,cashflowDataHtmlBean.getMonth()+" "+cashflowDataHtmlBean.getYear()));
                     }else  if(StringUtils.isNotEmpty(cumulativeCashflow) && Double.valueOf(cumulativeCashflow) == 0) {
-                        errors.add(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_ZERO ,cashflowDataHtmlBean.getMonth()));
+                        errors.add(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_ZERO ,cashflowDataHtmlBean.getMonth()+" "+cashflowDataHtmlBean.getYear()));
                     }
                 }
                 errors.add(validateCashflowAndInstallmentDates(loanActionForm.getInstallments(), loanActionForm.getCashFlowForm()));

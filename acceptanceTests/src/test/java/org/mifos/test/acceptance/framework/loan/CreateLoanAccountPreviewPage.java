@@ -18,30 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.test.acceptance.framework.loanproduct;
-
+package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
-import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.user.UserViewDetailsPage;
+import org.mifos.test.acceptance.framework.AbstractPage;
+import org.testng.Assert;
 
+public class CreateLoanAccountPreviewPage extends AbstractPage {
 
-public class DefineNewLoanProductConfirmationPage extends MifosPage {
-
-
-    public DefineNewLoanProductConfirmationPage(Selenium selenium) {
+    public CreateLoanAccountPreviewPage(Selenium selenium) {
         super(selenium);
     }
 
-
-    public UserViewDetailsPage navigateToViewLoanDetails() {
-        selenium.click("createLoanProductConfirmation.link.viewLoanDetails");
-        waitForPageToLoad();
-        return new UserViewDetailsPage(selenium);
+    public CreateLoanAccountPreviewPage() {
+        super();
     }
 
-    public void verifyPage() {
-        this.verifyPage("CreateLoanProductConfirmation");
+    public CreateLoanAccountPreviewPage verifyPage() {
+        this.verifyPage("CreateLoanPreview");
+        return this;
     }
 
+    public CreateLoanAccountPreviewPage verifyInterestTypeInLoanPreview(String interestType) {
+        Assert.assertTrue(selenium.isTextPresent("Interest Rate Type :  " + interestType));
+        return this;
+    }
 }

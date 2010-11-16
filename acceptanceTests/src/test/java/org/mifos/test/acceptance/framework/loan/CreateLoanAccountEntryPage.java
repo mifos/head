@@ -228,4 +228,10 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         typeText("noOfInstallments",String.valueOf(noOfInstallment));
         return this;
     }
+
+    public CreateLoanAccountEntryPage verifyInterestTypeInLoanCreation(String interestTypeName) {
+        Assert.assertTrue(selenium.isTextPresent("Interest Rate Type:"));
+        Assert.assertTrue(selenium.isTextPresent(interestTypeName));
+        return this;
+    }
 }
