@@ -82,7 +82,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         int noOfInstallments = 3;
         int loanAmount = 1000;
         int interestRate = 20;
-        String interestTypeName = "Declining Principal Balance";
+        String interestTypeName = "Declining Balance-Interest Recalculation";
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_PRINCIPLE_BALANCE;
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(noOfInstallments, loanAmount, interestRate, interestType);
         applicationDatabaseOperation.updateLSIM(1);
