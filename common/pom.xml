@@ -96,9 +96,9 @@
             <artifactId>spring-orm</artifactId>
         </dependency>
         <dependency>
-	        <groupId>org.springframework.webflow</groupId>
-	        <artifactId>spring-binding</artifactId>
-	    </dependency>
+            <groupId>org.springframework.webflow</groupId>
+            <artifactId>spring-binding</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>

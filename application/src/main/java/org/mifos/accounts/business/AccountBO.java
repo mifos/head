@@ -755,7 +755,7 @@ public class AccountBO extends AbstractBusinessObject {
      *
      * @param feeId
      *            the primary key of the {@link FeeBO} being sought.
-     * @return
+     * @return an account
      */
     public AccountFeesEntity getAccountFees(final Short feeId) {
         for (AccountFeesEntity accountFeesEntity : this.getAccountFees()) {
