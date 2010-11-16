@@ -615,7 +615,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanOfferingBO loanOffering = getLoanOffering(productId, userContext.getLocaleId());
         setVariableInstallmentDetailsOnForm(loanOffering, loanActionForm);
 
-        DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale()));
+        DateTime disbursementDate = getDisbursementDate(loanActionForm, userContext.getPreferredLocale());
 
         LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto = retrieveLoanSchedule(request, loanActionForm, userContext, disbursementDate);
         setGlimOnSession(request, loanActionForm, loanScheduleDetailsDto);
@@ -637,6 +637,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.valueOf(pageAfterQuestionnaire.getName()));
     }
 
+    private DateTime getDisbursementDate(LoanAccountActionForm loanActionForm, Locale locale) throws InvalidDateException {
+        return new DateTime(loanActionForm.getDisbursementDateValue(locale));
+    }
+
     private void setGlimOnSession(HttpServletRequest request, LoanAccountActionForm loanActionForm,
                                   LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto) throws PageExpiredException {
         if (loanScheduleDetailsDto.isGlimApplicable()) {
@@ -654,7 +658,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private LoanCreationLoanScheduleDetailsDto retrieveLoanSchedule(HttpServletRequest request, LoanAccountActionForm loanActionForm,
                                  UserContext userContext, DateTime disbursementDate) throws ApplicationException {
-        CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
+        CustomerDetailDto oldCustomer = getCustomer(request);
         FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
         LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto;
         try {
@@ -663,13 +667,24 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                         .getCustomerId(), disbursementDate, fund, loanActionForm);
                 loanActionForm.initializeTransactionFields(loanScheduleDetailsDto.getPaymentDataBeans());
             } else {
-                loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForLoanCreation(userContext, oldCustomer
-                        .getCustomerId(), disbursementDate, fund, loanActionForm);
-                loanActionForm.initializeInstallments(loanScheduleDetailsDto.getInstallments());
+                loanScheduleDetailsDto = retrieveLoanScheduleDTOAndInitializeInstallments(loanActionForm, userContext,
+                        disbursementDate, oldCustomer, fund);
             }
         } finally {
             setPerspectiveOnRequest(request);
         }
+        return loanScheduleDetailsDto;
+    }
+
+    private CustomerDetailDto getCustomer(HttpServletRequest request) throws PageExpiredException {
+        return (CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request);
+    }
+
+    private LoanCreationLoanScheduleDetailsDto retrieveLoanScheduleDTOAndInitializeInstallments(LoanAccountActionForm loanActionForm, UserContext userContext, DateTime disbursementDate, CustomerDetailDto oldCustomer, FundBO fund) throws ApplicationException {
+        LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto;
+        loanScheduleDetailsDto = loanServiceFacade.retrieveScheduleDetailsForLoanCreation(userContext, oldCustomer
+                .getCustomerId(), disbursementDate, fund, loanActionForm);
+        loanActionForm.initializeInstallments(loanScheduleDetailsDto.getInstallments());
         return loanScheduleDetailsDto;
     }
 
@@ -715,8 +730,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void setRedoLoanAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm, String perspective, Integer customerId) throws InvalidDateException, ApplicationException {
         if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
             UserContext userContext = getUserContext(request);
-            DateTime disbursementDate = new DateTime(loanAccountForm.getDisbursementDateValue(userContext
-            .getPreferredLocale()));
+            DateTime disbursementDate = getDisbursementDate(loanAccountForm, userContext.getPreferredLocale());
             LoanBO loan = loanServiceFacade.previewLoanRedoDetails(customerId, loanAccountForm,
                                             disbursementDate, userContext);
 
@@ -806,20 +820,21 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm)form;
         loanAccountActionForm.clearDetailsForLoan();
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
-        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum, getUserContext(request));
+        UserContext userContext = getUserContext(request);
+        LoanInformationDto loanInformationDto = this.loanServiceFacade.getLoanInformationDto(globalAccountNum, userContext);
 
         final String accountStateNameLocalised = MessageLookup.getInstance().lookup(
-                loanInformationDto.getAccountStateName(), getUserContext(request));
+                loanInformationDto.getAccountStateName(), userContext);
         SessionUtils.removeThenSetAttribute("accountStateNameLocalised", accountStateNameLocalised, request);
         final String gracePeriodTypeNameLocalised = MessageLookup.getInstance().lookup(
-                loanInformationDto.getGracePeriodTypeName(), getUserContext(request));
+                loanInformationDto.getGracePeriodTypeName(), userContext);
         SessionUtils.removeThenSetAttribute("gracePeriodTypeNameLocalised", gracePeriodTypeNameLocalised, request);
         final String interestTypeNameLocalised = MessageLookup.getInstance().lookup(
-                loanInformationDto.getInterestTypeName(), getUserContext(request));
+                loanInformationDto.getInterestTypeName(), userContext);
         SessionUtils.removeThenSetAttribute("interestTypeNameLocalised", interestTypeNameLocalised, request);
         final Set<String> accountFlagStateEntityNamesLocalised = new HashSet<String>();
         for(String name: loanInformationDto.getAccountFlagNames()) {
-            accountFlagStateEntityNamesLocalised.add(MessageLookup.getInstance().lookup(name, getUserContext(request)));
+            accountFlagStateEntityNamesLocalised.add(MessageLookup.getInstance().lookup(name, userContext));
         }
         SessionUtils.setCollectionAttribute("accountFlagNamesLocalised", accountFlagStateEntityNamesLocalised, request);
 
@@ -870,7 +885,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
-
+        List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto(userContext.getPreferredLocale());
+        loanAccountActionForm.initializeInstallments(installments);
+        setInstallmentsOnSession(request, loanAccountActionForm);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
@@ -1031,9 +1048,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         UserContext userContext = getUserContext(request);
         List<LoanAccountDetailsDto> loanAccountDetailsList = getLoanAccountDetailsFromSession(request);
-        DateTime disbursementDate = new DateTime(loanActionForm.getDisbursementDateValue(userContext
-                .getPreferredLocale()));
-        Integer customerId = ((CustomerDetailDto) SessionUtils.getAttribute(LOANACCOUNTOWNER, request)).getCustomerId();
+        DateTime disbursementDate = getDisbursementDate(loanActionForm, userContext.getPreferredLocale());
+        Integer customerId = (getCustomer(request)).getCustomerId();
 
         LoanCreationResultDto loanCreationResultDto;
         if (isRedoOperation(perspective)) {

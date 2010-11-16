@@ -485,7 +485,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward("get_success");
 
         Assert.assertEquals(0, loan.getPerformanceHistory().getNoOfPayments().intValue());
-        Assert.assertEquals(((LoanBO) accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
+        Assert.assertEquals((accountBO).getTotalAmountDue().getAmountDoubleValue(), 212.0);
         modifyActionDateForFirstInstallment();
         Assert.assertEquals("Total no. of notes should be 5", 5, accountBO.getAccountNotes().size());
 

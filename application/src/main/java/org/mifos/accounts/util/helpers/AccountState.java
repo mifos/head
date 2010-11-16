@@ -84,4 +84,8 @@ public enum AccountState implements LocalizedTextLookup {
     public String getPropertiesKey() {
         return messageKey;
     }
+
+    public static boolean isDisbursed(Short accountStateId) {
+        return !(LOAN_APPROVED.value.equals(accountStateId) || LOAN_DISBURSED_TO_LOAN_OFFICER.value.equals(accountStateId));
+    }
 }
