@@ -20,13 +20,12 @@
 
 package org.mifos.framework.components.customTableTag;
 
-import java.util.List;
-import java.util.Locale;
+import org.mifos.framework.exceptions.TableTagParseException;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
-
-import org.mifos.framework.exceptions.TableTagParseException;
+import java.util.List;
+import java.util.Locale;
 
 public class Table {
 
@@ -52,7 +51,12 @@ public class Table {
 
     public void getTable(String id, StringBuilder tableInfo, List obj, Locale locale, Locale prefferedLocale, Locale mfiLocale,
                          PageContext pageContext, String bundle) throws TableTagParseException, JspException {
-        tableInfo.append(String.format("<table id=\"%s%\" width=\"%s%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" >", id, getRow().getTotWidth()));
+        String totWidth = getRow().getTotWidth();
+        tableInfo.append("<table id=\"");
+        tableInfo.append(id);
+        tableInfo.append("\" width=\"");
+        tableInfo.append(totWidth);
+        tableInfo.append("%\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\" >");
 
         // Start :: Generating Header
         tableInfo.append("<tr ");
