@@ -95,7 +95,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
         validateRepaymentScheduleFieldDefault(noOfInstallments).
                 validateDateFieldValidations(disbursalDate,minGap,maxGap,noOfInstallments).
-                verifyInstallmentTotalValidations(noOfInstallments,minInstalmentAmount).
+                verifyInstallmentTotalValidations(noOfInstallments,minInstalmentAmount, disbursalDate, minGap).
                 verifyValidData(noOfInstallments,minGap,minInstalmentAmount,disbursalDate, maxGap);
 
     }

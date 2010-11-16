@@ -224,9 +224,9 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         selenium.waitForPageToLoad("3000");
     }
 
-    public ViewInstallmentDetailsPage verifyInstallmentTotalValidations(int noOfInstallments, int minInstalmentAmount) {
+    public ViewInstallmentDetailsPage verifyInstallmentTotalValidations(int noOfInstallments, int minInstalmentAmount, DateTime disbursalDate, int gap) {
         verifyBlankTotalField(noOfInstallments);
-        verifyErrorForTotalLessThanMinAmount(minInstalmentAmount,noOfInstallments);
+        verifyErrorForTotalLessThanMinAmount(minInstalmentAmount,noOfInstallments, disbursalDate, gap);
         verifyErrorForInvalidTotal(noOfInstallments);
         return this;
     }
@@ -239,7 +239,8 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
     }
 
-    private void verifyErrorForTotalLessThanMinAmount(int minInstalmentAmount, int noOfInstallments) {
+    private void verifyErrorForTotalLessThanMinAmount(int minInstalmentAmount, int noOfInstallments, DateTime disbursalDate, int gap) {
+        fillDate(disbursalDate, gap,noOfInstallments, true);
         fillAllTotalFields(noOfInstallments, String.valueOf(minInstalmentAmount-1));
         clickValidateAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
