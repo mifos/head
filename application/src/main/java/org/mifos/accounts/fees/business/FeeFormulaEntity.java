@@ -50,6 +50,13 @@ public class FeeFormulaEntity extends MasterDataEntity {
     }
 
     public FeeFormula getFeeFormula() {
+        if (feeFormula == null) {
+            try {
+                feeFormula = FeeFormula.getFeeFormula(this.getId());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
         return feeFormula;
     }
 

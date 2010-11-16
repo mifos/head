@@ -21,6 +21,7 @@
 package org.mifos.accounts.fees.business;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
@@ -54,6 +55,8 @@ public class FeeDto implements DataTransferObject {
 
     private RecurrenceType frequencyType;
 
+    private FeeFormula feeFormulaValue;
+
     public FeeDto() {
     }
 
@@ -71,6 +74,7 @@ public class FeeDto implements DataTransferObject {
         } else {
             this.amount = ((RateFeeBO) fee).getRate().toString();
             FeeFormulaEntity feeEntity = ((RateFeeBO) fee).getFeeFormula();
+            this.feeFormulaValue = feeEntity.getFeeFormula();
             this.feeFormula = feeEntity.getFormulaString();
         }
         this.periodic = fee.isPeriodic();
@@ -90,6 +94,10 @@ public class FeeDto implements DataTransferObject {
 
     public String getFeeSchedule() {
         return feeSchedule;
+    }
+
+    public FeeFormula getFeeFormulaValue() {
+        return feeFormulaValue;
     }
 
     public String getAmount() {
@@ -169,5 +177,4 @@ public class FeeDto implements DataTransferObject {
      //  when fee has a currency  then it should match loan account currency id
        return (getCurrencyId()== null || getCurrencyId().equals(currencyId));
     }
-
 }

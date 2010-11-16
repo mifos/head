@@ -40,9 +40,9 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.joda.time.DateMidnight;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.uihelpers.CashflowDataHtmlBean;
@@ -774,8 +774,24 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private void validateFeeTypeIfVariableInstallmentLoanType(ActionErrors errors, FeeDto additionalFeeDetails) {
-        if(isVariableInstallmentsAllowed() && additionalFeeDetails.isPeriodic()) {
-            addError(errors, "AdditionalFee", ProductDefinitionConstants.PERIODIC_FEE_NOT_APPLICABLE, additionalFeeDetails.getFeeName());
+        if (isVariableInstallmentsAllowed()) {
+            if (additionalFeeDetails.isPeriodic()) {
+                addError(errors, "AdditionalFee", ProductDefinitionConstants.PERIODIC_FEE_NOT_APPLICABLE,
+                        additionalFeeDetails.getFeeName());
+            } else if (additionalFeeDetails.getFeeType().equals(RateAmountFlag.RATE)) {
+                FeeFormula feeFormula = additionalFeeDetails.getFeeFormulaValue();
+                if (feeFormula != null) {
+                    if (feeFormula.equals(FeeFormula.AMOUNT_AND_INTEREST)) {
+                        addError(errors, "AdditionalFee",
+                                ProductDefinitionConstants.FEE_WITH_PERCENT_INTEREST_NOT_APPLICABLE,
+                                additionalFeeDetails.getFeeName());
+                    } else if (feeFormula.equals(FeeFormula.INTEREST)) {
+                        addError(errors, "AdditionalFee",
+                                ProductDefinitionConstants.FEE_WITH_PERCENT_INTEREST_NOT_APPLICABLE,
+                                additionalFeeDetails.getFeeName());
+                    }
+                }
+            }
         }
     }
 

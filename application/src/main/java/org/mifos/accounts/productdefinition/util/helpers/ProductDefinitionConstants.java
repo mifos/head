@@ -312,4 +312,5 @@ public interface ProductDefinitionConstants {
     String CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT = "errors.cashflowwarninginvalidformat";
     String INVALID_INTEREST_TYPE = "errors.interestTypeInvalidForVariableInstallment";
     String PERIODIC_FEE_NOT_APPLICABLE = "errors.periodicFeeNotApplicableForVariableInstallment";
+    String FEE_WITH_PERCENT_INTEREST_NOT_APPLICABLE = "errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan";
 }
