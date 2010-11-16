@@ -200,7 +200,7 @@ public class RepaymentScheduleInstallment implements Serializable {
         if (totalValue == null) return true;
         if (interest != null && fees != null) {
             Money minPayable = interest.add(fees);
-            return totalValue.compareTo(minPayable) <= 0;
+            return totalValue.compareTo(minPayable) < 0;
         }
         return totalValue.isLessThanOrEqualZero();
     }

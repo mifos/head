@@ -37,6 +37,8 @@ public class RepaymentScheduleInstallmentTest {
         installment = getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "-10");
         installment.setInterest(null);
         assertThat(installment.isTotalAmountInValid(), is(true));
+        installment = getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "21.4");
+        assertThat(installment.isTotalAmountInValid(), is(false));
     }
     
     @Test
