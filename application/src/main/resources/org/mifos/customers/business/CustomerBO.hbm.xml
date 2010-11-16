@@ -819,6 +819,7 @@
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING
 	        	              or c.displayName like :SEARCH_STRING
+                                      or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
 	        	              or (
                                           cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
@@ -847,6 +848,7 @@
 	        	              or c.lastName like :SEARCH_STRING 
 	        	              or c.secondLastName like :SEARCH_STRING
 	        	              or c.displayName like :SEARCH_STRING
+                                      or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
                                       or (
                                           cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
@@ -870,6 +872,7 @@
                     		   or (c.customerLevel.id =:LEVELID and 
                     		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
 	        	              			or c.displayName like :SEARCH_STRING
+                                   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
                     		   or (
                                           cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
@@ -893,6 +896,7 @@
                     		   or (c.customerLevel.id =:LEVELID and 
                     		   (c.firstName like :SEARCH_STRING or c.lastName like :SEARCH_STRING or c.secondLastName like :SEARCH_STRING 
 	        	              			or c.displayName like :SEARCH_STRING
+                                   or (c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING2)
                     		   or (
                                           cnd.nameType = 3 and cnd.name.middleName like :SEARCH_STRING2 and
                                           c.firstName like :SEARCH_STRING1 and c.lastName like :SEARCH_STRING3)
