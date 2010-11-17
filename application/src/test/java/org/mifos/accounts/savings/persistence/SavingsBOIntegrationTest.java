@@ -37,7 +37,6 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -535,7 +534,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-        AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.SAVINGS_ACCOUNT, null);
+        AccountStateMachines.getInstance().initialize(AccountTypes.SAVINGS_ACCOUNT, null);
         savings.changeStatus(AccountState.SAVINGS_PENDING_APPROVAL.getValue(), null, "notes");
         Assert.assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings.getAccountState().getId().shortValue());
 
@@ -547,7 +546,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savingsOffering = helper.createSavingsOffering("dfasdasd1", "sad1");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, userContext);
-        AccountStateMachines.getInstance().initialize((short) 1, (short) 1, AccountTypes.SAVINGS_ACCOUNT, null);
+        AccountStateMachines.getInstance().initialize(AccountTypes.SAVINGS_ACCOUNT, null);
         // 6 is blacklisted
 
         savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), Short.valueOf("6"), "notes");

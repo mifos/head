@@ -20,12 +20,32 @@
 
 package org.mifos.accounts.business.service;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.accounts.business.*;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountActionEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateMachines;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
@@ -38,10 +58,14 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.util.helpers.*;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountStateFlag;
+import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.accounts.util.helpers.ApplicableCharge;
+import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerFeeScheduleEntity;
@@ -49,20 +73,11 @@ import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.sql.Date;
-import java.util.*;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -280,45 +295,35 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testGetStatusName() throws Exception {
-        AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
-                AccountTypes.SAVINGS_ACCOUNT, null);
-        String statusNameForSavings = service.getStatusName(Short.valueOf("1"),
-                AccountState.SAVINGS_PARTIAL_APPLICATION, AccountTypes.SAVINGS_ACCOUNT);
+        AccountStateMachines.getInstance().initialize(AccountTypes.SAVINGS_ACCOUNT, null);
+        String statusNameForSavings = service.getStatusName(AccountState.SAVINGS_PARTIAL_APPLICATION, AccountTypes.SAVINGS_ACCOUNT);
         Assert.assertNotNull(statusNameForSavings);
 
-        AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
-                AccountTypes.LOAN_ACCOUNT, null);
-        String statusNameForLoan = service.getStatusName(Short.valueOf("1"), AccountState.LOAN_PARTIAL_APPLICATION,
-                AccountTypes.LOAN_ACCOUNT);
+        AccountStateMachines.getInstance().initialize(AccountTypes.LOAN_ACCOUNT, null);
+        String statusNameForLoan = service.getStatusName(AccountState.LOAN_PARTIAL_APPLICATION,AccountTypes.LOAN_ACCOUNT);
         Assert.assertNotNull(statusNameForLoan);
     }
 
     @Test
     public void testGetFlagName() throws Exception {
-        AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
-                AccountTypes.SAVINGS_ACCOUNT, null);
-        String flagNameForSavings = service.getFlagName(Short.valueOf("1"), AccountStateFlag.SAVINGS_REJECTED,
-                AccountTypes.SAVINGS_ACCOUNT);
+        AccountStateMachines.getInstance().initialize(AccountTypes.SAVINGS_ACCOUNT, null);
+        String flagNameForSavings = service.getFlagName(AccountStateFlag.SAVINGS_REJECTED, AccountTypes.SAVINGS_ACCOUNT);
         Assert.assertNotNull(flagNameForSavings);
 
-        AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
-                AccountTypes.LOAN_ACCOUNT, null);
-        String flagNameForLoan = service.getFlagName(Short.valueOf("1"), AccountStateFlag.LOAN_REJECTED,
-                AccountTypes.LOAN_ACCOUNT);
+        AccountStateMachines.getInstance().initialize(AccountTypes.LOAN_ACCOUNT, null);
+        String flagNameForLoan = service.getFlagName(AccountStateFlag.LOAN_REJECTED, AccountTypes.LOAN_ACCOUNT);
         Assert.assertNotNull(flagNameForLoan);
     }
 
     @Test
     public void testGetStatusList() throws Exception {
-        AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
-                AccountTypes.SAVINGS_ACCOUNT, null);
+        AccountStateMachines.getInstance().initialize(AccountTypes.SAVINGS_ACCOUNT, null);
         List<AccountStateEntity> statusListForSavings = service.getStatusList(new AccountStateEntity(
                 AccountState.SAVINGS_PARTIAL_APPLICATION), AccountTypes.SAVINGS_ACCOUNT, TestUtils.makeUser()
                 .getLocaleId());
         Assert.assertEquals(2, statusListForSavings.size());
 
-        AccountStateMachines.getInstance().initialize(Short.valueOf("1"), Short.valueOf("1"),
-                AccountTypes.LOAN_ACCOUNT, null);
+        AccountStateMachines.getInstance().initialize(AccountTypes.LOAN_ACCOUNT, null);
         List<AccountStateEntity> statusListForLoan = service.getStatusList(new AccountStateEntity(
                 AccountState.LOAN_PARTIAL_APPLICATION), AccountTypes.LOAN_ACCOUNT, Short.valueOf("1"));
         Assert.assertEquals(2, statusListForLoan.size());

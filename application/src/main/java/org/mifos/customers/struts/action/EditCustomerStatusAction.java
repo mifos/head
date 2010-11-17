@@ -20,6 +20,13 @@
 
 package org.mifos.customers.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -49,12 +56,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.List;
-
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class EditCustomerStatusAction extends BaseAction {
 
@@ -178,19 +179,16 @@ public class EditCustomerStatusAction extends BaseAction {
         return mapping.findForward(forward);
     }
 
-    private String getStatusName(CustomerBO customerBO, Short localeId, String statusId, Short statusIdValue) {
+    private String getStatusName(CustomerBO customerBO, String statusId, Short statusIdValue) {
         if (StringUtils.isNotBlank(statusId)) {
-            return customerService
-                    .getStatusName(localeId, CustomerStatus.fromInt(statusIdValue), customerBO.getLevel());
+            return customerService.getStatusName(CustomerStatus.fromInt(statusIdValue), customerBO.getLevel());
         }
         return null;
     }
 
-    private String getFlagName(CustomerBO customerBO, Short localeId, String statusId, Short statusIdValue,
-            Short flagIdValue) {
+    private String getFlagName(CustomerBO customerBO, String statusId, Short statusIdValue, Short flagIdValue) {
         if (StringUtils.isNotBlank(statusId) && isNewStatusCancelledOrClosed(statusIdValue)) {
-            return customerService.getFlagName(localeId, CustomerStatusFlag.getStatusFlag(flagIdValue), customerBO
-                    .getLevel());
+            return customerService.getFlagName(CustomerStatusFlag.getStatusFlag(flagIdValue), customerBO.getLevel());
         }
         return null;
     }
@@ -205,10 +203,8 @@ public class EditCustomerStatusAction extends BaseAction {
                 statusActionForm.getNewStatusIdValue(), statusActionForm.getLevelIdValue());
 
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
-        newStatusName = getStatusName(customerBO, userContext.getLocaleId(), statusActionForm.getNewStatusId(),
-                statusActionForm.getNewStatusIdValue());
-        flagName = getFlagName(customerBO, userContext.getLocaleId(), statusActionForm.getNewStatusId(),
-                statusActionForm.getNewStatusIdValue(), statusActionForm.getFlagIdValue());
+        newStatusName = getStatusName(customerBO, statusActionForm.getNewStatusId(), statusActionForm.getNewStatusIdValue());
+        flagName = getFlagName(customerBO, statusActionForm.getNewStatusId(), statusActionForm.getNewStatusIdValue(), statusActionForm.getFlagIdValue());
         SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME, newStatusName, request);
         SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, flagName, request);
 
@@ -262,8 +258,7 @@ public class EditCustomerStatusAction extends BaseAction {
 
     private void loadInitialData(ActionForm form, CustomerBO customerBO, UserContext userContext) throws Exception {
         customerBO.setUserContext(userContext);
-        customerService.initializeStateMachine(userContext.getLocaleId(), customerBO.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel());
+        customerService.initializeStateMachine(AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel());
         setFormAttributes(form, customerBO);
         customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
     }

@@ -156,7 +156,7 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
     }
 
     @Override
-    public void reset(ActionMapping mapping, HttpServletRequest request) {
+    public void reset(@SuppressWarnings("unused") ActionMapping mapping, HttpServletRequest request) {
         String methodCalled = request.getParameter(Methods.method.toString());
         if (null != methodCalled) {
             if ((Methods.preview.toString()).equals(methodCalled)) {
@@ -167,7 +167,7 @@ public class EditStatusActionForm extends BaseActionForm implements QuestionResp
     }
 
     @Override
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+    public ActionErrors validate(@SuppressWarnings("unused") ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
         String methodCalled = request.getParameter(Methods.method.toString());
         if (null != methodCalled) {

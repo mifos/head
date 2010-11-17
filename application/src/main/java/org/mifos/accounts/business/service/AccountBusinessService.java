@@ -72,7 +72,7 @@ import org.mifos.security.util.UserContext;
 public class AccountBusinessService implements BusinessService {
 
     @Override
-    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
     }
 
@@ -306,27 +306,25 @@ public class AccountBusinessService implements BusinessService {
         applicableChargeList.add(applicableCharge);
     }
 
-    public void initializeStateMachine(Short localeId, Short officeId, AccountTypes accountType,
-            CustomerLevel customerLevel) throws ServiceException {
+    public void initializeStateMachine(AccountTypes accountType, CustomerLevel customerLevel) throws ServiceException {
         try {
-            AccountStateMachines.getInstance().initialize(localeId, officeId, accountType, customerLevel);
+            AccountStateMachines.getInstance().initialize(accountType, customerLevel);
         } catch (StatesInitializationException e) {
             throw new ServiceException(e);
         }
     }
 
-    public String getStatusName(Short localeId, AccountState accountState, AccountTypes accountType) {
-        return AccountStateMachines.getInstance().getAccountStatusName(localeId, accountState, accountType);
+    public String getStatusName(AccountState accountState, AccountTypes accountType) {
+        return AccountStateMachines.getInstance().getAccountStatusName(accountState, accountType);
     }
 
-    public String getFlagName(Short localeId, AccountStateFlag accountStateFlag, AccountTypes accountType) {
-        return AccountStateMachines.getInstance().getAccountFlagName(localeId, accountStateFlag, accountType);
+    public String getFlagName(AccountStateFlag accountStateFlag, AccountTypes accountType) {
+        return AccountStateMachines.getInstance().getAccountFlagName(accountStateFlag, accountType);
     }
 
     public List<AccountStateEntity> getStatusList(AccountStateEntity accountStateEntity, AccountTypes accountType,
             Short localeId) {
-        List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getStatusList(accountStateEntity,
-                accountType);
+        List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getStatusList(accountStateEntity, accountType);
         if (null != statusList) {
             for (AccountStateEntity accountState : statusList) {
                 accountState.setLocaleId(localeId);

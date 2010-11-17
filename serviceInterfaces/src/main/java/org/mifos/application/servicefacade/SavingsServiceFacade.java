@@ -26,6 +26,8 @@ import org.joda.time.LocalDate;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
+import org.mifos.dto.domain.SavingsAccountStatusDto;
+import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
@@ -68,4 +70,10 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsAccountStatusDto retrieveAccountStatuses(Long savingsId, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus, Short localeId);
 }

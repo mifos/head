@@ -20,42 +20,43 @@
 
 package org.mifos.accounts.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
+import org.mifos.dto.domain.SavingsAccountStatusDto;
+import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.List;
-
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class EditStatusAction extends BaseAction {
 
@@ -64,11 +65,6 @@ public class EditStatusAction extends BaseAction {
     @Override
     protected BusinessService getService() {
         return getAccountBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
     }
 
     public static ActionSecurity getSecurity() {
@@ -84,28 +80,48 @@ public class EditStatusAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         doCleanUp(request.getSession(), form);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
-        AccountBO accountBO = getAccountBusinessService().getAccount(
-                getIntegerValue(((EditStatusActionForm) form).getAccountId()));
-        getAccountBusinessService().initializeStateMachine(userContext.getLocaleId(),
-                accountBO.getOffice().getOfficeId(), accountBO.getType(), null);
-        accountBO.setUserContext(userContext);
-        accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
-        setFormAttributes(form, accountBO);
+        EditStatusActionForm actionForm = (EditStatusActionForm) form;
+        Integer accountId = Integer.valueOf(actionForm.getAccountId());
+        AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
+
+        if (accountBO.isLoanAccount()) {
+            getAccountBusinessService().initializeStateMachine(accountBO.getType(), null);
+            accountBO.setUserContext(userContext);
+            accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
+
+            setFormAttributes(form, accountBO);
+        } if (accountBO.isSavingsAccount()) {
+
+            // NOTE - not using dto values at present but available when ui is refactored away from jsp
+            SavingsAccountStatusDto accountStatuses = this.savingsServiceFacade.retrieveAccountStatuses(accountId.longValue(), userContext.getLocaleId());
+
+            SavingsBO savingsAccount = this.savingsDao.findById(accountId.longValue());
+
+            setFormAttributes(form, savingsAccount);
+        }
+        List<AccountStateEntity> accountStatuses = getAccountBusinessService().getStatusList(accountBO.getAccountState(), accountBO.getType(), userContext.getLocaleId());
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
-        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_LIST, getAccountBusinessService().getStatusList(
-                accountBO.getAccountState(), accountBO.getType(), userContext.getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_LIST, accountStatuses, request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         AccountBO accountBO = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
-        getMasterData(form, accountBO, request, userContext);
+        EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
+
+        // FIXME - KEITHW - is checklist functionality being removed from application?
+        List<AccountCheckListBO> checklist = getAccountBusinessService().getStatusChecklist(
+                getShortValue(editStatusActionForm.getNewStatusId()),
+                getShortValue(editStatusActionForm.getAccountTypeId()));
+        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
+
         initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
         if (loanApproved(request)) {
             return approveLoanQuestionnaire.fetchAppliedQuestions(mapping,(EditStatusActionForm) form, request, ActionForwards.preview_success);
@@ -123,51 +139,64 @@ public class EditStatusAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(getDetailAccountPage(form));
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
-        AccountBO accountBOInSession = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
-        AccountBO accountBO = getAccountBusinessService().getAccount(
-                getIntegerValue(editStatusActionForm.getAccountId()));
-        checkVersionMismatch(accountBOInSession.getVersionNo(), accountBO.getVersionNo());
-        accountBO.setUserContext(userContext);
-        accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
-        setInitialObjectForAuditLogging(accountBO);
+        AccountBO accountBOInSession = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+
+        Integer accountId = Integer.valueOf(editStatusActionForm.getAccountId());
+        AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
+
         Short flagId = null;
         Short newStatusId = null;
+        String updateComment = editStatusActionForm.getNotes();
         if (StringUtils.isNotBlank(editStatusActionForm.getFlagId())) {
             flagId = getShortValue(editStatusActionForm.getFlagId());
         }
         if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())) {
             newStatusId = getShortValue(editStatusActionForm.getNewStatusId());
         }
-        checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
-        initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
-        approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, getIntegerValue(editStatusActionForm.getAccountId()));
-        accountBO.changeStatus(newStatusId, flagId, editStatusActionForm.getNotes());
-        accountBOInSession = null;
-        accountBO.update();
-        accountBO = null;
-        return mapping.findForward(getDetailAccountPage(form));
+
+        if (accountBO.isLoanAccount()) {
+            checkVersionMismatch(accountBOInSession.getVersionNo(), accountBO.getVersionNo());
+            accountBO.setUserContext(userContext);
+            accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
+            setInitialObjectForAuditLogging(accountBO);
+            checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
+            initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
+            approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
+            accountBO.changeStatus(newStatusId, flagId, updateComment);
+            accountBOInSession = null;
+            accountBO.update();
+            accountBO = null;
+            return mapping.findForward(ActionForwards.loan_detail_page.toString());
+        } if (accountBO.isSavingsAccount()) {
+            SavingsAccountUpdateStatus updateStatus = new SavingsAccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
+            this.savingsServiceFacade.updateSavingsAccountStatus(updateStatus, userContext.getLocaleId());
+            return mapping.findForward(ActionForwards.savings_details_page.toString());
+        }
+
+        // nothing but loan of savings account should be detected. customer account status change goes through seperate action.
+        return null;
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
@@ -227,35 +256,6 @@ public class EditStatusAction extends BaseAction {
             forward = ActionForwards.savings_details_page.toString();
         }
         return forward;
-    }
-
-    private void getMasterData(ActionForm form, AccountBO accountBO, HttpServletRequest request, UserContext userContext)
-            throws Exception {
-        EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
-        editStatusActionForm.setCommentDate(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
-        String newStatusName = null;
-        String flagName = null;
-        List<AccountCheckListBO> checklist = getAccountBusinessService().getStatusChecklist(
-                getShortValue(editStatusActionForm.getNewStatusId()),
-                getShortValue(editStatusActionForm.getAccountTypeId()));
-        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
-        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())) {
-            newStatusName = getAccountBusinessService().getStatusName(userContext.getLocaleId(),
-                    AccountState.fromShort(getShortValue(editStatusActionForm.getNewStatusId())), accountBO.getType());
-        }
-        SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME, newStatusName, request);
-        if (StringUtils.isNotBlank(editStatusActionForm.getNewStatusId())
-                && isNewStatusIsCancel(getShortValue(editStatusActionForm.getNewStatusId()))) {
-            flagName = getAccountBusinessService().getFlagName(userContext.getLocaleId(),
-                    AccountStateFlag.getStatusFlag(getShortValue(editStatusActionForm.getFlagId())),
-                    accountBO.getType());
-        }
-        SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, flagName, request);
-    }
-
-    private boolean isNewStatusIsCancel(Short newStatusId) {
-        return newStatusId.equals(AccountState.SAVINGS_CANCELLED.getValue())
-                || newStatusId.equals(AccountState.LOAN_CANCELLED.getValue());
     }
 
     private void setFormAttributes(ActionForm form, AccountBO accountBO) throws Exception {

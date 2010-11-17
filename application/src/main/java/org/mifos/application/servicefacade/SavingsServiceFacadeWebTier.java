@@ -31,7 +31,8 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
@@ -72,7 +73,6 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -80,6 +80,8 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
+import org.mifos.dto.domain.SavingsAccountStatusDto;
+import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
@@ -89,6 +91,7 @@ import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -679,7 +682,8 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         Money recommendedOrMandatory = new Money(savingsProduct.getCurrency(), savingsAccountCreation.getRecommendedOrMandatoryAmount());
         AccountState savingsAccountState = AccountState.fromShort(savingsAccountCreation.getAccountState());
 
-        List<CustomerCustomFieldEntity> savingsCustomFields = CustomerCustomFieldEntity.fromDto(savingsAccountCreation.getCustomFields(), null);
+        // NOTE - doesn't look like we create custom fields like this anymore but with questionaire API
+//        List<CustomerCustomFieldEntity> savingsCustomFields = CustomerCustomFieldEntity.fromDto(savingsAccountCreation.getCustomFields(), null);
 
         CalendarEvent calendarEvents = this.holidayDao.findCalendarEventsForThisYearAndNext(customer.getOfficeId());
 
@@ -688,13 +692,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         try {
             SavingsBO savingsAccount = null;
             if (savingsAccountWrapper.isIndividualSavingsAccount()) {
-                savingsAccount = SavingsBO.createIndividalSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState, savingsCustomFields, createdDate, createdById, calendarEvents, createdBy);
+
+                savingsAccount = SavingsBO.createIndividalSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState,
+                        createdDate, createdById, calendarEvents, createdBy);
+
             } else if (savingsAccountWrapper.isJointSavingsAccountWithClientTracking()) {
 
                 List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(customer.getSearchId(),
                         customer.getOfficeId(), CustomerLevel.CLIENT);
                 savingsAccount = SavingsBO.createJointSavingsAccount(customer, savingsProduct, recommendedOrMandatory, savingsAccountState,
-                        savingsCustomFields, createdDate, createdById, calendarEvents, createdBy, activeAndOnHoldClients);
+                        createdDate, createdById, calendarEvents, createdBy, activeAndOnHoldClients);
             }
 
             this.transactionHelper.startTransaction();
@@ -704,6 +711,59 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
             return savingsAccount.getAccountId().longValue();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public SavingsAccountStatusDto retrieveAccountStatuses(Long savingsId, Short localeId) {
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+
+        try {
+            List<ListElement> savingsStatesList = new ArrayList<ListElement>();
+            AccountStateMachines.getInstance().initializeSavingsStates();
+
+            List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getSavingsStatusList(savingsAccount.getAccountState());
+            for (AccountStateEntity accountState : statusList) {
+                accountState.setLocaleId(localeId);
+                savingsStatesList.add(new ListElement(accountState.getId().intValue(), accountState.getName()));
+            }
+
+            return new SavingsAccountStatusDto(savingsStatesList);
+        } catch (StatesInitializationException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus, Short localeId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+        userContext.setLocaleId(localeId);
+
+        SavingsBO savingsAccount = this.savingsDao.findById(updateStatus.getSavingsId());
+        savingsAccount.updateDetails(userContext);
+        try {
+            this.transactionHelper.startTransaction();
+            this.transactionHelper.beginAuditLoggingFor(savingsAccount);
+            AccountState newStatus = AccountState.fromShort(updateStatus.getNewStatusId());
+
+            // FIXME - keithw - refactor savings specific logic out of changeStatus and create savings statue machine wrapper.
+            savingsAccount.changeStatus(newStatus, updateStatus.getFlagId(), updateStatus.getComment());
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.commitTransaction();
         } catch (BusinessRuleException e) {
             this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getMessageKey(), e);

@@ -32,7 +32,6 @@ import java.util.Set;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
-import org.joda.time.ReadablePartial;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -84,7 +83,6 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -122,11 +120,6 @@ public class SavingsBO extends AccountBO {
     private SavingsOfferingBO savingsOffering;
     private SavingsPerformanceEntity savingsPerformance;
 
-//  private Date lastIntCalcDate;
-//  private Date nextIntCalcDate;
-//  private Date interIntCalcDate;
-//  private Money minAmntForInt;
-//  private MeetingBO timePerForInstcalc;
     // the follow three fields cant be null at present on savings_account table so populate them for now but dont use em.
     private SavingsTypeEntity savingsType;
     private InterestCalcTypeEntity interestCalcType;
@@ -190,27 +183,27 @@ public class SavingsBO extends AccountBO {
      * Responsible for creating savings account in valid initial state.
      */
     public static SavingsBO createIndividalSavingsAccount(CustomerBO customer, SavingsOfferingBO savingsProduct,
-            Money recommendedOrMandatoryAmount, AccountState savingsAccountState,
-            List<CustomerCustomFieldEntity> savingsCustomFields, LocalDate createdDate, Integer createdById,
+            Money recommendedOrMandatoryAmount, AccountState savingsAccountState, LocalDate createdDate, Integer createdById,
             CalendarEvent calendarEvents, PersonnelBO createdBy) {
 
         SavingsAccountActivationDetail activationDetails = determineAccountActivationDetails(customer, savingsProduct, recommendedOrMandatoryAmount, savingsAccountState, calendarEvents);
 
+        Money startingBalance = Money.zero(savingsProduct.getCurrency());
         RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
-        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy);
+        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, startingBalance);
 
         return savingsAccount;
     }
 
     public static SavingsBO createJointSavingsAccount(CustomerBO customer, SavingsOfferingBO savingsProduct,
-            Money recommendedOrMandatoryAmount, AccountState savingsAccountState,
-            List<CustomerCustomFieldEntity> savingsCustomFields, LocalDate createdDate, Integer createdById,
+            Money recommendedOrMandatoryAmount, AccountState savingsAccountState, LocalDate createdDate, Integer createdById,
             CalendarEvent calendarEvents, PersonnelBO createdBy, List<CustomerBO> activeAndOnHoldClients) {
 
         SavingsAccountActivationDetail activationDetails = determineAccountActivationDetails(customer, savingsProduct, recommendedOrMandatoryAmount, savingsAccountState, calendarEvents, activeAndOnHoldClients);
 
+        Money startingBalance = Money.zero(savingsProduct.getCurrency());
         RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.PER_INDIVIDUAL;
-        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy);
+        SavingsBO savingsAccount = new SavingsBO(savingsAccountState, customer, activationDetails, createdDate, createdById, savingsProduct, recommendedAmountUnit, recommendedOrMandatoryAmount, createdBy, startingBalance);
 
         return savingsAccount;
     }
@@ -219,11 +212,12 @@ public class SavingsBO extends AccountBO {
      * valid minimal legal constructor
      */
     public SavingsBO(AccountState savingsAccountState, CustomerBO customer, SavingsAccountActivationDetail activationDetails, LocalDate createdDate, Integer createdById, SavingsOfferingBO savingsProduct,
-            RecommendedAmountUnit recommendedAmountUnit, Money recommendedOrMandatoryAmount, PersonnelBO createdBy) {
+            RecommendedAmountUnit recommendedAmountUnit, Money recommendedOrMandatoryAmount, PersonnelBO createdBy, Money startingBalance) {
         super(AccountTypes.SAVINGS_ACCOUNT, savingsAccountState, customer, activationDetails, createdDate.toDateMidnight().toDate(), createdById.shortValue());
         this.savingsOffering = savingsProduct;
         this.recommendedAmntUnit = new RecommendedAmntUnitEntity(recommendedAmountUnit);
         this.recommendedAmount = recommendedOrMandatoryAmount;
+        this.savingsBalance = startingBalance;
         this.savingsPerformance = new SavingsPerformanceEntity(this);
 
         // inherited from savings product for now but should be removed and cleaned up.

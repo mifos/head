@@ -27,8 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -37,17 +35,19 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.StateEntity;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.components.stateMachineFactory.StateXMLParser;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * At first glance this code seems to be part of the excessively complicated
@@ -97,10 +97,23 @@ public class AccountStateMachines {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountStateMachines.class);
 
-    public void initialize(Short localeId, Short officeId, AccountTypes accountType, CustomerLevel level)
+    public void initializeSavingsStates() throws StatesInitializationException {
+        AccountTypes accountType = AccountTypes.SAVINGS_ACCOUNT;
+        CustomerLevel level = null;
+        String configName = getConfigurationName(accountType, level);
+        try {
+            statesMapForSavings = loadMap(AccountStates.TRANSITION_CONFIG_FILE_PATH_SAVINGS, configName);
+            accountStateEntityListForSavings = retrieveAllAccountStateList(accountType);
+            populateSavingsStatesViewMap();
+        } catch (Exception e) {
+            throw new StatesInitializationException(SavingsConstants.STATEINITIALIZATION_EXCEPTION, e);
+        }
+    }
+
+    public void initialize(AccountTypes accountType, CustomerLevel level)
             throws StatesInitializationException {
         logger.debug("In AccountStateMachines::initialize()");
-        String configName = getConfigurationName(officeId, accountType, level);
+        String configName = getConfigurationName(accountType, level);
         try {
             if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
                 statesMapForLoan = loadMap(AccountStates.TRANSITION_CONFIG_FILE_PATH_LOAN, configName);
@@ -131,7 +144,7 @@ public class AccountStateMachines {
         }
     }
 
-    public String getAccountStatusName(Short localeId, AccountState accountState, AccountTypes accountType) {
+    public String getAccountStatusName(AccountState accountState, AccountTypes accountType) {
         logger.debug("In AccountStateMachines::getAccountStatusName()");
         if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
             for (AccountStateEntity accountStateEntityObj : accountStateEntityListForLoan) {
@@ -149,7 +162,7 @@ public class AccountStateMachines {
         return null;
     }
 
-    public String getAccountFlagName(Short localeId, AccountStateFlag flag, AccountTypes accountType) {
+    public String getAccountFlagName(AccountStateFlag flag, AccountTypes accountType) {
         logger.debug("In AccountStateMachines::getAccountFlagName()");
         if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {
             for (AccountStateEntity accountStateEntity : accountStateEntityListForLoan) {
@@ -171,7 +184,7 @@ public class AccountStateMachines {
         return null;
     }
 
-    public String getCustomerStatusName(Short localeId, CustomerStatus customerStatus, CustomerLevel customerLevel) {
+    public String getCustomerStatusName(CustomerStatus customerStatus, CustomerLevel customerLevel) {
         logger.debug("In AccountStateMachines::getCustomerStatusName()");
         if (customerLevel.equals(CustomerLevel.CENTER)) {
             for (CustomerStatusEntity customerStatusEntity : customerStatusListForCenter) {
@@ -195,7 +208,7 @@ public class AccountStateMachines {
         return null;
     }
 
-    public String getCustomerFlagName(Short localeId, CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel) {
+    public String getCustomerFlagName(CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel) {
         logger.debug("In AccountStateMachines::getCustomerFlagName()");
         if (customerLevel.equals(CustomerLevel.CENTER)) {
             for (CustomerStatusEntity customerStatus : customerStatusListForCenter) {
@@ -229,6 +242,10 @@ public class AccountStateMachines {
             }
         }
         return null;
+    }
+
+    public List<AccountStateEntity> getSavingsStatusList(AccountStateEntity accountStateEntity) {
+        return statesViewMapForSavings.get(accountStateEntity.getId());
     }
 
     public List<AccountStateEntity> getStatusList(AccountStateEntity accountStateEntity, AccountTypes accountTypes) {
@@ -275,7 +292,7 @@ public class AccountStateMachines {
         }
     }
 
-    private String getConfigurationName(Short officeId, AccountTypes accountType, CustomerLevel level) {
+    private String getConfigurationName(AccountTypes accountType, CustomerLevel level) {
         logger.debug("In AccountStateMachines::getConfigurationName()");
         String configurationName = null;
         if (accountType.equals(AccountTypes.LOAN_ACCOUNT)) {

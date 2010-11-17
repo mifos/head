@@ -378,22 +378,16 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     @Test
     public void testGetStatusName() throws Exception {
         createInitialCustomers();
-        AccountStateMachines.getInstance().initialize(TestObjectFactory.TEST_LOCALE, center.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CENTER);
-        String statusNameForCenter = service.getStatusName(TestObjectFactory.TEST_LOCALE, center.getStatus(),
-                CustomerLevel.CENTER);
+        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CENTER);
+        String statusNameForCenter = service.getStatusName(center.getStatus(), CustomerLevel.CENTER);
         Assert.assertEquals("Active", statusNameForCenter);
 
-        AccountStateMachines.getInstance().initialize(TestObjectFactory.TEST_LOCALE, group.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.GROUP);
-        String statusNameForGroup = service.getStatusName(TestObjectFactory.TEST_LOCALE, group.getStatus(),
-                CustomerLevel.GROUP);
+        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.GROUP);
+        String statusNameForGroup = service.getStatusName(group.getStatus(), CustomerLevel.GROUP);
         Assert.assertEquals("Active", statusNameForGroup);
 
-        AccountStateMachines.getInstance().initialize(TestObjectFactory.TEST_LOCALE, client.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CLIENT);
-        String statusNameForClient = service.getStatusName(TestObjectFactory.TEST_LOCALE, client.getStatus(),
-                CustomerLevel.CLIENT);
+        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CLIENT);
+        String statusNameForClient = service.getStatusName(client.getStatus(), CustomerLevel.CLIENT);
         Assert.assertNotNull("Active", statusNameForClient);
     }
 
@@ -404,36 +398,29 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
         client = TestObjectFactory.createClient("client", CustomerStatus.CLIENT_CLOSED, group);
 
-        AccountStateMachines.getInstance().initialize(TestObjectFactory.TEST_LOCALE, client.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CLIENT);
-        String flagNameForClient = service.getFlagName(TestObjectFactory.TEST_LOCALE,
-                CustomerStatusFlag.CLIENT_CLOSED_DUPLICATE, CustomerLevel.CLIENT);
+        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CLIENT);
+        String flagNameForClient = service.getFlagName(CustomerStatusFlag.CLIENT_CLOSED_DUPLICATE, CustomerLevel.CLIENT);
         Assert.assertNotNull("Duplicate", flagNameForClient);
 
-        AccountStateMachines.getInstance().initialize(TestObjectFactory.TEST_LOCALE, group.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.GROUP);
-        String flagNameForGroup = service.getFlagName(TestObjectFactory.TEST_LOCALE,
-                CustomerStatusFlag.GROUP_CLOSED_DUPLICATE, CustomerLevel.GROUP);
+        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.GROUP);
+        String flagNameForGroup = service.getFlagName(CustomerStatusFlag.GROUP_CLOSED_DUPLICATE, CustomerLevel.GROUP);
         Assert.assertNotNull("Duplicate", flagNameForGroup);
     }
 
     @Test
     public void testGetStatusList() throws Exception {
         createInitialCustomers();
-        AccountStateMachines.getInstance().initialize(TestObjectFactory.TEST_LOCALE, center.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CENTER);
+        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CENTER);
         List<CustomerStatusEntity> statusListForCenter = service.getStatusList(center.getCustomerStatus(),
                 CustomerLevel.CENTER, TestObjectFactory.TEST_LOCALE);
         Assert.assertEquals(1, statusListForCenter.size());
 
-        AccountStateMachines.getInstance().initialize(TestObjectFactory.TEST_LOCALE, group.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.GROUP);
+        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.GROUP);
         List<CustomerStatusEntity> statusListForGroup = service.getStatusList(group.getCustomerStatus(),
                 CustomerLevel.GROUP, TestObjectFactory.TEST_LOCALE);
         Assert.assertEquals(2, statusListForGroup.size());
 
-        AccountStateMachines.getInstance().initialize(TestObjectFactory.TEST_LOCALE, client.getOffice().getOfficeId(),
-                AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CLIENT);
+        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CLIENT);
         List<CustomerStatusEntity> statusListForClient = service.getStatusList(client.getCustomerStatus(),
                 CustomerLevel.CLIENT, TestObjectFactory.TEST_LOCALE);
         Assert.assertEquals(2, statusListForClient.size());

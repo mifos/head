@@ -170,21 +170,20 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-    public void initializeStateMachine(Short localeId, Short officeId, AccountTypes accountTypes,
-            CustomerLevel customerLevel) throws ServiceException {
+    public void initializeStateMachine(AccountTypes accountTypes, CustomerLevel customerLevel) throws ServiceException {
         try {
-            AccountStateMachines.getInstance().initialize(localeId, officeId, accountTypes, customerLevel);
+            AccountStateMachines.getInstance().initialize(accountTypes, customerLevel);
         } catch (StatesInitializationException sie) {
             throw new ServiceException(sie);
         }
     }
 
-    public String getStatusName(Short localeId, CustomerStatus customerStatus, CustomerLevel customerLevel) {
-        return AccountStateMachines.getInstance().getCustomerStatusName(localeId, customerStatus, customerLevel);
+    public String getStatusName(CustomerStatus customerStatus, CustomerLevel customerLevel) {
+        return AccountStateMachines.getInstance().getCustomerStatusName(customerStatus, customerLevel);
     }
 
-    public String getFlagName(Short localeId, CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel) {
-        return AccountStateMachines.getInstance().getCustomerFlagName(localeId, customerStatusFlag, customerLevel);
+    public String getFlagName(CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel) {
+        return AccountStateMachines.getInstance().getCustomerFlagName(customerStatusFlag, customerLevel);
     }
 
     public List<CustomerStatusEntity> getStatusList(CustomerStatusEntity customerStatusEntity,
