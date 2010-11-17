@@ -145,7 +145,7 @@
                 <browser>*firefox</browser>
             </properties>
         </profile>
-        <profile>
+		<profile>
             <id>chrome</id>
             <properties>
                 <browser>*chrome</browser>
@@ -222,6 +222,16 @@
         <dependency>
             <groupId>findbugs</groupId>
             <artifactId>annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.5.4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
