@@ -48,6 +48,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.math.BigInteger;
+
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
 import static org.mifos.platform.util.CollectionUtils.isEmpty;
 import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
@@ -552,8 +554,9 @@ public class QuestionnaireValidatorImpl implements QuestionnaireValidator {
     private boolean invalidNumericAnswer(String answer, Integer allowedMin, Integer allowedMax) {
         boolean result;
         try {
-            Integer answerAsInt = Integer.parseInt(answer, 10);
-            result = (allowedMin != null && answerAsInt < allowedMin) || (allowedMax != null && answerAsInt > allowedMax);
+            BigInteger answerAsInt = new BigInteger(answer, 10);
+            result = (allowedMin != null && answerAsInt.compareTo(new BigInteger(allowedMin.toString())) < 0) ||
+                    (allowedMax != null && answerAsInt.compareTo(new BigInteger(allowedMax.toString())) > 0);
         } catch (NumberFormatException e) {
             result = true;
         }
