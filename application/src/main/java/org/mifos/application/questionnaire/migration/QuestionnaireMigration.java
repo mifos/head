@@ -241,7 +241,10 @@ public class QuestionnaireMigration {
     private Integer getQuestionGroup(Iterator<CustomFieldDefinitionEntity> customFields, Map<Short, Integer> customFieldQuestionIdMap, EntityType entityType) {
         Integer questionGroupId = null;
         if (customFields != null) {
-            questionGroupId = createQuestionGroup(mapAdditionalFieldsToQuestionGroupDto(customFields, customFieldQuestionIdMap, entityType));
+            QuestionGroupDto mapped = mapAdditionalFieldsToQuestionGroupDto(customFields, customFieldQuestionIdMap, entityType);
+            if (mapped != null) {
+                questionGroupId = createQuestionGroup(mapped);
+            }
         }
         return questionGroupId;
     }

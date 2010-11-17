@@ -123,6 +123,8 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
                 }
             }
         }
+        if (sectionDto.getQuestions().isEmpty())
+            return null;
         return getQuestionGroup(sectionDto, entityType.getValue());
     }
 
