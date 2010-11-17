@@ -30,10 +30,10 @@
     </li>
     <li id="numericDiv">
         <label for="currentQuestion.numericMin">[@spring.message "questionnaire.quesiton.numeric.min"/]: </label>
-        [@spring.formInput "questionDefinition.currentQuestion.numericMin", 'maxlength="5" class="numeric"'/]
+        [@spring.formInput "questionDefinition.currentQuestion.numericMin", 'maxlength="9" class="numeric"'/]
         <br>
         <label for="currentQuestion.numericMax">[@spring.message "questionnaire.quesiton.numeric.max"/]: </label>
-        [@spring.formInput "questionDefinition.currentQuestion.numericMax", 'maxlength="5" class="numeric"'/]
+        [@spring.formInput "questionDefinition.currentQuestion.numericMax", 'maxlength="9" class="numeric"'/]
     </li>
     <li id="choiceDiv" class="long_t_box">
         <label for="currentQuestion.currentChoice"><span class="red">*</span>[@spring.message "questionnaire.quesiton.choice"/]: </label>
