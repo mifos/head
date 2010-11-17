@@ -174,7 +174,7 @@ html, body {
 .content_panel h1 {
     margin: 0 0 15px 0;
     color: #CC6601;
-    font-size: 12px;
+    font-size:15px;
     font-weight: bold;
 }
 
@@ -426,7 +426,7 @@ input[type="checkbox"], input.checkbox {
 }
 
 #interestCalculationFrequency, #interestPostingMonthlyFrequency, #interestRate {
-    width: 76px;
+    width: 40px;
 }
 
 #chinese-info-on-login-page {

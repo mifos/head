@@ -56,7 +56,6 @@
         <li type="circle"><a id="admin.link.defineLookupOption"	href="defineLookupOptions.ftl">[@spring.message "admin.defineLookupOptions"/]</a></li>
         <li type="circle"><a id="admin.link.defineHiddenMandatoryFields" href="defineMandatoryHiddenFields.ftl">[@spring.message "admin.definemandatory/hiddenfields"/]</a></li>
         <li type="circle"><a id="admin.link.viewAdditionalFields" href="viewAdditionalFields.ftl">[@spring.message "admin.viewAdditionalFields"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineAdditionalFields"	href="defineAdditionalFields.ftl">[@spring.message "admin.defineAdditionalFields"/]</a></li>
-        <li type="circle"><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl" >[@spring.message "admin.uploadPPI"/]</a></li>
       </ul>
       </p>
       <p class="orangeheading">[@spring.message "admin.manageimports"/]</p>
@@ -115,6 +114,7 @@
       <ul>
         <li type="circle"><a id="admin.link.questions" href="viewQuestions.ftl">[@spring.message "admin.viewquestions" /]</a> | <a id="admin.link.defineNewQuestion" href="createQuestion.ftl">[@spring.message "admin.definenewquestion" /]</a></li>
         <li type="circle"><a id="admin.link.questiongroups" href="viewQuestionGroups.ftl">[@spring.message "admin.viewquestiongroups" /]</a> | <a id="admin.link.defineNewQuestionGroup" href="createQuestionGroup.ftl">[@spring.message "admin.definenewquestiongroup" /]</a></li>
+        <li type="circle"><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl" >[@spring.message "admin.uploadPPI"/]</a></li>
       </ul>
     </div>
   </div>

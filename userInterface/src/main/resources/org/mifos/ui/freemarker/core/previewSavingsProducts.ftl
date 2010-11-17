@@ -18,7 +18,7 @@
         <div class="margin20lefttop">
             <form method="post" action="previewSavingsProducts.ftl" name="previewsavingsproduct">
                 <p class="font15 margin5bottom"><span
-                        class="fontBold">${savingsProduct.generalDetails.name}</span>&nbsp;-<span
+                        class="fontBold">${savingsProduct.generalDetails.name}</span>&nbsp;-&nbsp;<span
                         class="orangeheading">[@spring.message "manageProducts.defineSavingsProducts.previewSavingsProductInformation" /]</span></p>
 
                 <p>[@spring.message "reviewtheinformationbelow.ClickSubmit" /]</p>

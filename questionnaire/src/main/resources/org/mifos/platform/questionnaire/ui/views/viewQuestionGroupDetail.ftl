@@ -22,6 +22,7 @@
 [@adminLeftPaneLayout]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script type="text/javascript" src="pages/questionnaire/js/viewQuestionGroupDetail.js"></script>
+<div class=" content">
     <span id="page.id" title="view_question_groups_details"></span>
     [#if error_message_code??]
         [@spring.message error_message_code/]
@@ -29,7 +30,7 @@
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",questionGroupForm.questionGroupDetail.title:""}/]
         [@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
-        <h1 id="questionGroup.title">
+        <h1 id="questionGroup.title" >
             ${questionGroupForm.questionGroupDetail.title}
         </h1>
         <form name="viewQuestionGroupDetailsForm" action="viewAndEditQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST" class="marginLeft30">
@@ -87,4 +88,5 @@
         </form>
     [/#if]
     </div>
+</div>
 [/@adminLeftPaneLayout]

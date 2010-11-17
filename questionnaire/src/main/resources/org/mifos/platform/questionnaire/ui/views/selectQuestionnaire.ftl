@@ -23,6 +23,7 @@
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script src="pages/questionnaire/js/selectQuestionnaire.js" type="text/javascript"></script>
     <span id="page.id" title="selectQuestionnaire"></span>
+ <div class="content">
     [#if Session.urlMap??]
         [#assign breadcrumb = Session.urlMap/]
         [@mifos.crumbpairs breadcrumb "false"/]
@@ -58,4 +59,5 @@
             </fieldset>
         </form>
     </div>
+ </div>
 [/@adminLeftPaneLayout]

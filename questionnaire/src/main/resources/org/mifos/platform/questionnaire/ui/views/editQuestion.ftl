@@ -20,39 +20,49 @@
 --]
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]
-    <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
-    <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
-    <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
-    <script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
-    <script src="pages/questionnaire/js/editQuestion.js" type="text/javascript"></script>
+<STYLE TYPE="text/css"><!--
+@import url(pages/questionnaire/css/questionnaire.css);
+--></STYLE>
+<script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+<script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
+<script src="pages/questionnaire/js/createQuestion.js" type="text/javascript"></script>
+<script src="pages/questionnaire/js/editQuestion.js" type="text/javascript"></script>
+<div class=" content">
     <span id="page.id" title="editQuestion"></span>
-    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl", "questionnaire.editquestion":""}/]
+    [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl", "questionnaire.editquestion":""}/]    
     [@mifos.crumbpairs breadcrumb/]
+
     <div class="content_panel">
-        <h1>
-            ${questionDefinition.currentQuestion.text} - [@spring.message "questionnaire.editquestion"/]
-        </h1>
+        <p class="font15 orangeheading margin5top10bottom">${questionDefinition.currentQuestion.text} - [@spring.message "questionnaire.editquestion"/]</p>
+
         <p class="red">
-            [@spring.message "questionnaire.editquestion.warning"/]
+        [@spring.message "questionnaire.editquestion.warning"/]
         </p>
+
         <p>
-            [@spring.message "questionnaire.editquestion.instructions"/]
+        [@spring.message "questionnaire.editquestion.instructions"/]
         </p>
+
         <div id="allErrorsDiv" class="allErrorsDiv">
-            [@mifosmacros.showAllErrors "questionDefinition.*"/]
+        [@mifosmacros.showAllErrors "questionDefinition.*"/]
         </div>
-        <form name="editquestionform" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST" focus="currentQuestion.text">
+        <form name="editquestionform" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST"
+              focus="currentQuestion.text">
 
 
             [#include "questionDefinition.ftl"]
-        <div class="button_footer">
-            <div class="button_container">
-                    <input type="submit" id="_eventId_update" name="_eventId_update" value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
+            <div class="button_footer">
+                <div class="button_container">
+                    <input type="submit" id="_eventId_update" name="_eventId_update"
+                           value="[@spring.message "questionnaire.submit"/]" class="buttn"/>
                     &nbsp;
-                    <input type="submit" id="_eventId_cancel" name="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
+                    <input type="submit" id="_eventId_cancel" name="_eventId_cancel"
+                           value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
+                </div>
             </div>
-        </div>
 
         </form>
     </div>
+</div>
+
 [/@adminLeftPaneLayout]

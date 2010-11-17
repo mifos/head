@@ -206,6 +206,9 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
         Long savingsId = Long.valueOf(savings.getAccountId());
         Long customerId = Long.valueOf(savings.getCustomer().getCustomerId());
+        if (StringUtils.isNotBlank(actionForm.getCustomerId())) {
+            customerId = Long.valueOf(actionForm.getCustomerId());
+        }
         Locale preferredLocale = uc.getPreferredLocale();
         LocalDate dateOfDepositOrWithdrawalTransaction = new LocalDate(trxnDate);
         Double amount = Double.valueOf(actionForm.getAmount());
