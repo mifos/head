@@ -40,8 +40,9 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         super(selenium);
     }
 
-    public void verifyPage() {
+    public ViewInstallmentDetailsPage verifyPage() {
         this.verifyPage("NextPaymentLoanAccount");
+        return this;
     }
 
 
@@ -161,6 +162,15 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
             setInstallmentDate(String.valueOf(installment), dateTimeFormatter.print(nextInstallment));
         }
     }
+
+    private void verifyAllDatesFields(DateTime disbursalDate, int gap, int noOfInstallments, boolean IsGapMinimumGap) {
+        DateTime nextInstallment = disbursalDate;
+        for (int installment = 0; installment < noOfInstallments; installment++) {
+            nextInstallment = getValidDate(nextInstallment,gap, IsGapMinimumGap);
+            Assert.assertEquals(dateTimeFormatter.print(nextInstallment),selenium.getValue("installments["+installment+"].dueDate"));
+        }
+    }
+
 
     private void validateBlankDate(double noOfInstallment) {
         for (int installment = 0; installment < noOfInstallment ; installment++) {
@@ -429,4 +439,26 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         selenium.waitForPageToLoad("3000");
         return new CreateLoanAccountPreviewPage(selenium);
     }
+
+    public void verifySchedulePersistOnEdit(int noOfInstallments, int minGap, int minInstalmentAmount, DateTime disbursalDate, int maxGap) {
+        verifyAllTotalFields(noOfInstallments,String.valueOf(minInstalmentAmount));
+        verifyAllDatesFields(disbursalDate,maxGap,noOfInstallments, false);
+        verifyCellValueOfInstallments(1,3,"94.5");
+        verifyCellValueOfInstallments(2,3,"95.0");
+        verifyCellValueOfInstallments(3,3,"95.6");
+        verifyCellValueOfInstallments(4,3,"96.5");
+        verifyCellValueOfInstallments(5,3,"618.4");
+        verifyCellValueOfInstallments(1,4,"5.5");
+        verifyCellValueOfInstallments(2,4,"5.0");
+        verifyCellValueOfInstallments(3,4,"4.4");
+        verifyCellValueOfInstallments(4,4,"3.5");
+        verifyCellValueOfInstallments(5,4,"3.4");
+    }
+
+    private void verifyAllTotalFields(int noOfInstallments, String installmentAmount) {
+        for (int installment = 0; installment < noOfInstallments-1; installment++) {
+            Assert.assertEquals(selenium.getValue("installments["+installment+"].total"), installmentAmount);
+        }
+    }
+
 }

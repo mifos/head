@@ -25,6 +25,7 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.testng.Assert;
 
 public class CreateLoanAccountPreviewPage extends AbstractPage {
+    String editScheduleButton = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
 
     public CreateLoanAccountPreviewPage(Selenium selenium) {
         super(selenium);
@@ -42,5 +43,17 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     public CreateLoanAccountPreviewPage verifyInterestTypeInLoanPreview(String interestType) {
         Assert.assertTrue(selenium.isTextPresent("Interest Rate Type :  " + interestType));
         return this;
+    }
+
+    public ViewInstallmentDetailsPage verifyEditSchedule() {
+        Assert.assertTrue(selenium.isElementPresent(editScheduleButton));
+        selenium.click(editScheduleButton);
+        waitForPageToLoad();
+        verifyPage("SchedulePreview");
+        return new ViewInstallmentDetailsPage(selenium);
+    }
+
+    public void verifyEditScheduleDisabled() {
+        Assert.assertTrue(!selenium.isElementPresent(editScheduleButton));
     }
 }

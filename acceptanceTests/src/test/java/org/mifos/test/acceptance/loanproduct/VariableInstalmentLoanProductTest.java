@@ -106,7 +106,10 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
-                verifyUncheckedVariableInstalmentsInLoanProductSummery();
+                verifyUncheckedVariableInstalmentsInLoanProductSummery()
+                .clickContinue().
+                clickPreviewAndGoToReviewLoanAccountPage()
+                .verifyEditScheduleDisabled();
 
     }
 
