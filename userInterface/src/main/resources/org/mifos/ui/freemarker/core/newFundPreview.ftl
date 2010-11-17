@@ -17,7 +17,7 @@
             <form method="post" action="newFundPreview.ftl" name="newFundPreview">
                 <div class="margin30left20top">
                     <p class="font15"><span
-                            class="fontBold">[@spring.message "defineanewfund"/]</span>&nbsp;--&nbsp;<span
+                            class="fontBold">[@spring.message "defineanewfund"/]</span>&nbsp;-&nbsp;<span
                             class="orangeheading">[@spring.message "reviewAndSubmit"/]</span></p>
 
                     <div>[@spring.message "reviewtheinformationbelow.ClickSubmitifyouaresatisfiedorclickEdittomakechanges.ClickCanceltoreturntoAdminpagewithoutsubmittinginformation"/]</div>

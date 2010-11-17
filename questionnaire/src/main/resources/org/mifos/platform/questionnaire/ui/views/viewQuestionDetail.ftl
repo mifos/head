@@ -28,6 +28,7 @@
 [@adminLeftPaneLayout]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script type="text/javascript" src="pages/questionnaire/js/viewQuestionDetail.js"></script>
+<div class=" content">
     <span id="page.id" title="view_question_details"></span>
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",question.text:""}/]
         [@mifos.crumbpairs breadcrumb/]
@@ -82,4 +83,5 @@
                 </fieldset>
             </form>
         </div>
+</div>
 [/@adminLeftPaneLayout]
