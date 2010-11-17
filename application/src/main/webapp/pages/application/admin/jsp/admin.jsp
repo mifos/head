@@ -193,11 +193,6 @@ while(enn.hasMoreElements()){
 								action="customFieldsAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
 								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link></td>
 							</tr>
-                            <tr class="fontnormal">
-                                <td><img src="pages/framework/images/bullet_circle.gif" width="9"
-                                    height="11"></td>
-                                <td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
-                            </tr>
 						</table>
 
 					<!-- spacer -->
@@ -430,6 +425,10 @@ while(enn.hasMoreElements()){
                   <td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
                   <td width="97%"><a id="admin.link.questiongroups" href="viewQuestionGroups.ftl"><mifos:mifoslabel name="admin.View" /> <mifos:mifoslabel name="admin.questiongroups" /></a> | <html-el:link styleId="admin.link.defineNewQuestionGroup" href="createQuestionGroup.ftl"><mifos:mifoslabel name="admin.definenew" /> <mifos:mifoslabel name="admin.questiongroup" /></html-el:link></td>
                 </tr>
+                   <tr class="fontnormal">
+                     <td><img src="pages/framework/images/bullet_circle.gif" width="9"  height="11"></td>
+                     <td><a id="admin.link.uploadPPI" href="uploadQuestionGroup.ftl"><mifos:mifoslabel name="admin.uploadPPI" /></a></td>
+                  </tr>
                 </table>
 			</td>
 			</tr>
