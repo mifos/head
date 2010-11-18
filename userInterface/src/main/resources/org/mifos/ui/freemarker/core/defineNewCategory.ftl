@@ -17,7 +17,7 @@
         <div class="margin20lefttop">
 		<form method="post" action="defineNewCategory.ftl" name="defineNewCategory">
 		<p class="font15">
-			<span class="fontBold">[@spring.message "admin.definenewcategory" /]</span>&nbsp;-<span class="orangeheading">[@spring.message "manageProducts.defineNewCategory.enterProductcategoryinformation" /]</span>
+			<span class="fontBold">[@spring.message "admin.definenewcategory" /]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "manageProducts.defineNewCategory.enterProductcategoryinformation" /]</span>
 		</p>
         <p>&nbsp;&nbsp;</p>
         <div>[@spring.message "manageProducts.defineNewCategory.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation" /]</div>

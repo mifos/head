@@ -27,8 +27,8 @@
             [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl",spring.status.value?default(""):""}/]
         [@mifos.crumbpairs breadcrumb/]
             <div class="margin20lefttop">
-                <div class="clear">&nbsp;</div>
-                <p class="font15"><span name="${spring.status.expression}"
+
+                <p class="font15 margin10bottom"><span name="${spring.status.expression}"
                                         class="fontBold">[@spring.bind "formBean.name"/]${spring.status.value?default("")}</span>&nbsp;-&nbsp;<span
                         class="orangeheading">[@spring.message "organizationPreferences.viewFunds.edit.editfundinformation"/]</span>
                 </p>
@@ -50,14 +50,14 @@
                     <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                 [@spring.bind "formBean.name"/]
                     <span class="span-4 rightAlign"><span
-                            class="red"> * </span>[@spring.message "organizationPreferences.viewFunds.name"/]</span>
+                            class="red"> * </span>[@spring.message "organizationPreferences.viewFunds.name"/]: </span>
                     <span class="span-4"><input type="text" name="${spring.status.expression}"
                                                 value="${spring.status.value?default("")}"/></span>
                 </div>
                 <div class="prepend-3 span-22 last">
                 [@spring.bind "formBean.codeValue"/]
                     <span class="span-4 rightAlign"><span
-                            class="red"> * </span>[@spring.message "organizationPreferences.viewFunds.fundCode"/]</span><span
+                            class="red"> * </span>[@spring.message "organizationPreferences.viewFunds.fundCode"/]: </span><span
                         class="span-4" name="${spring.status.expression}">${spring.status.value?default("")}</span>
                 </div>
                 <div class="clear">&nbsp;</div>

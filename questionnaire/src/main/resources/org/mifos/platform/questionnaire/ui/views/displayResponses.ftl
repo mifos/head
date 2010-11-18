@@ -22,10 +22,13 @@
 [@clientLeftPane]
     <STYLE TYPE="text/css"><!-- @import url(pages/questionnaire/css/questionnaire.css); --></STYLE>
     <script src="pages/questionnaire/js/display.js" type="text/javascript"></script>
+
     <span id="page.id" title="display_question_group_responses"></span>
+    <div class="content">
     [#if Session.urlMap??]
-        [#assign breadcrumb = Session.urlMap/]
-        [@mifos.crumbpairs breadcrumb "false"/]
+        [#assign thisSite][@spring.message "questionnaire.viewAdditionalInformation"/][/#assign]
+        [#assign breadcrumb = Session.urlMap + {"${thisSite}":""} /]
+        [@mifos.crumbpairs breadcrumb /]
     [/#if]
     <div class="content_panel">
         <h1>
@@ -69,4 +72,5 @@
             </div>
         </form>
     </div>
+ </div>
 [/@clientLeftPane]

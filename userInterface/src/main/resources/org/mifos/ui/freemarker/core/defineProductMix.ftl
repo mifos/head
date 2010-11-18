@@ -128,11 +128,11 @@ function selectAllOptions(outSel)
                                 <span class="span-4">
                                     [@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]
                                 </span>
-                                <span class="span-3">
+                                <span class="span-3 width80px">
                                     <br />
-                                    <input class="buttn2" name="add" type="button" value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.notAllowed, this.form.allowed);"/>
+                                    <input class="buttn2 width70px" name="add" type="button" value="[@spring.message "add"/] >>" onclick="moveOptions(this.form.notAllowed, this.form.allowed);"/>
                                     <br /><br />
-                                    <input class="buttn2" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.allowed, this.form.notAllowed);"/>
+                                    <input class="buttn2 width70px" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.allowed, this.form.notAllowed);"/>
                                 </span>
                                 <span class="span-4">
                                     [@spring.formMultiSelect "formBean.allowed", formBean.allowedProductOptions, "class=listSize" /]

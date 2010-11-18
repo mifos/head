@@ -62,7 +62,7 @@
 <div class="breadcrumb">
 	    [#list breadcrumbs?keys as text]
   			[#if text_has_next || lastEntryIsText=="false"]
-    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/&nbsp;
+    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/
             [#else]
                 <span class="fontBold">[@spring.messageText text, text/]</span>
    			[/#if]
