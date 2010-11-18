@@ -38,7 +38,7 @@ public class FormParametersHelper {
         formParameters.setMinLoanAmount("100");
         formParameters.setMaxLoanAmount("190000");
         formParameters.setDefaultLoanAmount("2500");
-        formParameters.setInterestTypes(DefineNewLoanProductPage.SubmitFormParameters.FLAT);
+        formParameters.setInterestTypes(DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE);
         formParameters.setMaxInterestRate("30");
         formParameters.setMinInterestRate("10");
         formParameters.setDefaultInterestRate("19");
@@ -62,7 +62,7 @@ public class FormParametersHelper {
         formParameters.setMinLoanAmount("1007");
         formParameters.setMaxLoanAmount("190000");
         formParameters.setDefaultLoanAmount("60000");
-        formParameters.setInterestTypes(DefineNewLoanProductPage.SubmitFormParameters.FLAT);
+        formParameters.setInterestTypes(DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE);
         formParameters.setMaxInterestRate("30");
         formParameters.setMinInterestRate("10");
         formParameters.setDefaultInterestRate("12");
