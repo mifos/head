@@ -200,6 +200,11 @@
                 <version>${spring.sec.version}</version>
             </dependency>
             <dependency>
+	            <groupId>commons-collections</groupId>
+	            <artifactId>commons-collections</artifactId>
+	            <version>3.2</version>
+        	</dependency>
+            <dependency>
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjrt</artifactId>
                 <version>1.5.4</version>

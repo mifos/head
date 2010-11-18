@@ -20,9 +20,10 @@
 
 package org.mifos.test.acceptance.loan;
 
+import java.util.Random;
+
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
-import org.junit.Ignore;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -38,8 +39,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Random;
 
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"acceptance","ui", "loan","smoke"})
@@ -104,8 +103,6 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         verifyLoanAccountStatus("ClientLoanStatusChange_002_result_dbunit.xml");
     }
 
-    @Ignore
-    @Test(enabled = false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void pendingApprovalToApplicationApprovedWithQuestionGroup() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
@@ -117,7 +114,7 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         String answer = "01/01/2010";
         String choiceAnswer = "Choice2";
         questionGroupHelper.createQuestionGroup(questionGroupTitle,question1,question2, "Approve Loan");
-        
+
         // a loan account w/ id 000100000000003 is pending approval in the data set
         EditLoanAccountStatusParameters statusParameters = new EditLoanAccountStatusParameters();
         statusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);

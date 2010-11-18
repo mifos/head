@@ -48,7 +48,6 @@ import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.dto.domain.SavingsAccountStatusDto;
 import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -102,6 +101,12 @@ public class EditStatusAction extends BaseAction {
             SavingsBO savingsAccount = this.savingsDao.findById(accountId.longValue());
 
             setFormAttributes(form, savingsAccount);
+            EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
+            editStatusActionForm.setAccountTypeId(accountBO.getType().getValue().toString());
+            editStatusActionForm.setCurrentStatusId(accountBO.getAccountState().getId().toString());
+            editStatusActionForm.setGlobalAccountNum(accountBO.getGlobalAccountNum());
+            editStatusActionForm.setAccountName(((SavingsBO) accountBO).getSavingsOffering().getPrdOfferingName());
+            editStatusActionForm.setInput("savings");
         }
         List<AccountStateEntity> accountStatuses = getAccountBusinessService().getStatusList(accountBO.getAccountState(), accountBO.getType(), userContext.getLocaleId());
 
@@ -122,8 +127,10 @@ public class EditStatusAction extends BaseAction {
                 getShortValue(editStatusActionForm.getAccountTypeId()));
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
 
+        String newStatusId = editStatusActionForm.getNewStatusId();
+
         initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
-        if (loanApproved(request)) {
+        if (loanApproved(newStatusId)) {
             return approveLoanQuestionnaire.fetchAppliedQuestions(mapping,(EditStatusActionForm) form, request, ActionForwards.preview_success);
         }
         return mapping.findForward(ActionForwards.preview_success.toString());
@@ -134,8 +141,8 @@ public class EditStatusAction extends BaseAction {
                 "loanAccountAction.do?method=get&globalAccountNum=" + globalAccountNum, new DefaultQuestionnaireServiceFacadeLocator());
     }
 
-    private boolean loanApproved(HttpServletRequest request) throws PageExpiredException {
-        return StringUtils.equalsIgnoreCase("Application Approved", (String) SessionUtils.getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
+    private boolean loanApproved(String newStatusId) {
+        return "3".equals(newStatusId);
     }
 
     @TransactionDemarcate(joinToken = true)
