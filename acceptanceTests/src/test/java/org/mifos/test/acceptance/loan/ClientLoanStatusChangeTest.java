@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.loan;
 
 import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
+import org.junit.Ignore;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
@@ -103,6 +104,8 @@ public class ClientLoanStatusChangeTest extends UiTestCaseBase {
         verifyLoanAccountStatus("ClientLoanStatusChange_002_result_dbunit.xml");
     }
 
+    @Ignore
+    @Test(enabled = false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void pendingApprovalToApplicationApprovedWithQuestionGroup() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_007_dbunit.xml", dataSource, selenium);
