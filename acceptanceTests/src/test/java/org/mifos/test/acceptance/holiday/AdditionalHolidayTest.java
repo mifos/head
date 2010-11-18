@@ -169,7 +169,8 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     // TC10
-    @Test(enabled = true)
+    @Ignore
+    @Test(enabled = false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createHolidayOnAMeetingWithRepaymentNextMeeting() throws Exception {
         initRemote
@@ -735,6 +736,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
 
         createHoliday(params);
     }
+
 
     @Test(enabled = false)
     private void createLoan(final CreateLoanAccountSearchParameters searchParameters,
