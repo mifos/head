@@ -34,6 +34,7 @@ import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidator;
 import org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl;
 import org.mifos.accounts.loan.business.service.validators.InstallmentRulesValidator;
@@ -166,6 +167,7 @@ public class DependencyInjectedServiceLocator {
     private static ListOfInstallmentsValidator listOfInstallmentsValidator;
     private static InstallmentRulesValidator installmentRulesValidator;
     private static InstallmentsValidator installmentsValidator;
+    private static LoanBusinessService loanBusinessService;
 
     public static CollectionSheetService locateCollectionSheetService() {
 
@@ -247,9 +249,17 @@ public class DependencyInjectedServiceLocator {
 
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
-            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor());
+            loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
+                    fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor(),locateLoanBusinessService());
         }
         return loanServiceFacade;
+    }
+
+    public static LoanBusinessService locateLoanBusinessService() {
+        if (loanBusinessService == null) {
+            loanBusinessService= new LoanBusinessService();
+        }
+        return loanBusinessService;
     }
 
     public static LegacyLoginServiceFacade locationLoginServiceFacade() {

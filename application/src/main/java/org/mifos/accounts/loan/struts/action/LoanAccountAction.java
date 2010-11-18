@@ -40,6 +40,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
+import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.CashflowDataHtmlBean;
@@ -556,8 +557,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             ActionErrors actionErrors = getActionErrors(errors);
             actionErrors.add(validateCashflowAndInstallmentDates(installments, loanActionForm.getCashFlowForm()));
             if (actionErrors.isEmpty()) {
-                loanServiceFacade.generateInstallmentSchedule(installments, loanActionForm.getLoanAmountValue(),
-                                            loanActionForm.getInterestDoubleValue(), disbursementDate);
+                loanBusinessService.generateInstallmentSchedule(
+                        new LoanScheduleGenerationDto(disbursementDate, loanActionForm.getLoanAmountValue(),
+                                loanActionForm.getInterestDoubleValue(), installments));
                 // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
                 setInstallmentsOnSession(request, loanActionForm);
                 actionErrors = getActionErrors(loanServiceFacade.validateInstallmentSchedule(installments, variableInstallmentDetails));
@@ -855,8 +857,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
             List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
                             .getAttribute("BusinessActivities", request);
-            SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanServiceFacade.getLoanAccountDetailsViewList(loanInformationDto,
-                    businessActEntity, loanBusinessService, clientBusinessService), request);
+            SessionUtils.setCollectionAttribute("loanAccountDetailsView",
+                    loanServiceFacade.getLoanAccountDetailsViewList(loanInformationDto,
+                    businessActEntity, clientBusinessService), request);
         }
         loadCustomFieldDefinitions(request);
         loadMasterData(request);
@@ -1185,8 +1188,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private LoanBO getLoanBO(final HttpServletRequest request) throws PageExpiredException, ServiceException {
         LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        LoanBO loanBO = loanBusinessService.getAccount(loanBOInSession.getAccountId());
-        return loanBO;
+        return loanBusinessService.getAccount(loanBOInSession.getAccountId());
     }
 
     private void setRequestAttributesForEditPage(final HttpServletRequest request, final LoanBO loanBO)

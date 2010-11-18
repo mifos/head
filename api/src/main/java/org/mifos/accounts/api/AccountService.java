@@ -22,6 +22,7 @@ package org.mifos.accounts.api;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * The Interface AccountService provides methods to make and support making
@@ -48,8 +49,9 @@ public interface AccountService {
      * Disburse multiple loan accounts within a single transaction.
      *
      * @param accountPaymentParametersDtoList a list of loan payment parameters
+     * @param locale
      */
-    void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception;
+    void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception;
 
     /**
      * Lookup a loan account reference for a loan with a matching primary key.

@@ -34,6 +34,7 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -86,9 +87,8 @@ public class LoanDisbursementAction extends BaseAction {
     }
 
     public LoanDisbursementAction() {
-
         accountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
-                new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()));
+                new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()), new LoanBusinessService());
     }
 
     public static ActionSecurity getSecurity() {
@@ -191,7 +191,7 @@ public class LoanDisbursementAction extends BaseAction {
             payment.add(new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
                     loanAccountId), disbursalAmount, new LocalDate(trxnDate), paymentType, comment,
                     new LocalDate(receiptDate), actionForm.getReceiptId()));
-            getAccountService().disburseLoans(payment);
+            getAccountService().disburseLoans(payment,uc.getPreferredLocale());
 
         } catch (Exception e) {
             if (e.getMessage().startsWith("errors.")) {

@@ -34,12 +34,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.service.AccountFeesDto;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.LoanInformationDto;
-import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
-import org.mifos.accounts.loan.business.service.LoanService;
-import org.mifos.accounts.loan.business.service.LoanSummaryDto;
+import org.mifos.accounts.loan.business.service.*;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
@@ -67,7 +62,6 @@ import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsB
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -128,12 +122,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-import java.util.ArrayList;
+import java.util.*;
 
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
@@ -154,9 +143,12 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final LoanDao loanDao;
     private final InstallmentsValidator installmentsValidator;
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+    LoanBusinessService loanBusinessService;
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-                                    PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, InstallmentsValidator installmentsValidator, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor) {
+                                    PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao,
+                                    InstallmentsValidator installmentsValidator,
+                                    ScheduleCalculatorAdaptor scheduleCalculatorAdaptor, LoanBusinessService loanBusinessService) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
@@ -164,6 +156,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         this.loanDao = loanDao;
         this.installmentsValidator = installmentsValidator;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
+        this.loanBusinessService = loanBusinessService;
     }
 
     @Override
@@ -323,7 +316,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext,
-            Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm)
+                                                                                     Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm)
             throws ApplicationException {
 
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
@@ -346,8 +339,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
                 isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
-        List<RepaymentScheduleInstallment> installments = computeInstallmentScheduleUsingDailyInterest(loanActionForm, loan,
-                                                    disbursementDate.toDate(), userContext.getPreferredLocale());
+        List<RepaymentScheduleInstallment> installments = loanBusinessService.computeInstallmentScheduleUsingDailyInterest(
+                new LoanScheduleGenerationDto(disbursementDate.toDate(),
+                        loan, loanActionForm.isVariableInstallmentsAllowed(), loanActionForm.getLoanAmountValue(),
+                        loanActionForm.getInterestDoubleValue()), userContext.getPreferredLocale());
 
         if (isRepaymentIndependentOfMeetingEnabled) {
             Date firstRepaymentDate = installments.get(0).getDueDateValue();
@@ -363,18 +358,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 isLoanPendingApprovalDefined, installments, new ArrayList<PaymentDataHtmlBean>());
     }
 
-    // Intentionally made package accessible to aid testing !
-    List<RepaymentScheduleInstallment> computeInstallmentScheduleUsingDailyInterest(LoanAccountActionForm loanActionForm, LoanBO loanBO,
-                                                                          Date disbursementDate, Locale locale) {
-        List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
-        if (loanActionForm.isVariableInstallmentsAllowed()|| loanBO.getInterestType().asEnum() == InterestType.DECLINING_PB) {
-            Money loanAmountValue = loanActionForm.getLoanAmountValue();
-            Double interestRate = loanActionForm.getInterestDoubleValue();
-            generateInstallmentSchedule(installments, loanAmountValue, interestRate, disbursementDate);
-            loanBO.copyInstallmentSchedule(installments);
-        }
-        return installments;
-    }
 
     private double computeGLIMLoanAmount(LoanAccountActionForm loanActionForm, LocalizationConverter localizationConverter) {
         double glimLoanAmount = Double.valueOf("0");
@@ -1056,10 +1039,8 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto,
-                                                                 List<BusinessActivityEntity> businessActEntity,
-                                                                 LoanBusinessService loanBusinessService,
-                                                                 ClientBusinessService clientBusinessService) throws ServiceException {
-
+                                                                     List<BusinessActivityEntity> businessActEntity,
+                                                                     ClientBusinessService clientBusinessService) throws ServiceException {
         List<LoanBO> individualLoans = loanBusinessService.findIndividualLoans(Integer.valueOf(
                 loanInformationDto.getAccountId()).toString());
 
@@ -1108,45 +1089,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public void generateInstallmentSchedule(List<RepaymentScheduleInstallment> installments,
-                                            Money loanAmount, Double interestRate, Date disbursementDate) {
-        Double dailyInterestFactor = interestRate / (AccountingRules.getNumberOfInterestDays() * 100d);
-        Money principalOutstanding = loanAmount;
-        Money runningPrincipal = new Money(loanAmount.getCurrency());
-        Date initialDueDate = disbursementDate;
-        int installmentIndex, numInstallments;
-        for (installmentIndex = 0, numInstallments = installments.size(); installmentIndex < numInstallments - 1; installmentIndex++) {
-            RepaymentScheduleInstallment installment = installments.get(installmentIndex);
-            Date currentDueDate = installment.getDueDateValue();
-            long duration = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, initialDueDate);
-            Money fees = installment.getFees();
-            Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, installment, duration);
-            Money total = installment.getTotalValue();
-            Money principal = total.subtract(interest.add(fees));
-            installment.setPrincipalAndInterest(interest, principal);
-            initialDueDate = currentDueDate;
-            principalOutstanding = principalOutstanding.subtract(principal);
-            runningPrincipal = runningPrincipal.add(principal);
-        }
-
-        RepaymentScheduleInstallment lastInstallment = installments.get(installmentIndex);
-        long duration = DateUtils.getNumberOfDaysBetweenTwoDates(lastInstallment.getDueDateValue(), initialDueDate);
-        Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, lastInstallment, duration);
-        Money fees = lastInstallment.getFees();
-        Money principal = loanAmount.subtract(runningPrincipal);
-        Money total = principal.add(interest).add(fees);
-        lastInstallment.setTotalAndTotalValue(total);
-        lastInstallment.setPrincipalAndInterest(interest, principal);
-    }
-
-    @Override
     public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
         return installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
-    }
-
-    private Money computeInterestAmount(Double dailyInterestFactor, Money principalOutstanding,
-                                        RepaymentScheduleInstallment installment, long duration) {
-        Double interestForInstallment = dailyInterestFactor * duration * principalOutstanding.getAmountDoubleValue();
-        return new Money(installment.getCurrency(), interestForInstallment);
     }
 }

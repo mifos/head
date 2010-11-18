@@ -62,7 +62,6 @@ public class LoanService implements Service {
 
     LoanProductService loanProductService;
     LoanDaoLegacyImpl loanDao;
-    HolidayDao holidayDao;
 
     public LoanProductService getLoanProductService() {
         return this.loanProductService;
@@ -95,7 +94,7 @@ public class LoanService implements Service {
             throws ApplicationException {
 
         CustomerBO center = new CustomerBusinessService().getCustomer(centerId);
-        checkPermissionForCreate(accountState.getValue(), userContext, null, center.getOffice().getOfficeId(), center
+        checkPermissionForCreate(accountState.getValue(), userContext, center.getOffice().getOfficeId(), center
                 .getPersonnel().getPersonnelId());
         LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(loanProductId);
 
@@ -116,15 +115,14 @@ public class LoanService implements Service {
         return new LoanDto(loan);
     }
 
-    protected void checkPermissionForCreate(Short newState, UserContext userContext, Short flagSelected,
-            Short officeId, Short loanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true)) {
+    protected void checkPermissionForCreate(Short newState, UserContext userContext,
+                                            Short officeId, Short loanOfficerId) throws ApplicationException {
+        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId)) {
             throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
     }
 
-    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short officeId, Short loanOfficerId,
-            boolean saveFlag) {
+    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short officeId, Short loanOfficerId) {
         return AuthorizationManager.getInstance().isActivityAllowed(
                 userContext,
                 new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newState), officeId,

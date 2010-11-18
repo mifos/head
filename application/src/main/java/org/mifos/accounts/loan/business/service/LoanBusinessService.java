@@ -20,9 +20,7 @@
 
 package org.mifos.accounts.loan.business.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -31,13 +29,17 @@ import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
+import org.mifos.application.servicefacade.LoanServiceFacadeWebTier;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
@@ -251,5 +253,53 @@ public class LoanBusinessService implements BusinessService {
             clients = loan.getCustomer().getChildren();
         }
         return clients;
+    }
+
+    public List<RepaymentScheduleInstallment> computeInstallmentScheduleUsingDailyInterest(
+            LoanScheduleGenerationDto loanScheduleGenerationDto, Locale locale) {
+        LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
+        List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
+        if (loanScheduleGenerationDto.isVariableInstallmentsAllowed() || loanBO.isDecliningPrincipalBalance()) {
+            loanScheduleGenerationDto.setInstallments(installments);
+            generateInstallmentSchedule(loanScheduleGenerationDto);
+            loanBO.copyInstallmentSchedule(installments);
+        }
+        return installments;
+    }
+
+    public void generateInstallmentSchedule(LoanScheduleGenerationDto loanScheduleGenerationDto) {
+        Double dailyInterestFactor = loanScheduleGenerationDto.getInterestRate() / (AccountingRules.getNumberOfInterestDays() * 100d);
+        Money principalOutstanding = loanScheduleGenerationDto.getLoanAmountValue();
+        Money runningPrincipal = new Money(loanScheduleGenerationDto.getLoanAmountValue().getCurrency());
+        Date initialDueDate = loanScheduleGenerationDto.getDisbursementDate();
+        int installmentIndex, numInstallments;
+        for (installmentIndex = 0, numInstallments = loanScheduleGenerationDto.getInstallments().size(); installmentIndex < numInstallments - 1; installmentIndex++) {
+            RepaymentScheduleInstallment installment = loanScheduleGenerationDto.getInstallments().get(installmentIndex);
+            Date currentDueDate = installment.getDueDateValue();
+            long duration = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, initialDueDate);
+            Money fees = installment.getFees();
+            Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, installment, duration);
+            Money total = installment.getTotalValue();
+            Money principal = total.subtract(interest.add(fees));
+            installment.setPrincipalAndInterest(interest, principal);
+            initialDueDate = currentDueDate;
+            principalOutstanding = principalOutstanding.subtract(principal);
+            runningPrincipal = runningPrincipal.add(principal);
+        }
+
+        RepaymentScheduleInstallment lastInstallment = loanScheduleGenerationDto.getInstallments().get(installmentIndex);
+        long duration = DateUtils.getNumberOfDaysBetweenTwoDates(lastInstallment.getDueDateValue(), initialDueDate);
+        Money interest = computeInterestAmount(dailyInterestFactor, principalOutstanding, lastInstallment, duration);
+        Money fees = lastInstallment.getFees();
+        Money principal = loanScheduleGenerationDto.getLoanAmountValue().subtract(runningPrincipal);
+        Money total = principal.add(interest).add(fees);
+        lastInstallment.setTotalAndTotalValue(total);
+        lastInstallment.setPrincipalAndInterest(interest, principal);
+    }
+
+    private Money computeInterestAmount(Double dailyInterestFactor, Money principalOutstanding,
+                                        RepaymentScheduleInstallment installment, long duration) {
+        Double interestForInstallment = dailyInterestFactor * duration * principalOutstanding.getAmountDoubleValue();
+        return new Money(installment.getCurrency(), interestForInstallment);
     }
 }

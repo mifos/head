@@ -34,29 +34,24 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentValidation
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
-import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -70,10 +65,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
@@ -81,16 +74,9 @@ import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
-/**
- *
- */
 @RunWith(MockitoJUnitRunner.class)
 public class LoanServiceFacadeWebTierTest {
 
@@ -116,9 +102,6 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private LoanBusinessService loanBusinessService;
 
-    @Mock
-    private ClientBusinessService clientBusinessService;
-
     // test data
     @Mock
     private CustomerBO customer;
@@ -138,18 +121,10 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
 
-    private RepaymentScheduleInstallmentBuilder installmentBuilder;
-
-    private Locale locale;
-
-    private MifosCurrency rupee;
-
     @Before
     public void setupAndInjectDependencies() {
-        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor);
-        locale = new Locale("en", "GB");
-        installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
-        rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, 
+                fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService);
     }
 
     @Test
@@ -179,7 +154,7 @@ public class LoanServiceFacadeWebTierTest {
     public void shouldFindGlimDataForGroupCustomer() {
 
         // setup
-        ValueListElement valueListElement = new BusinessActivityEntity(Integer.valueOf(1), "", "");
+        ValueListElement valueListElement = new BusinessActivityEntity(1, "", "");
         List<ValueListElement> loanPurposes = asList(valueListElement);
 
         List<ClientBO> clients = asList(client);
@@ -262,132 +237,6 @@ public class LoanServiceFacadeWebTierTest {
         assertThat(actual, is(errors));
         verify(installmentsValidator).validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
     }
-
-    @Test
-    public void shouldGenerateMonthlyInstallmentScheduleFromRepaymentSchedule() {
-        MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
-        RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "100");
-        RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("25-Oct-2010", 2, "182.8", "16.2", "1", "200");
-        RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("25-Nov-2010", 3, "186.0", "13.0", "1", "200");
-        RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("25-Dec-2010", 4, "452.6", "8.9", "1", "462.5");
-        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
-        Date disbursementDate = getDate(2010, 8, 25);
-        loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
-
-        assertInstallment(installment1, "78.6", "20.4");
-        assertInstallment(installment2, "180.8", "18.2");
-        assertInstallment(installment3, "183.9", "15.1");
-        assertInstallment(installment4, "556.7", "11.0");
-    }
-
-    @Test
-    public void shouldGenerateWeeklyInstallmentScheduleFromRepaymentSchedule() {
-        MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
-        RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "194.4", "4.6", "1", "100");
-        RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "195.3", "3.7", "1", "200");
-        RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "196.2", "2.8", "1", "200");
-        RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0");
-        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
-        Date disbursementDate = getDate(2010, 8, 25);
-        loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
-
-        assertInstallment(installment1, "94.4", "4.6");
-        assertInstallment(installment2, "194.8", "4.2");
-        assertInstallment(installment3, "195.7", "3.3");
-        assertInstallment(installment4, "515.0", "2.4");
-    }
-
-    @Test
-    public void shouldGenerateInstallmentScheduleFromRepaymentSchedule() {
-        RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
-        RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
-        RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
-        RepaymentScheduleInstallment installment4 =
-                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100");
-        RepaymentScheduleInstallment installment5 =
-                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100");
-        RepaymentScheduleInstallment installment6 =
-                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100");
-        RepaymentScheduleInstallment installment7 =
-                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
-        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
-                installment4, installment5, installment6, installment7);
-        Date disbursementDate = getDate(2010, 8, 25);
-        loanServiceFacade.generateInstallmentSchedule(installments, new Money(rupee, "1000"), 24d, disbursementDate);
-
-        assertInstallment(installment1, "69.4", "4.6");
-        assertInstallment(installment2, "94.7", "4.3");
-        assertInstallment(installment3, "95.2", "3.8");
-        assertInstallment(installment4, "84.4", "14.6");
-        assertInstallment(installment5, "94.7", "4.3");
-        assertInstallment(installment6, "96.4", "2.6");
-        assertInstallment(installment7, "465.2", "5.2");
-    }
-
-    @Test
-    public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabled() {
-        RepaymentScheduleInstallment installment1 =
-                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
-        RepaymentScheduleInstallment installment2 =
-                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
-        RepaymentScheduleInstallment installment3 =
-                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
-        LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
-        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
-        when(loanAccountActionForm.getLoanAmount()).thenReturn("1000");
-        when(loanAccountActionForm.getLoanAmountValue()).thenReturn(new Money(rupee, "1000"));
-        when(loanAccountActionForm.getInterestRate()).thenReturn("24");
-        when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(true);
-        when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
-        ((LoanServiceFacadeWebTier) loanServiceFacade).computeInstallmentScheduleUsingDailyInterest(loanAccountActionForm, loanBO, getDate(2010, 8, 22), locale);
-        verify(loanBO).copyInstallmentSchedule(installments);
-        verify(loanBO).toRepaymentScheduleDto(locale);
-    }
-    
-    @Test
-     public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfInterestTypeIsDecliningPrincipalBalance() {
-         RepaymentScheduleInstallment installment1 =
-                 getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
-         RepaymentScheduleInstallment installment2 =
-                 getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
-         RepaymentScheduleInstallment installment3 =
-                 getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
-         LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
-         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
-         when(loanAccountActionForm.getLoanAmount()).thenReturn("1000");
-         when(loanAccountActionForm.getLoanAmountValue()).thenReturn(new Money(rupee, "1000"));
-         when(loanAccountActionForm.getInterestRate()).thenReturn("24");
-         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
-         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
-         InterestTypesEntity interestTypesEntity = new InterestTypesEntity(InterestType.DECLINING_PB);
-         when(loanBO.getInterestType()).thenReturn(interestTypesEntity);
-         ((LoanServiceFacadeWebTier) loanServiceFacade).computeInstallmentScheduleUsingDailyInterest(loanAccountActionForm, loanBO, getDate(2010, 8, 22), locale);
-         verify(loanBO).copyInstallmentSchedule(installments);
-         verify(loanBO).toRepaymentScheduleDto(locale);
-     }
-
-
-    @Test
-    public void shouldNotComputeVariableInstallmentSchedule() {
-        LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
-        when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
-        InterestTypesEntity interestTypesEntity = new InterestTypesEntity(InterestType.DECLINING);
-        when(loanBO.getInterestType()).thenReturn(interestTypesEntity);
-        ((LoanServiceFacadeWebTier) loanServiceFacade).computeInstallmentScheduleUsingDailyInterest(loanAccountActionForm, loanBO, getDate(2010, 8, 22), null);
-        verify(loanBO, never()).copyInstallmentSchedule(any(List.class));
-    }
-
     @Test
     public void shouldValidateInstallmentSchedule() {
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
@@ -422,24 +271,5 @@ public class LoanServiceFacadeWebTierTest {
             verify(loanBO,never()).getCurrency();
             assertThat(e.getKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));
         }
-    }
-
-    private Date getDate(int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month - 1, day);
-        return calendar.getTime();
-    }
-
-    private void assertInstallment(RepaymentScheduleInstallment installment, String principal, String interest) {
-        assertThat(installment.getPrincipal().toString(), is(principal));
-        assertThat(installment.getInterest().toString(), is(interest));
-    }
-
-    private RepaymentScheduleInstallment getRepaymentScheduleInstallment(String dueDate, int installment,
-                                                                         String principal, String interest,
-                                                                         String fees, String total) {
-        return installmentBuilder.reset(locale).withInstallment(installment).withDueDateValue(dueDate).
-                withPrincipal(new Money(rupee, principal)).withInterest(new Money(rupee, interest)).
-                withFees(new Money(rupee, fees)).withTotalValue(total).build();
     }
 }

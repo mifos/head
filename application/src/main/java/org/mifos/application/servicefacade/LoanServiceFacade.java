@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import java.util.Date;
 import java.util.List;
@@ -64,7 +65,7 @@ public interface LoanServiceFacade {
             Short productId) throws ApplicationException;
 
     LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext,
-            Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm)
+                                                                              Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm)
             throws ApplicationException;
 
     LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForRedoLoan(UserContext userContext, Integer customerId,
@@ -102,14 +103,12 @@ public interface LoanServiceFacade {
 
     LoanInformationDto getLoanInformationDto(String globalAccountNum, UserContext userContext) throws ServiceException;
 
-    List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto, List<BusinessActivityEntity> businessActEntity, LoanBusinessService loanBusinessService, ClientBusinessService clientBusinessService)
+    List<LoanAccountDetailsDto> getLoanAccountDetailsViewList(LoanInformationDto loanInformationDto, List<BusinessActivityEntity> businessActEntity, ClientBusinessService clientBusinessService)
             throws ServiceException;
 
     RepayLoanDto getRepaymentDetails(String globalAccountNumber, Short localeId, AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) throws PersistenceException;
 
     Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments);
-
-    void generateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, Money loanAmount, Double interestRate, Date disbursementDate);
 
     Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
 }

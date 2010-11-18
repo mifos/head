@@ -205,11 +205,12 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
     @Test
     public void testGetAllLoanAccounts() throws Exception {
+        int initialLoanAccountsSize = loanBusinessService.getAllLoanAccounts().size();
         accountBO = getLoanAccount();
         loanBusinessService = new LoanBusinessService();
         List<LoanBO> loanAccounts = loanBusinessService.getAllLoanAccounts();
         Assert.assertNotNull(loanAccounts);
-        Assert.assertEquals(1, loanAccounts.size());
+        Assert.assertEquals(initialLoanAccountsSize+1, loanAccounts.size());
     }
 
     private AccountBO getLoanAccount() {

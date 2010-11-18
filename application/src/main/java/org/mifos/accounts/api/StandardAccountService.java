@@ -26,6 +26,8 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -46,6 +48,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
@@ -57,12 +60,20 @@ public class StandardAccountService implements AccountService {
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private final PersonnelDao personnelDao;
 
+    private LoanBusinessService loanBusinessService;
+
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
-            AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao) {
+                                  AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
+                                  LoanBusinessService loanBusinessService) {
         this.accountPersistence = accountPersistence;
         this.loanPersistence = loanPersistence;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
         this.personnelDao = personnelDao;
+        this.loanBusinessService = loanBusinessService;
+    }
+
+    public void setLoanBusinessService(LoanBusinessService loanBusinessService) {
+        this.loanBusinessService = loanBusinessService;
     }
 
     public LoanPersistence getLoanPersistence() {
@@ -140,7 +151,7 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
-    public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList) throws Exception {
+    public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception {
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = getLoanPersistence().getAccount(accountPaymentParametersDto.getAccountId());
@@ -160,8 +171,13 @@ public class StandardAccountService implements AccountService {
             PersonnelBO personnelBO = personnelDao.findPersonnelById(accountPaymentParametersDto.getUserMakingPayment()
                     .getUserId());
             disbursalPayment.setCreatedByUser(personnelBO);
+            Double interestRate = loan.getInterestRate();
 
             loan.disburseLoan(disbursalPayment);
+
+            boolean variableInstallmentsAllowed = loan.getLoanOffering().isVariableInstallmentsAllowed();
+            loanBusinessService.computeInstallmentScheduleUsingDailyInterest(new LoanScheduleGenerationDto(
+                    transactionDate, loan, variableInstallmentsAllowed, amount, interestRate), locale);
         }
         StaticHibernateUtil.commitTransaction();
     }
