@@ -2004,18 +2004,22 @@ public class LoanPrdActionForm extends BaseActionForm {
         request.setAttribute(Constants.CURRENTFLOWKEY, request.getParameter(Constants.CURRENTFLOWKEY));
         List<FeeDto> feeDtos = new ArrayList<FeeDto>();
         try {
-            if (getPrdOfferinFees() != null && getPrdOfferinFees().length > 0) {
+                if (getPrdOfferinFees() != null && getPrdOfferinFees().length > 0) {
 
-                List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE, request);
-                for (String selectedFee : getPrdOfferinFees()) {
-                    FeeBO fee = getFeeFromList(fees, selectedFee);
-                    if (fee != null) {
-                       if(isFeeTypeNonPeriodic(fee, errors)) {
-                           validateFeeIsNotDependentOnPercentOfInterest(fee, errors);
-                       }
+                    List<FeeBO> fees = (List<FeeBO>) SessionUtils.getAttribute(ProductDefinitionConstants.LOANPRDFEE,
+                            request);
+                    for (String selectedFee : getPrdOfferinFees()) {
+                        FeeBO fee = getFeeFromList(fees, selectedFee);
+                        if (fee != null) {
+                            if(canConfigureVariableInstallments()) {
+                                if (isFeeTypeNonPeriodic(fee, errors)) {
+                                    validateFeeIsNotDependentOnPercentOfInterest(fee, errors);
+                                }
+                            }
+                        feeDtos.add(new FeeDto(getUserContext(request), fee));
+                        }
                     }
                 }
-            }
             setSelectedFeeDtoOnSession(request, feeDtos);
         } catch (PageExpiredException e) {
         }

@@ -248,7 +248,57 @@ public class LoanPrdActionFormTest {
         Mockito.verify(errors, Mockito.times(2)).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
     }
 
+    @Test
+    public void shouldAllowPeriodicFeeForNonVariableInstallmentLoanProduct() {
+        String PERIODIC_FEE_1 = "1";
+        String PERIODIC_FEE_2 = "2";
+        String NON_PERIODIC_FEE = "3";
 
+        when(periodicFeeAmount.getFeeType()).thenReturn(RateAmountFlag.AMOUNT);
+        when(periodicFeeAmount.getFeeId()).thenReturn(Short.valueOf(PERIODIC_FEE_1));
+        when(periodicFeeAmount.getFeeName()).thenReturn("periodic fee1");
+        when(periodicFeeAmount.isPeriodic()).thenReturn(true);
+
+        when(periodicFeeRate.isPeriodic()).thenReturn(true);
+        when(periodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
+        when(periodicFeeRate.getFeeId()).thenReturn(Short.valueOf(PERIODIC_FEE_2));
+        when(periodicFeeRate.getFeeName()).thenReturn("periodic fee2");
+
+
+        when(nonPeriodicFeeRate.isPeriodic()).thenReturn(false);
+        when(nonPeriodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
+        when(nonPeriodicFeeRate.getFeeId()).thenReturn(Short.valueOf(NON_PERIODIC_FEE));
+        when(nonPeriodicFeeRate.getFeeName()).thenReturn("non Periodic fee");
+        when(((RateFeeBO)nonPeriodicFeeRate).getFeeFormula()).thenReturn(feeFormulaEntity);
+        when(feeFormulaEntity.getFeeFormula()).thenReturn(FeeFormula.INTEREST);
+
+
+        List<FeeBO> allPrdFees = new ArrayList<FeeBO>();
+        allPrdFees.add(periodicFeeAmount);
+        allPrdFees.add(periodicFeeRate);
+        allPrdFees.add(nonPeriodicFeeRate);
+
+
+        when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
+        when(request.getSession()).thenReturn(session);
+        when(session.getAttribute(Constants.FLOWMANAGER)).thenReturn(flowManager);
+        when(session.getAttribute(ProductDefinitionConstants.LOANPRDFEE)).thenReturn(allPrdFees);
+
+        Flow flow = new Flow();
+        try {
+            when(flowManager.getFromFlow(Mockito.anyString(),Mockito.anyString())).thenReturn(allPrdFees);
+            when(flowManager.getFlowWithValidation(FLOW_KEY)).thenReturn(flow);
+        } catch (PageExpiredException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        loanPrdActionForm.setCanConfigureVariableInstallments(false);
+        loanPrdActionForm.setPrdOfferinFees(new String[] {PERIODIC_FEE_1, PERIODIC_FEE_2, NON_PERIODIC_FEE});
+
+        loanPrdActionForm.validateSelectedFeeForVariableInstallment(request, errors);
+        Mockito.verifyZeroInteractions(errors);
+    }
 
     @Test
     public void anyInterestTypeCanBeSelectedForNonVariableInstallmentProductTypes() {
