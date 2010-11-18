@@ -8,4 +8,4 @@ Total amount of transactions with error: 2,000
 
 The following row(s) contain errors and will not be imported: 
 
-Row <24> error - THY3333333 - No Product name in "Transaction Party Details" field and ImportTransactionOrder property is not set
+Row <24> error - THY3333333 - No valid product name in "Transaction Party Details" field and ImportTransactionOrder property is not set
