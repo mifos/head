@@ -3993,6 +3993,10 @@ public class LoanBO extends AccountBO {
         }
     }
 
+    public boolean isVariableInstallmentsAllowed() {
+        return loanOffering.isVariableInstallmentsAllowed();
+    }
+
     /**
      * A struct to hold totals that can be passed around during rounding computations.
      */

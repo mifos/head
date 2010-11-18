@@ -266,6 +266,13 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 						</tr>
 					</table>
 					<c:if test="${loanInformationDto.disbursed}">
+                        <table width="96%" border="0" cellpadding="3" cellspacing="0">
+                            <tr>
+                                <td width="33%" class="headingorange">
+                                    <mifos:mifoslabel name="loan.installment_details" />
+                                </td>
+                            </tr>
+                        </table>
 					    <mifoscustom:mifostabletag source="installments" scope="session"
                                                xmlFileName="ProposedRepaymentSchedule.xml"
                                                moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"/>

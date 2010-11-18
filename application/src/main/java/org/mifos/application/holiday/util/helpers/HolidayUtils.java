@@ -34,9 +34,10 @@ import org.mifos.framework.util.DateTimeService;
  * Helper methods related to holidays logic
  */
 public class HolidayUtils {
+    private static final FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
 
     public static boolean isWorkingDay(final Calendar day) throws RuntimeException {
-        return new FiscalCalendarRules().isWorkingDay(day);
+        return fiscalCalendarRules.isWorkingDay(day);
     }
 
     static HolidayBO inHoliday(final Calendar pday, final List<HolidayBO> holidays) {
@@ -53,9 +54,19 @@ public class HolidayUtils {
     }
 
     public static Calendar getNextWorkingDay(final Calendar day) {
-        do {
+        while (!isWorkingDay(day)) {
             day.add(Calendar.DATE, 1);
-        } while (!isWorkingDay(day));
+        }
         return day;
+    }
+
+    public static Date getNextWorkingDay(Date date) {
+        return getNextWorkingDay(getCalendarDate(date)).getTime();
+    }
+
+    private static Calendar getCalendarDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
     }
 }

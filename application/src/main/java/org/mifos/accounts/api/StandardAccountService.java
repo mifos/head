@@ -29,6 +29,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -173,13 +174,23 @@ public class StandardAccountService implements AccountService {
             disbursalPayment.setCreatedByUser(personnelBO);
             Double interestRate = loan.getInterestRate();
 
+            Date oldDisbursementDate = loan.getDisbursementDate();
             loan.disburseLoan(disbursalPayment);
-
-            boolean variableInstallmentsAllowed = loan.getLoanOffering().isVariableInstallmentsAllowed();
-            loanBusinessService.computeInstallmentScheduleUsingDailyInterest(new LoanScheduleGenerationDto(
-                    transactionDate, loan, variableInstallmentsAllowed, amount, interestRate), locale);
+            adjustScheduleForVariableInstallments(locale, loan, amount, interestRate, oldDisbursementDate);
         }
         StaticHibernateUtil.commitTransaction();
+    }
+
+    private void adjustScheduleForVariableInstallments(Locale locale, LoanBO loan, Money amount, Double interestRate,
+                                                       Date oldDisbursementDate) {
+        boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
+        if (variableInstallmentsAllowed) {
+            List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto(locale);
+            Date newDisbursementDate = loan.getDisbursementDate();
+            loanBusinessService.adjustInstallmentGapsPostDisbursal(installments, oldDisbursementDate, newDisbursementDate);
+            loanBusinessService.computeInstallmentScheduleUsingDailyInterest(new LoanScheduleGenerationDto(
+                    newDisbursementDate, loan, variableInstallmentsAllowed, amount, interestRate), installments);
+        }
     }
 
     @Override

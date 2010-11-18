@@ -60,7 +60,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -233,7 +232,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     }
 
     @Test
-    public void testgetActiveLoansForAllClientsUnderGroup() throws Exception {
+    public void testGetActiveLoansForAllClientsUnderGroup() throws Exception {
         int groupLoanAccountId = 1;
         GroupBO groupMock = createMock(GroupBO.class);
         CustomerBO clientMock = createMock(ClientBO.class);

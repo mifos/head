@@ -262,11 +262,7 @@ public class MeetingBO extends AbstractBusinessObject {
         Date currentScheduleDate = currentScheduleDateTime.toDate();
         Calendar c = Calendar.getInstance();
         c.setTime(currentScheduleDate);
-
-        if (!HolidayUtils.isWorkingDay(c)) {
-            currentScheduleDate = HolidayUtils.getNextWorkingDay(c).getTime();
-        }
-
+        currentScheduleDate = HolidayUtils.getNextWorkingDay(c).getTime();
         Date meetingDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
         Date endDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(endDate.getTime());
         if (meetingDateWOTimeStamp.compareTo(endDateWOTimeStamp) > 0) {
@@ -277,9 +273,7 @@ public class MeetingBO extends AbstractBusinessObject {
                 && currentScheduleDate.compareTo(endDateWOTimeStamp) < 0) {
             currentScheduleDate = findNextMatchingDate(new DateTime(currentScheduleDate)).toDate();
             c.setTime(currentScheduleDate);
-            if (!HolidayUtils.isWorkingDay(c)) {
-                currentScheduleDate = HolidayUtils.getNextWorkingDay(c).getTime();
-            }
+            currentScheduleDate = HolidayUtils.getNextWorkingDay(c).getTime();
         }
 
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();

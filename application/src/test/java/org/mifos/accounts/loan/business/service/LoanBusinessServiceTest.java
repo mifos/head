@@ -30,6 +30,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -198,6 +199,71 @@ public class LoanBusinessServiceTest {
         assertInstallment(installment7, "465.2", "5.2");
     }
 
+    @Test
+    public void shouldMaintainInstallmentGapsPostDisbursal() {
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+        RepaymentScheduleInstallment installment4 =
+                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100");
+        RepaymentScheduleInstallment installment5 =
+                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100");
+        RepaymentScheduleInstallment installment6 =
+                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100");
+        RepaymentScheduleInstallment installment7 =
+                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
+                installment4, installment5, installment6, installment7);
+        Date initialDisbursementDate = getDate(2010, 8, 25);
+        Date disbursementDate = getDate(2010, 8, 30);
+        loanBusinessService.adjustInstallmentGapsPostDisbursal(installments,initialDisbursementDate,disbursementDate);
+        assertInstallmentDueDate(installment1, "06-Sep-2010");
+        assertInstallmentDueDate(installment2, "13-Sep-2010");
+        assertInstallmentDueDate(installment3, "20-Sep-2010");
+        assertInstallmentDueDate(installment4, "20-Oct-2010");
+        assertInstallmentDueDate(installment5, "30-Oct-2010");
+        assertInstallmentDueDate(installment6, "06-Nov-2010");
+        assertInstallmentDueDate(installment7, "23-Nov-2010");
+    }
+
+    @Test
+    public void shouldMaintainInstallmentGapsPostDisbursalWithNewDisbursalDateBeforeOldDisbursalDate() {
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+        RepaymentScheduleInstallment installment4 =
+                getRepaymentScheduleInstallment("15-Oct-2010", 4, "84.9", "14.1", "1", "100");
+        RepaymentScheduleInstallment installment5 =
+                getRepaymentScheduleInstallment("25-Oct-2010", 5, "94.9", "4.2", "1", "100");
+        RepaymentScheduleInstallment installment6 =
+                getRepaymentScheduleInstallment("01-Nov-2010", 6, "96.5", "2.5", "1", "100");
+        RepaymentScheduleInstallment installment7 =
+                getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
+                installment4, installment5, installment6, installment7);
+        Date initialDisbursementDate = getDate(2010, 8, 25);
+        Date disbursementDate = getDate(2010, 8, 20);
+        loanBusinessService.adjustInstallmentGapsPostDisbursal(installments,initialDisbursementDate,disbursementDate);
+        assertInstallmentDueDate(installment1, "27-Aug-2010");
+        assertInstallmentDueDate(installment2, "03-Sep-2010");
+        assertInstallmentDueDate(installment3, "10-Sep-2010");
+        assertInstallmentDueDate(installment4, "11-Oct-2010");
+        assertInstallmentDueDate(installment5, "21-Oct-2010");
+        assertInstallmentDueDate(installment6, "28-Oct-2010");
+        assertInstallmentDueDate(installment7, "15-Nov-2010");
+    }
+
+    private void assertInstallmentDueDate(RepaymentScheduleInstallment installment, String expectedDueDate) {
+        String actualDueDate = DateUtils.getDBtoUserFormatString(installment.getDueDateValue(), locale);
+        assertThat(actualDueDate, is(expectedDueDate));
+    }
+
     private void assertInstallment(RepaymentScheduleInstallment installment, String principal, String interest) {
         assertThat(installment.getPrincipal().toString(), is(principal));
         assertThat(installment.getInterest().toString(), is(interest));
@@ -213,7 +279,7 @@ public class LoanBusinessServiceTest {
 
     private Date getDate(int year, int month, int day) {
         Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month - 1, day);
+        calendar.set(year, month - 1, day, 0, 0, 0);
         return calendar.getTime();
     }
 }

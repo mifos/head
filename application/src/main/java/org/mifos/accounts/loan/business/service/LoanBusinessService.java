@@ -31,7 +31,7 @@ import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.application.servicefacade.LoanServiceFacadeWebTier;
+import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
@@ -259,6 +259,12 @@ public class LoanBusinessService implements BusinessService {
             LoanScheduleGenerationDto loanScheduleGenerationDto, Locale locale) {
         LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
         List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
+        return computeInstallmentScheduleUsingDailyInterest(loanScheduleGenerationDto, installments);
+    }
+
+    public List<RepaymentScheduleInstallment> computeInstallmentScheduleUsingDailyInterest(
+            LoanScheduleGenerationDto loanScheduleGenerationDto, List<RepaymentScheduleInstallment> installments) {
+        LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
         if (loanScheduleGenerationDto.isVariableInstallmentsAllowed() || loanBO.isDecliningPrincipalBalance()) {
             loanScheduleGenerationDto.setInstallments(installments);
             generateInstallmentSchedule(loanScheduleGenerationDto);
@@ -302,4 +308,18 @@ public class LoanBusinessService implements BusinessService {
         Double interestForInstallment = dailyInterestFactor * duration * principalOutstanding.getAmountDoubleValue();
         return new Money(installment.getCurrency(), interestForInstallment);
     }
+
+    public void adjustInstallmentGapsPostDisbursal(List<RepaymentScheduleInstallment> installments,
+                                                     Date oldDisbursementDate, Date newDisbursementDate) {
+        Date oldPrevDate = oldDisbursementDate, newPrevDate = newDisbursementDate;
+        for (RepaymentScheduleInstallment installment : installments) {
+            Date currentDueDate = installment.getDueDateValue();
+            long delta = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, oldPrevDate);
+            Date newDueDate = DateUtils.addDays(newPrevDate, (int) delta);
+            installment.setDueDateValue(HolidayUtils.getNextWorkingDay(newDueDate));
+            oldPrevDate = currentDueDate;
+            newPrevDate = installment.getDueDateValue();
+        }
+    }
+
 }
