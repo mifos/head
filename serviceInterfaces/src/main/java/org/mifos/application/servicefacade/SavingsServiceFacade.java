@@ -32,6 +32,7 @@ import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
+import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,4 +77,7 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsAccountDepositDueDto retrieveDepositDueDetails(String savingsSystemId, Short localeId);
 }

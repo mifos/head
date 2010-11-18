@@ -29,6 +29,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
+import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -87,6 +88,7 @@ import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -773,5 +775,29 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         } finally {
             this.transactionHelper.closeSession();
         }
+    }
+
+    @Override
+    public SavingsAccountDepositDueDto retrieveDepositDueDetails(String globalAccountNum, Short localeId) {
+        SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
+
+        List<AccountActionDateEntity> scheduledDeposits = savingsAccount.getAccountActionDatesSortedByInstallmentId();
+        for (AccountActionDateEntity scheduledDeposit : scheduledDeposits) {
+//            AccountDepositDto depositDto = scheduledDeposit.toDto();
+        }
+
+        List<AccountNotesEntity> savingsAccountNotes = new ArrayList<AccountNotesEntity>(savingsAccount.getAccountNotes());
+        for (AccountNotesEntity accountNotesEntity : savingsAccountNotes) {
+
+        }
+
+        for (AccountFlagMapping accountFlagMapping : savingsAccount.getAccountFlags()) {
+            accountFlagMapping.getFlag().setLocaleId(localeId);
+        }
+
+        AccountStateEntity accountStateEntity = savingsAccount.getAccountState();
+        accountStateEntity.setLocaleId(localeId);
+
+        return null;
     }
 }

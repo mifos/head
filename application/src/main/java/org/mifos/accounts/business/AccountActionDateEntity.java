@@ -31,17 +31,11 @@ import java.sql.Date;
 public abstract class AccountActionDateEntity extends AbstractEntity implements Comparable<AccountActionDateEntity> {
 
     protected final Integer actionDateId;
-
     protected AccountBO account;
-
     protected final CustomerBO customer;
-
     protected final Short installmentId;
-
     protected Date actionDate;
-
     protected Short paymentStatus;
-
     protected Date paymentDate;
 
     protected AccountActionDateEntity(final AccountBO account, final CustomerBO customer, final Short installmentId, final Date actionDate,

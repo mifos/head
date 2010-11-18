@@ -67,6 +67,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
+import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -471,14 +472,20 @@ public class SavingsAction extends AccountAppAction {
     public ActionForward getDepositDueDetails(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getDepositDueDetails()");
+        SavingsActionForm actionform = (SavingsActionForm) form;
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
-        SavingsBO savings = savingsService.findBySystemId(((SavingsActionForm) form).getGlobalAccountNum());
+
+        String savingsSystemId = actionform.getGlobalAccountNum();
+
+        SavingsBO savings = savingsService.findBySystemId(savingsSystemId);
         for (AccountActionDateEntity actionDate : savings.getAccountActionDates()) {
             savingsService.initialize(actionDate);
         }
 
         savingsService.initialize(savings.getAccountNotes());
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+
         for (AccountFlagMapping accountFlagMapping : savings.getAccountFlags()) {
             savingsService.initialize(accountFlagMapping.getFlag());
             accountFlagMapping.getFlag().setLocaleId(uc.getLocaleId());
@@ -487,6 +494,9 @@ public class SavingsAction extends AccountAppAction {
         savings.getAccountState().setLocaleId(uc.getLocaleId());
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+
+        SavingsAccountDepositDueDto depositDueDetails = this.savingsServiceFacade.retrieveDepositDueDetails(savingsSystemId, uc.getLocaleId());
+
         return mapping.findForward("depositduedetails_success");
     }
 
