@@ -26,7 +26,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
+import org.mifos.accounts.fees.business.FeeFrequencyEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,11 +45,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.MeetingDetailsEntity;
+import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
@@ -196,14 +201,8 @@ public class LoanPrdActionFormTest {
 
     @Test
     public void shouldNotAllowPeriodicFeeForVariableInstallmentLoanProduct() {
-        String PERIODIC_FEE_1 = "1";
         String PERIODIC_FEE_2 = "2";
         String NON_PERIODIC_FEE = "3";
-
-        when(periodicFeeAmount.getFeeType()).thenReturn(RateAmountFlag.AMOUNT);
-        when(periodicFeeAmount.getFeeId()).thenReturn(Short.valueOf(PERIODIC_FEE_1));
-        when(periodicFeeAmount.getFeeName()).thenReturn("periodic fee1");
-        when(periodicFeeAmount.isPeriodic()).thenReturn(true);
 
         when(periodicFeeRate.isPeriodic()).thenReturn(true);
         when(periodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
@@ -220,7 +219,6 @@ public class LoanPrdActionFormTest {
 
 
         List<FeeBO> allPrdFees = new ArrayList<FeeBO>();
-        allPrdFees.add(periodicFeeAmount);
         allPrdFees.add(periodicFeeRate);
         allPrdFees.add(nonPeriodicFeeRate);
 
@@ -242,28 +240,37 @@ public class LoanPrdActionFormTest {
         ActionMessageMatcher actionMessageMatcher = new ActionMessageMatcher(ProductDefinitionConstants.PERIODIC_FEE_NOT_APPLICABLE);
 
         loanPrdActionForm.setCanConfigureVariableInstallments(true);
-        loanPrdActionForm.setPrdOfferinFees(new String[] {PERIODIC_FEE_1, PERIODIC_FEE_2, NON_PERIODIC_FEE});
+        loanPrdActionForm.setPrdOfferinFees(new String[] {PERIODIC_FEE_2, NON_PERIODIC_FEE});
 
         loanPrdActionForm.validateSelectedFeeForVariableInstallment(request, errors);
-        Mockito.verify(errors, Mockito.times(2)).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
+        Mockito.verify(errors, Mockito.times(1)).add(Mockito.anyString(), Mockito.argThat(actionMessageMatcher));
     }
 
     @Test
     public void shouldAllowPeriodicFeeForNonVariableInstallmentLoanProduct() {
-        String PERIODIC_FEE_1 = "1";
         String PERIODIC_FEE_2 = "2";
         String NON_PERIODIC_FEE = "3";
 
-        when(periodicFeeAmount.getFeeType()).thenReturn(RateAmountFlag.AMOUNT);
-        when(periodicFeeAmount.getFeeId()).thenReturn(Short.valueOf(PERIODIC_FEE_1));
-        when(periodicFeeAmount.getFeeName()).thenReturn("periodic fee1");
-        when(periodicFeeAmount.isPeriodic()).thenReturn(true);
+
+
+        final FeeDto feeDto = Mockito.mock(FeeDto.class);
+        loanPrdActionForm = new LoanPrdActionForm() {
+            FeeDto getFeeDto(HttpServletRequest request, FeeBO fee) {
+                return feeDto;
+            }
+        };
+
+        FeeFrequencyEntity feeFrequencyEntity = Mockito.mock(FeeFrequencyEntity.class);
+        MeetingBO meetingBo = Mockito.mock(MeetingBO.class);
+        MeetingDetailsEntity meetingDetailsEntity = Mockito.mock(MeetingDetailsEntity.class);
 
         when(periodicFeeRate.isPeriodic()).thenReturn(true);
         when(periodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
         when(periodicFeeRate.getFeeId()).thenReturn(Short.valueOf(PERIODIC_FEE_2));
         when(periodicFeeRate.getFeeName()).thenReturn("periodic fee2");
-
+        when((periodicFeeRate).getFeeFormula()).thenReturn(feeFormulaEntity);
+        when(feeFormulaEntity.getFeeFormula()).thenReturn(FeeFormula.INTEREST);
+        when(periodicFeeRate.getFeeFrequency()).thenReturn(feeFrequencyEntity);
 
         when(nonPeriodicFeeRate.isPeriodic()).thenReturn(false);
         when(nonPeriodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
@@ -274,7 +281,6 @@ public class LoanPrdActionFormTest {
 
 
         List<FeeBO> allPrdFees = new ArrayList<FeeBO>();
-        allPrdFees.add(periodicFeeAmount);
         allPrdFees.add(periodicFeeRate);
         allPrdFees.add(nonPeriodicFeeRate);
 
@@ -294,7 +300,7 @@ public class LoanPrdActionFormTest {
         }
 
         loanPrdActionForm.setCanConfigureVariableInstallments(false);
-        loanPrdActionForm.setPrdOfferinFees(new String[] {PERIODIC_FEE_1, PERIODIC_FEE_2, NON_PERIODIC_FEE});
+        loanPrdActionForm.setPrdOfferinFees(new String[] { PERIODIC_FEE_2, NON_PERIODIC_FEE});
 
         loanPrdActionForm.validateSelectedFeeForVariableInstallment(request, errors);
         Mockito.verifyZeroInteractions(errors);

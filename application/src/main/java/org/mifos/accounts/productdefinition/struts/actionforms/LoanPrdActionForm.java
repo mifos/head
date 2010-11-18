@@ -2012,11 +2012,12 @@ public class LoanPrdActionForm extends BaseActionForm {
                         FeeBO fee = getFeeFromList(fees, selectedFee);
                         if (fee != null) {
                             if(canConfigureVariableInstallments()) {
-                                if (isFeeTypeNonPeriodic(fee, errors)) {
-                                    validateFeeIsNotDependentOnPercentOfInterest(fee, errors);
+                                if (validateIfFeeTypeNonPeriodic(fee, errors) && validateFeeIsNotDependentOnPercentOfInterest(fee, errors)) {
+                                    feeDtos.add(getFeeDto(request, fee));
                                 }
+                            }else {
+                                feeDtos.add(getFeeDto(request, fee));
                             }
-                        feeDtos.add(new FeeDto(getUserContext(request), fee));
                         }
                     }
                 }
@@ -2025,7 +2026,12 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
     }
 
-    private void validateFeeIsNotDependentOnPercentOfInterest(FeeBO fee, ActionErrors errors) {
+    FeeDto getFeeDto(HttpServletRequest request, FeeBO fee) {
+        return new FeeDto(getUserContext(request), fee);
+    }
+
+    private boolean validateFeeIsNotDependentOnPercentOfInterest(FeeBO fee, ActionErrors errors) {
+        boolean result = true;
         if (fee.getFeeType().equals(RateAmountFlag.RATE)) {
             FeeFormula feeFormula = ((RateFeeBO)fee).getFeeFormula().getFeeFormula();
             if (feeFormula != null) {
@@ -2033,16 +2039,19 @@ public class LoanPrdActionForm extends BaseActionForm {
                     addError(errors, "AdditionalFee",
                             ProductDefinitionConstants.FEE_WITH_PERCENT_INTEREST_NOT_APPLICABLE,
                             fee.getFeeName());
+                    result = false;
                 } else if (feeFormula.equals(FeeFormula.INTEREST)) {
                     addError(errors, "AdditionalFee",
                             ProductDefinitionConstants.FEE_WITH_PERCENT_INTEREST_NOT_APPLICABLE,
                             fee.getFeeName());
+                    result = false;
                 }
             }
         }
+        return result;
     }
 
-    private boolean isFeeTypeNonPeriodic(FeeBO fee, ActionErrors errors) {
+    private boolean validateIfFeeTypeNonPeriodic(FeeBO fee, ActionErrors errors) {
         if(fee.isPeriodic()) {
             addError(errors, "Fee", ProductDefinitionConstants.PERIODIC_FEE_NOT_APPLICABLE, fee.getFeeName());
             return false;
@@ -2076,7 +2085,7 @@ public class LoanPrdActionForm extends BaseActionForm {
                         if (AccountingRules.isMultiCurrencyEnabled()) {
                             isValidForCurrency(fee, errors, request);
                         }
-                        feeDtos.add(new FeeDto(getUserContext(request), fee));
+                        feeDtos.add(getFeeDto(request, fee));
                     }
                 }
             }
