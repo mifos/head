@@ -169,8 +169,7 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
     }
 
     // TC10
-    @Ignore
-    @Test(enabled = false)
+    @Test(enabled = true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createHolidayOnAMeetingWithRepaymentNextMeeting() throws Exception {
         initRemote
