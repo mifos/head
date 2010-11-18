@@ -45,7 +45,7 @@
                     <span class="paddingleft10 fontnormalbold">${sectionDetail.name}</span>
                     <ol>
                         [#list sectionDetail.questions as sectionQuestionDetail]
-                        <li>
+                        <li style='background-color: ${((sectionQuestionDetail_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
                             <label>[#if sectionQuestionDetail.mandatory]<span class="red">*</span>[/#if]
                             ${sectionQuestionDetail.text}:</label>[#if sectionQuestionDetail.multiSelectQuestion && sectionQuestionDetail.values?size > 1]
                         <ol>
