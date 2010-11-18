@@ -26,6 +26,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -44,8 +45,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeBOTest;
-import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
@@ -75,17 +76,19 @@ public class LoanPrdActionFormTest {
 
 
     @Mock
-    FeeBO periodicFeeRate;
+    RateFeeBO periodicFeeRate;
 
     @Mock
     FeeBO periodicFeeAmount;
 
-    @Mock
-    FeeBO nonPeriodicFeeRate;
+
+    FeeBO nonPeriodicFeeRate = Mockito.mock(RateFeeBO.class);
 
     @Mock
     FeeBO oneTimeFee;
 
+    @Mock
+    FeeFormulaEntity feeFormulaEntity;
 
     private LoanPrdActionForm loanPrdActionForm;
     private static final String FLOW_KEY = "FlowKey";
@@ -202,20 +205,24 @@ public class LoanPrdActionFormTest {
         when(periodicFeeAmount.getFeeName()).thenReturn("periodic fee1");
         when(periodicFeeAmount.isPeriodic()).thenReturn(true);
 
+        when(periodicFeeRate.isPeriodic()).thenReturn(true);
         when(periodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
         when(periodicFeeRate.getFeeId()).thenReturn(Short.valueOf(PERIODIC_FEE_2));
         when(periodicFeeRate.getFeeName()).thenReturn("periodic fee2");
-        when(periodicFeeRate.isPeriodic()).thenReturn(true);
 
+
+        when(nonPeriodicFeeRate.isPeriodic()).thenReturn(false);
         when(nonPeriodicFeeRate.getFeeType()).thenReturn(RateAmountFlag.RATE);
         when(nonPeriodicFeeRate.getFeeId()).thenReturn(Short.valueOf(NON_PERIODIC_FEE));
         when(nonPeriodicFeeRate.getFeeName()).thenReturn("non Periodic fee");
-        when(nonPeriodicFeeRate.isPeriodic()).thenReturn(false);
+        when(((RateFeeBO)nonPeriodicFeeRate).getFeeFormula()).thenReturn(feeFormulaEntity);
+        when(feeFormulaEntity.getFeeFormula()).thenReturn(FeeFormula.INTEREST);
 
 
         List<FeeBO> allPrdFees = new ArrayList<FeeBO>();
         allPrdFees.add(periodicFeeAmount);
         allPrdFees.add(periodicFeeRate);
+        allPrdFees.add(nonPeriodicFeeRate);
 
 
         when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);

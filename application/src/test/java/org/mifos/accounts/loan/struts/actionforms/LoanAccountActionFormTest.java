@@ -51,6 +51,7 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
@@ -354,6 +355,7 @@ public class LoanAccountActionFormTest extends TestCase {
 
     private FeeFormulaEntity createFeeFormulaEntityMock() {
         FeeFormulaEntity feeFormulaEntity = createMock(FeeFormulaEntity.class);
+        expect(feeFormulaEntity.getFeeFormula()).andReturn(FeeFormula.INTEREST);
         expect(feeFormulaEntity.getFormulaString()).andReturn("FormulaString");
         replay(feeFormulaEntity);
         return feeFormulaEntity;

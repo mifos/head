@@ -31,14 +31,17 @@ import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -152,8 +155,11 @@ public class AccountBusinessService implements BusinessService {
             FeeCategory categoryType = getCategoryType(account.getCustomer());
 
             if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
+
                 applicableChargeList = getLoanApplicableCharges(getAccountPersistence().getAllApplicableFees(
                         accountId, FeeCategory.LOAN), userContext, (LoanBO) account);
+
+
             } else if (account.getType() == AccountTypes.CUSTOMER_ACCOUNT) {
                 if (account.getCustomer().getCustomerMeeting() == null) {
                     throw new ServiceException(AccountExceptionConstants.APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION);
@@ -168,6 +174,8 @@ public class AccountBusinessService implements BusinessService {
         }
         return applicableChargeList;
     }
+
+
 
     private FeeCategory getCategoryType(CustomerBO customer) {
         if (customer.getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())) {
@@ -201,9 +209,35 @@ public class AccountBusinessService implements BusinessService {
             if(AccountingRules.isMultiCurrencyEnabled()){
                 filterBasedOnCurrencyOfLoan(feeList, loanBO);
             }
+
+            filterForVariableInstallmentLoanType(feeList,loanBO);
+
             populaleApplicableCharge(applicableChargeList, feeList, userContext);
         }
         return applicableChargeList;
+    }
+
+    private void filterForVariableInstallmentLoanType(List<FeeBO> feeList, LoanBO loanBO) {
+        if (loanBO.isOfType(AccountTypes.LOAN_ACCOUNT)) {
+            if (loanBO.getLoanOffering().isVariableInstallmentsAllowed()) {
+                for (Iterator<FeeBO> iter = feeList.iterator(); iter.hasNext();) {
+                    FeeBO fee = iter.next();
+
+                    if (fee.isPeriodic()) {
+                        iter.remove();
+                    } else if (fee.getFeeType().equals(RateAmountFlag.RATE)) {
+                        FeeFormula feeFormula = ((RateFeeBO) fee).getFeeFormula().getFeeFormula();
+                        if (feeFormula != null) {
+                            if (feeFormula.equals(FeeFormula.AMOUNT_AND_INTEREST)
+                                    || (feeFormula.equals(FeeFormula.INTEREST))) {
+                                iter.remove();
+                            }
+                        }
+                    }
+
+                }
+            }
+        }
     }
 
     private void filterBasedOnCurrencyOfLoan(List<FeeBO> feeList, LoanBO loanBO) {

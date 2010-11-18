@@ -2010,8 +2010,9 @@ public class LoanPrdActionForm extends BaseActionForm {
                 for (String selectedFee : getPrdOfferinFees()) {
                     FeeBO fee = getFeeFromList(fees, selectedFee);
                     if (fee != null) {
-                       validateFeeTypeNotPeriodic(fee, errors);
-                       validateFeeIsNotDependentOnPercentOfInterest(fee, errors);
+                       if(isFeeTypeNonPeriodic(fee, errors)) {
+                           validateFeeIsNotDependentOnPercentOfInterest(fee, errors);
+                       }
                     }
                 }
             }
@@ -2037,10 +2038,12 @@ public class LoanPrdActionForm extends BaseActionForm {
         }
     }
 
-    private void validateFeeTypeNotPeriodic(FeeBO fee, ActionErrors errors) {
+    private boolean isFeeTypeNonPeriodic(FeeBO fee, ActionErrors errors) {
         if(fee.isPeriodic()) {
             addError(errors, "Fee", ProductDefinitionConstants.PERIODIC_FEE_NOT_APPLICABLE, fee.getFeeName());
+            return false;
         }
+        return true;
     }
 
     void setSelectedFeeDtoOnSession(HttpServletRequest request, List<FeeDto> feeDtos)
