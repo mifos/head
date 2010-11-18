@@ -366,6 +366,14 @@ input[type="checkbox"], input.checkbox {
     width: 100%;
 }
 
+.width70px {
+    width:70px;
+}
+
+.width80px {
+    width:80px;
+}
+
 .height5px {
     height: 5px;
 }
@@ -409,4 +417,8 @@ input[type="checkbox"], input.checkbox {
     color: #000000;
     font-family: Arial, Verdana, Helvetica, sans-serif;
     font-size: 10pt;
+}
+
+.black {
+    color: #000;
 }
