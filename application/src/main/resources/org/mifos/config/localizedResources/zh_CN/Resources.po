@@ -30,7 +30,7 @@ msgstr "另请参见"
 
 #: center
 msgid "Center"
-msgstr "行政村"
+msgstr "中心"
 
 #: client
 msgid "Client"
@@ -91,7 +91,7 @@ msgstr "已核准"
 
 #: loanaccount_stateid_4
 msgid "Disbursed to LO"
-msgstr "发放给LO"
+msgstr "发放给信贷员"
 
 #: loanaccount_stateid_5
 msgid "Active in Good Standing"
@@ -158,69 +158,69 @@ msgstr "状态"
 #: value_1
 msgctxt "value_1"
 msgid "PartialApplication"
-msgstr "PartialApplication"
+msgstr "部分完成的申请表"
 
 #: value_10
 msgctxt "value_10"
 msgid "Hold"
-msgstr "Hold"
+msgstr "暂保存"
 
 #: value_11
 msgctxt "value_11"
 msgid "Cancelled"
-msgstr "Cancelled"
+msgstr "取消"
 
 #: value_12
 msgctxt "value_12"
 msgid "Closed"
-msgstr "Closed"
+msgstr "关闭"
 
 #: value_13
 msgctxt "value_13"
 msgid "Active"
-msgstr "Active"
+msgstr "活动的"
 
 #: value_14
 msgctxt "value_14"
 msgid "Inactive"
-msgstr "Inactive"
+msgstr "非活动的"
 
 #: value_2
 msgctxt "value_2"
 msgid "PendingApproval"
-msgstr "PendingApproval"
+msgstr "待批准"
 
 #: value_3
 msgctxt "value_3"
 msgid "Active"
-msgstr "Active"
+msgstr "活动"
 
 #: value_4
 msgctxt "value_4"
 msgid "Hold"
-msgstr "Hold"
+msgstr "暂保存"
 
 #: value_5
 msgctxt "value_5"
 msgid "Cancelled"
-msgstr "Cancelled"
+msgstr "取消"
 
 #: value_6
 msgctxt "value_6"
 msgid "Closed"
-msgstr "Closed"
+msgstr "关闭"
 
 #: value_7
 msgctxt "value_7"
 msgid "PartialApplication"
-msgstr "PartialApplication"
+msgstr "部分完成的申请表"
 
 #: value_8
 msgctxt "value_8"
 msgid "PendingApproval"
-msgstr "PendingApproval"
+msgstr "待批准"
 
 #: value_9
 msgctxt "value_9"
 msgid "Active"
-msgstr "Active"
+msgstr "活动"

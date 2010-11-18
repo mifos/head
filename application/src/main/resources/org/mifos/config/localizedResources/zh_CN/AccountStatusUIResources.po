@@ -104,7 +104,7 @@ msgstr "注释："
 
 #: accountStatus.resultsIn
 msgid "results in"
-msgstr ""
+msgstr "结果"
 
 #: accountStatus.search
 msgid "Search"

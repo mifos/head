@@ -28,7 +28,7 @@ msgstr "允许追溯交易"
 
 #: VOS.centerHierarchyExists
 msgid "Center hierarchy exists"
-msgstr "行政村层次已存在"
+msgstr "中心层次已存在"
 
 #: VOS.clientPendingState
 msgid "Client pending approval state enabled"
@@ -44,7 +44,7 @@ msgstr "客户可以独立于组存在"
 
 #: VOS.collectionSheetAdvanceDays
 msgid "Number of days in advance the collection sheet should be generated"
-msgstr "Number of days in advance the 收集单 should be generated"
+msgstr "在这天数之前应生成收集单"
 
 #: VOS.country
 msgid "Country"
@@ -76,7 +76,7 @@ msgstr "财年"
 
 #: VOS.glim
 msgid "Group loan with individual monitoring (GLIM)"
-msgstr ""
+msgstr "小组可个人还款追踪"
 
 #: VOS.groupPendingState
 msgid "Group pending approval state enabled"
@@ -152,7 +152,7 @@ msgstr "地区"
 
 #: VOS.lsim
 msgid "Loan schedule independent of meeting (LSIM)"
-msgstr ""
+msgstr "还款计划可在中心会之外"
 
 #: VOS.maxInterest
 msgid "Maximum Interest"

@@ -26,7 +26,7 @@ msgstr "由于批量任务正在运行，您已经从系统登录中注销。"
 
 #: errors.shutdown
 msgid "You have been logged out of the system because Mifos is shutting down."
-msgstr ""
+msgstr "由于Mifos正在关闭，您已经从系统登录中注销"
 
 #: errors.inactiveuser
 msgid ""

@@ -100,7 +100,7 @@ msgstr "或账户"
 
 #: CustomerSearch.s
 msgid "s"
-msgstr "s"
+msgstr ""
 
 #: CustomerSearch.search
 msgid "Search"
@@ -125,12 +125,12 @@ msgstr "如要搜索，输入"
 
 #: CustomerSearch.searchnamesysid
 msgid "name, system ID or account number"
-msgstr "名称、系统ID或帐号"
+msgstr "名称、系统序号或帐号"
 
 #: CustomerSearch.searchstring
 msgctxt "CustomerSearch.searchstring"
 msgid "Search by name, system ID or account number"
-msgstr "搜索名称、系统ID或帐号"
+msgstr "搜索名称、系统序号或帐号"
 
 #: CustomerSearch.select
 msgid "Select a"
@@ -182,7 +182,7 @@ msgstr "请选择一个部门以便继续。"
 msgid ""
 "Please specify the Name, System ID or Account Number to be searched for in "
 "the application."
-msgstr "请输入要搜索的名称、系统ID或帐号。"
+msgstr "请输入要搜索的名称、系统序号或帐号。"
 
 #: errors.nosearchstring
 msgid "Please specify Name to be searched."

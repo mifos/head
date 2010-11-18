@@ -28,7 +28,7 @@ msgstr "管理"
 
 #: acceptedPaymentType.clientgroupcenter
 msgid "Clients / Groups / Centers"
-msgstr "用户/组/行政村"
+msgstr "用户/组/中心"
 
 #: acceptedPaymentType.defineacceptedpaymenttype
 msgid "Define Accepted Payment Types"

@@ -106,7 +106,7 @@ msgstr "取消"
 
 #: Fees.centers
 msgid "(Centers)"
-msgstr "（行政村）"
+msgstr "（中心）"
 
 #: Fees.changeappliesto
 msgid "Change applies to"

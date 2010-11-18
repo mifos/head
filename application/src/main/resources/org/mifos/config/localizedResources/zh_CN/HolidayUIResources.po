@@ -99,7 +99,7 @@ msgstr "请指定{0}。"
 
 #: holiday.ApplicableOffices
 msgid "Applies To"
-msgstr ""
+msgstr "应用于"
 
 #: holiday.HolidayFromDate
 msgid "From Date"

@@ -20,7 +20,7 @@ msgstr "部门"
 
 #: bulkEntry.Center
 msgid "Center"
-msgstr "行政村"
+msgstr "中心"
 
 #: bulkEntry.acCollection
 msgid "A/C Collections"
@@ -36,7 +36,7 @@ msgstr "参与者"
 
 #: bulkEntry.attn
 msgid "Attn"
-msgstr "Attn"
+msgstr "参与"
 
 #: bulkEntry.bulkentry
 msgid "Bulk entry"
@@ -164,7 +164,7 @@ msgstr "受理日期"
 
 #: bulkEntry.rcptid
 msgid "Receipt ID"
-msgstr "受理ID"
+msgstr "受理序号"
 
 #: bulkEntry.revnsub
 msgid "Review &amp; submit "
@@ -243,7 +243,7 @@ msgstr "<li>填写的客户{1}的{0}金额无效。请填写有效的金额。</
 msgid ""
 "<li>Product {0} for customer {1} has two or more accounts open. Prepay these "
 "accounts individually.</li>"
-msgstr ""
+msgstr "<li>产品{0}于客户{1}有2个或更多活动账户。请预付。</li>"
 
 #: errors.invalidaccollections
 msgid ""
