@@ -17,16 +17,14 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import org.mifos.customers.api.DataTransferObject;
-
-/**
- *
- */
-public class CustomerNoteDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomerNoteDto implements Serializable {
     private final Date commentDate;
     private final String comment;
     private final String personnelName;
@@ -38,20 +36,15 @@ public class CustomerNoteDto implements DataTransferObject {
         this.personnelName = personnelName;
     }
 
-
     public Date getCommentDate() {
         return this.commentDate;
     }
-
 
     public String getComment() {
         return this.comment;
     }
 
-
     public String getPersonnelName() {
         return this.personnelName;
     }
-
-
 }

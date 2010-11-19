@@ -31,5 +31,9 @@
         <wb-resource deploy-path="/" source-path="/userInterface/src/main/webapp/pages"/>
         <wb-resource deploy-path="/" source-path="/application/src/main/webapp/WEB-INF"/>
         <wb-resource deploy-path="/" source-path="/application/src/main/webapp/pages"/>
+        <wb-resource deploy-path="/" source-path="/questionnaire/src/main/webapp/WEB-INF"/>
+        <wb-resource deploy-path="/" source-path="/questionnaire/src/main/webapp/pages"/>
+        <wb-resource deploy-path="/" source-path="/cashflow/src/main/webapp/WEB-INF"/>
+        <wb-resource deploy-path="/" source-path="/cashflow/src/main/webapp/pages"/>
     </wb-module>
 </project-modules>

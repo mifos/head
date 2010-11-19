@@ -27,6 +27,7 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsAccountStatusDto;
 import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
@@ -99,4 +100,7 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void updateSavingsAccountDetails(Long savingsId, String recommendedAmount, List<CustomFieldDto> accountCustomFieldSet);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsAccountDetailDto retrieveSavingsAccountDetails(Long savingsId);
 }

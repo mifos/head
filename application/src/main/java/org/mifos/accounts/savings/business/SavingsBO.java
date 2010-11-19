@@ -88,6 +88,8 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerNoteDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
@@ -1841,5 +1843,17 @@ public class SavingsBO extends AccountBO {
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
+    }
+
+    public SavingsAccountDetailDto toDto() {
+        List<SavingsRecentActivityDto> recentActivity = this.getRecentAccountActivity(3);
+
+        List<CustomerNoteDto> recentNoteDtos = new ArrayList<CustomerNoteDto>();
+        List<AccountNotesEntity> recentNotes = this.getRecentAccountNotes();
+        for (AccountNotesEntity accountNotesEntity : recentNotes) {
+            recentNoteDtos.add(new CustomerNoteDto(accountNotesEntity.getCommentDate(), accountNotesEntity.getComment(), accountNotesEntity.getPersonnelName()));
+        }
+
+        return new SavingsAccountDetailDto(this.savingsOffering.toFullDto(), recentActivity, recentNoteDtos, this.recommendedAmount.toString());
     }
 }

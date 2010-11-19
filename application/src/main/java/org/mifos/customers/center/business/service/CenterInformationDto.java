@@ -28,11 +28,11 @@ import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
 import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
-import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.customers.api.DataTransferObject;
 
 /**

@@ -38,12 +38,12 @@ import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
-import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 

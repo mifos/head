@@ -94,6 +94,7 @@ import org.mifos.dto.domain.DueOnDateDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsAccountStatusDto;
 import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
@@ -802,7 +803,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         List<DueOnDateDto> previousDueDates = new ArrayList<DueOnDateDto>();
 
         AccountActionDateEntity nextInstallment = savingsAccount.getDetailsOfNextInstallment();
-        LocalDate nextDueDate = new LocalDate(nextInstallment.getActionDate());
+        LocalDate nextDueDate = new LocalDate();
+        if (nextInstallment != null) {
+            nextDueDate = new LocalDate(nextInstallment.getActionDate());
+        }
 
         Money totalDue = Money.zero(savingsAccount.getCurrency());
         List<AccountActionDateEntity> scheduledDeposits = savingsAccount.getAccountActionDatesSortedByInstallmentId();
@@ -1033,5 +1037,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         } finally {
             this.transactionHelper.closeSession();
         }
+    }
+
+    @Override
+    public SavingsAccountDetailDto retrieveSavingsAccountDetails(Long savingsId) {
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+        return savingsAccount.toDto();
     }
 }

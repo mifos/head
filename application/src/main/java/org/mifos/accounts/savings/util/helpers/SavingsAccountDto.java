@@ -38,13 +38,11 @@ public class SavingsAccountDto implements DataTransferObject {
     private final Short recommendedAmntUnitId;
     private final List<CollectionSheetEntryInstallmentDto> accountTrxnDetails = new ArrayList<CollectionSheetEntryInstallmentDto>();
 
-
     private boolean isValidDepositAmountEntered = true;
     private boolean isValidWithDrawalAmountEntered = true;
 
     private String depositAmountEntered;
     private String withDrawalAmountEntered;
-
 
     public SavingsAccountDto(Integer accountId, Integer customerId, String savingsOfferingShortName,
             Short savingsOfferingId, Short savingsTypeId, Short recommendedAmntUnitId) {

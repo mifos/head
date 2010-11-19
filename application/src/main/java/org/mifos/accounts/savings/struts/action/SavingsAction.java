@@ -61,6 +61,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
@@ -71,7 +72,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
@@ -270,11 +270,15 @@ public class SavingsAction extends AccountAppAction {
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService.retrieveCustomFieldsDefinition(), request);
 
         SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savings.getSavingsOffering(), request);
-        actionForm.setRecommendedAmount(savings.getSavingsOffering().getRecommendedAmount().toString());
+
+        Long savingsId = savings.getAccountId().longValue();
+        SavingsAccountDetailDto savingsAccountDto = this.savingsServiceFacade.retrieveSavingsAccountDetails(savingsId);
+
+        actionForm.setRecommendedAmount(savingsAccountDto.getRecommendedOrMandatoryAmount());
 
         actionForm.clear();
 
-        SessionUtils.setCollectionAttribute(SavingsConstants.RECENTY_ACTIVITY_DETAIL_PAGE, savings.getRecentAccountActivity(3), request);
+        SessionUtils.setCollectionAttribute(SavingsConstants.RECENTY_ACTIVITY_DETAIL_PAGE, savingsAccountDto.getRecentActivity(), request);
         SessionUtils.setCollectionAttribute(SavingsConstants.NOTES, savings.getRecentAccountNotes(), request);
         logger.info(" Savings object retrieved successfully");
 
