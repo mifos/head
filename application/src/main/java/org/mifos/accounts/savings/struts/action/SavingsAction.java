@@ -30,6 +30,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -254,9 +255,15 @@ public class SavingsAction extends AccountAppAction {
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsActionForm actionForm = (SavingsActionForm) form;
         actionForm.setInput(null);
-        logger.debug(" Retrieving for globalAccountNum: " + actionForm.getGlobalAccountNum());
+        String globalAccountNum = actionForm.getGlobalAccountNum();
+        if (StringUtils.isBlank(actionForm.getGlobalAccountNum())) {
+            SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+            globalAccountNum = savings.getGlobalAccountNum();
+        }
 
-        SavingsBO savings = this.savingsDao.findBySystemId(actionForm.getGlobalAccountNum());
+        logger.debug(" Retrieving for globalAccountNum: " + globalAccountNum);
+
+        SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
         savings.setUserContext(uc);
 
         savings.getAccountState().setLocaleId(uc.getLocaleId());
@@ -473,10 +480,14 @@ public class SavingsAction extends AccountAppAction {
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         Integer versionNum = savings.getVersionNo();
-        savings = savingsService.findBySystemId(((SavingsActionForm) form).getGlobalAccountNum());
+
+        savings = this.savingsDao.findBySystemId(((SavingsActionForm) form).getGlobalAccountNum());
         checkVersionMismatch(versionNum, savings.getVersionNo());
         savings.setUserContext(uc);
-        savings.waiveAmountDue(WaiveEnum.ALL);
+
+        Long savingsId = savings.getAccountId().longValue();
+        this.savingsServiceFacade.waiveNextDepositAmountDue(savingsId);
+
         return mapping.findForward("waiveAmount_success");
     }
 

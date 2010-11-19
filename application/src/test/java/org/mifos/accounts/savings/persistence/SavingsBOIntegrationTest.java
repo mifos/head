@@ -68,7 +68,6 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.MifosCurrency;
@@ -838,30 +837,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getTotalAmountInArrears(), TestUtils.createMoney(400.0));
 
         savings.waiveAmountOverDue();
-        savings = (SavingsBO) saveAndFetch(savings);
-        Assert.assertEquals(savings.getTotalAmountInArrears(), getRoundedMoney(0.0));
-        Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
-    }
-
-    @Test
-    public void testWaiveAmountDueForCurrentDateMeeting() throws Exception {
-        savings = getSavingsAccount();
-        Assert.assertEquals(savings.getTotalAmountDueForNextInstallment(), TestUtils.createMoney(200.0));
-        savings.waiveAmountDue(WaiveEnum.ALL);
-        savings = (SavingsBO) saveAndFetch(savings);
-        Assert.assertEquals(savings.getTotalAmountInArrears(), getRoundedMoney(0.0));
-        Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
-    }
-
-    @Test
-    public void testWaiveAmountDueWithPartialPayment() throws Exception {
-        savings = getSavingsAccount();
-        SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        accountActionDateEntity.setDepositPaid(new Money(getCurrency(), "20.0"));
-
-        savings = (SavingsBO) saveAndFetch(savings);
-        Assert.assertEquals(savings.getTotalAmountDueForNextInstallment(), TestUtils.createMoney(180.0));
-        savings.waiveAmountDue(WaiveEnum.ALL);
         savings = (SavingsBO) saveAndFetch(savings);
         Assert.assertEquals(savings.getTotalAmountInArrears(), getRoundedMoney(0.0));
         Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);

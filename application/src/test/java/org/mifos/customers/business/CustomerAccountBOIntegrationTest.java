@@ -20,6 +20,22 @@
 
 package org.mifos.customers.business;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Assert;
@@ -57,28 +73,11 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Set;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -262,79 +261,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         AccountActionDateEntity installment = customerAccountBO.getAccountActionDate(custTrxn.getInstallmentId());
         Assert.assertFalse("The installment adjusted should now be marked unpaid(due).", installment.isPaid());
 
-    }
-
-    @Test
-    public void testWaiveForIntallmentOncePaid() throws Exception {
-        createCenter();
-        CustomerAccountBO customerAccount = center.getCustomerAccount();
-        Assert.assertNotNull(customerAccount);
-        Date transactionDate = new Date(System.currentTimeMillis());
-        List<AccountActionDateEntity> dueActionDates = TestObjectFactory.getDueActionDatesForAccount(customerAccount
-                .getAccountId(), transactionDate);
-        Assert.assertEquals(1, dueActionDates.size());
-        CustomerScheduleEntity customerScheduleEntity = (CustomerScheduleEntity) customerAccount
-                .getAccountActionDate(Short.valueOf("1"));
-        PaymentData accountPaymentDataView = TestObjectFactory.getCustomerAccountPaymentDataView(dueActionDates,
-                customerScheduleEntity.getTotalFeeDueWithMiscFee(), null, center.getPersonnel(), "3424324", Short
-                        .valueOf("1"), transactionDate, transactionDate);
-        center = TestObjectFactory.getCustomer(center.getCustomerId());
-        customerAccount = center.getCustomerAccount();
-        customerAccount.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.flushAndClearSession();
-
-        Assert.assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
-        for (CustomerActivityEntity activity : customerAccount.getCustomerActivitDetails()) {
-            Assert.assertEquals(transactionDate, activity.getCreatedDate());
-        }
-        Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
-        Assert.assertEquals("The size of the due insallments after payment is", TestObjectFactory
-                .getDueActionDatesForAccount(customerAccount.getAccountId(), transactionDate).size(), 0);
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        UserContext uc = TestUtils.makeUser();
-        customerAccount = center.getCustomerAccount();
-        customerAccount.setUserContext(uc);
-        customerAccount.applyCharge(Short.valueOf(AccountConstants.MISC_FEES), new Double("33"));
-        for (AccountActionDateEntity accountActionDateEntity : customerAccount.getAccountActionDates()) {
-            CustomerScheduleEntity customerSchEntity = (CustomerScheduleEntity) accountActionDateEntity;
-            if (customerSchEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(new Money(getCurrency(), "33.0"), customerSchEntity.getMiscFee());
-            }
-        }
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        customerAccount = center.getCustomerAccount();
-        customerAccount.setUserContext(uc);
-        customerAccount.waiveAmountDue(WaiveEnum.ALL);
-        for (AccountActionDateEntity accountAction : customerAccount.getAccountActionDates()) {
-            CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                Assert.assertEquals(new Money(getCurrency()), accountActionDateEntity.getTotalFeeDueWithMiscFee());
-            }
-        }
-    }
-
-    @Test
-    public void testWaiveChargeDue() throws Exception {
-        createInitialObjects();
-        TestObjectFactory.flushandCloseSession();
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        userContext = TestUtils.makeUser();
-        CustomerAccountBO customerAccountBO = group.getCustomerAccount();
-        customerAccountBO.setUserContext(userContext);
-        customerAccountBO.waiveAmountDue(WaiveEnum.ALL);
-        for (AccountActionDateEntity accountAction : customerAccountBO.getAccountActionDates()) {
-            CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
-                    .getAccountFeesActionDetails()) {
-                if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
-                } else {
-                    Assert.assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
-                }
-            }
-        }
     }
 
     @Test

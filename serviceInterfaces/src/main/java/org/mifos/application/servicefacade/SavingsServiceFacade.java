@@ -103,4 +103,6 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     SavingsAccountDetailDto retrieveSavingsAccountDetails(Long savingsId);
+
+    void waiveNextDepositAmountDue(Long savingsId);
 }

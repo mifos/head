@@ -1143,9 +1143,6 @@ public class AccountBO extends AbstractBusinessObject {
             final Money penalty, final Short personnelId, final String description) throws AccountException {
     }
 
-    public void waiveAmountDue(final WaiveEnum waiveType) throws AccountException {
-    }
-
     public void waiveAmountOverDue(final WaiveEnum waiveType) throws AccountException {
     }
 

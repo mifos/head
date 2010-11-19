@@ -66,7 +66,6 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -1472,21 +1471,15 @@ public class SavingsBO extends AccountBO {
         return nextInstallment;
     }
 
-    @Override
-    public void waiveAmountDue(final WaiveEnum waiveType) throws AccountException {
-        try {
-            PersonnelBO personnel = getPersonnelPersistence().getPersonnel(getUserContext().getId());
-            addSavingsActivityDetails(buildSavingsActivity(getTotalAmountDueForNextInstallment(), getSavingsBalance(),
-                    AccountActionTypes.WAIVEOFFDUE.getValue(), new DateTimeService().getCurrentJavaDateTime(),
-                    personnel));
-            List<AccountActionDateEntity> nextInstallments = getNextInstallment();
-            for (AccountActionDateEntity accountActionDate : nextInstallments) {
-                ((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
-            }
+    public void waiveNextDepositAmountDue(PersonnelBO loggedInUser) {
 
-            getSavingsPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
+        SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsWaiveAmountDueOnNextDeposit(this,
+                loggedInUser, this.savingsBalance, getTotalAmountDueForNextInstallment(), new DateTime().toDate());
+        savingsActivityDetails.add(savingsActivity);
+
+        List<AccountActionDateEntity> nextInstallments = getNextInstallment();
+        for (AccountActionDateEntity accountActionDate : nextInstallments) {
+            ((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
         }
     }
 

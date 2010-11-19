@@ -20,14 +20,22 @@
 
 package org.mifos.customers.business.service;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -38,16 +46,12 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
-import org.mifos.customers.business.CustomerAccountBOTestUtils;
-import org.mifos.customers.business.CustomerActivityEntity;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerFeeScheduleEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.checklist.business.CheckListBO;
@@ -59,30 +63,15 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.util.UserContext;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
 
 public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -153,33 +142,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     @Test
-    public void testGetAllActivityView() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        StaticHibernateUtil.flushSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        List<CustomerRecentActivityDto> customerActivityViewList = service
-                .getAllActivityView(center.getGlobalCustNum());
-        Assert.assertEquals(0, customerActivityViewList.size());
-        center.getCustomerAccount().setUserContext(TestUtils.makeUser());
-        center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        List<CustomerActivityEntity> customerActivityDetails = center.getCustomerAccount().getCustomerActivitDetails();
-        Assert.assertEquals(1, customerActivityDetails.size());
-        for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
-            Assert.assertEquals(new Money(getCurrency(), "100"), customerActivityEntity.getAmount());
-        }
-        List<CustomerRecentActivityDto> customerActivityView = service.getAllActivityView(center.getGlobalCustNum());
-        Assert.assertEquals(1, customerActivityView.size());
-        for (CustomerRecentActivityDto view : customerActivityView) {
-            Assert.assertEquals(new Money(getCurrency(), "100").toString(), view.getAmount());
-            Assert.assertEquals("Amnt waived", view.getDescription());
-            Assert.assertEquals(TestObjectFactory.getContext().getName(), view.getPostedBy());
-        }
-    }
-
-    @Test
     @Ignore
     public void testFailureGetRecentActivityView() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -194,86 +156,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
             Assert.assertTrue(true);
         }
         StaticHibernateUtil.flushSession();
-    }
-
-    @Test
-    public void testGetRecentActivityView() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        StaticHibernateUtil.flushSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        List<CustomerRecentActivityDto> customerActivityViewList = service
-                .getAllActivityView(center.getGlobalCustNum());
-        Assert.assertEquals(0, customerActivityViewList.size());
-        UserContext uc = TestUtils.makeUser();
-        center.getCustomerAccount().setUserContext(uc);
-        center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
-        TestObjectFactory.flushandCloseSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        for (AccountActionDateEntity accountAction : center.getCustomerAccount().getAccountActionDates()) {
-            CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
-                        .getAccountFeesActionDetails();
-                for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-                    CustomerAccountBOTestUtils.setFeeAmount((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,
-                            new Money(getCurrency(), "100"));
-                }
-            }
-        }
-        TestObjectFactory.updateObject(center);
-        center.getCustomerAccount().setUserContext(uc);
-        center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
-        TestObjectFactory.flushandCloseSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        for (AccountActionDateEntity accountAction : center.getCustomerAccount().getAccountActionDates()) {
-            CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
-                        .getAccountFeesActionDetails();
-                for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-                    CustomerAccountBOTestUtils.setFeeAmount((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,
-                            new Money(getCurrency(), "100"));
-                }
-            }
-        }
-        TestObjectFactory.updateObject(center);
-        center.getCustomerAccount().setUserContext(uc);
-        center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
-        TestObjectFactory.flushandCloseSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        for (AccountActionDateEntity accountAction : center.getCustomerAccount().getAccountActionDates()) {
-            CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-            if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("3"))) {
-                Set<AccountFeesActionDetailEntity> accountFeesActionDetails = accountActionDateEntity
-                        .getAccountFeesActionDetails();
-                for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountFeesActionDetails) {
-                    CustomerAccountBOTestUtils.setFeeAmount((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,
-                            new Money(getCurrency(), "20"));
-                }
-            }
-        }
-        TestObjectFactory.updateObject(center);
-        center.getCustomerAccount().setUserContext(uc);
-        center.getCustomerAccount().waiveAmountDue(WaiveEnum.ALL);
-        TestObjectFactory.flushandCloseSession();
-
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-        List<CustomerActivityEntity> customerActivityDetails = center.getCustomerAccount().getCustomerActivitDetails();
-        Assert.assertEquals(3, customerActivityDetails.size());
-        for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
-            Assert.assertEquals(new Money(getCurrency(), "100"), customerActivityEntity.getAmount());
-        }
-
-        List<CustomerRecentActivityDto> customerActivityView = service.getRecentActivityView(center.getCustomerId());
-        Assert.assertEquals(3, customerActivityView.size());
-        for (CustomerRecentActivityDto view : customerActivityView) {
-            Assert.assertEquals(new Money(getCurrency(), "100").toString(), view.getAmount());
-            Assert.assertEquals(TestObjectFactory.getContext().getName(), view.getPostedBy());
-        }
     }
 
     @Test

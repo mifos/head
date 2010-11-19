@@ -437,8 +437,7 @@ public class CustomerAccountBO extends AccountBO {
         }
     }
 
-    @Override
-    public void waiveAmountDue(@SuppressWarnings("unused") final WaiveEnum chargeType) throws AccountException {
+    public void waiveAmountDue() throws AccountException {
         AccountActionDateEntity accountActionDateEntity = getUpcomingInstallment();
         Money chargeWaived = ((CustomerScheduleEntity) accountActionDateEntity).waiveCharges();
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {

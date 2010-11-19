@@ -28,12 +28,17 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.WaiveEnum;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.util.helpers.CenterConstants;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
@@ -117,6 +122,9 @@ public class AccountAppAction extends BaseAction {
         AccountBO account = getAccountBusinessService().getAccount(accountId);
         account.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
+
+        PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(uc.getId());
+
         WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
         if (account.getPersonnel() != null) {
             getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
@@ -126,7 +134,13 @@ public class AccountAppAction extends BaseAction {
             getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
                     account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(), uc.getId());
         }
-        account.waiveAmountDue(waiveEnum);
+        if (account.isLoanAccount()) {
+            ((LoanBO)account).waiveAmountDue(waiveEnum);
+        } else if (account.isSavingsAccount()) {
+            ((SavingsBO)account).waiveNextDepositAmountDue(loggedInUser);
+        } else  {
+            ((CustomerAccountBO)account).waiveAmountDue();
+        }
         return mapping.findForward("waiveChargesDue_Success");
     }
 

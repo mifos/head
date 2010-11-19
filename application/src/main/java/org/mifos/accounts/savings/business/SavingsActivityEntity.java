@@ -56,6 +56,12 @@ public class SavingsActivityEntity extends AbstractEntity {
         return new SavingsActivityEntity(loggedInUser, accountAction, withdrawalAmount, savingsBalance, paymentDate, savings);
     }
 
+    public static SavingsActivityEntity savingsWaiveAmountDueOnNextDeposit(SavingsBO savings, PersonnelBO personnel,
+            Money savingsBalance, Money totalAmountDueForNextDeposit, Date nextDepositDate) {
+        AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.WAIVEOFFDUE);
+        return new SavingsActivityEntity(personnel, accountAction, totalAmountDueForNextDeposit, savingsBalance, nextDepositDate, savings);
+    }
+
     protected SavingsActivityEntity() {
         this.id = null;
         this.account = null;

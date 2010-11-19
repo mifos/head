@@ -68,6 +68,7 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -90,7 +91,12 @@ public class AccountBusinessService implements BusinessService {
 
     public List<TransactionHistoryDto> getTrxnHistory(AccountBO accountBO, UserContext uc) {
         accountBO.setUserContext(uc);
-        return accountBO.getTransactionHistoryView();
+        List<TransactionHistoryDto> transactionHistories = accountBO.getTransactionHistoryView();
+        for (TransactionHistoryDto transactionHistoryDto : transactionHistories) {
+            transactionHistoryDto.setUserPrefferedPostedDate(DateUtils.getUserLocaleDate(uc.getPreferredLocale(), transactionHistoryDto.getPostedDate().toString()));
+            transactionHistoryDto.setUserPrefferedTransactionDate(DateUtils.getUserLocaleDate(uc.getPreferredLocale(), transactionHistoryDto.getTransactionDate().toString()));
+        }
+        return transactionHistories;
     }
 
     public AccountBO getAccount(Integer accountId) throws ServiceException {
