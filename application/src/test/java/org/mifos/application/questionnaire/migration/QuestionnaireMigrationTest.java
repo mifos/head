@@ -352,7 +352,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.CLIENT);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(customerDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(customerDao, times(2)).retrieveCustomFieldEntitiesForClientIterator();
+        verify(customerDao, times(3)).retrieveCustomFieldEntitiesForClientIterator();
         verify(questionnaireMigrationMapper, times(2)).mapForCustomers(eq(QUESTION_GROUP_ID), eq(1), Matchers.<List<CustomerCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
@@ -393,7 +393,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.GROUP);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(customerDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(customerDao, times(2)).retrieveCustomFieldEntitiesForGroupIterator();
+        verify(customerDao, times(3)).retrieveCustomFieldEntitiesForGroupIterator();
         verify(questionnaireMigrationMapper, times(2)).mapForCustomers(eq(QUESTION_GROUP_ID), eq(4), Matchers.<List<CustomerCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
@@ -434,7 +434,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.LOAN);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(loanDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(loanDao, times(2)).retrieveCustomFieldEntitiesForLoan();
+        verify(loanDao, times(3)).retrieveCustomFieldEntitiesForLoan();
         verify(questionnaireMigrationMapper, times(2)).mapForAccounts(eq(QUESTION_GROUP_ID), eq(2), Matchers.<List<AccountCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
@@ -476,7 +476,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.SAVINGS);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(savingsDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(savingsDao, times(2)).retrieveCustomFieldEntitiesForSavings();
+        verify(savingsDao, times(3)).retrieveCustomFieldEntitiesForSavings();
         verify(questionnaireMigrationMapper, times(2)).mapForAccounts(eq(QUESTION_GROUP_ID), eq(12), Matchers.<List<AccountCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
@@ -517,7 +517,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.CENTER);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(customerDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(customerDao, times(2)).retrieveCustomFieldEntitiesForCenterIterator();
+        verify(customerDao, times(3)).retrieveCustomFieldEntitiesForCenterIterator();
         verify(questionnaireMigrationMapper, times(2)).mapForCustomers(eq(QUESTION_GROUP_ID), eq(9), Matchers.<List<CustomerCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
@@ -558,7 +558,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.OFFICE);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(officeDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(officeDao, times(2)).retrieveCustomFieldEntitiesForOffice();
+        verify(officeDao, times(3)).retrieveCustomFieldEntitiesForOffice();
         verify(questionnaireMigrationMapper, times(2)).mapForOffice(eq(QUESTION_GROUP_ID), eq(14), Matchers.<List<OfficeCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
@@ -599,7 +599,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper).map(customFieldIterator, customFieldQuestionIdMap, EntityType.PERSONNEL);
         verify(questionnaireServiceFacade).createQuestionGroup(questionGroupDto);
         verify(personnelDao, times(2)).getCustomFieldResponses(any(Short.class));
-        verify(personnelDao, times(2)).retrieveCustomFieldEntitiesForPersonnel();
+        verify(personnelDao, times(3)).retrieveCustomFieldEntitiesForPersonnel();
         verify(questionnaireMigrationMapper, times(2)).mapForPersonnel(eq(QUESTION_GROUP_ID), eq(15), Matchers.<List<PersonnelCustomFieldEntity>>any(), eq(customFieldQuestionIdMap));
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto1);
         verify(questionnaireServiceFacade).saveQuestionGroupInstance(questionGroupInstanceDto2);
