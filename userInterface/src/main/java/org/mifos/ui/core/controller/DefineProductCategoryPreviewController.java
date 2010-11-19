@@ -46,7 +46,6 @@ public class DefineProductCategoryPreviewController {
 
     private static final String REDIRECT_TO_ADMIN = "redirect:/AdminAction.do?method=load";
     private static final String CANCEL_PARAM = "CANCEL";
-    private static final String REDIRECT_TO_VIEW_PRODUCT_CATEGORY = "redirect:/editProductCategory.ftl";
     private static final String EDIT_PARAM = "EDIT";
 
     @Autowired
@@ -88,7 +87,7 @@ public class DefineProductCategoryPreviewController {
             BindingResult result) {
         ModelAndView modelAndView = new ModelAndView("defineNewCategory");
         if (StringUtils.isNotBlank(cancel)) {
-            modelAndView.setViewName(REDIRECT_TO_VIEW_PRODUCT_CATEGORY);
+            modelAndView.setViewName(REDIRECT_TO_ADMIN);
         } else if (StringUtils.isNotBlank(edit)) {
             modelAndView.setViewName("defineNewCategory");
             modelAndView.addObject("formBean", bean);
