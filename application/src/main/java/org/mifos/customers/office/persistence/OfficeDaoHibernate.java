@@ -333,7 +333,7 @@ public class OfficeDaoHibernate implements OfficeDao {
     public Iterator<OfficeCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (Iterator<OfficeCustomFieldEntity>) genericDao.executeNamedQueryIterator("OfficeCustomFieldEntity.getResponses", queryParameters);
+        return (Iterator<OfficeCustomFieldEntity>) genericDao.executeNamedQueryIterator("CustomerCustomFieldEntity.getResponses", queryParameters);
     }
 
 

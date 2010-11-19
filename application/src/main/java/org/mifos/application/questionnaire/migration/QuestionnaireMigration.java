@@ -37,7 +37,6 @@ import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.HibernateUtil;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
@@ -154,32 +153,9 @@ public class QuestionnaireMigration {
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.GROUP);
             customFields = getCustomFieldsForGroup();
             Integer eventSourceId = getEventSourceId("Create", "Group");
-            if (migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForGroup());
-            }
+            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap);
         }
         return questionGroupId;
-    }
-
-    private void removeCustomFields(Iterator<CustomFieldDefinitionEntity> customFields) {
-        boolean result = false;
-        if (customFields != null) {
-            result = true;
-            while (customFields.hasNext()) {
-                CustomFieldDefinitionEntity customField = customFields.next();
-                try {
-                    surveysPersistence.delete(customField);
-                } catch (PersistenceException e) {
-                    logger.error(format("Unable to remove custom field with ID %d", customField.getFieldId()), e);
-                    result = false;
-                    HibernateUtil.getInstance().rollbackTransaction();
-                    break;
-                }
-            }
-        }
-        if (result) {
-            HibernateUtil.getInstance().commitTransaction();
-        }
     }
 
     // Made 'public' to aid unit testing
@@ -191,9 +167,7 @@ public class QuestionnaireMigration {
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.CLIENT);
             customFields = getCustomFieldsForClient();
             Integer eventSourceId = getEventSourceId("Create", "Client");
-            if (migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForClient());
-            }
+            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -206,9 +180,7 @@ public class QuestionnaireMigration {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.LOAN);
             customFields = getCustomFieldsForLoan();
-            if (migrateAdditionalFieldsResponsesForLoan(customFields, questionGroupId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForLoan());
-            }
+            migrateAdditionalFieldsResponsesForLoan(customFields, questionGroupId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -221,9 +193,7 @@ public class QuestionnaireMigration {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.PERSONNEL);
             customFields = getCustomFieldsForPersonnel();
-            if (migrateAdditionalFieldsResponsesForPersonnel(customFields, questionGroupId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForPersonnel());
-            }
+            migrateAdditionalFieldsResponsesForPersonnel(customFields, questionGroupId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -236,9 +206,7 @@ public class QuestionnaireMigration {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.OFFICE);
             customFields = getCustomFieldsForOffice();
-            if (migrateAdditionalFieldsResponsesForOffice(customFields, questionGroupId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForOffice());
-            }
+            migrateAdditionalFieldsResponsesForOffice(customFields, questionGroupId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -252,9 +220,7 @@ public class QuestionnaireMigration {
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.CENTER);
             customFields = getCustomFieldsForCenter();
             Integer eventSourceId = getEventSourceId("Create", "Center");
-            if (migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForCenter());
-            }
+            migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -267,9 +233,7 @@ public class QuestionnaireMigration {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
             questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.SAVINGS);
             customFields = getCustomFieldsForSavings();
-            if (migrateAdditionalFieldsResponsesForSavings(customFields, questionGroupId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForSavings());
-            }
+            migrateAdditionalFieldsResponsesForSavings(customFields, questionGroupId, customFieldQuestionIdMap);
         }
         return questionGroupId;
     }
@@ -378,159 +342,69 @@ public class QuestionnaireMigration {
         return customFields;
     }
 
-    private boolean migrateAdditionalFieldsResponsesForCustomer(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
+    private void migrateAdditionalFieldsResponsesForCustomer(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
                                                              Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
         if (questionGroupId != null && eventSourceId != null) {
-            result = true;
             Map<Integer, List<CustomerCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForCustomer(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<CustomerCustomFieldEntity> customerResponses = customFieldResponses.get(entityId);
                 QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForCustomer(questionGroupId, eventSourceId, customFieldQuestionIdMap, customerResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    for (CustomerCustomFieldEntity response : customerResponses) {
-                        try {
-                            surveysPersistence.delete(response);
-                        } catch (PersistenceException e) {
-                            logger.error(format("Unable to remove responses given for account with ID %d for custom fields",
-                                    response.getCustomerId()), e);
-                            result = false;
-                            HibernateUtil.getInstance().rollbackTransaction();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = false;
-                }
+                saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
-        return result;
     }
 
-    private boolean migrateAdditionalFieldsResponsesForLoan(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
+    private void migrateAdditionalFieldsResponsesForLoan(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
                                                              Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
         if (questionGroupId != null) {
-            result = true;
             Map<Integer, List<AccountCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForLoan(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<AccountCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
                 Integer eventSourceId = getEventSourceId("Create", "Loan");
                 QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForAccount(questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    for (AccountCustomFieldEntity response : accountResponses) {
-                        try {
-                            surveysPersistence.delete(response);
-                        } catch (PersistenceException e) {
-                            logger.error(format("Unable to remove responses given for loan with ID %d for custom fields",
-                                    response.getAccountId()), e);
-                            result = false;
-                            HibernateUtil.getInstance().rollbackTransaction();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = false;
-                }
+                saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
-        return result;
     }
 
-    private boolean migrateAdditionalFieldsResponsesForPersonnel(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
+    private void migrateAdditionalFieldsResponsesForPersonnel(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
             Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
         if (questionGroupId != null) {
-            result = true;
             Map<Integer, List<PersonnelCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForPersonnel(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<PersonnelCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
                 Integer eventSourceId = getEventSourceId("Create", "Personnel");
                 QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForPersonnel(questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    for (PersonnelCustomFieldEntity response : accountResponses) {
-                         try {
-                            surveysPersistence.delete(response);
-                        } catch (PersistenceException e) {
-                            logger.error(format("Unable to remove responses given for personnel with ID %d for custom fields",
-                                    response.getPersonnel().getPersonnelId()), e);
-                            result = false;
-                            HibernateUtil.getInstance().rollbackTransaction();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = false;
-                }
+                saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
-        return result;
     }
 
-    private boolean migrateAdditionalFieldsResponsesForOffice(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
+    private void migrateAdditionalFieldsResponsesForOffice(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
             Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
         if (questionGroupId != null) {
-            result = true;
             Map<Integer, List<OfficeCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForOffice(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<OfficeCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
                 Integer eventSourceId = getEventSourceId("Create", "Office");
                 QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForOffice(questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    for (OfficeCustomFieldEntity response : accountResponses) {
-                        try {
-                            surveysPersistence.delete(response);
-                        } catch (PersistenceException e) {
-                            logger.error(format("Unable to remove responses given for office with ID %d for custom fields",
-                                    response.getOffice().getOfficeId()), e);
-                            result = false;
-                            HibernateUtil.getInstance().rollbackTransaction();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = false;
-                }
+                saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
-        return result;
     }
 
-    private boolean migrateAdditionalFieldsResponsesForSavings(Iterator<CustomFieldDefinitionEntity> customFields,
+    private void migrateAdditionalFieldsResponsesForSavings(Iterator<CustomFieldDefinitionEntity> customFields,
             Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
         if (questionGroupId != null) {
-            result = true;
             Map<Integer, List<AccountCustomFieldEntity>> customFieldResponses = getCustomFieldResponsesForSavings(customFields);
             for (Integer entityId : customFieldResponses.keySet()) {
                 List<AccountCustomFieldEntity> accountResponses = customFieldResponses.get(entityId);
                 Integer eventSourceId = getEventSourceId("Create", "Savings");
                 QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstanceForAccount(questionGroupId,
                         eventSourceId, customFieldQuestionIdMap, accountResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    for (AccountCustomFieldEntity response : accountResponses) {
-                        try {
-                            surveysPersistence.delete(response);
-                        } catch (PersistenceException e) {
-                            logger.error(format("Unable to remove responses given for savings with ID %d for custom fields",
-                                    response.getAccountId()), e);
-                            result = false;
-                            HibernateUtil.getInstance().rollbackTransaction();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = false;
-                }
+                saveQuestionGroupInstance(questionGroupInstanceDto);
             }
         }
-        return result;
     }
 
     private Map<Integer, List<AccountCustomFieldEntity>> getCustomFieldResponsesForSavings(Iterator<CustomFieldDefinitionEntity> customFields) {
@@ -704,16 +578,14 @@ public class QuestionnaireMigration {
         return customFieldResponses;
     }
 
-    private boolean saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto) {
+    private void saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto) {
         if (questionGroupInstanceDto != null) {
             try {
                 questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
-                return true;
             } catch (Exception e) {
                 logger.error(format("Unable to migrate responses from customer with ID, %d for custom fields", questionGroupInstanceDto.getEntityId()), e);
             }
         }
-        return false;
     }
 
     private QuestionGroupInstanceDto mapToQuestionGroupInstanceForCustomer(Integer questionGroupId, Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap,
@@ -794,16 +666,7 @@ public class QuestionnaireMigration {
         QuestionGroupDto questionGroupDto = mapSurveyToQuestionGroupDto(survey);
         Integer questionGroupId = createQuestionGroup(questionGroupDto, survey);
         Integer eventSourceId = getEventSourceId(questionGroupDto);
-        if (migrateSurveyResponses(survey, questionGroupId, eventSourceId)) {
-            /* todo - we don't want to remove surveys in release E
-            HibernateUtil.getInstance().commitTransaction();
-
-            try {
-                surveysPersistence.delete(survey);
-            } catch (PersistenceException e) {
-                logger.error(format("Unable to remove survey '%s' with ID %s", survey.getName(), survey.getSurveyId()), e);
-            }*/
-        }
+        migrateSurveyResponses(survey, questionGroupId, eventSourceId);
         return questionGroupId;
     }
 
@@ -848,32 +711,16 @@ public class QuestionnaireMigration {
         return questionGroupId;
     }
 
-    private boolean migrateSurveyResponses(Survey survey, Integer questionGroupId, Integer eventSourceId) {
-        boolean result = false;
+    private void migrateSurveyResponses(Survey survey, Integer questionGroupId, Integer eventSourceId) {
         if (questionGroupId != null && eventSourceId != null) {
-            result = true;
             Iterator<SurveyInstance> surveyInstanceIterator = getSurveyInstances(survey);
             if (surveyInstanceIterator != null) {
                 while (surveyInstanceIterator.hasNext()) {
                     SurveyInstance surveyInstance = surveyInstanceIterator.next();
-                    if (saveQuestionGroupInstance(mapToQuestionGroupInstance(questionGroupId, eventSourceId, surveyInstance), surveyInstance)) {
-                        /* todo - we don't want to remove surveys in release E
-                        try {
-                            surveysPersistence.delete(surveyInstance);
-                        } catch (PersistenceException e) {
-                            logger.error(format("Unable to remove survey instance '%s' (survey id: %d, survey instance id: %d)",
-                                    survey.getName(), survey.getSurveyId(), surveyInstance.getInstanceId()), e);
-                            result = false;
-                            HibernateUtil.getInstance().rollbackTransaction();
-                        }*/
-                    }
-                    else {
-                        result = false;
-                    }
+                    saveQuestionGroupInstance(mapToQuestionGroupInstance(questionGroupId, eventSourceId, surveyInstance), surveyInstance);
                 }
             }
         }
-        return result;
     }
 
     private QuestionGroupInstanceDto mapToQuestionGroupInstance(Integer questionGroupId, Integer eventSourceId, SurveyInstance surveyInstance) {
@@ -887,17 +734,15 @@ public class QuestionnaireMigration {
         return questionGroupInstanceDto;
     }
 
-    private boolean saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto, SurveyInstance surveyInstance) {
+    private void saveQuestionGroupInstance(QuestionGroupInstanceDto questionGroupInstanceDto, SurveyInstance surveyInstance) {
         if (questionGroupInstanceDto != null) {
             try {
                 questionnaireServiceFacade.saveQuestionGroupInstance(questionGroupInstanceDto);
-                return true;
             } catch (Exception e) {
                 Survey survey = surveyInstance.getSurvey();
                 logger.error(format("Unable to migrate a survey instance with ID, %s for the survey, '%s' with ID, %s", surveyInstance.getInstanceId(), survey.getName(), survey.getSurveyId()), e);
             }
         }
-        return false;
     }
 
     private Iterator<SurveyInstance> getSurveyInstances(Survey survey) {
