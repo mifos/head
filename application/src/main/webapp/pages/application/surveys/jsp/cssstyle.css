@@ -625,3 +625,6 @@ select {
 	height: 25px;
 
 }
+.no-list-style{
+    list-style : none;
+}
