@@ -31,6 +31,8 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
+import org.mifos.dto.domain.NoteSearchDto;
+import org.mifos.dto.screen.NotesSearchResultsDto;
 
 /**
  *
@@ -65,5 +67,7 @@ public interface SavingsDao {
     List<Integer> retrieveAllActiveAndInActiveSavingsAccountsPendingInterestPostingOn(LocalDate interestPostingDate);
 
     SavingsBO findBySystemId(String globalAccountNum);
+
+    NotesSearchResultsDto searchNotes(NoteSearchDto noteSearch);
 
 }

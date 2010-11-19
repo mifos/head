@@ -30,12 +30,14 @@ public class SavingsAccountDetailDto {
     private final List<SavingsRecentActivityDto> recentActivity;
     private final List<CustomerNoteDto> recentNoteDtos;
     private final String recommendedOrMandatoryAmount;
+    private final String globalAccountNum;
 
-    public SavingsAccountDetailDto(SavingsProductDto productDetails, List<SavingsRecentActivityDto> recentActivity, List<CustomerNoteDto> recentNoteDtos, String recommendedOrMandatoryAmount) {
+    public SavingsAccountDetailDto(SavingsProductDto productDetails, List<SavingsRecentActivityDto> recentActivity, List<CustomerNoteDto> recentNoteDtos, String recommendedOrMandatoryAmount, String globalAccountNum) {
         this.productDetails = productDetails;
         this.recentActivity = recentActivity;
         this.recentNoteDtos = recentNoteDtos;
         this.recommendedOrMandatoryAmount = recommendedOrMandatoryAmount;
+        this.globalAccountNum = globalAccountNum;
     }
 
     public SavingsProductDto getProductDetails() {
@@ -52,5 +54,9 @@ public class SavingsAccountDetailDto {
 
     public String getRecommendedOrMandatoryAmount() {
         return this.recommendedOrMandatoryAmount;
+    }
+
+    public String getGlobalAccountNum() {
+        return this.globalAccountNum;
     }
 }

@@ -30,7 +30,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.NotesActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -39,6 +39,9 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.dto.domain.NoteSearchDto;
+import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.screen.NotesSearchResultsDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.struts.action.SearchAction;
@@ -58,11 +61,6 @@ public class NotesAction extends SearchAction {
         return new AccountBusinessService();
     }
 
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
-
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("notesAction");
         security.allow("load", SecurityConstants.VIEW);
@@ -75,17 +73,30 @@ public class NotesAction extends SearchAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         clearActionForm(form);
-        AccountBO accountBO = new AccountBusinessService().getAccount(Integer.valueOf(((NotesActionForm) form)
-                .getAccountId()));
-        setFormAttributes(form, accountBO);
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        NotesActionForm notesActionForm = (NotesActionForm) form;
+        Integer accountId = Integer.valueOf(notesActionForm.getAccountId());
+        AccountBO account = new AccountBusinessService().getAccount(accountId);
+
+        if (account.isLoanAccount()) {
+            notesActionForm.setAccountTypeId(account.getType().getValue().toString());
+            notesActionForm.setGlobalAccountNum(account.getGlobalAccountNum());
+            notesActionForm.setPrdOfferingName(((LoanBO) account).getLoanOffering().getPrdOfferingName());
+        } else if (account.isSavingsAccount()) {
+            SavingsAccountDetailDto savingsAccountDto = this.savingsServiceFacade.retrieveSavingsAccountNotes(accountId.longValue(), uc.getLocaleId());
+            notesActionForm.setPrdOfferingName(savingsAccountDto.getProductDetails().getProductDetails().getName());
+            notesActionForm.setAccountTypeId(account.getType().getValue().toString());
+            notesActionForm.setGlobalAccountNum(savingsAccountDto.getGlobalAccountNum());
+        }
+
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         NotesActionForm notesActionForm = (NotesActionForm) form;
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc.getId());
@@ -97,21 +108,21 @@ public class NotesAction extends SearchAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(chooseForward(Short.valueOf(((NotesActionForm) form).getAccountTypeId())));
     }
 
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         NotesActionForm notesActionForm = (NotesActionForm) form;
         AccountBO accountBO = new AccountBusinessService().getAccount(Integer.valueOf(notesActionForm.getAccountId()));
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
@@ -122,8 +133,7 @@ public class NotesAction extends SearchAction {
             checkPermissionForAddingNotes(accountBO.getType(), null, uc, accountBO.getOffice().getOfficeId(), uc
                     .getId());
         }
-        AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils.getAttribute(
-                AccountConstants.ACCOUNT_NOTES, request);
+        AccountNotesEntity accountNotes = (AccountNotesEntity) SessionUtils.getAttribute(AccountConstants.ACCOUNT_NOTES, request);
         accountBO.addAccountNotes(accountNotes);
         accountBO.setUserContext(uc);
         accountBO.update();
@@ -141,8 +151,8 @@ public class NotesAction extends SearchAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
@@ -161,18 +171,14 @@ public class NotesAction extends SearchAction {
 
     @Override
     protected QueryResult getSearchResult(ActionForm form) throws Exception {
-        return new AccountBusinessService()
-                .getAllAccountNotes(Integer.valueOf(((NotesActionForm) form).getAccountId()));
-    }
 
-    private void setFormAttributes(ActionForm form, AccountBO accountBO) throws Exception {
-        NotesActionForm notesActionForm = (NotesActionForm) form;
-        notesActionForm.setAccountTypeId(accountBO.getType().getValue().toString());
-        notesActionForm.setGlobalAccountNum(accountBO.getGlobalAccountNum());
-        if (accountBO instanceof LoanBO) {
-            notesActionForm.setPrdOfferingName(((LoanBO) accountBO).getLoanOffering().getPrdOfferingName());
-        } else if (accountBO instanceof SavingsBO) {
-            notesActionForm.setPrdOfferingName(((SavingsBO) accountBO).getSavingsOffering().getPrdOfferingName());
+        Integer accountId = Integer.valueOf(((NotesActionForm) form).getAccountId());
+        AccountBO account = new AccountBusinessService().getAccount(accountId);
+        if (account.isSavingsAccount()) {
+            NoteSearchDto noteSearchDto = new NoteSearchDto(accountId, Integer.valueOf(1), Integer.valueOf(10));
+            NotesSearchResultsDto noteResults = this.savingsServiceFacade.retrievePagedNotesDto(noteSearchDto);
         }
+
+        return new AccountPersistence().getAllAccountNotes(accountId);
     }
 }

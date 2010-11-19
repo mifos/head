@@ -28,8 +28,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -41,6 +46,10 @@ import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.dto.domain.CustomerNoteDto;
+import org.mifos.dto.domain.NoteSearchDto;
+import org.mifos.dto.screen.NotesSearchResultsDto;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -282,5 +291,30 @@ public class SavingsDaoHibernate implements SavingsDao {
         }
 
         return postingPendingAccounts;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public NotesSearchResultsDto searchNotes(NoteSearchDto noteSearch) {
+        Session session = StaticHibernateUtil.getSessionTL();
+        Criteria criteriaQuery = session.createCriteria(AccountNotesEntity.class);
+        criteriaQuery.add(Restrictions.eq("account.accountId", noteSearch.getAccountId()));
+        criteriaQuery.addOrder(Order.desc("commentId"));
+
+        Integer totalNumberOfSavingsNotes = 10;
+
+        int firstResult = (noteSearch.getPage() * noteSearch.getPageSize()) - noteSearch.getPageSize();
+        criteriaQuery.setFirstResult(firstResult);
+        criteriaQuery.setMaxResults(noteSearch.getPageSize());
+
+        List<AccountNotesEntity> pagedResults = criteriaQuery.list();
+        List<CustomerNoteDto> pageDtoResults = new ArrayList<CustomerNoteDto>();
+        for (AccountNotesEntity note : pagedResults) {
+            pageDtoResults.add(new CustomerNoteDto(note.getCommentDate(), note.getComment(), note.getPersonnelName()));
+        }
+
+        NotesSearchResultsDto resultsDto = new NotesSearchResultsDto(totalNumberOfSavingsNotes.intValue(), firstResult, noteSearch.getPage(), noteSearch.getPageSize(), pageDtoResults);
+
+        return resultsDto;
     }
 }

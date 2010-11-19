@@ -25,6 +25,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
@@ -36,6 +37,7 @@ import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
+import org.mifos.dto.screen.NotesSearchResultsDto;
 import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
@@ -113,4 +115,10 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<AuditLogDto> retrieveSavingsAccountAuditLogs(Long savingsId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    NotesSearchResultsDto retrievePagedNotesDto(NoteSearchDto noteSearch);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    SavingsAccountDetailDto retrieveSavingsAccountNotes(Long savingsId, Short localeId);
 }

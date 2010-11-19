@@ -93,6 +93,7 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.DueOnDateDto;
+import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
@@ -105,6 +106,7 @@ import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.NotesSearchResultsDto;
 import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
@@ -1126,5 +1128,26 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public NotesSearchResultsDto retrievePagedNotesDto(NoteSearchDto noteSearch) {
+        return this.savingsDao.searchNotes(noteSearch);
+    }
+
+    @Override
+    public SavingsAccountDetailDto retrieveSavingsAccountNotes(Long savingsId, Short localeId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+        userContext.setLocaleId(localeId);
+
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+        savingsAccount.updateDetails(userContext);
+        return savingsAccount.toDto();
     }
 }

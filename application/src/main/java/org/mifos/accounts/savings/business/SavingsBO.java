@@ -1847,6 +1847,6 @@ public class SavingsBO extends AccountBO {
             recentNoteDtos.add(new CustomerNoteDto(accountNotesEntity.getCommentDate(), accountNotesEntity.getComment(), accountNotesEntity.getPersonnelName()));
         }
 
-        return new SavingsAccountDetailDto(this.savingsOffering.toFullDto(), recentActivity, recentNoteDtos, this.recommendedAmount.toString());
+        return new SavingsAccountDetailDto(this.savingsOffering.toFullDto(), recentActivity, recentNoteDtos, this.recommendedAmount.toString(), this.globalAccountNum);
     }
 }

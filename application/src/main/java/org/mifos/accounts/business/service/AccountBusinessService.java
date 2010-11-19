@@ -30,7 +30,6 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -40,7 +39,6 @@ import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -54,11 +52,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -66,7 +64,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
-import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.ActivityMapper;
@@ -117,14 +114,6 @@ public class AccountBusinessService implements BusinessService {
             throw new ServiceException(e);
         }
         return accountAction;
-    }
-
-    public QueryResult getAllAccountNotes(Integer accountId) throws ServiceException {
-        try {
-            return getAccountPersistence().getAllAccountNotes(accountId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
     }
 
     public List<AccountStateEntity> retrieveAllAccountStateList(AccountTypes accountTypes) throws ServiceException {
