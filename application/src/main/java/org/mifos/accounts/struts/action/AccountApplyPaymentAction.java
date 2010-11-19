@@ -160,7 +160,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 
         AccountPaymentParametersDto accountPaymentParametersDto = new AccountPaymentParametersDto(
                 userReferenceDto, new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
-                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(), actionForm.getReceiptId());
+                paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(), actionForm.getReceiptId(), null);
 
         getAccountService().makePayment(accountPaymentParametersDto);
 
