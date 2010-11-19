@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.savings.business;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -72,7 +70,6 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
@@ -91,6 +88,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -516,54 +514,19 @@ public class SavingsBO extends AccountBO {
         logger.info("In SavingsBO::save(), Successfully saved , accountId: " + getAccountId());
     }
 
-    public void update(final Money recommendedAmount, final List<CustomFieldDto> customFields) throws AccountException {
-        logger.debug("In SavingsBO::update(), accountId: " + getAccountId());
-        this.setUpdatedBy(userContext.getId());
-        this.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+    public void update(final Money recommendedAmount, final Set<AccountCustomFieldEntity> accountCustomFields) {
+
         if (isDepositScheduleBeRegenerated()) {
-            if (this.recommendedAmount != null && recommendedAmount != null
-                    && !this.recommendedAmount.equals(recommendedAmount)) {
-                for (AccountActionDateEntity accountDate : this.getAccountActionDates()) {
-                    if (accountDate.getActionDate().compareTo(new DateTimeService().getCurrentDateMidnight().toDate()) >= 0) {
-                        ((SavingsScheduleEntity) accountDate).setDeposit(recommendedAmount);
+            if (this.recommendedAmount != null && recommendedAmount != null && !this.recommendedAmount.equals(recommendedAmount)) {
+                for (AccountActionDateEntity scheduledDeposit : this.getAccountActionDates()) {
+                    if (scheduledDeposit.isBeforeOrOn(new LocalDate())) {
+                        ((SavingsScheduleEntity) scheduledDeposit).setDeposit(recommendedAmount);
                     }
                 }
             }
         }
         this.recommendedAmount = recommendedAmount;
-        if (this.getAccountCustomFields() != null && customFields != null) {
-            for (CustomFieldDto view : customFields) {
-                boolean fieldPresent = false;
-                if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
-                        && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
-                    try {
-                        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT,
-                                getUserContext().getPreferredLocale());
-                        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
-                        view.setFieldValue(DateUtils.convertUserToDbFmt(view.getFieldValue(), userfmt));
-                    } catch (InvalidDateException e) {
-                        throw new AccountException(e);
-                    }
-                }
-                for (AccountCustomFieldEntity customFieldEntity : this.getAccountCustomFields()) {
-                    if (customFieldEntity.getFieldId().equals(view.getFieldId())) {
-                        fieldPresent = true;
-                        customFieldEntity.setFieldValue(view.getFieldValue());
-                    }
-                }
-                if (!fieldPresent) {
-                    this.getAccountCustomFields().add(
-                            new AccountCustomFieldEntity(this, view.getFieldId(), view.getFieldValue()));
-                }
-            }
-        }
-
-        try {
-            getSavingsPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
-        logger.info("In SavingsBO::update(), successfully updated , accountId: " + getAccountId());
+        this.setAccountCustomFields(accountCustomFields);
     }
 
     public boolean isMandatory() {
@@ -575,7 +538,6 @@ public class SavingsBO extends AccountBO {
     }
 
     public boolean isDepositScheduleBeRegenerated() {
-        logger.debug("In SavingsBO::isDepositScheduleBeRegenerated(), accountStateId: " + getAccountState().getId());
         return getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_APPROVED
                 || getAccountState().getId().shortValue() == AccountStates.SAVINGS_ACC_INACTIVE;
     }
@@ -595,9 +557,6 @@ public class SavingsBO extends AccountBO {
         LocalDate currentPostingDate = interestPostingPeriodResult.getPostingPeriod().getEndDate();
         LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(currentPostingDate);
 
-        // NOTE - keithw - I am putting back in enforcement of zero'd interest postings to ensure
-        // that adjustments cannot be done to transactions after a posting period has expired
-        // there are others ways of enforcing this but using this approach as previously existed in release 1.6.x and below.
         doPostInterest(currentPostingDate, actualInterestToBePosted, createdBy);
         updatePostingDetails(nextPostingDate);
     }
@@ -1428,6 +1387,8 @@ public class SavingsBO extends AccountBO {
         SavingsRecentActivityDto savingsRecentActivityDto = new SavingsRecentActivityDto();
         savingsRecentActivityDto.setAccountTrxnId(savingActivity.getId());
         savingsRecentActivityDto.setActionDate(savingActivity.getTrxnCreatedDate());
+        String preferredDate = DateUtils.getUserLocaleDate(this.userContext.getPreferredLocale(), savingActivity.getTrxnCreatedDate().toString());
+        savingsRecentActivityDto.setUserPrefferedDate(preferredDate);
         savingsRecentActivityDto.setAmount(removeSign(savingActivity.getAmount()).toString());
         savingsRecentActivityDto.setActivity(savingActivity.getActivity().getName());
         savingsRecentActivityDto.setRunningBalance(savingActivity.getBalanceAmount().toString());

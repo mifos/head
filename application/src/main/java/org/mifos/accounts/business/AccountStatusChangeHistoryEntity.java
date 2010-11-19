@@ -23,24 +23,21 @@ package org.mifos.accounts.business;
 import java.util.Date;
 import java.util.Locale;
 
+import org.joda.time.LocalDate;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 
 public class AccountStatusChangeHistoryEntity extends AbstractEntity {
+
     private final Integer accountStatusChangeId;
-
     private final AccountBO account;
-
     private final AccountStateEntity oldStatus;
-
     private final AccountStateEntity newStatus;
-
     private final PersonnelBO personnel;
-
     private Locale locale = null;
-
     private Date createdDate;
 
     protected AccountStatusChangeHistoryEntity() {
@@ -94,7 +91,7 @@ public class AccountStatusChangeHistoryEntity extends AbstractEntity {
     }
 
     public String getOldStatusName() {
-        if (oldStatus.getId().equals(newStatus.getId())) {
+        if (oldStatus == null || oldStatus.getId().equals(newStatus.getId())) {
             return "-";
         }
         return oldStatus.getName();
@@ -114,6 +111,10 @@ public class AccountStatusChangeHistoryEntity extends AbstractEntity {
 
     public String getUserPrefferedTransactionDate() {
         return DateUtils.getUserLocaleDate(getLocale(), getCreatedDate().toString());
+    }
+
+    public SavingsStatusChangeHistoryDto toDto() {
+        return new SavingsStatusChangeHistoryDto(getPersonnelName(), getNewStatusName(), getOldStatusName(), getUserPrefferedTransactionDate(), new LocalDate(this.createdDate));
     }
 
 }

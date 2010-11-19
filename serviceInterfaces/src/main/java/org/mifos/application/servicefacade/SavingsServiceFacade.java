@@ -23,6 +23,7 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
@@ -30,11 +31,14 @@ import org.mifos.dto.domain.SavingsAccountStatusDto;
 import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
+import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.dto.domain.SavingsWithdrawalDto;
 import org.mifos.dto.screen.DepositWithdrawalReferenceDto;
 import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
+import org.mifos.dto.screen.SavingsRecentActivityDto;
+import org.mifos.dto.screen.SavingsTransactionHistoryDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface SavingsServiceFacade {
@@ -80,4 +84,19 @@ public interface SavingsServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     SavingsAccountDepositDueDto retrieveDepositDueDetails(String savingsSystemId, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<SavingsRecentActivityDto> retrieveRecentSavingsActivities(Long savingsId, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<SavingsTransactionHistoryDto> retrieveTransactionHistory(String globalAccountNum, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<SavingsStatusChangeHistoryDto> retrieveStatusChangeHistory(String globalAccountNum, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomFieldDto> retrieveCustomFieldsForEdit(String globalAccountNum, Short localeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateSavingsAccountDetails(Long savingsId, String recommendedAmount, List<CustomFieldDto> accountCustomFieldSet);
 }

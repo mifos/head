@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.business;
 
+import org.joda.time.LocalDate;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
@@ -124,5 +125,9 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
 
     public void setAccount(AccountBO account) {
         this.account = account;
+    }
+
+    public boolean isBeforeOrOn(LocalDate date) {
+        return new LocalDate(this.actionDate).isBefore(date) || new LocalDate(this.actionDate).isEqual(date);
     }
 }

@@ -20,17 +20,37 @@
 
 package org.mifos.dto.screen;
 
-import org.joda.time.LocalDate;
+import java.util.List;
+
+import org.mifos.dto.domain.DueOnDateDto;
 
 public class SavingsAccountDepositDueDto {
 
-    private final LocalDate nextDueDate;
+    private final DueOnDateDto nextDueDetail;
+    private final List<DueOnDateDto> previousDueDetails;
+    private final Short stateId;
+    private final String stateName;
 
-    public SavingsAccountDepositDueDto(LocalDate nextDueDate) {
-        this.nextDueDate = nextDueDate;
+    public SavingsAccountDepositDueDto(DueOnDateDto nextDueDetail, List<DueOnDateDto> previousDueDetails, Short stateId, String stateName) {
+        this.nextDueDetail = nextDueDetail;
+        this.previousDueDetails = previousDueDetails;
+        this.stateId = stateId;
+        this.stateName = stateName;
     }
 
-    public LocalDate getNextDueDate() {
-        return this.nextDueDate;
+    public DueOnDateDto getNextDueDetail() {
+        return this.nextDueDetail;
+    }
+
+    public List<DueOnDateDto> getPreviousDueDetails() {
+        return this.previousDueDetails;
+    }
+
+    public Short getStateId() {
+        return this.stateId;
+    }
+
+    public String getStateName() {
+        return this.stateName;
     }
 }

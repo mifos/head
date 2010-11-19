@@ -22,7 +22,6 @@ package org.mifos.accounts.loan.struts.action;
 
 import junit.framework.Assert;
 import org.hibernate.Session;
-import org.mifos.accounts.business.TransactionHistoryDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -32,6 +31,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;

@@ -18,40 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.business;
+package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.util.helpers.DateUtils;
+public class TransactionHistoryDto implements Serializable, Comparable<TransactionHistoryDto> {
 
-public class TransactionHistoryDto implements DataTransferObject, Comparable<TransactionHistoryDto> {
     private Date transactionDate;
-
     private Integer paymentId;
-
     private Integer accountTrxnId;
-
     private String type;
-
     private String glcode;
-
     private String debit = "-";
-
     private String credit = "-";
-
     private String balance;
-
     private String clientName = "-";
-
     private Date postedDate;
-
     private String postedBy;
-
     private String notes = "-";
-
     private Locale locale = null;
+    private String userPrefferedTransactionDate;
+    private String userPrefferedPostedDate;
 
     public Integer getAccountTrxnId() {
         return accountTrxnId;
@@ -158,11 +147,11 @@ public class TransactionHistoryDto implements DataTransferObject, Comparable<Tra
     }
 
     public String getUserPrefferedPostedDate() {
-        return DateUtils.getUserLocaleDate(getLocale(), getPostedDate().toString());
+        return userPrefferedPostedDate;
     }
 
     public String getUserPrefferedTransactionDate() {
-        return DateUtils.getUserLocaleDate(getLocale(), getTransactionDate().toString());
+        return userPrefferedTransactionDate;
     }
 
     public void setFinancialEnteries(Integer trxnId, Date trxnDate, String actionType, String glCode, String debit,
@@ -204,5 +193,13 @@ public class TransactionHistoryDto implements DataTransferObject, Comparable<Tra
         } else {
             return 0;
         }
+    }
+
+    public void setUserPrefferedPostedDate(String userPrefferedPostedDate) {
+        this.userPrefferedPostedDate = userPrefferedPostedDate;
+    }
+
+    public void setUserPrefferedTransactionDate(String userPrefferedTransactionDate) {
+        this.userPrefferedTransactionDate = userPrefferedTransactionDate;
     }
 }

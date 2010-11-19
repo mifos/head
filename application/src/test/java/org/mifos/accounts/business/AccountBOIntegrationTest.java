@@ -44,6 +44,7 @@ import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;

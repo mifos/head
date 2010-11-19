@@ -79,6 +79,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.DateTimeService;
@@ -118,7 +119,7 @@ public class AccountBO extends AbstractBusinessObject {
     private final Set<AccountFeesEntity> accountFees;
     private final Set<AccountActionDateEntity> accountActionDates;
     private List<AccountPaymentEntity> accountPayments;
-    private final Set<AccountCustomFieldEntity> accountCustomFields;
+    private Set<AccountCustomFieldEntity> accountCustomFields;
 
     /*
      * Injected Persistence classes
@@ -1824,5 +1825,9 @@ public class AccountBO extends AbstractBusinessObject {
     @Deprecated
     public void setAccountId(Integer accountId) {
         this.accountId = accountId;
+    }
+
+    public void setAccountCustomFields(Set<AccountCustomFieldEntity> accountCustomFields) {
+        this.accountCustomFields = accountCustomFields;
     }
 }

@@ -18,9 +18,8 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings.business;
+package org.mifos.dto.screen;
 
-import org.mifos.accounts.business.TransactionHistoryDto;
 
 public class SavingsTransactionHistoryDto extends TransactionHistoryDto {
 }

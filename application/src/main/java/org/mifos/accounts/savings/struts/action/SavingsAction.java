@@ -26,7 +26,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,18 +36,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
-import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.SavingsTransactionHistoryDto;
-import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -67,8 +61,11 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
+import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.dto.screen.SavingsAccountDepositDueDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
+import org.mifos.dto.screen.SavingsRecentActivityDto;
+import org.mifos.dto.screen.SavingsTransactionHistoryDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -90,14 +87,10 @@ import org.slf4j.LoggerFactory;
 
 public class SavingsAction extends AccountAppAction {
 
-    private SavingsBusinessService savingsService;
-
-    private MasterDataService masterDataService;
-
     private static final Logger logger = LoggerFactory.getLogger(SavingsAction.class);
-
+    private SavingsBusinessService savingsService;
+    private MasterDataService masterDataService;
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
-
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Savings",
             ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
 
@@ -320,10 +313,17 @@ public class SavingsAction extends AccountAppAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::edit()");
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         SavingsActionForm actionForm = (SavingsActionForm) form;
+
+        List<CustomFieldDto> customFields = this.savingsServiceFacade.retrieveCustomFieldsForEdit(actionForm.getGlobalAccountNum(), uc.getLocaleId());
+
         actionForm.setRecommendedAmount(savings.getRecommendedAmount().toString());
-        actionForm.setAccountCustomFieldSet(createCustomFieldViewsForEdit(savings.getAccountCustomFields(), request));
+        actionForm.setAccountCustomFieldSet(customFields);
+
+        List<CustomFieldDefinitionEntity> customFieldDefinitions = savingsService.retrieveCustomFieldsDefinition();
+        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, customFieldDefinitions, request);
         return mapping.findForward("edit_success");
     }
 
@@ -347,14 +347,14 @@ public class SavingsAction extends AccountAppAction {
         logger.debug("In SavingsAction::update()");
         SavingsActionForm actionForm = (SavingsActionForm) form;
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+
+        Long savingsId = savings.getAccountId().longValue();
+        savings = this.savingsDao.findById(savingsId);
         Integer version = savings.getVersionNo();
-        savings = new SavingsBusinessService().findById(savings.getAccountId());
         checkVersionMismatch(version, savings.getVersionNo());
-        savings.setVersionNo(version);
-        savings.setUserContext(uc);
-        setInitialObjectForAuditLogging(savings);
-        savings.update(new Money(savings.getCurrency(), actionForm.getRecommendedAmount()), actionForm.getAccountCustomFieldSet());
+
+        this.savingsServiceFacade.updateSavingsAccountDetails(savingsId, actionForm.getRecommendedAmount(), actionForm.getAccountCustomFieldSet());
+
         request.setAttribute(SavingsConstants.GLOBALACCOUNTNUM, savings.getGlobalAccountNum());
         logger.info("In SavingsAction::update(), Savings object updated successfully");
 
@@ -366,17 +366,14 @@ public class SavingsAction extends AccountAppAction {
     public ActionForward getRecentActivity(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getRecentActivity()");
-        // Check for order-by clause in AccountBO.hbm.xml and
-        // AccountPayment.hbm.xml for accountPaymentSet and
-        // accountTrxnSet. It should be set for the primay key column desc in
-        // both. If stated is not there, the code
-        // below will behave abnormally.
+
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        savings = savingsService.findById(savings.getAccountId());
-        savings.setUserContext(uc);
-        SessionUtils.setCollectionAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST, savings
-                .getRecentAccountActivity(null), request);
+
+        Long savingsId = savings.getAccountId().longValue();
+        List<SavingsRecentActivityDto> recentActivity = this.savingsServiceFacade.retrieveRecentSavingsActivities(savingsId, uc.getLocaleId());
+
+        SessionUtils.setCollectionAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST, recentActivity, request);
         return mapping.findForward("getRecentActivity_success");
     }
 
@@ -384,50 +381,12 @@ public class SavingsAction extends AccountAppAction {
     public ActionForward getTransactionHistory(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getRecentActivity()");
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         String globalAccountNum = request.getParameter("globalAccountNum");
-        SavingsBO savings = savingsService.findBySystemId(globalAccountNum);
-        List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = new ArrayList<SavingsTransactionHistoryDto>();
-        // Check for order-by clause in AccountBO.hbm.xml,
-        // AccountPayment.hbm.xml and AccountTrxnEntity.hbm.xml for
-        // accountPaymentSet ,
-        // accountTrxnSet and financialBoSet. They all should be set for their
-        // primay key column desc in both. If stated is not there, the code
-        // below will behave abnormally.
-        List<AccountPaymentEntity> accountPaymentSet = savings.getAccountPayments();
-        for (AccountPaymentEntity accountPaymentEntity : accountPaymentSet) {
-            Set<AccountTrxnEntity> accountTrxnEntitySet = accountPaymentEntity.getAccountTrxns();
-            for (AccountTrxnEntity accountTrxnEntity : accountTrxnEntitySet) {
-                Set<FinancialTransactionBO> financialTransactionBOSet = accountTrxnEntity.getFinancialTransactions();
-                for (FinancialTransactionBO financialTransactionBO : financialTransactionBOSet) {
-                    SavingsTransactionHistoryDto savingsTransactionHistoryDto = new SavingsTransactionHistoryDto();
-                    savingsTransactionHistoryDto.setTransactionDate(financialTransactionBO.getActionDate());
-                    savingsTransactionHistoryDto.setPaymentId(accountTrxnEntity.getAccountPayment().getPaymentId());
-                    savingsTransactionHistoryDto.setAccountTrxnId(accountTrxnEntity.getAccountTrxnId());
-                    savingsTransactionHistoryDto.setType(financialTransactionBO.getFinancialAction().getName());
-                    savingsTransactionHistoryDto.setGlcode(financialTransactionBO.getGlcode().getGlcode());
-                    if (financialTransactionBO.isDebitEntry()) {
-                        savingsTransactionHistoryDto.setDebit(String.valueOf(removeSign(financialTransactionBO
-                                .getPostedAmount())));
-                    } else if (financialTransactionBO.isCreditEntry()) {
-                        savingsTransactionHistoryDto.setCredit(String.valueOf(removeSign(financialTransactionBO
-                                .getPostedAmount())));
-                    }
-                    savingsTransactionHistoryDto.setBalance(String
-                            .valueOf(removeSign(((SavingsTrxnDetailEntity) accountTrxnEntity).getBalance())));
-                    savingsTransactionHistoryDto.setClientName(accountTrxnEntity.getCustomer().getDisplayName());
-                    savingsTransactionHistoryDto.setPostedDate(financialTransactionBO.getPostedDate());
-                    if (accountTrxnEntity.getPersonnel() != null) {
-                        savingsTransactionHistoryDto.setPostedBy(accountTrxnEntity.getPersonnel().getDisplayName());
-                    }
-                    if (financialTransactionBO.getNotes() != null && !financialTransactionBO.getNotes().equals("")) {
-                        savingsTransactionHistoryDto.setNotes(financialTransactionBO.getNotes());
-                    }
-                    savingsTransactionHistoryViewList.add(savingsTransactionHistoryDto);
-                }
-            }
-        }
-        SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST, savingsTransactionHistoryViewList,
-                request);
+
+        List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = this.savingsServiceFacade.retrieveTransactionHistory(globalAccountNum, uc.getLocaleId());
+
+        SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST, savingsTransactionHistoryViewList, request);
         return mapping.findForward("getTransactionHistory_success");
     }
 
@@ -435,15 +394,18 @@ public class SavingsAction extends AccountAppAction {
     public ActionForward getStatusHistory(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getRecentActivity()");
+        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         String globalAccountNum = request.getParameter("globalAccountNum");
-        SavingsBO savings = savingsService.findBySystemId(globalAccountNum);
+
+        List<SavingsStatusChangeHistoryDto> savingsStatusHistoryDtoList = this.savingsServiceFacade.retrieveStatusChangeHistory(globalAccountNum, uc.getLocaleId());
+
+        SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
         savingsService.initialize(savings.getAccountStatusChangeHistory());
-        savings.setUserContext((UserContext) SessionUtils
-                .getAttribute(Constants.USER_CONTEXT_KEY, request.getSession()));
-        List<AccountStatusChangeHistoryEntity> savingsStatusHistoryViewList = new ArrayList<AccountStatusChangeHistoryEntity>(
-                savings.getAccountStatusChangeHistory());
-        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHANGE_HISTORY_LIST, savingsStatusHistoryViewList,
-                request);
+        savings.setUserContext((UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession()));
+
+        List<AccountStatusChangeHistoryEntity> savingsStatusHistoryViewList = new ArrayList<AccountStatusChangeHistoryEntity>(savings.getAccountStatusChangeHistory());
+
+        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHANGE_HISTORY_LIST, savingsStatusHistoryViewList, request);
 
         return mapping.findForward("getStatusHistory_success");
     }
@@ -531,14 +493,6 @@ public class SavingsAction extends AccountAppAction {
     private void doCleanUp(SavingsActionForm savingsActionForm, HttpServletRequest request) throws Exception {
         savingsActionForm.clear();
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
-    }
-
-    private String removeSign(Money amount) {
-        if (amount.isLessThanZero()) {
-            return amount.negate().toString();
-        }
-
-        return amount.toString();
     }
 
     protected void checkPermissionForCreate(Short newState, UserContext userContext,

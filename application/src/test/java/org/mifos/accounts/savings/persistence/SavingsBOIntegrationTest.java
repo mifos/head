@@ -30,7 +30,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.Assert;
 
@@ -60,7 +59,6 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsActivityEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.business.SavingsRecentActivityDto;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -84,6 +82,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -247,44 +246,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(AccountState.SAVINGS_ACTIVE.getValue(), savings.getAccountState().getId());
         Assert.assertEquals(savingsOffering.getRecommendedAmount(), savings.getRecommendedAmount());
 
-    }
-
-    @Test
-    public void testSuccessfulUpdate() throws Exception {
-        createInitialObjects();
-        savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
-                RecommendedAmountUnit.PER_INDIVIDUAL);
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-        savings.update(new Money(currency, "700.0"), getCustomFieldView());
-        StaticHibernateUtil.flushSession();;
-
-        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
-        Assert.assertTrue(true);
-        Assert.assertEquals(TestUtils.createMoney(700.0), savings.getRecommendedAmount());
-    }
-
-    @Test
-    public void testSuccessfulUpdateDepositSchedule() throws Exception {
-        createInitialObjects();
-        savingsOffering = TestObjectFactory.createSavingsProduct("dfasdasd1", "sad1",
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
-                AccountStates.SAVINGS_ACC_APPROVED, userContext);
-        savings.update(new Money(currency, "700.0"), getCustomFieldView());
-
-        StaticHibernateUtil.flushSession();;
-
-        savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
-        Assert.assertTrue(true);
-        Assert.assertEquals(TestUtils.createMoney(700.0), savings.getRecommendedAmount());
-        Set<AccountActionDateEntity> actionDates = savings.getAccountActionDates();
-        Assert.assertNotNull(actionDates);
-        for (AccountActionDateEntity entity : actionDates) {
-            if (entity.getActionDate().compareTo(new java.sql.Date(System.currentTimeMillis())) > 0) {
-                Assert.assertEquals(TestUtils.createMoney(700.0), ((SavingsScheduleEntity) entity).getDeposit());
-            }
-        }
     }
 
     @Test

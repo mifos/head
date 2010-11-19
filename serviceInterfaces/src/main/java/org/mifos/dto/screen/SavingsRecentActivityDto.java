@@ -18,15 +18,15 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.savings.business;
+package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.util.helpers.DateUtils;
-
-public class SavingsRecentActivityDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class SavingsRecentActivityDto implements Serializable {
 
     private Integer accountTrxnId;
     private Date actionDate;
@@ -34,6 +34,7 @@ public class SavingsRecentActivityDto implements DataTransferObject {
     private String amount;
     private String runningBalance;
     private Locale locale = null;
+    private String userPrefferedDate;
 
     public Integer getAccountTrxnId() {
         return accountTrxnId;
@@ -84,7 +85,10 @@ public class SavingsRecentActivityDto implements DataTransferObject {
     }
 
     public String getUserPrefferedDate() {
-        return DateUtils.getUserLocaleDate(getLocale(), getActionDate().toString());
+        return userPrefferedDate;
     }
 
+    public void setUserPrefferedDate(String userPrefferedDate) {
+        this.userPrefferedDate = userPrefferedDate;
+    }
 }
