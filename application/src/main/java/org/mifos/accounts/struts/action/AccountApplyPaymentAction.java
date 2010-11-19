@@ -41,6 +41,7 @@ import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
@@ -51,6 +52,7 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -71,7 +73,8 @@ public class AccountApplyPaymentAction extends BaseAction {
     private List<PaymentTypeDto> feePaymentTypeDtos;
 
     public AccountApplyPaymentAction() throws Exception {
-        accountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence(), null);
+        accountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence(), null,
+            new CustomerDaoHibernate(new GenericDaoHibernate()));
         loanPaymentTypeDtos = accountService.getLoanPaymentTypes();
         feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }
@@ -177,7 +180,8 @@ public class AccountApplyPaymentAction extends BaseAction {
                     paymentTypeDto,
                     "",
                     (receiptDate == null) ? null : new LocalDate(receiptDate.getTime()),
-                    actionForm.getReceiptId());
+                    actionForm.getReceiptId(),
+                    null);
 
             getAccountService().makePayment(accountPaymentParametersDto);
 
