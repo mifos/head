@@ -32,6 +32,8 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -39,6 +41,8 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.ConfigurationManager;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -60,16 +64,18 @@ public class StandardAccountService implements AccountService {
     private LoanPersistence loanPersistence;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private final PersonnelDao personnelDao;
+    private CustomerDao customerDao;
 
     private LoanBusinessService loanBusinessService;
 
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
                                   AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
-                                  LoanBusinessService loanBusinessService) {
+                                  CustomerDao customerDao, LoanBusinessService loanBusinessService) {
         this.accountPersistence = accountPersistence;
         this.loanPersistence = loanPersistence;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
         this.personnelDao = personnelDao;
+        this.customerDao = customerDao;
         this.loanBusinessService = loanBusinessService;
     }
 
@@ -143,6 +149,10 @@ public class StandardAccountService implements AccountService {
                 .getUserId(), amount, accountPaymentParametersDto.getPaymentDate().toDateMidnight().toDate(),
                 accountPaymentParametersDto.getReceiptId(), receiptDate, accountPaymentParametersDto.getPaymentType()
                         .getValue());
+        if (accountPaymentParametersDto.getCustomer() != null) {
+            paymentData.setCustomer(customerDao.findCustomerById(
+                accountPaymentParametersDto.getCustomer().getCustomerId()));
+        }
         paymentData.setComment(accountPaymentParametersDto.getComment());
 
         account.applyPayment(paymentData);
@@ -313,7 +323,7 @@ public class StandardAccountService implements AccountService {
                                                         paymentEntity.getComment(),
                                                         paymentEntity.getReceiptDate() == null ? null :
                                                             LocalDate.fromDateFields(paymentEntity.getReceiptDate()),
-                                                            paymentEntity.getReceiptNumber());
+                                                            paymentEntity.getReceiptNumber(), null);
         return paymentDto;
     }
 

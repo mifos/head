@@ -84,7 +84,16 @@ public class QuestionGroupController extends QuestionnaireController {
                 questionGroupsCategoriesSplit.get(eventSource).add(questionGroup);
             }
         }
-        return questionGroupsCategoriesSplit;
+        // MIFOS-4164: sort by event source
+        Map <String,List <QuestionGroupDetail>> orderedQGCategories = new LinkedHashMap<String, List<QuestionGroupDetail>>();
+        for (EventSourceDto eventSourceDto : questionnaireServiceFacade.getAllEventSources()) {
+            String eventSource = eventSourceDto.toString();
+            List <QuestionGroupDetail> questionGroupsList = questionGroupsCategoriesSplit.get(eventSource);
+            if (questionGroupsList != null) {
+                orderedQGCategories.put(eventSource, questionGroupsList);
+            }
+        }
+        return orderedQGCategories;
     }
 
     @RequestMapping("/viewQuestionGroupDetail.ftl")

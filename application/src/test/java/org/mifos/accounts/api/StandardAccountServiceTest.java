@@ -35,6 +35,7 @@ import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.application.collectionsheet.persistence.LoanAccountBuilder;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -98,10 +99,13 @@ public class StandardAccountServiceTest {
     @Mock
     private LoanBusinessService loanBusinessService;
 
+    @Mock
+    private CustomerDao customerDao;
+
     @Before
     public void setup() {
         standardAccountService = new StandardAccountService(accountPersistence, loanPersistence,
-                acceptedPaymentTypePersistence, personnelDao, loanBusinessService);
+                acceptedPaymentTypePersistence, personnelDao, customerDao, loanBusinessService);
         Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setAccountPersistence(accountPersistence);

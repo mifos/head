@@ -69,7 +69,7 @@ public class PluginManager {
         ServiceLoader<TransactionImport> loader = ServiceLoader.load(TransactionImport.class, pluginClassLoader);
         for (TransactionImport ti : loader) {
             ti.setAccountService(new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
-                    new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()), new LoanBusinessService()));
+                    new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()), new CustomerDaoHibernate(new GenericDaoHibernate()), new LoanBusinessService()));
 	    ti.setCustomerSearchService(new CustomerSearchServiceImpl(new CustomerDaoHibernate(new GenericDaoHibernate())));
             plugins.add(ti);
         }

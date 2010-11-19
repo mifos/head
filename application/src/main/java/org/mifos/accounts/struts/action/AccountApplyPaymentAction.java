@@ -33,6 +33,7 @@ import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
@@ -44,6 +45,7 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -69,7 +71,7 @@ public class AccountApplyPaymentAction extends BaseAction {
     private List<PaymentTypeDto> feePaymentTypeDtos;
 
     public AccountApplyPaymentAction() throws Exception {
-        accountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence(), null, new LoanBusinessService());
+        accountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence(), null, new CustomerDaoHibernate(new GenericDaoHibernate()), new LoanBusinessService());
         loanPaymentTypeDtos = accountService.getLoanPaymentTypes();
         feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }
