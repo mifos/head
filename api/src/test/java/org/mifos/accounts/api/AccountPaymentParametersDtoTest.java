@@ -71,6 +71,6 @@ public class AccountPaymentParametersDtoTest {
     @Test
     public void receiptDateAndReceiptIdCanBeNull() {
         new AccountPaymentParametersDto(user, account, paymentAmount, paymentDate, paymentType, emptyComment, null,
-                null);
+                null, null);
     }
 }
