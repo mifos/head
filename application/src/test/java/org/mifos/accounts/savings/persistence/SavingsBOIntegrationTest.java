@@ -793,55 +793,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(savings.getDetailsOfInstallmentsInArrears().size(), 2);
     }
 
-    @Test
-    public void testWaiveAmountOverDueForSingleInstallmentDue() throws Exception {
-        savings = getSavingsAccount();
-        AccountActionDateEntity accountActionDateEntity = savings.getAccountActionDate((short) 1);
-        ((SavingsScheduleEntity) accountActionDateEntity).setActionDate(offSetCurrentDate(1));
-        savings = (SavingsBO) saveAndFetch(savings);
-        Assert.assertEquals(savings.getTotalAmountInArrears(), TestUtils.createMoney(200.0));
-        savings.waiveAmountOverDue();
-        savings = (SavingsBO) saveAndFetch(savings);
-        Assert.assertEquals(savings.getTotalAmountInArrears(), getRoundedMoney(0.0));
-        Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
-    }
-
-    @Test
-    public void testWaiveAmountOverDueWithPartialPayment() throws Exception {
-        savings = getSavingsAccount();
-        SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        accountActionDateEntity.setDepositPaid(new Money(getCurrency(), "20.0"));
-        accountActionDateEntity.setActionDate(offSetCurrentDate(1));
-
-        savings = (SavingsBO) saveAndFetch(savings);
-        Assert.assertEquals(savings.getTotalAmountInArrears(), TestUtils.createMoney(180.0));
-
-        savings.waiveAmountOverDue();
-        savings = (SavingsBO) saveAndFetch(savings);
-        Assert.assertEquals(savings.getTotalAmountInArrears(), getRoundedMoney(0.0));
-        Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
-    }
-
-    @Test
-    public void testWaiveAmountOverDueForTwoInstallmentsDue() throws Exception {
-        savings = getSavingsAccount();
-
-        SavingsScheduleEntity accountActionDateEntity = (SavingsScheduleEntity) savings.getAccountActionDate((short) 1);
-        accountActionDateEntity.setActionDate(offSetCurrentDate(2));
-        SavingsScheduleEntity accountActionDateEntity2 = (SavingsScheduleEntity) savings
-                .getAccountActionDate((short) 2);
-        accountActionDateEntity2.setActionDate(offSetCurrentDate(1));
-
-        savings = (SavingsBO) saveAndFetch(savings);
-
-        Assert.assertEquals(savings.getTotalAmountInArrears(), TestUtils.createMoney(400.0));
-
-        savings.waiveAmountOverDue();
-        savings = (SavingsBO) saveAndFetch(savings);
-        Assert.assertEquals(savings.getTotalAmountInArrears(), getRoundedMoney(0.0));
-        Assert.assertEquals(savings.getSavingsActivityDetails().size(), 1);
-    }
-
     private void createCustomerObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));

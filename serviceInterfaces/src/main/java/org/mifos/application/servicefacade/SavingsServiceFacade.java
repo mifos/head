@@ -23,6 +23,7 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.joda.time.LocalDate;
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
@@ -95,14 +96,21 @@ public interface SavingsServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<SavingsStatusChangeHistoryDto> retrieveStatusChangeHistory(String globalAccountNum, Short localeId);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_UPDATE_SAVINGS_ACCOUNT')")
     List<CustomFieldDto> retrieveCustomFieldsForEdit(String globalAccountNum, Short localeId);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_UPDATE_SAVINGS_ACCOUNT')")
     void updateSavingsAccountDetails(Long savingsId, String recommendedAmount, List<CustomFieldDto> accountCustomFieldSet);
 
     @PreAuthorize("isFullyAuthenticated()")
     SavingsAccountDetailDto retrieveSavingsAccountDetails(Long savingsId);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_WAIVE_NEXT_SAVINGS_DEPOSIT_DUE_AMOUNT')")
     void waiveNextDepositAmountDue(Long savingsId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_WAIVE_OVER_DUE_SAVINGS_DEPOSITS')")
+    void waiveDepositAmountOverDue(Long savingsId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<AuditLogDto> retrieveSavingsAccountAuditLogs(Long savingsId);
 }

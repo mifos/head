@@ -1483,22 +1483,16 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    public void waiveAmountOverDue() throws AccountException {
-        try {
-            PersonnelBO personnel = getPersonnelPersistence().getPersonnel(getUserContext().getId());
-            addSavingsActivityDetails(buildSavingsActivity(getTotalAmountInArrears(), getSavingsBalance(),
-                    AccountActionTypes.WAIVEOFFOVERDUE.getValue(), new DateTimeService().getCurrentJavaDateTime(),
-                    personnel));
-            List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
-            for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
-                ((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
-            }
+    public void waiveAmountOverDue(PersonnelBO loggedInUser) {
 
-            getSavingsPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
+        SavingsActivityEntity savingsActivity = SavingsActivityEntity.savingsWaiveDepositAmountOverdue(this,
+                loggedInUser, this.savingsBalance, getTotalAmountInArrears(), new DateTime().toDate());
+        savingsActivityDetails.add(savingsActivity);
+
+        List<AccountActionDateEntity> installmentsInArrears = getDetailsOfInstallmentsInArrears();
+        for (AccountActionDateEntity accountActionDate : installmentsInArrears) {
+            ((SavingsScheduleEntity) accountActionDate).waiveDepositDue();
         }
-
     }
 
     /**

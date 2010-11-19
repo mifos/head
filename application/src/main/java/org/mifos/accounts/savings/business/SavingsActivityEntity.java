@@ -57,9 +57,15 @@ public class SavingsActivityEntity extends AbstractEntity {
     }
 
     public static SavingsActivityEntity savingsWaiveAmountDueOnNextDeposit(SavingsBO savings, PersonnelBO personnel,
-            Money savingsBalance, Money totalAmountDueForNextDeposit, Date nextDepositDate) {
+            Money savingsBalance, Money totalAmountDueForNextDeposit, Date activityDate) {
         AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.WAIVEOFFDUE);
-        return new SavingsActivityEntity(personnel, accountAction, totalAmountDueForNextDeposit, savingsBalance, nextDepositDate, savings);
+        return new SavingsActivityEntity(personnel, accountAction, totalAmountDueForNextDeposit, savingsBalance, activityDate, savings);
+    }
+
+    public static SavingsActivityEntity savingsWaiveDepositAmountOverdue(SavingsBO savings, PersonnelBO personnel,
+            Money savingsBalance, Money totalAmountInArrears, Date activityDate) {
+        AccountActionEntity accountAction = new AccountActionEntity(AccountActionTypes.WAIVEOFFOVERDUE);
+        return new SavingsActivityEntity(personnel, accountAction, totalAmountInArrears, savingsBalance, activityDate, savings);
     }
 
     protected SavingsActivityEntity() {

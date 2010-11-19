@@ -72,13 +72,13 @@ import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
-import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
@@ -90,6 +90,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.DueOnDateDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -109,6 +110,8 @@ import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
 import org.mifos.dto.screen.SavingsProductReferenceDto;
 import org.mifos.dto.screen.SavingsRecentActivityDto;
 import org.mifos.dto.screen.SavingsTransactionHistoryDto;
+import org.mifos.framework.components.audit.business.service.AuditBusinessService;
+import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
@@ -1062,7 +1065,6 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
         try {
             this.transactionHelper.startTransaction();
-            this.transactionHelper.beginAuditLoggingFor(savingsAccount);
 
             savingsAccount.waiveNextDepositAmountDue(loggedInUser);
 
@@ -1076,6 +1078,53 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             throw new MifosRuntimeException(e);
         } finally {
             this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void waiveDepositAmountOverDue(Long savingsId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+
+        SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
+        savingsAccount.updateDetails(userContext);
+
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+        try {
+            this.transactionHelper.startTransaction();
+
+            savingsAccount.waiveAmountOverDue(loggedInUser);
+
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public List<AuditLogDto> retrieveSavingsAccountAuditLogs(Long savingsId) {
+        List<AuditLogDto> auditLogDtos = new ArrayList<AuditLogDto>();
+        AuditBusinessService auditBusinessService = new AuditBusinessService();
+        try {
+            List<AuditLogView> auditLogs = auditBusinessService.getAuditLogRecords(EntityType.SAVINGS.getValue(), savingsId.intValue());
+            for (AuditLogView auditLogView : auditLogs) {
+                auditLogDtos.add(auditLogView.toDto());
+            }
+            return auditLogDtos;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
         }
     }
 }

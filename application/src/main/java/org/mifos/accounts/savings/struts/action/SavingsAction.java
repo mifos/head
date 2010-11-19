@@ -47,9 +47,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
-import org.mifos.accounts.struts.action.AccountAppAction;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -71,6 +69,7 @@ import org.mifos.dto.screen.SavingsTransactionHistoryDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -86,7 +85,7 @@ import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SavingsAction extends AccountAppAction {
+public class SavingsAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsAction.class);
     private SavingsBusinessService savingsService;
@@ -498,10 +497,14 @@ public class SavingsAction extends AccountAppAction {
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         Integer versionNum = savings.getVersionNo();
-        savings = savingsService.findBySystemId(((SavingsActionForm) form).getGlobalAccountNum());
+
+        savings = this.savingsDao.findBySystemId(((SavingsActionForm) form).getGlobalAccountNum());
         checkVersionMismatch(versionNum, savings.getVersionNo());
         savings.setUserContext(uc);
-        savings.waiveAmountOverDue();
+
+        Long savingsId = savings.getAccountId().longValue();
+        this.savingsServiceFacade.waiveDepositAmountOverDue(savingsId);
+
         return mapping.findForward("waiveAmount_success");
     }
 
