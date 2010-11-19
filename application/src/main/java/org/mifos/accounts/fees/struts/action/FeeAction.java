@@ -156,7 +156,7 @@ public class FeeAction extends BaseAction {
 
         SessionUtils.setCollectionAttribute(FeeConstants.STATUSLIST, feeDetailsForManage.getFeeStatuses(), request);
         feeActionForm.updateWithFee(feeDetailsForManage.getFee());
-        request.setAttribute("model", feeDetailsForManage.getFee());
+        request.getSession().setAttribute("model", feeDetailsForManage.getFee());
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
 
@@ -164,7 +164,7 @@ public class FeeAction extends BaseAction {
     public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         FeeDto feeDto = this.feeServiceFacade.getFeeDetails(((FeeActionForm) form).getFeeIdValue());
-        request.setAttribute("model", feeDto);
+        request.getSession().setAttribute("model", feeDto);
         return mapping.findForward(ActionForwards.editPreview_success.toString());
     }
 

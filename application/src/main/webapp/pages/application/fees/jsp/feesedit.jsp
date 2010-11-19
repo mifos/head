@@ -134,8 +134,6 @@ explanation of the license and how it is applied.
 								</td>
 							</tr>
 							<html-el:hidden property="input" value="edit" />
-							<html-el:hidden property="feeIdTemp" value="${model.id}" />
-							<html-el:hidden property="feeId" value="${model.id}" />
 							<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 						</table>
 
