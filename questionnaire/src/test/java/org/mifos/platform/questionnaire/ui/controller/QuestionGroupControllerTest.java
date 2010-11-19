@@ -281,13 +281,19 @@ public class QuestionGroupControllerTest {
     public void shouldGetAllQuestionGroups() {
         List<QuestionGroupDetail> questionGroupDetails = asList(
                 getQuestionGroupDetail(1, TITLE + "1","View","Loan", true, true, "title1", "sectionName1"), getQuestionGroupDetail(2, TITLE +"2","View","Loan", true, true, "title2", "sectionName2"), getQuestionGroupDetail(3, TITLE + "3","Create","Loan", true, true, "title3", "sectionName3"));
+        List<EventSourceDto> eventSources = asList(
+                new EventSourceDto("Create", "Loan", "Create Loan"),
+                new EventSourceDto("View", "Loan", "Create Loan")
+        );
         Map <String,List <QuestionGroupDetail>> questionGroupsCategoriesSplit = new LinkedHashMap<String, List<QuestionGroupDetail>>();
         questionGroupsCategoriesSplit.put("Create Loan", asList(getQuestionGroupDetail(3, TITLE + "3","Create","Loan", true, true, "title3", "sectionName3")));
         questionGroupsCategoriesSplit.put("View Loan", asList(getQuestionGroupDetail(1, TITLE + "1","View","Loan", true, true, "title1", "sectionName1"), getQuestionGroupDetail(2, TITLE + "2","View","Loan", true, true, "title2", "sectionName2")));
         when(questionnaireServiceFacade.getAllQuestionGroups()).thenReturn(questionGroupDetails);
+        when(questionnaireServiceFacade.getAllEventSources()).thenReturn(eventSources);
         String view = questionGroupController.getAllQuestionGroups(model, httpServletRequest);
         assertThat(view, Is.is("viewQuestionGroups"));
         verify(questionnaireServiceFacade).getAllQuestionGroups();
+        verify(questionnaireServiceFacade).getAllEventSources();
         verify(model).addAttribute(Matchers.eq("questionGroups"), argThat(new QuestionGroupsGroupByEventSourceMatcher(questionGroupsCategoriesSplit)));
     }
 
