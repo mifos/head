@@ -103,7 +103,7 @@ msgstr "性别"
 
 #: Customer.History.InterestPaid
 msgid "interest paid"
-msgstr ""
+msgstr "已付利息"
 
 #: Customer.IncompleteChecklist
 msgid "Please select all the items in the checklist, and click submit."
@@ -268,7 +268,7 @@ msgstr "为"
 
 #: Customer.in
 msgid "in"
-msgstr "in"
+msgstr "在"
 
 #: Customer.last_pmnt
 msgid "Last payment made"
@@ -419,7 +419,7 @@ msgstr "费用"
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "这 {0}是不合格的因为 {1}"
 
 #: errors.grouploanofficernotassigned
 msgid "Status cannot be changed to Active since Loan officer is not assigned."
@@ -462,7 +462,7 @@ msgstr "由于尚未指定会议，无法修改状态为活动。"
 
 #: errors.mustNotBeNegative
 msgid "{0} must not be negative."
-msgstr ""
+msgstr "{0}必须是负数"
 
 #: errors.prefix
 msgid "<LI>"
@@ -515,7 +515,7 @@ msgstr "添加注释"
 
 #: label.amountof
 msgid "Amount of"
-msgstr "Amount of"
+msgstr "金额"
 
 #: label.amountofloan
 msgid "Amount of loan:"

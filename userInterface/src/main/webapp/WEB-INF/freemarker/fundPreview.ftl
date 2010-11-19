@@ -30,8 +30,7 @@
   		[@spring.bind "formBean.name"/]
   		[#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl",spring.status.value?default(""):""}/]
   		[@mifos.crumbpairs breadcrumb/]
-     	
-        <div class="clear">&nbsp;</div>
+
     	<p class="font15"><span class="fontBold">[@spring.bind "formBean.name"/]<label name="${spring.status.expression}">${spring.status.value?default("")}</label>[@spring.showErrors "<br />"/]</span>&nbsp;-&nbsp;<span class="orangeheading">[@spring.message "organizationPreferences.fundpreview.previewfundinformation"/]</span></p>
         <div>[@spring.message "organizationPreferences.viewFunds.edit.previewTheFieldsBelowThenClickSubmitClickCancelToReturnToFundDetailsWithoutSubmittingInformation"/]</div>
         <div class="clear">&nbsp;</div>

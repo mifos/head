@@ -148,7 +148,7 @@ msgstr "账户"
 
 #: Savings.accountAssigned
 msgid "has been assigned account #"
-msgstr "已指定账户#"
+msgstr "已指定账户号"
 
 #: Savings.accountBalance
 msgid "Account balance"
@@ -305,7 +305,7 @@ msgstr "编辑下面的栏位。"
 
 #: Savings.editFields.clickPreview.clickCancelToReturn
 msgid "Edit the fields below. Then click Preview. Click Cancel to return to"
-msgstr ""
+msgstr "编辑下面栏位。按预览。按取消回去"
 
 #: Savings.editTransaction
 msgid "Edit Transaction"
@@ -688,7 +688,7 @@ msgstr "{0}不能是晚于今天的日期。"
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "这{0}是无效因为{1}"
 
 #: errors.insufficentbalance
 msgid ""

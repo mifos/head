@@ -50,8 +50,7 @@
         <form method="post" action="defineSavingsProduct.ftl" name="createsavingsproduct">
           <p class="font15 margin5bottom">
           	<span class="fontBold">
-              [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.addanewSavingsProduct" , [savings]  /]
-              &nbsp;-
+              [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.addanewSavingsProduct" , [savings]  /]&nbsp;-              
             </span>
             <span class="orangeheading">
                 [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.enterSavingsproductinformation" , [savings]  /]                

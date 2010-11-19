@@ -23,9 +23,7 @@ package org.mifos.ui.core.controller;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,25 +52,11 @@ public class UncaughtExceptionController {
         mm.setViewName("uncaughtException");
         mm.addObject("uncaughtException", cause);
         mm.addObject("requestUri", requestUri);
-        if (isDevCookieAvailable(request) && cause != null) {
+        if (cause != null) {
             Writer result = new StringWriter();
             cause.printStackTrace(new PrintWriter(result));
             mm.addObject("stackString", result.toString());
         }
         return mm;
-    }
-
-    private boolean isDevCookieAvailable(HttpServletRequest request) {
-        boolean cookieExists = false;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("MifosDevCookie".equals(cookie.getName())) {
-                    cookieExists = true;
-                    break;
-                }
-            }
-        }
-        return cookieExists;
     }
 }

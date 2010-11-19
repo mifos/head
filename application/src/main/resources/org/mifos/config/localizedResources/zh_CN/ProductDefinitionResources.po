@@ -141,7 +141,7 @@ msgstr "</UL>"
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "这{0}为无效因为{1}"
 
 #: errors.graceperioddur
 msgid ""
@@ -620,7 +620,7 @@ msgstr "然后点击“提交”按钮。"
 
 #: product.clientgroupcenters
 msgid "Clients/ Groups/ Centers"
-msgstr "客户/组/行政村"
+msgstr "客户/组/中心"
 
 #: product.clients
 msgid "Clients"
@@ -880,7 +880,7 @@ msgstr "列入贷款周期计数器"
 
 #: product.include.interest.waiver
 msgid "Can waive interest on Prepay loan"
-msgstr ""
+msgstr "提前还款可豁免利息"
 
 #: product.inf
 msgid "information"
@@ -1634,76 +1634,73 @@ msgstr "是"
 
 #: product.canConfigureVariableInstallments
 msgid "Can configure variable installments"
-msgstr ""
+msgstr "可设置弹性还款计划"
 
 #: product.minimumGapBetweenInstallments
 msgid "Minimum gap between installments"
-msgstr ""
+msgstr "最低还款时间间隔"
 
 #: product.maximumGapBetweenInstallments
 msgid "Maximum gap between installments"
-msgstr ""
+msgstr "最高还款时间间隔"
 
 #: product.minimumInstallmentAmount
 msgid "Minimum installment amount"
-msgstr ""
+msgstr "最低还款额"
 
 #: product.notApplicable
 msgid "N/A"
-msgstr ""
+msgstr "不适用"
 
 #: product.cashFlowValidation
 msgid "Compare with Cash Flow"
-msgstr ""
+msgstr "与现金流相比"
 
 #: product.cashFlowWarningThreshold
 msgid "Warning Threshold"
-msgstr ""
+msgstr "提示限度"
 
 #: errors.minGapMoreThanMaxGapForVariableInstallmentProduct
 msgid ""
 "Minimum gap must be less than the maximum gap for loans with variable "
 "installments"
-msgstr ""
+msgstr "弹性还款计划最小间隔必须小于最高间隔"
 
 #: errors.variableInstallmentMinGapNegativeOrZero
 msgid ""
 "Minimum gap must not be zero or negative for loans with variable "
 "installments"
-msgstr ""
+msgstr "弹性还款计划最小间隔必须是大于零"
 
 #: errors.variableInstallmentMaxGapNegativeOrZero
 msgid ""
 "Maximum gap must not be zero or negative for loans with variable "
 "installments"
-msgstr ""
+msgstr "弹性还款计划最大间隔必须是大于零"
 
 #: errors.variableInstallmentMinGapMoreThanAllowed
 msgid ""
 "Minimum gap must be less than 4 digits for loans with variable installments"
-msgstr ""
+msgstr "弹性还款计划最小间隔必须小于4位数"
 
 #: errors.variableInstallmentMaxGapMoreThanAllowed
 msgid ""
 "Maximum gap must be less than 4 digits for loans with variable installments"
-msgstr ""
+msgstr "弹性还款计划最大间隔必须小于4位数"
 
 #: errors.minInstallmentAmountInvalidFormat
 msgid ""
 "The min installment amount for variable installments is invalid because {0}"
-msgstr ""
+msgstr "弹性还款计划最小还款次数无效因为{0}"
 
 #: errors.cashFlowWarningThresholdInvalid
 msgid "Warning Threshold should be a value less than 100"
-msgstr ""
+msgstr "提示限度应小于100"
 
 #: errors.variableInstallmentMinGapNotProvided
 msgid "Please specify the minimum gap for variable installments"
-msgstr ""
+msgstr "请设定弹性还款计划最小间隔"
 
 #: errors.cashflowwarninginvalidformat
 msgid "Warning threshold should be a non-negative number."
-msgstr ""
-
-#~ msgid "By last loan Amount"
-#~ msgstr "最后贷款金额"
+msgstr "提示限度不应为负数"

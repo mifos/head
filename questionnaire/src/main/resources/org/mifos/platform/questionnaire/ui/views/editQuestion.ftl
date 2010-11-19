@@ -33,7 +33,7 @@
     [@mifos.crumbpairs breadcrumb/]
 
     <div class="content_panel">
-        <p class="font15 orangeheading margin5top10bottom">${questionDefinition.currentQuestion.text} - [@spring.message "questionnaire.editquestion"/]</p>
+        <p class="font15 orangeheading margin5top10bottom"><span style="color:#000">${questionDefinition.currentQuestion.text} - </span> [@spring.message "questionnaire.editquestion"/]</p>
 
         <p class="red">
         [@spring.message "questionnaire.editquestion.warning"/]

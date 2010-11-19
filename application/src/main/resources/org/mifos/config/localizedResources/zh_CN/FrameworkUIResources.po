@@ -36,7 +36,7 @@ msgstr "新建账户"
 
 #: framework.createNewCenter
 msgid "Create new center"
-msgstr "新建行政村"
+msgstr "新建中心"
 
 #: framework.createNewClient
 msgid "Create new client"

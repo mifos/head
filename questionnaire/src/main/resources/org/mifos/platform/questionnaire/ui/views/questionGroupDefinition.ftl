@@ -22,6 +22,7 @@
 [#assign selectQuestions][@spring.message "questionnaire.selectQuestions"/][/#assign]
 [#assign active][@spring.message "questionnaire.active"/][/#assign]
 [#assign inActive][@spring.message "questionnaire.inactive"/][/#assign]
+<div class="content">
 <div class="allErrorsDiv">
     [@mifosmacros.showAllErrors "questionGroupForm.*"/]
 </div>
@@ -160,4 +161,5 @@
              <input type="submit" name="_eventId_cancel" id="_eventId_cancel" value="[@spring.message "questionnaire.cancel"/]" class="cancelbuttn"/>
         </div>
     </div>
+</div>
 </form>

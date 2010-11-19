@@ -134,27 +134,27 @@ msgstr "输入{0}名称并点击“搜索”按钮。点击“取消”按钮放
 
 #: Center.CenterCharges
 msgid "Center charges"
-msgstr "行政村开支"
+msgstr "中心开支"
 
 #: Center.CenterChargesHeading
 msgid "Center charges "
-msgstr "行政村开支"
+msgstr "中心开支"
 
 #: Center.CenterDetailsHeading
 msgid "Center Details"
-msgstr "行政村详情"
+msgstr "中心详情"
 
 #: Center.CenterInformationHeading
 msgid "Center information"
-msgstr "行政村信息"
+msgstr "中心信息"
 
 #: Center.CenterName
 msgid "Center Name:"
-msgstr "行政村名称："
+msgstr "中心名称："
 
 #: Center.CenterPipeline
 msgid "Center Information"
-msgstr "行政村信息"
+msgstr "中心信息"
 
 #: Center.CenterStartDate
 msgid "start date"
@@ -212,7 +212,7 @@ msgstr "您可以在搜索框中输入系统ID号来访问{0}详情，以及该{
 
 #: Center.Confirmation.Information1
 msgid "You can enter a system ID number into the search box to access "
-msgstr "您可以在搜索框中输入系统ID号来访问"
+msgstr "您可以在搜索框中输入系统序号来访问"
 
 #: Center.Confirmation.Information2
 msgid "details which also include a "
@@ -224,7 +224,7 @@ msgstr "账户、性能数据等。"
 
 #: Center.Confirmation.NameSystemID
 msgid "has been assigned the system ID number:"
-msgstr "已被分配系统ID号："
+msgstr "已被分配系统序号："
 
 #: Center.Confirmation.NextStep
 msgid "Suggested next steps "
@@ -244,7 +244,7 @@ msgstr "国家："
 
 #: Center.CreateEditPageTitle
 msgid "Manage Center - Enter center information"
-msgstr "管理行政村－输入行政村信息"
+msgstr "管理行政村－输入中心信息"
 
 #: Center.CreateGroupNew
 msgid "Create New {0}"
@@ -268,7 +268,7 @@ msgstr "新建行政村－"
 
 #: Center.CreateNewCenterLink
 msgid "Create a new center"
-msgstr "新建行政村"
+msgstr "新建中心"
 
 #: Center.CreatePageCancelInstruction
 msgid ""
@@ -281,11 +281,11 @@ msgstr "请填写下面的栏位，然后点击“预览”按钮。"
 
 #: Center.CreatePageTitle
 msgid "Create New Center - Enter center information"
-msgstr "新建行政村－输入行政村信息"
+msgstr "新建行政村－输入中心信息"
 
 #: Center.CreatePreviewEditPageTitle
 msgid "Preview center information"
-msgstr "预览行政村信息"
+msgstr "预览中心信息"
 
 #: Center.CreatePreviewPageInstruction
 msgid ""
@@ -295,7 +295,7 @@ msgstr "请查看以下信息，如果满意请点击“提交”按钮提交，
 
 #: Center.CreatePreviewPageTitle
 msgid "Create New Center - Review & submit"
-msgstr "新建行政村－查看并提交"
+msgstr "新建中心－查看并提交"
 
 #: Center.CurrentStatusHeading
 msgid "Current Status "
@@ -311,15 +311,15 @@ msgstr "编辑"
 
 #: Center.EditCenterDetailsLink
 msgid "Edit center details"
-msgstr "编辑行政村详情"
+msgstr "编辑中心详情"
 
 #: Center.EditCenterInformationLink
 msgid "Edit Center Information"
-msgstr "编辑行政村信息"
+msgstr "编辑中心信息"
 
 #: Center.EditCenterStatusLink
 msgid "Edit center status"
-msgstr "编辑行政村状态"
+msgstr "编辑中心状态"
 
 #: Center.EditInformation
 msgid "Edit {0} information"
@@ -541,7 +541,7 @@ msgstr "储蓄"
 
 #: Center.SearchCenterPipeline
 msgid "Select center"
-msgstr "选择行政村"
+msgstr "选择中心"
 
 #: Center.SearchGroupPipeline
 msgid "Group information "
@@ -557,7 +557,7 @@ msgstr "输入{0}名称并点击“搜索”按钮。"
 
 #: Center.Searchmsg1
 msgid "To select, click on a resulting {0}."
-msgstr ""
+msgstr "按钮选以下结果"
 
 #: Center.SearchResultName
 msgid "Search for:"
@@ -599,7 +599,7 @@ msgstr "调查"
 
 #: Center.SystemId
 msgid "System ID"
-msgstr "系统ID"
+msgstr "系统序号"
 
 #: Center.Telephone
 msgid "Telephone:"
@@ -647,7 +647,7 @@ msgstr "查看详情"
 
 #: Center.acc
 msgid "Acct #"
-msgstr "Acct #"
+msgstr "账户号"
 
 #: Center.account
 msgid "account"
@@ -679,7 +679,7 @@ msgstr "修改"
 
 #: Center.changeCenterMembershipHeading
 msgid "Change Center Membership"
-msgstr "更改行政村成员"
+msgstr "更改中心成员"
 
 #: Center.changeCenterMembershipInstruction
 msgid "Details without changing"
@@ -709,7 +709,7 @@ msgstr "点击"
 
 #: Center.clientcharges
 msgid "View Center Charges"
-msgstr "查看行政村开支"
+msgstr "查看中心开支"
 
 #: Center.dash
 msgid "-"
@@ -754,7 +754,7 @@ msgstr "删除"
 
 #: Center.s
 msgid "s"
-msgstr "s"
+msgstr ""
 
 #: Center.select
 msgid "Select {0}"
@@ -877,7 +877,7 @@ msgstr "预览"
 
 #: button.previous
 msgid "Edit center Information"
-msgstr "编辑行政村信息"
+msgstr "编辑中心信息"
 
 #: button.previousStatus
 msgid "Edit status"

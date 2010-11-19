@@ -20,10 +20,16 @@ msgstr "将字符串转换为double型时发生异常。"
 
 #: Clientid
 msgid "Client Id"
-msgstr "Client Id"
+msgstr "客户号"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
-#, fuzzy
+msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
+msgid ""
+"the number of digits after the decimal separator exceeds the allowed number "
+"%s"
+msgstr "小数位数超过允许的%s位"
+
+#: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
 msgid ""
 "the number of digits after the decimal separator exceeds the allowed number "
@@ -45,7 +51,6 @@ msgid ""
 msgstr "小数位数超过允许的%s位"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
-#, fuzzy
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
 msgid ""
 "the number of digits before the decimal separator exceeds the allowed number "
@@ -68,7 +73,7 @@ msgstr "小数位数超过允许的%s位"
 
 #: CASHFLOW_THRESHOLD_OUT_OF_RANGE
 msgid "Warning Threshold should be a value less than %s"
-msgstr ""
+msgstr "提示限度应小于%s"
 
 #: ID
 msgid "ID"
@@ -116,35 +121,35 @@ msgstr "更新"
 
 #: cancel
 msgid "cancel"
-msgstr "cancel"
+msgstr "取消"
 
 #: chooseOffice
 msgid "chooseOffice"
-msgstr "chooseOffice"
+msgstr "选办公室"
 
 #: confirmBranchTransfer
 msgid "confirmBranchTransfer"
-msgstr "confirmBranchTransfer"
+msgstr "确认移动分支机构"
 
 #: confirmGroupTransfer
 msgid "confirmGroupTransfer"
-msgstr "confirmGroupTransfer"
+msgstr "确认移动小组"
 
 #: confirmParentTransfer
 msgid "confirmParentTransfer"
-msgstr "confirmParentTransfer"
+msgstr "确认移动"
 
 #: continue
 msgid "continue"
-msgstr "continue"
+msgstr "继续"
 
 #: editMFIInfo
 msgid "editMFIInfo"
-msgstr "editMFIInfo"
+msgstr "编辑小额信贷机构信息"
 
 #: editPersonalInfo
 msgid "editPersonalInfo"
-msgstr "editPersonalInfo"
+msgstr "编辑个人信息"
 
 #: getAllFunds
 msgid "getAllFunds"

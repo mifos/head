@@ -69,7 +69,7 @@ msgstr "以下的列表属于"
 
 #: admin.belowislistofadministrativedocuments
 msgid "Below is the list of administrative documents."
-msgstr ""
+msgstr "以下属于管理文件"
 
 #: admin.category
 msgid "category"
@@ -127,7 +127,7 @@ msgstr "定义下拉列表选项"
 
 #: admin.definenew
 msgid "Add New"
-msgstr ""
+msgstr "加新的"
 
 #: admin.definenewquestion
 msgid "Define new question"
@@ -307,15 +307,15 @@ msgstr "问题"
 
 #: admin.questiongroups
 msgid "Question Groups"
-msgstr ""
+msgstr "问题组"
 
 #: admin.questiongroup
 msgid "Question Group"
-msgstr ""
+msgstr "问题组"
 
 #: admin.define.questions
 msgid "Define questions"
-msgstr ""
+msgstr "定义问题"
 
 #: admin.redo
 msgid "Redo"
@@ -355,68 +355,68 @@ msgstr "调查"
 
 #: admin.manage.surveys
 msgid "Manage surveys"
-msgstr ""
+msgstr "管理问卷"
 
 #: admin.view.surveys
 msgctxt "admin.view.surveys"
 msgid "View surveys"
-msgstr "查看调查"
+msgstr "查看问卷"
 
 #: admin.shutdown.title
 msgid "Shutdown Information"
-msgstr ""
+msgstr "关闭系统信息"
 
 #: admin.shutdown.link
 msgid "Shutdown"
-msgstr ""
+msgstr "关闭系统"
 
 #: admin.shutdown.button.submit
 msgid "Start shutdown"
-msgstr ""
+msgstr "开始关闭系统"
 
 #: admin.shutdown.button.cancel
 msgid "Cancel shutdown"
-msgstr ""
+msgstr "取消关闭系统"
 
 #: admin.shutdown.button.refresh
 msgid "Refresh"
-msgstr ""
+msgstr "刷新"
 
 #: admin.shutdown.welcome
 msgid "Welcome to the Mifos shutdown management area."
-msgstr ""
+msgstr "欢迎到Mifos关闭系统管理"
 
 #: admin.shutdown.users
 msgid "Active sessions"
-msgstr ""
+msgstr "活动使用者"
 
 #: admin.shutdown.status
 msgid "Shutdown status"
-msgstr ""
+msgstr "关闭状况"
 
 #: admin.shutdown.status.none
 msgid "Not planned"
-msgstr ""
+msgstr "非计划中"
 
 #: admin.shutdown.status.inprogress
 msgid "In progress (shutting down in {0} hours, {1} minutes, {2} seconds)"
-msgstr ""
+msgstr "进行中（在{0}小时，{1}分钟，{2}秒后关闭）"
 
 #: admin.shutdown.status.imminent
 msgid "System shutdown is imminent. Please complete current work and log out."
-msgstr ""
+msgstr "系统即将关闭。请完成现工作及退出。"
 
 #: admin.shutdown.timeout
 msgid "Schedule in"
-msgstr ""
+msgstr "定时於"
 
 #: admin.shutdown.timeout.unit
 msgid "seconds"
-msgstr ""
+msgstr "秒"
 
 #: admin.sysadmin.title
 msgid "System Administration"
-msgstr ""
+msgstr "系统管理"
 
 #: admin.sysinfo.applicationversion
 msgid "Mifos Database Version"
@@ -476,23 +476,23 @@ msgstr "操作系统/架构/版本"
 
 #: admin.sysinfo.osUser
 msgid "Operating System User"
-msgstr ""
+msgstr "操作系统使用者"
 
 #: admin.sysinfo.releaseName
 msgid "Release Name"
-msgstr ""
+msgstr "发布版本名"
 
 #: admin.sysinfo.commitIdentifier
 msgid "Commit Identifier"
-msgstr ""
+msgstr "确定标识"
 
 #: admin.sysinfo.buildNumber
 msgid "Build Number"
-msgstr ""
+msgstr "版本建立号"
 
 #: admin.sysinfo.buildDate
 msgid "Build Date"
-msgstr ""
+msgstr "版本建立日"
 
 #: admin.sysinfo.title
 msgid "System Information"
@@ -618,7 +618,7 @@ msgstr "查看储蓄产品"
 #: admin.viewsurvey
 msgctxt "admin.viewsurvey"
 msgid "View surveys"
-msgstr "查看调查"
+msgstr "查看问卷"
 
 #: admin.viewsysusers
 msgid "View system users"
@@ -636,7 +636,7 @@ msgstr "您没有进行该操作的权限。请您在请求系统管理员授予
 
 #: error.shutdown.timeout.invalid
 msgid "Please type valid shutdown timeout (in seconds)."
-msgstr ""
+msgstr "请输入系统关闭时间（秒）。"
 
 #: errors.prefix
 msgid "<li>"
@@ -674,27 +674,20 @@ msgstr "已导入过该文件。"
 
 #: admin.uploadPPI
 msgid "Activate Question Group"
-msgstr ""
+msgstr "活动问题组"
 
 #: admin.questionnaire.migration
 msgid "Questionnaire Migration"
-msgstr ""
+msgstr "问卷处理"
 
 #: admin.questionnaire.migration.migrate.surveys
 msgid "Migrate Surveys"
-msgstr ""
+msgstr "问卷"
 
 #: admin.questionnaire.migration.migrate.additional.fields
-#, fuzzy
 msgid "Migrate Additional Fields"
 msgstr "查看附加栏位"
 
 #: admin.migrate.questiongroups
 msgid "Migrate to Question Groups"
-msgstr ""
-
-#~ msgid "Define new"
-#~ msgstr "定义新的"
-
-#~ msgid "Subversion Revision Number"
-#~ msgstr "Subversion修订号"
+msgstr "问题组"

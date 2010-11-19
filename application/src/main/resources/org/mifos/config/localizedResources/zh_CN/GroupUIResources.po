@@ -40,7 +40,7 @@ msgstr "平均每个{0}大小："
 
 #: Group.Center
 msgid "Center"
-msgstr "行政村"
+msgstr "中心"
 
 #: Group.EditGroupInstructions
 msgid ""
@@ -62,7 +62,7 @@ msgstr "投资组合风险："
 
 #: Group.S
 msgid "s"
-msgstr "s"
+msgstr ""
 
 #: Group.Selected
 msgid "{0} Selected:"
@@ -78,7 +78,7 @@ msgstr "是"
 
 #: Group.acc
 msgid "Acct #"
-msgstr "Acct #"
+msgstr "账户号"
 
 #: Group.account
 msgid "account"
@@ -210,7 +210,7 @@ msgstr "分支机构"
 
 #: Group.center
 msgid "center"
-msgstr "行政村"
+msgstr "中心"
 
 #: Group.centerAssign
 msgid "{0} assigned"
@@ -230,11 +230,11 @@ msgstr "修改{0}成员"
 
 #: Group.changecentermembership
 msgid "Change center membership:"
-msgstr "修改行政村成员："
+msgstr "修改中心成员："
 
 #: Group.changecentermembershiphead
 msgid "Change center membership"
-msgstr "修改行政村成员"
+msgstr "修改中心成员"
 
 #: Group.changestatus
 msgid "Change status"
@@ -254,11 +254,11 @@ msgstr "选择{0}"
 
 #: Group.choosecenterMsg1
 msgid "Click on a Center name to assign"
-msgstr "点击行政村名称来指定"
+msgstr "点击中心名称来指定"
 
 #: Group.choosecenterMsg2
 msgid "group to that center."
-msgstr "组至该行政村。"
+msgstr "组至该中心。"
 
 #: Group.city
 msgid "City:"
@@ -1012,7 +1012,7 @@ msgstr "取消"
 
 #: button.continue
 msgid "Continue"
-msgstr ""
+msgstr "继续"
 
 #: button.editstatus
 msgid "Edit status"

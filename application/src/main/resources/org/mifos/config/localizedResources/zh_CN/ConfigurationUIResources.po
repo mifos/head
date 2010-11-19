@@ -232,7 +232,7 @@ msgstr "外部ID"
 
 #: configuration.familydetails
 msgid "Family Details"
-msgstr ""
+msgstr "家庭细节"
 
 #: configuration.fields
 msgid "fields"
@@ -398,7 +398,7 @@ msgstr "邮编"
 
 #: configuration.povertystatus
 msgid "Poverty Status"
-msgstr ""
+msgstr "贫困状况"
 
 #: configuration.prdtypes
 msgid "Product Types"
@@ -471,11 +471,11 @@ msgstr "序号"
 
 #: configuration.source_fund
 msgid "Source of fund"
-msgstr ""
+msgstr "资金来源"
 
 #: configuration.spousefatherinformation
 msgid "Spouse/Father Information"
-msgstr ""
+msgstr "眷属/父亲资料"
 
 #: configuration.spousefathermiddlename
 msgid "Relative middle name"
@@ -535,7 +535,7 @@ msgstr "代金券"
 
 #: configuration.numberofchildren
 msgid "Number of Children"
-msgstr ""
+msgstr "子女数目"
 
 #: errors.default_value_not_date
 msgid "Default value does not match data type date (format (DD/MM/YYYY))"

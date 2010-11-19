@@ -166,7 +166,7 @@ msgstr "发布者"
 #: TransactionID
 msgctxt "TransactionID"
 msgid "Transaction ID#"
-msgstr "交易ID号#"
+msgstr "交易序号#"
 
 #: Type
 msgctxt "Type"
@@ -902,7 +902,7 @@ msgstr "利率类型"
 
 #: accounts.kanakpura_center
 msgid "Kanakpura Center"
-msgstr "Kanakpura行政村"
+msgstr "Kanakpura中心"
 
 #: accounts.last_pmnt
 msgid "Last payment made"

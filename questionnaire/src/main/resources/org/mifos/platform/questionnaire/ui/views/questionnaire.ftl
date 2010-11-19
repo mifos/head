@@ -49,7 +49,7 @@
             <fieldset>
                 <ol id="responses">
                     [#list sectionDetail.questions as question]
-                    <li class="marginTop15">
+                    <li class="marginTop15" style='background-color: ${((question_index % 2)==0)?string("#F2F2F2", "#FFFFFF")}'>
                         <label for="details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value">
                             [#if question.mandatory]<span class="red">*</span>[/#if]
                             ${question.text}

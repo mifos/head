@@ -16,7 +16,7 @@
             <form method="POST" action="defineNewFund.ftl" name="organizationPreferences.definenewfund.defineNewFund">
                 <div class="margin20lefttop">
                     <p class="font11pt">
-                        <span class="fontBold">[@spring.message "organizationPreferences.definenewfund.defineanewfund"/]&nbsp;-&nbsp;</span>
+                        <span class="fontBold">[@spring.message "organizationPreferences.definenewfund.defineanewfund"/]&nbsp;-</span>
                         <span class="orangeheading">[@spring.message "organizationPreferences.definenewfund.enterfundinformation"/]</span>
                     </p>
 

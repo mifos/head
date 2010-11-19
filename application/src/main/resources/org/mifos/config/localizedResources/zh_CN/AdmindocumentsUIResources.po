@@ -833,7 +833,7 @@ msgstr "利率类型"
 
 #: accounts.kanakpura_center
 msgid "Kanakpura Center"
-msgstr "Kanakpura行政村"
+msgstr "Kanakpura 中心"
 
 #: accounts.last_pmnt
 msgid "Last payment made"
