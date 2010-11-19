@@ -102,6 +102,7 @@
                     <effort>Max</effort>
                     <threshold>Low</threshold>
                     <excludeFilterFile>${basedir}/../findbugs.excludes.xml</excludeFilterFile>
+                    <skip>${maven.test.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
