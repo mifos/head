@@ -364,8 +364,8 @@ public class QuestionnaireServiceTest {
     private SectionDetail getSectionDefinition(String name) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, QuestionType.INVALID, true), true));
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, QuestionType.INVALID, true), false));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(11, null, QuestionType.INVALID, true, true), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(12, null, QuestionType.INVALID, true, true), false));
         return section;
     }
 
@@ -650,7 +650,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void shouldSaveResponses() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         QuestionGroupInstance questionGroupInstance = new QuestionGroupInstance();
@@ -664,7 +664,7 @@ public class QuestionnaireServiceTest {
 
     @Test
     public void testValidateResponse() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         try {

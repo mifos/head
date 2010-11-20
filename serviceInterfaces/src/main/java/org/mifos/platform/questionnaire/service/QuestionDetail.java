@@ -40,21 +40,23 @@ public class QuestionDetail implements Serializable {
     private Integer numericMin;
     private Integer numericMax;
     private boolean active;
+    private boolean editable;
 
     public QuestionDetail() {
         this(null, QuestionType.INVALID);
     }
 
     public QuestionDetail(String text, QuestionType type) {
-        this(0, text, type, true);
+        this(0, text, type, true, true);
     }
 
-    public QuestionDetail(Integer id, String text, QuestionType type, boolean active) {
+    public QuestionDetail(Integer id, String text, QuestionType type, boolean active, boolean editable) {
         this.id = id;
         this.text = text;
         this.type = type;
         this.answerChoices = new ArrayList<ChoiceDto>();
         this.active = active;
+        this.editable = editable;
     }
 
     public Integer getId() {
@@ -166,6 +168,14 @@ public class QuestionDetail implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
     public boolean isNewQuestion() {

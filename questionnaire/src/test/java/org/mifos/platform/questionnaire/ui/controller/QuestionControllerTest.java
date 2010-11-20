@@ -317,7 +317,7 @@ public class QuestionControllerTest {
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, title, type, true);
+        return new QuestionDetail(id, title, type, true, true);
     }
 
     private QuestionForm getQuestionForm(String title, String type) {

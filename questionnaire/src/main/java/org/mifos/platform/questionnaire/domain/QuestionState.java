@@ -21,7 +21,7 @@
 package org.mifos.platform.questionnaire.domain;
 
 public enum QuestionState {
-    INACTIVE(0), ACTIVE(1);
+    INACTIVE(0), ACTIVE(1), INACTIVE_NOT_EDITABLE(2), ACTIVE_NOT_EDITABLE(3);
 
     private int value;
 
@@ -43,7 +43,9 @@ public enum QuestionState {
         throw new RuntimeException("no question state " + state);
     }
 
-    public static QuestionState getQuestionStateEnum(boolean active) {
-        return active ? ACTIVE : INACTIVE;
+    public static QuestionState getQuestionStateEnum(boolean active, boolean editable) {
+        return active ?
+                editable ? ACTIVE : ACTIVE_NOT_EDITABLE :
+                editable ? INACTIVE : INACTIVE_NOT_EDITABLE;
     }
 }
