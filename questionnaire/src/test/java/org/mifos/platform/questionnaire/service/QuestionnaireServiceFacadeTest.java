@@ -179,7 +179,7 @@ public class QuestionnaireServiceFacadeTest {
     public void testGetQuestionById() throws SystemException {
         int questionId = 1;
         String title = "Title";
-        QuestionDetail question = new QuestionDetail(questionId, title, QuestionType.NUMERIC, true);
+        QuestionDetail question = new QuestionDetail(questionId, title, QuestionType.NUMERIC, true, true);
         question.setNumericMin(10);
         question.setNumericMax(100);
         when(questionnaireService.getQuestion(questionId)).thenReturn(question);
@@ -197,7 +197,7 @@ public class QuestionnaireServiceFacadeTest {
         int questionId = 1;
         String title = "Title";
         List<ChoiceDto> answerChoices = asList(new ChoiceDto("choice1"), new ChoiceDto("choice2"));
-        QuestionDetail expectedQuestionDetail = new QuestionDetail(questionId, title, QuestionType.MULTI_SELECT, true);
+        QuestionDetail expectedQuestionDetail = new QuestionDetail(questionId, title, QuestionType.MULTI_SELECT, true, true);
         expectedQuestionDetail.setAnswerChoices(answerChoices);
         when(questionnaireService.getQuestion(questionId)).thenReturn(expectedQuestionDetail);
         QuestionDetail questionDetail = questionnaireServiceFacade.getQuestionDetail(questionId);
@@ -264,7 +264,7 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void shouldSaveQuestionGroupDetail() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, "value", false));
         QuestionGroupDetails questionGroupDetails = new QuestionGroupDetails(1, 1, 1,
                 asList(getQuestionGroupDetail("QG1", "Create", "Client", sectionDetails)));
@@ -274,7 +274,7 @@ public class QuestionnaireServiceFacadeTest {
 
     @Test
     public void testValidateResponse() {
-        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true, true));
         List<SectionDetail> sectionDetails = asList(getSectionDetailWithQuestions("Sec1", questionDetails, null, true));
         QuestionGroupDetail questionGroupDetail = new QuestionGroupDetail(1, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails, true);
         try {
@@ -394,7 +394,7 @@ public class QuestionnaireServiceFacadeTest {
         List<SectionQuestionDetail> questions = new ArrayList<SectionQuestionDetail>();
         for (int quesId : questionIds) {
             String text = "Q" + quesId;
-            questions.add(new SectionQuestionDetail(new QuestionDetail(quesId, text, QuestionType.DATE, true), false));
+            questions.add(new SectionQuestionDetail(new QuestionDetail(quesId, text, QuestionType.DATE, true, true), false));
         }
         sectionDetail.setQuestionDetails(questions);
         return sectionDetail;
@@ -403,7 +403,7 @@ public class QuestionnaireServiceFacadeTest {
     private SectionDetail getSectionDetail(String name) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Q1", QuestionType.FREETEXT, true), true));
+        sectionDetail.addQuestion(new SectionQuestionDetail(new QuestionDetail(123, "Q1", QuestionType.FREETEXT, true, true), true));
         return sectionDetail;
     }
 
@@ -416,12 +416,12 @@ public class QuestionnaireServiceFacadeTest {
     }
 
     private QuestionDetail getQuestionDetail(int id, String text, QuestionType questionType) {
-        return new QuestionDetail(id, text, questionType, true);
+        return new QuestionDetail(id, text, questionType, true, true);
     }
 
 
     private QuestionDetail getQuestionDetail(int id, String text, QuestionType questionType, List<String> choices) {
-        QuestionDetail questionDetail = new QuestionDetail(id, text, questionType, true);
+        QuestionDetail questionDetail = new QuestionDetail(id, text, questionType, true, true);
         List<ChoiceDto> choiceDtos = new ArrayList<ChoiceDto>();
         for (String choice : choices) {
             choiceDtos.add(new ChoiceDto(choice));

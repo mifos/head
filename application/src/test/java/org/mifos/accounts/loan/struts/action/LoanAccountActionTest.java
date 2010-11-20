@@ -122,7 +122,7 @@ public class LoanAccountActionTest {
     private SectionDetail getSectionDetail(String name, String title, List<String> answerChoices) {
         SectionDetail sectionDetail = new SectionDetail();
         sectionDetail.setName(name);
-        QuestionDetail questionDetail = new QuestionDetail(111, title, QuestionType.SINGLE_SELECT, true);
+        QuestionDetail questionDetail = new QuestionDetail(111, title, QuestionType.SINGLE_SELECT, true, true);
         List<ChoiceDto> choiceDtos = new ArrayList<ChoiceDto>();
         for (String answerChoice : answerChoices) {
             choiceDtos.add(new ChoiceDto(answerChoice));

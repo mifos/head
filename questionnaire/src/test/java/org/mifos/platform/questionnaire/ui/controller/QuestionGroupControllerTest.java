@@ -603,11 +603,11 @@ public class QuestionGroupControllerTest {
     }
 
     private SectionQuestionDetail getSectionQuestionDetail(int id, String title) {
-        return new SectionQuestionDetail(new QuestionDetail(id, title, QuestionType.FREETEXT, true), true);
+        return new SectionQuestionDetail(new QuestionDetail(id, title, QuestionType.FREETEXT, true, true), true);
     }
 
     private QuestionDetail getQuestionDetail(int id, String title, QuestionType type) {
-        return new QuestionDetail(id, title, type, true);
+        return new QuestionDetail(id, title, type, true, true);
     }
 
 

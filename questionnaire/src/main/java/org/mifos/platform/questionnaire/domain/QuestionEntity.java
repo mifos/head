@@ -176,7 +176,11 @@ public class QuestionEntity implements Serializable, Comparable<QuestionEntity> 
     }
 
     public boolean isActive() {
-        return QuestionState.ACTIVE.equals(questionState);
+        return QuestionState.ACTIVE.equals(questionState) || QuestionState.ACTIVE_NOT_EDITABLE.equals(questionState);
+    }
+
+    public boolean isEditable() {
+        return QuestionState.ACTIVE.equals(questionState) || QuestionState.INACTIVE.equals(questionState);
     }
 }
 

@@ -45,12 +45,14 @@ public class QuestionDto implements Serializable {
     private Integer maxValue;
     private boolean mandatory;
     private boolean active;
+    private boolean editable;
     @XStreamAsAttribute
     private Integer order;
 
     public QuestionDto() {
         choices = new ArrayList<ChoiceDto>();
         active = true;
+        editable = true;
     }
 
     public String getText() {
@@ -115,6 +117,14 @@ public class QuestionDto implements Serializable {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
     }
 
     public Integer getOrder() {

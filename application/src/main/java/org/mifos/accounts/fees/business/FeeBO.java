@@ -347,10 +347,12 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
         if (this instanceof AmountFeeBO) {
             feeDto.setAmount(((AmountFeeBO) this).getFeeAmount());
+            feeDto.setRateBasedFee(false);
         } else {
             RateFeeBO rateFeeBo = (RateFeeBO) this;
             feeDto.setRate(rateFeeBo.getRate());
             feeDto.setFeeFormula(rateFeeBo.getFeeFormula().toDto());
+            feeDto.setRateBasedFee(true);
         }
         return feeDto;
     }

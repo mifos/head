@@ -21,7 +21,7 @@
 package org.mifos.customers.surveys.helpers;
 
 public enum QuestionState {
-    INACTIVE(0), ACTIVE(1);
+    INACTIVE(0), ACTIVE(1), INACTIVE_NOT_EDITABLE(2), ACTIVE_NOT_EDITABLE(3);
 
     private int value;
 

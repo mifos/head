@@ -125,8 +125,10 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         List<QuestionEntity> questions;
         if (isNotEmpty(questionIdsToExclude)) {
             questions = questionDao.retrieveByStateExcluding(questionIdsToExclude, QuestionState.ACTIVE.getValue());
+            questions.addAll(questionDao.retrieveByStateExcluding(questionIdsToExclude, QuestionState.ACTIVE_NOT_EDITABLE.getValue()));
         } else {
             questions = questionDao.retrieveByState(QuestionState.ACTIVE.getValue());
+            questions.addAll(questionDao.retrieveByState(QuestionState.ACTIVE_NOT_EDITABLE.getValue()));
         }
         return questionnaireMapper.mapToQuestionDetails(questions);
     }
@@ -331,8 +333,19 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     public Integer uploadPPIQuestionGroup(String country) {
         String ppiXmlForCountry = ppiSurveyLocator.getPPIUploadFileForCountry(country);
         QuestionGroupDto questionGroupDto = questionGroupDefinitionParser.parse(ppiXmlForCountry);
-        activateQGWithQuestions(questionGroupDto); // according to MIFOS-4146 all uploaded PPI should be active
+        activateQGWithQuestions(questionGroupDto); // according to MIFOS-4146 all uploaded QG and questions should be active
+        if (questionGroupDto.isPpi()) { // according to MIFOS-4149 PPI questions should be editable
+            makePPIQuestionsNotEditable(questionGroupDto);
+        }
         return defineQuestionGroup(questionGroupDto, false);
+    }
+
+    private void makePPIQuestionsNotEditable(QuestionGroupDto questionGroupDto) {
+        for (SectionDto section : questionGroupDto.getSections()) {
+            for (QuestionDto question : section.getQuestions()) {
+                question.setEditable(false);
+            }
+        }
     }
 
     private void activateQGWithQuestions(QuestionGroupDto questionGroupDto) {
@@ -340,6 +353,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         for (SectionDto section : questionGroupDto.getSections()) {
             for (QuestionDto question : section.getQuestions()) {
                 question.setActive(true);
+                question.setEditable(true);
             }
         }
     }

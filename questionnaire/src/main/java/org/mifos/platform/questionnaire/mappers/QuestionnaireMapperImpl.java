@@ -149,7 +149,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         question.setQuestionText(questionDetail.getText());
         question.setAnswerType(mapToAnswerType(questionDetail.getType()));
         question.setChoices(mapToChoices(questionDetail.getAnswerChoices()));
-        question.setQuestionState(QuestionState.getQuestionStateEnum(questionDetail.isActive()));
+        question.setQuestionState(QuestionState.getQuestionStateEnum(questionDetail.isActive(), questionDetail.isEditable()));
         mapBoundsForNumericQuestionDetail(questionDetail, question);
         return question;
     }
@@ -334,7 +334,7 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
 
     private QuestionDetail mapToQuestionDetail(QuestionEntity question, QuestionType type) {
         List<ChoiceDto> answerChoices = mapToQuestionChoices(question.getChoices());
-        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), type, question.isActive());
+        QuestionDetail questionDetail = new QuestionDetail(question.getQuestionId(), question.getQuestionText(), type, question.isActive(), question.isEditable());
         questionDetail.setNickname(question.getNickname());
         questionDetail.setAnswerChoices(answerChoices);
         mapBoundsForNumericQuestion(question, questionDetail);
@@ -499,7 +499,9 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         questionEntity.setAnswerType(mapToAnswerType(questionDto.getType()));
         questionEntity.setNumericMin(questionDto.getMinValue());
         questionEntity.setNumericMax(questionDto.getMaxValue());
-        questionEntity.setQuestionState(questionDto.isActive() ? QuestionState.ACTIVE : QuestionState.INACTIVE);
+        questionEntity.setQuestionState(questionDto.isActive() ?
+                questionDto.isEditable() ? QuestionState.ACTIVE : QuestionState.ACTIVE_NOT_EDITABLE :
+                questionDto.isEditable() ? QuestionState.INACTIVE : QuestionState.INACTIVE_NOT_EDITABLE);
         questionEntity.setChoices(mapToChoices(questionDto.getChoices()));
         return questionEntity;
     }
