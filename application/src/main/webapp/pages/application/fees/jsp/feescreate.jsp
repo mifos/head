@@ -190,6 +190,7 @@ explanation of the license and how it is applied.
 														property="feeRecurrenceType"
 														value="${RecurrenceType.MONTHLY.value}"
 														onclick="onPageLoad();">
+														<mifos:mifoslabel name="Fees.monthly" />
 													</html-el:radio></td>
 
 												</tr>
