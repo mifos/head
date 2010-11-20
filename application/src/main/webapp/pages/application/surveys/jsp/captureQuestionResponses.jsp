@@ -114,7 +114,7 @@ explanation of the license and how it is applied.
                                      <c:out value="${questionLoopStatus.index}" />
                                  </bean:define>
                                  <tr class="fontnormal bg${(questionLoopStatus.index + 1) % 2}">
-                                     <td width="17%" align="right" valign="top">
+                                     <td width="26%" align="right" valign="top">
                                          <span id="create_ClientPersonalInfo.label.question">
                                              <c:if test="${question.mandatory}">
                                                  <span class="mandatorytext">
@@ -124,7 +124,7 @@ explanation of the license and how it is applied.
                                              <c:out value="${question.text}" />
                                          </span>:
                                      </td>
-                                     <td width="83%">
+                                     <td width="74%">
                                      <html-el:hidden property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].id' value="${question.id}"></html-el:hidden>
                                      <c:if test="${question.questionType == 'FREETEXT'}">
                                          <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" 
