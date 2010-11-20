@@ -455,7 +455,7 @@ a:hover {
 	height:80px;
 }
 .listSize{
-	width:135px;
+	min-width:135px;
 	height:80px;
 }
 .marginBottom{
