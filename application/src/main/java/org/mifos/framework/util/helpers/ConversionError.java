@@ -69,7 +69,7 @@ public enum ConversionError {
         @Override
         public String toLocalizedMessage(Locale locale, MifosCurrency currency) {
             String errorText = super.toLocalizedMessage(locale, currency);
-            return errorText.replaceFirst("%s", AccountingRules.getCashFlowWarningThreshold().toString());
+            return errorText.replaceFirst("%s", AccountingRules.getCashFlowThreshold().toString());
         }},
 
     EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD {

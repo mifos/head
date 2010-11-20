@@ -98,6 +98,7 @@
 		<mapping resource="org/mifos/accounts/productdefinition/business/LoanAmountSameForAllLoanBO.hbm.xml" />
 		<mapping resource="org/mifos/accounts/productdefinition/business/NoOfInstallSameForAllLoanBO.hbm.xml" />
         <mapping resource="org/mifos/accounts/productdefinition/business/VariableInstallmentDetailsBO.hbm.xml" />
+        <mapping resource="org/mifos/accounts/productdefinition/business/CashFlowDetail.hbm.xml" />
 
 		<!--M2 style object for GLCODE-->
 		<mapping class="org.mifos.accounts.financial.business.GLCodeEntity" />

@@ -242,3 +242,4 @@ truncate table variable_installment_details;
 truncate table loan_cash_flow;
 truncate table monthly_cash_flow_details;
 truncate table cash_flow;
+truncate table cash_flow_detail;

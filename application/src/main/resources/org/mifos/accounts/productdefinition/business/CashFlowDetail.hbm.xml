@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+                            "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+                            "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.mifos.accounts.productdefinition.business.CashFlowDetail" table="cash_flow_detail">
+        <id name="id" column="id" type="short" access="field">
+            <generator class="native" />
+        </id>
+        <property name="cashFlowThreshold" column="cash_flow_threshold" access="field"/>
+        <property name="indebtednessRatio" column="indebtedness_ratio" access="field"/>
+        <property name="repaymentCapacity" column="repayment_capacity" access="field"/>
+    </class>
+</hibernate-mapping>

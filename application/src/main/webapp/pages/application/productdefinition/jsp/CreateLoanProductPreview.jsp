@@ -601,14 +601,14 @@ explanation of the license and how it is applied.
 
                                         <c:if test="${sessionScope.loanproductactionform.cashFlowValidation}">
 
-                                                    <mifos:mifoslabel name="product.cashFlowWarningThreshold" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                                    <mifos:mifoslabel name="product.cashFlowThreshold" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                     <span class="fontnormal">
                                                         <c:choose>
-                                                            <c:when test="${empty sessionScope.loanproductactionform.cashFlowWarningThreshold}">
+                                                            <c:when test="${empty sessionScope.loanproductactionform.cashFlowThreshold}">
                                                                 <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
                                                             </c:when>
                                                             <c:otherwise>
-                                                                 <c:out value="${sessionScope.loanproductactionform.cashFlowWarningThreshold}" />
+                                                                 <c:out value="${sessionScope.loanproductactionform.cashFlowThreshold}" />
                                                                  <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
                                                             </c:otherwise>
                                                         </c:choose>

@@ -43,12 +43,13 @@ import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.struts.uihelpers.CashflowDataHtmlBean;
+import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
 import org.mifos.accounts.loan.util.MonthYearComparator;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
@@ -490,34 +491,38 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private boolean updateCashflowAndValidate(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
         boolean result = true;
-        ActionErrors validateCashflowForInstallments = validateCashflowForInstallments(request, loanActionForm);
+        ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request, loanActionForm);
         if(!validateCashflowForInstallments.isEmpty()) {
             addErrors(request,validateCashflowForInstallments);
         }
         return result;
     }
 
-    private ActionErrors validateCashflowForInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
+    private ActionErrors validateCashFlowForInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
         UserContext userContext = getUserContext(request);
-        Double cashflowThresholdPercent = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()).getCashFlowCheckThreshold();
-        //Do not compare or validate if cashflow threshold is null or zero
+        CashFlowDetail cashFlowDetail = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()).
+                getCashFlowDetail();
         ActionErrors errors = new ActionErrors();
-        if(cashflowThresholdPercent!=null && cashflowThresholdPercent != 0) {
-            List<CashflowDataHtmlBean> cashflowDataHtmlBeans = loanActionForm.getCashflowDataHtmlBeans();
-            if(cashflowDataHtmlBeans != null && cashflowDataHtmlBeans.size() != 0) {
-                for(CashflowDataHtmlBean cashflowDataHtmlBean: cashflowDataHtmlBeans) {
-                    String cashflowAndInstallmentDiffPercent = cashflowDataHtmlBean.getDiffCumulativeCashflowAndInstallmentPercent();
-                    if(StringUtils.isNotEmpty(cashflowAndInstallmentDiffPercent) && Double.valueOf(cashflowAndInstallmentDiffPercent) > cashflowThresholdPercent) {
-                       errors.add(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new ActionMessage(AccountConstants.BEYOND_CASHFLOW_THRESHOLD ,cashflowDataHtmlBean.getMonth()+" "+cashflowDataHtmlBean.getYear(),String.valueOf(cashflowThresholdPercent)));
+        if (cashFlowDetail != null) {
+            Double cashFlowThresholdPercent = cashFlowDetail.getCashFlowThreshold();
+            //Do not compare or validate if cash flow threshold is null or zero
+            if (cashFlowThresholdPercent != null && cashFlowThresholdPercent != 0) {
+                List<CashFlowDataHtmlBean> cashFlowDataHtmlBeans = loanActionForm.getCashflowDataHtmlBeans();
+                if (cashFlowDataHtmlBeans != null && cashFlowDataHtmlBeans.size() != 0) {
+                    for (CashFlowDataHtmlBean cashflowDataHtmlBean : cashFlowDataHtmlBeans) {
+                        String cashFlowAndInstallmentDiffPercent = cashflowDataHtmlBean.getDiffCumulativeCashflowAndInstallmentPercent();
+                        if (StringUtils.isNotEmpty(cashFlowAndInstallmentDiffPercent) && Double.valueOf(cashFlowAndInstallmentDiffPercent) > cashFlowThresholdPercent) {
+                            errors.add(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new ActionMessage(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, cashflowDataHtmlBean.getMonth() + " " + cashflowDataHtmlBean.getYear(), String.valueOf(cashFlowThresholdPercent)));
+                        }
+                        String cumulativeCashFlow = cashflowDataHtmlBean.getCumulativeCashFlow();
+                        if (StringUtils.isNotEmpty(cumulativeCashFlow) && Double.valueOf(cumulativeCashFlow) < 0) {
+                            errors.add(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, cashflowDataHtmlBean.getMonth() + " " + cashflowDataHtmlBean.getYear()));
+                        } else if (StringUtils.isNotEmpty(cumulativeCashFlow) && Double.valueOf(cumulativeCashFlow) == 0) {
+                            errors.add(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, cashflowDataHtmlBean.getMonth() + " " + cashflowDataHtmlBean.getYear()));
+                        }
                     }
-                    String cumulativeCashflow = cashflowDataHtmlBean.getCumulativeCashFlow();
-                    if(StringUtils.isNotEmpty(cumulativeCashflow) && Double.valueOf(cumulativeCashflow) < 0) {
-                        errors.add(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE ,cashflowDataHtmlBean.getMonth()+" "+cashflowDataHtmlBean.getYear()));
-                    }else  if(StringUtils.isNotEmpty(cumulativeCashflow) && Double.valueOf(cumulativeCashflow) == 0) {
-                        errors.add(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_ZERO ,cashflowDataHtmlBean.getMonth()+" "+cashflowDataHtmlBean.getYear()));
-                    }
+                    errors.add(validateCashflowAndInstallmentDates(loanActionForm.getInstallments(), loanActionForm.getCashFlowForm()));
                 }
-                errors.add(validateCashflowAndInstallmentDates(loanActionForm.getInstallments(), loanActionForm.getCashFlowForm()));
             }
         }
         return errors;
@@ -721,7 +726,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         //----to display errors on second page
         if(forward.equals(ActionForwards.preview_success)) {
-            ActionErrors validateCashflowForInstallments = validateCashflowForInstallments(request, (LoanAccountActionForm) form);
+            ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request, (LoanAccountActionForm) form);
             if(!validateCashflowForInstallments.isEmpty()) {
                 addErrors(request,validateCashflowForInstallments);
             }

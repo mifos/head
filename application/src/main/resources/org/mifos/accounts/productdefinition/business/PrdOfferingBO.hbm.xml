@@ -79,8 +79,7 @@
             <property name="variableInstallmentsAllowed" column="variable_installment_flag"
 				access="field" type="short" />
 				
-	        <property name="cashFlowCheckEnabled" column="cashflow_comparison_flag" type="short" access="field"/>
-		    <property name="cashFlowCheckThreshold" column="cashflow_threshold" access="field"/>
+	        <property name="cashFlowCheckEnabled" column="cash_flow_comparison_flag" type="short" access="field"/>
 		    
 			<many-to-one name="gracePeriodType"
 				column="graceperiod_type_id"
@@ -101,6 +100,10 @@
 				column="variable_installment_details_id"
 				class="org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO"
 				cascade="all" unique="true"/>
+			<many-to-one name="cashFlowDetail"
+				column="cash_flow_detail_id"
+				class="org.mifos.accounts.productdefinition.business.CashFlowDetail"
+				cascade="all" unique="true" insert="true" update="true" lazy="false"/>
 
 			<!--Mapping of loan offering to its associated funds-->
 			<set name="loanOfferingFunds" cascade="all,delete-orphan"

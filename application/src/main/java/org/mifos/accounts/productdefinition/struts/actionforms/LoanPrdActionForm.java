@@ -308,8 +308,12 @@ public class LoanPrdActionForm extends BaseActionForm {
     private String cashFlowValidation;
 
     private String[] loanOfferingQGs;
-    private String cashFlowWarningThreshold;
-    private Double cashFlowWarningThresholdValue;
+    private String cashFlowThreshold;
+    private Double cashFlowThresholdValue;
+    private String indebtednessRatio;
+    private Double indebtednessRatioValue;
+    private String repaymentCapacity;
+    private Double repaymentCapacityValue;
 
 
     public Double getLastLoanDefaultLoanAmt1Value() {
@@ -2505,32 +2509,32 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     private void validateCashFlow(ActionErrors actionErrors, Locale locale) {
 
-        DoubleConversionResult cashFlowWarningThresholdResult = null;
+        DoubleConversionResult cashFlowThresholdResult = null;
         Double cashFlowThreshold = null;
         List<ConversionError> errorList = null;
 
         if(getCashFlowValidation()) {
-            if(cashFlowWarningThreshold != null && (!cashFlowWarningThreshold.trim().equals(""))){
+            if(this.cashFlowThreshold != null && (!this.cashFlowThreshold.trim().equals(""))){
 
-                cashFlowWarningThresholdResult = parseDoubleForCashFlowThreshold(cashFlowWarningThreshold);
+                cashFlowThresholdResult = parseDoubleForCashFlowThreshold(this.cashFlowThreshold);
 
-                errorList = cashFlowWarningThresholdResult.getErrors();
+                errorList = cashFlowThresholdResult.getErrors();
                 if (errorList.size() > 0) {
                     for (int i = 0; i < errorList.size(); i++) {
-                        addError(actionErrors, cashFlowWarningThreshold,
+                        addError(actionErrors, this.cashFlowThreshold,
                                 ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT, getConversionErrorText(errorList
                                         .get(i), locale));
                     }
                 } else {
-                    cashFlowThreshold = cashFlowWarningThresholdResult.getDoubleValue();
+                    cashFlowThreshold = cashFlowThresholdResult.getDoubleValue();
                 }
             }
 
             if(cashFlowThreshold != null) {
-                if(cashFlowThreshold >= AccountingRules.getCashFlowWarningThreshold()) {
-                    addError(actionErrors,"cashFlowWarningThreshold",ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID, String.valueOf(AccountingRules.getCashFlowWarningThreshold()));
+                if(cashFlowThreshold >= AccountingRules.getCashFlowThreshold()) {
+                    addError(actionErrors,"cashFlowThreshold",ProductDefinitionConstants.CASHFLOW_THRESHOLD_INVALID, String.valueOf(AccountingRules.getCashFlowThreshold()));
                 }
-                cashFlowWarningThresholdValue = cashFlowThreshold;
+                cashFlowThresholdValue = cashFlowThreshold;
             }
 
         }
@@ -2989,22 +2993,29 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
 
-    public void setCashFlowWarningThreshold(String cashFlowWarningThreshold) {
-        this.cashFlowWarningThreshold = cashFlowWarningThreshold;
+    public void setCashFlowThreshold(String cashFlowThreshold) {
+        this.cashFlowThreshold = cashFlowThreshold;
     }
 
     public void setLoanOfferingQGs(String[] loanOfferingQGs) {
         this.loanOfferingQGs = loanOfferingQGs;
     }
-    public String getCashFlowWarningThreshold() {
-        return cashFlowWarningThreshold;
+    public String getCashFlowThreshold() {
+        return cashFlowThreshold;
     }
 
-    public Double getCashFlowWarningThresholdValue() {
-        if (StringUtils.isEmpty(cashFlowWarningThreshold)) {
-            return cashFlowWarningThresholdValue;
+    public Double getCashFlowThresholdValue() {
+        if (StringUtils.isEmpty(cashFlowThreshold)) {
+            return cashFlowThresholdValue;
         }
-        return getDoubleValue(cashFlowWarningThreshold);
+        return getDoubleValue(cashFlowThreshold);
     }
 
+    public Double getIndebtednessRatioValue() {
+        return indebtednessRatioValue;
+    }
+
+    public Double getRepaymentCapacityValue() {
+        return repaymentCapacityValue;
+    }
 }

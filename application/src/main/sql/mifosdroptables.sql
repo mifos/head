@@ -445,3 +445,4 @@ drop table if exists variable_installment_details;
 drop table if exists loan_cash_flow;
 drop table if exists monthly_cash_flow_details;
 drop table if exists cash_flow;
+drop table if exists cash_flow_detail;

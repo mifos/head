@@ -1247,6 +1247,15 @@ create table variable_installment_details (
 )
 engine=innodb character set utf8;
 
+create table cash_flow_detail (
+  id smallint auto_increment not null,
+  cash_flow_threshold decimal(13, 10),
+  indebtedness_ratio decimal(13, 10),
+  repayment_capacity decimal(13, 10),
+  primary key(id)
+)
+engine=innodb character set utf8;
+
 create table loan_offering (
   prd_offering_id smallint not null,
   interest_type_id smallint not null,
@@ -1277,8 +1286,8 @@ create table loan_offering (
   interest_waiver_flag smallint default 0,
   variable_installment_flag smallint default 0,
   variable_installment_details_id smallint,
-  cashflow_comparison_flag smallint default 0,
-  cashflow_threshold decimal(13, 10),
+  cash_flow_comparison_flag smallint default 0,
+  cash_flow_detail_id smallint,
   primary key(prd_offering_id),
   foreign key(principal_glcode_id)
     references gl_code(glcode_id)
@@ -1326,6 +1335,10 @@ create table loan_offering (
       on update no action,
   foreign key(variable_installment_details_id)
     references variable_installment_details(id)
+      on delete no action
+      on update no action,
+  foreign key(cash_flow_detail_id)
+    references cash_flow_detail(id)
       on delete no action
       on update no action
 )
@@ -4634,16 +4647,18 @@ create table BATCH_STEP_EXECUTION_SEQ (id bigint not null) engine=myisam;
 create table BATCH_JOB_EXECUTION_SEQ (id bigint not null) engine=myisam;
 
 create table BATCH_JOB_SEQ (id bigint not null) engine=myisam;
-create table cash_flow  (
-  id int auto_increment not null primary key,
-  capital decimal(13, 10),
-  liability decimal(13, 10)
-) engine=innodb character set utf8;
+
 create table prd_offering_question_group(
     prd_offering_id smallint not null,
     question_group_id integer not null,
     foreign key (prd_offering_id) references prd_offering(prd_offering_id),
     foreign key (question_group_id) references question_group(id)
+) engine=innodb character set utf8;
+
+create table cash_flow  (
+  id int auto_increment not null primary key,
+  capital decimal(21, 4),
+  liability decimal(21, 4)
 ) engine=innodb character set utf8;
 
 create table monthly_cash_flow_details(

@@ -45,7 +45,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.struts.uihelpers.CashflowDataHtmlBean;
+import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
@@ -215,17 +215,17 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     private CashFlowForm cashFlowForm;
 
-    private List<CashflowDataHtmlBean> cashflowDataHtmlBeans;
+    private List<CashFlowDataHtmlBean> cashflowDataHtmlBeans;
 
     private String scheduleViewDate;
 
     private Money loanAmountValue;
 
-    public List<CashflowDataHtmlBean> getCashflowDataHtmlBeans(){
+    public List<CashFlowDataHtmlBean> getCashflowDataHtmlBeans(){
         return cashflowDataHtmlBeans;
     }
 
-    public void setCashflowDataHtmlBeans(List<CashflowDataHtmlBean> cashflowDataHtmlBeans) {
+    public void setCashflowDataHtmlBeans(List<CashFlowDataHtmlBean> cashflowDataHtmlBeans) {
         this.cashflowDataHtmlBeans = cashflowDataHtmlBeans;
     }
 

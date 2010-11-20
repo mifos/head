@@ -121,7 +121,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     private final Set<NoOfInstallSameForAllLoanBO> noOfInstallSameForAllLoan;
 
     private Short cashFlowCheckEnabled;
-    private Double cashFlowCheckThreshold;
+    private CashFlowDetail cashFlowDetail;
 
     public static LoanOfferingBO createNew(Integer userId, String globalProductId, String name, String shortName, String description, ProductCategoryBO productCategory,
             DateTime startDate, DateTime endDate, PrdApplicableMasterEntity applicableToEntity, MifosCurrency currency, InterestTypesEntity interestTypeEntity, Double minRate,
@@ -478,15 +478,6 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public Short getCashFlowCheckEnabled(){
         return cashFlowCheckEnabled;
     }
-
-    public void setCashFlowCheckThreshold (Double threshold) {
-        this.cashFlowCheckThreshold = threshold;
-    }
-
-    public Double getCashFlowCheckThreshold () {
-        return cashFlowCheckThreshold;
-    }
-
 
     public GracePeriodTypeEntity getGracePeriodType() {
         return gracePeriodType;
@@ -1512,6 +1503,14 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     public void setVariableInstallmentDetails(VariableInstallmentDetailsBO variableInstallmentDetails) {
         this.variableInstallmentDetails = variableInstallmentDetails;
+    }
+
+    public CashFlowDetail getCashFlowDetail() {
+        return cashFlowDetail;
+    }
+
+    public void setCashFlowDetail(CashFlowDetail cashFlowDetail) {
+        this.cashFlowDetail = cashFlowDetail;
     }
 
     public Short getDefaultNumOfEligibleInstallmentsSameForAllLoan() {

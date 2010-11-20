@@ -1099,7 +1099,7 @@
   <loan_cash_flow/>
   <loan_counter/>
   <loan_fee_schedule/>
-  <loan_offering prd_offering_id="1" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="5.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="17" interest_glcode_id="40" interest_waiver_flag="0" variable_installment_flag="0" cashflow_comparison_flag="0"/>
+  <loan_offering prd_offering_id="1" interest_type_id="1" graceperiod_type_id="1" max_interest_rate="30.0000000000" min_interest_rate="3.0000000000" def_interest_rate="5.0000000000" loan_counter_flag="0" int_ded_disbursement_flag="0" prin_due_last_inst_flag="0" grace_period_duration="0" principal_glcode_id="17" interest_glcode_id="40" interest_waiver_flag="0" variable_installment_flag="0" cash_flow_comparison_flag="0"/>
   <loan_offering_fund/>
   <loan_penalty/>
   <loan_perf_history id="1" account_id="3" no_of_payments="0"/>

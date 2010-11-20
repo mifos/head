@@ -160,8 +160,8 @@ public class AccountingRules {
         return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
     }
 
-    public static Double getCashFlowWarningThreshold() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.CASHFLOW_WARNING_THRESHOLD);
+    public static Double getCashFlowThreshold() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.CASHFLOW_THRESHOLD);
     }
 
 

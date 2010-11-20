@@ -36,7 +36,7 @@ public class EditLoanProductPage extends MifosPage {
     String maxInstalmentGapTextBox = "maximumGapBetweenInstallments";
     String minInstalmentAmountTextBox = "minimumInstallmentAmount";
     String cashFlowCheckbox = "cashFlowValidation";
-    String cashFlowThresholdTextBox = "cashFlowWarningThreshold";
+    String cashFlowThresholdTextBox = "cashFlowThreshold";
     public EditLoanProductPage(Selenium selenium) {
         super(selenium);
     }

@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.accounts.loan.struts.uihelpers.CashflowDataHtmlBean;
+import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 
@@ -42,13 +42,13 @@ public class InstallmentAndCashflowComparisionUtility {
         return installments;
     }
 
-    public List<CashflowDataHtmlBean> getCashflowDataHtmlBeans(){
-         List<CashflowDataHtmlBean> cashflowDataHtmlBeans = null;
+    public List<CashFlowDataHtmlBean> getCashflowDataHtmlBeans(){
+         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = null;
 
          if(getMonthlyCashFlows() != null && getMonthlyCashFlows().size() > 0) {
-             cashflowDataHtmlBeans = new ArrayList<CashflowDataHtmlBean>();
+             cashflowDataHtmlBeans = new ArrayList<CashFlowDataHtmlBean>();
              for(MonthlyCashFlowForm monthlyCashflowform : getMonthlyCashFlows()) {
-                 CashflowDataHtmlBean cashflowDataHtmlBean = new CashflowDataHtmlBean();
+                 CashFlowDataHtmlBean cashflowDataHtmlBean = new CashFlowDataHtmlBean();
                  cashflowDataHtmlBean.setMonth(monthlyCashflowform.getMonth());
                  cashflowDataHtmlBean.setYear(String.valueOf(monthlyCashflowform.getYear()));
                  cashflowDataHtmlBean.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow()));

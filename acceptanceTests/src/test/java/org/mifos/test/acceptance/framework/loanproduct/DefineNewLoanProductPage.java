@@ -36,7 +36,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
     String previewButton = "createLoanProduct.button.preview";
     String minInstalmentAmountTextBox = "minimumInstallmentAmount";
     String cashFlowCheckbox = "cashFlowValidation";
-    String cashFlowThresholdTextBox = "cashFlowWarningThreshold";
+    String cashFlowThresholdTextBox = "cashFlowThreshold";
 
     public DefineNewLoanProductPage() {
         super();
