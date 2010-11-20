@@ -83,11 +83,11 @@ public abstract class Persistence {
     }
 
     public void rollbackTransaction() {
-        getHibernateUtil().rollbackTransaction();
+        StaticHibernateUtil.rollbackTransaction();
     }
 
     public void commitTransaction() {
-        getHibernateUtil().commitTransaction();
+        StaticHibernateUtil.commitTransaction();
     }
 
     /**
