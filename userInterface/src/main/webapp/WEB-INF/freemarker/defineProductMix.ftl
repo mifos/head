@@ -122,10 +122,11 @@ function selectAllOptions(outSel)
 				<div class="span-20 last margin20topbottom">
 	          		<div class="span-20">
 	          			<span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineProductmix.removenotallowedproducts"/]&nbsp;:&nbsp;</span>
-	            		<span class="span-12 ">
+	            		<span class="span-12 " style="width:auto">
 	                		<span class="span-9">[@spring.message "manageProducts.defineProductmix.clickonaproductintherightboxtoselect.ThenclickRemove"/]</span>
+	                		<br/>
 	                    	<div class="margin10topbottomrgin">
-                                <span class="span-4">
+                                <span class="span-4" style="width:auto">
                                     [@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]
                                 </span>
                                 <span class="span-3 width80px">
@@ -134,7 +135,7 @@ function selectAllOptions(outSel)
                                     <br /><br />
                                     <input class="buttn2 width70px" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.allowed, this.form.notAllowed);"/>
                                 </span>
-                                <span class="span-4">
+                                <span class="span-4" style="width:auto">
                                     [@spring.formMultiSelect "formBean.allowed", formBean.allowedProductOptions, "class=listSize" /]
                                 </span>
                             </div>
