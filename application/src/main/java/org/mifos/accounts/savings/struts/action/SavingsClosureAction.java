@@ -92,7 +92,7 @@ public class SavingsClosureAction extends BaseAction {
         new SavingsPersistence().initialize(savings);
 
         LocalDate accountCloseDate = new LocalDate();
-        SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, accountCloseDate, uc.getLocaleId());
+        SavingsAccountClosureDto closureDetails = this.savingsServiceFacade.retrieveClosingDetails(savingsId, accountCloseDate);
 
         AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
         List<PaymentTypeEntity> acceptedPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());

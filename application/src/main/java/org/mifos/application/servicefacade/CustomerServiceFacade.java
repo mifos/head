@@ -38,7 +38,7 @@ import org.mifos.security.util.UserContext;
 
 public interface CustomerServiceFacade {
 
-    OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy(UserContext userContext);
+    OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy();
 
     CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation, UserContext userContext);
 

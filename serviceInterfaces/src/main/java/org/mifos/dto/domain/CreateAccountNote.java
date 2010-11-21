@@ -20,23 +20,26 @@
 package org.mifos.dto.domain;
 
 import java.io.Serializable;
-import java.util.Date;
+
+import org.joda.time.LocalDate;
 
 @SuppressWarnings("PMD")
 @edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
-public class CustomerNoteDto implements Serializable {
+public class CreateAccountNote implements Serializable {
 
-    private final Date commentDate;
+    private final LocalDate commentDate;
     private final String comment;
-    private final String personnelName;
+    private final Integer createdById;
+    private final Integer accountId;
 
-    public CustomerNoteDto(final Date commentDate, final String comment, final String personnelName) {
+    public CreateAccountNote(final LocalDate commentDate, final String comment, final Integer createdById, Integer accountId) {
         this.commentDate = commentDate;
         this.comment = comment;
-        this.personnelName = personnelName;
+        this.createdById = createdById;
+        this.accountId = accountId;
     }
 
-    public Date getCommentDate() {
+    public LocalDate getCommentDate() {
         return this.commentDate;
     }
 
@@ -44,7 +47,11 @@ public class CustomerNoteDto implements Serializable {
         return this.comment;
     }
 
-    public String getPersonnelName() {
-        return this.personnelName;
+    public Integer getCreatedById() {
+        return this.createdById;
+    }
+
+    public Integer getAccountId() {
+        return this.accountId;
     }
 }

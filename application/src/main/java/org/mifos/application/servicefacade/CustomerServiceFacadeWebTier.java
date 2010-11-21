@@ -103,9 +103,11 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
@@ -123,17 +125,26 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy(UserContext userContext) {
+    public OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy() {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         OfficeDto office = officeDao.findOfficeDtoById(userContext.getBranchId());
         List<OfficeBO> branchParents = officeDao.findBranchsOnlyWithParentsMatching(office.getSearchId());
         List<OfficeDetailsDto> levels = officeDao.findActiveOfficeLevels();
 
-        List<OfficeHierarchyDto> branchOnlyOfficeHierarchy = OfficeBO
-                .convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(branchParents);
+        List<OfficeHierarchyDto> branchOnlyOfficeHierarchy = OfficeBO.convertToBranchOnlyHierarchyWithParentsOfficeHierarchy(branchParents);
 
-        return new OnlyBranchOfficeHierarchyDto(userContext.getPreferredLocale(), levels, office.getSearchId(),
-                branchOnlyOfficeHierarchy);
+        return new OnlyBranchOfficeHierarchyDto(userContext.getPreferredLocale(), levels, office.getSearchId(), branchOnlyOfficeHierarchy);
+    }
+
+    private UserContext toUserContext(MifosUser user) {
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+        return userContext;
     }
 
     @Override

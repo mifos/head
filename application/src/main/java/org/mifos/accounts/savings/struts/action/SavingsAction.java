@@ -323,11 +323,10 @@ public class SavingsAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::edit()");
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         SavingsActionForm actionForm = (SavingsActionForm) form;
 
-        List<CustomFieldDto> customFields = this.savingsServiceFacade.retrieveCustomFieldsForEdit(actionForm.getGlobalAccountNum(), uc.getLocaleId());
+        List<CustomFieldDto> customFields = this.savingsServiceFacade.retrieveCustomFieldsForEdit(actionForm.getGlobalAccountNum());
 
         actionForm.setRecommendedAmount(savings.getRecommendedAmount().toString());
         actionForm.setAccountCustomFieldSet(customFields);
@@ -376,12 +375,10 @@ public class SavingsAction extends BaseAction {
     public ActionForward getRecentActivity(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getRecentActivity()");
-
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
         Long savingsId = savings.getAccountId().longValue();
-        List<SavingsRecentActivityDto> recentActivity = this.savingsServiceFacade.retrieveRecentSavingsActivities(savingsId, uc.getLocaleId());
+        List<SavingsRecentActivityDto> recentActivity = this.savingsServiceFacade.retrieveRecentSavingsActivities(savingsId);
 
         SessionUtils.setCollectionAttribute(SavingsConstants.RECENTY_ACTIVITY_LIST, recentActivity, request);
         return mapping.findForward("getRecentActivity_success");
@@ -391,10 +388,9 @@ public class SavingsAction extends BaseAction {
     public ActionForward getTransactionHistory(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getRecentActivity()");
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         String globalAccountNum = request.getParameter("globalAccountNum");
 
-        List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = this.savingsServiceFacade.retrieveTransactionHistory(globalAccountNum, uc.getLocaleId());
+        List<SavingsTransactionHistoryDto> savingsTransactionHistoryViewList = this.savingsServiceFacade.retrieveTransactionHistory(globalAccountNum);
 
         SessionUtils.setCollectionAttribute(SavingsConstants.TRXN_HISTORY_LIST, savingsTransactionHistoryViewList, request);
         return mapping.findForward("getTransactionHistory_success");
@@ -404,10 +400,9 @@ public class SavingsAction extends BaseAction {
     public ActionForward getStatusHistory(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In SavingsAction::getRecentActivity()");
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         String globalAccountNum = request.getParameter("globalAccountNum");
 
-        List<SavingsStatusChangeHistoryDto> savingsStatusHistoryDtoList = this.savingsServiceFacade.retrieveStatusChangeHistory(globalAccountNum, uc.getLocaleId());
+        List<SavingsStatusChangeHistoryDto> savingsStatusHistoryDtoList = this.savingsServiceFacade.retrieveStatusChangeHistory(globalAccountNum);
 
         SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
         savingsService.initialize(savings.getAccountStatusChangeHistory());
@@ -467,7 +462,7 @@ public class SavingsAction extends BaseAction {
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
 
-        SavingsAccountDepositDueDto depositDueDetails = this.savingsServiceFacade.retrieveDepositDueDetails(savingsSystemId, uc.getLocaleId());
+        SavingsAccountDepositDueDto depositDueDetails = this.savingsServiceFacade.retrieveDepositDueDetails(savingsSystemId);
 
         return mapping.findForward("depositduedetails_success");
     }

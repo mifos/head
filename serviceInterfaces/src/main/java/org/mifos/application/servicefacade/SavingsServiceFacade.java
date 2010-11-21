@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.dto.domain.AuditLogDto;
+import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -54,13 +55,13 @@ public interface SavingsServiceFacade {
     void withdraw(SavingsWithdrawalDto savingsWithdrawal);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
-    SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId, Short localeId);
+    SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_ADJUST_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CLOSE_SAVINGS_ACCOUNT')")
-    SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate, Short localeId);
+    SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CLOSE_SAVINGS_ACCOUNT')")
     void closeSavingsAccount(Long savingsId, String notes, SavingsWithdrawalDto closeAccount);
@@ -69,7 +70,7 @@ public interface SavingsServiceFacade {
     void postInterestForLastPostingPeriod(LocalDate dateOfBatchJob);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MAKE_SAVINGS_DEPOSIT_OR_WITHDRAWAL')")
-    DepositWithdrawalReferenceDto retrieveDepositWithdrawalReferenceData(Long savingsId, Integer customerId, Short localeId);
+    DepositWithdrawalReferenceDto retrieveDepositWithdrawalReferenceData(Long savingsId, Integer customerId);
 
     @PreAuthorize("isFullyAuthenticated()")
     List<PrdOfferingDto> retrieveApplicableSavingsProductsForCustomer(Integer customerId);
@@ -81,25 +82,25 @@ public interface SavingsServiceFacade {
     Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation);
 
     @PreAuthorize("isFullyAuthenticated()")
-    SavingsAccountStatusDto retrieveAccountStatuses(Long savingsId, Short localeId);
+    SavingsAccountStatusDto retrieveAccountStatuses(Long savingsId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus, Short localeId);
+    void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus);
 
     @PreAuthorize("isFullyAuthenticated()")
-    SavingsAccountDepositDueDto retrieveDepositDueDetails(String savingsSystemId, Short localeId);
+    SavingsAccountDepositDueDto retrieveDepositDueDetails(String savingsSystemId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    List<SavingsRecentActivityDto> retrieveRecentSavingsActivities(Long savingsId, Short localeId);
+    List<SavingsRecentActivityDto> retrieveRecentSavingsActivities(Long savingsId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    List<SavingsTransactionHistoryDto> retrieveTransactionHistory(String globalAccountNum, Short localeId);
+    List<SavingsTransactionHistoryDto> retrieveTransactionHistory(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated()")
-    List<SavingsStatusChangeHistoryDto> retrieveStatusChangeHistory(String globalAccountNum, Short localeId);
+    List<SavingsStatusChangeHistoryDto> retrieveStatusChangeHistory(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_UPDATE_SAVINGS_ACCOUNT')")
-    List<CustomFieldDto> retrieveCustomFieldsForEdit(String globalAccountNum, Short localeId);
+    List<CustomFieldDto> retrieveCustomFieldsForEdit(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_UPDATE_SAVINGS_ACCOUNT')")
     void updateSavingsAccountDetails(Long savingsId, String recommendedAmount, List<CustomFieldDto> accountCustomFieldSet);
@@ -120,5 +121,8 @@ public interface SavingsServiceFacade {
     NotesSearchResultsDto retrievePagedNotesDto(NoteSearchDto noteSearch);
 
     @PreAuthorize("isFullyAuthenticated()")
-    SavingsAccountDetailDto retrieveSavingsAccountNotes(Long savingsId, Short localeId);
+    SavingsAccountDetailDto retrieveSavingsAccountNotes(Long savingsId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void addNote(CreateAccountNote accountNote);
 }

@@ -91,6 +91,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AuditLogDto;
+import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.DueOnDateDto;
 import org.mifos.dto.domain.NoteSearchDto;
@@ -436,16 +437,19 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         return interestCalculationPeriodCalculator;
     }
 
-    @Override
-    public SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate, Short localeId) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
+    private UserContext toUserContext(MifosUser user) {
         UserContext userContext = new UserContext();
         userContext.setBranchId(user.getBranchId());
         userContext.setId(Short.valueOf((short) user.getUserId()));
         userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+        return userContext;
+    }
+
+    @Override
+    public SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
@@ -494,11 +498,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void closeSavingsAccount(Long savingsId, String notes, SavingsWithdrawalDto closeAccountDto) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
         savingsAccount.updateDetails(userContext);
@@ -564,15 +564,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public DepositWithdrawalReferenceDto retrieveDepositWithdrawalReferenceData(Long savingsId, Integer customerId, Short localeId) {
+    public DepositWithdrawalReferenceDto retrieveDepositWithdrawalReferenceData(Long savingsId, Integer customerId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+        UserContext userContext = toUserContext(user);
 
         try {
             SavingsBO savingsAccount = savingsDao.findById(savingsId);
@@ -630,15 +625,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId, Short localeId) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+    public SavingsAdjustmentReferenceDto retrieveAdjustmentReferenceData(Long savingsId) {
 
         SavingsBO savings = savingsDao.findById(savingsId);
 
@@ -750,7 +737,11 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public SavingsAccountStatusDto retrieveAccountStatuses(Long savingsId, Short localeId) {
+    public SavingsAccountStatusDto retrieveAccountStatuses(Long savingsId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
 
         try {
@@ -759,7 +750,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getSavingsStatusList(savingsAccount.getAccountState());
             for (AccountStateEntity accountState : statusList) {
-                accountState.setLocaleId(localeId);
+                accountState.setLocaleId(userContext.getLocaleId());
                 savingsStatesList.add(new ListElement(accountState.getId().intValue(), accountState.getName()));
             }
 
@@ -770,15 +761,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus, Short localeId) {
+    public void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(updateStatus.getSavingsId());
         savingsAccount.updateDetails(userContext);
@@ -803,7 +789,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public SavingsAccountDepositDueDto retrieveDepositDueDetails(String globalAccountNum, Short localeId) {
+    public SavingsAccountDepositDueDto retrieveDepositDueDetails(String globalAccountNum) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
         SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
 
         List<DueOnDateDto> previousDueDates = new ArrayList<DueOnDateDto>();
@@ -827,21 +816,16 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
         DueOnDateDto nextdueDate = new DueOnDateDto(nextDueDate, MoneyUtils.currencyRound(totalDue).toString());
 
         AccountStateEntity accountStateEntity = savingsAccount.getAccountState();
-        accountStateEntity.setLocaleId(localeId);
+        accountStateEntity.setLocaleId(userContext.getLocaleId());
 
         return new SavingsAccountDepositDueDto(nextdueDate, previousDueDates, accountStateEntity.getId(), accountStateEntity.getName());
     }
 
     @Override
-    public List<SavingsRecentActivityDto> retrieveRecentSavingsActivities(Long savingsId, Short localeId) {
+    public List<SavingsRecentActivityDto> retrieveRecentSavingsActivities(Long savingsId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
         savingsAccount.updateDetails(userContext);
@@ -850,15 +834,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public List<SavingsTransactionHistoryDto> retrieveTransactionHistory(String globalAccountNum, Short localeId) {
+    public List<SavingsTransactionHistoryDto> retrieveTransactionHistory(String globalAccountNum) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
         savingsAccount.updateDetails(userContext);
@@ -919,14 +898,9 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public List<SavingsStatusChangeHistoryDto> retrieveStatusChangeHistory(String globalAccountNum, Short localeId) {
+    public List<SavingsStatusChangeHistoryDto> retrieveStatusChangeHistory(String globalAccountNum) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
         savingsAccount.updateDetails(userContext);
@@ -941,15 +915,10 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public List<CustomFieldDto> retrieveCustomFieldsForEdit(String globalAccountNum, Short localeId) {
+    public List<CustomFieldDto> retrieveCustomFieldsForEdit(String globalAccountNum) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findBySystemId(globalAccountNum);
         savingsAccount.updateDetails(userContext);
@@ -989,11 +958,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void updateSavingsAccountDetails(Long savingsId, String recommendedOrMandatoryAmount, List<CustomFieldDto> customFields) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
         savingsAccount.updateDetails(userContext);
@@ -1136,18 +1101,40 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public SavingsAccountDetailDto retrieveSavingsAccountNotes(Long savingsId, Short localeId) {
+    public SavingsAccountDetailDto retrieveSavingsAccountNotes(Long savingsId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLocaleId(localeId);
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
         savingsAccount.updateDetails(userContext);
         return savingsAccount.toDto();
+    }
+
+    @Override
+    public void addNote(CreateAccountNote accountNote) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(accountNote.getCreatedById().shortValue());
+        SavingsBO savingsAccount = this.savingsDao.findById(accountNote.getAccountId().longValue());
+
+        AccountNotesEntity accountNotes = new AccountNotesEntity(new java.sql.Date(accountNote.getCommentDate().toDateMidnight().toDate().getTime()),
+                accountNote.getComment(), createdBy, savingsAccount);
+
+        try {
+            this.transactionHelper.startTransaction();
+
+            savingsAccount.updateDetails(userContext);
+            savingsAccount.addAccountNotes(accountNotes);
+            this.savingsDao.save(savingsAccount);
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
     }
 }

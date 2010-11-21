@@ -89,7 +89,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         savings = this.savingsDao.findById(savingsId);
         savings.setUserContext(uc);
 
-        SavingsAdjustmentReferenceDto savingsAdjustmentDto = this.savingsServiceFacade.retrieveAdjustmentReferenceData(savingsId, uc.getLocaleId());
+        SavingsAdjustmentReferenceDto savingsAdjustmentDto = this.savingsServiceFacade.retrieveAdjustmentReferenceData(savingsId);
 
         if (savingsAdjustmentDto.isDepositOrWithdrawal()) {
 

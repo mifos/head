@@ -106,7 +106,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         if (StringUtils.isNotBlank(actionForm.getCustomerId())) {
             customerId = Integer.valueOf(actionForm.getCustomerId());
         }
-        DepositWithdrawalReferenceDto depositWithdrawalReferenceDto = this.savingsServiceFacade.retrieveDepositWithdrawalReferenceData(savingsId, customerId, uc.getLocaleId());
+        DepositWithdrawalReferenceDto depositWithdrawalReferenceDto = this.savingsServiceFacade.retrieveDepositWithdrawalReferenceData(savingsId, customerId);
 
         savings = this.savingsDao.findById(savingsId);
         if (savings.isGroupModelWithIndividualAccountability()) {
@@ -148,7 +148,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
             if (StringUtils.isNotBlank(actionForm.getCustomerId())) {
                 customerId = Integer.valueOf(actionForm.getCustomerId());
             }
-            DepositWithdrawalReferenceDto depositWithdrawalReferenceDto = this.savingsServiceFacade.retrieveDepositWithdrawalReferenceData(savingsId, customerId, uc.getLocaleId());
+            DepositWithdrawalReferenceDto depositWithdrawalReferenceDto = this.savingsServiceFacade.retrieveDepositWithdrawalReferenceData(savingsId, customerId);
 
             Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
             // added for defect 1587 [start]

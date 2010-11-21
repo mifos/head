@@ -96,7 +96,7 @@ public class EditStatusAction extends BaseAction {
         } if (accountBO.isSavingsAccount()) {
 
             // NOTE - not using dto values at present but available when ui is refactored away from jsp
-            SavingsAccountStatusDto accountStatuses = this.savingsServiceFacade.retrieveAccountStatuses(accountId.longValue(), userContext.getLocaleId());
+            SavingsAccountStatusDto accountStatuses = this.savingsServiceFacade.retrieveAccountStatuses(accountId.longValue());
 
             SavingsBO savingsAccount = this.savingsDao.findById(accountId.longValue());
 
@@ -195,7 +195,7 @@ public class EditStatusAction extends BaseAction {
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {
             SavingsAccountUpdateStatus updateStatus = new SavingsAccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
-            this.savingsServiceFacade.updateSavingsAccountStatus(updateStatus, userContext.getLocaleId());
+            this.savingsServiceFacade.updateSavingsAccountStatus(updateStatus);
             return mapping.findForward(ActionForwards.savings_details_page.toString());
         }
 
