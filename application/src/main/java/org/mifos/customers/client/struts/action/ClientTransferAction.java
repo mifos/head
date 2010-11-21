@@ -131,7 +131,7 @@ public class ClientTransferAction extends BaseAction {
         ClientTransferActionForm actionForm = (ClientTransferActionForm) form;
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        ClientBO client = this.customerServiceFacade.transferClientToGroup(getUserContext(request), actionForm.getParentGroupIdValue(), clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
+        ClientBO client = this.customerServiceFacade.transferClientToGroup(actionForm.getParentGroupIdValue(), clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
         return mapping.findForward(ActionForwards.update_success.toString());

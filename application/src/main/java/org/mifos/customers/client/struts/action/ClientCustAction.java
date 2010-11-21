@@ -44,7 +44,6 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.ClientDetailDto;
 import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
 import org.mifos.application.servicefacade.ClientFormCreationDto;
@@ -160,8 +159,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Short groupFlag = actionForm.getGroupFlagValue();
         String parentGroupId = actionForm.getParentGroupId();
 
-        UserContext userContext = getUserContext(request);
-        ClientFormCreationDto clientFormCreationDto = this.customerServiceFacade.retrieveClientFormCreationData(userContext, groupFlag, officeId, parentGroupId);
+        ClientFormCreationDto clientFormCreationDto = this.customerServiceFacade.retrieveClientFormCreationData(groupFlag, officeId, parentGroupId);
 
         if (clientFormCreationDto.getFormedByPersonnelId() != null) {
             actionForm.setFormedByPersonnel(clientFormCreationDto.getFormedByPersonnelId().toString());
@@ -233,8 +231,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward familyInfoNext(ActionMapping mapping, ActionForm form,
-                                        @SuppressWarnings("unused") HttpServletRequest request,
+    public ActionForward familyInfoNext(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                                         @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.setFamilyDateOfBirth();
@@ -452,13 +449,11 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                                 @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        UserContext userContext = getUserContext(request);
-
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         List<SavingsDetailDto> allowedSavingProducts = getSavingsOfferingsFromSession(request);
 
         List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
-        CustomerDetailsDto clientDetails = this.customerServiceFacade.createNewClient(actionForm, meeting, userContext, allowedSavingProducts, customerCustomFields);
+        CustomerDetailsDto clientDetails = this.customerServiceFacade.createNewClient(actionForm, meeting, allowedSavingProducts, customerCustomFields);
 
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());
@@ -539,11 +534,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.clearMostButNotAllFieldsOnActionForm();
-        UserContext userContext = getUserContext(request);
         ClientBO clientFromSession = getClientFromSession(request);
         final String clientSystemId = clientFromSession.getGlobalCustNum();
 
-        ClientPersonalInfoDto personalInfo = this.customerServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId, userContext);
+        ClientPersonalInfoDto personalInfo = this.customerServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId);
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, personalInfo.getClientDropdowns().getSalutations(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, personalInfo.getClientDropdowns().getGenders(), request);
@@ -593,13 +587,12 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                                                  @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
 
-        String governmentId = actionForm.getGovernmentId();
+//        String governmentId = actionForm.getGovernmentId();
         String dateOfBirth = actionForm.getDateOfBirth();
-        String clientName = actionForm.getClientName().getDisplayName();
+//        String clientName = actionForm.getClientName().getDisplayName();
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(dateOfBirth)));
 
-        ClientDetailDto clientDetailDto = new ClientDetailDto(governmentId, dateOfBirth, clientName);
-        ClientRulesDto clientRules = this.customerServiceFacade.retrieveClientDetailsForPreviewingEditOfPersonalInfo(clientDetailDto);
+        ClientRulesDto clientRules = this.customerServiceFacade.retrieveClientDetailsForPreviewingEditOfPersonalInfo();
 
         boolean isFamilyDetailsRequired = clientRules.isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
@@ -652,9 +645,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.clearMostButNotAllFieldsOnActionForm();
         ClientBO clientFromSession = getClientFromSession(request);
-        UserContext userContext = getUserContext(request);
 
-        ClientFamilyInfoDto clientFamilyInfo = this.customerServiceFacade.retrieveFamilyInfoForEdit(clientFromSession.getGlobalCustNum(), userContext);
+        ClientFamilyInfoDto clientFamilyInfo = this.customerServiceFacade.retrieveFamilyInfoForEdit(clientFromSession.getGlobalCustNum());
 
         SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, clientFamilyInfo.getClientDropdowns().getLivingStatus(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFamilyInfo.getClientDropdowns().getGenders(), request);
@@ -740,11 +732,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                                           @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
-        UserContext userContext = getUserContext(request);
         ClientBO clientInSession = getClientFromSession(request);
 
         Integer customerId = clientInSession.getCustomerId();
-        this.customerServiceFacade.updateFamilyInfo(customerId, userContext, clientInSession.getVersionNo(), actionForm);
+        this.customerServiceFacade.updateFamilyInfo(customerId, clientInSession.getVersionNo(), actionForm);
 
         actionForm.setFamilyDateOfBirth();
         actionForm.constructFamilyDetails();
@@ -759,12 +750,11 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         actionForm.clearMostButNotAllFieldsOnActionForm();
-        UserContext userContext = getUserContext(request);
         ClientBO clientFromSession = getClientFromSession(request);
 
         String clientSystemId = clientFromSession.getGlobalCustNum();
 
-        ClientMfiInfoDto mfiInfoDto = this.customerServiceFacade.retrieveMfiInfoForEdit(clientSystemId, userContext);
+        ClientMfiInfoDto mfiInfoDto = this.customerServiceFacade.retrieveMfiInfoForEdit(clientSystemId);
 
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, mfiInfoDto.getLoanOfficersList(), request);
@@ -807,14 +797,13 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     public ActionForward updateMfiInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                                        @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        UserContext userContext = getUserContext(request);
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         ClientBO clientInSession = getClientFromSession(request);
 
         Integer clientId = clientInSession.getCustomerId();
         Integer oldVersionNumber = clientInSession.getVersionNo();
 
-        this.customerServiceFacade.updateClientMfiInfo(clientId, oldVersionNumber, userContext, actionForm);
+        this.customerServiceFacade.updateClientMfiInfo(clientId, oldVersionNumber, actionForm);
 
         return mapping.findForward(ActionForwards.updateMfiInfo_success.toString());
     }
@@ -833,23 +822,20 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         return (List<SavingsDetailDto>) SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
     }
 
-    @SuppressWarnings({"unchecked"})
     private boolean isSpouseFatherInformationMandatory() {
         return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION);
     }
 
-    @SuppressWarnings({"unchecked"})
     private boolean isSpouseFatherInformationHidden() {
         return FieldConfig.getInstance().isFieldHidden("Client." + HiddenMandatoryFieldNamesConstants.SPOUSE_FATHER_INFORMATION);
     }
 
-    @SuppressWarnings({"unchecked"})
     private boolean isFamilyDetailsMandatory() {
         return FieldConfig.getInstance().isFieldManadatory("Client." + HiddenMandatoryFieldNamesConstants.FAMILY_DETAILS);
     }
 
     @Override
-    public ActionForward captureQuestionResponses(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward captureQuestionResponses(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "captureQuestionResponses");
         ActionErrors errors = createClientQuestionnaire.validateResponses(request, (ClientCustActionForm) form);
         if (errors != null && !errors.isEmpty()) {
@@ -860,7 +846,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     }
 
     @Override
-    public ActionForward editQuestionResponses(ActionMapping mapping, ActionForm form, HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward editQuestionResponses(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createClientQuestionnaire.editResponses(mapping, request, (ClientCustActionForm) form);
     }

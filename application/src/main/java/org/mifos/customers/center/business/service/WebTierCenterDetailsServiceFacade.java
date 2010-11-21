@@ -41,7 +41,9 @@ import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  *
@@ -55,8 +57,10 @@ public class WebTierCenterDetailsServiceFacade implements CenterDetailsServiceFa
     }
 
     @Override
-    public CenterInformationDto getCenterInformationDto(String globalCustNum, UserContext userContext)
-            throws ServiceException {
+    public CenterInformationDto getCenterInformationDto(String globalCustNum)throws ServiceException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         CenterBO center = customerDao.findCenterBySystemId(globalCustNum);
         if (center == null) {
@@ -97,8 +101,15 @@ public class WebTierCenterDetailsServiceFacade implements CenterDetailsServiceFa
                 customerSurveys, customFields);
     }
 
+    private UserContext toUserContext(MifosUser user) {
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+        return userContext;
+    }
+
     protected String localizedMessageLookup(String key) {
         return MessageLookup.getInstance().lookup(key);
     }
-
 }

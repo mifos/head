@@ -20,20 +20,15 @@
 
 package org.mifos.application.servicefacade;
 
-import java.util.Locale;
-
-import org.mifos.security.util.UserContext;
 
 public class GroupCreation {
 
     private final Short officeId;
     private final String parentSystemId;
-    private final UserContext userContext;
 
-    public GroupCreation(Short officeId, String parentSystemId, UserContext userContext) {
+    public GroupCreation(Short officeId, String parentSystemId) {
         this.officeId = officeId;
         this.parentSystemId = parentSystemId;
-        this.userContext = userContext;
     }
 
     public Short getOfficeId() {
@@ -42,21 +37,5 @@ public class GroupCreation {
 
     public String getParentSystemId() {
         return this.parentSystemId;
-    }
-
-    public UserContext getUserContext() {
-        return this.userContext;
-    }
-
-    public Locale getPreferredLocale() {
-        return this.userContext.getPreferredLocale();
-    }
-
-    public Short getUserId() {
-        return this.userContext.getId();
-    }
-
-    public Short getUserLevelId() {
-        return this.userContext.getLevelId();
     }
 }

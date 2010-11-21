@@ -139,9 +139,8 @@ public class EditCustomerStatusAction extends BaseAction {
 
         EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
         CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        UserContext userContext = getUserContext(request);
 
-        this.customerServiceFacade.updateCustomerStatus(customerBOInSession.getCustomerId(), customerBOInSession.getVersionNo(), editStatusActionForm.getFlagId(), editStatusActionForm.getNewStatusId(), editStatusActionForm.getNotes(), userContext);
+        this.customerServiceFacade.updateCustomerStatus(customerBOInSession.getCustomerId(), customerBOInSession.getVersionNo(), editStatusActionForm.getFlagId(), editStatusActionForm.getNewStatusId(), editStatusActionForm.getNotes());
 
         createClientQuestionnaire.saveResponses(request, editStatusActionForm, customerBOInSession.getCustomerId());
 

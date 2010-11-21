@@ -24,7 +24,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
@@ -42,7 +41,6 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.center.business.service.CenterBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.exceptions.CustomerException;
@@ -124,10 +122,9 @@ public class GroupTransferAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
-        UserContext userContext = getUserContext(request);
         GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        GroupBO group = this.customerServiceFacade.transferGroupToBranch(groupInSession.getGlobalCustNum(), actionForm.getOfficeIdValue(), userContext, groupInSession.getVersionNo());
+        GroupBO group = this.customerServiceFacade.transferGroupToBranch(groupInSession.getGlobalCustNum(), actionForm.getOfficeIdValue(), groupInSession.getVersionNo());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
         return mapping.findForward(ActionForwards.update_success.toString());
@@ -162,9 +159,8 @@ public class GroupTransferAction extends BaseAction {
 
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
         GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        UserContext userContext = getUserContext(request);
 
-        GroupBO group = this.customerServiceFacade.transferGroupToCenter(groupInSession.getGlobalCustNum(), actionForm.getCenterSystemId(), userContext, groupInSession.getVersionNo());
+        GroupBO group = this.customerServiceFacade.transferGroupToCenter(groupInSession.getGlobalCustNum(), actionForm.getCenterSystemId(), groupInSession.getVersionNo());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
         return mapping.findForward(ActionForwards.update_success.toString());
@@ -177,7 +173,7 @@ public class GroupTransferAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadGrpMemberShip(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        doCleanUp(request.getSession(), form);
+        doCleanUp(form);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
 
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
@@ -293,7 +289,7 @@ public class GroupTransferAction extends BaseAction {
         }
     }
 
-    private void doCleanUp(HttpSession session, ActionForm form) {
+    private void doCleanUp(ActionForm form) {
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
         actionForm.setComment(null);
 
@@ -325,12 +321,8 @@ public class GroupTransferAction extends BaseAction {
         return new GroupBusinessService();
     }
 
-    private CenterBusinessService getCenterBusinessService() {
-        return new CenterBusinessService();
-    }
-
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse httpservletresponse) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         if (method.equalsIgnoreCase(Methods.removeGroupMemberShip.toString())) {
             return mapping.findForward(ActionForwards.loadGrpMemberShip_success.toString());

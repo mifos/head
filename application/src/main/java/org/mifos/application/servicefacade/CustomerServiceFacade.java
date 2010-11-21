@@ -40,37 +40,37 @@ public interface CustomerServiceFacade {
 
     OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy();
 
-    CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation, UserContext userContext);
+    CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation);
 
     GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation);
 
-    ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, Short groupFlag, Short officeId, String parentGroupId);
+    ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId);
 
-    CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
+    CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
 
-    CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
+    CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
 
-    CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, UserContext userContext, List<SavingsDetailDto> allowedSavingProducts, List<CustomerCustomFieldEntity> customFields) throws ApplicationException;
+    CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, List<SavingsDetailDto> allowedSavingProducts, List<CustomerCustomFieldEntity> customFields) throws ApplicationException;
 
-    CenterDto retrieveCenterDetailsForUpdate(Integer centerId, UserContext userContext);
+    CenterDto retrieveCenterDetailsForUpdate(Integer centerId);
 
-    CenterDto retrieveGroupDetailsForUpdate(String globalCustNum, UserContext userContext);
+    CenterDto retrieveGroupDetailsForUpdate(String globalCustNum);
 
-    void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException;
+    void updateCenter(CenterUpdate centerUpdate) throws ApplicationException;
 
-    void updateGroup(UserContext userContext, GroupUpdate groupUpdate) throws ApplicationException;
+    void updateGroup(GroupUpdate groupUpdate) throws ApplicationException;
 
-    CustomerSearch search(String searchString, UserContext userContext) throws ApplicationException;
+    CustomerSearch search(String searchString) throws ApplicationException;
 
     CenterHierarchySearchDto isCenterHierarchyConfigured(Short loggedInUserBranchId);
 
-    GroupBO transferGroupToCenter(String globalCustNum, String centerSystemId, UserContext userContext, Integer previousGroupVersionNo) throws ApplicationException;
+    GroupBO transferGroupToCenter(String globalCustNum, String centerSystemId, Integer previousGroupVersionNo) throws ApplicationException;
 
-    GroupBO transferGroupToBranch(String globalCustNum, Short officeIdValue, UserContext userContext, Integer previousGroupVersionNo) throws ApplicationException;
+    GroupBO transferGroupToBranch(String globalCustNum, Short officeIdValue, Integer previousGroupVersionNo) throws ApplicationException;
 
-    ClientBO transferClientToGroup(UserContext userContext, Integer parentGroupIdValue, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException;
+    ClientBO transferClientToGroup(Integer parentGroupIdValue, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException;
 
-    void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId, String notes, UserContext userContext) throws ApplicationException;
+    void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId, String notes) throws ApplicationException;
 
     boolean isGroupHierarchyRequired();
 
@@ -80,18 +80,18 @@ public interface CustomerServiceFacade {
 
     ProcessRulesDto previewClient(String governmentId, DateTime dateOfBirth, String clientName);
 
-    ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, UserContext userContext);
+    ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId);
 
-    ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo(ClientDetailDto clientDetailDto);
+    ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo();
 
     void updateClientPersonalInfo(UserContext userContext, Integer oldClientVersionNumber, Integer customerId,
             ClientCustActionForm actionForm) throws ApplicationException;
 
-    ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum, UserContext userContext);
+    ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum);
 
-    void updateFamilyInfo(Integer customerId, UserContext userContext, Integer versionNo, ClientCustActionForm actionForm) throws ApplicationException;
+    void updateFamilyInfo(Integer customerId, Integer versionNo, ClientCustActionForm actionForm) throws ApplicationException;
 
-    ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId, UserContext userContext);
+    ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId);
 
-    void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, UserContext userContext, ClientCustActionForm actionForm) throws ApplicationException;
+    void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, ClientCustActionForm actionForm) throws ApplicationException;
 }

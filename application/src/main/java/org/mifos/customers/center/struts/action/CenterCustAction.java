@@ -121,8 +121,7 @@ public class CenterCustAction extends CustAction {
         CenterCreation centerCreationDto = new CenterCreation(actionForm.getOfficeIdValue(), userContext.getId(),
                 userContext.getLevelId(), userContext.getPreferredLocale());
 
-        CenterFormCreationDto centerFormCreation = this.customerServiceFacade.retrieveCenterFormCreationData(
-                centerCreationDto, userContext);
+        CenterFormCreationDto centerFormCreation = this.customerServiceFacade.retrieveCenterFormCreationData(centerCreationDto);
 
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerFormCreation
                 .getCustomFieldViews(), request);
@@ -169,10 +168,9 @@ public class CenterCustAction extends CustAction {
 
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
-        UserContext userContext = getUserContext(request);
 
         List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
-        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(actionForm, meeting, userContext, customerCustomFields);
+        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(actionForm, meeting, customerCustomFields);
         createCenterQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
 
         actionForm.setCustomerId(centerDetails.getId().toString());
@@ -191,11 +189,10 @@ public class CenterCustAction extends CustAction {
         actionForm.clearActionFormFields();
         CenterBO center = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         final Integer centerId = center.getCustomerId();
-        UserContext userContext = getUserContext(request);
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, null, request);
 
-        CenterDto centerDto = this.customerServiceFacade.retrieveCenterDetailsForUpdate(centerId, userContext);
+        CenterDto centerDto = this.customerServiceFacade.retrieveCenterDetailsForUpdate(centerId);
 
         actionForm.setLoanOfficerId(centerDto.getLoanOfficerIdAsString());
         actionForm.setCustomerId(centerDto.getCustomerIdAsString());
@@ -209,10 +206,8 @@ public class CenterCustAction extends CustAction {
         actionForm.setCustomFields(centerDto.getCustomFieldViews());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerDto.getCenter(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerDto
-                .getActiveLoanOfficersForBranch(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerDto.getCustomFieldViews(),
-                request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerDto.getActiveLoanOfficersForBranch(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerDto.getCustomFieldViews(),request);
         SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, centerDto.getCustomerPositionViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, centerDto.getClientList(), request);
 
@@ -242,13 +237,12 @@ public class CenterCustAction extends CustAction {
 
         CenterBO centerFromSession = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
-        UserContext userContext = getUserContext(request);
 
         CenterUpdate centerUpdate = new CenterUpdate(centerFromSession.getCustomerId(), centerFromSession
                 .getVersionNo(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), actionForm
                 .getMfiJoiningDate(), actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 
-        this.customerServiceFacade.updateCenter(userContext, centerUpdate);
+        this.customerServiceFacade.updateCenter(centerUpdate);
 
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -281,8 +275,7 @@ public class CenterCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         // John W - UserContext passed because some status' need to be looked up for internationalisation
-        CenterInformationDto centerInformationDto = this.centerDetailsServiceFacade.getCenterInformationDto(
-                ((CenterCustActionForm) form).getGlobalCustNum(), getUserContext(request));
+        CenterInformationDto centerInformationDto = this.centerDetailsServiceFacade.getCenterInformationDto(((CenterCustActionForm) form).getGlobalCustNum());
         SessionUtils.removeThenSetAttribute("centerInformationDto", centerInformationDto, request);
 
         // John W - 'BusinessKey' attribute used by breadcrumb but is not in associated jsp
@@ -339,9 +332,8 @@ public class CenterCustAction extends CustAction {
         cleanUpSearch(request);
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
         String searchString = actionForm.getSearchString();
-        UserContext userContext = getUserContext(request);
 
-        CustomerSearch searchResult = this.customerServiceFacade.search(searchString, userContext);
+        CustomerSearch searchResult = this.customerServiceFacade.search(searchString);
 
         addSeachValues(searchString, searchResult.getOfficeId(), searchResult.getOfficeName(), request);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, searchResult.getSearchResult(), request);
@@ -359,9 +351,8 @@ public class CenterCustAction extends CustAction {
         ActionForward actionForward = super.search(mapping, form, request, response);
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
         String searchString = actionForm.getSearchString();
-        UserContext userContext = getUserContext(request);
 
-        CustomerSearch searchResult = this.customerServiceFacade.search(searchString, userContext);
+        CustomerSearch searchResult = this.customerServiceFacade.search(searchString);
 
         addSeachValues(searchString, searchResult.getOfficeId(), searchResult.getOfficeName(), request);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, searchResult.getSearchResult(), request);

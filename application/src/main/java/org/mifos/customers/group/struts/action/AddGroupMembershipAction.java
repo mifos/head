@@ -39,7 +39,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 
 public class AddGroupMembershipAction extends BaseAction {
 
@@ -83,10 +82,9 @@ public class AddGroupMembershipAction extends BaseAction {
         AddGroupMembershipForm actionForm = (AddGroupMembershipForm) form;
 
         Integer parentGroupId = actionForm.getParentGroupIdValue();
-        UserContext userContext = getUserContext(request);
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        ClientBO client = this.customerServiceFacade.transferClientToGroup(userContext, parentGroupId, clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
+        ClientBO client = this.customerServiceFacade.transferClientToGroup(parentGroupId, clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 

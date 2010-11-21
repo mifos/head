@@ -31,6 +31,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -52,7 +53,6 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
@@ -148,7 +148,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation, UserContext userContext) {
+    public CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         List<PersonnelDto> activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
 
@@ -166,6 +169,9 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     @Override
     public GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation) {
 
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
         CustomerBO parentCustomer = null;
         Short parentOfficeId = groupCreation.getOfficeId();
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.empty();
@@ -179,24 +185,21 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             parentOfficeId = parentCustomer.getOffice().getOfficeId();
 
-            centerCreation = new CenterCreation(parentOfficeId, groupCreation.getUserId(), groupCreation
-                    .getUserLevelId(), groupCreation.getPreferredLocale());
+            centerCreation = new CenterCreation(parentOfficeId, userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
 
             MeetingBO customerMeeting = parentCustomer.getCustomerMeetingValue();
             List<FeeBO> fees = customerDao.retrieveFeesApplicableToGroupsRefinedBy(customerMeeting);
-            applicableFees = CustomerApplicableFeesDto.toDto(fees, groupCreation.getUserContext());
+            applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
         } else {
-            centerCreation = new CenterCreation(groupCreation.getOfficeId(), groupCreation.getUserId(), groupCreation
-                    .getUserLevelId(), groupCreation.getPreferredLocale());
+            centerCreation = new CenterCreation(groupCreation.getOfficeId(), userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
             personnelList = this.personnelDao.findActiveLoanOfficersForOffice(centerCreation);
 
             List<FeeBO> fees = customerDao.retrieveFeesApplicableToGroups();
-            applicableFees = CustomerApplicableFeesDto.toDto(fees, groupCreation.getUserContext());
+            applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
         }
 
         List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, groupCreation
-                .getPreferredLocale());
+        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
         List<PersonnelDto> formedByPersonnel = customerDao
                 .findLoanOfficerThatFormedOffice(centerCreation.getOfficeId());
 
@@ -205,8 +208,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public ClientFormCreationDto retrieveClientFormCreationData(UserContext userContext, Short groupFlag,
-            Short officeId, String parentGroupId) {
+    public ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         List<PersonnelDto> personnelList = new ArrayList<PersonnelDto>();
         MeetingBO parentCustomerMeeting = null;
@@ -296,7 +301,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId, UserContext userContext) {
+    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         try {
             ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
@@ -321,14 +329,14 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting,
-            UserContext userContext, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException {
+    public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         try {
-            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext
-                    .getPreferredLocale());
-            DateTime mfiJoiningDate = CalendarUtils.getDateFromString(actionForm.getMfiJoiningDate(), userContext
-                    .getPreferredLocale());
+            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
+            DateTime mfiJoiningDate = CalendarUtils.getDateFromString(actionForm.getMfiJoiningDate(), userContext.getPreferredLocale());
 
             String centerName = actionForm.getDisplayName();
             String externalId = actionForm.getExternalId();
@@ -370,8 +378,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting,
-            UserContext userContext, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException {
+    public CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting,List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         GroupBO group;
 
@@ -436,9 +446,11 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting,
-            UserContext userContext, List<SavingsDetailDto> allowedSavingProducts,
+    public CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, List<SavingsDetailDto> allowedSavingProducts,
             List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         try {
             List<Short> selectedSavingProducts = actionForm.getSelectedOfferings();
@@ -665,7 +677,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CenterDto retrieveCenterDetailsForUpdate(Integer centerId, UserContext userContext) {
+    public CenterDto retrieveCenterDetailsForUpdate(Integer centerId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         CustomerBO center = customerDao.findCustomerById(centerId);
 
@@ -700,7 +715,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CenterDto retrieveGroupDetailsForUpdate(String globalCustNum, UserContext userContext) {
+    public CenterDto retrieveGroupDetailsForUpdate(String globalCustNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         List<PersonnelDto> activeLoanOfficersForBranch = new ArrayList<PersonnelDto>();
 
@@ -816,14 +834,17 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public void updateCenter(UserContext userContext, CenterUpdate centerUpdate) throws ApplicationException {
+    public void updateCenter(CenterUpdate centerUpdate) throws ApplicationException {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         customerService.updateCenter(userContext, centerUpdate);
     }
 
     @Override
-    public void updateGroup(UserContext userContext, GroupUpdate groupUpdate) throws ApplicationException {
-
+    public void updateGroup(GroupUpdate groupUpdate) throws ApplicationException {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
         customerService.updateGroup(userContext, groupUpdate);
     }
 
@@ -834,7 +855,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerSearch search(String searchString, UserContext userContext) throws ApplicationException {
+    public CustomerSearch search(String searchString) throws ApplicationException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         if (searchString == null) {
             throw new CustomerException(CenterConstants.NO_SEARCH_STRING);
@@ -850,9 +874,9 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         String officeId = userContext.getBranchId().toString();
         String officeName = this.officeDao.findOfficeDtoById(userContext.getBranchId()).getName();
 
-        PersonnelBO user = personnelDao.findPersonnelById(userContext.getId());
+        PersonnelBO loggedInUser = personnelDao.findPersonnelById(userContext.getId());
 
-        QueryResult searchResult = customerDao.search(normalisedSearchString, user);
+        QueryResult searchResult = customerDao.search(normalisedSearchString, loggedInUser);
 
         return new CustomerSearch(searchResult, searchString, officeId, officeName);
     }
@@ -867,8 +891,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public GroupBO transferGroupToCenter(String groupSystemId, String centerSystemId, UserContext userContext,
-            Integer previousGroupVersionNo) throws ApplicationException {
+    public GroupBO transferGroupToCenter(String groupSystemId, String centerSystemId, Integer previousGroupVersionNo) throws ApplicationException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         CenterBO transferToCenter = this.customerDao.findCenterBySystemId(centerSystemId);
         transferToCenter.setUserContext(userContext);
@@ -884,8 +910,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public GroupBO transferGroupToBranch(String globalCustNum, Short officeId, UserContext userContext,
-            Integer previousGroupVersionNo) throws ApplicationException {
+    public GroupBO transferGroupToBranch(String globalCustNum, Short officeId, Integer previousGroupVersionNo) throws ApplicationException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         OfficeBO transferToOffice = this.officeDao.findOfficeById(officeId);
         transferToOffice.setUserContext(userContext);
@@ -901,15 +929,18 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public ClientBO transferClientToGroup(UserContext userContext, Integer groupId, String clientGlobalCustNum,
-            Integer previousClientVersionNo) throws ApplicationException {
-        return this.customerService
-                .transferClientTo(userContext, groupId, clientGlobalCustNum, previousClientVersionNo);
+    public ClientBO transferClientToGroup(Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+        return this.customerService.transferClientTo(userContext, groupId, clientGlobalCustNum, previousClientVersionNo);
     }
 
     @Override
     public void updateCustomerStatus(Integer customerId, Integer previousCustomerVersionNo, String flagIdAsString,
-            String newStatusIdAsString, String notes, UserContext userContext) throws ApplicationException {
+            String newStatusIdAsString, String notes) throws ApplicationException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         Short flagId = null;
         Short newStatusId = null;
@@ -1011,7 +1042,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo(ClientDetailDto clientDetailDto) {
+    public ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo() {
         return retrieveClientRules();
     }
 
@@ -1047,8 +1078,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public ClientFamilyInfoDto retrieveFamilyInfoForEdit(String clientGlobalCustNum, UserContext userContext) {
+    public ClientFamilyInfoDto retrieveFamilyInfoForEdit(String clientGlobalCustNum) {
 
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
         try {
             ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
 
@@ -1106,8 +1139,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public void updateFamilyInfo(Integer customerId, UserContext userContext, Integer oldVersionNum,
-            ClientCustActionForm actionForm) throws ApplicationException {
+    public void updateFamilyInfo(Integer customerId, Integer oldVersionNum, ClientCustActionForm actionForm) throws ApplicationException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         ClientFamilyInfoUpdate clientFamilyInfoUpdate = new ClientFamilyInfoUpdate(customerId, oldVersionNum,
                 actionForm.getFamilyPrimaryKey(), actionForm.getFamilyNames(), actionForm.getFamilyDetails());
@@ -1116,7 +1151,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId, UserContext userContext) {
+    public ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
 
@@ -1142,8 +1180,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, UserContext userContext,
-            ClientCustActionForm actionForm) throws CustomerException {
+    public void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, ClientCustActionForm actionForm) throws CustomerException {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
         boolean trained = false;
         if (trainedValue(actionForm) != null && trainedValue(actionForm).equals(YesNoFlag.YES.getValue())) {

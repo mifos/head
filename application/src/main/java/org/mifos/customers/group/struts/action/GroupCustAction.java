@@ -148,8 +148,7 @@ public class GroupCustAction extends CustAction {
         actionForm.cleanForm();
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request.getSession());
 
-        UserContext userContext = getUserContext(request);
-        GroupCreation groupCreation = new GroupCreation(actionForm.getOfficeIdValue(), actionForm.getCenterSystemId(), userContext);
+        GroupCreation groupCreation = new GroupCreation(actionForm.getOfficeIdValue(), actionForm.getCenterSystemId());
 
         GroupFormCreationDto groupFormCreationDto = this.customerServiceFacade.retrieveGroupFormCreationData(groupCreation);
 
@@ -204,11 +203,10 @@ public class GroupCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
-        UserContext userContext = getUserContext(request);
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
         List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
-        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewGroup(actionForm, meeting, userContext, customerCustomFields);
+        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewGroup(actionForm, meeting, customerCustomFields);
         createGroupQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
         actionForm.setCustomerId(centerDetails.getId().toString());
         actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());
@@ -275,13 +273,12 @@ public class GroupCustAction extends CustAction {
 
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
         actionForm.cleanForm();
-        UserContext userContext = getUserContext(request);
 
         // FIXME - store group identifier (id, globalCustNum) instead of entire business object
         GroupBO group = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         logger.debug("Entering GroupCustAction manage method and customer id: " + group.getGlobalCustNum());
 
-        CenterDto groupDto = this.customerServiceFacade.retrieveGroupDetailsForUpdate(group.getGlobalCustNum(), userContext);
+        CenterDto groupDto = this.customerServiceFacade.retrieveGroupDetailsForUpdate(group.getGlobalCustNum());
 
         CustomerBO group1 = groupDto.getCenter();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group1, request);
@@ -334,7 +331,6 @@ public class GroupCustAction extends CustAction {
 
         GroupBO group = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
-        UserContext userContext = getUserContext(request);
 
         boolean trained = false;
         if (actionForm.getTrainedValue() != null && actionForm.getTrainedValue().equals(Short.valueOf("1"))) {
@@ -345,7 +341,7 @@ public class GroupCustAction extends CustAction {
                 actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), trained,
                 actionForm.getTrainedDate(), actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
 
-        this.customerServiceFacade.updateGroup(userContext, groupUpdate);
+        this.customerServiceFacade.updateGroup(groupUpdate);
 
         return mapping.findForward(ActionForwards.update_success.toString());
     }
