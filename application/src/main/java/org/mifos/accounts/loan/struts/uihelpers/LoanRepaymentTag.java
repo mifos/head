@@ -261,9 +261,12 @@ public class LoanRepaymentTag extends BodyTagSupport {
     }
 
     private Date getViewDate(String currentFlowKey, FlowManager flowManager) throws PageExpiredException {
+        int daysBetweenTodayAndViewDate = 0;
         Date viewDate = (Date) flowManager.getFromFlow(currentFlowKey, Constants.VIEW_DATE);
-        Date today = new Date();
-        int daysBetweenTodayAndViewDate = (int) Utilities.getDaysInBetween(today, viewDate);
+        if(viewDate !=null){
+            Date today = new Date();
+            daysBetweenTodayAndViewDate = (int) Utilities.getDaysInBetween(today, viewDate);
+        }
         DateTime mifosDate = new DateTimeService().getCurrentDateTime();
         if (daysBetweenTodayAndViewDate > 0) {
             return mifosDate.plusDays(daysBetweenTodayAndViewDate).toDate();
