@@ -29,7 +29,7 @@ import java.util.List;
 
 @SuppressWarnings("PMD")
 public class QuestionnairePage extends MifosPage {
-    private static final String SELECT_QUESTION_JS = "window.$(\"#responses label:contains(\\\"%s\\\")\").attr(\"for\")";
+    private static final String SELECT_QUESTION_JS = "window.$(\"#questionnaire label:contains(\\\"%s\\\")\").attr(\"for\")";
 
     public QuestionnairePage(Selenium selenium) {
         super(selenium);
