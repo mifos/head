@@ -1,0 +1,46 @@
+#!/usr/bin/make -f
+
+build: build-stamp
+build-stamp:
+ifeq (,$(filter nocheck,$(DEB_BUILD_OPTIONS)))
+	mvn --offline --quiet install
+else
+	mvn --offline --quiet install -Dmaven.test.skip=true
+endif
+	touch $@
+
+clean:
+	dh_testdir
+	dh_testroot
+	$(RM) -f build-stamp
+	mvn --offline --quiet $@
+	dh_clean
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+	install -o tomcat6 -g tomcat6 -m 755 -d $(CURDIR)/debian/mifos/var/lib/tomcat6/webapps
+	install -o tomcat6 -g tomcat6 -m 644 application/target/mifos-webapp.war $(CURDIR)/debian/mifos/var/lib/tomcat6/webapps/mifos.war
+	install -o tomcat6 -g tomcat6 -m 755 -d $(CURDIR)/debian/mifos/etc/tomcat6/policy.d
+	install -o root    -g tomcat6 -m 644 resources/linux/05mifos.policy $(CURDIR)/debian/mifos/etc/tomcat6/policy.d/05mifos.policy
+	install -o tomcat6 -g tomcat6 -m 755 -d $(CURDIR)/debian/mifos/usr/share/tomcat6/.mifos
+	install -o tomcat6 -g tomcat6 -m 644 application/release/example_local.properties $(CURDIR)/debian/mifos/usr/share/tomcat6/.mifos/local.properties
+	install -o tomcat6 -g tomcat6 -m 644 resources/linux/loggerconfiguration.xml $(CURDIR)/debian/mifos/usr/share/tomcat6/.mifos/loggerconfiguration.xml
+	install -o tomcat6 -g tomcat6 -m 755 -d $(CURDIR)/debian/mifos/var/log/mifos
+
+binary-indep: build install
+	dh_testdir
+	dh_testroot
+	dh_installdocs
+	dh_installman
+	dh_compress
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb
+
+binary-arch: build install
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install
