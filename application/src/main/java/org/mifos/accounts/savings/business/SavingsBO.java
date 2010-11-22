@@ -745,9 +745,15 @@ public class SavingsBO extends AccountBO {
         Date transactionDate = paymentData.getTransactionDate();
         List<AccountPaymentData> accountPayments = paymentData.getAccountPayments();
 
+        if(paymentData.getCustomer() == null) {
+            throw new NullPointerException("Customer in payment data during payment should not be null");
+        }
+
         CustomerBO customer = paymentData.getCustomer();
         AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, totalAmount, paymentData.getReceiptNum(),
                 paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData.getPaymentTypeId()), transactionDate);
+        accountPayment.setCreatedByUser(paymentData.getPersonnel());
+        accountPayment.setComment(paymentData.getComment());
 
         // make savings account active if inactive
         if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {

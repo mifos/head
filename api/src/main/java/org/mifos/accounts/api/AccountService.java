@@ -137,6 +137,12 @@ public interface AccountService {
     AccountReferenceDto lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(
             String phoneNumber, String savingsProductShortName) throws Exception;
 
+    /**
+     * Checks if there is more than one savings/loan account for a given client's phone number and product short name
+     */
+    boolean existsMoreThanOneSavingsAccount(String phoneNumber, String loanProductShortName);
+
+    boolean existsMoreThanOneLoanAccount(String phoneNumber, String loanProductShortName);
 
     /**
      * Validate a payment by checking for any errors that would result from making a

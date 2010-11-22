@@ -404,6 +404,18 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
+    public boolean existsMoreThanOneLoanAccount(String phoneNumber, String loanProductShortName) {
+        try {
+            lookupLoanAccountReferenceFromClientPhoneNumberAndLoanProductShortName(phoneNumber, loanProductShortName);
+        } catch (Exception e) {
+            if (e.getMessage().contains("org.hibernate.NonUniqueResultException")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public AccountReferenceDto lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(
             String phoneNumber, String savingsProductShortName) throws Exception {
         AccountBO accountBo = getAccountPersistence().findSavingsByClientPhoneNumberAndProductShortName(
@@ -413,6 +425,18 @@ public class StandardAccountService implements AccountService {
                     + " and savings product short name " + savingsProductShortName);
         }
         return new AccountReferenceDto(accountBo.getAccountId());
+    }
+
+    @Override
+    public boolean existsMoreThanOneSavingsAccount(String phoneNumber, String loanProductShortName) {
+        try {
+            lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(phoneNumber, loanProductShortName);
+        } catch (Exception e) {
+            if (e.getMessage().contains("org.hibernate.NonUniqueResultException")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

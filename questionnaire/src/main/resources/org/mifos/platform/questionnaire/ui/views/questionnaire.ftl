@@ -66,7 +66,7 @@
                             [@spring.formInput "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].value", 'maxlength="10" class="date-pick"' /]
                           [#break]
                           [#case "MULTI_SELECT"]
-                          <fieldset class="right_section" style="width:70%">
+                          <fieldset class="right_section" style="width:68%">
                             <ol class="noPadding">
                               <li class="noPadding">
                                 [@mifosmacros.formCheckboxesWithTags "questionGroupDetails.details[${selectedQuestionnaireIndex}].sectionDetails[${sectionDetail_index}].questions[${question_index}].values", question.answerChoices ,'</li><li class="noPadding">', ''/]
@@ -75,7 +75,7 @@
                           </fieldset>
                           [#break]
                           [#case "SMART_SELECT"]
-                          <fieldset class="right_section" style="width:70%">
+                          <fieldset class="right_section" style="width:68%">
                                 <li class="noPadding">
                                   <input type="text" autocomplete="off" id="txtListSearch" name="txtListSearch" style="width:21em;" class="txtListSearch"/>
                                 </li>
@@ -87,7 +87,7 @@
                           </fieldset>
                           [#break]
                           [#case "SINGLE_SELECT"]
-                          <fieldset class="right_section" style="width:70%">
+                          <fieldset class="right_section" style="width:68%">
                             <ol  class="noPadding">
                               <li class="noPadding">
                                   [#if question.answerChoices?size > 6]

@@ -24,14 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
+import org.mifos.application.admin.servicefacade.ShutdownServiceFacade;
+import org.mifos.application.admin.servicefacade.LoggedUserDto;
+import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.dto.screen.ListElement;
@@ -43,6 +48,7 @@ import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -52,6 +58,9 @@ import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionCons
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
+import org.mifos.customers.personnel.business.PersonnelBO;
 
 public class RolesPermissionsAction extends BaseAction {
 
@@ -129,7 +138,34 @@ public class RolesPermissionsAction extends BaseAction {
                 RolesAndPermissionConstants.ACTIVITYLIST, request);
         rolesPermissionServiceFacade.updateRole(Short.parseShort(rolesPermissionsActionForm.getId()), userContext.getId(),
                 rolesPermissionsActionForm.getName(), getActivityIds(getActivities(activities, rolesPermissionsActionForm.getActivities())));
+        // MIFOS-3530: update all currently logged users
+        for (String loggedUser : getLoggedUsers(request)) {
+            this.authenticationAuthorizationServiceFacade.reloadUserDetailsForSecurityContext(loggedUser);
+        }
         return mapping.findForward(ActionForwards.update_success.toString());
+    }
+
+    private List<String> getLoggedUsers(HttpServletRequest request) {
+        List<String> loggedUsers = new ArrayList<String>();
+        ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class
+                .getName());
+        Collection<HttpSession> sessions = shutdownManager.getActiveSessions();
+        PersonnelBusinessService personnelBusinessService = new PersonnelBusinessService();
+        for (HttpSession session : sessions) {
+            UserContext userContextFromSession = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
+            if (userContextFromSession == null) {
+                continue;
+            }
+            PersonnelBO personnel;
+            try {
+                personnel = personnelBusinessService.getPersonnel(userContextFromSession.getId());
+            } catch (ServiceException e) {
+                continue;
+            }
+            loggedUsers.add(personnel.getUserName());
+
+        }
+        return loggedUsers;
     }
 
     @TransactionDemarcate(joinToken = true)

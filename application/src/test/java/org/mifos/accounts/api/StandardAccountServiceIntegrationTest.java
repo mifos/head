@@ -26,7 +26,6 @@ import junit.framework.Assert;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.AccountIntegrationTestCase;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
@@ -76,14 +75,18 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     @Test
     public void testMakePaymentForLoanAccount() throws Exception {
         String payemntAmount = "700";
+        CustomerDto clientDto = new CustomerDto();
+        clientDto.setCustomerId(client.getCustomerId());
+        LocalDate paymentDate = new LocalDate();
+        LocalDate receiptDate = new LocalDate().minusDays(3);
+        String receiptNumber = "AA/03/UX-9Q";
 
         standardAccountService.setAccountPersistence(new AccountPersistence());
 
-        Assert.assertEquals(0, groupLoan.getAccountPayments().size());
-
         AccountPaymentParametersDto loanPayment = new AccountPaymentParametersDto(new UserReferenceDto(
                 groupLoan.getPersonnel().getPersonnelId()), new AccountReferenceDto(groupLoan.getAccountId()),
-                new BigDecimal(payemntAmount), new LocalDate(), defaultPaymentType, "");
+                new BigDecimal(payemntAmount), paymentDate, defaultPaymentType, "comment",receiptDate, receiptNumber,
+                clientDto);
         standardAccountService.makePayment(loanPayment);
 
         TestObjectFactory.updateObject(groupLoan);
@@ -93,8 +96,23 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
 
         Assert.assertEquals(1, groupLoan.getAccountPayments().size());
         for (AccountPaymentEntity payment : groupLoan.getAccountPayments()) {
+
             Assert.assertEquals(TestUtils.createMoney(payemntAmount), payment.getAmount());
+            Assert.assertEquals(paymentDate.toDateMidnight().toDate(), payment.getPaymentDate());
+            Assert.assertEquals(defaultPaymentType.getName(), payment.getPaymentType().getName());
+            Assert.assertEquals("comment", payment.getComment());
+            Assert.assertEquals(groupLoan, payment.getAccount());
+            Assert.assertEquals(groupLoan.getPersonnel(), payment.getCreatedByUser());
+            Assert.assertEquals(receiptDate.toDateMidnight().toDate(), payment.getReceiptDate());
+            Assert.assertEquals(receiptNumber, payment.getReceiptNumber());
+            Assert.assertNull(payment.getCheckNumber());
+            Assert.assertNull(payment.getBankName());
+            Assert.assertNull(payment.getVoucherNumber());
+            Assert.assertFalse(payment.isSavingsDeposit());
+            Assert.assertFalse(payment.isSavingsWithdrawal());
+            Assert.assertFalse(payment.isSavingsDepositOrWithdrawal());
             Assert.assertEquals(4, payment.getAccountTrxns().size());
+
             for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
                 AccountTrxnEntity trxn = accountTrxn;
                 Assert.assertEquals(group.getCustomerId(), trxn.getCustomer().getCustomerId());
@@ -102,16 +120,25 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
         }
     }
 
-    @Test @Ignore
+    @Test
     public void testMakePaymentForSavingsAccountOnDeposit() throws Exception {
         savingsBO = createClientSavingsAccount();
         String deposit = "400";
+        CustomerDto clientDto = new CustomerDto();
+        clientDto.setCustomerId(client.getCustomerId());
+        //FIXME why one day in future payment is allowed
+        LocalDate paymentDate = new LocalDate().plusDays(1);
+        LocalDate receiptDate = new LocalDate().minusDays(3);
+        String receiptNumber = "AA/03/UX-9Q";
+
         standardAccountService.setAccountPersistence(new AccountPersistence());
         Assert.assertEquals(0, savingsBO.getAccountPayments().size());
-        AccountPaymentParametersDto loanPayment = new AccountPaymentParametersDto(new UserReferenceDto(
-                savingsBO.getPersonnel().getPersonnelId()), new AccountReferenceDto(savingsBO.getAccountId()),
-                new BigDecimal(deposit), new LocalDate().plusDays(1), defaultPaymentType, "");
-        standardAccountService.makePayment(loanPayment);
+
+        AccountPaymentParametersDto depositPayment = new AccountPaymentParametersDto(new UserReferenceDto(savingsBO
+                .getPersonnel().getPersonnelId()), new AccountReferenceDto(savingsBO.getAccountId()), new BigDecimal(
+                deposit), paymentDate, defaultPaymentType, "comment", receiptDate, receiptNumber,
+                clientDto);
+        standardAccountService.makePayment(depositPayment);
 
         TestObjectFactory.updateObject(savingsBO);
 
@@ -120,8 +147,23 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
 
         Assert.assertEquals(1, savingsBO.getAccountPayments().size());
         for (AccountPaymentEntity payment : savingsBO.getAccountPayments()) {
+
             Assert.assertEquals(TestUtils.createMoney(deposit), payment.getAmount());
             Assert.assertEquals(1, payment.getAccountTrxns().size());
+            Assert.assertEquals(paymentDate.toDateMidnight().toDate(), payment.getPaymentDate());
+            Assert.assertEquals(defaultPaymentType.getName(), payment.getPaymentType().getName());
+            Assert.assertEquals("comment", payment.getComment());
+            Assert.assertEquals(savingsBO, payment.getAccount());
+            Assert.assertEquals(savingsBO.getPersonnel(), payment.getCreatedByUser());
+            Assert.assertEquals(receiptDate.toDateMidnight().toDate(), payment.getReceiptDate());
+            Assert.assertEquals(receiptNumber, payment.getReceiptNumber());
+            Assert.assertNull(payment.getCheckNumber());
+            Assert.assertNull(payment.getBankName());
+            Assert.assertNull(payment.getVoucherNumber());
+            Assert.assertTrue(payment.isSavingsDeposit());
+            Assert.assertFalse(payment.isSavingsWithdrawal());
+            Assert.assertTrue(payment.isSavingsDepositOrWithdrawal());
+
             for (AccountTrxnEntity accountTrxn : payment.getAccountTrxns()) {
                 AccountTrxnEntity trxn = accountTrxn;
                 Assert.assertEquals(client.getCustomerId(), trxn.getCustomer().getCustomerId());

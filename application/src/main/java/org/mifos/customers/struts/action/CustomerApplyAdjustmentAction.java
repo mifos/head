@@ -79,8 +79,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
         request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
-        if (null == customerBO.getCustomerAccount().findMostRecentPaymentByPaymentDate()
-                || customerBO.getCustomerAccount().getLastPmntAmnt() == 0) {
+        if (null == customerBO.getCustomerAccount().findMostRecentNonzeroPaymentByPaymentDate()) {
             request.setAttribute("isDisabled", "true");
             throw new ApplicationException(AccountExceptionConstants.ZEROAMNTADJUSTMENT);
         }
@@ -96,8 +95,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
                 .getGlobalCustNum());
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
-        if (null == customerBO.getCustomerAccount().findMostRecentPaymentByPaymentDate()
-                || customerBO.getCustomerAccount().getLastPmntAmnt() == 0) {
+        if (null == customerBO.getCustomerAccount().findMostRecentNonzeroPaymentByPaymentDate()) {
             request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
             request.setAttribute("isDisabled", "true");
             throw new ApplicationException(AccountExceptionConstants.ZEROAMNTADJUSTMENT);
@@ -118,8 +116,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
         checkVersionMismatch(customerBOInSession.getVersionNo(), customerBO.getVersionNo());
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
-        if (null == customerBO.getCustomerAccount().findMostRecentPaymentByPaymentDate()
-                || customerBO.getCustomerAccount().getLastPmntAmnt() == 0) {
+        if (null == customerBO.getCustomerAccount().findMostRecentNonzeroPaymentByPaymentDate()) {
             request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
             throw new ApplicationException(AccountExceptionConstants.ZEROAMNTADJUSTMENT);
         }
