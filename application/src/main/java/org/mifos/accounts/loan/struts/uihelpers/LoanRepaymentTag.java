@@ -265,7 +265,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
         Date viewDate = (Date) flowManager.getFromFlow(currentFlowKey, Constants.VIEW_DATE);
         if(viewDate !=null){
             Date today = new Date();
-            daysBetweenTodayAndViewDate = (int) Utilities.getDaysInBetween(today, viewDate);
+            daysBetweenTodayAndViewDate = (int) Utilities.getDaysInBetween(viewDate, today);
         }
         DateTime mifosDate = new DateTimeService().getCurrentDateTime();
         if (daysBetweenTodayAndViewDate > 0) {
