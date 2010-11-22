@@ -270,7 +270,7 @@ input[type=text], input[type=password], input.text, input.title, textarea, {/*ba
 	/*border-color:#D4D4D4 #EBEBEB #D4D4D4 ;
 	border-width:1.5px;*/
 	border:1px solid #7f9db9;
-	color:#6A6969;
+	color:#000;
 	font-family:Arial, Helvetica, sans-serif;
 	font-size:11px;
 }
