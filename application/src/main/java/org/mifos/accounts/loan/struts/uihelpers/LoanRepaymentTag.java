@@ -20,11 +20,16 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.schedule.utils.Utilities;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
@@ -38,6 +43,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,6 +61,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
             HttpSession session = pageContext.getSession();
             FlowManager flowManager = (FlowManager) session.getAttribute(Constants.FLOWMANAGER);
             loanBO = (LoanBO) flowManager.getFromFlow(currentFlowKey, Constants.BUSINESS_KEY);
+            Date viewDate = getViewDate(currentFlowKey, flowManager);
             Money totalPrincipal = new Money(loanBO.getCurrency(), "0");
             Money totalInterest = new Money(loanBO.getCurrency(), "0");
             Money totalFees = new Money(loanBO.getCurrency(), "0");
@@ -178,8 +185,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
                 boolean dueInstallments = false;
                 if (!installment.isPaid()
-                        && installment.getActionDate().getTime() <= new DateTimeService().getCurrentJavaDateTime()
-                                .getTime()) {
+                        && installment.getActionDate().getTime() <= viewDate.getTime()) {
                     dueInstallments = true;
                 }
 
@@ -191,8 +197,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     html1.endTag("tr");
                     while (index < list.size() - 1
                             && !installment.isPaid()
-                            && installment.getActionDate().getTime() <= new DateTimeService().getCurrentJavaDateTime()
-                                    .getTime()) {
+                            && installment.getActionDate().getTime() <= viewDate.getTime()) {
                         index++;
                         html1.append(createInstallmentRow(installment, false));
                         installment = (LoanScheduleEntity) list.get(index);
@@ -201,8 +206,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
                 boolean futureInstallments = false;
                 if (!installment.isPaid()
-                        && installment.getActionDate().getTime() > new DateTimeService().getCurrentJavaDateTime()
-                                .getTime()) {
+                        && installment.getActionDate().getTime() > viewDate.getTime()) {
                     futureInstallments = true;
                 }
                 if (futureInstallments) {
@@ -254,6 +258,18 @@ public class LoanRepaymentTag extends BodyTagSupport {
             throw new JspException(e);
         }
         return SKIP_BODY;
+    }
+
+    private Date getViewDate(String currentFlowKey, FlowManager flowManager) throws PageExpiredException {
+        Date viewDate = (Date) flowManager.getFromFlow(currentFlowKey, Constants.VIEW_DATE);
+        Date today = new Date();
+        int daysBetweenTodayAndViewDate = (int) Utilities.getDaysInBetween(today, viewDate);
+        DateTime mifosDate = new DateTimeService().getCurrentDateTime();
+        if (daysBetweenTodayAndViewDate > 0) {
+            return mifosDate.plusDays(daysBetweenTodayAndViewDate).toDate();
+        } else {
+            return mifosDate.minusDays(Math.abs(daysBetweenTodayAndViewDate)).toDate();
+        }
     }
 
     XmlBuilder createInstallmentRow(LoanScheduleEntity installment, boolean isPaymentMade) {

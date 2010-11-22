@@ -82,6 +82,7 @@ public interface Constants {
     String USER_CONTEXT_KEY = "UserContext";
     String ACTIVITYCONTEXT = "ActivityContext";
     String BUSINESS_KEY = "BusinessKey";
+    String VIEW_DATE = "ViewDate";
 
     String ACCOUNT_TYPE = "AccountType";
     String ACCOUNT_VERSION = "AccountVersion";

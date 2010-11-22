@@ -934,10 +934,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm)form;
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
-        LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId,
-                loanAccountActionForm.getScheduleViewDateValue(userContext.getPreferredLocale()));
+        Date viewDate = loanAccountActionForm.getScheduleViewDateValue(userContext.getPreferredLocale());
+        LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId, viewDate);
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        SessionUtils.setAttribute(Constants.VIEW_DATE, viewDate, request);
 
         return mapping.findForward(ActionForwards.getLoanRepaymentSchedule.toString());
     }
