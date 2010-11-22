@@ -1,0 +1,16 @@
+Source: mifos
+Section: net
+Priority: optional
+Maintainer: Adam Monsen <haircut@gmail.com>
+Homepage: http://www.mifos.org
+Build-Depends: debhelper (>= 7)
+Standards-Version: 3.8.3
+
+Package: mifos
+Architecture: all
+Depends: ${misc:Depends}, mysql-client-core (>= 5.1), tomcat6
+Recommends: mysql-server (>= 5.1), sun-java6-jdk (>= 6)
+Description: Microfinance application
+ Mifos is a Microfinance application.
+ .
+ This package installs a war file for use in Tomcat 6.

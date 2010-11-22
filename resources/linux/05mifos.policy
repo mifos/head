@@ -1,0 +1,9 @@
+grant {
+    permission java.io.FilePermission "/var/lib/tomcat6/webapps/mifos/-", "read,write";
+    permission java.io.FilePermission "/tmp/-", "read,write";
+    permission java.io.FilePermission "/usr/share/tomcat6/.mifos/-", "read";
+    // FIXME: is this AllPermission line necessary?
+    permission java.security.AllPermission "/var/lib/tomcat6/webapps/mifos/-";
+};
+
+// vim: ft=java
