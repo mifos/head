@@ -20,23 +20,15 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.schedule.utils.Utilities;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.tags.XmlBuilder;
-import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.framework.util.helpers.LabelTagUtils;
-import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.security.util.UserContext;
 
 import javax.servlet.http.HttpSession;
@@ -261,18 +253,9 @@ public class LoanRepaymentTag extends BodyTagSupport {
     }
 
     private Date getViewDate(String currentFlowKey, FlowManager flowManager) throws PageExpiredException {
-        int daysBetweenTodayAndViewDate = 0;
         Date viewDate = (Date) flowManager.getFromFlow(currentFlowKey, Constants.VIEW_DATE);
-        if(viewDate !=null){
-            Date today = new Date();
-            daysBetweenTodayAndViewDate = (int) Utilities.getDaysInBetween(viewDate, today);
-        }
-        DateTime mifosDate = new DateTimeService().getCurrentDateTime();
-        if (daysBetweenTodayAndViewDate > 0) {
-            return mifosDate.plusDays(daysBetweenTodayAndViewDate).toDate();
-        } else {
-            return mifosDate.minusDays(Math.abs(daysBetweenTodayAndViewDate)).toDate();
-        }
+        viewDate = (viewDate == null) ? new Date() : viewDate;
+        return new DateTime(viewDate).withTime(23, 59, 59, 0).toDate();
     }
 
     XmlBuilder createInstallmentRow(LoanScheduleEntity installment, boolean isPaymentMade) {
