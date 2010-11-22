@@ -142,4 +142,15 @@ public class QuestionGroupDetail implements Serializable {
             }
         }
     }
+
+    public boolean hasNoActiveSectionsAndQuestions() {
+        boolean result = true;
+        for (SectionDetail sectionDetail : sectionDetails) {
+            if (sectionDetail.hasActiveQuestions()) {
+                result = false;
+                break;
+            }
+        }
+        return result;
+    }
 }

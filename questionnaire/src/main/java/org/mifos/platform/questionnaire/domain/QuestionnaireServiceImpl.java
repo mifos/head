@@ -180,7 +180,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         questionnaireValidator.validateForEventSource(eventSourceDto);
         List<QuestionGroup> questionGroups = questionGroupDao.retrieveQuestionGroupsByEventSource(eventSourceDto.getEvent(), eventSourceDto.getSource());
         List<QuestionGroupDetail> questionGroupDetails = questionnaireMapper.mapToQuestionGroupDetails(questionGroups);
-        removeInactiveSectionsAndQuestions(questionGroupDetails);
+        removeInActiveSectionsAndQuestions(questionGroupDetails);
         return questionGroupDetails;
     }
 
@@ -423,24 +423,27 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         }
     }
 
-    private void removeInactiveSectionsAndQuestions(List<QuestionGroupDetail> questionGroupDetails) {
-        for (QuestionGroupDetail questionGroupDetail : questionGroupDetails) {
-            removeInactiveSectionsAndQuestions(questionGroupDetail);
+    private void removeInActiveSectionsAndQuestions(List<QuestionGroupDetail> questionGroupDetails) {
+        for (Iterator<QuestionGroupDetail> questionGroupDetailIterator = questionGroupDetails.iterator(); questionGroupDetailIterator.hasNext();) {
+            QuestionGroupDetail questionGroupDetail = questionGroupDetailIterator.next();
+            removeInActiveSectionsAndQuestions(questionGroupDetail);
+            if (questionGroupDetail.hasNoActiveSectionsAndQuestions()) {
+                questionGroupDetailIterator.remove();
+            }
         }
     }
 
-    private void removeInactiveSectionsAndQuestions(QuestionGroupDetail questionGroupDetail) {
+    private void removeInActiveSectionsAndQuestions(QuestionGroupDetail questionGroupDetail) {
         for (Iterator<SectionDetail> sectionDetailIterator = questionGroupDetail.getSectionDetails().iterator(); sectionDetailIterator.hasNext();) {
             SectionDetail sectionDetail = sectionDetailIterator.next();
+            removeInActiveQuestions(sectionDetail);
             if (sectionDetail.hasNoActiveQuestions()) {
                 sectionDetailIterator.remove();
-                continue;
             }
-            removeInactiveQuestions(sectionDetail);
         }
     }
 
-    private void removeInactiveQuestions(SectionDetail sectionDetail) {
+    private void removeInActiveQuestions(SectionDetail sectionDetail) {
         for (Iterator<SectionQuestionDetail> sectionQuestionDetailIterator = sectionDetail.getQuestions().iterator(); sectionQuestionDetailIterator.hasNext();) {
             if (sectionQuestionDetailIterator.next().isInactive()) {
                 sectionQuestionDetailIterator.remove();
