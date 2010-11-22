@@ -27,6 +27,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 
 import java.util.Date;
+import java.math.BigDecimal;
 
 @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity", "PMD.ExcessiveMethodLength"})
 public class SavingsProductFormValidator implements Validator {
@@ -157,6 +158,17 @@ public class SavingsProductFormValidator implements Validator {
                         true, new String[] {"Min.savingsProduct.interestPostingMonthlyFrequency"}, null, null));
                 errors.addAllErrors(bindException);
             }
+        }
+
+        BigDecimal minBalanceForInterestCalculation;
+        try {
+            minBalanceForInterestCalculation = BigDecimal.valueOf(Double.valueOf(formBean.getMinBalanceRequiredForInterestCalculation()));
+        }
+        catch (NumberFormatException e) {
+            minBalanceForInterestCalculation = new BigDecimal("-1");
+        }
+        if (minBalanceForInterestCalculation.compareTo(BigDecimal.ZERO) < 0) {
+            errors.reject("Min.savingsProduct.balanceRequiredForInterestCalculation");
         }
 
         if (formBean.getSelectedPrincipalGlCode().trim().isEmpty()) {

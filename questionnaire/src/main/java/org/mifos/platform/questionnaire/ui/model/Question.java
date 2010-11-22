@@ -218,6 +218,10 @@ public class Question implements Serializable {
         return questionDetail.isActive();
     }
 
+    public boolean isEditable() {
+        return questionDetail.isEditable();
+    }
+
     public void setActive(boolean active) {
         questionDetail.setActive(active);
     }

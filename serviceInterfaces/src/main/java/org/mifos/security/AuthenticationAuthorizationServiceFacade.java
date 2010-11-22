@@ -23,5 +23,5 @@ package org.mifos.security;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface AuthenticationAuthorizationServiceFacade extends UserDetailsService {
-
+    void reloadUserDetailsForSecurityContext(String username);
 }

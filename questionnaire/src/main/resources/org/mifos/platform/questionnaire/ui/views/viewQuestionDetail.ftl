@@ -40,7 +40,9 @@
                 <fieldset>
                     <ol>
                         <li>
-                            <a href="editQuestion#" class="topRight">[@spring.message "questionnaire.edit"/]</a>
+                            [#if question.editable]
+                                <a href="editQuestion#" class="topRight">[@spring.message "questionnaire.edit"/]</a>
+                            [/#if]
                             <input type="submit" id="_eventId_editQuestion" name="_eventId_editQuestion" value="${question.id}" style="display:none"/>
                             [@spring.message "questionnaire.question"/]: ${question.text}
                         </li>

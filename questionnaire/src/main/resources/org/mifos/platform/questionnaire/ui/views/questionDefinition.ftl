@@ -11,6 +11,7 @@
 <input type="hidden" id="multiSelect" name="multiSelect" value="${multiSelect}"/>
 <input type="hidden" id="singleSelect" name="singleSelect" value="${singleSelect}" />
 <input type="hidden" id="smartSelect" name="smartSelect" value="${smartSelect}" />
+<input type="submit" id="dummy" name="dummy" value="" style="display: none;" onclick="return false;"/>
 <input type="submit" id="_eventId_removeChoice" name="_eventId_removeChoice" value="" style="display: none;"/>
 <input type="submit" id="_eventId_removeChoiceTag" name="_eventId_removeChoiceTag" value="" style="display: none;"/>
 <input type="submit" id="_eventId_addSmartChoiceTag" name="_eventId_addSmartChoiceTag" value="" style="display: none;"/>

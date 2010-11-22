@@ -334,25 +334,12 @@ public class PersonAction extends SearchAction {
             request.setAttribute("displayName", name.getDisplayName());
             request.setAttribute("globalPersonnelNum", globalPersonnelNum);
 
-            reloadUserDetailsForSecurityContext(perosonnelInfo.getUserName());
+            this.authenticationAuthorizationServiceFacade.reloadUserDetailsForSecurityContext(perosonnelInfo.getUserName());
 
             return mapping.findForward(ActionForwards.update_success.toString());
         } catch (BusinessRuleException e) {
             throw new PersonnelException(e.getMessageKey(), e);
         }
-    }
-
-    private void reloadUserDetailsForSecurityContext(String username) {
-        UserDetails userSecurityDetails = this.authenticationAuthorizationServiceFacade.loadUserByUsername(username);
-        MifosUser reloadedUserDetails = (MifosUser) userSecurityDetails;
-
-        SecurityContext securityContext = SecurityContextHolder.getContext();
-        if (securityContext == null) {
-            securityContext = new SecurityContextImpl();
-            SecurityContextHolder.setContext(securityContext);
-        }
-        Authentication authentication = new UsernamePasswordAuthenticationToken(reloadedUserDetails, reloadedUserDetails, reloadedUserDetails.getAuthorities());
-        securityContext.setAuthentication(authentication);
     }
 
     @SuppressWarnings("unused")

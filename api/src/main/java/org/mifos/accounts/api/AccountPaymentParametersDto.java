@@ -55,6 +55,9 @@ public class AccountPaymentParametersDto {
     /** The comment associated with the payment. */
     private final String comment;
 
+    /** Customer making the payment */
+    private CustomerDto customer;
+
     /**
      * Instantiates a new account payment parameters dto.
      *
@@ -67,7 +70,7 @@ public class AccountPaymentParametersDto {
      */
     public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
             BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment) {
-        this(userMakingPayment, account, paymentAmount, paymentDate, paymentType, comment, null, null);
+        this(userMakingPayment, account, paymentAmount, paymentDate, paymentType, comment, null, null, null);
     }
 
     /**
@@ -81,10 +84,11 @@ public class AccountPaymentParametersDto {
      * @param comment the comment associated with the payment
      * @param receiptDate the receipt date
      * @param receiptId the receipt id
+     * @param customer a customer making payment
      */
     public AccountPaymentParametersDto(UserReferenceDto userMakingPayment, AccountReferenceDto account,
             BigDecimal paymentAmount, LocalDate paymentDate, PaymentTypeDto paymentType, String comment,
-            LocalDate receiptDate, String receiptId) {
+            LocalDate receiptDate, String receiptId, CustomerDto customer) {
         super();
         if (null == userMakingPayment) {
             throw new IllegalArgumentException("userMakingPayment cannot be null");
@@ -118,6 +122,7 @@ public class AccountPaymentParametersDto {
 
         this.receiptDate = receiptDate;
         this.receiptId = receiptId;
+        this.customer = customer;
     }
 
     /**
@@ -190,6 +195,14 @@ public class AccountPaymentParametersDto {
      */
     public String getComment() {
         return this.comment;
+    }
+
+    public CustomerDto getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerDto customer) {
+        this.customer = customer;
     }
 
 }

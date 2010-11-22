@@ -398,7 +398,7 @@ public class QuestionnaireMapperTest {
     private SectionDetail getSectionDefinition(String name, int questionId, String questionTitle) {
         SectionDetail section = new SectionDetail();
         section.setName(name);
-        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, questionTitle, QuestionType.FREETEXT, true), true));
+        section.addQuestion(new SectionQuestionDetail(new QuestionDetail(questionId, questionTitle, QuestionType.FREETEXT, true, true), true));
         return section;
     }
 
@@ -528,21 +528,21 @@ public class QuestionnaireMapperTest {
         when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 10)).thenReturn(asList(questionGroupInstance));
         when(questionGroupInstanceDao.retrieveLatestQuestionGroupInstanceByQuestionGroupAndEntity(201, 11)).thenReturn(asList(questionGroupInstance));
 
-        List<QuestionDetail> questionDetails1 = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true));
+        List<QuestionDetail> questionDetails1 = asList(new QuestionDetail(12, "Question 1", QuestionType.FREETEXT, true, true));
         List<SectionDetail> sectionDetails1 = asList(getSectionDetailWithQuestions(14, "Sec1", questionDetails1, "value", null));
         QuestionGroupDetail questionGroupDetail1 = new QuestionGroupDetail(10, "QG1", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails1, true);
 
-        List<QuestionDetail> questionDetails2 = asList(new QuestionDetail(13, "Question 2", QuestionType.DATE, true));
+        List<QuestionDetail> questionDetails2 = asList(new QuestionDetail(13, "Question 2", QuestionType.DATE, true, true));
         List<SectionDetail> sectionDetails2 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails2, null, null));
         QuestionGroupDetail questionGroupDetail2 = new QuestionGroupDetail(11, "QG2", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails2, true);
 
-        QuestionDetail questionDetail1 = new QuestionDetail(13, "Question 3", QuestionType.MULTI_SELECT, true);
+        QuestionDetail questionDetail1 = new QuestionDetail(13, "Question 3", QuestionType.MULTI_SELECT, true, true);
         questionDetail1.setAnswerChoices(asList(getChoiceDto("a1"), getChoiceDto("a2"), getChoiceDto("a3")));
         List<QuestionDetail> questionDetails3 = asList(questionDetail1);
         List<SectionDetail> sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, null, asList("a2", "a3")));
         QuestionGroupDetail questionGroupDetail3 = new QuestionGroupDetail(11, "QG2", Arrays.asList(new EventSourceDto("Create", "Client", null)), sectionDetails3, true);
 
-        QuestionDetail questionDetail2 = new QuestionDetail(13, "Question 4", QuestionType.SMART_SELECT, true);
+        QuestionDetail questionDetail2 = new QuestionDetail(13, "Question 4", QuestionType.SMART_SELECT, true, true);
         questionDetail2.setAnswerChoices(asList(getChoiceDto("a1", "Tag1", "Tag2"), getChoiceDto("a2", "Tag11", "Tag22"), getChoiceDto("a3", "Tag111", "Tag222")));
         questionDetails3 = asList(questionDetail2);
         sectionDetails3 = asList(getSectionDetailWithQuestions(15, "Sec2", questionDetails3, asList(getSelectionDetail("a1", "Tag2"), getSelectionDetail("a3", "Tag111"))));

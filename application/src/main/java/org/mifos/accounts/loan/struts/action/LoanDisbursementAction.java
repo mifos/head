@@ -72,6 +72,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.mifos.customers.persistence.CustomerDaoHibernate;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
@@ -88,7 +89,8 @@ public class LoanDisbursementAction extends BaseAction {
     public LoanDisbursementAction() {
 
         accountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
-                new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()));
+                new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()),
+                new CustomerDaoHibernate(new GenericDaoHibernate()));
     }
 
     public static ActionSecurity getSecurity() {
@@ -190,7 +192,7 @@ public class LoanDisbursementAction extends BaseAction {
             final BigDecimal disbursalAmount = new BigDecimal(actionForm.getLoanAmount());
             payment.add(new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
                     loanAccountId), disbursalAmount, new LocalDate(trxnDate), paymentType, comment,
-                    new LocalDate(receiptDate), actionForm.getReceiptId()));
+                    new LocalDate(receiptDate), actionForm.getReceiptId(), null));
             getAccountService().disburseLoans(payment);
 
         } catch (Exception e) {
