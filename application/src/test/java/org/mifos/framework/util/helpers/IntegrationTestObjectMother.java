@@ -247,12 +247,8 @@ public class IntegrationTestObjectMother {
 
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
 
-        try {
-            customerService.createCenter(center, meeting, accountFees);
-            StaticHibernateUtil.flushAndClearSession();
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
+        customerService.createCenter(center, meeting, accountFees);
+        StaticHibernateUtil.flushAndClearSession();
     }
 
     public static void createCenter(CenterBO center, MeetingBO meeting, AmountFeeBO fee) {
@@ -265,11 +261,7 @@ public class IntegrationTestObjectMother {
         List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
         accountFees.add(accountFee);
 
-        try {
             customerService.createCenter(center, meeting, accountFees);
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public static void createCenter(CenterBO center, MeetingBO meeting, AmountFeeBO...fees) {
@@ -283,11 +275,7 @@ public class IntegrationTestObjectMother {
             accountFees.add(accountFee);
         }
 
-        try {
-            customerService.createCenter(center, meeting, accountFees);
-        } catch (ApplicationException e) {
-            throw new RuntimeException(e);
-        }
+        customerService.createCenter(center, meeting, accountFees);
     }
 
     public static void createGroup(GroupBO group, MeetingBO meeting) {

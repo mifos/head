@@ -20,7 +20,9 @@
 
 package org.mifos.security;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,10 +43,14 @@ public class MifosUser implements UserDetails {
     private final Collection<GrantedAuthority> authorities;
     private final int userId;
     private final Short branchId;
+    private final Short levelId;
+    private final List<Short> roleIds;
 
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="EI_EXPOSE_REP", justification="ignoring for now..")
-    public MifosUser(int userId, Short branchId, String username, byte[] password, boolean enabled, boolean accountNonExpired,
+    public MifosUser(int userId, Short branchId, Short levelId, List<Short> roleIds, String username, byte[] password, boolean enabled, boolean accountNonExpired,
             boolean credentialsNonExpired, boolean accountNonLocked, Collection<GrantedAuthority> authorities) {
+        this.levelId = levelId;
+        this.roleIds = new ArrayList<Short>(roleIds);
         this.username = username;
         this.password = password;
         this.enabled = enabled;
@@ -102,5 +108,13 @@ public class MifosUser implements UserDetails {
 
     public Short getBranchId() {
         return this.branchId;
+    }
+
+    public Short getLevelId() {
+        return this.levelId;
+    }
+
+    public List<Short> getRoleIds() {
+        return this.roleIds;
     }
 }

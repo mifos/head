@@ -32,6 +32,7 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
@@ -46,7 +47,7 @@ public interface CustomerServiceFacade {
 
     ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId);
 
-    CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
+    CustomerDetailsDto createNewCenter(CenterCreationDetail centerCreationDetail, MeetingBO meeting);
 
     CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
 
@@ -84,8 +85,7 @@ public interface CustomerServiceFacade {
 
     ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo();
 
-    void updateClientPersonalInfo(UserContext userContext, Integer oldClientVersionNumber, Integer customerId,
-            ClientCustActionForm actionForm) throws ApplicationException;
+    void updateClientPersonalInfo(UserContext userContext, Integer oldClientVersionNumber, Integer customerId, ClientCustActionForm actionForm) throws ApplicationException;
 
     ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum);
 

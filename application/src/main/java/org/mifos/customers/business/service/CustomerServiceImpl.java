@@ -30,6 +30,7 @@ import java.util.Set;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -57,9 +58,9 @@ import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
@@ -83,7 +84,6 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -91,8 +91,8 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 /**
  * Default implementation of {@link CustomerService}.
@@ -125,20 +125,22 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public final void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws ApplicationException {
+    public final void createCenter(CenterBO customer, MeetingBO meeting, List<AccountFeesEntity> accountFees) {
 
-        customer.validate();
-        customer.validateMeetingAndFees(accountFees);
+        try {
+            customer.validate();
+            customer.validateMeetingAndFees(accountFees);
 
-        customerDao.validateCenterNameIsNotTakenForOffice(customer.getDisplayName(), customer.getOfficeId());
+            customerDao.validateCenterNameIsNotTakenForOffice(customer.getDisplayName(), customer.getOfficeId());
 
-        List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
-        customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
+            List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
 
-        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
-        // List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
+            customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
 
-        createCustomer(customer, meeting, accountFees);
+            createCustomer(customer, meeting, accountFees);
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 
     @Override

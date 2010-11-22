@@ -25,6 +25,7 @@ import java.sql.Blob;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -47,7 +48,6 @@ import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
@@ -58,7 +58,6 @@ import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
@@ -90,6 +89,8 @@ import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
@@ -144,6 +145,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         userContext.setBranchId(user.getBranchId());
         userContext.setId(Short.valueOf((short) user.getUserId()));
         userContext.setName(user.getUsername());
+        userContext.setLevelId(user.getLevelId());
+        userContext.setRoles(new HashSet<Short>(user.getRoleIds()));
         return userContext;
     }
 
@@ -329,39 +332,34 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewCenter(CenterCustActionForm actionForm, MeetingBO meeting, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException {
+    public CustomerDetailsDto createNewCenter(CenterCreationDetail actionForm, MeetingBO meeting) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
-        try {
-            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
-            DateTime mfiJoiningDate = CalendarUtils.getDateFromString(actionForm.getMfiJoiningDate(), userContext.getPreferredLocale());
+        String centerName = actionForm.getDisplayName();
+        String externalId = actionForm.getExternalId();
+        AddressDto addressDto = actionForm.getAddressDto();
+        Address centerAddress = new Address(addressDto.getLine1(), addressDto.getLine2(), addressDto.getLine3(),
+                addressDto.getCity(), addressDto.getState(), addressDto.getCountry(), addressDto.getZip(), addressDto.getPhoneNumber());
+        PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
+        OfficeBO centerOffice = this.officeDao.findOfficeById(actionForm.getOfficeId());
 
-            String centerName = actionForm.getDisplayName();
-            String externalId = actionForm.getExternalId();
-            Address centerAddress = actionForm.getAddress();
-            PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerIdValue());
-            OfficeBO centerOffice = this.officeDao.findOfficeById(actionForm.getOfficeIdValue());
+        int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(actionForm.getOfficeId());
 
-            int numberOfCustomersInOfficeAlready = customerDao
-                    .retrieveLastSearchIdValueForNonParentCustomersInOffice(actionForm.getOfficeIdValue());
+//        List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
+        List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
 
-            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm
-                    .getFeesToApply());
-
-            CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
-                    centerOffice, numberOfCustomersInOfficeAlready, customerCustomFields, centerAddress, externalId,
-                    new DateMidnight().toDateTime());
-
-            this.customerService.createCenter(center, meeting, feesForCustomerAccount);
-
-            return new CustomerDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
-        } catch (InvalidDateException e) {
-            throw new IllegalStateException(e);
-        } catch (PersistenceException e) {
-            throw new IllegalStateException(e);
+        DateTime mfiJoiningDate = null;
+        if (actionForm.getMfiJoiningDate() != null) {
+            mfiJoiningDate = actionForm.getMfiJoiningDate().toDateMidnight().toDateTime();
         }
+        CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
+                centerOffice, numberOfCustomersInOfficeAlready, centerAddress, externalId, new DateMidnight().toDateTime());
+
+        this.customerService.createCenter(center, meeting, feesForCustomerAccount);
+
+        return new CustomerDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
     }
 
     private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<FeeDto> feesToApply) {

@@ -22,7 +22,9 @@ package org.mifos.domain.builders;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.security.MifosUser;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -30,6 +32,7 @@ public class MifosUserBuilder {
 
     private Integer userId = Integer.valueOf(1);
     private Short branchId = Short.valueOf("1");
+    private PersonnelLevel level = PersonnelLevel.LOAN_OFFICER;
     private String username = "mifos";
     private byte[] password = "testmifos".getBytes();
     private boolean enabled  = true;
@@ -37,9 +40,19 @@ public class MifosUserBuilder {
     private boolean credentialsNonExpired = true;
     private boolean accountNonLocked = true;
     private Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+    private List<Short> roleIds = new ArrayList<Short>();
 
     public MifosUser build() {
-        return new MifosUser(userId, branchId, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+        return new MifosUser(userId, branchId, level.getValue(), roleIds, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 
+    public MifosUserBuilder withAdminRole() {
+        roleIds.add(Short.valueOf("1"));
+        return this;
+    }
+
+    public MifosUserBuilder nonLoanOfficer() {
+        this.level = PersonnelLevel.NON_LOAN_OFFICER;
+        return this;
+    }
 }

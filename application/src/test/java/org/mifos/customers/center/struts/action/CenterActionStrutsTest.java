@@ -20,7 +20,16 @@
 
 package org.mifos.customers.center.struts.action;
 
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -39,7 +48,6 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.business.service.CenterInformationDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
@@ -51,18 +59,13 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 
 public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     public CenterActionStrutsTest() throws Exception {
@@ -71,7 +74,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
     private CenterBO center;
     private GroupBO group;
-    private ClientBO client;
     private String flowKey;
     private final SavingsTestHelper helper = new SavingsTestHelper();
     private SavingsOfferingBO savingsOffering;
@@ -108,7 +110,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     @Override
     protected void tearDown() throws Exception {
         savingsBO = null;
-        client = null;
         group = null;
         center = null;
         super.tearDown();
@@ -253,7 +254,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
-        removeFees(feesToRemove);
     }
 
     public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception {
@@ -272,7 +272,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
         actionPerform();
         Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
-        removeFees(feesToRemove);
     }
 
     public void testFailurePreview_FeeFrequencyMismatch() throws Exception {
@@ -290,7 +289,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedFee[0].amount", "200");
         actionPerform();
         Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
-        removeFees(feesToRemove);
     }
 
     public void testSuccessfulPreview() throws Exception {
@@ -325,7 +323,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
         verifyNoActionErrors();
         verifyNoActionMessages();
-        removeFees(feesToRemove);
     }
 
     public void testSuccessfulPrevious() throws Exception {
@@ -589,11 +586,5 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         fees.add(new FeeDto(TestObjectFactory.getContext(), fee1));
         StaticHibernateUtil.flushSession();
         return fees;
-    }
-
-    private void removeFees(List<FeeDto> feesToRemove) {
-//        for (FeeDto fee : feesToRemove) {
-//            TestObjectFactory.cleanUp(new FeePersistence().getFee(fee.getFeeIdValue()));
-//        }
     }
 }

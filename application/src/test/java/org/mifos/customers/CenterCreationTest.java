@@ -20,11 +20,13 @@
 
 package org.mifos.customers;
 
-import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mifos.domain.builders.PersonnelBuilder.anyLoanOfficer;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,8 +60,8 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.domain.builders.CalendarEventBuilder;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.service.BusinessRuleException;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -108,7 +110,7 @@ public class CenterCreationTest {
     }
 
 
-    @Test(expected = CustomerException.class)
+    @Test(expected = BusinessRuleException.class)
     public void throwsCheckedExceptionWhenCenterValidationFails() throws Exception {
 
         // setup
@@ -124,7 +126,7 @@ public class CenterCreationTest {
         verify(mockedCenter).validate();
     }
 
-    @Test(expected = CustomerException.class)
+    @Test(expected = BusinessRuleException.class)
     public void throwsCheckedExceptionWhenCenterMeetingAndFeesFailValidation() throws Exception {
 
         // setup
@@ -213,8 +215,8 @@ public class CenterCreationTest {
         try {
             customerService.createCenter(centerWithNoCustomFields, aWeeklyMeeting.build(), noAccountFees);
             fail("cannotCreateCenterWithMandatoryAdditionalFieldsNotEntered");
-        } catch (ApplicationException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
+        } catch (BusinessRuleException e) {
+            assertThat(e.getMessageKey(), is(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
         }
     }
 }

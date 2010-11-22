@@ -67,7 +67,7 @@ public class CenterBuilder {
         }
 
         center = CenterBO.createNew(userContext, name, mfiJoiningDate, meeting, loanOfficer, office,
-                numberOfCustomersInOfficeAlready, customerCustomFields, address, externalId, activationDate);
+                numberOfCustomersInOfficeAlready, address, externalId, activationDate);
         center.updateCustomerStatus(status);
 
         if (versionNumber != null) {

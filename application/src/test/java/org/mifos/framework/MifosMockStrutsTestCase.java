@@ -26,11 +26,19 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.DatabaseDependentTest;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.*;
+import org.mifos.security.MifosUser;
 import org.mifos.service.test.TestMode;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+
 import servletunit.struts.MockStrutsTestCase;
 
 import javax.servlet.http.HttpServletRequest;
@@ -84,7 +92,13 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
             strutsConfigSet = true;
         }
         DatabaseDependentTest.before();
-        getActionServlet().getServletContext().setAttribute(ShutdownManager.class.getName(), new ShutdownManager());        
+        getActionServlet().getServletContext().setAttribute(ShutdownManager.class.getName(), new ShutdownManager());
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     protected void addRequestDateParameter(String param, String dateStr) throws InvalidDateException {

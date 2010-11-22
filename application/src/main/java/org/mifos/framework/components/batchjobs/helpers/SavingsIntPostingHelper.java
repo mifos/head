@@ -27,6 +27,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
@@ -86,7 +87,8 @@ public class SavingsIntPostingHelper extends TaskHelper {
         boolean credentialsNonExpired = true;
         boolean accountNonLocked = true;
         Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+        List<Short> roleIds = new ArrayList<Short>();
 
-       return new MifosUser(userId, branchId, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+       return new MifosUser(userId, branchId, PersonnelLevel.LOAN_OFFICER.getValue(), roleIds, username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
     }
 }

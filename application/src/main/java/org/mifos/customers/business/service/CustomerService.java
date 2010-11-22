@@ -45,7 +45,7 @@ import org.mifos.security.util.UserContext;
 
 public interface CustomerService {
 
-    void createCenter(CenterBO center, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws ApplicationException;
+    void createCenter(CenterBO center, MeetingBO meeting, List<AccountFeesEntity> accountFees);
 
     void createGroup(GroupBO group, MeetingBO meeting, List<AccountFeesEntity> accountFees) throws CustomerException;
 

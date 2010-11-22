@@ -138,7 +138,7 @@ public class CenterPersistence extends Persistence {
         List<CustomerCustomFieldEntity> customFields = CustomerCustomFieldEntity.fromDto(customFieldDto, null);
 
         CenterBO center = CenterBO.createNew(userContext, template.getDisplayName(), new DateTime(template.getMfiJoiningDate()), meeting, loanOfficer,
-                centerOffice, numberOfCustomersInOfficeAlready, customFields, template.getAddress(), template.getExternalId(), new DateMidnight().toDateTime());
+                centerOffice, numberOfCustomersInOfficeAlready, template.getAddress(), template.getExternalId(), new DateMidnight().toDateTime());
 
         CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
 

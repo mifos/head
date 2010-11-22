@@ -62,6 +62,7 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -73,8 +74,14 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     public GroupActionStrutsTest() throws Exception {
@@ -122,6 +129,12 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         fieldConfig.init();
         getActionServlet().getServletContext().setAttribute(Constants.FIELD_CONFIGURATION,
                 fieldConfig.getEntityMandatoryFieldMap());
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Override
@@ -139,6 +152,12 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
      * If the user does not have right to create a group, the application must show a permission error (see MIFOS-3499)
      */
     public void testFailureCreate_WithoutPermissions() throws Exception {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         createGroupWithCenter();
 
         UserContext userContext = TestUtils.makeUser();
@@ -893,7 +912,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
         Assert.assertTrue(group.isTrained());
         Assert.assertEquals(newDisplayName, group.getDisplayName());
-        
+
     }
 
     public void testUpdateSuccessWithoutTrained() throws Exception {

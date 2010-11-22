@@ -34,6 +34,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -46,13 +47,16 @@ import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.CustomerSearch;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.calendar.CalendarUtils;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.business.service.CenterInformationDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -169,8 +173,13 @@ public class CenterCustAction extends CustAction {
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
-        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
-        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(actionForm, meeting, customerCustomFields);
+        LocalDate mfiJoiningDate = new LocalDate(CalendarUtils.getDateFromString(actionForm.getMfiJoiningDate(), getUserContext(request).getPreferredLocale()));
+
+        Address address = actionForm.getAddress();
+        AddressDto addressDto = Address.toDto(address);
+
+        CenterCreationDetail centerCreationDetail = new CenterCreationDetail(mfiJoiningDate, actionForm.getDisplayName(), actionForm.getExternalId(), addressDto, actionForm.getLoanOfficerIdValue(), actionForm.getOfficeIdValue());
+        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(centerCreationDetail, meeting);
         createCenterQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
 
         actionForm.setCustomerId(centerDetails.getId().toString());

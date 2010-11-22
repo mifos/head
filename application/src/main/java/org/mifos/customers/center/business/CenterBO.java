@@ -28,8 +28,8 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPerformanceHistory;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
@@ -38,7 +38,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
@@ -49,7 +48,7 @@ public class CenterBO extends CustomerBO {
 
     public static CenterBO createNew(UserContext userContext, String centerName, DateTime mfiJoiningDate,
             MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO centerOffice, int numberOfCustomersInOfficeAlready,
-            List<CustomerCustomFieldEntity> customerCustomFields, Address centerAddress, String externalId, DateTime activationDate) {
+            Address centerAddress, String externalId, DateTime activationDate) {
 
         PersonnelBO formedBy = null;
         CenterBO center = new CenterBO(userContext, centerName, mfiJoiningDate, meeting, loanOfficer, centerOffice,
@@ -58,10 +57,10 @@ public class CenterBO extends CustomerBO {
         center.setExternalId(externalId);
         center.updateAddress(centerAddress);
 
-        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity.fromCustomerCustomFieldEntity(customerCustomFields, center);
-        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-            center.addCustomField(customerCustomFieldEntity);
-        }
+//        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity.fromCustomerCustomFieldEntity(customerCustomFields, center);
+//        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
+//            center.addCustomField(customerCustomFieldEntity);
+//        }
 
         return center;
     }
