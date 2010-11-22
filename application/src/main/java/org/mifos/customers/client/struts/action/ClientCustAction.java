@@ -324,7 +324,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         }
     }
 
-    @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form,
                                 @SuppressWarnings("unused") HttpServletRequest request,
                                 @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
