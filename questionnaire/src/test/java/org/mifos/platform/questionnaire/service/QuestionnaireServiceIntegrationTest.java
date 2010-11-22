@@ -23,7 +23,6 @@ package org.mifos.platform.questionnaire.service;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
@@ -69,11 +68,11 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.Arrays;
 
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
@@ -552,6 +551,17 @@ public class QuestionnaireServiceIntegrationTest {
 
     @Test
     @Transactional(rollbackFor = DataAccessException.class)
+    public void shouldNotGetInQuestionGroupsWithAllInactiveQuestions() throws SystemException {
+        String title = "QG1" + currentTimeMillis();
+        List<SectionDetail> sectionDetails = asList(getSectionWithAllInactiveQuestions("S1"), getSectionWithAllInactiveQuestions("S2"));
+        defineQuestionGroup(title, "Create", "Client", sectionDetails, true);
+        List<QuestionGroupDetail> questionGroups = questionnaireService.getQuestionGroups(new EventSourceDto("Create", "Client", "Create.Client"));
+        assertThat(questionGroups, is(notNullValue()));
+        assertThat(questionGroups.size(), is(0));
+    }
+
+    @Test
+    @Transactional(rollbackFor = DataAccessException.class)
     public void shouldSaveQuestionWithSmartSelectOptionType() {
         String quesTitle = "Ques" + currentTimeMillis();
         QuestionEntity questionEntity = new QuestionEntity();
@@ -743,6 +753,15 @@ public class QuestionnaireServiceIntegrationTest {
         section.setName(name);
         String questionTitle = "Question" + name + currentTimeMillis();
         QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.NUMERIC, true);
+        section.addQuestion(new SectionQuestionDetail(questionDetail, true));
+        return section;
+    }
+
+    private SectionDetail getSectionWithAllInactiveQuestions(String name) throws SystemException {
+        SectionDetail section = new SectionDetail();
+        section.setName(name);
+        String questionTitle = "Question" + name + currentTimeMillis();
+        QuestionDetail questionDetail = defineQuestion(questionTitle, QuestionType.NUMERIC, false);
         section.addQuestion(new SectionQuestionDetail(questionDetail, true));
         return section;
     }

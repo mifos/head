@@ -543,7 +543,7 @@ public class AccountBO extends AbstractBusinessObject {
         if (isAdjustPossibleOnLastTrxn()) {
             logger.debug(
                     "Adjustment is possible hence attempting to adjust.");
-            adjustPayment(findMostRecentPaymentByPaymentDate(), getLoggedInUser(), adjustmentComment);
+            adjustPayment(findMostRecentNonzeroPaymentByPaymentDate(), getLoggedInUser(), adjustmentComment);
             try {
                 getAccountPersistence().createOrUpdate(this);
             } catch (PersistenceException e) {
@@ -807,11 +807,10 @@ public class AccountBO extends AbstractBusinessObject {
         return findMostRecentPaymentByPaymentDate();
     }
 
-    public AccountPaymentEntity findMostRecentPaymentByPaymentDate() {
+    private AccountPaymentEntity findMostRecentPaymentByPaymentDate(List<AccountPaymentEntity> recentAccountPayments) {
 
         AccountPaymentEntity mostRecentPayment = null;
 
-        List<AccountPaymentEntity> recentAccountPayments = new ArrayList<AccountPaymentEntity>(this.accountPayments);
         if (!recentAccountPayments.isEmpty()) {
             mostRecentPayment = recentAccountPayments.get(0);
             for (AccountPaymentEntity accountPaymentEntity : recentAccountPayments) {
@@ -823,6 +822,23 @@ public class AccountBO extends AbstractBusinessObject {
         }
 
         return mostRecentPayment;
+    }
+
+    public AccountPaymentEntity findMostRecentPaymentByPaymentDate() {
+        return findMostRecentPaymentByPaymentDate(new ArrayList<AccountPaymentEntity>(this.accountPayments));
+    }
+
+    /**
+     * This method skips zero-amount payments, ie. these which were reversed by the  "payment adjustment" process
+     */
+    public AccountPaymentEntity findMostRecentNonzeroPaymentByPaymentDate() {
+        List<AccountPaymentEntity> nonzeroPayments = new ArrayList<AccountPaymentEntity>();
+        for (AccountPaymentEntity payment : this.accountPayments) {
+            if (payment.getAmount().isNonZero()) {
+                nonzeroPayments.add(payment);
+            }
+        }
+        return findMostRecentPaymentByPaymentDate(nonzeroPayments);
     }
 
     public AccountPaymentEntity getLastPmntToBeAdjusted() {

@@ -90,7 +90,6 @@ public class ClientTest extends UiTestCaseBase {
     private String response;
     private ClientViewDetailsPage viewClientDetailsPage;
     private Map<Integer, QuestionGroup> questionGroupInstancesOfClient;
-    private String sectionName;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -213,11 +212,12 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     private void testSectionShouldNotAppearInQuestionnaireWhenAllQuestionsAreInactive() {
+        testActivateQuestion(question1);
         testDeactivateQuestion(question2);
         navigateToClientDetailsPage();
         viewClientDetailsPage.getQuestionnairePage(questionGroupTitle);
-        Assert.assertFalse(sectionName + " should not be present on questionnaire when all questions are inactive",
-                selenium.isTextPresent(sectionName));
+        Assert.assertFalse("Section2 should not be present on questionnaire when all questions are inactive",
+                selenium.isTextPresent("Section2"));
     }
 
     private void testShouldEditInactiveQuestion(String response) {
@@ -226,12 +226,20 @@ public class ClientTest extends UiTestCaseBase {
         testEditQuestionGroup(response);
     }
 
-    private void testDeactivateQuestion(String question1) {
+    private void testDeactivateQuestion(String question) {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         ViewAllQuestionsPage viewAllQuestionsPage = adminPage.navigateToViewAllQuestions();
-        QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(question1);
+        QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(question);
         EditQuestionPage editQuestionPage = questionDetailPage.navigateToEditQuestionPage();
         questionDetailPage = editQuestionPage.deactivate();
+    }
+
+    private void testActivateQuestion(String question) {
+        AdminPage adminPage = navigationHelper.navigateToAdminPage();
+        ViewAllQuestionsPage viewAllQuestionsPage = adminPage.navigateToViewAllQuestions();
+        QuestionDetailPage questionDetailPage = viewAllQuestionsPage.navigateToQuestionDetail(question);
+        EditQuestionPage editQuestionPage = questionDetailPage.navigateToEditQuestionPage();
+        questionDetailPage = editQuestionPage.activate();
     }
 
 
@@ -308,9 +316,12 @@ public class ClientTest extends UiTestCaseBase {
         adminPage = createQuestionPage.submitQuestions();
 
         CreateQuestionGroupPage createQuestionGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
-        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1, question2), "View Client");
+        CreateQuestionGroupParameters parameters;
+        parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question1), "View Client", "Section1");
         createQuestionGroupPage.addSection(parameters);
         createQuestionGroupPage.markEveryOtherQuestionsMandatory(asList(question1));
+        parameters = getCreateQuestionGroupParameters(questionGroupTitle, asList(question2), "View Client", "Section2");
+        createQuestionGroupPage.addSection(parameters);
         createQuestionGroupPage.submit(parameters);
     }
 
@@ -372,18 +383,17 @@ public class ClientTest extends UiTestCaseBase {
         adminPage = cqPage.submitQuestions();
 
         CreateQuestionGroupPage cqGroupPage = adminPage.navigateToCreateQuestionGroupPage().verifyPage();
-        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(qgTitle, asList(q1, q2), "Create Client");
+        CreateQuestionGroupParameters parameters = getCreateQuestionGroupParameters(qgTitle, asList(q1, q2), "Create Client", "Section1");
         cqGroupPage.addSection(parameters);
         cqGroupPage.markEveryOtherQuestionsMandatory(asList(q1));
         cqGroupPage.submit(parameters);
     }
 
-    private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, List<String> questions, String appliesTo) {
+    private CreateQuestionGroupParameters getCreateQuestionGroupParameters(String questionGroupTitle, List<String> questions, String appliesTo, String sectionName) {
         CreateQuestionGroupParameters parameters = new CreateQuestionGroupParameters();
         parameters.setTitle(questionGroupTitle);
         parameters.setAppliesTo(appliesTo);
         parameters.setAnswerEditable(true);
-        sectionName = "Default Section";
         parameters.setSectionName(sectionName);
         parameters.setQuestions(questions);
         return parameters;

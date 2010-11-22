@@ -390,18 +390,11 @@ public class CustomerAccountBO extends AccountBO {
         }
         logger.debug(
                 "Total payments on this account is  " + getAccountPayments().size());
-        if (null == findMostRecentPaymentByPaymentDate() && getLastPmntAmnt() == 0) {
-
+        if (null == findMostRecentNonzeroPaymentByPaymentDate()) {
             return false;
         }
 
-        for (AccountTrxnEntity accntTrxn : findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
-            if (accntTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.CUSTOMER_ADJUSTMENT.getValue())) {
-                return false;
-            }
-        }
-
-        logger.debug("Adjustment is not possible ");
+        logger.debug("Adjustment is possible");
         return true;
     }
 
