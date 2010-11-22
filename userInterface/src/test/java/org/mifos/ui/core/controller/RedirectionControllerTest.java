@@ -25,15 +25,15 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.web.servlet.ModelAndView;
-import org.testng.Assert;
-import org.testng.annotations.Test;
 
-@Test(groups = { "unit" })
 public class RedirectionControllerTest {
 
+    @Test
     public void testHandleRequest() throws ServletException, IOException {
 
         String expectedPageToRedirectTo = "foopage";

@@ -37,10 +37,6 @@
 
         <!-- from parent pom -->
         <dependency>
-            <groupId>org.mifos</groupId>
-            <artifactId>mifos-testFramework</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
         </dependency>
@@ -67,11 +63,6 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <classifier>jdk15</classifier>
         </dependency>
         <dependency>
             <groupId>org.freemarker</groupId>

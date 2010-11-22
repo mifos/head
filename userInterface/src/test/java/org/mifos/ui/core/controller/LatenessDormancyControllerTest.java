@@ -78,7 +78,6 @@ public class LatenessDormancyControllerTest {
         // verification
         Assert.assertThat(returnedFormBean, is(expectedFormBean));
         Mockito.verify(adminServiceFacade).retrieveProductConfiguration();
-        Assert.fail("failing on purpose but not being picked up by build.");
     }
 
     @Test
