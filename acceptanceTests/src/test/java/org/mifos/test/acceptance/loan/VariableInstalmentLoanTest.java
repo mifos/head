@@ -22,10 +22,11 @@ package org.mifos.test.acceptance.loan;
 
 
 import org.joda.time.DateTime;
+import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
-import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -56,6 +57,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
     private DateTime systemDateTime;
     private NavigationHelper navigationHelper;
+    private FeeTestHelper feeTestHelper;
 
     @AfterMethod
     public void logOut() {
@@ -76,6 +78,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
         dataSetup.createClient(clientName, officeName, userName);
+        feeTestHelper = new FeeTestHelper(dataSetup);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -92,8 +95,12 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
         DateTime disbursalDate = systemDateTime.plusDays(1);
 
         createLoanProductWithVariableInstalment(maxGap, minGap, minInstalmentAmount, formParameters);
-        createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
-        validateRepaymentScheduleFieldDefault(noOfInstallments).
+        navigationHelper.navigateToHomePage();
+        loanTestHelper.
+                navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
+                setDisbursalDate(disbursalDate).
+                clickContinue().
+                validateRepaymentScheduleFieldDefault(noOfInstallments).
                 validateDateFieldValidations(disbursalDate,minGap,maxGap,noOfInstallments).
                 verifyInstallmentTotalValidations(noOfInstallments,minInstalmentAmount, disbursalDate, minGap).
                 verifyValidData(noOfInstallments,minGap,minInstalmentAmount,disbursalDate, maxGap).
@@ -101,6 +108,28 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
                 verifyEditSchedule().
                 verifySchedulePersistOnEdit(noOfInstallments,minGap,minInstalmentAmount,disbursalDate, maxGap);
 
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    public void verifyInvalidFees() throws Exception {
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(5, 1000, 20);
+        applicationDatabaseOperation.updateLSIM(1);
+        DateTime disbursalDate = systemDateTime.plusDays(1);
+        String periodicFees = feeTestHelper.createPeriodicFee("loanWeeklyFee", FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
+        String fixedFeePerAmountAndInterest = feeTestHelper.createFixedFee("fixedFeePerAmountAndInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 100, "Loan Amount+Interest");
+        String fixedFeePerInterest = feeTestHelper.createFixedFee("fixedFeePerInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 20, "Interest");
+        String[] blockedInterest = {periodicFees, fixedFeePerAmountAndInterest, fixedFeePerInterest};
+
+        createLoanProductWithVariableInstalment(100, 5, 100, formParameters);
+        navigationHelper.navigateToHomePage();
+        loanTestHelper.
+                navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
+                setDisbursalDate(disbursalDate).
+                verifyInvalidFeeBlocked(blockedInterest).
+                clickContinue().
+                clickPreviewAndGoToReviewLoanAccountPage().
+                submit().navigateToLoanAccountDetailsPage().
+                navigateToApplyCharge().verifyBlockedFee(blockedInterest);
     }
 
     private DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate) {
@@ -119,15 +148,6 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
                 fillVariableInstalmentOption(String.valueOf(maxGap),String.valueOf(minGap), String.valueOf(minInstalmentAmount)).
                 submitAndGotoNewLoanProductPreviewPage().
                 submit();
-    }
-
-
-    private ViewInstallmentDetailsPage createNewLoanAccountAndNavigateToRepaymentSchedule(DateTime validDisbursalDate) {
-        navigationHelper.navigateToHomePage();
-        return loanTestHelper.
-                navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters()).
-                setDisbursalDate(validDisbursalDate).
-                clickContinue();
     }
 
     private CreateLoanAccountSearchParameters setLoanSearchParameters() {

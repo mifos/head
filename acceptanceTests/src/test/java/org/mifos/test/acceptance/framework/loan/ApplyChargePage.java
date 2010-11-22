@@ -23,6 +23,7 @@ package org.mifos.test.acceptance.framework.loan;
 import org.mifos.test.acceptance.framework.MifosPage;
 
 import com.thoughtworks.selenium.Selenium;
+import org.testng.Assert;
 
 
 public class ApplyChargePage extends MifosPage {
@@ -42,5 +43,12 @@ public class ApplyChargePage extends MifosPage {
         waitForPageToLoad();
 
         return new LoanAccountPage(selenium);
+    }
+
+    public void verifyBlockedFee(String[] blockedInterest) {
+        for (int index = 0; index < blockedInterest.length; index++) {
+            String fee = blockedInterest[index];
+            Assert.assertTrue(!selenium.isElementPresent("//select[@name='chargeType']/option[text()='" + fee + "']"));
+        }
     }
 }

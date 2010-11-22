@@ -39,6 +39,10 @@ public class ApplicationDatabaseOperation {
                 "login_name = '" + userLoginName + "';");
     }
 
+    public boolean doesFeeExist(String feeName) throws SQLException {
+        return doesEntityExist("select count(fee_name) from fees where fee_name = '" + feeName + "';");
+    }
+
     private boolean doesEntityExist(String entityCountQuery) throws SQLException {
         ResultSet resultSet = null;
         try{

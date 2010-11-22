@@ -26,6 +26,7 @@ public class FeesCreatePage extends AbstractPage {
         public static final int WEEKLY_FEE_RECURRENCE = 1;
         public static final int ONETIME_FEE_FREQUENCY = 2;
         public static final int PERIODIC_FEE_FREQUENCY = 1;
+        public static final String ALL_CUSTOMERS = "All Customers";
         private String feeName;
         private String categoryType;
         private boolean defaultFees;
@@ -38,6 +39,7 @@ public class FeesCreatePage extends AbstractPage {
         private double amount;
         private int glCode;
         private String feeFormula;
+        public static final String LOAN = "Loans";
 
         public String getFeeFormula() {
             return this.feeFormula;
@@ -137,7 +139,7 @@ public class FeesCreatePage extends AbstractPage {
 
     }
 
-    public void fillFeesParameters(FeesCreatePage.SubmitFormParameters parameters) {
+    public FeesCreatePage fillFeesParameters(SubmitFormParameters parameters) {
         selenium.type("feescreate.input.feeName", parameters.getFeeName());
         selenium.select("feescreate.label.categoryType", "label=" + parameters.getCategoryType());
         selenium.click("//input[@id='feescreate.button.feeFrequencyType' and @value='"
@@ -154,7 +156,11 @@ public class FeesCreatePage extends AbstractPage {
             selenium.type("feescreate.input.monthRecurAfter", Integer.toString(parameters.getMonthRecurAfter()));
         }
         if (parameters.getCustomerCharge() != null) {
-            selenium.select("feescreate.label.customerCharge", "label=" + parameters.getCustomerCharge());
+            if (parameters.getCategoryType().equals(FeesCreatePage.SubmitFormParameters.LOAN)) {
+                selenium.select("loanCharge", "label=" + parameters.getCustomerCharge());
+            } else {
+                selenium.select("feescreate.label.customerCharge", "label=" + parameters.getCustomerCharge());
+            }
         }
 
         if (parameters.getAmount() != 0) {
@@ -162,9 +168,10 @@ public class FeesCreatePage extends AbstractPage {
         }
         if (parameters.getFeeFormula() != null) {
             selenium.select("feescreate.label.feeFormula", parameters.getFeeFormula());
+            selenium.type("feescreate.input.rate", Double.toString(parameters.getRate()));
         }
-        selenium.type("feescreate.input.rate", Double.toString(parameters.getRate()));
         selenium.select("feescreate.label.glCode", "label=" + parameters.getGlCode());
+        return this;
     }
 
     public PreviewFeesCreatePage submitPageAndGotoPreviewFeesCreatePage() {

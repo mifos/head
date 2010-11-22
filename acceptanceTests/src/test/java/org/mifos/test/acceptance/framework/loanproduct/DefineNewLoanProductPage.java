@@ -95,7 +95,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String principalGLCode;
         private boolean interestWaiver;
         private List<String> questionGroups;
-
        public String getBranch() {
             return this.branch;
         }
@@ -263,7 +262,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
        public void setQuestionGroups(List<String> questionGroups) {
            this.questionGroups = questionGroups;
        }
-   }
+    }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
         selenium.type("createLoanProduct.input.prdOffering", parameters.getOfferingName());
@@ -298,10 +297,15 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public DefineNewLoanProductPreviewPage submitAndGotoNewLoanProductPreviewPage() {
-        selenium.click(previewButton);
-        waitForPageToLoad();
+        submit();
         return new DefineNewLoanProductPreviewPage(selenium);
     }
+
+    private void submit() {
+        selenium.click(previewButton);
+        waitForPageToLoad();
+    }
+
     public DefineNewLoanProductPage verifyVariableInstalmentOptionsDefaults() {
 
         Assert.assertTrue(!selenium.isChecked(configureVariableInstalmentsCheckbox)
@@ -317,7 +321,6 @@ public class DefineNewLoanProductPage extends AbstractPage {
         Assert.assertTrue(selenium.getValue(minInstalmentAmountTextBox).equals(""));
         return this;
     }
-
     public DefineNewLoanProductPage verifyVariableInstalmentOptionsFields() {
         fillInstalmentOptionsAndSubmit("text,", "text,", "text,");
         Assert.assertTrue(selenium.isTextPresent("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed"));
@@ -402,5 +405,33 @@ public class DefineNewLoanProductPage extends AbstractPage {
         submitAndGotoNewLoanProductPreviewPage();
         Assert.assertTrue(selenium.isTextPresent("Warning threshold should be a non-negative number."));
     }
+
+    public DefineNewLoanProductPage verifyBlockedInterestTypes() {
+        verifyInterestBlockedForVariableInstallment(SubmitFormParameters.FLAT);
+        verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_PRINCIPLE_BALANCE);
+        verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_BALANCE_EPI);
+        return this;
+    }
+
+    private void verifyInterestBlockedForVariableInstallment(int interestType) {
+        selenium.select("interestTypes", "value=" + interestType);
+        fillInstalmentOptionsAndSubmit("10","10","100");
+        submit();
+        Assert.assertTrue(selenium.isTextPresent("The selected interest type is invalid for variable installment loan product"));
+    }
+
+    public void verifyFeeTypesBlocked(String[] feeNames) {
+        for (int index = 0; index < feeNames.length; index++) {
+            String feeName = feeNames[index];
+            selenium.addSelection("feeId", "label=" + feeName);
+        }
+        selenium.click("LoanFeesList.button.add");
+        submit();
+        for (int index = 0; index < feeNames.length; index++) {
+            String feeName = feeNames[index];
+            Assert.assertTrue(selenium.isTextPresent(feeName + " fee cannot be applied to variable installment loan product"));
+        }
+    }
+
 
 }

@@ -2,6 +2,7 @@ package org.mifos.test.acceptance.util;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
@@ -67,6 +68,18 @@ public class TestDataSetup {
                 navigateToCustomerChangeStatusPage().
                 submitAndGotoCustomerChangeStatusPreviewDataPage(setApprovalStatus()).
                 submitAndGotoClientViewDetailsPage();
+    }
+
+    public void createFee(FeesCreatePage.SubmitFormParameters feeParameters) throws SQLException {
+        if (applicationDatabaseOperation.doesFeeExist(feeParameters.getFeeName())) {
+            return;
+        }
+        new NavigationHelper(selenium).
+                navigateToAdminPage().
+                navigateToFeesCreate().
+                fillFeesParameters(feeParameters).
+                submitPageAndGotoPreviewFeesCreatePage().
+                submit();
     }
 
     private CustomerChangeStatusPage.SubmitFormParameters setApprovalStatus() {

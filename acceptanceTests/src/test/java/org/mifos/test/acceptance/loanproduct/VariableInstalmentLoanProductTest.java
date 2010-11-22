@@ -22,8 +22,10 @@ package org.mifos.test.acceptance.loanproduct;
 
 
 import org.joda.time.DateTime;
+import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -59,6 +61,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     private InitializeApplicationRemoteTestingService initRemote;
     @Autowired
     private DbUnitUtilities dbUnitUtilities;
+    private FeeTestHelper feeTestHelper;
     // ---
 
     @Override
@@ -77,6 +80,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
         dataSetup.createClient(clientName, officeName, userName);
+        feeTestHelper = new FeeTestHelper(dataSetup);
     }
 
     @AfterMethod
@@ -135,10 +139,17 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     public void verifyVariableInstalmentField() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         applicationDatabaseOperation.updateLSIM(1);
-        loanProductTestHelper.
+
+        String periodicFees = feeTestHelper.createPeriodicFee("loanWeeklyFee", FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
+        String fixedFeePerAmountAndInterest = feeTestHelper.createFixedFee("fixedFeePerAmountAndInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 100, "Loan Amount+Interest");
+        String fixedFeePerInterest = feeTestHelper.createFixedFee("fixedFeePerInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 20, "Interest");
+
+            loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 verifyVariableInstalmentOptionsDefaults().
-                verifyVariableInstalmentOptionsFields();
+                verifyVariableInstalmentOptionsFields().
+                verifyBlockedInterestTypes().
+                verifyFeeTypesBlocked(new String[]{periodicFees, fixedFeePerAmountAndInterest, fixedFeePerInterest});
     }
 
     private void createAndValidateLoanProductWithVariableInstalment(String maxGap, String minGap, String minInstalmentAmount, DefineNewLoanProductPage.SubmitFormParameters formParameters) {
@@ -158,5 +169,6 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName, loanProductName).
                 verifyVariableInstalmentsInLoanProductSummery(maxGap, minGap, minInstalmentAmount);
     }
+
 }
 

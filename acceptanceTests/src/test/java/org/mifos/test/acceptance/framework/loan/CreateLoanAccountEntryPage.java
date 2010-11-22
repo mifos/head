@@ -104,16 +104,19 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.select("monthWeek", formParameters.getLsimWeekDay());
         }
 
-        selenium.click(continueButton);
-        waitForPageToLoad();
+        submit();
         return new ViewInstallmentDetailsPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
-        selenium.click(continueButton);
-        waitForPageToLoad();
+        submit();
         return navigateToConfirmationPage();
 
+    }
+
+    private void submit() {
+        selenium.click(continueButton);
+        waitForPageToLoad();
     }
 
     public HomePage navigateToHomePage(){
@@ -157,15 +160,13 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
 
     public ViewInstallmentDetailsPage clickContinue(){
-        selenium.click(continueButton);
-        waitForPageToLoad();
+        submit();
         selenium.isVisible("schedulePreview.button.preview");
         return  new ViewInstallmentDetailsPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {
-        selenium.click(continueButton);
-        waitForPageToLoad();
+        submit();
         return navigateToConfirmationPage();
 
     }
@@ -232,6 +233,22 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     public CreateLoanAccountEntryPage verifyInterestTypeInLoanCreation(String interestTypeName) {
         Assert.assertTrue(selenium.isTextPresent("Interest Rate Type:"));
         Assert.assertTrue(selenium.isTextPresent(interestTypeName));
+        return this;
+    }
+
+    public CreateLoanAccountEntryPage verifyInvalidFeeBlocked(String[] fees) {
+        for (int index = 0; index < fees.length; index++) {
+            String fee = fees[index];
+            selenium.select("selectedFee[" + index + "].feeId",fee);
+        }
+        submit();
+        for (int index = 0; index < fees.length; index++) {
+            String fee = fees[index];
+            Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
+        }
+        for (int index = 0; index < fees.length; index++) {
+            selenium.select("selectedFee[" + index + "].feeId","--Select--");
+        }
         return this;
     }
 }

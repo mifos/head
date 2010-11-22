@@ -55,7 +55,7 @@ public class DefineNewFeesTest extends UiTestCaseBase{
     public static FeesCreatePage.SubmitFormParameters getCreateOneTimeFeesParameters(){
          FeesCreatePage.SubmitFormParameters formParameters =  new FeesCreatePage.SubmitFormParameters();
          formParameters.setFeeName(StringUtil.getRandomString(5));
-         formParameters.setCategoryType("All Customers");
+        formParameters.setCategoryType(formParameters.ALL_CUSTOMERS);
          formParameters.setDefaultFees(false);
          formParameters.setFeeFrequencyType(formParameters.ONETIME_FEE_FREQUENCY);
          formParameters.setCustomerCharge("Upfront");
