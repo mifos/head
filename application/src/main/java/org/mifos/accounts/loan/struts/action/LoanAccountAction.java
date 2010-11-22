@@ -724,11 +724,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                                     ActionForwards.preview_success :
                                                     ActionForwards.preview_failure;
 
+        boolean cashFlowBounded = bindCashflowIfPresent(request, loanAccountForm);
         //----to display errors on second page
-        if(forward.equals(ActionForwards.preview_success)) {
-            ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request, (LoanAccountActionForm) form);
-            if(!validateCashflowForInstallments.isEmpty()) {
-                addErrors(request,validateCashflowForInstallments);
+        if (forward.equals(ActionForwards.preview_success)) {
+            if (cashFlowBounded) {
+                ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request,
+                        (LoanAccountActionForm) form);
+                if (!validateCashflowForInstallments.isEmpty()) {
+                    addErrors(request, validateCashflowForInstallments);
+                }
             }
         }
 
