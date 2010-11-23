@@ -60,6 +60,10 @@ public class ApplicableAccountFeeDto implements Serializable {
         return this.amount;
     }
 
+    public void setFeeRemoved(boolean isRemoved) {
+        this.removed = isRemoved;
+    }
+
     public boolean isFeeRemoved() {
         return this.removed;
     }

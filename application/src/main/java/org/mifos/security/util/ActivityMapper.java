@@ -599,20 +599,21 @@ public class ActivityMapper {
                 new ActivityContext(getActivityIdForState(newSate), recordOfficeId, recordLoanOfficerId));
     }
 
-    public boolean isSavePermittedForCustomer(short newSate, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) {
+    public boolean isSavePermittedForCustomer(short newSate, UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
 
         final short activityId = getActivityIdForCustomerState(newSate);
 
-        if (recordOfficeId == null) {
-            recordOfficeId = userContext.getBranchId();
+        Short officeId = recordOfficeId;
+        if (officeId == null) {
+            officeId = userContext.getBranchId();
         }
 
-        if (recordLoanOfficerId == null) {
-            recordLoanOfficerId = userContext.getId();
+        Short loanOfficerId = recordLoanOfficerId;
+        if (loanOfficerId == null) {
+            loanOfficerId = userContext.getId();
         }
 
-        ActivityContext activityContext = new ActivityContext(activityId, recordOfficeId, recordLoanOfficerId);
+        ActivityContext activityContext = new ActivityContext(activityId, officeId, loanOfficerId);
 
         return AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext);
     }

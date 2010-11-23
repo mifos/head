@@ -44,7 +44,7 @@ import org.mifos.security.util.UserContext;
  * A singleton authorization service. Tracks a map of activities to roles
  * synchronized with the <code>activity</code> table in the database.
  */
-
+@SuppressWarnings("unchecked")
 public class AuthorizationManager {
 
     private Map<Short, Set> activityToRolesCacheMap = null;
