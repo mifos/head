@@ -27,6 +27,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.plugin.PluginManager;
 import org.mifos.framework.struts.action.BaseAction;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -132,8 +134,10 @@ public class ImportTransactionsAction extends BaseAction {
 			request.setAttribute("numberOfErrorRows", importResult.getNumberOfErrorRows());
 			request.setAttribute("numberOfIgnoredRows", importResult.getNumberOfIgnoredRows());
 			request.setAttribute("numberOfReadRows", importResult.getNumberOfReadRows());
-			request.setAttribute("totalAmountOfTransactionsImported", importResult.getTotalAmountOfTransactionsImported());
-			request.setAttribute("totalAmountOfTransactionsWithError", importResult.getTotalAmountOfTransactionsWithError());
+			request.setAttribute("totalAmountOfTransactionsImported", new Money(Money.getDefaultCurrency(),
+                importResult.getTotalAmountOfTransactionsImported()).toString());
+			request.setAttribute("totalAmountOfTransactionsWithError", new Money(Money.getDefaultCurrency(),
+                importResult.getTotalAmountOfTransactionsWithError()).toString());
 
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG, generateStatusLogfile(importResult, ti).getBytes());
 			request.getSession().setAttribute(SESSION_ATTRIBUTE_LOG_FILENAME, statusLogfileName(importTransactionsFile.getFileName()));
@@ -225,8 +229,8 @@ public class ImportTransactionsAction extends BaseAction {
 			"%d rows will be ignored\n" +
 			"%d rows contained errors and were not imported\n" +
 			"\n" +
-			"Total amount of transactions imported: %.2f\n" +
-			"Total amount of transactions with error: %.2f\n" +
+			"Total amount of transactions imported: %s\n" +
+			"Total amount of transactions with error: %s\n" +
 			"\n" +
 			"%s";
 
@@ -239,8 +243,8 @@ public class ImportTransactionsAction extends BaseAction {
 				transactionImport.getSuccessfullyParsedRows(),
 				result.getNumberOfIgnoredRows(),
 				result.getNumberOfErrorRows(),
-				result.getTotalAmountOfTransactionsImported(),
-				result.getTotalAmountOfTransactionsWithError(),
+				new Money(Money.getDefaultCurrency(), result.getTotalAmountOfTransactionsImported()).toString(),
+				new Money(Money.getDefaultCurrency(), result.getTotalAmountOfTransactionsWithError()).toString(),
 				rowErrors);
 	}
 
