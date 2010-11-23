@@ -23,7 +23,7 @@ package org.mifos.dto.domain;
 import java.io.Serializable;
 
 @SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EC_UNRELATED_TYPES"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CustomerDto implements Serializable {
 
     private Integer customerId;

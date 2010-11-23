@@ -32,12 +32,15 @@ import org.mifos.dto.domain.UserReferenceDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+@SuppressWarnings("PMD")
 @RunWith(MockitoJUnitRunner.class)
 public class AccountPaymentParametersDtoTest {
-    private UserReferenceDto user = new UserReferenceDto((short) -1);
-    private AccountReferenceDto account = new AccountReferenceDto(-1);
+
+    private UserReferenceDto user = new UserReferenceDto(Short.valueOf("-1"));
+    private AccountReferenceDto account = new AccountReferenceDto(Integer.valueOf(-1));
     private BigDecimal paymentAmount = new BigDecimal("0.0");
     private LocalDate paymentDate = new LocalDate(1990, 1, 1);
+
     @Mock
     private PaymentTypeDto paymentType;
     private String emptyComment = "";

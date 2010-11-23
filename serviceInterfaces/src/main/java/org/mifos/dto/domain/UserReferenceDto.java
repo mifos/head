@@ -29,14 +29,14 @@ package org.mifos.dto.domain;
 public class UserReferenceDto {
 
     /** The user id. */
-    private final short userId;
+    private final Short userId;
 
     /**
      * Instantiates a new user reference dto.
      *
      * @param userId the user id
      */
-    public UserReferenceDto(short userId) {
+    public UserReferenceDto(Short userId) {
         this.userId = userId;
     }
 
@@ -45,8 +45,7 @@ public class UserReferenceDto {
      *
      * @return the user id
      */
-    public short getUserId() {
+    public Short getUserId() {
         return this.userId;
     }
-
 }

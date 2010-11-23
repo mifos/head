@@ -49,12 +49,13 @@ public class AccountReferenceDto {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+        int prime = 31;
         int result = 1;
         result = prime * result + this.accountId;
         return result;
     }
 
+    @SuppressWarnings("PMD")
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

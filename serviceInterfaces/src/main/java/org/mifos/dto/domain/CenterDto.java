@@ -39,6 +39,7 @@ public class CenterDto {
     private final List<PersonnelDto> activeLoanOfficersForBranch;
     private final boolean centerHierarchyExists;
 
+    @SuppressWarnings("PMD")
     public CenterDto(Short loanOfficerId, Integer customerId, String globalCustNum, DateTime mfiJoiningDate,
             String mfiJoiningDateAsString, String externalId, AddressDto address,
             List<CustomerPositionDto> customerPositionDtos, List<CustomFieldDto> customFieldDtos,

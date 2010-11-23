@@ -28,7 +28,7 @@ package org.mifos.dto.domain;
 public class PaymentTypeDto {
 
     /** The value of the internal ID used for this payment type. */
-    private final short value;
+    private final Short value;
 
     /** The name of the payment type. */
     private final String name;
@@ -43,7 +43,7 @@ public class PaymentTypeDto {
      * @param value the ID value
      * @param name the name
      */
-    public PaymentTypeDto(short value, String name) {
+    public PaymentTypeDto(Short value, String name) {
         this.value = value;
         this.name = name;
     }
@@ -53,7 +53,7 @@ public class PaymentTypeDto {
      *
      * @return the value
      */
-    public short getValue() {
+    public Short getValue() {
         return value;
     }
 
@@ -68,13 +68,14 @@ public class PaymentTypeDto {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
+        int prime = 31;
         int result = 1;
         result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());
         result = prime * result + this.value;
         return result;
     }
 
+    @SuppressWarnings("PMD")
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {
@@ -94,10 +95,7 @@ public class PaymentTypeDto {
         } else if (!this.name.equals(other.name)) {
             return false;
         }
-        if (this.value != other.value) {
-            return false;
-        }
-        return true;
+        return this.value.equals(other.value);
     }
 
     @Override

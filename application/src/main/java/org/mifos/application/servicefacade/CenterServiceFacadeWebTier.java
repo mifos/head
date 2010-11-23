@@ -231,7 +231,10 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
                     .getMfiJoiningDate().toString());
         }
 
-        AddressDto address = Address.toDto(center.getAddress());
+        AddressDto address = null;
+        if (center.getAddress() != null) {
+            address = Address.toDto(center.getAddress());
+        }
         return new CenterDto(loanOfficerId, center.getCustomerId(), center.getGlobalCustNum(), mfiJoiningDate,
                 mfiJoiningDateAsString, center.getExternalId(), address, customerPositionDtos,
                 customFieldDtos, customerList, activeLoanOfficersForBranch, true);
