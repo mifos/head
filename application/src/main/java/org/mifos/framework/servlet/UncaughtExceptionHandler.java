@@ -25,14 +25,13 @@ import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
-import org.springframework.security.access.AccessDeniedException;
 
 public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
 
@@ -52,7 +51,7 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
 
             modelAndView.addObject("uncaughtException", ex);
             modelAndView.addObject("requestUri", requestUri);
-            if (isDevCookieAvailable(request) && ex != null) {
+            if (ex != null) {
                 Writer result = new StringWriter();
                 ex.printStackTrace(new PrintWriter(result));
                 modelAndView.addObject("stackString", result.toString());
@@ -79,17 +78,4 @@ public class UncaughtExceptionHandler extends SimpleMappingExceptionResolver {
         return null;
     }
 
-    private boolean isDevCookieAvailable(HttpServletRequest request) {
-        boolean cookieExists = false;
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("MifosDevCookie".equals(cookie.getName())) {
-                    cookieExists = true;
-                    break;
-                }
-            }
-        }
-        return cookieExists;
-    }
 }
