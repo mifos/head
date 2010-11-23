@@ -18,17 +18,19 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.personnel.business;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.api.DataTransferObject;
+import java.io.Serializable;
+
 
 /**
  * I am an immutable DTO for PersonnelBO
  */
-public class PersonnelDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class PersonnelDto implements Serializable {
 
     private final Short personnelId;
-
     private final String displayName;
 
     public PersonnelDto(final Short personnelId, final String displayName) {

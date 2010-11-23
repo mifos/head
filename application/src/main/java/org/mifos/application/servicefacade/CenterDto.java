@@ -26,8 +26,8 @@ import org.joda.time.DateTime;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.accounts.api.CustomerDto;
-import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 

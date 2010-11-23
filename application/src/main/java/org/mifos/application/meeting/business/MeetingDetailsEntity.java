@@ -25,6 +25,8 @@ import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.dto.domain.MeetingDetailsDto;
+import org.mifos.dto.domain.MeetingRecurrenceDto;
 import org.mifos.framework.business.AbstractEntity;
 
 /**
@@ -150,4 +152,8 @@ public class MeetingDetailsEntity extends AbstractEntity {
         return versionNo;
     }
 
+    public MeetingDetailsDto toDto() {
+        MeetingRecurrenceDto meetingRecurrenceDto =  this.meetingRecurrence.toDto();
+        return new MeetingDetailsDto(this.recurrenceType.getRecurrenceId().intValue(), this.recurrenceType.getRecurrenceName(), this.recurAfter.intValue(), meetingRecurrenceDto);
+    }
 }

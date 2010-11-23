@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
@@ -38,6 +37,7 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -47,7 +47,7 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
-public class CenterCustActionForm extends CustomerActionForm implements QuestionResponseCapturer{
+public class CenterCustActionForm extends CustomerActionForm implements QuestionResponseCapturer {
 
     private String mfiJoiningDateDD;
     private String mfiJoiningDateMM;
@@ -152,8 +152,8 @@ public class CenterCustActionForm extends CustomerActionForm implements Question
     }
 
     public void clearActionFormFields() {
-        setDefaultFees(new ArrayList<FeeDto>());
-        setAdditionalFees(new ArrayList<FeeDto>());
+        setDefaultFees(new ArrayList<ApplicableAccountFeeDto>());
+        setAdditionalFees(new ArrayList<ApplicableAccountFeeDto>());
         setCustomerPositions(new ArrayList<CustomerPositionDto>());
         setCustomFields(new ArrayList<CustomFieldDto>());
         setAddress(new Address());

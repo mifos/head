@@ -18,11 +18,23 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.center.business.service;
+package org.mifos.dto.domain;
 
-import org.mifos.framework.exceptions.ServiceException;
+public class CreateAccountFeeDto {
 
-public interface CenterDetailsServiceFacade {
+    private final Integer feeId;
+    private final String amount;
 
-    CenterInformationDto getCenterInformationDto(String globalCustNum) throws ServiceException;
+    public CreateAccountFeeDto(Integer feeId, String amount) {
+        this.feeId = feeId;
+        this.amount = amount;
+    }
+
+    public Integer getFeeId() {
+        return this.feeId;
+    }
+
+    public String getAmount() {
+        return this.amount;
+    }
 }

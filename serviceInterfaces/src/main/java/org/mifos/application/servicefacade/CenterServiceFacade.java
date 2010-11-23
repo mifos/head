@@ -18,11 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.center.business.service;
+package org.mifos.application.servicefacade;
 
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.screen.CenterFormCreationDto;
 
-public interface CenterDetailsServiceFacade {
+public interface CenterServiceFacade {
 
-    CenterInformationDto getCenterInformationDto(String globalCustNum) throws ServiceException;
+    CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation);
 }

@@ -24,6 +24,7 @@ import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,9 +40,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.application.servicefacade.CenterDto;
-import org.mifos.application.servicefacade.CenterFormCreationDto;
 import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.CustomerSearch;
@@ -54,9 +53,15 @@ import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
+import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
+import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.screen.CenterFormCreationDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -67,6 +72,7 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 public class CenterCustAction extends CustAction {
 
@@ -125,14 +131,11 @@ public class CenterCustAction extends CustAction {
         CenterCreation centerCreationDto = new CenterCreation(actionForm.getOfficeIdValue(), userContext.getId(),
                 userContext.getLevelId(), userContext.getPreferredLocale());
 
-        CenterFormCreationDto centerFormCreation = this.customerServiceFacade.retrieveCenterFormCreationData(centerCreationDto);
+        CenterFormCreationDto centerFormCreation = this.centerServiceFacade.retrieveCenterFormCreationData(centerCreationDto);
 
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerFormCreation
-                .getCustomFieldViews(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerFormCreation
-                .getActiveLoanOfficersForBranch(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, centerFormCreation
-                .getAdditionalFees(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerFormCreation.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerFormCreation.getActiveLoanOfficersForBranch(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, centerFormCreation.getAdditionalFees(), request);
         actionForm.setCustomFields(centerFormCreation.getCustomFieldViews());
         actionForm.setDefaultFees(centerFormCreation.getDefaultFees());
 
@@ -178,12 +181,24 @@ public class CenterCustAction extends CustAction {
         Address address = actionForm.getAddress();
         AddressDto addressDto = Address.toDto(address);
 
-        CenterCreationDetail centerCreationDetail = new CenterCreationDetail(mfiJoiningDate, actionForm.getDisplayName(), actionForm.getExternalId(), addressDto, actionForm.getLoanOfficerIdValue(), actionForm.getOfficeIdValue());
-        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(centerCreationDetail, meeting);
-        createCenterQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
+        MeetingDto meetingDto = meeting.toDto();
 
-        actionForm.setCustomerId(centerDetails.getId().toString());
-        actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());
+        List<CreateAccountFeeDto> accountFeesToBeApplied = new ArrayList<CreateAccountFeeDto>();
+        List<ApplicableAccountFeeDto> feesToBeApplied = actionForm.getFeesToApply();
+        for (ApplicableAccountFeeDto feeDto : feesToBeApplied) {
+            accountFeesToBeApplied.add(new CreateAccountFeeDto(feeDto.getFeeId(), feeDto.getAmount()));
+        }
+
+        try {
+            CenterCreationDetail centerCreationDetail = new CenterCreationDetail(mfiJoiningDate, actionForm.getDisplayName(), actionForm.getExternalId(), addressDto, actionForm.getLoanOfficerIdValue(), actionForm.getOfficeIdValue(), accountFeesToBeApplied);
+            CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(centerCreationDetail, meetingDto);
+            createCenterQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
+
+            actionForm.setCustomerId(centerDetails.getId().toString());
+            actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());
+        } catch (BusinessRuleException e) {
+            throw new ApplicationException(e.getMessageKey(), e);
+        }
 
         return mapping.findForward(ActionForwards.create_success.toString());
     }

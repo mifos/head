@@ -18,11 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.center.business.service;
+package org.mifos.dto.domain;
 
-import org.mifos.framework.exceptions.ServiceException;
+public class MeetingTypeDto {
 
-public interface CenterDetailsServiceFacade {
+    private final Integer meetingTypeId;
+    private final String meetingPurpose;
+    private final String description;
 
-    CenterInformationDto getCenterInformationDto(String globalCustNum) throws ServiceException;
+    public MeetingTypeDto(Integer meetingTypeId, String meetingPurpose, String description) {
+        this.meetingTypeId = meetingTypeId;
+        this.meetingPurpose = meetingPurpose;
+        this.description = description;
+    }
+
+    public Integer getMeetingTypeId() {
+        return this.meetingTypeId;
+    }
+
+    public String getMeetingPurpose() {
+        return this.meetingPurpose;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
 }

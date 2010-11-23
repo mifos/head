@@ -40,8 +40,8 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDt
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.personnel.business.PersonnelDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
+import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;

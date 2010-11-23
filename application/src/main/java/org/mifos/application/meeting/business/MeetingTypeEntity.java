@@ -21,6 +21,7 @@
 package org.mifos.application.meeting.business;
 
 import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.dto.domain.MeetingTypeDto;
 import org.mifos.framework.business.AbstractEntity;
 
 /**
@@ -57,5 +58,9 @@ public class MeetingTypeEntity extends AbstractEntity {
 
     public MeetingType asEnum() {
         return MeetingType.fromInt(meetingTypeId);
+    }
+
+    public MeetingTypeDto toDto() {
+        return new MeetingTypeDto(this.meetingTypeId.intValue(), this.meetingPurpose, this.description);
     }
 }

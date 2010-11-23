@@ -22,10 +22,10 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.PersonnelDto;
 
 public class GroupFormCreationDto {
 
@@ -35,18 +35,20 @@ public class GroupFormCreationDto {
     private final List<CustomFieldDto> customFieldDtos;
     private final List<PersonnelDto> personnelList;
     private final List<PersonnelDto> formedByPersonnel;
-    private final CustomerApplicableFeesDto applicableFees;
+    private List<ApplicableAccountFeeDto> defaultFees;
+    private List<ApplicableAccountFeeDto> additionalFees;
 
     public GroupFormCreationDto(boolean centerHierarchyExists, CustomerBO parentCustomer,
             Short groupOfficeId, List<CustomFieldDto> customFieldDtos, List<PersonnelDto> personnelList,
-            List<PersonnelDto> formedByPersonnel, CustomerApplicableFeesDto applicableFees) {
+            List<PersonnelDto> formedByPersonnel, List<ApplicableAccountFeeDto> defaultFees, List<ApplicableAccountFeeDto> additionalFees) {
         this.centerHierarchyExists = centerHierarchyExists;
         this.parentCustomer = parentCustomer;
         this.groupOfficeId = groupOfficeId;
         this.customFieldDtos = customFieldDtos;
         this.personnelList = personnelList;
         this.formedByPersonnel = formedByPersonnel;
-        this.applicableFees = applicableFees;
+        this.defaultFees = defaultFees;
+        this.additionalFees = additionalFees;
     }
 
     public List<PersonnelDto> getFormedByPersonnel() {
@@ -69,12 +71,12 @@ public class GroupFormCreationDto {
         return this.parentCustomer;
     }
 
-    public List<FeeDto> getDefaultFees() {
-        return this.applicableFees.getDefaultFees();
+    public List<ApplicableAccountFeeDto> getDefaultFees() {
+        return this.defaultFees;
     }
 
-    public List<FeeDto> getAdditionalFees() {
-        return this.applicableFees.getAdditionalFees();
+    public List<ApplicableAccountFeeDto> getAdditionalFees() {
+        return this.additionalFees;
     }
 
     public String getParentOfficeId() {

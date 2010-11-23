@@ -44,6 +44,7 @@ import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;

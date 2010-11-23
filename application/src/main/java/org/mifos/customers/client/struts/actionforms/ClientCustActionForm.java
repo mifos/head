@@ -20,11 +20,24 @@
 
 package org.mifos.customers.client.struts.actionforms;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.upload.FormFile;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
@@ -42,6 +55,7 @@ import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -57,19 +71,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.StringTokenizer;
 
 public class ClientCustActionForm extends CustomerActionForm implements QuestionResponseCapturer {
 
@@ -448,10 +449,18 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         }
 
         // issue 2929: when the spouse/father fields are hidden, then the values are null instead empty string - this need to be fixed here
-        if (spouseName.getFirstName() == null) spouseName.setFirstName("");
-        if (spouseName.getMiddleName() == null) spouseName.setMiddleName("");
-        if (spouseName.getSecondLastName() == null) spouseName.setSecondLastName("");
-        if (spouseName.getLastName() == null) spouseName.setLastName("");
+        if (spouseName.getFirstName() == null) {
+            spouseName.setFirstName("");
+        }
+        if (spouseName.getMiddleName() == null) {
+            spouseName.setMiddleName("");
+        }
+        if (spouseName.getSecondLastName() == null) {
+            spouseName.setSecondLastName("");
+        }
+        if (spouseName.getLastName() == null) {
+            spouseName.setLastName("");
+        }
 
         if (spouseName.getNameType() == null && (mandatorySpouseType ||
                 !StringUtils.isBlank(spouseName.getFirstName()) || !StringUtils.isBlank(spouseName.getMiddleName()) ||
@@ -1047,8 +1056,8 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
 
     public void clearMostButNotAllFieldsOnActionForm() {
 
-        setDefaultFees(new ArrayList<FeeDto>());
-        setAdditionalFees(new ArrayList<FeeDto>());
+        setDefaultFees(new ArrayList<ApplicableAccountFeeDto>());
+        setAdditionalFees(new ArrayList<ApplicableAccountFeeDto>());
         setCustomFields(new ArrayList<CustomFieldDto>());
         setFamilyNames(new ArrayList<ClientNameDetailDto>());
         setFamilyDetails(new ArrayList<ClientFamilyDetailDto>());

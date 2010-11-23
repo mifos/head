@@ -18,23 +18,23 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
 import java.util.List;
 
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.PersonnelDto;
 
 public class CenterFormCreationDto {
 
     private final List<PersonnelDto> activeLoanOfficersForBranch;
     private final List<CustomFieldDto> customFieldDtos;
-    private final List<FeeDto> additionalFees;
-    private final List<FeeDto> defaultFees;
+    private final List<ApplicableAccountFeeDto> additionalFees;
+    private final List<ApplicableAccountFeeDto> defaultFees;
 
-    public CenterFormCreationDto(List<PersonnelDto> activeLoanOfficersForBranch,
-            List<CustomFieldDto> customFieldDtos, List<FeeDto> additionalFees, List<FeeDto> defaultFees) {
+    public CenterFormCreationDto(List<PersonnelDto> activeLoanOfficersForBranch, List<CustomFieldDto> customFieldDtos,
+                                 List<ApplicableAccountFeeDto> additionalFees, List<ApplicableAccountFeeDto> defaultFees) {
         this.activeLoanOfficersForBranch = activeLoanOfficersForBranch;
         this.customFieldDtos = customFieldDtos;
         this.additionalFees = additionalFees;
@@ -49,11 +49,11 @@ public class CenterFormCreationDto {
         return this.customFieldDtos;
     }
 
-    public List<FeeDto> getAdditionalFees() {
+    public List<ApplicableAccountFeeDto> getAdditionalFees() {
         return this.additionalFees;
     }
 
-    public List<FeeDto> getDefaultFees() {
+    public List<ApplicableAccountFeeDto> getDefaultFees() {
         return this.defaultFees;
     }
 }

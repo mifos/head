@@ -20,7 +20,11 @@
 
 package org.mifos.customers.struts.action;
 
+import java.sql.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -30,7 +34,13 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.business.*;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerBOTestUtils;
+import org.mifos.customers.business.CustomerFlagDetailEntity;
+import org.mifos.customers.business.CustomerNoteEntity;
+import org.mifos.customers.business.CustomerPositionEntity;
+import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -43,18 +53,21 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
-
-import java.sql.Date;
-import java.util.List;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -67,7 +80,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     private CustomerBO center;
     private LoanBO loanBO;
     private String flowKey;
-    private OfficeBO office;         
+    private OfficeBO office;
 
     @Override
     protected void setStrutsConfig() {
@@ -91,6 +104,12 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
 
         flowKey = createFlow(request, EditCustomerStatusAction.class);
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Override

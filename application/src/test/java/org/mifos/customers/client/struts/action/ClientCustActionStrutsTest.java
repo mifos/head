@@ -64,6 +64,8 @@ import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -78,7 +80,13 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -485,15 +493,15 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
+        List<ApplicableAccountFeeDto> feeList = (List<ApplicableAccountFeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
                 request);
-        FeeDto fee = feeList.get(0);
+        ApplicableAccountFeeDto fee = feeList.get(0);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("input", "mfiInfo");
-        addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+        addRequestParameter("selectedFee[0].feeId", fee.getFeeId().toString());
         addRequestParameter("selectedFee[0].amount", "100");
-        addRequestParameter("selectedFee[1].feeId", fee.getFeeId());
+        addRequestParameter("selectedFee[1].feeId", fee.getFeeId().toString());
         addRequestParameter("selectedFee[1].amount", "150");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
@@ -523,13 +531,12 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("input", "personalInfo");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
-        FeeDto fee = feeList.get(0);
+        List<ApplicableAccountFeeDto> feeList = (List<ApplicableAccountFeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+        ApplicableAccountFeeDto fee = feeList.get(0);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("input", "mfiInfo");
         addRequestParameter("method", "preview");
-        addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+        addRequestParameter("selectedFee[0].feeId", fee.getFeeId().toString());
         addRequestParameter("selectedFee[0].amount", "");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
@@ -604,10 +611,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         List<CustomFieldDto> customFieldDefs = getCustomFieldFromSession();
         List<BusinessActivityEntity> povertyStatus = (List<BusinessActivityEntity>) SessionUtils.getAttribute(
                 ClientConstants.POVERTY_STATUS, request);
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
+        List<ApplicableAccountFeeDto> feeList = (List<ApplicableAccountFeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
         Assert.assertEquals(1, feeList.size());
-        FeeDto fee = feeList.get(0);
+        ApplicableAccountFeeDto fee = feeList.get(0);
 
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "next");
@@ -635,7 +641,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "preview");
         addRequestParameter("input", "mfiInfo");
         addRequestParameter("formedByPersonnel", "1");
-        addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+        addRequestParameter("selectedFee[0].feeId", fee.getFeeId().toString());
         addRequestParameter("selectedFee[0].amount", fee.getAmount());
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, new MeetingBO(RecurrenceType.WEEKLY, (short) 2,
@@ -680,14 +686,13 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         }
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        List<FeeDto> feeList = (List<FeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST,
-                request);
-        FeeDto fee = feeList.get(0);
+        List<ApplicableAccountFeeDto> feeList = (List<ApplicableAccountFeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
+        ApplicableAccountFeeDto fee = feeList.get(0);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "preview");
         addRequestParameter("input", "mfiInfo");
         addRequestParameter("formedByPersonnel", "1");
-        addRequestParameter("selectedFee[0].feeId", fee.getFeeId());
+        addRequestParameter("selectedFee[0].feeId", fee.getFeeId().toString());
         addRequestParameter("selectedFee[0].amount", fee.getAmount());
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, new MeetingBO(RecurrenceType.MONTHLY, Short
@@ -772,6 +777,13 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testCreateSuccessWithAssociatedSavingsOfferings() throws Exception {
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         savingsOffering1 = TestObjectFactory.createSavingsProduct("savingsPrd1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
@@ -850,7 +862,14 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testCreateSuccessWithoutGroup() throws Exception {
-        List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
+//        List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
         addRequestParameter("officeId", "3");
@@ -907,7 +926,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         ClientCustActionForm actionForm = (ClientCustActionForm) request.getSession().getAttribute(
                 "clientCustActionForm");
         client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
-        removeFees(feesToRemove);
+//        removeFees(feesToRemove);
     }
 
     public void testCreateSuccessUnderGroup() throws Exception {
@@ -1215,7 +1234,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 matchValues(auditLogRecord, "Mr", "Mrs");
             }
         }
-        
+
     }
 
     private void createClientForAuditLog() throws Exception {

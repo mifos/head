@@ -18,11 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.center.business.service;
+package org.mifos.dto.domain;
 
-import org.mifos.framework.exceptions.ServiceException;
+public class MeetingRecurrenceDto {
 
-public interface CenterDetailsServiceFacade {
+    private final Integer dayNumber;
+    private final Integer weekOfMonth;
+    private final Integer dayOfWeek;
 
-    CenterInformationDto getCenterInformationDto(String globalCustNum) throws ServiceException;
+    public MeetingRecurrenceDto(Integer dayNumber, Integer weekOfMonth, Integer dayOfWeek) {
+        this.dayNumber = dayNumber;
+        this.weekOfMonth = weekOfMonth;
+        this.dayOfWeek = dayOfWeek;
+    }
+
+    public Integer getDayNumber() {
+        return this.dayNumber;
+    }
+
+    public Integer getWeekOfMonth() {
+        return this.weekOfMonth;
+    }
+
+    public Integer getDayOfWeek() {
+        return this.dayOfWeek;
+    }
 }

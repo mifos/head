@@ -20,6 +20,8 @@
 
 package org.mifos.dto.domain;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
 
 public class CenterCreationDetail {
@@ -30,15 +32,17 @@ public class CenterCreationDetail {
     private final AddressDto addressDto;
     private final Short loanOfficerId;
     private final Short officeId;
+    private final List<CreateAccountFeeDto> feesToApply;
 
     public CenterCreationDetail(LocalDate mfiJoiningDate, String displayName, String externalId, AddressDto addressDto,
-            Short loanOfficerId, Short officeId) {
+            Short loanOfficerId, Short officeId, List<CreateAccountFeeDto> feesToApply) {
         this.mfiJoiningDate = mfiJoiningDate;
         this.displayName = displayName;
         this.externalId = externalId;
         this.addressDto = addressDto;
         this.loanOfficerId = loanOfficerId;
         this.officeId = officeId;
+        this.feesToApply = feesToApply;
     }
 
     public LocalDate getMfiJoiningDate() {
@@ -63,5 +67,9 @@ public class CenterCreationDetail {
 
     public Short getOfficeId() {
         return this.officeId;
+    }
+
+    public List<CreateAccountFeeDto> getFeesToApply() {
+        return this.feesToApply;
     }
 }

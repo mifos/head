@@ -24,10 +24,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.servicefacade.CenterCreation;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
-import org.mifos.customers.personnel.business.PersonnelDto;
+import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.mifos.security.MifosUser;

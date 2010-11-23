@@ -20,9 +20,13 @@
 
 package org.mifos.customers.group.struts.actionforms;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.QuestionResponseCapturer;
 import org.mifos.application.util.helpers.EntityType;
@@ -32,15 +36,12 @@ import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
 
 public class GroupCustActionForm extends CustomerActionForm  implements QuestionResponseCapturer{
 
@@ -109,10 +110,10 @@ public class GroupCustActionForm extends CustomerActionForm  implements Question
         }
         return (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
     }
-    
+
     public void cleanForm() {
-        setDefaultFees(new ArrayList<FeeDto>());
-        setAdditionalFees(new ArrayList<FeeDto>());
+        setDefaultFees(new ArrayList<ApplicableAccountFeeDto>());
+        setAdditionalFees(new ArrayList<ApplicableAccountFeeDto>());
         setCustomerPositions(new ArrayList<CustomerPositionDto>());
         setCustomFields(new ArrayList<CustomFieldDto>());
         setAddress(new Address());

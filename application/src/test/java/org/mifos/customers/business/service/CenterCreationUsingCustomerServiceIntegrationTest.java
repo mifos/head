@@ -20,7 +20,8 @@
 
 package org.mifos.customers.business.service;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -37,7 +38,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -46,7 +46,6 @@ import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -55,14 +54,12 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.BusinessRuleException;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
  * I test the creation of {@link CenterBO}'s using the {@link CustomerService} implementation.
@@ -297,7 +294,7 @@ public class CenterCreationUsingCustomerServiceIntegrationTest extends MifosInte
         assertThat(center.getCustomerAccount().getAccountFees().isEmpty(), is(false));
     }
 
-    @Test(expected=CustomerException.class)
+    @Test(expected=BusinessRuleException.class)
     public void canNotCreateCenterWithNameOfAlreadyExistingCenter() throws Exception {
 
         // minimal details

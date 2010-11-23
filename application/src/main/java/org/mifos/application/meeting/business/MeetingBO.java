@@ -38,6 +38,9 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
+import org.mifos.dto.domain.MeetingDetailsDto;
+import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.MeetingTypeDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -482,5 +485,11 @@ public class MeetingBO extends AbstractBusinessObject {
             }
         }
         return meeting;
+    }
+
+    public MeetingDto toDto() {
+        MeetingTypeDto meetingType = this.meetingType.toDto();
+        MeetingDetailsDto meetingDetailsDto = this.meetingDetails.toDto();
+        return new MeetingDto(new LocalDate(this.meetingStartDate), this.meetingPlace, meetingType, meetingDetailsDto);
     }
 }

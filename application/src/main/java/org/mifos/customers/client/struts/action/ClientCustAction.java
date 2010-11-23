@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
+import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
@@ -69,6 +71,7 @@ import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -174,7 +177,21 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         }
         actionForm.setLoanOfficerName(clientFormCreationDto.getFormedByPersonnelName());
         actionForm.setCustomFields(clientFormCreationDto.getCustomFieldViews());
-        actionForm.setDefaultFees(clientFormCreationDto.getApplicableFees().getDefaultFees());
+
+        // FIXME - keithw - hack while doing customer service facades clean up.
+        List<ApplicableAccountFeeDto> defaultFees = new ArrayList<ApplicableAccountFeeDto>();
+        List<FeeDto> clientDefaultFees = clientFormCreationDto.getApplicableFees().getDefaultFees();
+        for (FeeDto feeDto : clientDefaultFees) {
+            defaultFees.add(new ApplicableAccountFeeDto(feeDto.getFeeIdValue().intValue(), feeDto.getFeeName(), feeDto.getAmount(), feeDto.isRemoved(), feeDto.isWeekly(), feeDto.isMonthly(), feeDto.isPeriodic(), feeDto.getFeeSchedule()));
+        }
+        actionForm.setDefaultFees(defaultFees);
+
+        List<ApplicableAccountFeeDto> additionalFees = new ArrayList<ApplicableAccountFeeDto>();
+        List<FeeDto> clientAdditionalFees = clientFormCreationDto.getApplicableFees().getAdditionalFees();
+        for (FeeDto feeDto : clientAdditionalFees) {
+            additionalFees.add(new ApplicableAccountFeeDto(feeDto.getFeeIdValue().intValue(), feeDto.getFeeName(), feeDto.getAmount(), feeDto.isRemoved(), feeDto.isWeekly(), feeDto.isMonthly(), feeDto.isPeriodic(), feeDto.getFeeSchedule()));
+        }
+        SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, additionalFees, request);
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getClientDropdowns().getSalutations(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFormCreationDto.getClientDropdowns().getGenders(), request);
@@ -188,7 +205,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFormCreationDto.getClientDropdowns().getSpouseFather(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFormCreationDto.getCustomFieldViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto.getPersonnelList(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, clientFormCreationDto.getApplicableFees().getAdditionalFees(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, clientFormCreationDto.getFormedByPersonnelList(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);

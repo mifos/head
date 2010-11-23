@@ -177,4 +177,12 @@ public class FeeDto implements DataTransferObject {
      //  when fee has a currency  then it should match loan account currency id
        return (getCurrencyId()== null || getCurrencyId().equals(currencyId));
     }
+
+    public boolean isMonthly() {
+        return RecurrenceType.MONTHLY.equals(this.frequencyType);
+    }
+
+    public boolean isWeekly() {
+        return RecurrenceType.WEEKLY.equals(this.frequencyType);
+    }
 }
