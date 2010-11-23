@@ -19,7 +19,6 @@
  */
 package org.mifos.customers.business;
 
-import org.mifos.accounts.api.CustomerDto;
 import org.mifos.framework.business.util.Address;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -40,6 +39,7 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;

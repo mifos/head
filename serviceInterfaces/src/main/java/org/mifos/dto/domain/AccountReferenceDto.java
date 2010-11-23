@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.api;
+package org.mifos.dto.domain;
 
 /**
  * The Class AccountReferenceDto is a Data Transfer Object

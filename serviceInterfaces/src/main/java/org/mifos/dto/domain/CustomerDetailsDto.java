@@ -18,35 +18,24 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.api;
+package org.mifos.dto.domain;
 
+public class CustomerDetailsDto {
 
-/**
- * The Class UserReferenceDto is a Data Transfer Object to hold
- * a reference to a Mifos user. A Mifos user is currently represented as
- * a PersonnelBO.
- */
-public class UserReferenceDto {
+    private final Integer id;
+    private final String globalCustNum;
 
-    /** The user id. */
-    private final short userId;
-
-    /**
-     * Instantiates a new user reference dto.
-     *
-     * @param userId the user id
-     */
-    public UserReferenceDto(short userId) {
-        this.userId = userId;
+    public CustomerDetailsDto(Integer id, String globalCustNum) {
+        this.id = id;
+        this.globalCustNum = globalCustNum;
     }
 
-    /**
-     * Gets the user id.
-     *
-     * @return the user id
-     */
-    public short getUserId() {
-        return this.userId;
+    public Integer getId() {
+        return this.id;
+    }
+
+    public String getGlobalCustNum() {
+        return this.globalCustNum;
     }
 
 }

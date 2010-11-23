@@ -18,35 +18,27 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.api;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.api.DataTransferObject;
+import java.io.Serializable;
 
-public class CustomerDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomerDto implements Serializable {
 
     private Integer customerId;
-
     private String globalCustNum;
-
     private String customerSearchId;
-
     private String displayName;
-
     private Short statusId;
-
     private Integer versionNo;
-
     private Short customerLevelId;
-
     private Short officeId;
-
     private Short personnelId;
-
     private Integer parentCustomerId;
 
     public CustomerDto() {
-
+        // default constructor for hibernate
     }
 
     public CustomerDto(java.lang.Integer customerId, java.lang.String displayName, Integer parentCustomerId,
@@ -178,14 +170,14 @@ public class CustomerDto implements DataTransferObject {
     }
 
     public boolean isCustomerCenter() {
-        return getCustomerLevelId().equals(CustomerLevel.CENTER.getValue());
+        return getCustomerLevelId().equals(3);
     }
 
     public boolean isCustomerGroup() {
-        return getCustomerLevelId().equals(CustomerLevel.GROUP.getValue());
+        return getCustomerLevelId().equals(2);
     }
 
     public boolean isCustomerClient() {
-        return getCustomerLevelId().equals(CustomerLevel.CLIENT.getValue());
+        return getCustomerLevelId().equals(1);
     }
 }

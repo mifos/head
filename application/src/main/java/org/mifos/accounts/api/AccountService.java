@@ -24,6 +24,10 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 
+import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.PaymentTypeDto;
+
 /**
  * The Interface AccountService provides methods to make and support making
  * loan payments. This interface is intended to be used by implementers of

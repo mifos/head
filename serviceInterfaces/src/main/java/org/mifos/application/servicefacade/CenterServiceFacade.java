@@ -21,9 +21,21 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.domain.CenterCreationDetail;
+import org.mifos.dto.domain.CenterDto;
+import org.mifos.dto.domain.CustomerDetailsDto;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface CenterServiceFacade {
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_NEW_CENTER')")
     CenterFormCreationDto retrieveCenterFormCreationData(CenterCreation centerCreation);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CREATE_NEW_CENTER')")
+    CustomerDetailsDto createNewCenter(CenterCreationDetail centerCreationDetail, MeetingDto meeting);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS')")
+    CenterDto retrieveCenterDetailsForUpdate(Integer centerId);
 }

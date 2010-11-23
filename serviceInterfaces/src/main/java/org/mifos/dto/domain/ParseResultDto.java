@@ -18,12 +18,11 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.spi;
+package org.mifos.dto.domain;
 
 import java.util.List;
 import java.math.BigDecimal;
 
-import org.mifos.accounts.api.AccountPaymentParametersDto;
 
 public class ParseResultDto {
     private final List<String> parseErrors;

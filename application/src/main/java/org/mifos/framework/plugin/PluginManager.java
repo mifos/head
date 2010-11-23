@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.StandardAccountService;
+import org.mifos.accounts.api.TransactionImport;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -40,7 +41,6 @@ import org.mifos.customers.business.service.CustomerSearchServiceImpl;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.framework.util.ConfigurationLocator;
-import org.mifos.spi.TransactionImport;
 
 public class PluginManager {
 

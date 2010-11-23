@@ -32,10 +32,10 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.util.helpers.SavingsAccountDto;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.client.business.service.ClientAttendanceDto;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.api.DataTransferObject;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
 

@@ -28,11 +28,8 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.api.AccountPaymentParametersDto;
-import org.mifos.accounts.api.AccountReferenceDto;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.api.StandardAccountService;
-import org.mifos.accounts.api.UserReferenceDto;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -74,6 +71,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import org.mifos.customers.persistence.CustomerDaoHibernate;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.UserReferenceDto;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
@@ -185,7 +185,7 @@ public class LoanDisbursementAction extends BaseAction {
                 .valueOf(paymentTypeIdStringForDisbursement);
         try {
             final List<AccountPaymentParametersDto> payment = new ArrayList<AccountPaymentParametersDto>();
-            final org.mifos.accounts.api.PaymentTypeDto paymentType = getLoanDisbursementTypeDtoForId(Short
+            final org.mifos.dto.domain.PaymentTypeDto paymentType = getLoanDisbursementTypeDtoForId(Short
                     .valueOf(paymentTypeIdForDisbursement));
             final String comment = "";
             final BigDecimal disbursalAmount = new BigDecimal(actionForm.getLoanAmount());
@@ -206,8 +206,8 @@ public class LoanDisbursementAction extends BaseAction {
         return mapping.findForward(Constants.UPDATE_SUCCESS);
     }
 
-    private org.mifos.accounts.api.PaymentTypeDto getLoanDisbursementTypeDtoForId(short id) throws Exception {
-        for (org.mifos.accounts.api.PaymentTypeDto paymentTypeDto : getAccountService().getLoanDisbursementTypes()) {
+    private org.mifos.dto.domain.PaymentTypeDto getLoanDisbursementTypeDtoForId(short id) throws Exception {
+        for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : getAccountService().getLoanDisbursementTypes()) {
             if (paymentTypeDto.getValue() == id) {
                 return paymentTypeDto;
             }

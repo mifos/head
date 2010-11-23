@@ -30,9 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
-import org.mifos.accounts.api.CustomerDto;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -47,18 +45,12 @@ import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerService;
@@ -96,11 +88,11 @@ import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
-import org.mifos.dto.domain.CenterCreationDetail;
-import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.MeetingDetailsDto;
-import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.CustomerDetailsDto;
+import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
@@ -118,7 +110,6 @@ import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
@@ -330,77 +321,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
-    }
-
-    @Override
-    public CustomerDetailsDto createNewCenter(CenterCreationDetail createCenterDetail, MeetingDto meetingDto) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        String centerName = createCenterDetail.getDisplayName();
-        String externalId = createCenterDetail.getExternalId();
-        AddressDto addressDto = createCenterDetail.getAddressDto();
-        Address centerAddress = new Address(addressDto.getLine1(), addressDto.getLine2(), addressDto.getLine3(),
-                addressDto.getCity(), addressDto.getState(), addressDto.getCountry(), addressDto.getZip(), addressDto.getPhoneNumber());
-        PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(createCenterDetail.getLoanOfficerId());
-        OfficeBO centerOffice = this.officeDao.findOfficeById(createCenterDetail.getOfficeId());
-
-        int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(createCenterDetail.getOfficeId());
-
-        List<AccountFeesEntity> feesForCustomerAccount = createAccountFeeEntities(createCenterDetail.getFeesToApply());
-
-        DateTime mfiJoiningDate = null;
-        if (createCenterDetail.getMfiJoiningDate() != null) {
-            mfiJoiningDate = createCenterDetail.getMfiJoiningDate().toDateMidnight().toDateTime();
-        }
-
-        try {
-            MeetingDetailsDto meetingDetailsDto = meetingDto.getMeetingDetailsDto();
-            MeetingBO meeting = new MeetingBO(RecurrenceType.fromInt(meetingDetailsDto.getRecurrenceTypeId().shortValue()),
-                                              meetingDetailsDto.getEvery().shortValue(),
-                                              meetingDto.getMeetingStartDate().toDateMidnight().toDate(),
-                                              MeetingType.CUSTOMER_MEETING);
-
-            RankOfDay rank = null;
-            Integer weekOfMonth = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-            if (weekOfMonth != null && weekOfMonth > 0) {
-                rank = RankOfDay.getRankOfDay(meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth()+1);
-            }
-
-            WeekDay weekDay = null;
-            Integer weekDayNum = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-            if (weekDayNum != null && weekDayNum > 0) {
-                weekDay = WeekDay.getWeekDay(meetingDetailsDto.getRecurrenceDetails().getDayOfWeek());
-            }
-
-            if (rank != null && weekDay != null) {
-                meeting = new MeetingBO(weekDay, rank, meetingDetailsDto.getEvery().shortValue(), meetingDto.getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-            }
-            meeting.setUserContext(userContext);
-
-            CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
-                    centerOffice, numberOfCustomersInOfficeAlready, centerAddress, externalId, new DateMidnight().toDateTime());
-
-            this.customerService.createCenter(center, meeting, feesForCustomerAccount);
-
-            return new CustomerDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
-        } catch (MeetingException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        }
-    }
-
-    private List<AccountFeesEntity> createAccountFeeEntities(List<CreateAccountFeeDto> feesToApply) {
-        List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
-        for (CreateAccountFeeDto feeDto : feesToApply) {
-            FeeBO fee = new FeePersistence().getFee(feeDto.getFeeId().shortValue());
-            Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeDto.getAmount());
-
-            AccountBO nullReferenceForNow = null;
-            AccountFeesEntity accountFee = new AccountFeesEntity(nullReferenceForNow, fee, feeAmount);
-            feesForCustomerAccount.add(accountFee);
-        }
-        return feesForCustomerAccount;
     }
 
     private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<ApplicableAccountFeeDto> feesToApply) {
@@ -715,44 +635,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public CenterDto retrieveCenterDetailsForUpdate(Integer centerId) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        CustomerBO center = customerDao.findCustomerById(centerId);
-
-        Short officeId = center.getOffice().getOfficeId();
-        String searchId = center.getSearchId();
-        Short loanOfficerId = extractLoanOfficerId(center);
-
-        CenterCreation centerCreation = new CenterCreation(officeId, userContext.getId(), userContext.getLevelId(),
-                userContext.getPreferredLocale());
-        List<PersonnelDto> activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
-
-        List<CustomerDto> customerList = customerDao.findClientsThatAreNotCancelledOrClosed(searchId, officeId);
-
-        List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(center, userContext
-                .getLocaleId());
-
-        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForCenter();
-        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(center.getCustomFields(),
-                fieldDefinitions, userContext);
-
-        DateTime mfiJoiningDate = new DateTime();
-        String mfiJoiningDateAsString = "";
-        if (center.getMfiJoiningDate() != null) {
-            mfiJoiningDate = new DateTime(center.getMfiJoiningDate());
-            mfiJoiningDateAsString = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), center
-                    .getMfiJoiningDate().toString());
-        }
-
-        return new CenterDto(loanOfficerId, center.getCustomerId(), center.getGlobalCustNum(), mfiJoiningDate,
-                mfiJoiningDateAsString, center.getExternalId(), center.getAddress(), customerPositionDtos,
-                customFieldDtos, customerList, center, activeLoanOfficersForBranch, true);
-    }
-
-    @Override
     public CenterDto retrieveGroupDetailsForUpdate(String globalCustNum) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -790,9 +672,10 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
                     .getMfiJoiningDate().toString());
         }
 
+        AddressDto address = Address.toDto(group.getAddress());
         return new CenterDto(loanOfficerId, group.getCustomerId(), group.getGlobalCustNum(), mfiJoiningDate,
-                mfiJoiningDateAsString, group.getExternalId(), group.getAddress(), customerPositionDtos,
-                customFieldDtos, customerList, group, activeLoanOfficersForBranch, isCenterHierarchyExists);
+                mfiJoiningDateAsString, group.getExternalId(), address, customerPositionDtos,
+                customFieldDtos, customerList, activeLoanOfficersForBranch, isCenterHierarchyExists);
     }
 
     private List<CustomerPositionDto> generateCustomerPositionViews(CustomerBO customer, Short localeId) {

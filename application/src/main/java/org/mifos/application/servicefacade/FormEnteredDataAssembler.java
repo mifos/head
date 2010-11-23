@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
-import org.mifos.accounts.api.CustomerDto;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
 

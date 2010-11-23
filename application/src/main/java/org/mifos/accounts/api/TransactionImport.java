@@ -18,13 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.spi;
+package org.mifos.accounts.api;
 
 import java.io.InputStream;
 
-import org.mifos.accounts.api.AccountService;
-import org.mifos.accounts.api.CustomerSearchService;
-import org.mifos.accounts.api.UserReferenceDto;
+import org.mifos.dto.domain.ParseResultDto;
+import org.mifos.dto.domain.UserReferenceDto;
 
 /**
  * Service Provider Interface (SPI) for importing bank transactions.

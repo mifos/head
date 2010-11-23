@@ -19,6 +19,8 @@ package org.mifos.accounts.api;
 
 import java.util.List;
 
+import org.mifos.dto.domain.CustomerDto;
+
 public interface CustomerSearchService {
 
     List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber);

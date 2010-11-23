@@ -50,7 +50,6 @@ import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAcc
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientAttendanceDto;
@@ -61,6 +60,7 @@ import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.framework.MifosMockStrutsTestCase;

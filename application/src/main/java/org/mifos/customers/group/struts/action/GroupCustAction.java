@@ -37,16 +37,13 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterHierarchySearchDto;
-import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.GroupCreation;
 import org.mifos.application.servicefacade.GroupFormCreationDto;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
@@ -57,6 +54,8 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CenterDto;
+import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -276,12 +275,12 @@ public class GroupCustAction extends CustAction {
 
         // FIXME - store group identifier (id, globalCustNum) instead of entire business object
         GroupBO group = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        group = this.customerDao.findGroupBySystemId(group.getGlobalCustNum());
         logger.debug("Entering GroupCustAction manage method and customer id: " + group.getGlobalCustNum());
 
         CenterDto groupDto = this.customerServiceFacade.retrieveGroupDetailsForUpdate(group.getGlobalCustNum());
 
-        CustomerBO group1 = groupDto.getCenter();
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, group1, request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, groupDto.getActiveLoanOfficersForBranch(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, groupDto.isCenterHierarchyExists(), request);
@@ -289,22 +288,22 @@ public class GroupCustAction extends CustAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, groupDto.getCustomerPositionViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, groupDto.getClientList(), request);
 
-        actionForm.setLoanOfficerId(String.valueOf(group1.getLoanOfficerId()));
-        actionForm.setDisplayName(group1.getDisplayName());
-        actionForm.setCustomerId(group1.getCustomerId().toString());
-        actionForm.setGlobalCustNum(group1.getGlobalCustNum());
-        actionForm.setExternalId(group1.getExternalId());
-        actionForm.setAddress(group1.getAddress());
+        actionForm.setLoanOfficerId(String.valueOf(group.getLoanOfficerId()));
+        actionForm.setDisplayName(group.getDisplayName());
+        actionForm.setCustomerId(group.getCustomerId().toString());
+        actionForm.setGlobalCustNum(group.getGlobalCustNum());
+        actionForm.setExternalId(group.getExternalId());
+        actionForm.setAddress(group.getAddress());
         actionForm.setCustomerPositions(groupDto.getCustomerPositionViews());
         actionForm.setCustomFields(groupDto.getCustomFieldViews());
 
-        if (group1.isTrained()) {
+        if (group.isTrained()) {
             actionForm.setTrained(GroupConstants.TRAINED);
         } else {
             actionForm.setTrained(GroupConstants.NOT_TRAINED);
         }
-        if (group1.getTrainedDate() != null) {
-            actionForm.setTrainedDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), group1
+        if (group.getTrainedDate() != null) {
+            actionForm.setTrainedDate(DateUtils.getUserLocaleDate(getUserContext(request).getPreferredLocale(), group
                     .getTrainedDate().toString()));
         }
 

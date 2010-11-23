@@ -22,8 +22,8 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.customers.business.CustomerPositionDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.framework.business.util.Address;
 
 public class CenterUpdate {

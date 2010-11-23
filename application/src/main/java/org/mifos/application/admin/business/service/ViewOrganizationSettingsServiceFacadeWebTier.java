@@ -21,6 +21,7 @@
 package org.mifos.application.admin.business.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.accounts.api.TransactionImport;
 import org.mifos.application.admin.servicefacade.ViewOrganizationSettingsServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
@@ -40,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import org.mifos.framework.plugin.PluginManager;
-import org.mifos.spi.TransactionImport;
 
 public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganizationSettingsServiceFacade {
     private static final String DELIMITER = ", ";

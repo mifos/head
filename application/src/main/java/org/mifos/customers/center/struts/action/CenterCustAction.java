@@ -40,9 +40,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.CenterDto;
 import org.mifos.application.servicefacade.CenterUpdate;
-import org.mifos.application.servicefacade.CustomerDetailsDto;
 import org.mifos.application.servicefacade.CustomerSearch;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -56,7 +54,9 @@ import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
+import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
@@ -191,7 +191,7 @@ public class CenterCustAction extends CustAction {
 
         try {
             CenterCreationDetail centerCreationDetail = new CenterCreationDetail(mfiJoiningDate, actionForm.getDisplayName(), actionForm.getExternalId(), addressDto, actionForm.getLoanOfficerIdValue(), actionForm.getOfficeIdValue(), accountFeesToBeApplied);
-            CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewCenter(centerCreationDetail, meetingDto);
+            CustomerDetailsDto centerDetails = this.centerServiceFacade.createNewCenter(centerCreationDetail, meetingDto);
             createCenterQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
 
             actionForm.setCustomerId(centerDetails.getId().toString());
@@ -214,9 +214,11 @@ public class CenterCustAction extends CustAction {
         CenterBO center = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         final Integer centerId = center.getCustomerId();
 
+        center = this.customerDao.findCenterBySystemId(center.getGlobalCustNum());
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, null, request);
 
-        CenterDto centerDto = this.customerServiceFacade.retrieveCenterDetailsForUpdate(centerId);
+        CenterDto centerDto = this.centerServiceFacade.retrieveCenterDetailsForUpdate(centerId);
 
         actionForm.setLoanOfficerId(centerDto.getLoanOfficerIdAsString());
         actionForm.setCustomerId(centerDto.getCustomerIdAsString());
@@ -225,11 +227,11 @@ public class CenterCustAction extends CustAction {
         actionForm.setMfiJoiningDate(centerDto.getMfiJoiningDateAsString());
         actionForm.setMfiJoiningDate(centerDto.getMfiJoiningDate().getDayOfMonth(), centerDto.getMfiJoiningDate()
                 .getMonthOfYear(), centerDto.getMfiJoiningDate().getYear());
-        actionForm.setAddress(centerDto.getAddress());
+        actionForm.setAddress(center.getAddress());
         actionForm.setCustomerPositions(centerDto.getCustomerPositionViews());
         actionForm.setCustomFields(centerDto.getCustomFieldViews());
 
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerDto.getCenter(), request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerDto.getActiveLoanOfficersForBranch(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerDto.getCustomFieldViews(),request);
         SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, centerDto.getCustomerPositionViews(), request);

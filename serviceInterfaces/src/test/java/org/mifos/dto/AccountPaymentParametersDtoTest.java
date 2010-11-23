@@ -18,25 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.api;
+package org.mifos.dto;
 
 import java.math.BigDecimal;
 
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.PaymentTypeDto;
+import org.mifos.dto.domain.UserReferenceDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AccountPaymentParametersDtoTest {
-    UserReferenceDto user = new UserReferenceDto((short) -1);
-    AccountReferenceDto account = new AccountReferenceDto(-1);
-    BigDecimal paymentAmount = new BigDecimal("0.0");
-    LocalDate paymentDate = new LocalDate(1990, 1, 1);
+    private UserReferenceDto user = new UserReferenceDto((short) -1);
+    private AccountReferenceDto account = new AccountReferenceDto(-1);
+    private BigDecimal paymentAmount = new BigDecimal("0.0");
+    private LocalDate paymentDate = new LocalDate(1990, 1, 1);
     @Mock
-    PaymentTypeDto paymentType;
-    String emptyComment = "";
+    private PaymentTypeDto paymentType;
+    private String emptyComment = "";
 
     @Test(expected = IllegalArgumentException.class)
     public void userMakingPaymentCannotBeNull() {

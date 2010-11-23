@@ -31,8 +31,8 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
-import org.mifos.dto.domain.CenterCreationDetail;
-import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.CenterDto;
+import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
@@ -45,13 +45,9 @@ public interface CustomerServiceFacade {
 
     ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId);
 
-    CustomerDetailsDto createNewCenter(CenterCreationDetail centerCreationDetail, MeetingDto meeting);
-
     CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
 
     CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, List<SavingsDetailDto> allowedSavingProducts, List<CustomerCustomFieldEntity> customFields) throws ApplicationException;
-
-    CenterDto retrieveCenterDetailsForUpdate(Integer centerId);
 
     CenterDto retrieveGroupDetailsForUpdate(String globalCustNum);
 

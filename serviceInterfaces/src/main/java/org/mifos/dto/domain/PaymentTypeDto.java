@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.api;
+package org.mifos.dto.domain;
 
 
 /**
@@ -43,7 +43,7 @@ public class PaymentTypeDto {
      * @param value the ID value
      * @param name the name
      */
-    PaymentTypeDto(short value, String name) {
+    public PaymentTypeDto(short value, String name) {
         this.value = value;
         this.name = name;
     }

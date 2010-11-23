@@ -18,11 +18,13 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.business;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.api.DataTransferObject;
+import java.io.Serializable;
 
-public class CustomerPositionDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomerPositionDto implements Serializable {
 
     private Integer customerId;
     private Short positionId;

@@ -18,42 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.domain;
 
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerPositionDto;
-import org.mifos.accounts.api.CustomerDto;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.PersonnelDto;
-import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.business.util.Address;
 
-/**
- * I extend {@link AbstractBusinessObject} to keep custom tags in jsp working for now.
- */
-public class CenterDto extends AbstractBusinessObject {
+public class CenterDto {
 
     private final Short loanOfficerId;
     private final Integer customerId;
     private final String globalCustNum;
     private final DateTime mfiJoiningDate;
     private final String mfiJoiningDateAsString;
-    private final Address address;
+    private final AddressDto address;
     private final List<CustomerPositionDto> customerPositionDtos;
     private final List<CustomFieldDto> customFieldDtos;
     private final List<CustomerDto> clientList;
     private final String externalId;
     private final List<PersonnelDto> activeLoanOfficersForBranch;
-    private final CustomerBO center;
     private final boolean centerHierarchyExists;
 
     public CenterDto(Short loanOfficerId, Integer customerId, String globalCustNum, DateTime mfiJoiningDate,
-            String mfiJoiningDateAsString, String externalId, Address address,
+            String mfiJoiningDateAsString, String externalId, AddressDto address,
             List<CustomerPositionDto> customerPositionDtos, List<CustomFieldDto> customFieldDtos,
-            List<CustomerDto> customerList, CustomerBO center, List<PersonnelDto> activeLoanOfficersForBranch, boolean centerHierarchyExists) {
+            List<CustomerDto> customerList, List<PersonnelDto> activeLoanOfficersForBranch, boolean centerHierarchyExists) {
         this.loanOfficerId = loanOfficerId;
         this.customerId = customerId;
         this.globalCustNum = globalCustNum;
@@ -64,7 +53,6 @@ public class CenterDto extends AbstractBusinessObject {
         this.customerPositionDtos = customerPositionDtos;
         this.customFieldDtos = customFieldDtos;
         this.clientList = customerList;
-        this.center = center;
         this.activeLoanOfficersForBranch = activeLoanOfficersForBranch;
         this.centerHierarchyExists = centerHierarchyExists;
     }
@@ -93,7 +81,7 @@ public class CenterDto extends AbstractBusinessObject {
         return this.mfiJoiningDateAsString;
     }
 
-    public Address getAddress() {
+    public AddressDto getAddress() {
         return this.address;
     }
 
@@ -131,9 +119,5 @@ public class CenterDto extends AbstractBusinessObject {
 
     public List<PersonnelDto> getActiveLoanOfficersForBranch() {
         return this.activeLoanOfficersForBranch;
-    }
-
-    public CustomerBO getCenter() {
-        return this.center;
     }
 }

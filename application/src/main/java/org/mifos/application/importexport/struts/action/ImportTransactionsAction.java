@@ -43,11 +43,13 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.upload.FormFile;
-import org.mifos.accounts.api.UserReferenceDto;
+import org.mifos.accounts.api.TransactionImport;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
 import org.mifos.application.importexport.servicefacade.WebTierImportTransactionsServiceFacade;
 import org.mifos.application.importexport.struts.actionforms.ImportTransactionsActionForm;
 import org.mifos.application.servicefacade.ListItem;
+import org.mifos.dto.domain.ParseResultDto;
+import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
@@ -56,8 +58,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.spi.ParseResultDto;
-import org.mifos.spi.TransactionImport;
 
 /**
  * This class takes the {@link ImportTransactionsActionForm} and retrieves file
