@@ -12,25 +12,29 @@ html, body {
 }
 
 .site_logo {
-    float: right;
-    vertical-align: top;
+    /*float: right;*/
+    /*vertical-align: top;*/
     z-index: 999;
     padding-right: 40px;
+    font-size:9pt;
+    text-align:right;
+    height:10px;
 }
 
 .site_logo .logo {
-    text-indent: -9999em;
+    text-indent: -9999px;
+    
 }
 
 .top_menu {
     margin-left: 201px;
-    margin-top: 48px;
+    margin-top: 39px;
 }
 
 .top_menu ul {
     list-style: none;
-    margin: 0 0 4px;
-    width: 100%;
+    margin: 0 0 5px;
+    /*width: 100%;*/
     padding: 0;
 }
 
