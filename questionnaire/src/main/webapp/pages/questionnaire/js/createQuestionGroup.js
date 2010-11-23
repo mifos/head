@@ -58,23 +58,18 @@ $(document).ready(function () {
 			}
 		});
 	});
-
-    $("#eventSourceIds").bind("change keypress click blur", function(){
-        var selectedOptions = $(this.options);
-        var createLoanSelected = false;
-        for (i=0; i<selectedOptions.length; i++) {
-            if (selectedOptions[i].value == "Create.Loan" && selectedOptions[i].selected) {
-              createLoanSelected = true;
-                break;
-            }
-          }
-        if(createLoanSelected) {
-            $("#applyToAllLoansDiv").show();
-        }else{
-            $("#applyToAllLoansDiv").hide();
-        }
-    });
-
+	
+	$("#eventSourceIds").change(function(){
+		$("#applyToAllLoansDiv").hide();
+		var selectedItems = $("#eventSourceIds :selected");
+		for (i=0; i<selectedItems.length; i++) {
+			if(selectedItems[i].value == "Create.Loan"){
+				$("#applyToAllLoansDiv").show();
+				break;
+			}
+		}
+	});
+    
 	$("input[name=addQuestionFlag]").change(function(event) {
         $("#addQuestionDiv").toggle();
         $("#selectQuestionsDiv").toggle();
