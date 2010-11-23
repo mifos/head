@@ -70,7 +70,7 @@ public class MinimumBalanceCalculationStrategyTest {
         Money.setDefaultCurrency(oldCurrency);
     }
 
-    private InterestCalculationPeriodBuilder zeroBalanceAug31stToSeptember30thCalculationPeriod() {
+    private InterestCalculationPeriodBuilder withBalanceOnAug31stToSeptember30thCalculationPeriod() {
         return new InterestCalculationPeriodBuilder().from(august31st).to(september30th).withStartingBalance("1000");
     }
 
@@ -89,7 +89,7 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test(expected = IllegalArgumentException.class)
     public void shouldThrowExceptionWithNullBalanceBeforeInterval() {
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod()
                 .withBalanceBeforeInterval(null).build();
 
         // exercise test
@@ -99,7 +99,7 @@ public class MinimumBalanceCalculationStrategyTest {
     @Test
     public void noDailyDetailsWithExistingBalanceBeforeInterval() {
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().build();
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod().build();
 
         // exercise test
         Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -112,7 +112,7 @@ public class MinimumBalanceCalculationStrategyTest {
 
         EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("500").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().containing(september6thDetails).build();
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod().containing(september6thDetails).build();
 
         // exercise test
         Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -125,7 +125,7 @@ public class MinimumBalanceCalculationStrategyTest {
 
         EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withWithdrawalsOf("500").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod().containing(september6thDetails).build();
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod().containing(september6thDetails).build();
 
         // exercise test
         Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
@@ -139,7 +139,7 @@ public class MinimumBalanceCalculationStrategyTest {
         EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withWithdrawalsOf("500").build();
         EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withDespoitsOf("550").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod()
                 .containing(september6thDetails, september13thDetails).build();
 
         // exercise test
@@ -154,7 +154,7 @@ public class MinimumBalanceCalculationStrategyTest {
         EndOfDayDetail september6thDetails = new EndOfDayBuilder().on(september6th).withDespoitsOf("550").build();
         EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withWithdrawalsOf("500").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod()
                 .containing(september6thDetails, september13thDetails).build();
 
         // exercise test
@@ -171,7 +171,7 @@ public class MinimumBalanceCalculationStrategyTest {
         EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withDespoitsOf("100").build();
         EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withDespoitsOf("1000").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod()
                 .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails).build();
 
         // exercise test
@@ -189,7 +189,7 @@ public class MinimumBalanceCalculationStrategyTest {
         EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withWithdrawalsOf("100").build();
         EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withWithdrawalsOf("1000").build();
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod()
                 .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails).build();
 
         // exercise test
@@ -206,7 +206,7 @@ public class MinimumBalanceCalculationStrategyTest {
         EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withWithdrawalsOf("1000").build(); // Balance 200 * Minimum
         EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withDespoitsOf("2000").build(); // Balance 2200
 
-        interestCalculationPeriodDetail = zeroBalanceAug31stToSeptember30thCalculationPeriod()
+        interestCalculationPeriodDetail = withBalanceOnAug31stToSeptember30thCalculationPeriod()
                 .containing(september1stDetails, september6thDetails, september13thDetails, september20thDetails).build();
 
         // exercise test
@@ -214,4 +214,20 @@ public class MinimumBalanceCalculationStrategyTest {
 
         assertThat(minimumBalancePrincipal, is(TestUtils.createMoney("200")));
     }
+
+    @Test // MIFOSTEST-140
+    public void twoDepositWithFirstActivityWithinInterval() {
+
+        EndOfDayDetail september13thDetails = new EndOfDayBuilder().on(september13th).withDespoitsOf("12000").build(); // Balance 12000 * Minimum
+        EndOfDayDetail september20thDetails = new EndOfDayBuilder().on(september20th).withDespoitsOf("15000").build(); // Balance 15000
+
+        interestCalculationPeriodDetail = new InterestCalculationPeriodBuilder().from(august31st).to(september30th).isFirstActivity().withStartingBalance("0")
+                .containing(september13thDetails, september20thDetails).build();
+
+        // exercise test
+        Money minimumBalancePrincipal = calculationStrategy.calculatePrincipal(interestCalculationPeriodDetail);
+
+        assertThat(minimumBalancePrincipal, is(TestUtils.createMoney("12000")));
+    }
+
 }

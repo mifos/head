@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.savings.interest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.mifos.framework.util.helpers.Money;
 
 public class MinimumBalanceCalculationStrategy implements PrincipalCalculationStrategy {
@@ -30,10 +31,14 @@ public class MinimumBalanceCalculationStrategy implements PrincipalCalculationSt
         validateInterestCalculationPeriodDetail(interestCalculationPeriodDetail);
 
         Money minimumBalance = interestCalculationPeriodDetail.getBalanceBeforeInterval();
+
+        if(!interestCalculationPeriodDetail.isFirstActivityBeforeInterval() && CollectionUtils.isNotEmpty(interestCalculationPeriodDetail.getDailyDetails())){
+            minimumBalance = interestCalculationPeriodDetail.getDailyDetails().get(0).getResultantAmountForDay();
+        }
+
         Money runningBalance = interestCalculationPeriodDetail.getBalanceBeforeInterval();
 
         for (EndOfDayDetail daily : interestCalculationPeriodDetail.getDailyDetails()) {
-
                 runningBalance = runningBalance.add(daily.getResultantAmountForDay());
 
             if (minimumBalance.isGreaterThan(runningBalance)) {
