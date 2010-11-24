@@ -31,7 +31,6 @@ import org.mifos.application.collectionsheet.persistence.GroupBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.config.Localization;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
@@ -39,6 +38,8 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.domain.builders.PersonnelBuilder;
+import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -151,7 +152,10 @@ public class CenterHierarchyCustomerServiceIntegrationTest extends MifosIntegrat
         // setup
         String externalId = center.getExternalId();
         String mfiJoiningDate = new SimpleDateFormat("dd/MM/yyyy").format(center.getMfiJoiningDate());
-        Address address = center.getAddress();
+        AddressDto address = null;
+        if (center.getAddress() != null) {
+            address = Address.toDto(center.getAddress());
+        }
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
 

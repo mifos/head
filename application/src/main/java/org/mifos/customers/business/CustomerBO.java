@@ -39,7 +39,6 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
@@ -57,10 +56,12 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -1287,8 +1288,13 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             address = this.customerAddressDetail.getAddress();
         }
 
+        AddressDto addressDto = null;
+        if (address != null) {
+            Address.toDto(address);
+        }
+
         return new CustomerDetailDto(this.customerId, this.displayName, this.searchId, this.globalCustNum,
-                loanOfficerId, this.externalId, address);
+                loanOfficerId, this.externalId, addressDto);
     }
 
     public boolean hasSameIdentityAs(CustomerBO customer) {
@@ -1354,7 +1360,11 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         this.setUpdateDetails();
 
         this.setExternalId(centerUpdate.getExternalId());
-        this.updateAddress(centerUpdate.getAddress());
+        AddressDto dto = centerUpdate.getAddress();
+        if ( dto != null) {
+            Address address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(), dto.getPhoneNumber());
+            this.updateAddress(address);
+        }
 
         try {
             if (centerUpdate.getMfiJoiningDate() != null) {

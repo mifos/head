@@ -17,16 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 
-import org.mifos.customers.api.DataTransferObject;
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP"}, justification="should disable at filter level and also for pmd - not important for us")
+public class SurveyDto implements Serializable {
 
-/**
- *
- */
-public class SurveyDto implements DataTransferObject {
     private final Integer instanceId;
     private final String surveyName;
     private final Date dateConducted;

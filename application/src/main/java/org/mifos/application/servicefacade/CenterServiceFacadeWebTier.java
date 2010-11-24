@@ -39,6 +39,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
@@ -52,21 +53,36 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
+import org.mifos.dto.domain.CenterDisplayDto;
 import org.mifos.dto.domain.CenterDto;
+import org.mifos.dto.domain.CenterInformationDto;
+import org.mifos.dto.domain.CenterPerformanceHistoryDto;
+import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerAccountSummaryDto;
+import org.mifos.dto.domain.CustomerAddressDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerMeetingDto;
+import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.CustomerPositionDto;
+import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -313,5 +329,62 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
                     position.getName());
             customerPositionDtos.add(customerPosition);
         }
+    }
+
+    @Override
+    public void updateCenter(CenterUpdate centerUpdate) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            customerService.updateCenter(userContext, centerUpdate);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public CenterInformationDto getCenterInformationDto(String globalCustNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CenterBO center = customerDao.findCenterBySystemId(globalCustNum);
+        if (center == null) {
+            throw new MifosRuntimeException("Center not found for globalCustNum" + globalCustNum);
+        }
+
+        CenterDisplayDto centerDisplay = customerDao.getCenterDisplayDto(center.getCustomerId(),
+                userContext);
+
+        Integer centerId = center.getCustomerId();
+        String searchId = center.getSearchId();
+        Short branchId = centerDisplay.getBranchId();
+
+        CustomerAccountSummaryDto customerAccountSummary = customerDao.getCustomerAccountSummaryDto(centerId);
+
+        CenterPerformanceHistoryDto centerPerformanceHistory = customerDao.getCenterPerformanceHistory(searchId, branchId);
+
+        CustomerAddressDto centerAddress = customerDao.getCustomerAddressDto(center);
+
+        List<CustomerDetailDto> groups = customerDao.getGroupsOtherThanClosedAndCancelledForGroup(searchId, branchId);
+
+        List<CustomerNoteDto> recentCustomerNotes = customerDao.getRecentCustomerNoteDto(centerId);
+
+        List<CustomerPositionOtherDto> customerPositions = customerDao.getCustomerPositionDto(centerId, userContext);
+
+        List<SavingsDetailDto> savingsDetail = customerDao.getSavingsDetailDto(centerId, userContext);
+
+        CustomerMeetingDto customerMeeting = customerDao.getCustomerMeetingDto(center.getCustomerMeeting(), userContext);
+
+        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CENTER);
+
+        List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(centerId);
+
+        List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(centerId, EntityType.CENTER.getValue(), userContext);
+
+        return new CenterInformationDto(centerDisplay, customerAccountSummary, centerPerformanceHistory, centerAddress,
+                groups, recentCustomerNotes, customerPositions, savingsDetail, customerMeeting, activeSurveys,
+                customerSurveys, customFields);
     }
 }

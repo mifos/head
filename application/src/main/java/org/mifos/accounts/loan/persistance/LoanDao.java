@@ -23,7 +23,7 @@ package org.mifos.accounts.loan.persistance;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.customers.util.helpers.SurveyDto;
+import org.mifos.dto.domain.SurveyDto;
 
 import java.util.Iterator;
 import java.util.List;

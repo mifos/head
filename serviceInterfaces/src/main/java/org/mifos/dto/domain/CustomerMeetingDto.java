@@ -17,12 +17,28 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+package org.mifos.dto.domain;
 
-package org.mifos.customers.center.business.service;
+import java.io.Serializable;
 
-import org.mifos.framework.exceptions.ServiceException;
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomerMeetingDto implements Serializable {
 
-public interface CenterDetailsServiceFacade {
+    private final String meetingSchedule;
+    private final String meetingPlace;
 
-    CenterInformationDto getCenterInformationDto(String globalCustNum) throws ServiceException;
+    public CustomerMeetingDto(final String meetingSchedule, final String meetingPlace) {
+        this.meetingSchedule = meetingSchedule;
+        this.meetingPlace = meetingPlace;
+    }
+
+    public String getMeetingSchedule() {
+        return this.meetingSchedule;
+    }
+
+    public String getMeetingPlace() {
+        return this.meetingPlace;
+    }
+
 }

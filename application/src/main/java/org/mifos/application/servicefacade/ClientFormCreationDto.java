@@ -23,9 +23,9 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.SavingsDetailDto;
 
 public class ClientFormCreationDto {
 

@@ -40,13 +40,11 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.CenterUpdate;
 import org.mifos.application.servicefacade.CustomerSearch;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.center.business.service.CenterInformationDto;
 import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -55,6 +53,8 @@ import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterDto;
+import org.mifos.dto.domain.CenterInformationDto;
+import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
@@ -264,11 +264,20 @@ public class CenterCustAction extends CustAction {
         CenterBO centerFromSession = (CenterBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         CenterCustActionForm actionForm = (CenterCustActionForm) form;
 
+        AddressDto dto = null;
+        if (actionForm.getAddress() != null) {
+            dto = Address.toDto(actionForm.getAddress());
+        }
+
         CenterUpdate centerUpdate = new CenterUpdate(centerFromSession.getCustomerId(), centerFromSession
                 .getVersionNo(), actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), actionForm
-                .getMfiJoiningDate(), actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
+                .getMfiJoiningDate(), dto, actionForm.getCustomFields(), actionForm.getCustomerPositions());
 
-        this.customerServiceFacade.updateCenter(centerUpdate);
+        try {
+            this.centerServiceFacade.updateCenter(centerUpdate);
+        } catch (BusinessRuleException e) {
+            throw new ApplicationException(e.getMessageKey(), e);
+        }
 
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -301,7 +310,7 @@ public class CenterCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         // John W - UserContext passed because some status' need to be looked up for internationalisation
-        CenterInformationDto centerInformationDto = this.centerDetailsServiceFacade.getCenterInformationDto(((CenterCustActionForm) form).getGlobalCustNum());
+        CenterInformationDto centerInformationDto = this.centerServiceFacade.getCenterInformationDto(((CenterCustActionForm) form).getGlobalCustNum());
         SessionUtils.removeThenSetAttribute("centerInformationDto", centerInformationDto, request);
 
         // John W - 'BusinessKey' attribute used by breadcrumb but is not in associated jsp

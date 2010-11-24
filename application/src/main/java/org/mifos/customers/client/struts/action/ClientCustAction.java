@@ -69,9 +69,9 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
+import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -552,6 +552,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.clearMostButNotAllFieldsOnActionForm();
         ClientBO clientFromSession = getClientFromSession(request);
         final String clientSystemId = clientFromSession.getGlobalCustNum();
+        ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
 
         ClientPersonalInfoDto personalInfo = this.customerServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId);
 
@@ -582,7 +583,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setLoanOfficerId(personalInfo.getCustomerDetail().getLoanOfficerIdAsString());
         actionForm.setGlobalCustNum(personalInfo.getCustomerDetail().getGlobalCustNum());
         actionForm.setExternalId(personalInfo.getCustomerDetail().getExternalId());
-        actionForm.setAddress(personalInfo.getCustomerDetail().getAddress());
+
+        actionForm.setAddress(client.getAddress());
 
         // client specific
         actionForm.setGovernmentId(personalInfo.getClientDetail().getGovernmentId());
@@ -592,7 +594,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setSpouseName(personalInfo.getClientDetail().getSpouseName());
         actionForm.setCustomFields(personalInfo.getCustomFieldViews());
 
-        ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
 
         return mapping.findForward(ActionForwards.editPersonalInfo_success.toString());
@@ -676,7 +677,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setLoanOfficerId(clientFamilyInfo.getCustomerDetail().getLoanOfficerIdAsString());
         actionForm.setGlobalCustNum(clientFamilyInfo.getCustomerDetail().getGlobalCustNum());
         actionForm.setExternalId(clientFamilyInfo.getCustomerDetail().getExternalId());
-        actionForm.setAddress(clientFamilyInfo.getCustomerDetail().getAddress());
 
         // client specific
         actionForm.setGovernmentId(clientFamilyInfo.getClientDetail().getGovernmentId());
@@ -727,6 +727,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         }
 
         ClientBO client = this.customerDao.findClientBySystemId(clientFromSession.getGlobalCustNum());
+        actionForm.setAddress(client.getAddress());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
 
         return mapping.findForward(ActionForwards.editFamilyInfo_success.toString());

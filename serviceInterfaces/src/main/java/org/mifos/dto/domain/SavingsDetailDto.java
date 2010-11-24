@@ -17,24 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.util.helpers.Money;
+import java.io.Serializable;
 
-/**
- *
- */
-public class SavingsDetailDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class SavingsDetailDto implements Serializable {
+
     private final String globalAccountNum;
     private final String prdOfferingName;
     private final Short accountStateId;
     private final String accountStateName;
-    private final Money savingsBalance;
+    private final String savingsBalance;
     private final Short prdOfferingId;
 
     public SavingsDetailDto(final String globalAccountNum, final String prdOfferingName, final Short accountStateId,
-            final String accountStateName, final Money outstandingBalance) {
+            final String accountStateName, final String outstandingBalance) {
         this.prdOfferingId = null;
         this.globalAccountNum = globalAccountNum;
         this.prdOfferingName = prdOfferingName;
@@ -68,7 +67,7 @@ public class SavingsDetailDto implements DataTransferObject {
         return this.accountStateName;
     }
 
-    public Money getSavingsBalance() {
+    public String getSavingsBalance() {
         return this.savingsBalance;
     }
 

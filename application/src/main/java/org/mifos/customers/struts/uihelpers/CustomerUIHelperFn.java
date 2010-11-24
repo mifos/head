@@ -26,8 +26,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
-import org.mifos.customers.util.helpers.CustomerPositionDto;
+import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -48,10 +48,10 @@ public class CustomerUIHelperFn {
         StringBuilder stringBuilder = new StringBuilder();
         if (customerPositions != null && customer != null) {
             logger.debug("Iterating over customerPositions list");
-            List<CustomerPositionDto> customerPositionList = (List<CustomerPositionDto>) customerPositions;
+            List<CustomerPositionOtherDto> customerPositionList = (List<CustomerPositionOtherDto>) customerPositions;
             String positionNames[] = new String[customerPositionList.size()];
             int i = 0;
-            for (CustomerPositionDto customerPosition : customerPositionList) {
+            for (CustomerPositionOtherDto customerPosition : customerPositionList) {
                 CustomerDetailDto customerDetails = (CustomerDetailDto) customer;
                 if (null != customerPosition && customerPosition.getCustomerId() != null
                         && customerDetails != null) {

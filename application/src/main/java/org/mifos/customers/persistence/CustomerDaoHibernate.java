@@ -65,36 +65,37 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
-import org.mifos.customers.util.helpers.CenterDisplayDto;
-import org.mifos.customers.util.helpers.CenterPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.ClientDisplayDto;
 import org.mifos.customers.util.helpers.ClientFamilyDetailDto;
-import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
-import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerMeetingDto;
-import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
-import org.mifos.customers.util.helpers.SavingsDetailDto;
-import org.mifos.customers.util.helpers.SurveyDto;
+import org.mifos.dto.domain.CenterDisplayDto;
+import org.mifos.dto.domain.CenterPerformanceHistoryDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerAccountSummaryDto;
+import org.mifos.dto.domain.CustomerAddressDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
+import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.domain.SurveyDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.ActivityMapper;
@@ -108,6 +109,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -319,8 +321,16 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         // bug #1417 - wrong client sort order. Client sort order on bulk
         // entry screens should match ordering on group details page.
-        Collections.sort(clients, CustomerDetailDto.searchIdComparator());
+        Collections.sort(clients, searchIdComparator());
         return clients;
+    }
+
+    public static Comparator<CustomerDetailDto> searchIdComparator() {
+        return new Comparator<CustomerDetailDto>() {
+            public int compare(final CustomerDetailDto o1, final CustomerDetailDto o2) {
+                return ChapterNum.compare(o1.getSearchId(), o2.getSearchId());
+            }
+        };
     }
 
     @Override
@@ -555,7 +565,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         MifosCurrency mifosCurrency = Money.getDefaultCurrency();
         final Money totalAmountDue = new Money(mifosCurrency, (totalChargesDue.add(totalFeesDue)));
 
-        return new CustomerAccountSummaryDto(globalAccountNum, totalAmountDue);
+        return new CustomerAccountSummaryDto(globalAccountNum, totalAmountDue.toString());
     }
 
     @Override
@@ -589,7 +599,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         List<CustomerDetailDto> groups = (List<CustomerDetailDto>) this.genericDao.executeNamedQuery(
                 "Customer.getListOfGroupsUnderCenterOtherThanClosedAndCancelled", queryParameters);
 
-        Collections.sort(groups, CustomerDetailDto.searchIdComparator());
+        Collections.sort(groups, searchIdComparator());
         return groups;
     }
 
@@ -641,7 +651,7 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<CustomerPositionDto> getCustomerPositionDto(final Integer parentId, final UserContext userContext) {
+    public List<CustomerPositionOtherDto> getCustomerPositionDto(final Integer parentId, final UserContext userContext) {
 
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("PARENT_ID", parentId);
@@ -652,7 +662,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             return null;
         }
 
-        List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
+        List<CustomerPositionOtherDto> customerPositions = new ArrayList<CustomerPositionOtherDto>();
         String lookupName;
         Integer customerId;
         String customerDisplayName;
@@ -664,7 +674,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             customerDisplayName = (String) customerPosition[2];
             positionName = MessageLookup.getInstance().lookup(lookupName, userContext);
 
-            customerPositions.add(new CustomerPositionDto(positionName, customerId, customerDisplayName));
+            customerPositions.add(new CustomerPositionOtherDto(positionName, customerId, customerDisplayName));
         }
         return customerPositions;
     }
@@ -704,7 +714,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             savingsBalance = new Money(mifosCurrency, (BigDecimal) savingsDetail[5]);
 
             savingsDetails.add(new SavingsDetailDto(globalAccountNum, prdOfferingName, accountStateId,
-                    accountStateName, savingsBalance));
+                    accountStateName, savingsBalance.toString()));
         }
         return savingsDetails;
     }

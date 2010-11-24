@@ -160,7 +160,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
     private String getRoleForActivityId(String activityId) {
         try {
-            return activityIdToRolesMap.getString(activityId);
+            return activityIdToRolesMap.getString(activityId).trim();
         } catch (MissingResourceException e) {
             return "ROLE_UNDEFINED";
         }

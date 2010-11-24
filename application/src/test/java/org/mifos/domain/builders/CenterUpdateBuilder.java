@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.servicefacade.CenterUpdate;
+import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerPositionDto;
-import org.mifos.framework.business.util.Address;
 
 public class CenterUpdateBuilder {
 
@@ -39,11 +39,10 @@ public class CenterUpdateBuilder {
         Short loanOfficerId = -1;
         String externalId = null;
         String mfiJoiningDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-        Address address = null;
+        AddressDto address = null;
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
 
         return new CenterUpdate(customerId, versionNum, loanOfficerId, externalId, mfiJoiningDate, address, customFields, customerPositions);
     }
-
 }

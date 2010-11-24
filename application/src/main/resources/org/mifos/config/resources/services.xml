@@ -86,10 +86,6 @@
     	<constructor-arg ref="customerDao" />
     </bean>
     
-    <bean id="centerDetailsServiceFacade" class="org.mifos.customers.center.business.service.WebTierCenterDetailsServiceFacade" >
-    	<constructor-arg ref="customerDao" />
-    </bean>
-    
     <bean id="groupDetailsServiceFacade" class="org.mifos.customers.group.business.service.WebTierGroupDetailsServiceFacade" >
     	<constructor-arg ref="customerDao" />
     </bean>

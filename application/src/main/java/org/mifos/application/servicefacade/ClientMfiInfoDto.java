@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.PersonnelDto;
 
 public class ClientMfiInfoDto {

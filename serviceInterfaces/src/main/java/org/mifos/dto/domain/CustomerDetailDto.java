@@ -17,25 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.domain;
 
-import java.util.Comparator;
+import java.io.Serializable;
 
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.business.util.Address;
-import org.mifos.framework.util.helpers.ChapterNum;
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomerDetailDto implements Serializable {
 
-/**
- *
- */
-public class CustomerDetailDto implements DataTransferObject {
     private Integer customerId;
     private String displayName;
     private String searchId;
     private String globalCustNum;
     private Short loanOfficerId;
     private String externalId;
-    private Address address;
+    private AddressDto address;
 
     /*
      * requires public constructor as using hibernates aliasToBean transformer
@@ -58,7 +54,7 @@ public class CustomerDetailDto implements DataTransferObject {
     }
 
     public CustomerDetailDto(final Integer id, final String displayName, final String searchId,
-            final String globalCustNum, Short loanOfficerId, String externalId, Address address) {
+            final String globalCustNum, Short loanOfficerId, String externalId, AddressDto address) {
         this.customerId = id;
         this.displayName = displayName;
         this.searchId = searchId;
@@ -100,14 +96,6 @@ public class CustomerDetailDto implements DataTransferObject {
         this.globalCustNum = globalCustNum;
     }
 
-    public static Comparator<CustomerDetailDto> searchIdComparator() {
-        return new Comparator<CustomerDetailDto>() {
-            public int compare(final CustomerDetailDto o1, final CustomerDetailDto o2) {
-                return ChapterNum.compare(o1.getSearchId(), o2.getSearchId());
-            }
-        };
-    }
-
     public Short getLoanOfficerId() {
         return this.loanOfficerId;
     }
@@ -123,7 +111,7 @@ public class CustomerDetailDto implements DataTransferObject {
         return this.externalId;
     }
 
-    public Address getAddress() {
+    public AddressDto getAddress() {
         return this.address;
     }
 }

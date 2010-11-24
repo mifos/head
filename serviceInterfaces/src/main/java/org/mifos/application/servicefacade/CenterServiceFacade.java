@@ -23,6 +23,8 @@ package org.mifos.application.servicefacade;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterDto;
+import org.mifos.dto.domain.CenterInformationDto;
+import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
@@ -38,4 +40,10 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS')")
     CenterDto retrieveCenterDetailsForUpdate(Integer centerId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS')")
+    void updateCenter(CenterUpdate centerUpdate);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    CenterInformationDto getCenterInformationDto(String globalCustNum);
 }

@@ -73,8 +73,6 @@ import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
-import org.mifos.customers.center.business.service.CenterDetailsServiceFacade;
-import org.mifos.customers.center.business.service.WebTierCenterDetailsServiceFacade;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
 import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
@@ -110,7 +108,6 @@ public class DependencyInjectedServiceLocator {
     private static SavingsServiceFacade savingsServiceFacade;
     private static CustomerServiceFacade customerServiceFacade;
     private static CenterServiceFacade centerServiceFacade;
-    private static CenterDetailsServiceFacade centerDetailsServiceFacade;
     private static GroupDetailsServiceFacade groupDetailsServiceFacade;
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
     private static LegacyLoginServiceFacade loginServiceFacade;
@@ -249,13 +246,6 @@ public class DependencyInjectedServiceLocator {
             groupDetailsServiceFacade = new WebTierGroupDetailsServiceFacade(customerDao);
         }
         return groupDetailsServiceFacade;
-    }
-
-    public static CenterDetailsServiceFacade locateCenterDetailsServiceFacade() {
-        if (centerDetailsServiceFacade == null) {
-            centerDetailsServiceFacade = new WebTierCenterDetailsServiceFacade(customerDao);
-        }
-        return centerDetailsServiceFacade;
     }
 
     public static LoanServiceFacade locateLoanServiceFacade() {

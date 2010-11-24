@@ -17,19 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.api.DataTransferObject;
+import java.io.Serializable;
 
-/**
- *
- */
-public class CustomerPositionDto implements DataTransferObject{
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomerPositionOtherDto implements Serializable {
+
     private final String positionName;
     private final Integer customerId;
     private final String customerDisplayName;
 
-    public CustomerPositionDto(final String positionName, final Integer customerId, final String customerDisplayName) {
+    public CustomerPositionOtherDto(final String positionName, final Integer customerId, final String customerDisplayName) {
         this.positionName = positionName;
         this.customerId = customerId;
         this.customerDisplayName = customerDisplayName;
@@ -46,5 +46,4 @@ public class CustomerPositionDto implements DataTransferObject{
     public String getCustomerDisplayName() {
         return this.customerDisplayName;
     }
-
 }

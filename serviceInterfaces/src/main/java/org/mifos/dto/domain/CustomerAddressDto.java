@@ -17,14 +17,14 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.api.DataTransferObject;
+import java.io.Serializable;
 
-/**
- *
- */
-public class CustomerAddressDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomerAddressDto implements Serializable {
+
     private final String displayAddress;
     private final String city;
     private final String state;
@@ -65,5 +65,4 @@ public class CustomerAddressDto implements DataTransferObject {
     public String getPhoneNumber() {
         return this.phoneNumber;
     }
-
 }

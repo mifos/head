@@ -17,21 +17,19 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.util.helpers.Money;
+import java.io.Serializable;
 
-/**
- *
- */
-public class CustomerAccountSummaryDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_NO_SERIALVERSIONID", justification="should disable at filter level and also for pmd - not important for us")
+public class CustomerAccountSummaryDto implements Serializable {
 
     private final String globalAccountNum;
-    private final Money nextDueAmount;
+    private final String nextDueAmount;
 
     public CustomerAccountSummaryDto(final String customerAccountGlobalAccountNum,
-            final Money customerAccountNextDueAmount) {
+            final String customerAccountNextDueAmount) {
         this.globalAccountNum = customerAccountGlobalAccountNum;
         this.nextDueAmount = customerAccountNextDueAmount;
     }
@@ -40,7 +38,7 @@ public class CustomerAccountSummaryDto implements DataTransferObject {
         return this.globalAccountNum;
     }
 
-    public Money getNextDueAmount() {
+    public String getNextDueAmount() {
         return this.nextDueAmount;
     }
 

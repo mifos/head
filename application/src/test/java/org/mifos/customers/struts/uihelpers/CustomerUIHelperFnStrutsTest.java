@@ -36,10 +36,10 @@ import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.struts.action.EditCustomerStatusAction;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
-import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -121,9 +121,9 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         CustomerDetailDto clientDetail = new CustomerDetailDto(client.getCustomerId(), client.getDisplayName(), client
                 .getSearchId(), client.getGlobalCustNum());
 
-        List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
+        List<CustomerPositionOtherDto> customerPositions = new ArrayList<CustomerPositionOtherDto>();
         for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
-            customerPositions.add(new CustomerPositionDto(customerPosition.getPosition().getName(), customerPosition
+            customerPositions.add(new CustomerPositionOtherDto(customerPosition.getPosition().getName(), customerPosition
                     .getCustomer().getCustomerId(), customerPosition.getCustomer().getDisplayName()));
         }
 
@@ -190,9 +190,9 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
                 .getSearchId(), client.getGlobalCustNum());
 
 
-        List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
+        List<CustomerPositionOtherDto> customerPositions = new ArrayList<CustomerPositionOtherDto>();
         for (CustomerPositionEntity customerPosition : group.getCustomerPositions()) {
-            customerPositions.add(new CustomerPositionDto(customerPosition.getPosition().getName(), customerPosition
+            customerPositions.add(new CustomerPositionOtherDto(customerPosition.getPosition().getName(), customerPosition
                     .getCustomer().getCustomerId(), customerPosition.getCustomer().getDisplayName()));
         }
 

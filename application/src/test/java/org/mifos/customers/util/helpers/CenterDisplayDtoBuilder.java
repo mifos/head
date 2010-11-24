@@ -23,6 +23,7 @@ package org.mifos.customers.util.helpers;
 import java.util.Date;
 
 import org.joda.time.DateTime;
+import org.mifos.dto.domain.CenterDisplayDto;
 
 public class CenterDisplayDtoBuilder {
 

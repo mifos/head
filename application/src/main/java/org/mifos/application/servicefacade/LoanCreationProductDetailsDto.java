@@ -25,7 +25,7 @@ import java.util.List;
 
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 
 public class LoanCreationProductDetailsDto {

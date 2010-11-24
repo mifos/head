@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.mifos.customers.client.business.ClientFamilyDetailDto;
 import org.mifos.customers.client.business.ClientNameDetailDto;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 
 public class ClientFamilyInfoDto {
 

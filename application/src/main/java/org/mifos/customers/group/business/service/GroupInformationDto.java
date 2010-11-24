@@ -22,19 +22,19 @@ package org.mifos.customers.group.business.service;
 
 import java.util.List;
 
-import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
-import org.mifos.customers.util.helpers.CustomerAddressDto;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerFlagDto;
-import org.mifos.customers.util.helpers.CustomerMeetingDto;
-import org.mifos.customers.util.helpers.CustomerPositionDto;
-import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.GroupPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.LoanDetailDto;
-import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerAccountSummaryDto;
+import org.mifos.dto.domain.CustomerAddressDto;
+import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
+import org.mifos.dto.domain.CustomerPositionOtherDto;
+import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.domain.SurveyDto;
 import org.mifos.customers.api.DataTransferObject;
 
 /**
@@ -52,7 +52,7 @@ public class GroupInformationDto implements DataTransferObject {
     private final CustomerAddressDto address;
     private final List<CustomerDetailDto> clientsOtherThanClosedAndCancelled;
     private final List<CustomerNoteDto> recentCustomerNotes;
-    private final List<CustomerPositionDto> customerPositions;
+    private final List<CustomerPositionOtherDto> customerPositions;
     private final List<CustomerFlagDto> customerFlags;
     private final List<LoanDetailDto> loanAccountsInUse;
     private final List<SavingsDetailDto> savingsAccountsInUse;
@@ -64,7 +64,7 @@ public class GroupInformationDto implements DataTransferObject {
     public GroupInformationDto(final GroupDisplayDto groupDisplay,
             final CustomerAccountSummaryDto customerAccountSummary, GroupPerformanceHistoryDto groupPerformanceHistory,
             final CustomerAddressDto address, final List<CustomerDetailDto> clientsOtherThanClosedAndCancelled,
-            final List<CustomerNoteDto> recentCustomerNotes, final List<CustomerPositionDto> customerPositions,
+            final List<CustomerNoteDto> recentCustomerNotes, final List<CustomerPositionOtherDto> customerPositions,
             final List<CustomerFlagDto> customerFlags, final List<LoanDetailDto> loanAccountsInUse,
             final List<SavingsDetailDto> savingsAccountsInUse, final CustomerMeetingDto customerMeeting,
             final Boolean activeSurveys, final List<SurveyDto> customerSurveys,
@@ -106,7 +106,7 @@ public class GroupInformationDto implements DataTransferObject {
         return this.recentCustomerNotes;
     }
 
-    public List<CustomerPositionDto> getCustomerPositions() {
+    public List<CustomerPositionOtherDto> getCustomerPositions() {
         return this.customerPositions;
     }
 

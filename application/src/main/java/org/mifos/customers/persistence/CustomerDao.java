@@ -39,24 +39,24 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
-import org.mifos.customers.util.helpers.CenterDisplayDto;
-import org.mifos.customers.util.helpers.CenterPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.ClientDisplayDto;
-import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
-import org.mifos.customers.util.helpers.CustomerAddressDto;
-import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerFlagDto;
-import org.mifos.customers.util.helpers.CustomerMeetingDto;
-import org.mifos.customers.util.helpers.CustomerPositionDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
-import org.mifos.customers.util.helpers.SavingsDetailDto;
-import org.mifos.customers.util.helpers.SurveyDto;
+import org.mifos.dto.domain.CenterDisplayDto;
+import org.mifos.dto.domain.CenterPerformanceHistoryDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerAccountSummaryDto;
+import org.mifos.dto.domain.CustomerAddressDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
+import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.domain.SurveyDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.util.UserContext;
@@ -151,7 +151,7 @@ public interface CustomerDao {
 
     List<CustomerNoteDto> getRecentCustomerNoteDto(Integer centerId);
 
-    List<CustomerPositionDto> getCustomerPositionDto(Integer centerId, UserContext userContext);
+    List<CustomerPositionOtherDto> getCustomerPositionDto(Integer centerId, UserContext userContext);
 
     CustomerMeetingDto getCustomerMeetingDto(CustomerMeetingEntity customerMeeting, UserContext userContext);
 

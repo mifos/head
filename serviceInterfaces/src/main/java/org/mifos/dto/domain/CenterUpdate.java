@@ -18,13 +18,9 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.domain;
 
 import java.util.List;
-
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.CustomerPositionDto;
-import org.mifos.framework.business.util.Address;
 
 public class CenterUpdate {
 
@@ -33,11 +29,11 @@ public class CenterUpdate {
     private final Short loanOfficerId;
     private final String externalId;
     private final String mfiJoiningDate;
-    private final Address address;
+    private final AddressDto address;
     private final List<CustomFieldDto> customFields;
     private final List<CustomerPositionDto> customerPositions;
 
-    public CenterUpdate(Integer customerId, Integer versionNum, Short loanOfficerId, String externalId, String mfiJoiningDate, Address address,
+    public CenterUpdate(Integer customerId, Integer versionNum, Short loanOfficerId, String externalId, String mfiJoiningDate, AddressDto address,
             List<CustomFieldDto> customFields, List<CustomerPositionDto> customerPositions) {
         this.customerId = customerId;
         this.versionNum = versionNum;
@@ -61,7 +57,7 @@ public class CenterUpdate {
         return this.mfiJoiningDate;
     }
 
-    public Address getAddress() {
+    public AddressDto getAddress() {
         return this.address;
     }
 

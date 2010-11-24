@@ -7,7 +7,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.customers.util.helpers.SurveyDto;
+import org.mifos.dto.domain.SurveyDto;
 
 import java.util.ArrayList;
 import java.util.Date;
