@@ -19,4 +19,4 @@ msgstr ""
 #. # or MessageLookupMessages.properties can be defined here.
 #: errors.multipleCurrencies
 msgid "<Multiple Currencies>"
-msgstr "<Â§öÁßçÂ∏ÅÂÄº>"
+msgstr "∂‡÷÷±“÷µ"

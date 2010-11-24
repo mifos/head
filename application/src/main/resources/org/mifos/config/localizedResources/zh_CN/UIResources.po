@@ -50,7 +50,7 @@ msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESH
 msgid ""
 "the number of digits before the decimal separator exceeds the allowed number "
 "%s"
-msgstr "小数位数超过允许的%s位"
+msgstr "个数位数超过允许的%s位"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST"

@@ -288,7 +288,7 @@ msgstr "交易日期无效。交易日期不能早于该客户的最后一次会
 msgid ""
 "Date of transaction is invalid. It can not be prior to the date of the first "
 "transaction made on the loan account."
-msgstr "交易日期无效。交易日期不能早于该客户的最后一次会议日期及贷款账户激活日期。"
+msgstr "交易日期无效。交易日期不能早于该客户的第一次交易日期。"
 
 #: errors.loan.duplicatePeriodicFee
 msgid "Same periodic fee cannot be selected multiple times."
@@ -2147,7 +2147,7 @@ msgstr "还款日{0}无效。有效日为 23-Apr-2010"
 
 #: errors.installment.duedate.same.as.disburse.date
 msgid "Installment {0} has due date which falls on the disbursal date"
-msgstr ""
+msgstr "第{0}还款日是放款日"
 
 #: errors.installment.duedate.is.holiday
 msgid "Installment {0} has due date which falls on a holiday"

@@ -756,7 +756,7 @@ msgstr "种姓："
 
 #: client.ExternalId
 msgid "External ID:"
-msgstr "外部ID："
+msgstr "外部号："
 
 #: client.ExternalIdInfo
 msgid ""
@@ -1158,7 +1158,7 @@ msgstr "家庭详情"
 msgid ""
 "Adding family members are optional. Click \"Add Row\" to add a new family "
 "member."
-msgstr ""
+msgstr "可加入家庭成员。按加行键来加家庭成员"
 
 #: client.FamilyRelationship
 msgctxt "client.FamilyRelationship"
@@ -1603,7 +1603,7 @@ msgstr "<li>请填写必要的附加信息。</li>"
 msgid ""
 "<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
 "field.</li>"
-msgstr ""
+msgstr "<li>请在附加信息栏填写有效日期（日/月/年)。</li>"
 
 #: errors.Customer.specifyFeeAmount
 msgid "<li>Please specify fee amount.</li>"
@@ -1615,7 +1615,7 @@ msgstr "无法将客户添加至非活动的组"
 
 #: errors.Customer.TargetGroupStatusLowerThanClient
 msgid "Group status should be higher than Client status"
-msgstr ""
+msgstr "组的状态不应高于客户状态"
 
 #: errors.InvalidTrainedDate
 msgid "<li>Please enter a valid training date.</li>"
@@ -1710,19 +1710,19 @@ msgstr "附加信息"
 
 #: client.QuestionGroupInstances
 msgid "Question Groups"
-msgstr ""
+msgstr "问题组"
 
 #: questionnaire.invalid.numeric.range.response
 msgid "<li>Please specify a number between {0} and {1} for {2}</li>"
-msgstr ""
+msgstr "<li>请为{2}指定{0}到{1}的值。</li>"
 
 #: questionnaire.invalid.numeric.min.response
 msgid "<li>Please specify a number greater than {0} for {1}</li>"
-msgstr ""
+msgstr "<li>请为{1}指定高于{0}的值。</li>"
 
 #: questionnaire.invalid.numeric.max.response
 msgid "<li>Please specify a number lesser than {0} for {1}</li>"
-msgstr ""
+msgstr "<li>请为{1}指定低于{0}的值。</li>"
 
 #: questionnaire.invalid.numeric.response
 msgid "<li>Please specify a number for {0}</li>"
