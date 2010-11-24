@@ -22,25 +22,19 @@ package org.mifos.dto.domain;
 
 import java.util.List;
 
-import org.mifos.customers.business.CustomerBO;
-
 public class GroupFormCreationDto {
 
-    private final CustomerBO parentCustomer;
     private final boolean centerHierarchyExists;
-    private final Short groupOfficeId;
     private final List<CustomFieldDto> customFieldDtos;
     private final List<PersonnelDto> personnelList;
     private final List<PersonnelDto> formedByPersonnel;
-    private List<ApplicableAccountFeeDto> defaultFees;
-    private List<ApplicableAccountFeeDto> additionalFees;
+    private final List<ApplicableAccountFeeDto> defaultFees;
+    private final List<ApplicableAccountFeeDto> additionalFees;
 
-    public GroupFormCreationDto(boolean centerHierarchyExists, CustomerBO parentCustomer,
-            Short groupOfficeId, List<CustomFieldDto> customFieldDtos, List<PersonnelDto> personnelList,
-            List<PersonnelDto> formedByPersonnel, List<ApplicableAccountFeeDto> defaultFees, List<ApplicableAccountFeeDto> additionalFees) {
+    public GroupFormCreationDto(boolean centerHierarchyExists, List<CustomFieldDto> customFieldDtos,
+            List<PersonnelDto> personnelList, List<PersonnelDto> formedByPersonnel,
+            List<ApplicableAccountFeeDto> defaultFees, List<ApplicableAccountFeeDto> additionalFees) {
         this.centerHierarchyExists = centerHierarchyExists;
-        this.parentCustomer = parentCustomer;
-        this.groupOfficeId = groupOfficeId;
         this.customFieldDtos = customFieldDtos;
         this.personnelList = personnelList;
         this.formedByPersonnel = formedByPersonnel;
@@ -64,31 +58,11 @@ public class GroupFormCreationDto {
         return this.centerHierarchyExists;
     }
 
-    public CustomerBO getParentCustomer() {
-        return this.parentCustomer;
-    }
-
     public List<ApplicableAccountFeeDto> getDefaultFees() {
         return this.defaultFees;
     }
 
     public List<ApplicableAccountFeeDto> getAdditionalFees() {
         return this.additionalFees;
-    }
-
-    public String getParentOfficeId() {
-        String parentOfficeId = groupOfficeId.toString();
-        if (this.getParentCustomer() != null) {
-            parentOfficeId = this.parentCustomer.getOffice().getOfficeId().toString();
-        }
-        return parentOfficeId;
-    }
-
-    public String getParentPersonnelId() {
-        String parentPersonnelId = "";
-        if (this.getParentCustomer() != null) {
-            parentPersonnelId = this.parentCustomer.getPersonnel().getPersonnelId().toString();
-        }
-        return parentPersonnelId;
     }
 }

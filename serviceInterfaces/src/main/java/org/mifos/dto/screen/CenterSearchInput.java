@@ -22,9 +22,8 @@ package org.mifos.dto.screen;
 
 import java.io.Serializable;
 
-/**
- * This class is helper class and provides input for center search
- */
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CenterSearchInput implements Serializable {
 
     /** Denotes for which purpose group is using the center search */

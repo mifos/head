@@ -42,6 +42,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -147,14 +148,16 @@ public class GroupCustAction extends CustAction {
         actionForm.cleanForm();
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request.getSession());
 
-        GroupCreation groupCreation = new GroupCreation(actionForm.getOfficeIdValue(), actionForm.getCenterSystemId());
+        String centerSystemId = actionForm.getCenterSystemId();
+        CenterBO center = this.customerDao.findCenterBySystemId(centerSystemId);
+        GroupCreation groupCreation = new GroupCreation(actionForm.getOfficeIdValue(), centerSystemId);
 
         GroupFormCreationDto groupFormCreationDto = this.groupServiceFacade.retrieveGroupFormCreationData(groupCreation);
 
         // inherit these settings from center/parent if center hierarchy is configured
-        actionForm.setParentCustomer(groupFormCreationDto.getParentCustomer());
-        actionForm.setOfficeId(groupFormCreationDto.getParentOfficeId());
-        actionForm.setFormedByPersonnel(groupFormCreationDto.getParentPersonnelId());
+        actionForm.setParentCustomer(center);
+        actionForm.setOfficeId(center.getOfficeId().toString());
+        actionForm.setFormedByPersonnel(center.getLoanOfficerId().toString());
 
         actionForm.setCustomFields(groupFormCreationDto.getCustomFieldViews());
         actionForm.setDefaultFees(groupFormCreationDto.getDefaultFees());

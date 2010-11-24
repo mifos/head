@@ -130,7 +130,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
         List<PersonnelDto> formedByPersonnel = customerDao.findLoanOfficerThatFormedOffice(centerCreation.getOfficeId());
 
-        return new GroupFormCreationDto(isCenterHierarchyExists, parentCustomer, parentOfficeId, customFieldDtos,
+        return new GroupFormCreationDto(isCenterHierarchyExists, customFieldDtos,
                 personnelList, formedByPersonnel, applicableDefaultAccountFees, applicableDefaultAdditionalFees);
     }
 }
