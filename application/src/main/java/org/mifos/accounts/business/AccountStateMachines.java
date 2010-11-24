@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -105,6 +106,46 @@ public class AccountStateMachines {
             statesMapForSavings = loadMap(AccountStates.TRANSITION_CONFIG_FILE_PATH_SAVINGS, configName);
             accountStateEntityListForSavings = retrieveAllAccountStateList(accountType);
             populateSavingsStatesViewMap();
+        } catch (Exception e) {
+            throw new StatesInitializationException(SavingsConstants.STATEINITIALIZATION_EXCEPTION, e);
+        }
+    }
+
+    public void initializeCenterStates() throws StatesInitializationException {
+
+        AccountTypes accountType = AccountTypes.CUSTOMER_ACCOUNT;
+        CustomerLevel level = CustomerLevel.CENTER;
+        String configName = getConfigurationName(accountType, level);
+        try {
+            statesMapForCenter = loadMap(CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CENTER, configName);
+            customerStatusListForCenter = retrieveAllCustomerStatusList(level);
+            populateCenterStatesViewMap();
+        } catch (Exception e) {
+            throw new StatesInitializationException(SavingsConstants.STATEINITIALIZATION_EXCEPTION, e);
+        }
+    }
+
+    public void initializeGroupStates() throws StatesInitializationException {
+        AccountTypes accountType = AccountTypes.CUSTOMER_ACCOUNT;
+        CustomerLevel level = CustomerLevel.GROUP;
+        String configName = getConfigurationName(accountType, level);
+        try {
+            statesMapForGroup = loadMap(CustomerConstants.TRANSITION_CONFIG_FILE_PATH_GROUP, configName);
+            customerStatusListForGroup = retrieveAllCustomerStatusList(level);
+            populateGroupStatesViewMap();
+        } catch (Exception e) {
+            throw new StatesInitializationException(SavingsConstants.STATEINITIALIZATION_EXCEPTION, e);
+        }
+    }
+
+    public void initializeClientStates() throws StatesInitializationException {
+        AccountTypes accountType = AccountTypes.CUSTOMER_ACCOUNT;
+        CustomerLevel level = CustomerLevel.CLIENT;
+        String configName = getConfigurationName(accountType, level);
+        try {
+            statesMapForClient = loadMap(CustomerConstants.TRANSITION_CONFIG_FILE_PATH_CLIENT, configName);
+            customerStatusListForClient = retrieveAllCustomerStatusList(level);
+            populateClientStatesViewMap();
         } catch (Exception e) {
             throw new StatesInitializationException(SavingsConstants.STATEINITIALIZATION_EXCEPTION, e);
         }
@@ -210,6 +251,9 @@ public class AccountStateMachines {
 
     public String getCustomerFlagName(CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel) {
         logger.debug("In AccountStateMachines::getCustomerFlagName()");
+        if (customerStatusFlag == null) {
+            return "";
+        }
         if (customerLevel.equals(CustomerLevel.CENTER)) {
             for (CustomerStatusEntity customerStatus : customerStatusListForCenter) {
                 for (CustomerStatusFlagEntity customerStateFlagEntity : customerStatus.getFlagSet()) {
@@ -241,11 +285,32 @@ public class AccountStateMachines {
                 }
             }
         }
-        return null;
+        return "";
     }
 
     public List<AccountStateEntity> getSavingsStatusList(AccountStateEntity accountStateEntity) {
         return statesViewMapForSavings.get(accountStateEntity.getId());
+    }
+
+    public List<CustomerStatusEntity> getCenterStatusList(CustomerStatusEntity customerStatusEntity) {
+        if (statesViewMapForCenter.containsKey(customerStatusEntity.getId())) {
+            return statesViewMapForCenter.get(customerStatusEntity.getId());
+        }
+        return new ArrayList<CustomerStatusEntity>();
+    }
+
+    public List<CustomerStatusEntity> getGroupStatusList(CustomerStatusEntity customerStatusEntity) {
+        if (statesViewMapForGroup.containsKey(customerStatusEntity.getId())) {
+            return statesViewMapForGroup.get(customerStatusEntity.getId());
+        }
+        return new ArrayList<CustomerStatusEntity>();
+    }
+
+    public List<CustomerStatusEntity> getClientStatusList(CustomerStatusEntity customerStatusEntity) {
+        if (statesViewMapForClient.containsKey(customerStatusEntity.getId())) {
+            return statesViewMapForClient.get(customerStatusEntity.getId());
+        }
+        return new ArrayList<CustomerStatusEntity>();
     }
 
     public List<AccountStateEntity> getStatusList(AccountStateEntity accountStateEntity, AccountTypes accountTypes) {

@@ -700,7 +700,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionMessages();
         Assert.assertEquals(getStatusName(CustomerStatus.fromInt(Short.valueOf("10"))), (String) SessionUtils
                 .getAttribute(SavingsConstants.NEW_STATUS_NAME, request));
-        Assert.assertNull("Since new Status is not Closed,so flag should be null.", SessionUtils.getAttribute(
+        Assert.assertEquals("Since new Status is not Closed,so flag should be blank.", "", SessionUtils.getAttribute(
                 SavingsConstants.FLAG_NAME, request));
         cleanInitialObjects();
     }

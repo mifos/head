@@ -176,7 +176,7 @@ public class EditCustomerStatusActionForm extends BaseActionForm implements Ques
     }
 
     @Override
-    public void reset(ActionMapping mapping, HttpServletRequest request) {
+    public void reset(@SuppressWarnings("unused") ActionMapping mapping, HttpServletRequest request) {
         String methodCalled = request.getParameter(Methods.method.toString());
         if (null != methodCalled) {
             if ((Methods.previewStatus.toString()).equals(methodCalled)) {
@@ -187,7 +187,7 @@ public class EditCustomerStatusActionForm extends BaseActionForm implements Ques
     }
 
     @Override
-    public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
+    public ActionErrors validate(@SuppressWarnings("unused") ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
         String methodCalled = request.getParameter(Methods.method.toString());
         if (null != methodCalled) {
@@ -244,18 +244,6 @@ public class EditCustomerStatusActionForm extends BaseActionForm implements Ques
         return errors;
     }
 
-    private boolean isCheckListNotComplete(String chklistSize) {
-        return (isPartialSelected(chklistSize) || isNoneSelected(chklistSize));
-    }
-
-    private boolean isPartialSelected(String chklistSize) {
-        return (selectedItems != null) && (Integer.valueOf(chklistSize).intValue() != selectedItems.length);
-    }
-
-    private boolean isNoneSelected(String chklistSize) {
-        return (Integer.valueOf(chklistSize).intValue() > 0) && (selectedItems == null);
-    }
-
     private boolean isNewStatusHasFlag() {
         return (Short.valueOf(newStatusId).equals(CustomerStatus.CLIENT_CANCELLED.getValue()))
                 || (Short.valueOf(newStatusId).equals(CustomerStatus.CLIENT_CLOSED.getValue()))
@@ -271,6 +259,14 @@ public class EditCustomerStatusActionForm extends BaseActionForm implements Ques
     @Override
     public List<QuestionGroupDetail> getQuestionGroups() {
         return this.questionGroups;
+    }
+
+    public void clear() {
+        setSelectedItems(null);
+        setNotes(null);
+        setNewStatusId(null);
+        setFlagId(null);
+        setQuestionGroups(null);
     }
 
 }

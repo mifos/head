@@ -30,16 +30,15 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.CustomerPictureEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
@@ -154,14 +153,6 @@ public class CustomerBusinessService implements BusinessService {
 
     }
 
-    public List<CustomerCheckListBO> getStatusChecklist(Short statusId, Short customerLevelId) throws ServiceException {
-        try {
-            return customerPersistence.getStatusChecklist(statusId, customerLevelId);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
     public List<CustomerStatusEntity> retrieveAllCustomerStatusList(Short levelId) throws ServiceException {
         try {
             return customerPersistence.retrieveAllCustomerStatusList(levelId);
@@ -178,18 +169,9 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-    public String getStatusName(CustomerStatus customerStatus, CustomerLevel customerLevel) {
-        return AccountStateMachines.getInstance().getCustomerStatusName(customerStatus, customerLevel);
-    }
-
-    public String getFlagName(CustomerStatusFlag customerStatusFlag, CustomerLevel customerLevel) {
-        return AccountStateMachines.getInstance().getCustomerFlagName(customerStatusFlag, customerLevel);
-    }
-
     public List<CustomerStatusEntity> getStatusList(CustomerStatusEntity customerStatusEntity,
             CustomerLevel customerLevel, Short localeId) {
-        List<CustomerStatusEntity> statusList = AccountStateMachines.getInstance().getStatusList(customerStatusEntity,
-                customerLevel);
+        List<CustomerStatusEntity> statusList = AccountStateMachines.getInstance().getStatusList(customerStatusEntity,customerLevel);
         if (null != statusList) {
             for (CustomerStatusEntity customerStatusObj : statusList) {
                 customerStatusObj.setLocaleId(localeId);

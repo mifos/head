@@ -196,38 +196,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     }
 
     @Test
-    public void testGetCustomerChecklist() throws Exception {
-
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
-        CustomerCheckListBO checklistCenter = TestObjectFactory.createCustomerChecklist(center.getCustomerLevel()
-                .getId(), center.getCustomerStatus().getId(), CheckListConstants.STATUS_ACTIVE);
-        CustomerCheckListBO checklistClient = TestObjectFactory.createCustomerChecklist(client.getCustomerLevel()
-                .getId(), client.getCustomerStatus().getId(), CheckListConstants.STATUS_INACTIVE);
-        CustomerCheckListBO checklistGroup = TestObjectFactory.createCustomerChecklist(
-                group.getCustomerLevel().getId(), group.getCustomerStatus().getId(), CheckListConstants.STATUS_ACTIVE);
-        StaticHibernateUtil.flushSession();
-        Assert.assertEquals(1,
-                service.getStatusChecklist(center.getCustomerStatus().getId(), center.getCustomerLevel().getId())
-                        .size());
-        client = (ClientBO) (StaticHibernateUtil.getSessionTL().get(ClientBO.class,
-                Integer.valueOf(client.getCustomerId())));
-        group = (GroupBO) (StaticHibernateUtil.getSessionTL()
-                .get(GroupBO.class, Integer.valueOf(group.getCustomerId())));
-        center = (CenterBO) (StaticHibernateUtil.getSessionTL().get(CenterBO.class,
-                Integer.valueOf(center.getCustomerId())));
-        checklistCenter = (CustomerCheckListBO) (StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
-                checklistCenter.getChecklistId())));
-        checklistClient = (CustomerCheckListBO) (StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
-                checklistClient.getChecklistId())));
-        checklistGroup = (CustomerCheckListBO) (StaticHibernateUtil.getSessionTL().get(CheckListBO.class, new Short(
-                checklistGroup.getChecklistId())));
-
-    }
-
-    @Test
     public void testRetrieveAllCustomerStatusList() throws NumberFormatException, SystemException, ApplicationException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
@@ -255,38 +223,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
         Assert.assertEquals(0, service.getAllCustomerNotes(center.getCustomerId()).getSize());
         Assert.assertEquals(0, center.getCustomerNotes().size());
-    }
-
-    @Test
-    public void testGetStatusName() throws Exception {
-        createInitialCustomers();
-        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CENTER);
-        String statusNameForCenter = service.getStatusName(center.getStatus(), CustomerLevel.CENTER);
-        Assert.assertEquals("Active", statusNameForCenter);
-
-        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.GROUP);
-        String statusNameForGroup = service.getStatusName(group.getStatus(), CustomerLevel.GROUP);
-        Assert.assertEquals("Active", statusNameForGroup);
-
-        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CLIENT);
-        String statusNameForClient = service.getStatusName(client.getStatus(), CustomerLevel.CLIENT);
-        Assert.assertNotNull("Active", statusNameForClient);
-    }
-
-    @Test
-    public void testGetFlagName() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group", CustomerStatus.GROUP_ACTIVE, center);
-        client = TestObjectFactory.createClient("client", CustomerStatus.CLIENT_CLOSED, group);
-
-        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.CLIENT);
-        String flagNameForClient = service.getFlagName(CustomerStatusFlag.CLIENT_CLOSED_DUPLICATE, CustomerLevel.CLIENT);
-        Assert.assertNotNull("Duplicate", flagNameForClient);
-
-        AccountStateMachines.getInstance().initialize(AccountTypes.CUSTOMER_ACCOUNT, CustomerLevel.GROUP);
-        String flagNameForGroup = service.getFlagName(CustomerStatusFlag.GROUP_CLOSED_DUPLICATE, CustomerLevel.GROUP);
-        Assert.assertNotNull("Duplicate", flagNameForGroup);
     }
 
     @Test

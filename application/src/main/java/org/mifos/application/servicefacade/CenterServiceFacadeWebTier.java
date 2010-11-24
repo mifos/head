@@ -24,10 +24,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
@@ -42,12 +44,17 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
@@ -55,6 +62,8 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
@@ -81,9 +90,12 @@ import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.mifos.dto.screen.CustomerStatusDetailDto;
+import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.MifosUser;
@@ -386,5 +398,118 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         return new CenterInformationDto(centerDisplay, customerAccountSummary, centerPerformanceHistory, centerAddress,
                 groups, recentCustomerNotes, customerPositions, savingsDetail, customerMeeting, activeSurveys,
                 customerSurveys, customFields);
+    }
+
+    @Override
+    public void updateCustomerStatus(Integer customerId, Integer previousCustomerVersionNo, String flagIdAsString,
+            String newStatusIdAsString, String notes) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        Short flagId = null;
+        Short newStatusId = null;
+        if (StringUtils.isNotBlank(flagIdAsString)) {
+            flagId = Short.valueOf(flagIdAsString);
+        }
+        if (StringUtils.isNotBlank(newStatusIdAsString)) {
+            newStatusId = Short.valueOf(newStatusIdAsString);
+        }
+
+        CustomerStatusFlag customerStatusFlag = null;
+        if (flagId != null) {
+            customerStatusFlag = CustomerStatusFlag.fromInt(flagId);
+        }
+
+        CustomerStatus newStatus = CustomerStatus.fromInt(newStatusId);
+
+        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdate(customerId, previousCustomerVersionNo,
+                customerStatusFlag, newStatus, notes);
+
+        try {
+            this.customerService.updateCustomerStatus(userContext, customerStatusUpdate);
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public void initializeCenterStates(String centerGlobalNum) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CenterBO center = this.customerDao.findCenterBySystemId(centerGlobalNum);
+
+        try {
+            List<ListElement> savingsStatesList = new ArrayList<ListElement>();
+            AccountStateMachines.getInstance().initializeCenterStates();
+
+            List<CustomerStatusEntity> statusList = AccountStateMachines.getInstance().getCenterStatusList(center.getCustomerStatus());
+            for (CustomerStatusEntity customerState : statusList) {
+                customerState.setLocaleId(userContext.getLocaleId());
+                savingsStatesList.add(new ListElement(customerState.getId().intValue(), customerState.getName()));
+            }
+        } catch (StatesInitializationException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void initializeGroupStates(String groupGlobalNum) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        GroupBO group = this.customerDao.findGroupBySystemId(groupGlobalNum);
+
+        try {
+            List<ListElement> savingsStatesList = new ArrayList<ListElement>();
+            AccountStateMachines.getInstance().initializeGroupStates();
+
+            List<CustomerStatusEntity> statusList = AccountStateMachines.getInstance().getGroupStatusList(group.getCustomerStatus());
+            for (CustomerStatusEntity customerState : statusList) {
+                customerState.setLocaleId(userContext.getLocaleId());
+                savingsStatesList.add(new ListElement(customerState.getId().intValue(), customerState.getName()));
+            }
+        } catch (StatesInitializationException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void initializeClientStates(String clientGlobalNum) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        ClientBO client = this.customerDao.findClientBySystemId(clientGlobalNum);
+
+        try {
+            List<ListElement> savingsStatesList = new ArrayList<ListElement>();
+            AccountStateMachines.getInstance().initializeClientStates();
+
+            List<CustomerStatusEntity> statusList = AccountStateMachines.getInstance().getClientStatusList(client.getCustomerStatus());
+            for (CustomerStatusEntity customerState : statusList) {
+                customerState.setLocaleId(userContext.getLocaleId());
+                savingsStatesList.add(new ListElement(customerState.getId().intValue(), customerState.getName()));
+            }
+        } catch (StatesInitializationException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public CustomerStatusDetailDto retrieveCustomerStatusDetails(Short newStatusId, Short flagIdValue, Short customerLevelId) {
+
+        CustomerLevel customerLevel = CustomerLevel.getLevel(customerLevelId);
+        CustomerStatus customerStatus = CustomerStatus.fromInt(newStatusId);
+
+        CustomerStatusFlag statusFlag = null;
+        if (customerStatus.isCustomerCancelledOrClosed()) {
+            statusFlag = CustomerStatusFlag.getStatusFlag(flagIdValue);
+        }
+
+        String statusName = AccountStateMachines.getInstance().getCustomerStatusName(customerStatus, customerLevel);
+        String flagName = AccountStateMachines.getInstance().getCustomerFlagName(statusFlag, customerLevel);
+
+        return new CustomerStatusDetailDto(statusName, flagName);
     }
 }

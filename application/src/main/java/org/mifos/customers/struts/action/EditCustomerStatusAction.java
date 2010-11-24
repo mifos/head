@@ -22,6 +22,7 @@ package org.mifos.customers.struts.action;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -32,19 +33,20 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.struts.actionforms.EditCustomerStatusActionForm;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerStatusFlag;
-import org.mifos.framework.business.service.BusinessService;
+import org.mifos.dto.screen.CustomerStatusDetailDto;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -54,22 +56,15 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class EditCustomerStatusAction extends BaseAction {
 
-    private CustomerBusinessService customerService;
-
     private static final Logger logger = LoggerFactory.getLogger(EditCustomerStatusAction.class);
 
     public EditCustomerStatusAction() {
-        customerService = new CustomerBusinessService();
-    }
-
-    @Override
-    protected BusinessService getService() {
-        return customerService;
     }
 
     public static ActionSecurity getSecurity() {
@@ -87,24 +82,48 @@ public class EditCustomerStatusAction extends BaseAction {
         return security;
     }
 
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-
-    }
-
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadStatus(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In EditCustomerStatusAction:load()");
-        doCleanUp(form, request);
-        CustomerBO customerBO = customerService.getCustomer(((EditCustomerStatusActionForm) form).getCustomerIdValue());
-        loadInitialData(form, customerBO, getUserContext(request));
-        SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+        EditCustomerStatusActionForm editCustomerStatusActionForm = (EditCustomerStatusActionForm) form;
+        editCustomerStatusActionForm.clear();
 
-        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_LIST, customerService.getStatusList(customerBO
-                .getCustomerStatus(), customerBO.getLevel(), getUserContext(request).getLocaleId()), request);
+        UserContext userContext = getUserContext(request);
+
+        Integer customerId = editCustomerStatusActionForm.getCustomerIdValue();
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        customer.setUserContext(userContext);
+        SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, customer, request);
+
+        List<CustomerStatusEntity> statusList = new ArrayList<CustomerStatusEntity>();
+        switch(customer.getLevel()) {
+        case CENTER:
+            this.centerServiceFacade.initializeCenterStates(customer.getGlobalCustNum());
+            statusList = AccountStateMachines.getInstance().getCenterStatusList(customer.getCustomerStatus());
+            editCustomerStatusActionForm.setInput("center");
+            break;
+        case GROUP:
+            this.centerServiceFacade.initializeGroupStates(customer.getGlobalCustNum());
+            statusList = AccountStateMachines.getInstance().getGroupStatusList(customer.getCustomerStatus());
+            editCustomerStatusActionForm.setInput("group");
+            break;
+        case CLIENT:
+            this.centerServiceFacade.initializeClientStates(customer.getGlobalCustNum());
+            statusList = AccountStateMachines.getInstance().getClientStatusList(customer.getCustomerStatus());
+            editCustomerStatusActionForm.setInput("client");
+            break;
+        default:
+            break;
+        };
+
+        editCustomerStatusActionForm.setLevelId(customer.getCustomerLevel().getId().toString());
+        editCustomerStatusActionForm.setCurrentStatusId(customer.getCustomerStatus().getId().toString());
+        editCustomerStatusActionForm.setGlobalAccountNum(customer.getGlobalCustNum());
+        editCustomerStatusActionForm.setCustomerName(customer.getDisplayName());
+
+        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_LIST, statusList, request);
         return mapping.findForward(ActionForwards.loadStatus_success.toString());
     }
 
@@ -112,12 +131,29 @@ public class EditCustomerStatusAction extends BaseAction {
     public ActionForward previewStatus(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In EditCustomerStatusAction:preview()");
+
         CustomerBO customerBO = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        setCustomerStatusDetails(form, customerBO, request, getUserContext(request));
-        EditCustomerStatusActionForm actionForm = (EditCustomerStatusActionForm) form;
-        if (actionForm.getNewStatusIdValue().equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
-            return createClientQuestionnaire.fetchAppliedQuestions(
-                mapping, actionForm, request, ActionForwards.previewStatus_success);
+
+        EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
+        statusActionForm.setCommentDate(DateUtils.getCurrentDate(getUserContext(request).getPreferredLocale()));
+
+        if (StringUtils.isNotBlank(statusActionForm.getNewStatusId())) {
+            CustomerStatusDetailDto customerStatusDetail = this.centerServiceFacade.retrieveCustomerStatusDetails(statusActionForm.getNewStatusIdValue(), statusActionForm.getFlagIdValue(), customerBO.getLevel().getValue());
+            SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME, customerStatusDetail.getStatusName(), request);
+            SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, customerStatusDetail.getFlagName(), request);
+        } else {
+            SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME, null, request);
+            SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, null, request);
+        }
+
+
+        Short newStatusId = statusActionForm.getNewStatusIdValue();
+        Short customerLevelId = statusActionForm.getLevelIdValue();
+        List<CustomerCheckListBO> checklist = new CustomerPersistence().getStatusChecklist(newStatusId, customerLevelId);
+        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
+
+        if (statusActionForm.getNewStatusIdValue().equals(CustomerStatus.CLIENT_CLOSED.getValue())) {
+            return createClientQuestionnaire.fetchAppliedQuestions(mapping, statusActionForm, request, ActionForwards.previewStatus_success);
         }
         return mapping.findForward(ActionForwards.previewStatus_success.toString());
     }
@@ -140,9 +176,14 @@ public class EditCustomerStatusAction extends BaseAction {
         EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
         CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        this.customerServiceFacade.updateCustomerStatus(customerBOInSession.getCustomerId(), customerBOInSession.getVersionNo(), editStatusActionForm.getFlagId(), editStatusActionForm.getNewStatusId(), editStatusActionForm.getNotes());
-
-        createClientQuestionnaire.saveResponses(request, editStatusActionForm, customerBOInSession.getCustomerId());
+        try {
+            this.centerServiceFacade.updateCustomerStatus(customerBOInSession.getCustomerId(), customerBOInSession.getVersionNo(),
+                                                          editStatusActionForm.getFlagId(), editStatusActionForm.getNewStatusId(),
+                                                          editStatusActionForm.getNotes());
+            createClientQuestionnaire.saveResponses(request, editStatusActionForm, customerBOInSession.getCustomerId());
+        } catch (BusinessRuleException e) {
+            throw new ApplicationException(e.getMessageKey(), e);
+        }
 
         return mapping.findForward(getDetailAccountPage(form));
     }
@@ -178,69 +219,6 @@ public class EditCustomerStatusAction extends BaseAction {
         return mapping.findForward(forward);
     }
 
-    private String getStatusName(CustomerBO customerBO, String statusId, Short statusIdValue) {
-        if (StringUtils.isNotBlank(statusId)) {
-            return customerService.getStatusName(CustomerStatus.fromInt(statusIdValue), customerBO.getLevel());
-        }
-        return null;
-    }
-
-    private String getFlagName(CustomerBO customerBO, String statusId, Short statusIdValue, Short flagIdValue) {
-        if (StringUtils.isNotBlank(statusId) && isNewStatusCancelledOrClosed(statusIdValue)) {
-            return customerService.getFlagName(CustomerStatusFlag.getStatusFlag(flagIdValue), customerBO.getLevel());
-        }
-        return null;
-    }
-
-    private void setCustomerStatusDetails(ActionForm form, CustomerBO customerBO, HttpServletRequest request,
-            UserContext userContext) throws Exception {
-        EditCustomerStatusActionForm statusActionForm = (EditCustomerStatusActionForm) form;
-        statusActionForm.setCommentDate(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
-        String newStatusName = null;
-        String flagName = null;
-        List<CustomerCheckListBO> checklist = customerService.getStatusChecklist(
-                statusActionForm.getNewStatusIdValue(), statusActionForm.getLevelIdValue());
-
-        SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
-        newStatusName = getStatusName(customerBO, statusActionForm.getNewStatusId(), statusActionForm.getNewStatusIdValue());
-        flagName = getFlagName(customerBO, statusActionForm.getNewStatusId(), statusActionForm.getNewStatusIdValue(), statusActionForm.getFlagIdValue());
-        SessionUtils.setAttribute(SavingsConstants.NEW_STATUS_NAME, newStatusName, request);
-        SessionUtils.setAttribute(SavingsConstants.FLAG_NAME, flagName, request);
-
-    }
-
-    private boolean isNewStatusCancelledOrClosed(Short newStatusId) {
-        return newStatusId.equals(CustomerStatus.CLIENT_CANCELLED.getValue())
-                || newStatusId.equals(CustomerStatus.CLIENT_CLOSED.getValue())
-                || newStatusId.equals(CustomerStatus.GROUP_CANCELLED.getValue())
-                || newStatusId.equals(CustomerStatus.GROUP_CLOSED.getValue());
-    }
-
-    private void setFormAttributes(ActionForm form, CustomerBO customerBO) {
-        EditCustomerStatusActionForm editCustomerStatusActionForm = (EditCustomerStatusActionForm) form;
-        editCustomerStatusActionForm.setLevelId(customerBO.getCustomerLevel().getId().toString());
-        editCustomerStatusActionForm.setCurrentStatusId(customerBO.getCustomerStatus().getId().toString());
-        editCustomerStatusActionForm.setGlobalAccountNum(customerBO.getGlobalCustNum());
-        editCustomerStatusActionForm.setCustomerName(customerBO.getDisplayName());
-        if (customerBO.getCustomerLevel().isCenter()) {
-            editCustomerStatusActionForm.setInput("center");
-        } else if (customerBO.getCustomerLevel().isGroup()) {
-            editCustomerStatusActionForm.setInput("group");
-        } else if (customerBO.getCustomerLevel().isClient()) {
-            editCustomerStatusActionForm.setInput("client");
-        }
-
-    }
-
-    private void doCleanUp(ActionForm form, @SuppressWarnings("unused") HttpServletRequest request) {
-        EditCustomerStatusActionForm editCustomerStatusActionForm = (EditCustomerStatusActionForm) form;
-        editCustomerStatusActionForm.setSelectedItems(null);
-        editCustomerStatusActionForm.setNotes(null);
-        editCustomerStatusActionForm.setNewStatusId(null);
-        editCustomerStatusActionForm.setFlagId(null);
-        editCustomerStatusActionForm.setQuestionGroups(null);
-    }
-
     private String getDetailAccountPage(ActionForm form) {
         EditCustomerStatusActionForm editStatusActionForm = (EditCustomerStatusActionForm) form;
         String input = editStatusActionForm.getInput();
@@ -253,13 +231,6 @@ public class EditCustomerStatusAction extends BaseAction {
             forward = ActionForwards.client_detail_page.toString();
         }
         return forward;
-    }
-
-    private void loadInitialData(ActionForm form, CustomerBO customerBO, UserContext userContext) throws Exception {
-        customerBO.setUserContext(userContext);
-        customerService.initializeStateMachine(AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel());
-        setFormAttributes(form, customerBO);
-        customerBO.getCustomerStatus().setLocaleId(userContext.getLocaleId());
     }
 
     @TransactionDemarcate(joinToken = true)

@@ -28,6 +28,7 @@ import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface CenterServiceFacade {
@@ -46,4 +47,20 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     CenterInformationDto getCenterInformationDto(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void initializeCenterStates(String centerGlobalNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    CustomerStatusDetailDto retrieveCustomerStatusDetails(Short newStatusId, Short flagIdValue, Short value);
+
+    // ALL BELOW ARE NOT CENTER SPECIFIC
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId, String notes);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void initializeGroupStates(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void initializeClientStates(String globalCustNum);
 }

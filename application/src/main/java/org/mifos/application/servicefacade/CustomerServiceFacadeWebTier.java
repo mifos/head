@@ -852,35 +852,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public void updateCustomerStatus(Integer customerId, Integer previousCustomerVersionNo, String flagIdAsString,
-            String newStatusIdAsString, String notes) throws ApplicationException {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        Short flagId = null;
-        Short newStatusId = null;
-        if (StringUtils.isNotBlank(flagIdAsString)) {
-            flagId = Short.valueOf(flagIdAsString);
-        }
-        if (StringUtils.isNotBlank(newStatusIdAsString)) {
-            newStatusId = Short.valueOf(newStatusIdAsString);
-        }
-
-        CustomerStatusFlag customerStatusFlag = null;
-        if (flagId != null) {
-            customerStatusFlag = CustomerStatusFlag.fromInt(flagId);
-        }
-
-        CustomerStatus newStatus = CustomerStatus.fromInt(newStatusId);
-
-        CustomerStatusUpdate customerStatusUpdate = new CustomerStatusUpdate(customerId, previousCustomerVersionNo,
-                customerStatusFlag, newStatus, notes);
-
-        this.customerService.updateCustomerStatus(userContext, customerStatusUpdate);
-    }
-
-    @Override
     public boolean isGroupHierarchyRequired() {
         return ClientRules.getClientCanExistOutsideGroup();
     }

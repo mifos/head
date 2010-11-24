@@ -358,8 +358,6 @@ public abstract class BaseAction extends DispatchAction {
         return new MasterDataService().retrieveMasterEntities(type, localeId);
     }
 
-
-
     protected Short getShortValue(String str) {
         return StringUtils.isNotBlank(str) ? Short.valueOf(str) : null;
     }

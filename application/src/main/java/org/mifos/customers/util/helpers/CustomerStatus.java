@@ -95,7 +95,15 @@ public enum CustomerStatus {
         return CustomerStatus.CLIENT_ACTIVE.getValue().equals(this.value);
     }
 
+    public boolean isClientCancelled() {
+        return CustomerStatus.CLIENT_CANCELLED.getValue().equals(this.value);
+    }
+
     public boolean isClientClosed() {
         return CustomerStatus.CLIENT_CLOSED.getValue().equals(this.value);
+    }
+
+    public boolean isCustomerCancelledOrClosed() {
+        return isClientCancelled() || isClientClosed() || isGroupCancelled() || isGroupClosed();
     }
 }

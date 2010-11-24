@@ -691,14 +691,14 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
+    @SuppressWarnings("unchecked")
     public List<CustomerCheckListBO> getStatusChecklist(final Short statusId, final Short customerLevelId)
             throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CHECKLIST_STATUS", CheckListConstants.STATUS_ACTIVE);
         queryParameters.put("STATUS_ID", statusId);
         queryParameters.put("LEVEL_ID", customerLevelId);
-        List<CustomerCheckListBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_STATE_CHECKLIST,
-                queryParameters);
+        List<CustomerCheckListBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_CUSTOMER_STATE_CHECKLIST,queryParameters);
         return queryResult;
     }
 

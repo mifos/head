@@ -97,16 +97,4 @@ public class CustomerBusinessServiceTest {
         } catch (ServiceException e) {
         }
     }
-
-    @Test
-    public void testInvalidConnectionGetStatusChecklist() throws PersistenceException {
-        try {
-            Short customerId = new Short("1");
-            Short statusId = new Short("11");
-            when(customerPersistence.getStatusChecklist(statusId, customerId)).thenThrow(new PersistenceException("some exception"));
-            service.getStatusChecklist(statusId, customerId);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
 }

@@ -63,8 +63,6 @@ public interface CustomerServiceFacade {
 
     ClientBO transferClientToGroup(Integer parentGroupIdValue, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException;
 
-    void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId, String notes) throws ApplicationException;
-
     boolean isGroupHierarchyRequired();
 
     GroupSearchResultsDto searchGroups(boolean searchForAddingClientsToGroup, String normalizedSearchString, Short loggedInUserId);

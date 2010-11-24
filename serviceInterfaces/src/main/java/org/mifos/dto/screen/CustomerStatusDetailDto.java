@@ -18,20 +18,23 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.center.struts.action;
+package org.mifos.dto.screen;
 
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.struts.action.BaseAction;
+public class CustomerStatusDetailDto {
 
-public class CenterEditStatusAction extends BaseAction {
+    private final String statusName;
+    private final String flagName;
 
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return null;
+    public CustomerStatusDetailDto(String statusName, String flagName) {
+        this.statusName = statusName;
+        this.flagName = flagName;
     }
 
-    public CenterEditStatusAction() {
-        super();
+    public String getStatusName() {
+        return this.statusName;
+    }
+
+    public String getFlagName() {
+        return this.flagName;
     }
 }
