@@ -30,15 +30,12 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.struts.action.AccountAppAction;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.struts.actionforms.CustomerAccountActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
-import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.util.helpers.BusinessServiceName;
+import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -46,13 +43,9 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
 public class CustomerAccountAction extends AccountAppAction {
+
     public CustomerAccountAction() throws Exception {
         super();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
     }
 
     public static ActionSecurity getSecurity() {
@@ -62,19 +55,15 @@ public class CustomerAccountAction extends AccountAppAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String globalCustNum = ((CustomerAccountActionForm) form).getGlobalCustNum();
-        CustomerBusinessService customerService = (CustomerBusinessService) ServiceFactory.getInstance()
-                .getBusinessService(BusinessServiceName.Customer);
-        CustomerBO customerBO = customerService.findBySystemId(globalCustNum);
+        CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
         CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
-        List<CustomerRecentActivityDto> recentActivities = customerService.getRecentActivityView(customerBO
-                .getCustomerId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerAccount, request);
-        // SessionUtils.setAttribute(CustomerConstants.CUSTOMER_ACCOUNT,customerAccount,
-        // request);
+
+        List<CustomerRecentActivityDto> recentActivities = this.centerServiceFacade.retrieveRecentActivities(customerBO.getCustomerId(), 3);
         SessionUtils.setCollectionAttribute(CustomerConstants.RECENT_ACTIVITIES, recentActivities, request);
+
         ActionForwards forward = getForward(customerBO);
         return mapping.findForward(forward.toString());
     }

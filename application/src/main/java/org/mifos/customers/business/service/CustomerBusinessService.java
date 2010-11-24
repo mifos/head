@@ -25,6 +25,7 @@ import static org.mifos.framework.util.helpers.NumberUtils.getPercentage;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateMachines;
@@ -39,15 +40,14 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.util.helpers.CustomerRecentActivityDto;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerStatusFlag;
+import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
@@ -110,34 +110,13 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-    public List<CustomerRecentActivityDto> getRecentActivityView(Integer customerId) throws ServiceException {
-        CustomerBO customerBO;
-        try {
-            customerBO = customerPersistence.getCustomer(customerId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-        List<CustomerActivityEntity> customerActivityDetails = customerBO.getCustomerAccount()
-                .getCustomerActivitDetails();
-        List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
-
-        int count = 0;
-        for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
-            customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
-            if (++count == 3) {
-                break;
-            }
-        }
-        return customerActivityViewList;
-    }
-
     public List<CustomerRecentActivityDto> getAllActivityView(String globalCustNum) throws ServiceException {
         CustomerBO customerBO = findBySystemId(globalCustNum);
         List<CustomerActivityEntity> customerActivityDetails = customerBO.getCustomerAccount()
                 .getCustomerActivitDetails();
         List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
         for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
-            customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
+            customerActivityViewList.add(getCustomerActivityView(customerActivityEntity, Locale.getDefault()));
         }
         return customerActivityViewList;
     }
@@ -398,9 +377,12 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-    private CustomerRecentActivityDto getCustomerActivityView(CustomerActivityEntity customerActivityEntity) {
+    private CustomerRecentActivityDto getCustomerActivityView(CustomerActivityEntity customerActivityEntity, Locale locale) {
         CustomerRecentActivityDto customerRecentActivityDto = new CustomerRecentActivityDto();
+
+        String preferredDate = DateUtils.getUserLocaleDate(locale, customerActivityEntity.getCreatedDate().toString());
         customerRecentActivityDto.setActivityDate(customerActivityEntity.getCreatedDate());
+        customerRecentActivityDto.setUserPrefferedDate(preferredDate);
         customerRecentActivityDto.setDescription(customerActivityEntity.getDescription());
         Money amount = removeSign(customerActivityEntity.getAmount());
         if (amount.isZero()) {

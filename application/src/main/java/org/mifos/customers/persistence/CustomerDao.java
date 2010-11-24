@@ -79,6 +79,8 @@ public interface CustomerDao {
 
     CustomerBO findCustomerById(Integer customerId);
 
+    CustomerBO findCustomerBySystemId(String globalCustNum);
+
     ClientBO findClientBySystemId(String globalCustNum);
 
     GroupBO findGroupBySystemId(String globalCustNum);

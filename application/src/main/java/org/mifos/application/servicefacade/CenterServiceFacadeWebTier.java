@@ -23,6 +23,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
@@ -45,6 +46,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
@@ -90,6 +92,7 @@ import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.business.util.Address;
@@ -98,6 +101,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -511,5 +515,47 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         String flagName = AccountStateMachines.getInstance().getCustomerFlagName(statusFlag, customerLevel);
 
         return new CustomerStatusDetailDto(statusName, flagName);
+    }
+
+    @Override
+    public List<CustomerRecentActivityDto> retrieveRecentActivities(Integer customerId, Integer countOfActivities) {
+        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
+        List<CustomerActivityEntity> customerActivityDetails = customerBO.getCustomerAccount().getCustomerActivitDetails();
+
+        List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
+        int count = 0;
+        for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
+            customerActivityViewList.add(getCustomerActivityView(customerActivityEntity));
+            if (++count == countOfActivities) {
+                break;
+            }
+        }
+        return customerActivityViewList;
+    }
+
+    private CustomerRecentActivityDto getCustomerActivityView(CustomerActivityEntity customerActivityEntity) {
+
+        CustomerRecentActivityDto customerRecentActivityDto = new CustomerRecentActivityDto();
+        String preferredDate = DateUtils.getUserLocaleDate(Locale.getDefault(), customerActivityEntity.getCreatedDate().toString());
+        customerRecentActivityDto.setUserPrefferedDate(preferredDate);
+        customerRecentActivityDto.setActivityDate(customerActivityEntity.getCreatedDate());
+        customerRecentActivityDto.setDescription(customerActivityEntity.getDescription());
+        Money amount = removeSign(customerActivityEntity.getAmount());
+        if (amount.isZero()) {
+            customerRecentActivityDto.setAmount("-");
+        } else {
+            customerRecentActivityDto.setAmount(amount.toString());
+        }
+        if (customerActivityEntity.getPersonnel() != null) {
+            customerRecentActivityDto.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
+        }
+        return customerRecentActivityDto;
+    }
+
+    private Money removeSign(Money amount) {
+        if (amount != null && amount.isLessThanZero()) {
+            return amount.negate();
+        }
+        return amount;
     }
 }

@@ -29,6 +29,7 @@ import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.group.util.helpers.GroupSearchResults;
+import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;

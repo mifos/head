@@ -20,6 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.List;
+
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterDto;
@@ -28,6 +30,7 @@ import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -51,13 +54,17 @@ public interface CenterServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void initializeCenterStates(String centerGlobalNum);
 
+    // General
     @PreAuthorize("isFullyAuthenticated()")
     CustomerStatusDetailDto retrieveCustomerStatusDetails(Short newStatusId, Short flagIdValue, Short value);
 
-    // ALL BELOW ARE NOT CENTER SPECIFIC
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerRecentActivityDto> retrieveRecentActivities(Integer customerId, Integer countOfActivities);
+
     @PreAuthorize("isFullyAuthenticated()")
     void updateCustomerStatus(Integer customerId, Integer versionNo, String flagId, String newStatusId, String notes);
 
+    // ALL BELOW ARE NOT FOR CENTER
     @PreAuthorize("isFullyAuthenticated()")
     void initializeGroupStates(String globalCustNum);
 

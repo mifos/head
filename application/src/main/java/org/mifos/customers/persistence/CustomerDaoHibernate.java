@@ -141,6 +141,18 @@ public class CustomerDaoHibernate implements CustomerDao {
     }
 
     @Override
+    public CustomerBO findCustomerBySystemId(String globalCustNum) {
+        if (StringUtils.isBlank(globalCustNum)) {
+            throw new IllegalArgumentException("globalCustNum cannot be null or empty.");
+        }
+
+        final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("globalCustNum", globalCustNum);
+
+        return (CustomerBO) genericDao.executeUniqueResultNamedQuery("customer.findBySystemId", queryParameters);
+    }
+
+    @Override
     public CenterBO findCenterBySystemId(String globalCustNum) {
         final HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalCustNum", globalCustNum);
