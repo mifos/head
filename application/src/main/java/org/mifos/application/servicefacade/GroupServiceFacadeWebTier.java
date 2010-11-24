@@ -24,27 +24,53 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.joda.time.DateTime;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerService;
+import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.GroupCreation;
+import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
+import org.mifos.dto.domain.MeetingDetailsDto;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
 import org.mifos.dto.screen.CenterSearchInput;
+import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.MifosUser;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class GroupServiceFacadeWebTier implements GroupServiceFacade {
@@ -132,5 +158,126 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         return new GroupFormCreationDto(isCenterHierarchyExists, customFieldDtos,
                 personnelList, formedByPersonnel, applicableDefaultAccountFees, applicableDefaultAdditionalFees);
+    }
+
+    @Override
+    public CustomerDetailsDto createNewGroup(GroupCreationDetail actionForm, MeetingDto meetingDto) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        GroupBO group;
+
+        try {
+            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
+
+//            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
+
+            PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
+
+            Short loanOfficerId;
+            Short officeId;
+
+            String groupName = actionForm.getDisplayName();
+            CustomerStatus customerStatus = CustomerStatus.fromInt(actionForm.getCustomerStatus());
+            String externalId = actionForm.getExternalId();
+            boolean trained = actionForm.isTrained();
+            DateTime trainedOn = actionForm.getTrainedOn();
+            AddressDto dto = actionForm.getAddressDto();
+            Address address = null;
+            if (dto != null) {
+                address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(), dto.getPhoneNumber());
+            }
+
+            MeetingBO groupMeeting = null;
+            if (meetingDto != null) {
+                // FIXME - pull out assembly code from dto to domain object for meeting (also in center service facade)
+                MeetingDetailsDto meetingDetailsDto = meetingDto.getMeetingDetailsDto();
+                groupMeeting = new MeetingBO(RecurrenceType.fromInt(meetingDetailsDto.getRecurrenceTypeId().shortValue()),
+                                                  meetingDetailsDto.getEvery().shortValue(),
+                                                  meetingDto.getMeetingStartDate().toDateMidnight().toDate(),
+                                                  MeetingType.CUSTOMER_MEETING);
+
+                RankOfDay rank = null;
+                Integer weekOfMonth = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
+                if (weekOfMonth != null && weekOfMonth > 0) {
+                    rank = RankOfDay.getRankOfDay(meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth()+1);
+                }
+
+                WeekDay weekDay = null;
+                Integer weekDayNum = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
+                if (weekDayNum != null && weekDayNum > 0) {
+                    weekDay = WeekDay.getWeekDay(meetingDetailsDto.getRecurrenceDetails().getDayOfWeek());
+                }
+
+                if (rank != null && weekDay != null) {
+                    groupMeeting = new MeetingBO(weekDay, rank, meetingDetailsDto.getEvery().shortValue(), meetingDto.getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
+                }
+                groupMeeting.setUserContext(userContext);
+            }
+
+            if (ClientRules.getCenterHierarchyExists()) {
+
+                CenterBO parentCustomer = this.customerDao.findCenterBySystemId(actionForm.getParentSystemId());
+                loanOfficerId = parentCustomer.getPersonnel().getPersonnelId();
+                officeId = parentCustomer.getOffice().getOfficeId();
+
+                checkPermissionForCreate(customerStatus.getValue(), userContext, officeId, loanOfficerId);
+                groupMeeting = parentCustomer.getCustomerMeetingValue();
+
+                group = GroupBO.createGroupWithCenterAsParent(userContext, groupName, formedBy, parentCustomer,
+                        address, externalId, trained, trainedOn, customerStatus);
+            } else {
+
+                // create group without center as parent
+                loanOfficerId = actionForm.getLoanOfficerId() != null ? actionForm.getLoanOfficerId() : userContext.getId();
+                officeId = actionForm.getOfficeId();
+
+                checkPermissionForCreate(customerStatus.getValue(), userContext, officeId, loanOfficerId);
+
+                OfficeBO office = this.officeDao.findOfficeById(actionForm.getOfficeId());
+                PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
+
+                int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(officeId);
+
+                group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, groupName, formedBy, groupMeeting,
+                        loanOfficer, office, address, externalId, trained, trainedOn,
+                        customerStatus, numberOfCustomersInOfficeAlready);
+            }
+
+            this.customerService.createGroup(group, groupMeeting, feesForCustomerAccount);
+
+            return new CustomerDetailsDto(group.getCustomerId(), group.getGlobalCustNum());
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<ApplicableAccountFeeDto> feesToApply) {
+        List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
+        for (ApplicableAccountFeeDto feeDto : feesToApply) {
+            FeeBO fee = new FeePersistence().getFee(feeDto.getFeeId().shortValue());
+            Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeDto.getAmount());
+
+            AccountBO nullReferenceForNow = null;
+            AccountFeesEntity accountFee = new AccountFeesEntity(nullReferenceForNow, fee, feeAmount);
+            feesForCustomerAccount.add(accountFee);
+        }
+        return feesForCustomerAccount;
+    }
+
+    private void checkPermissionForCreate(Short newState, UserContext userContext, Short recordOfficeId,
+            Short recordLoanOfficerId) throws ApplicationException {
+        if (!isPermissionAllowed(newState, userContext, recordOfficeId, recordLoanOfficerId)) {
+            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short recordOfficeId,
+            Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
+                recordOfficeId, recordLoanOfficerId);
     }
 }

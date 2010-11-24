@@ -33,6 +33,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -41,7 +42,6 @@ import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
@@ -52,12 +52,17 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.GroupCreation;
+import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.framework.business.util.Address;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -70,6 +75,7 @@ import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -177,7 +183,7 @@ public class GroupCustAction extends CustAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                                  @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
         boolean isPendingApprovalDefined = ProcessFlowRules.isGroupPendingApprovalStateEnabled();
@@ -207,12 +213,42 @@ public class GroupCustAction extends CustAction {
         GroupCustActionForm actionForm = (GroupCustActionForm) form;
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
 
-        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
-        CustomerDetailsDto centerDetails = this.customerServiceFacade.createNewGroup(actionForm, meeting, customerCustomFields);
-        createGroupQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
-        actionForm.setCustomerId(centerDetails.getId().toString());
-        actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());
+        UserContext userContext = getUserContext(request);
+
+//        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
+
+        String groupName = actionForm.getDisplayName();
+        String externalId = actionForm.getExternalId();
+        boolean trained = actionForm.isCustomerTrained();
+        DateTime trainedOn = new DateTime(actionForm.getTrainedDateValue(userContext.getPreferredLocale()));
+        AddressDto addressDto = null;
+        if (actionForm.getAddress() != null) {
+            addressDto = Address.toDto(actionForm.getAddress());
+        }
+        Short customerStatusId = actionForm.getStatusValue().getValue();
+        String centerSystemId = actionForm.getParentCustomer().getGlobalCustNum();
+        Short officeId = actionForm.getOfficeIdValue();
+
+        MeetingDto meetingDto = null;
+        if (meeting!= null) {
+            meetingDto = meeting.toDto();
+        }
+
+        try {
+            GroupCreationDetail groupCreationDetail = new GroupCreationDetail(groupName, externalId,
+                    addressDto, actionForm.getFormedByPersonnelValue(), actionForm.getFeesToApply(),
+                    customerStatusId, trained, trainedOn, centerSystemId, officeId);
+
+            CustomerDetailsDto centerDetails = this.groupServiceFacade.createNewGroup(groupCreationDetail, meetingDto);
+            createGroupQuestionnaire.saveResponses(request, actionForm, centerDetails.getId());
+            actionForm.setCustomerId(centerDetails.getId().toString());
+            actionForm.setGlobalCustNum(centerDetails.getGlobalCustNum());
+        } catch (BusinessRuleException e) {
+            throw new ApplicationException(e.getMessageKey(), e);
+        }
+
         SessionUtils.setAttribute(GroupConstants.IS_GROUP_LOAN_ALLOWED, ClientRules.getGroupCanApplyLoans(), request);
+
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 

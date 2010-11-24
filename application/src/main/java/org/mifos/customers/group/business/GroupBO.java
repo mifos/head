@@ -38,9 +38,9 @@ import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
@@ -53,7 +53,6 @@ import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.business.util.Address;
@@ -72,7 +71,7 @@ public class GroupBO extends CustomerBO {
 
     public static GroupBO createGroupWithCenterAsParent(UserContext userContext, String groupName,
             PersonnelBO formedBy, CustomerBO parentCustomer,
-            List<CustomerCustomFieldEntity> customerCustomFields, Address address, String externalId, boolean trained,
+            Address address, String externalId, boolean trained,
             DateTime trainedOn, CustomerStatus customerStatus) {
 
         Assert.notNull(customerStatus, "customerStatus cannot be null");
@@ -106,18 +105,18 @@ public class GroupBO extends CustomerBO {
             }
         }
 
-        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
-                .fromCustomerCustomFieldEntity(customerCustomFields, group);
-        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-            group.addCustomField(customerCustomFieldEntity);
-        }
+//        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
+//                .fromCustomerCustomFieldEntity(customerCustomFields, group);
+//        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
+//            group.addCustomField(customerCustomFieldEntity);
+//        }
 
         return group;
     }
 
     public static GroupBO createGroupAsTopOfCustomerHierarchy(UserContext userContext, String groupName,
             PersonnelBO formedBy, MeetingBO meeting, PersonnelBO loanOfficer, OfficeBO office,
-            List<CustomerCustomFieldEntity> customerCustomFields, Address address, String externalId, boolean trained,
+            Address address, String externalId, boolean trained,
             DateTime trainedOn, CustomerStatus customerStatus, int numberOfCustomersInOfficeAlready) {
 
         Assert.notNull(customerStatus, "customerStatus cannot be null");
@@ -139,11 +138,11 @@ public class GroupBO extends CustomerBO {
             group.setTrainedDate(trainedOn.toDate());
         }
 
-        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
-                .fromCustomerCustomFieldEntity(customerCustomFields, group);
-        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-            group.addCustomField(customerCustomFieldEntity);
-        }
+//        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
+//                .fromCustomerCustomFieldEntity(customerCustomFields, group);
+//        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
+//            group.addCustomField(customerCustomFieldEntity);
+//        }
 
         return group;
     }

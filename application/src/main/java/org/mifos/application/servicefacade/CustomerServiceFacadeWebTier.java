@@ -71,7 +71,6 @@ import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
-import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
@@ -280,73 +279,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             feesForCustomerAccount.add(accountFee);
         }
         return feesForCustomerAccount;
-    }
-
-    @Override
-    public CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting,List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        GroupBO group;
-
-        try {
-            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
-
-            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext
-                    .getPreferredLocale());
-
-            PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getFormedByPersonnelValue());
-
-            Short loanOfficerId;
-            Short officeId;
-            Short customerStatusId = actionForm.getStatusValue().getValue();
-
-            String groupName = actionForm.getDisplayName();
-            CustomerStatus customerStatus = actionForm.getStatusValue();
-            String externalId = actionForm.getExternalId();
-            boolean trained = actionForm.isCustomerTrained();
-            DateTime trainedOn = new DateTime(actionForm.getTrainedDateValue(userContext.getPreferredLocale()));
-            Address address = actionForm.getAddress();
-            MeetingBO groupMeeting = meeting;
-
-            if (ClientRules.getCenterHierarchyExists()) {
-
-                // create group without center as parent
-                CustomerBO parentCustomer = actionForm.getParentCustomer();
-                loanOfficerId = parentCustomer.getPersonnel().getPersonnelId();
-                officeId = parentCustomer.getOffice().getOfficeId();
-
-                checkPermissionForCreate(actionForm.getStatusValue().getValue(), userContext, officeId, loanOfficerId);
-                groupMeeting = parentCustomer.getCustomerMeetingValue();
-
-                group = GroupBO.createGroupWithCenterAsParent(userContext, groupName, formedBy, parentCustomer,
-                        customerCustomFields, address, externalId, trained, trainedOn, customerStatus);
-            } else {
-
-                loanOfficerId = actionForm.getLoanOfficerIdValue() != null ? actionForm.getLoanOfficerIdValue()
-                        : userContext.getId();
-                officeId = actionForm.getOfficeIdValue();
-
-                checkPermissionForCreate(customerStatusId, userContext, officeId, loanOfficerId);
-
-                OfficeBO office = this.officeDao.findOfficeById(actionForm.getOfficeIdValue());
-                PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerIdValue());
-
-                int numberOfCustomersInOfficeAlready = customerDao
-                        .retrieveLastSearchIdValueForNonParentCustomersInOffice(officeId);
-
-                group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, groupName, formedBy, groupMeeting,
-                        loanOfficer, office, customerCustomFields, address, externalId, trained, trainedOn,
-                        customerStatus, numberOfCustomersInOfficeAlready);
-            }
-
-            this.customerService.createGroup(group, groupMeeting, feesForCustomerAccount);
-
-            return new CustomerDetailsDto(group.getCustomerId(), group.getGlobalCustNum());
-        } catch (InvalidDateException e) {
-            throw new MifosRuntimeException(e);
-        }
     }
 
     @Override

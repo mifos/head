@@ -19,14 +19,10 @@
  */
 package org.mifos.application.collectionsheet.persistence;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -49,7 +45,7 @@ public class GroupBuilder {
     private PersonnelBO loanOfficer;
     private CustomerStatus customerStatus = CustomerStatus.GROUP_ACTIVE;
     private CustomerBO parentCustomer = new CenterBuilder().build();
-    private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
+//    private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
     private Address address;
     private String externalId;
     private boolean trained = false;
@@ -66,7 +62,7 @@ public class GroupBuilder {
         }
 
         group = GroupBO.createGroupWithCenterAsParent(userContext, name, formedBy, parentCustomer,
-                customerCustomFields, address, externalId, trained, trainedOn, customerStatus);
+                address, externalId, trained, trainedOn, customerStatus);
 
         if (this.versionNumber != null) {
             group.setVersionNo(versionNumber);
@@ -83,7 +79,7 @@ public class GroupBuilder {
 
         UserContext userContext = TestUtils.makeUser();
         group = GroupBO.createGroupAsTopOfCustomerHierarchy(userContext, name, formedBy, meeting, loanOfficer, office,
-                customerCustomFields, address, externalId, trained, trainedOn, customerStatus, numberOfChildrenUnderBranch);
+                address, externalId, trained, trainedOn, customerStatus, numberOfChildrenUnderBranch);
 
         return group;
     }
