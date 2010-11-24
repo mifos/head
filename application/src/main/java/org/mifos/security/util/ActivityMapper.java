@@ -28,7 +28,6 @@ import org.mifos.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
 import org.mifos.accounts.loan.struts.action.RepayLoanAction;
 import org.mifos.accounts.loan.struts.action.ReverseLoanDisbursalAction;
 import org.mifos.accounts.productdefinition.struts.action.LoanPrdAction;
-import org.mifos.accounts.productdefinition.struts.action.SavingsPrdAction;
 import org.mifos.accounts.savings.struts.action.SavingsAction;
 import org.mifos.accounts.savings.struts.action.SavingsApplyAdjustmentAction;
 import org.mifos.accounts.savings.struts.action.SavingsClosureAction;
@@ -189,7 +188,6 @@ public class ActivityMapper {
         parseActionSecurity(ClientTransferAction.getSecurity());
         parseActionSecurity(GroupTransferAction.getSecurity());
         parseActionSecurity(MeetingAction.getSecurity());
-        parseActionSecurity(SavingsPrdAction.getSecurity());
         parseActionSecurity(LoanPrdAction.getSecurity());
         parseActionSecurity(FeeAction.getSecurity());
         parseActionSecurity(ChkListAction.getSecurity());

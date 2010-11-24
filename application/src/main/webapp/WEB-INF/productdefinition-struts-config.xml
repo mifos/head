@@ -6,9 +6,6 @@
         <!-- Loan Product -->
         <form-bean name="loanproductactionform"
                    type="org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm"/>
-        <!-- Savings Product -->
-        <form-bean name="savingsproductactionform"
-                   type="org.mifos.accounts.productdefinition.struts.actionforms.SavingsPrdActionForm"/>
     </form-beans>
 
     <action-mappings>
@@ -50,41 +47,6 @@
                      path="/pages/application/productdefinition/jsp/viewLoanPrdChangeLog.jsp"/>
             <forward name="cancelLoanProductChangeLog" path="/loanproductaction.do?method=get"/>
 
-        </action>
-        <!-- Savings Product -->
-        <action path="/savingsproductaction" name="savingsproductactionform"
-                type="org.mifos.accounts.productdefinition.struts.action.SavingsPrdAction"
-                input="/savingsproductaction.do?method=validate" parameter="method" validate="true" scope="session">
-            <forward name="load_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"/>
-            <forward name="load_failure" path="/pages/framework/jsp/error.jsp"/>
-            <forward name="preview_success"
-                     path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"/>
-            <forward name="preview_failure" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"/>
-            <forward name="previous_success" path="/pages/application/productdefinition/jsp/CreateSavingsProduct.jsp"/>
-            <forward name="previous_failure"
-                     path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"/>
-            <forward name="create_success"
-                     path="/pages/application/productdefinition/jsp/CreateSavingsProductConfirmation.jsp"/>
-            <forward name="create_failure"
-                     path="/pages/application/productdefinition/jsp/CreateSavingsProductPreview.jsp"/>
-            <forward name="cancelCreate_success" path="/AdminAction.do?method=load"/>
-            <forward name="cancelEdit_success" path="/savingsproductaction.do?method=get"/>
-            <forward name="get_success" path="/pages/application/productdefinition/jsp/Savings_ProductDetails.jsp"/>
-            <forward name="manage_success" path="/pages/application/productdefinition/jsp/Edit_SavingsProduct.jsp"/>
-            <forward name="previewManage_success"
-                     path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"/>
-            <forward name="previewManage_failure"
-                     path="/pages/application/productdefinition/jsp/Edit_SavingsProduct.jsp"/>
-            <forward name="previousManage_success"
-                     path="/pages/application/productdefinition/jsp/Edit_SavingsProduct.jsp"/>
-            <forward name="update_success" path="/savingsproductaction.do?method=get"/>
-            <forward name="update_failure"
-                     path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"/>
-            <forward name="search_success" path="/pages/application/productdefinition/jsp/View_AllSavingsProduct.jsp"/>
-            <forward name="failure" path="/pages/application/productdefinition/jsp/Preview_EditSavingsProduct.jsp"/>
-            <forward name="viewSavingsProductChangeLog"
-                     path="/pages/application/productdefinition/jsp/viewSavingsPrdChangeLog.jsp"/>
-            <forward name="cancelSavingsProductChangeLog" path="/savingsproductaction.do?method=get"/>
         </action>
 	</action-mappings>
     <message-resources key="ProductDefUIResources"
