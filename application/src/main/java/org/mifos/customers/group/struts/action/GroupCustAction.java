@@ -37,9 +37,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.CenterHierarchySearchDto;
-import org.mifos.application.servicefacade.GroupCreation;
-import org.mifos.application.servicefacade.GroupFormCreationDto;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
@@ -56,6 +53,9 @@ import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
+import org.mifos.dto.domain.GroupCreation;
+import org.mifos.dto.domain.GroupFormCreationDto;
+import org.mifos.dto.screen.CenterHierarchySearchDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -113,10 +113,8 @@ public class GroupCustAction extends CustAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ActionForwards actionForward = null;
-        UserContext userContext = getUserContext(request);
-        Short loggedInUserBranch = userContext.getBranchId();
 
-        CenterHierarchySearchDto centerHierarchySearchDto = this.customerServiceFacade.isCenterHierarchyConfigured(loggedInUserBranch);
+        CenterHierarchySearchDto centerHierarchySearchDto = this.groupServiceFacade.isCenterHierarchyConfigured();
 
         if (centerHierarchySearchDto.isCenterHierarchyExists()) {
             SessionUtils.setAttribute(GroupConstants.CENTER_SEARCH_INPUT, centerHierarchySearchDto.getSearchInputs(), request.getSession());
@@ -151,7 +149,7 @@ public class GroupCustAction extends CustAction {
 
         GroupCreation groupCreation = new GroupCreation(actionForm.getOfficeIdValue(), actionForm.getCenterSystemId());
 
-        GroupFormCreationDto groupFormCreationDto = this.customerServiceFacade.retrieveGroupFormCreationData(groupCreation);
+        GroupFormCreationDto groupFormCreationDto = this.groupServiceFacade.retrieveGroupFormCreationData(groupCreation);
 
         // inherit these settings from center/parent if center hierarchy is configured
         actionForm.setParentCustomer(groupFormCreationDto.getParentCustomer());

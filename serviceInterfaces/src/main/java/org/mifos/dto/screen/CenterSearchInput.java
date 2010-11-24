@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.group.util.helpers;
+package org.mifos.dto.screen;
 
 import java.io.Serializable;
 

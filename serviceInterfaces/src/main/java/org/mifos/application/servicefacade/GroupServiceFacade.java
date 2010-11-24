@@ -20,23 +20,17 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.customers.group.util.helpers.CenterSearchInput;
+import org.mifos.dto.domain.GroupCreation;
+import org.mifos.dto.domain.GroupFormCreationDto;
+import org.mifos.dto.screen.CenterHierarchySearchDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-public class CenterHierarchySearchDto {
+public interface GroupServiceFacade {
 
-    private final boolean centerHierarchyExists;
-    private final CenterSearchInput searchInputs;
+    @PreAuthorize("isFullyAuthenticated()")
+    CenterHierarchySearchDto isCenterHierarchyConfigured();
 
-    public CenterHierarchySearchDto(boolean centerHierarchyExists, CenterSearchInput searchInputs) {
-        this.centerHierarchyExists = centerHierarchyExists;
-        this.searchInputs = searchInputs;
-    }
+    @PreAuthorize("isFullyAuthenticated()")
+    GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation);
 
-    public boolean isCenterHierarchyExists() {
-        return this.centerHierarchyExists;
-    }
-
-    public CenterSearchInput getSearchInputs() {
-        return this.searchInputs;
-    }
 }

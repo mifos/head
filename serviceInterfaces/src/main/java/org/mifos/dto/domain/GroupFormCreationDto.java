@@ -18,14 +18,11 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.domain;
 
 import java.util.List;
 
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.dto.domain.ApplicableAccountFeeDto;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.PersonnelDto;
 
 public class GroupFormCreationDto {
 

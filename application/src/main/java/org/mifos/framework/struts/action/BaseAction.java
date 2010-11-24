@@ -54,6 +54,7 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.CustomerServiceFacade;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.GroupServiceFacade;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.servicefacade.MeetingServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
@@ -110,6 +111,7 @@ public abstract class BaseAction extends DispatchAction {
     protected SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
     protected CenterServiceFacade centerServiceFacade = DependencyInjectedServiceLocator.locateCenterServiceFacade();
+    protected GroupServiceFacade groupServiceFacade = DependencyInjectedServiceLocator.locateGroupServiceFacade();
     protected MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
     protected GroupDetailsServiceFacade groupDetailsServiceFacade = DependencyInjectedServiceLocator.locateGroupDetailsServiceFacade();
     protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
@@ -137,6 +139,7 @@ public abstract class BaseAction extends DispatchAction {
             this.savingsProductDao = springAppContext.getBean(SavingsProductDao.class);
             this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
             this.centerServiceFacade = springAppContext.getBean(CenterServiceFacade.class);
+            this.groupServiceFacade = springAppContext.getBean(GroupServiceFacade.class);
             this.meetingServiceFacade = springAppContext.getBean(MeetingServiceFacade.class);
             this.groupDetailsServiceFacade = springAppContext.getBean(GroupDetailsServiceFacade.class);
             this.clientDetailsServiceFacade = springAppContext.getBean(ClientDetailsServiceFacade.class);

@@ -35,7 +35,6 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
@@ -73,8 +72,6 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
-import org.mifos.customers.group.util.helpers.CenterSearchInput;
-import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
@@ -82,7 +79,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
@@ -150,56 +146,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         userContext.setLevelId(user.getLevelId());
         userContext.setRoles(new HashSet<Short>(user.getRoleIds()));
         return userContext;
-    }
-
-    @Override
-    public GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        CustomerBO parentCustomer = null;
-        Short parentOfficeId = groupCreation.getOfficeId();
-        CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.empty();
-        List<PersonnelDto> personnelList = new ArrayList<PersonnelDto>();
-
-        CenterCreation centerCreation;
-
-        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
-        if (isCenterHierarchyExists) {
-            parentCustomer = this.customerDao.findCenterBySystemId(groupCreation.getParentSystemId());
-
-            parentOfficeId = parentCustomer.getOffice().getOfficeId();
-
-            centerCreation = new CenterCreation(parentOfficeId, userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
-
-            MeetingBO customerMeeting = parentCustomer.getCustomerMeetingValue();
-            List<FeeBO> fees = customerDao.retrieveFeesApplicableToGroupsRefinedBy(customerMeeting);
-            applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
-        } else {
-            centerCreation = new CenterCreation(groupCreation.getOfficeId(), userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
-            personnelList = this.personnelDao.findActiveLoanOfficersForOffice(centerCreation);
-
-            List<FeeBO> fees = customerDao.retrieveFeesApplicableToGroups();
-            applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
-        }
-
-        List<ApplicableAccountFeeDto> applicableDefaultAccountFees = new ArrayList<ApplicableAccountFeeDto>();
-        for (FeeDto fee : applicableFees.getDefaultFees()) {
-            applicableDefaultAccountFees.add(new ApplicableAccountFeeDto(fee.getFeeIdValue().intValue(), fee.getFeeName(), fee.getAmount(), fee.isRemoved(), fee.isWeekly(), fee.isMonthly(), fee.isPeriodic(), fee.getFeeSchedule()));
-        }
-
-        List<ApplicableAccountFeeDto> applicableDefaultAdditionalFees = new ArrayList<ApplicableAccountFeeDto>();
-        for (FeeDto fee : applicableFees.getAdditionalFees()) {
-            applicableDefaultAdditionalFees.add(new ApplicableAccountFeeDto(fee.getFeeIdValue().intValue(), fee.getFeeName(), fee.getAmount(), fee.isRemoved(), fee.isWeekly(), fee.isMonthly(), fee.isPeriodic(), fee.getFeeSchedule()));
-        }
-
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
-        List<PersonnelDto> formedByPersonnel = customerDao.findLoanOfficerThatFormedOffice(centerCreation.getOfficeId());
-
-        return new GroupFormCreationDto(isCenterHierarchyExists, parentCustomer, parentOfficeId, customFieldDtos,
-                personnelList, formedByPersonnel, applicableDefaultAccountFees, applicableDefaultAdditionalFees);
     }
 
     @Override
@@ -795,15 +741,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         QueryResult searchResult = customerDao.search(normalisedSearchString, loggedInUser);
 
         return new CustomerSearch(searchResult, searchString, officeId, officeName);
-    }
-
-    @Override
-    public CenterHierarchySearchDto isCenterHierarchyConfigured(Short loggedInUserBranch) {
-
-        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
-        CenterSearchInput searchInputs = new CenterSearchInput(loggedInUserBranch, GroupConstants.CREATE_NEW_GROUP);
-
-        return new CenterHierarchySearchDto(isCenterHierarchyExists, searchInputs);
     }
 
     @Override

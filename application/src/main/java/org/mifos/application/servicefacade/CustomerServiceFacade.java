@@ -41,8 +41,6 @@ public interface CustomerServiceFacade {
 
     OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy();
 
-    GroupFormCreationDto retrieveGroupFormCreationData(GroupCreation groupCreation);
-
     ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId);
 
     CustomerDetailsDto createNewGroup(GroupCustActionForm actionForm, MeetingBO meeting, List<CustomerCustomFieldEntity> customerCustomFields) throws ApplicationException;
@@ -54,8 +52,6 @@ public interface CustomerServiceFacade {
     void updateGroup(GroupUpdate groupUpdate) throws ApplicationException;
 
     CustomerSearch search(String searchString) throws ApplicationException;
-
-    CenterHierarchySearchDto isCenterHierarchyConfigured(Short loggedInUserBranchId);
 
     GroupBO transferGroupToCenter(String globalCustNum, String centerSystemId, Integer previousGroupVersionNo) throws ApplicationException;
 
