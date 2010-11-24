@@ -107,6 +107,7 @@ public class CenterCustAction extends CustAction {
                 .retrieveBranchOnlyOfficeHierarchy(userContext);
 
         SessionUtils.setAttribute(OnlyBranchOfficeHierarchyDto.IDENTIFIER, officeHierarchy, request);
+        SessionUtils.setAttribute(CustomerConstants.URL_MAP, null, request.getSession(false));
 
         return mapping.findForward(ActionForwards.chooseOffice_success.toString());
     }

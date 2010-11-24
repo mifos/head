@@ -126,7 +126,7 @@ padding-top:5px;
 }
 .orangeline {
 	background:#FF9600;
-	line-height:9px;
+	line-height:6px;
 	/*width:1270px;*/
 	width:100%;
 }
@@ -348,8 +348,8 @@ padding-top:5px;
 .menu {
 	float:left;
 	padding-bottom:5px;
-	margin-top:55px;
-	margin-bottom:-1.5px;
+	margin-top:50px;
+	/*margin-bottom:-1.5px;*/
 	margin-left:200px;
 	width:650px;
 }

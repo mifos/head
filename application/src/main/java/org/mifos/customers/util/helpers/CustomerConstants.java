@@ -279,4 +279,6 @@ public interface CustomerConstants {
     String TOTAL_AMOUNT_PAID_KEY = "label.totalamountpaidLabel";
     String QUESTION_GROUPS_LIST = "questionGroups";
 
+    String URL_MAP = "urlMap";
+
 }

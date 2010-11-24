@@ -378,6 +378,10 @@ input[type="checkbox"], input.checkbox {
     width:80px;
 }
 
+.width130px {
+    width:130px;
+}
+
 .height5px {
     height: 5px;
 }

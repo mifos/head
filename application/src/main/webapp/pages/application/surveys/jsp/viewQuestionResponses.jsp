@@ -28,6 +28,7 @@ explanation of the license and how it is applied.
         location.href = document.getElementById('editResponseURL').value;    	
     }
 </script>
+
 <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 <div id="viewQuestionResponseDiv" class="${param.responseDivStyleClass}">
  	<c:set value="${requestScope.questionsHostForm.questionGroups}" var="questionGroups" />
