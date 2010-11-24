@@ -153,16 +153,6 @@ while(enn.hasMoreElements()){
 							<a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl"><mifos:mifoslabel name="admin.vieworganizationsettings" /></a>
 							</td>
 						</tr>
-						<tr class="fontnormal">
-							<td><img src="pages/framework/images/bullet_circle.gif" width="9"
-								height="11"></td>
-							<td><html-el:link styleId="admin.link.viewPPI"
-								action="ppiAction.do?method=get">
-								<mifos:mifoslabel name="admin.viewPPI" /></html-el:link>
-							| <html-el:link styleId="admin.link.configurePPI"
-								action="ppiAction.do?method=configure">
-								<mifos:mifoslabel name="admin.configurePPI" /></html-el:link></td>
-						</tr>
 					</table>
 					 <br>
 					<span class="fontnormalbold"><mifos:mifoslabel name="admin.datadisplayrules" /></span><br>
