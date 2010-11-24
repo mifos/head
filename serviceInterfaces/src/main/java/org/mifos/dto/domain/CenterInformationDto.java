@@ -78,6 +78,7 @@ public class CenterInformationDto implements Serializable {
         return this.centerPerformanceHistory;
     }
 
+    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="NM_CONFUSING", justification="its not confusing...")
     public CustomerAddressDto getAddress() {
         return this.address;
     }
@@ -113,5 +114,4 @@ public class CenterInformationDto implements Serializable {
     public List<CustomFieldDto> getCustomFields() {
         return this.customFields;
     }
-
 }

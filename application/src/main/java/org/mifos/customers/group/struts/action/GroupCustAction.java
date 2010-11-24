@@ -46,7 +46,6 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.business.service.GroupInformationDto;
 import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
@@ -60,6 +59,7 @@ import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
+import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -259,8 +259,9 @@ public class GroupCustAction extends CustAction {
 
         // John W - UserContext object passed because some status' need to be looked up for internationalisation based
         // on UserContext info
-        GroupInformationDto groupInformationDto = groupDetailsServiceFacade.getGroupInformationDto(
-                ((GroupCustActionForm) form).getGlobalCustNum(), getUserContext(request));
+
+        String groupSystemId = ((GroupCustActionForm) form).getGlobalCustNum();
+        GroupInformationDto groupInformationDto = this.groupServiceFacade.getGroupInformationDto(groupSystemId);
         SessionUtils.removeThenSetAttribute("groupInformationDto", groupInformationDto, request);
 
         // John W - - not sure whether to leave these rules as is or do something else like bake the logic into the main

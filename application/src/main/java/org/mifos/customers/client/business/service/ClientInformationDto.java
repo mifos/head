@@ -24,13 +24,13 @@ import java.util.List;
 
 import org.mifos.customers.util.helpers.ClientDisplayDto;
 import org.mifos.customers.util.helpers.ClientPerformanceHistoryDto;
-import org.mifos.customers.util.helpers.CustomerFlagDto;
-import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
+import org.mifos.dto.domain.CustomerFlagDto;
 import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
+import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.customers.api.DataTransferObject;

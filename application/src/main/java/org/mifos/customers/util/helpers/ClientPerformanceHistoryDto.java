@@ -22,6 +22,7 @@ package org.mifos.customers.util.helpers;
 import java.util.List;
 
 import org.mifos.customers.api.DataTransferObject;
+import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.util.helpers.Money;
 
 /**

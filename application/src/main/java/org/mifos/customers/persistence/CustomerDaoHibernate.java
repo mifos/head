@@ -68,13 +68,9 @@ import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
 import org.mifos.customers.util.helpers.ClientDisplayDto;
 import org.mifos.customers.util.helpers.ClientFamilyDetailDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerFlagDto;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.GroupDisplayDto;
-import org.mifos.customers.util.helpers.LoanCycleCounter;
-import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.dto.domain.CenterDisplayDto;
 import org.mifos.dto.domain.CenterPerformanceHistoryDto;
@@ -83,12 +79,16 @@ import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.CustomerFlagDto;
 import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.CustomerPositionOtherDto;
+import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
+import org.mifos.dto.screen.GroupDisplayDto;
+import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
@@ -1231,7 +1231,7 @@ public class CustomerDaoHibernate implements CustomerDao {
             for (LoanBO loan : loanAccounts) {
                 loanDetail.add(new LoanDetailDto(loan.getGlobalAccountNum(), loan.getLoanOffering()
                         .getPrdOfferingName(), loan.getAccountState().getId(), loan.getAccountState().getName(), loan
-                        .getLoanSummary().getOutstandingBalance(), loan.getTotalAmountDue()));
+                        .getLoanSummary().getOutstandingBalance().toString(), loan.getTotalAmountDue().toString()));
             }
             return loanDetail;
         }

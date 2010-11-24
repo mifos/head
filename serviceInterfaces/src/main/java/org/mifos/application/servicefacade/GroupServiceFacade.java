@@ -26,6 +26,7 @@ import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
+import org.mifos.dto.screen.GroupInformationDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface GroupServiceFacade {
@@ -39,4 +40,6 @@ public interface GroupServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     CustomerDetailsDto createNewGroup(GroupCreationDetail groupCenterDetail, MeetingDto meetingDto);
 
+    @PreAuthorize("isFullyAuthenticated()")
+    GroupInformationDto getGroupInformationDto(String globalCustNum);
 }

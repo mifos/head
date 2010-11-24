@@ -76,10 +76,10 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.Param;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.dto.domain.CustomerDto;
+import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -1136,7 +1136,7 @@ public class CustomerPersistence extends Persistence {
             totalAmountDue = new Money(mifosCurrency, "7.7");
 
             loanDetails.add(new LoanDetailDto(globalAccountNum, prdOfferingName, accountStateId, accountStateName,
-                    outstandingBalance, totalAmountDue));
+                    outstandingBalance.toString(), totalAmountDue.toString()));
         }
         return loanDetails;
     }

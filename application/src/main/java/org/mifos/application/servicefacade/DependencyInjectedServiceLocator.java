@@ -20,7 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-
 import org.mifos.accounts.fees.business.service.FeeService;
 import org.mifos.accounts.fees.business.service.FeeServiceImpl;
 import org.mifos.accounts.fees.persistence.FeeDao;
@@ -75,8 +74,6 @@ import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.client.business.service.WebTierClientDetailsServiceFacade;
-import org.mifos.customers.group.business.service.GroupDetailsServiceFacade;
-import org.mifos.customers.group.business.service.WebTierGroupDetailsServiceFacade;
 import org.mifos.customers.office.business.service.LegacyOfficeServiceFacade;
 import org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier;
 import org.mifos.customers.office.persistence.OfficeDao;
@@ -109,7 +106,6 @@ public class DependencyInjectedServiceLocator {
     private static CustomerServiceFacade customerServiceFacade;
     private static CenterServiceFacade centerServiceFacade;
     private static GroupServiceFacade groupServiceFacade;
-    private static GroupDetailsServiceFacade groupDetailsServiceFacade;
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
     private static LegacyLoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
@@ -250,13 +246,6 @@ public class DependencyInjectedServiceLocator {
             clientDetailsServiceFacade = new WebTierClientDetailsServiceFacade(customerDao);
         }
         return clientDetailsServiceFacade;
-    }
-
-    public static GroupDetailsServiceFacade locateGroupDetailsServiceFacade() {
-        if (groupDetailsServiceFacade == null) {
-            groupDetailsServiceFacade = new WebTierGroupDetailsServiceFacade(customerDao);
-        }
-        return groupDetailsServiceFacade;
     }
 
     public static LoanServiceFacade locateLoanServiceFacade() {

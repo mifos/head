@@ -31,41 +31,65 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
+import org.mifos.core.CurrencyMismatchException;
+import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.surveys.helpers.SurveyType;
+import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.CustomerAccountSummaryDto;
+import org.mifos.dto.domain.CustomerAddressDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
+import org.mifos.dto.domain.CustomerFlagDto;
+import org.mifos.dto.domain.CustomerMeetingDto;
+import org.mifos.dto.domain.CustomerNoteDto;
+import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.dto.domain.GroupCreation;
 import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
+import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
 import org.mifos.dto.screen.CenterSearchInput;
+import org.mifos.dto.screen.GroupDisplayDto;
+import org.mifos.dto.screen.GroupInformationDto;
+import org.mifos.dto.screen.GroupPerformanceHistoryDto;
+import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
@@ -279,5 +303,90 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             Short recordLoanOfficerId) {
         return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
                 recordOfficeId, recordLoanOfficerId);
+    }
+
+    @Override
+    public GroupInformationDto getGroupInformationDto(String globalCustNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        GroupBO group = this.customerDao.findGroupBySystemId(globalCustNum);
+        if (group == null) {
+            throw new MifosRuntimeException("Group not found for globalCustNum: " + globalCustNum);
+        }
+
+        GroupDisplayDto groupDisplay = this.customerDao.getGroupDisplayDto(group.getCustomerId(), userContext);
+
+        Integer groupId = group.getCustomerId();
+        String searchId = group.getSearchId();
+        Short branchId = groupDisplay.getBranchId();
+
+        CustomerAccountSummaryDto customerAccountSummary = this.customerDao.getCustomerAccountSummaryDto(groupId);
+
+        GroupPerformanceHistoryDto groupPerformanceHistory = assembleGroupPerformanceHistoryDto(group
+                .getGroupPerformanceHistory(), searchId, branchId, groupId);
+
+        CustomerAddressDto groupAddress = this.customerDao.getCustomerAddressDto(group);
+        List<CustomerDetailDto> clients = this.customerDao.findClientsThatAreNotCancelledOrClosedReturningDetailDto(searchId, branchId);
+
+        List<CustomerNoteDto> recentCustomerNotes = this.customerDao.getRecentCustomerNoteDto(groupId);
+        List<CustomerPositionOtherDto> customerPositions = this.customerDao.getCustomerPositionDto(groupId, userContext);
+        List<CustomerFlagDto> customerFlags = this.customerDao.getCustomerFlagDto(group.getCustomerFlags());
+        List<LoanDetailDto> loanDetail = this.customerDao.getLoanDetailDto(group.getOpenLoanAccounts());
+        List<SavingsDetailDto> savingsDetail = this.customerDao.getSavingsDetailDto(groupId, userContext);
+
+        CustomerMeetingDto customerMeeting = this.customerDao.getCustomerMeetingDto(group.getCustomerMeeting(), userContext);
+
+        boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.GROUP);
+
+        List<SurveyDto> customerSurveys = this.customerDao.getCustomerSurveyDto(groupId);
+
+        List<CustomFieldDto> customFields = this.customerDao.getCustomFieldViewForCustomers(groupId, EntityType.GROUP
+                .getValue(), userContext);
+
+        return new GroupInformationDto(groupDisplay, customerAccountSummary, groupPerformanceHistory, groupAddress,
+                clients, recentCustomerNotes, customerPositions, customerFlags, loanDetail, savingsDetail,
+                customerMeeting, activeSurveys, customerSurveys, customFields);
+    }
+
+    private GroupPerformanceHistoryDto assembleGroupPerformanceHistoryDto(
+            GroupPerformanceHistoryEntity groupPerformanceHistory, String searchId, Short branchId, Integer groupId) {
+
+        Integer activeClientCount = this.customerDao.getActiveAndOnHoldClientCountForGroup(searchId, branchId);
+
+        Money lastGroupLoanAmountMoney = groupPerformanceHistory.getLastGroupLoanAmount();
+        String lastGroupLoanAmount = "";
+        if (lastGroupLoanAmountMoney != null) {
+            lastGroupLoanAmount = lastGroupLoanAmountMoney.toString();
+        }
+
+        String avgLoanAmountForMember = this.customerDao.getAvgLoanAmountForMemberInGoodOrBadStanding(searchId, branchId);
+        String totalLoanAmountForGroup = this.customerDao.getTotalLoanAmountForGroup(searchId, branchId);
+
+        String portfolioAtRisk;
+        String totalSavingsAmount;
+
+        try {
+            if (groupPerformanceHistory.getPortfolioAtRisk() == null) {
+                portfolioAtRisk = "0";
+            } else {
+                portfolioAtRisk = groupPerformanceHistory.getPortfolioAtRisk().toString();
+            }
+        } catch (CurrencyMismatchException e) {
+            portfolioAtRisk = localizedMessageLookup("errors.multipleCurrencies");
+        }
+
+        totalSavingsAmount = this.customerDao.getTotalSavingsAmountForGroupandClientsOfGroup(searchId, branchId);
+
+        List<LoanCycleCounter> loanCycleCounters = this.customerDao.fetchLoanCycleCounter(groupId, CustomerLevel.GROUP.getValue());
+
+        return new GroupPerformanceHistoryDto(activeClientCount.toString(), lastGroupLoanAmount,
+                avgLoanAmountForMember, totalLoanAmountForGroup, portfolioAtRisk, totalSavingsAmount,
+                loanCycleCounters);
+    }
+
+    private String localizedMessageLookup(String key) {
+        return MessageLookup.getInstance().lookup(key);
     }
 }

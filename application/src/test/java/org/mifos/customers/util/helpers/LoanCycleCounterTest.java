@@ -22,6 +22,7 @@ package org.mifos.customers.util.helpers;
 
 import junit.framework.TestCase;
 
+import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.TestUtils;
 import org.testng.annotations.Test;
 
