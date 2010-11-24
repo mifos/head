@@ -24,6 +24,8 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CustomerRecentActivityDto implements Serializable {
 
     public CustomerRecentActivityDto(java.util.Date activityDate, String description, String amount, String postedBy) {
