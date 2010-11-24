@@ -29,6 +29,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
+import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.office.business.OfficeBO;
@@ -74,7 +75,7 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
     private MifosCurrency currency;
     private OfficeBO office;
     private String description;
-    private Set<PrdOfferingBO> collectionProductMix;
+    private Set<ProductMixBO> collectionProductMix;
     private Set<PrdOfferingBO> prdOfferingNotAllowedId; // For Not allowed products
     private Short prdMixFlag; // Tagging products for which mixes were defined
     private Set<QuestionGroupReference> questionGroups;
@@ -284,11 +285,11 @@ public abstract class PrdOfferingBO extends AbstractBusinessObject {
         this.description = description;
     }
 
-    public Set<PrdOfferingBO> getCollectionProductMix() {
+    public Set<ProductMixBO> getCollectionProductMix() {
         return collectionProductMix;
     }
 
-    public void setCollectionProductMix(final Set<PrdOfferingBO> collectionProductMix) {
+    public void setCollectionProductMix(final Set<ProductMixBO> collectionProductMix) {
         this.collectionProductMix = collectionProductMix;
     }
 

@@ -136,15 +136,13 @@ explanation of the license and how it is applied.
 												<p>
 													<fmt:message key="admin.importexport.amountImported">
 															<fmt:param>
-																<fmt:formatNumber value="${requestScope.totalAmountOfTransactionsImported}" type="number"
-																					minFractionDigits="0" maxFractionDigits="2"/>
+																<c:out value="${requestScope.totalAmountOfTransactionsImported}"/>
 															</fmt:param>
 													</fmt:message>
 													<br/>
 													<fmt:message key="admin.importexport.amountError">
 															<fmt:param>
-																<fmt:formatNumber value="${requestScope.totalAmountOfTransactionsWithError}" type="number"
-																					minFractionDigits="0" maxFractionDigits="2"/>
+																<c:out value="${requestScope.totalAmountOfTransactionsWithError}"/>
 															</fmt:param>
 													</fmt:message>
 												</p>

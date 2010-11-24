@@ -47,7 +47,6 @@
         <li type="circle"><a id="admin.link.viewHolidays" href="viewHolidays.ftl" >[@spring.message "admin.viewholidays"/]</a>&nbsp;|&nbsp;<a Id="admin.link.defineNewHoliday" href="defineNewHoliday.ftl">[@spring.message "admin.definenewholidays"/]</a></li>
         <li type="circle"><a id="admin.link.defineAcceptedPaymentType" href="defineAcceptedPaymentTypes.ftl" >[@spring.message "admin.defineacceptedpayments"/]</a></li>
         <li type="circle"><a id="admin.link.viewOrganizationSettings" href="viewOrganizationSettings.ftl" >[@spring.message "admin.viewOrganizationSettings"/]</a></li>
-        <li type="circle"><a id="admin.link.viewPPI" href="ppiAction.do?method=get" >[@spring.message "admin.viewPPIsettings" /]</a>&nbsp;|&nbsp;<a Id="admin.link.configurePPI" href="ppiAction.do?method=configure">[@spring.message "admin.ConfigurePPIsettings"/]</a></li>
       </ul>
       </p>
       <p><span class="fontBold">[@spring.message "admin.datadisplayandrules" /] </span>

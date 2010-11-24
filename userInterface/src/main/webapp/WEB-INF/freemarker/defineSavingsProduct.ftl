@@ -5,8 +5,11 @@
 [@mifos.header "title" /]
 <script type="text/javascript">
   	$(document).ready(function () {
-  		fnCheckAppliesTo();
-  		fnCheckRecMand();
+  		setTimeout(function() {
+                fnCheckAppliesTo();
+                fnCheckRecMand();
+          },100);
+
 	});
 
 	function fnCheckAppliesTo() {
@@ -43,7 +46,7 @@
             <p class="span-17 timelineboldorange arrowIMG  padding20left" style="width:50%">
                 [@spring.messageArgs "ftlDefinedLabels.manageProducts.defineSavingsProducts.savingsproductinformation" , [savings]  /]                
             </p>
-            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right" style="float:right">[@spring.message "reviewAndSubmit" /]</p>
+            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right width130px" style="float:right">[@spring.message "reviewAndSubmit" /]</p>
         </div>
 
       <div class="margin20lefttop">
@@ -126,7 +129,7 @@
 				</span>
 			</div>
             <div class="span-20 ">
-            	<span class="pull-3 span-8 rightAlign" id="recamnt">[@spring.message "manageProducts.defineSavingsProducts.recommendedAmountforDeposit" /]:</span>
+            	<span class="span-8 rightAlign" id="recamnt" style="margin-left: -120px;">[@spring.message "manageProducts.defineSavingsProducts.recommendedAmountforDeposit" /]:</span>
             	<span class="pull-3 span-8 rightAlign" id="mandamnt" style="display: none"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.mandatoryAmountforDeposit" /]:</span>
             	<span class="span-4">[@spring.formInput "savingsProduct.amountForDeposit" /]</span>
   			</div>

@@ -23,6 +23,7 @@ package org.mifos.framework.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.List;
@@ -151,7 +152,7 @@ public class PPITestDataGenerator {
 
         Properties properties = new Properties();
 
-        properties.load(new FileInputStream(filename));
+        properties.load(new FileReader(filename));
 
         System.out.println("Loading data for: " + properties.getProperty("questionGroup.name"));
         questionnaireServiceFacade.uploadPPIQuestionGroup(properties.getProperty("questionGroup.xml.filename"));

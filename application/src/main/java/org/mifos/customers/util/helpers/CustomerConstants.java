@@ -280,4 +280,7 @@ public interface CustomerConstants {
     String QUESTION_GROUPS_LIST = "questionGroups";
     String VARIABLE_INSTALLMENT_ENABLED = "variableInstallmentsEnabled";
     String LOAN_ACCOUNT = "loanAccount";
+
+    String URL_MAP = "urlMap";
+
 }

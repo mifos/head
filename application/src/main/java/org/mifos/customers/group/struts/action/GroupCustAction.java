@@ -125,6 +125,8 @@ public class GroupCustAction extends CustAction {
             actionForward = ActionForwards.loadCreateGroup;
         }
 
+        SessionUtils.setAttribute(CustomerConstants.URL_MAP, null, request.getSession(false));
+
         return mapping.findForward(actionForward.toString());
     }
 
@@ -378,6 +380,9 @@ public class GroupCustAction extends CustAction {
         if (actionForm.getInput() != null && actionForm.getInput().equals(GroupConstants.GROUP_SEARCH_CLIENT_TRANSFER)) {
             return mapping.findForward(ActionForwards.loadTransferSearch_success.toString());
         }
+
+
+        SessionUtils.setAttribute(CustomerConstants.URL_MAP, null, request.getSession(false));
 
         return mapping.findForward(ActionForwards.loadSearch_success.toString());
     }

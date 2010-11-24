@@ -39,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/previewProductMix")
 @SessionAttributes("formBean")
+@SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.NPathComplexity"})
 public class PreviewProductMixController {
 
     private static final String REDIRECT_TO_ADMIN_SCREEN = "redirect:/AdminAction.do?method=load";
@@ -104,26 +105,30 @@ public class PreviewProductMixController {
 
     private void updateAllowedNotAllowedProductMix(ProductMixFormBean formBean) {
         String[] allowed = formBean.getAllowed();
-        for (String allowedKey : allowed) {
-            if (!formBean.getAllowedProductOptions().containsKey(allowedKey)) {
-                String productName = formBean.getNotAllowedProductOptions().get(allowedKey);
-                if (null != allowedKey && null != productName) {
-                    formBean.getAllowedProductOptions().put(allowedKey, productName);
-                    formBean.getNotAllowedProductOptions().remove(allowedKey);
+        if (null != allowed) {
+            for (String allowedKey : allowed) {
+                if (!formBean.getAllowedProductOptions().containsKey(allowedKey)) {
+                    String productName = formBean.getNotAllowedProductOptions().get(allowedKey);
+                    if (null != allowedKey && null != productName) {
+                        formBean.getAllowedProductOptions().put(allowedKey, productName);
+                        formBean.getNotAllowedProductOptions().remove(allowedKey);
+                    }
                 }
             }
         }
 
         String[] notAllowed = formBean.getNotAllowed();
-        for (String notAllowedKey : notAllowed) {
-            if (!formBean.getNotAllowedProductOptions().containsKey(notAllowedKey)) {
-                String productName = formBean.getAllowedProductOptions().get(notAllowedKey);
-                if (null != notAllowedKey && null != productName) {
-                    formBean.getNotAllowedProductOptions().put(notAllowedKey, productName);
-                    formBean.getAllowedProductOptions().remove(notAllowedKey);
+        if (null != notAllowed) {
+            for (String notAllowedKey : notAllowed) {
+                if (!formBean.getNotAllowedProductOptions().containsKey(notAllowedKey)) {
+                    String productName = formBean.getAllowedProductOptions().get(notAllowedKey);
+                    if (null != notAllowedKey && null != productName) {
+                        formBean.getNotAllowedProductOptions().put(notAllowedKey, productName);
+                        formBean.getAllowedProductOptions().remove(notAllowedKey);
+                    }
                 }
             }
-        }
+        }                        
     }
 
     /* Need to reset those attributes manually due to problem with reset them by Spring when select box is empty - morzechowski@soldevelo.com */

@@ -1407,32 +1407,33 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             applicationConfigurationDao.save(product);
             StaticHibernateUtil.flushSession();
 
-            List<PrdOfferingBO> notAllowedProducts = new ArrayList<PrdOfferingBO>();
+            List<PrdOfferingBO> newNotAllowedProducts = new ArrayList<PrdOfferingBO>();
             for (Integer notAllowedProductId : notAllowedProductIds) {
                 PrdOfferingBO notAllowedProduct = new PrdOfferingPersistence().getPrdOfferingByID(notAllowedProductId
                         .shortValue());
-                notAllowedProducts.add(notAllowedProduct);
+                newNotAllowedProducts.add(notAllowedProduct);
             }
 
-            for (PrdOfferingBO oldnotallowedProduct : notAllowedProducts) {
+            for (ProductMixBO oldNotAllowedProduct : product.getCollectionProductMix() ) {
 
                 ProductMixBO productMix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(productId
-                        .shortValue(), oldnotallowedProduct.getPrdOfferingId());
+                        .shortValue(), oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId());
 
                 if (null != productMix) {
                     applicationConfigurationDao.delete(productMix);
                     StaticHibernateUtil.flushSession();
                 }
                 ProductMixBO alternateproductmix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(
-                        oldnotallowedProduct.getPrdOfferingId(), productId.shortValue());
+                        oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId(), productId.shortValue());
+                
                 if (null != alternateproductmix) {
                     applicationConfigurationDao.delete(alternateproductmix);
                     StaticHibernateUtil.flushSession();
                 }
             }
 
-            for (PrdOfferingBO notallowedProduct : notAllowedProducts) {
-                ProductMixBO productMix = new ProductMixBO(product, notallowedProduct);
+            for (PrdOfferingBO notAllowedProduct : newNotAllowedProducts) {
+                ProductMixBO productMix = new ProductMixBO(product, notAllowedProduct);
                 productMix.setUpdatedDate(new DateTime().toDate());
                 productMix.setUpdatedBy(Short.valueOf("1"));
                 applicationConfigurationDao.save(productMix);

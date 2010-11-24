@@ -12,7 +12,7 @@
             <p class="span-17 silverheading completeIMG padding20left"
                style="width:50%">[@spring.message "manageProducts.defineNewCategory.productcategoryinformation"/]</p>
 
-            <p class="span-3 timelineboldorange arrowIMG last padding20left10right"
+            <p class="span-3 timelineboldorange arrowIMG last padding20left10right width130px"
                style="float:right">[@spring.message "reviewAndSubmit" /]</p>
         </div>
         <div class="margin20lefttop">

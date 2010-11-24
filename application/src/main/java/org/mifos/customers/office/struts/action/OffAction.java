@@ -115,7 +115,7 @@ public class OffAction extends BaseAction {
 
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, officeFormDto.getCustomFields(), request);
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(getUserContext(request).getLocaleId()), request);
-
+        SessionUtils.setAttribute(CustomerConstants.URL_MAP, null, request.getSession(false));
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 

@@ -70,17 +70,17 @@ function selectAllOptions(outSel)
             <p class="span-17 timelineboldorange arrowIMG  padding20left"
                style="width:50%">[@spring.message "manageProducts.defineProductmix.productmixinformation"/]</p>
 
-            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right"
+            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right width130px"
                style="float:right">[@spring.message "reviewAndSubmit" /]</p>
         </div>
         <div class="margin20lefttop">
-          <p class="font15 margin10topbottom"><span class="fontBold">[@spring.message "manageProducts.defineProductmix.addanewproductmix"/]</span>&nbsp;--&nbsp;<span class="orangeheading"> [@spring.message "manageProducts.defineProductmix.enterproductmixinformation"/]</span></p>
+          <p class="font15 margin10topbottom"><span class="fontBold">[@spring.message "manageProducts.defineProductmix.addanewproductmix"/]</span>&nbsp;-<span class="orangeheading"> [@spring.message "manageProducts.defineProductmix.enterproductmixinformation"/]</span></p>
           <div>[@spring.message "manageProducts.defineProductmix.completethefieldsbelow.ThenclickPreview.ClickCanceltoreturntoAdminwithoutsubmittinginformation"/] </div>
           <div><span class="red">* </span>[@spring.message "manageProducts.defineProductmix.fieldsmarkedwithanasteriskarerequired"/] </div>
           [@mifos.showAllErrors "formBean.*"/]   
           <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineProductmix.productmixdetails"/] </p>
         <form name="productsmixform" id="productsmixform" method="post" action="editProductMix.ftl">
-        	<div class="prepend-3 last">
+        	<div class="prepend-3 last width90prc">
         		<div class="span-20 ">
 	        		<span class="span-5 rightAlign">
 	        			<span class="red">* </span>[@spring.message "manageProducts.defineProductmix.producttype"/]&nbsp;:&nbsp;
@@ -123,21 +123,22 @@ function selectAllOptions(outSel)
 				    </span>
 				</div>
 				
-				<div class="span-20 last margin20topbottom">
-	          		<div class="span-20">
+				<div class="span-20 last margin20topbottom width100prc">
+	          		<div class="span-20 width100prc">
 	          			<span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineProductmix.removenotallowedproducts"/]&nbsp;:&nbsp;</span>
-	            		<span class="span-12 ">
-	                		<span class="span-9">[@spring.message "manageProducts.defineProductmix.clickonaproductintherightboxtoselect.ThenclickRemove"/]</span>
-	                    	<span class="span-4">
+	            		<span class="span-12" style="width:auto;">
+                            <span class="span-9">[@spring.message "manageProducts.defineProductmix.clickonaproductintherightboxtoselect.ThenclickRemove"/]</span>
+                            <br/>
+	                    	<span class="span-4" style="width:auto;">
 								[@spring.formMultiSelect "formBean.notAllowed", formBean.notAllowedProductOptions, "class=listSize" /]	                    		
 	            			</span>
-	                    	<span class="span-3 width80px" >
+	                    	<span class="span-3" >
 	                    		<br />
 	                    		<input class="buttn2 width70px" name="add" type="button" value="[@spring.message "add"/] >>"  onclick="moveOptions(this.form.notAllowed, this.form.allowed);"/>
 	                    		<br /><br />
 								<input class="buttn2 width70px" name="remove" type="button" value="<< [@spring.message "remove"/]" onclick="moveOptions(this.form.allowed, this.form.notAllowed);"/>
 							</span>
-							<span class="span-4">
+							<span class="span-4" style="width:auto;">
 								[@spring.formMultiSelect "formBean.allowed", formBean.allowedProductOptions, "class=listSize" /]
 	            			</span>
 	               		</span>

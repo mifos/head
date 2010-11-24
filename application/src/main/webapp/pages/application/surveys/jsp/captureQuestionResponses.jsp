@@ -31,8 +31,15 @@ explanation of the license and how it is applied.
 <%@ taglib uri="/sessionaccess" prefix="session"%>
 <%@ taglib uri="http://struts.apache.org/tags-logic" prefix="logic"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="/mifos/custom-tags" prefix="customtags"%>
 
-<tiles:insert definition=".withoutmenu">
+
+<c:set  var="tilestheme" scope="page" value=".withoutmenu" />
+<c:if test="${!empty sessionScope.urlMap}">
+    <c:set  var="tilestheme" scope="page" value=".withmenu_andsearch" />
+</c:if>
+
+<tiles:insert definition="${pageScope.tilestheme}" >
 	<tiles:put name="body" type="string">
 		<span id="page.id" title="captureQuestionResponse"></span>
 		<SCRIPT type="text/javascript" SRC="pages/framework/js/date.js"></SCRIPT>
@@ -46,7 +53,7 @@ explanation of the license and how it is applied.
 		<script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
 		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
 		<script type="text/javascript" src="pages/application/surveys/js/captureQuestionResponses_struts.js"></script>
-		
+
 		<STYLE type="text/css">
 		  .validationErr{
 	        color:#FF0000;
@@ -79,10 +86,21 @@ explanation of the license and how it is applied.
             padding-left: 0px;
         }
 		</STYLE>
-            
+        
         <fmt:setLocale value='${sessionScope["LOCALE"]}'/>
 		<fmt:setBundle basename="org.mifos.config.localizedResources.SurveysUIResources"/>
 		<html-el:form action="${requestScope.origFlowRequestURI}">
+            <c:if test="${!empty sessionScope.urlMap}">
+            <table width="95%" border="0" cellpadding="0" cellspacing="0">
+                <tr>
+                    <td class="bluetablehead05">
+						<span class="fontnormal8pt">
+	          				<customtags:headerLink/>
+	        			</span>
+                    </td>
+                </tr>
+            </table>
+            </c:if>
 			<logic:messagesPresent>
                 <table width="93%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -127,18 +145,18 @@ explanation of the license and how it is applied.
                                      <td width="74%">
                                      <html-el:hidden property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].id' value="${question.id}"></html-el:hidden>
                                      <c:if test="${question.questionType == 'FREETEXT'}">
-                                         <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" 
+                                         <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField"
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="200" />
-                                     </c:if> 
+                                     </c:if>
                                      <c:if test="${question.questionType == 'NUMERIC'}">
-                                         <mifos:mifosnumbertext styleId="create_ClientPersonalInfo.input.customField" 
+                                         <mifos:mifosnumbertext styleId="create_ClientPersonalInfo.input.customField"
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="200" />
-                                     </c:if> 
+                                     </c:if>
                                      <c:if test="${question.questionType == 'DATE'}">
                                          <mifos:mifosalphanumtext styleId="create_ClientPersonalInfo.input.customField" styleClass="date-pick"
                                              property='questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value' maxlength="10" />
                                      </c:if>
-                                     
+
                                      <c:if test="${question.questionType == 'SINGLE_SELECT'}">
                                          <c:if test="${fn:length(question.answerChoices) > 6}">
                                              <mifos:select	property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].value" size="1">
@@ -156,7 +174,7 @@ explanation of the license and how it is applied.
                                              </c:forEach>
                                          </c:if>
                                      </c:if>
-                                     
+
                                       <c:if test="${question.questionType == 'MULTI_SELECT'}">
                                          <fieldset style="width:70%" class="right_section">
 				                            <ol class="noPadding">
@@ -164,10 +182,10 @@ explanation of the license and how it is applied.
 				                              <c:forEach var="choiceValue" items="${question.answerChoices}" >
 				                                 <li class="noPadding">
 								    				<html:multibox property="questionGroups[${groupIdx}].sectionDetails[${sectionIdx}].questions[${questionIdx}].valuesAsArray" value="${choiceValue}" /> ${choiceValue}
-								                 </li>  
-							                  </c:forEach>												
+								                 </li>
+							                  </c:forEach>
 				                            </ol>
-				                          </fieldset>    
+				                          </fieldset>
                                      </c:if>
                                      <c:if test="${question.questionType == 'SMART_SELECT'}">
                                          <fieldset style="width:70%" class="right_section">
@@ -217,6 +235,6 @@ explanation of the license and how it is applied.
 			<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 			<html-el:hidden property="method" value="captureQuestionResponses" />
 		</html-el:form>
-		
+
 	</tiles:put>
 </tiles:insert>

@@ -32,7 +32,7 @@
 [#macro topNavigationNoSecurity currentTab]
 <div id="header">
 	<div class="site_logo">
-		<span class="logo">Mifos</span>
+		<span class="logo"></span>
 		<a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
 		<a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
 	</div>

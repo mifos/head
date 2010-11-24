@@ -156,6 +156,7 @@ public class PersonAction extends SearchAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward chooseOffice(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        SessionUtils.setAttribute(CustomerConstants.URL_MAP, null, request.getSession(false));
         return mapping.findForward(ActionForwards.chooseOffice_success.toString());
     }
 
