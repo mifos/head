@@ -81,7 +81,7 @@ public class LoanBusinessServiceTest {
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(true);
         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
         loanBusinessService.
-                applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
+                computeInstallmentScheduleUsingDailyInterest(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
                         loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
         verify(loanBO).copyInstallmentSchedule(installments);
@@ -103,8 +103,8 @@ public class LoanBusinessServiceTest {
         when(loanAccountActionForm.getInterestRate()).thenReturn("24");
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
-        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
-        loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
+        when(loanBO.isDecliningPrincipalBalance()).thenReturn(true);
+        loanBusinessService.computeInstallmentScheduleUsingDailyInterest(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
         verify(loanBO).copyInstallmentSchedule(installments);
@@ -118,14 +118,14 @@ public class LoanBusinessServiceTest {
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
         InterestTypesEntity interestTypesEntity = new InterestTypesEntity(InterestType.DECLINING);
         when(loanBO.getInterestType()).thenReturn(interestTypesEntity);
-        loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
+        loanBusinessService.computeInstallmentScheduleUsingDailyInterest(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
         verify(loanBO, never()).copyInstallmentSchedule(any(List.class));
     }
 
     @Test
-    public void shouldGenerateMonthlyInstallmentScheduleFromRepaymentScheduleUsingDailyInterest() {
+    public void shouldGenerateMonthlyInstallmentScheduleFromRepaymentSchedule() {
         MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         RepaymentScheduleInstallment installment1 =
                 getRepaymentScheduleInstallment("25-Sep-2010", 1, "178.6", "20.4", "1", "100");
@@ -138,7 +138,7 @@ public class LoanBusinessServiceTest {
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = getDate(2010, 8, 25);
         final Money loanAmount = new Money(rupee, "1000");
-        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+        loanBusinessService.generateInstallmentSchedule(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
 
         assertInstallment(installment1, "78.6", "20.4");
         assertInstallment(installment2, "180.8", "18.2");
@@ -147,7 +147,7 @@ public class LoanBusinessServiceTest {
     }
 
     @Test
-    public void shouldGenerateWeeklyInstallmentScheduleFromRepaymentScheduleUsingDailyInterest() {
+    public void shouldGenerateWeeklyInstallmentScheduleFromRepaymentSchedule() {
         MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         RepaymentScheduleInstallment installment1 =
                 getRepaymentScheduleInstallment("01-Sep-2010", 1, "194.4", "4.6", "1", "100");
@@ -160,7 +160,7 @@ public class LoanBusinessServiceTest {
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
         Date disbursementDate = getDate(2010, 8, 25);
         final Money loanAmount = new Money(rupee, "1000");
-        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+        loanBusinessService.generateInstallmentSchedule(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
 
         assertInstallment(installment1, "94.4", "4.6");
         assertInstallment(installment2, "194.8", "4.2");
@@ -169,7 +169,7 @@ public class LoanBusinessServiceTest {
     }
 
     @Test
-    public void shouldGenerateInstallmentScheduleFromRepaymentScheduleUsingDailyInterest() {
+    public void shouldGenerateInstallmentScheduleFromRepaymentSchedule() {
         RepaymentScheduleInstallment installment1 =
                 getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
         RepaymentScheduleInstallment installment2 =
@@ -188,7 +188,7 @@ public class LoanBusinessServiceTest {
                 installment4, installment5, installment6, installment7);
         Date disbursementDate = getDate(2010, 8, 25);
         final Money loanAmount = new Money(rupee, "1000");
-        loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
+        loanBusinessService.generateInstallmentSchedule(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
 
         assertInstallment(installment1, "69.4", "4.6");
         assertInstallment(installment2, "94.7", "4.3");

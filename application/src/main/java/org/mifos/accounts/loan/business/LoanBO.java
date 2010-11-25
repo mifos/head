@@ -4282,7 +4282,7 @@ public class LoanBO extends AccountBO {
         return installments;
     }
 
-    public boolean isDecliningBalanceInterestRecalculation() {
+    public boolean isDecliningPrincipalBalance() {
         return loanOffering.getInterestType() == InterestType.DECLINING_PB;
     }
 }

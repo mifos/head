@@ -562,7 +562,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             ActionErrors actionErrors = getActionErrors(errors);
             actionErrors.add(validateCashflowAndInstallmentDates(installments, loanActionForm.getCashFlowForm()));
             if (actionErrors.isEmpty()) {
-                loanBusinessService.applyDailyInterestRates(
+                loanBusinessService.generateInstallmentSchedule(
                         new LoanScheduleGenerationDto(disbursementDate, loanActionForm.getLoanAmountValue(),
                                 loanActionForm.getInterestDoubleValue(), installments));
                 // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp

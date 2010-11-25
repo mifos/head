@@ -21,6 +21,7 @@ package org.mifos.accounts.loan.business;
 
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
@@ -34,7 +35,7 @@ import java.util.Map;
 public class ScheduleCalculatorAdaptor {
 
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {
-        if (loan.isDecliningBalanceInterestRecalculation()) {
+        if (loan.isDecliningPrincipalBalance()) {
             Schedule schedule = mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
                     loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
             schedule.computeExtraInterest(asOfDate);

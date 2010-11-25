@@ -26,7 +26,9 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -65,7 +67,7 @@ public class ScheduleCalculatorAdaptorTest {
     @Test
     public void shouldComputeExtraInterestForDecliningPrincipalBalance() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Mockito.when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        Mockito.when(loanBO.isDecliningPrincipalBalance()).thenReturn(true);
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         Mockito.when(loanBO.getDisbursementDate()).thenReturn(getDate(23, 9, 2010));
         Mockito.when(loanBO.getLoanAmount()).thenReturn(new Money(rupee,LOAN_AMOUNT));
@@ -74,7 +76,7 @@ public class ScheduleCalculatorAdaptorTest {
 
         scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
 
-        Mockito.verify(loanBO, Mockito.times(1)).isDecliningBalanceInterestRecalculation();
+        Mockito.verify(loanBO, Mockito.times(1)).isDecliningPrincipalBalance();
         Mockito.verify(loanBO, Mockito.times(1)).getLoanScheduleEntities();
         Mockito.verify(loanBO, Mockito.times(1)).getDisbursementDate();
         Mockito.verify(loanBO, Mockito.times(1)).getLoanAmount();
@@ -90,7 +92,7 @@ public class ScheduleCalculatorAdaptorTest {
     @Test
     public void shouldNotComputeExtraInterestForNonPrincipalBalanceInterestTypes() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Mockito.when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
+        Mockito.when(loanBO.isDecliningPrincipalBalance()).thenReturn(false);
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         Mockito.when(loanBO.getDisbursementDate()).thenReturn(getDate(23, 9, 2010));
         Mockito.when(loanBO.getLoanAmount()).thenReturn(new Money(rupee,LOAN_AMOUNT));
