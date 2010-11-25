@@ -33,6 +33,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
@@ -44,6 +45,9 @@ import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerPositionEntity;
+import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -61,18 +65,22 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerFlagDto;
 import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
+import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.dto.domain.CustomerPositionOtherDto;
 import org.mifos.dto.domain.GroupCreation;
 import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
+import org.mifos.dto.domain.GroupUpdate;
 import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
@@ -87,8 +95,9 @@ import org.mifos.dto.screen.GroupPerformanceHistoryDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
@@ -388,5 +397,139 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
     private String localizedMessageLookup(String key) {
         return MessageLookup.getInstance().lookup(key);
+    }
+
+    @Override
+    public CenterDto retrieveGroupDetailsForUpdate(String globalCustNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        List<PersonnelDto> activeLoanOfficersForBranch = new ArrayList<PersonnelDto>();
+
+        GroupBO group = this.customerDao.findGroupBySystemId(globalCustNum);
+
+        Short officeId = group.getOffice().getOfficeId();
+        String searchId = group.getSearchId();
+        Short loanOfficerId = extractLoanOfficerId(group);
+
+        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
+        if (!isCenterHierarchyExists) {
+
+            CenterCreation centerCreation = new CenterCreation(officeId, userContext.getId(), userContext.getLevelId(),
+                    userContext.getPreferredLocale());
+            activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
+        }
+
+        List<CustomerDto> customerList = customerDao.findClientsThatAreNotCancelledOrClosed(searchId, officeId);
+
+        List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(group, userContext.getLocaleId());
+
+        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
+        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(group.getCustomFields(),
+                fieldDefinitions, userContext);
+
+        DateTime mfiJoiningDate = new DateTime();
+        String mfiJoiningDateAsString = "";
+        if (group.getMfiJoiningDate() != null) {
+            mfiJoiningDate = new DateTime(group.getMfiJoiningDate());
+            mfiJoiningDateAsString = DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), group
+                    .getMfiJoiningDate().toString());
+        }
+
+        AddressDto address = null;
+        if (group.getAddress() != null) {
+            address = Address.toDto(group.getAddress());
+        }
+        return new CenterDto(loanOfficerId, group.getCustomerId(), group.getGlobalCustNum(), mfiJoiningDate,
+                mfiJoiningDateAsString, group.getExternalId(), address, customerPositionDtos,
+                customFieldDtos, customerList, activeLoanOfficersForBranch, isCenterHierarchyExists);
+    }
+
+    private List<CustomerPositionDto> generateCustomerPositionViews(CustomerBO customer, Short localeId) {
+
+        try {
+            List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
+
+            List<PositionEntity> allCustomerPositions = new MasterPersistence().retrieveMasterEntities(
+                    PositionEntity.class, localeId);
+            if (!new ClientRules().getCenterHierarchyExists()) {
+                customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
+            } else {
+                customerPositions.addAll(allCustomerPositions);
+            }
+
+            List<CustomerPositionDto> customerPositionDtos = new ArrayList<CustomerPositionDto>();
+            generatePositionsFromExistingCustomerPositions(customer, customerPositions, customerPositionDtos);
+
+            if (customerPositionDtos.isEmpty()) {
+                generateNewListOfPositions(customer, customerPositions, customerPositionDtos);
+            }
+
+            return customerPositionDtos;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    private List<PositionEntity> populateWithNonCenterRelatedPositions(List<PositionEntity> allCustomerPositions) {
+        List<PositionEntity> nonCenterRelatedPositions = new ArrayList<PositionEntity>();
+        for (PositionEntity positionEntity : allCustomerPositions) {
+            if (!(positionEntity.getId().equals(Short.valueOf("1")) || positionEntity.getId()
+                    .equals(Short.valueOf("2")))) {
+                nonCenterRelatedPositions.add(positionEntity);
+            }
+        }
+        return nonCenterRelatedPositions;
+    }
+
+    private void generatePositionsFromExistingCustomerPositions(CustomerBO customer,
+            List<PositionEntity> customerPositions, List<CustomerPositionDto> customerPositionDtos) {
+        for (PositionEntity position : customerPositions) {
+            for (CustomerPositionEntity entity : customer.getCustomerPositions()) {
+                if (position.getId().equals(entity.getPosition().getId())) {
+
+                    CustomerPositionDto customerPosition;
+                    if (entity.getCustomer() != null) {
+                        customerPosition = new CustomerPositionDto(entity.getCustomer().getCustomerId(), entity
+                                .getPosition().getId(), entity.getPosition().getName());
+                    } else {
+                        customerPosition = new CustomerPositionDto(customer.getCustomerId(), entity.getPosition()
+                                .getId(), entity.getPosition().getName());
+                    }
+
+                    customerPositionDtos.add(customerPosition);
+                }
+            }
+        }
+    }
+
+    private void generateNewListOfPositions(CustomerBO customer, List<PositionEntity> customerPositions,
+            List<CustomerPositionDto> customerPositionDtos) {
+        for (PositionEntity position : customerPositions) {
+            CustomerPositionDto customerPosition = new CustomerPositionDto(customer.getCustomerId(), position.getId(),
+                    position.getName());
+            customerPositionDtos.add(customerPosition);
+        }
+    }
+
+    private Short extractLoanOfficerId(CustomerBO customer) {
+        Short loanOfficerId = null;
+        PersonnelBO loanOfficer = customer.getPersonnel();
+        if (loanOfficer != null) {
+            loanOfficerId = loanOfficer.getPersonnelId();
+        }
+        return loanOfficerId;
+    }
+
+    @Override
+    public void updateGroup(GroupUpdate groupUpdate) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+        try {
+            customerService.updateGroup(userContext, groupUpdate);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 }

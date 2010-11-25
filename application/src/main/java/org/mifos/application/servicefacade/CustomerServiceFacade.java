@@ -29,7 +29,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
-import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
@@ -43,10 +42,6 @@ public interface CustomerServiceFacade {
     ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId);
 
     CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, List<SavingsDetailDto> allowedSavingProducts, List<CustomerCustomFieldEntity> customFields) throws ApplicationException;
-
-    CenterDto retrieveGroupDetailsForUpdate(String globalCustNum);
-
-    void updateGroup(GroupUpdate groupUpdate) throws ApplicationException;
 
     CustomerSearch search(String searchString) throws ApplicationException;
 

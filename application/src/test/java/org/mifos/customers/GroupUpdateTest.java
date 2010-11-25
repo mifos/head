@@ -28,7 +28,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.service.CustomerAccountFactory;
 import org.mifos.customers.business.service.CustomerService;
@@ -42,7 +41,9 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.domain.builders.GroupUpdateBuilder;
 import org.mifos.domain.builders.PersonnelBuilder;
+import org.mifos.dto.domain.GroupUpdate;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.UserContext;
@@ -151,7 +152,7 @@ public class GroupUpdateTest {
 
         // verification
         verify(mockedGroup).setExternalId(groupUpdate.getExternalId());
-        verify(mockedGroup).updateAddress(groupUpdate.getAddress());
+        verify(mockedGroup).updateAddress((Address)anyObject());
     }
 
     @Test

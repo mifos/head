@@ -18,13 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.domain;
 
 import java.util.List;
 
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.CustomerPositionDto;
-import org.mifos.framework.business.util.Address;
 
 public class GroupUpdate {
 
@@ -34,14 +31,15 @@ public class GroupUpdate {
     private final String externalId;
     private final boolean trained;
     private final String trainedDateAsString;
-    private final Address address;
+    private final AddressDto address;
     private final List<CustomFieldDto> customFields;
     private final List<CustomerPositionDto> customerPositions;
     private final String globalCustNum;
     private final String displayName;
 
+    @SuppressWarnings("PMD")
     public GroupUpdate(Integer customerId, String globalCustNum, Integer versionNo, String displayName,
-            Short loanOfficerId, String externalId, boolean trained, String trainedDateAsString, Address address,
+            Short loanOfficerId, String externalId, boolean trained, String trainedDateAsString, AddressDto address,
             List<CustomFieldDto> customFields, List<CustomerPositionDto> customerPositions) {
         this.customerId = customerId;
         this.globalCustNum = globalCustNum;
@@ -88,7 +86,7 @@ public class GroupUpdate {
         return this.trainedDateAsString;
     }
 
-    public Address getAddress() {
+    public AddressDto getAddress() {
         return this.address;
     }
 

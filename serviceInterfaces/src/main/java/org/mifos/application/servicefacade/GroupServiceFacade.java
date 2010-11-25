@@ -20,10 +20,12 @@
 
 package org.mifos.application.servicefacade;
 
+import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.GroupCreation;
 import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
+import org.mifos.dto.domain.GroupUpdate;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
 import org.mifos.dto.screen.GroupInformationDto;
@@ -42,4 +44,10 @@ public interface GroupServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     GroupInformationDto getGroupInformationDto(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    CenterDto retrieveGroupDetailsForUpdate(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateGroup(GroupUpdate groupUpdate);
 }

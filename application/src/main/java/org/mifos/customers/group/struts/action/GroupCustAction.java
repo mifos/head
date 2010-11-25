@@ -38,7 +38,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
@@ -57,6 +56,7 @@ import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.GroupCreation;
 import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
+import org.mifos.dto.domain.GroupUpdate;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
 import org.mifos.dto.screen.GroupInformationDto;
@@ -318,7 +318,7 @@ public class GroupCustAction extends CustAction {
         group = this.customerDao.findGroupBySystemId(group.getGlobalCustNum());
         logger.debug("Entering GroupCustAction manage method and customer id: " + group.getGlobalCustNum());
 
-        CenterDto groupDto = this.customerServiceFacade.retrieveGroupDetailsForUpdate(group.getGlobalCustNum());
+        CenterDto groupDto = this.groupServiceFacade.retrieveGroupDetailsForUpdate(group.getGlobalCustNum());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
 
@@ -376,11 +376,20 @@ public class GroupCustAction extends CustAction {
             trained = true;
         }
 
+        AddressDto address = null;
+        if (actionForm.getAddress() != null) {
+            address = Address.toDto(actionForm.getAddress());
+        }
+
         GroupUpdate groupUpdate = new GroupUpdate(group.getCustomerId(), group.getGlobalCustNum(), group.getVersionNo(), actionForm.getDisplayName(),
                 actionForm.getLoanOfficerIdValue(), actionForm.getExternalId(), trained,
-                actionForm.getTrainedDate(), actionForm.getAddress(), actionForm.getCustomFields(), actionForm.getCustomerPositions());
+                actionForm.getTrainedDate(), address, actionForm.getCustomFields(), actionForm.getCustomerPositions());
 
-        this.customerServiceFacade.updateGroup(groupUpdate);
+        try {
+            this.groupServiceFacade.updateGroup(groupUpdate);
+        } catch (BusinessRuleException e) {
+            throw new ApplicationException(e.getMessageKey(), e);
+        }
 
         return mapping.findForward(ActionForwards.update_success.toString());
     }

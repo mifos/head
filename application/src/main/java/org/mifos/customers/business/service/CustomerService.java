@@ -29,7 +29,6 @@ import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
-import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
@@ -40,6 +39,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.CenterUpdate;
+import org.mifos.dto.domain.GroupUpdate;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
 

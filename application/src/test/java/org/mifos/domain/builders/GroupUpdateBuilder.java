@@ -25,10 +25,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.servicefacade.GroupUpdate;
+import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerPositionDto;
-import org.mifos.framework.business.util.Address;
+import org.mifos.dto.domain.GroupUpdate;
 
 public class GroupUpdateBuilder {
 
@@ -38,7 +38,7 @@ public class GroupUpdateBuilder {
     private Short loanOfficerId = -1;
     private String externalId = null;
     private String mfiJoiningDate = new SimpleDateFormat("dd/MM/yyyy").format(new Date());
-    private Address address = null;
+    private AddressDto address = null;
     private List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
     private List<CustomerPositionDto> customerPositions = new ArrayList<CustomerPositionDto>();
 

@@ -49,7 +49,6 @@ import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
 import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
 import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
-import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarEvent;
@@ -87,6 +86,8 @@ import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerPositionDto;
+import org.mifos.dto.domain.GroupUpdate;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
@@ -339,7 +340,15 @@ public class CustomerServiceImpl implements CustomerService {
 
             group.updateTrainedDetails(groupUpdate);
             group.setExternalId(groupUpdate.getExternalId());
-            group.updateAddress(groupUpdate.getAddress());
+
+            Address address = null;
+            if (groupUpdate.getAddress() != null) {
+                address = new Address(groupUpdate.getAddress().getLine1(), groupUpdate.getAddress().getLine2(), groupUpdate.getAddress().getLine3(),
+                        groupUpdate.getAddress().getCity(), groupUpdate.getAddress().getState(), groupUpdate.getAddress().getCountry(),
+                        groupUpdate.getAddress().getZip(), groupUpdate.getAddress().getPhoneNumber());
+            }
+
+            group.updateAddress(address);
 
             if (group.isNameDifferent(groupUpdate.getDisplayName())) {
                 customerDao.validateGroupNameIsNotTakenForOffice(groupUpdate.getDisplayName(), group.getOffice().getOfficeId());
