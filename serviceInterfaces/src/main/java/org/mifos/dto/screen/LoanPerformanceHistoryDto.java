@@ -34,7 +34,6 @@ public class LoanPerformanceHistoryDto implements Serializable {
 
     public LoanPerformanceHistoryDto(Integer noOfPayments, Integer totalNoOfMissedPayments, Short daysInArrears,
             Date loanMaturityDate) {
-        super();
         this.noOfPayments = noOfPayments;
         this.totalNoOfMissedPayments = totalNoOfMissedPayments;
         this.daysInArrears = daysInArrears;

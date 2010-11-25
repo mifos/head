@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding='UTF-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd" >
+<hibernate-mapping>
+    <class name="org.mifos.accounts.loan.business.CalculatedInterestOnPayment"
+           table="calculated_interest_on_payment">
+        <id name="loanTrxnDetailEntityId" column="loan_account_trxn_id" type="integer" access="field">
+            <generator class="foreign">
+                <param name="property">loanTrxnDetailEntity</param>
+            </generator>
+        </id>
+        <property name="originalInterest"
+                  type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="original_interest_currency_id"/>
+            <column name="original_interest"/>
+        </property>
+        <property name="extraInterestPaid"
+                  type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="extra_interest_paid_currency_id"/>
+            <column name="extra_interest_paid"/>
+        </property>
+        <one-to-one name="loanTrxnDetailEntity"
+                    class="org.mifos.accounts.loan.business.LoanTrxnDetailEntity"
+                    access="field"/>
+    </class>
+</hibernate-mapping>

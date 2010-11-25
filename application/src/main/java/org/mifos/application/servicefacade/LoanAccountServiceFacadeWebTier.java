@@ -42,6 +42,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -150,6 +151,15 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
@@ -898,10 +908,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                                         loan.getLoanSummary().getTotalLoanAmnt().toString(), loan.getLoanSummary().getTotalAmntPaid().toString(),
                                                         loan.getLoanSummary().getTotalAmntDue().toString());
 
-        LoanPerformanceHistoryDto loanPerformanceHistory = new LoanPerformanceHistoryDto(loan.getPerformanceHistory().getNoOfPayments(),
-                                                                                        loan.getPerformanceHistory().getTotalNoOfMissedPayments(),
-                                                                                        loan.getPerformanceHistory().getDaysInArrears(),
-                                                                                        loan.getPerformanceHistory().getLoanMaturityDate());
+        LoanPerformanceHistoryEntity performanceHistory = loan.getPerformanceHistory();
+        LoanPerformanceHistoryDto loanPerformanceHistory = new LoanPerformanceHistoryDto(performanceHistory.getNoOfPayments(),
+                                                                                        performanceHistory.getTotalNoOfMissedPayments(),
+                                                                                        performanceHistory.getDaysInArrears(),
+                                                                                        performanceHistory.getLoanMaturityDate());
 
         Set<AccountFeesDto> accountFeesDtos = new HashSet<AccountFeesDto>();
         if(!loan.getAccountFees().isEmpty()) {
