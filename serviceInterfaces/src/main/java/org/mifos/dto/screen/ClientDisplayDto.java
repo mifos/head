@@ -17,18 +17,15 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.util.helpers.DateUtils;
-
-/**
- *
- */
-public class ClientDisplayDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+public class ClientDisplayDto implements Serializable {
 
     private final Integer customerId;
     private final String globalCustNum;
@@ -66,7 +63,7 @@ public class ClientDisplayDto implements DataTransferObject {
     private final String spouseFatherName;
 
     // if areFamilyDetailsRequired = true
-    private final List<ClientFamilyDetailDto> familyDetails;
+    private final List<ClientFamilyDetailOtherDto> familyDetails;
 
     public ClientDisplayDto(final Integer customerId, final String globalCustNum, final String displayName,
             final String parentCustomerDisplayName, final Integer branchId, final String branchName, final String externalId,
@@ -78,7 +75,7 @@ public class ClientDisplayDto implements DataTransferObject {
             final String citizenship, final String ethnicity, final String educationLevel, final String povertyStatus,
             final Short numChildren, final Boolean isCustomerPicture, final Boolean areFamilyDetailsRequired,
             final String spouseFatherValue, final String spouseFatherName,
-            final List<ClientFamilyDetailDto> familyDetails) {
+            final List<ClientFamilyDetailOtherDto> familyDetails, Integer age) {
 
         this.customerId = customerId;
         this.globalCustNum = globalCustNum;
@@ -94,11 +91,7 @@ public class ClientDisplayDto implements DataTransferObject {
         this.customerStatusName = customerStatusName;
         this.trainedDate = trainedDate;
         this.dateOfBirth = dateOfBirth;
-        if (dateOfBirth == null) {
-            this.age = null;
-        } else {
-            this.age = DateUtils.DateDiffInYears(new java.sql.Date(dateOfBirth.getTime()));
-        }
+        this.age = age;
         this.governmentId = governmentId;
         this.clientUnderGroup = clientUnderGroup;
         this.blackListed = blackListed;
@@ -249,7 +242,7 @@ public class ClientDisplayDto implements DataTransferObject {
         return this.spouseFatherName;
     }
 
-    public List<ClientFamilyDetailDto> getFamilyDetails() {
+    public List<ClientFamilyDetailOtherDto> getFamilyDetails() {
         return this.familyDetails;
     }
 
