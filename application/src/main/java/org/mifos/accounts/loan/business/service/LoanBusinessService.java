@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.business.service;
 
 import java.util.*;
 
+import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
@@ -255,25 +256,22 @@ public class LoanBusinessService implements BusinessService {
         return clients;
     }
 
-    public List<RepaymentScheduleInstallment> computeInstallmentScheduleUsingDailyInterest(
-            LoanScheduleGenerationDto loanScheduleGenerationDto, Locale locale) {
+    public List<RepaymentScheduleInstallment> applyDailyInterestRatesWhereApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, Locale locale) {
         LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
         List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
-        return computeInstallmentScheduleUsingDailyInterest(loanScheduleGenerationDto, installments);
-    }
-
-    public List<RepaymentScheduleInstallment> computeInstallmentScheduleUsingDailyInterest(
-            LoanScheduleGenerationDto loanScheduleGenerationDto, List<RepaymentScheduleInstallment> installments) {
-        LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
-        if (loanScheduleGenerationDto.isVariableInstallmentsAllowed() || loanBO.isDecliningPrincipalBalance()) {
+        if (dailyInterestRatesApplicable(loanScheduleGenerationDto, loanBO)) {
             loanScheduleGenerationDto.setInstallments(installments);
-            generateInstallmentSchedule(loanScheduleGenerationDto);
+            applyDailyInterestRates(loanScheduleGenerationDto);
             loanBO.copyInstallmentSchedule(installments);
         }
         return installments;
     }
 
-    public void generateInstallmentSchedule(LoanScheduleGenerationDto loanScheduleGenerationDto) {
+    private boolean dailyInterestRatesApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, LoanBO loanBO) {
+        return loanScheduleGenerationDto.isVariableInstallmentsAllowed() || loanBO.isDecliningBalanceInterestRecalculation();
+    }
+
+    public void applyDailyInterestRates(LoanScheduleGenerationDto loanScheduleGenerationDto) {
         Double dailyInterestFactor = loanScheduleGenerationDto.getInterestRate() / (AccountingRules.getNumberOfInterestDays() * 100d);
         Money principalOutstanding = loanScheduleGenerationDto.getLoanAmountValue();
         Money runningPrincipal = new Money(loanScheduleGenerationDto.getLoanAmountValue().getCurrency());
@@ -322,4 +320,10 @@ public class LoanBusinessService implements BusinessService {
         }
     }
 
+    public void adjustDatesForVariableInstallments(boolean variableInstallmentsAllowed, List<RepaymentScheduleInstallment> originalInstallments,
+                                                   Date oldDisbursementDate, Date newDisbursementDate) {
+        if (variableInstallmentsAllowed) {
+            adjustInstallmentGapsPostDisbursal(originalInstallments, oldDisbursementDate, newDisbursementDate);
+        }
+    }
 }

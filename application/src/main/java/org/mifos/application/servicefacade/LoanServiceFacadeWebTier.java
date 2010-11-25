@@ -339,7 +339,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
                 isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
-        List<RepaymentScheduleInstallment> installments = loanBusinessService.computeInstallmentScheduleUsingDailyInterest(
+        List<RepaymentScheduleInstallment> installments = loanBusinessService.applyDailyInterestRatesWhereApplicable(
                 new LoanScheduleGenerationDto(disbursementDate.toDate(),
                         loan, loanActionForm.isVariableInstallmentsAllowed(), loanActionForm.getLoanAmountValue(),
                         loanActionForm.getInterestDoubleValue()), userContext.getPreferredLocale());

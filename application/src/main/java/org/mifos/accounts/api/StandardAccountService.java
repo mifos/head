@@ -188,20 +188,14 @@ public class StandardAccountService implements AccountService {
             Date oldDisbursementDate = loan.getDisbursementDate();
             List<RepaymentScheduleInstallment> originalInstallments = loan.toRepaymentScheduleDto(locale);
             loan.disburseLoan(disbursalPayment);
-            adjustScheduleForVariableInstallments(loan, amount, interestRate, oldDisbursementDate, originalInstallments);
+            boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
+            Date newDisbursementDate = loan.getDisbursementDate();
+            loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, originalInstallments,
+                    oldDisbursementDate, newDisbursementDate);
+            loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(newDisbursementDate,
+                            loan, variableInstallmentsAllowed, amount, interestRate), locale);
         }
         StaticHibernateUtil.commitTransaction();
-    }
-
-    private void adjustScheduleForVariableInstallments(LoanBO loan, Money amount, Double interestRate,
-                                                       Date oldDisbursementDate, List<RepaymentScheduleInstallment> installments) {
-        boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
-        if (variableInstallmentsAllowed) {
-            Date newDisbursementDate = loan.getDisbursementDate();
-            loanBusinessService.adjustInstallmentGapsPostDisbursal(installments, oldDisbursementDate, newDisbursementDate);
-            loanBusinessService.computeInstallmentScheduleUsingDailyInterest(new LoanScheduleGenerationDto(
-                    newDisbursementDate, loan, variableInstallmentsAllowed, amount, interestRate), installments);
-        }
     }
 
     @Override
