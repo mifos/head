@@ -638,8 +638,14 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setGovernmentId(personalInfo.getClientDetail().getGovernmentId());
         actionForm.setDateOfBirth(personalInfo.getClientDetail().getDateOfBirth());
         actionForm.setClientDetailView(personalInfo.getClientDetail().getCustomerDetail());
-        actionForm.setClientName(personalInfo.getClientDetail().getClientName());
-        actionForm.setSpouseName(personalInfo.getClientDetail().getSpouseName());
+
+        ClientNameDetailDto clientName = personalInfo.getClientDetail().getClientName();
+        clientName.setNames(ClientRules.getNameSequence());
+        actionForm.setClientName(clientName);
+
+        ClientNameDetailDto spouseName = personalInfo.getClientDetail().getSpouseName();
+        spouseName.setNames(ClientRules.getNameSequence());
+        actionForm.setSpouseName(spouseName);
         actionForm.setCustomFields(personalInfo.getCustomFieldViews());
 
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
