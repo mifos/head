@@ -324,18 +324,18 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     public ViewInstallmentDetailsPage verifyRecalculationOfCashFlow() {
         verifyRecalculation(validateButton);
         verifyRecalculationForForSameMonth(validateButton);
-//        verifyRecalculation(previewButton);
-//        verifyRecalculationForForSameMonth(previewButton);
+        verifyRecalculation(previewButton);
+        verifyRecalculationForForSameMonth(previewButton);
         return this;
     }
 
     public ViewInstallmentDetailsPage verifyWarningThresholdMessageOnReviewSchedulePage(double warningThreshold) {
-//        verifyWarningThresholdMessageOnReviewSchedulePage(validateButton,warningThreshold);
+        verifyWarningThresholdMessageOnReviewSchedulePage(validateButton,warningThreshold);
         verifyWarningThresholdMessageOnReviewSchedulePage(previewButton, warningThreshold);
         return this;
     }
 
-    public void verifyErrorMessageOnInstallmentDatesOutOfCashFlowCaptured() {
+    public void verifyInstallmentDatesOutOfCashFlowCaptured() {
         verifyErrorMessageOnDatesOutOfCashFlow(validateButton);
         verifyErrorMessageOnDatesOutOfCashFlow(previewButton);
     }
@@ -343,6 +343,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     private void verifyRecalculation(String button) {
         setInstallmentDate("0", "02-Sep-2010");
         setInstallmentDate("1", "02-Oct-2010");
+        setInstallmentDate("2", "02-Nov-2010");
         setFirstAndSecondInstallmentTotal("1");
         selenium.click(button);
         selenium.waitForPageToLoad("3000");
@@ -355,6 +356,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     private void verifyRecalculationForForSameMonth(String button) {
         setInstallmentDate("0", "02-Sep-2010");
         setInstallmentDate("1", "02-Sep-2010");
+        setInstallmentDate("2", "02-Nov-2010");
         setFirstAndSecondInstallmentTotal("1");
         selenium.click(button);
         selenium.waitForPageToLoad("3000");
@@ -386,11 +388,14 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     }
 
     private void verifyErrorMessageOnDatesOutOfCashFlow(String button) {
-        setInstallmentDate("1","02-Aug-2010");
-        setInstallmentDate("2","02-Jan-2010");
+        setInstallmentDate("0","02-Aug-2010");
+        setInstallmentDate("1","26-Oct-2010");
+        setInstallmentDate("2","02-Jan-2011");
+        setFirstAndSecondInstallmentTotal("336.0");
         selenium.click(button);
         selenium.waitForPageToLoad("3000");
-        Assert.assertTrue(selenium.isTextPresent(""));
+        Assert.assertTrue(selenium.isTextPresent("Cash flow is not available for August 2010. Due date should be entered for a month for which cash flow is available"));
+        Assert.assertTrue(selenium.isTextPresent("Cash flow is not available for January 2011. Due date should be entered for a month for which cash flow is available"));
     }
 
     public void verifyRecalculationWhenDateAndTotalChange() {
@@ -461,4 +466,36 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         }
     }
 
+    public ViewInstallmentDetailsPage verifyRecalculationOfCashFlowOnValidate() {
+        verifyRecalculation(validateButton);
+        verifyRecalculationForForSameMonth(validateButton);
+        return this;
+    }
+
+    public ViewInstallmentDetailsPage verifyWarningThresholdMessageOnValidate(double warningThreshold) {
+        verifyWarningThresholdMessageOnReviewSchedulePage(validateButton,warningThreshold);
+        return this;
+    }
+
+    public ViewInstallmentDetailsPage verifyRecalculationOfCashFlowOnPreview() {
+        verifyRecalculation(previewButton);
+        verifyRecalculationForForSameMonth(previewButton);
+        return this;
+
+    }
+
+    public ViewInstallmentDetailsPage verifyWarningThresholdMessageOnPreview(double warningThreshold) {
+        verifyWarningThresholdMessageOnReviewSchedulePage(previewButton,warningThreshold);
+        return this;
+    }
+
+    public ViewInstallmentDetailsPage verifyInstallmentDatesOutOfCashFlowCapturedOnValidate() {
+        verifyErrorMessageOnDatesOutOfCashFlow(validateButton);
+        return this;
+    }
+
+    public ViewInstallmentDetailsPage verifyInstallmentDatesOutOfCashFlowCapturedOnPreview() {
+        verifyErrorMessageOnDatesOutOfCashFlow(previewButton);
+        return this;
+    }
 }

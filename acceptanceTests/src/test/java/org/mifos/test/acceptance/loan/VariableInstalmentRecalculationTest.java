@@ -78,7 +78,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowRecalculation() throws Exception {
         int noOfInstallments = 3;
@@ -87,9 +87,9 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(noOfInstallments, loanAmount, interestRate);
         applicationDatabaseOperation.updateLSIM(1);
 
-        int maxGap = 10;
+        int maxGap = 90;
         int minGap = 1;
-        int minInstalmentAmount = 100;
+        int minInstalmentAmount = 0;
         int cashFlowIncremental = 1;
         double warningThreshold = 10.0;
 
@@ -100,9 +100,12 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
                 enterValidData(cashFlowIncremental, 100).
                 clickContinue().
                 verifyCashFlowDefaultValues().
-                verifyRecalculationOfCashFlow().
-                verifyWarningThresholdMessageOnReviewSchedulePage(warningThreshold).
-                verifyErrorMessageOnInstallmentDatesOutOfCashFlowCaptured();
+                verifyInstallmentDatesOutOfCashFlowCapturedOnValidate().
+                verifyRecalculationOfCashFlowOnValidate().
+                verifyWarningThresholdMessageOnValidate(warningThreshold).
+                verifyInstallmentDatesOutOfCashFlowCapturedOnPreview().
+                verifyRecalculationOfCashFlowOnPreview().
+                verifyWarningThresholdMessageOnPreview(warningThreshold);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
