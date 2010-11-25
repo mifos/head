@@ -17,31 +17,23 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.loan.struts.action;
 
-import java.util.List;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.dto.domain.ValueListElement;
+import java.io.Serializable;
 
-/**
- *
- */
-public class LoanCreationGlimDto {
+public interface ValueListElement extends Serializable {
 
-    private final List<ValueListElement> loanPurposes;
-    private final List<ClientBO> activeClientsOfGroup;
+    Integer getId();
 
-    public LoanCreationGlimDto(final List<ValueListElement> loanPurposes, final List<ClientBO> activeClientsOfGroup) {
-        this.loanPurposes = loanPurposes;
-        this.activeClientsOfGroup = activeClientsOfGroup;
-    }
+    void setId(Integer id);
 
-    public List<ValueListElement> getLoanPurposes() {
-        return this.loanPurposes;
-    }
+    String getName();
 
-    public List<ClientBO> getActiveClientsOfGroup() {
-        return this.activeClientsOfGroup;
-    }
+    void setName(String name);
+
+    String getValueKey();
+
+    void setValueKey(String valueKey);
+
 }

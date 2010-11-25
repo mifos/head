@@ -18,12 +18,14 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
 import java.util.List;
 
-import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.dto.domain.ApplicableAccountFeeDto;
+import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 
@@ -33,21 +35,25 @@ public class ClientFormCreationDto {
     private final Short officeId;
     private final Short formedByPersonnelId;
     private final List<PersonnelDto> personnelList;
-    private final CustomerApplicableFeesDto applicableFees;
     private final ClientRulesDto clientRules;
     private final List<SavingsDetailDto> savingsOfferings;
     private final List<PersonnelDto> formedByPersonnelList;
-    private final MeetingBO parentCustomerMeeting;
+    private final MeetingDto parentCustomerMeeting;
     private final String centerDisplayName;
     private final ClientDropdownsDto clientDropdowns;
     private final String formedByPersonnelName;
     private final String groupDisplayName;
     private final String officeName;
+    private final List<ApplicableAccountFeeDto> additionalFees;
+    private final List<ApplicableAccountFeeDto> defaultFees;
 
+    @SuppressWarnings("PMD")
     public ClientFormCreationDto(ClientDropdownsDto clientDropdowns, List<CustomFieldDto> customFieldDtos, ClientRulesDto clientRules, Short officeId, String officeName,
-            Short formedByPersonnelId, String formedByPersonnelName, List<PersonnelDto> personnelList, CustomerApplicableFeesDto applicableFees,
+            Short formedByPersonnelId, String formedByPersonnelName, List<PersonnelDto> personnelList,
             List<PersonnelDto> formedByPersonnelList, List<SavingsDetailDto> savingsOfferings,
-            MeetingBO parentCustomerMeeting, String centerDisplayName, String groupDisplayName) {
+            MeetingDto parentCustomerMeeting, String centerDisplayName, String groupDisplayName,
+            List<ApplicableAccountFeeDto> additionalFees,
+            List<ApplicableAccountFeeDto> defaultFees) {
 
         this.clientDropdowns = clientDropdowns;
         this.customFieldDtos = customFieldDtos;
@@ -57,12 +63,13 @@ public class ClientFormCreationDto {
         this.formedByPersonnelId = formedByPersonnelId;
         this.formedByPersonnelName = formedByPersonnelName;
         this.personnelList = personnelList;
-        this.applicableFees = applicableFees;
         this.formedByPersonnelList = formedByPersonnelList;
         this.savingsOfferings = savingsOfferings;
         this.parentCustomerMeeting = parentCustomerMeeting;
         this.centerDisplayName = centerDisplayName;
         this.groupDisplayName = groupDisplayName;
+        this.additionalFees = additionalFees;
+        this.defaultFees = defaultFees;
     }
 
     public List<CustomFieldDto> getCustomFieldViews() {
@@ -81,10 +88,6 @@ public class ClientFormCreationDto {
         return this.personnelList;
     }
 
-    public CustomerApplicableFeesDto getApplicableFees() {
-        return this.applicableFees;
-    }
-
     public ClientRulesDto getClientRules() {
         return this.clientRules;
     }
@@ -97,7 +100,7 @@ public class ClientFormCreationDto {
         return this.formedByPersonnelList;
     }
 
-    public MeetingBO getParentCustomerMeeting() {
+    public MeetingDto getParentCustomerMeeting() {
         return this.parentCustomerMeeting;
     }
 
@@ -119,5 +122,13 @@ public class ClientFormCreationDto {
 
     public String getOfficeName() {
         return this.officeName;
+    }
+
+    public List<ApplicableAccountFeeDto> getAdditionalFees() {
+        return this.additionalFees;
+    }
+
+    public List<ApplicableAccountFeeDto> getDefaultFees() {
+        return this.defaultFees;
     }
 }

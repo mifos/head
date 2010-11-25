@@ -41,7 +41,6 @@ import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
-import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
@@ -78,6 +77,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
@@ -86,6 +86,8 @@ import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.ClientDropdownsDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -141,83 +143,8 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         return userContext;
     }
 
-    @Override
-    public ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId) {
 
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        List<PersonnelDto> personnelList = new ArrayList<PersonnelDto>();
-        MeetingBO parentCustomerMeeting = null;
-        Short formedByPersonnelId = null;
-        String formedByPersonnelName = "";
-        String centerDisplayName = "";
-        String groupDisplayName = "";
-        String officeName = "";
-        List<FeeBO> fees = new ArrayList<FeeBO>();
-
-        if (YesNoFlag.YES.getValue().equals(groupFlag)) {
-
-            Integer parentCustomerId = Integer.valueOf(parentGroupId);
-            CustomerBO parentCustomer = this.customerDao.findCustomerById(parentCustomerId);
-
-            groupDisplayName = parentCustomer.getDisplayName();
-
-            if (parentCustomer.getPersonnel() != null) {
-                formedByPersonnelId = parentCustomer.getPersonnel().getPersonnelId();
-                formedByPersonnelName = parentCustomer.getPersonnel().getDisplayName();
-            }
-
-            if (parentCustomer.getParentCustomer() != null) {
-                centerDisplayName = parentCustomer.getParentCustomer().getDisplayName();
-            }
-
-            officeId = parentCustomer.getOffice().getOfficeId();
-            officeName = parentCustomer.getOffice().getOfficeName();
-
-            if (parentCustomer.getCustomerMeeting() != null) {
-                parentCustomerMeeting = parentCustomer.getCustomerMeetingValue();
-                fees = this.customerDao.retrieveFeesApplicableToClientsRefinedBy(parentCustomer
-                        .getCustomerMeetingValue());
-            } else {
-                fees = this.customerDao.retrieveFeesApplicableToClients();
-            }
-
-        } else if (YesNoFlag.NO.getValue().equals(groupFlag)) {
-
-            CenterCreation centerCreation = new CenterCreation(officeId, userContext.getId(), userContext.getLevelId(),
-                    userContext.getPreferredLocale());
-            personnelList = this.personnelDao.findActiveLoanOfficersForOffice(centerCreation);
-            fees = this.customerDao.retrieveFeesApplicableToClients();
-        }
-
-        CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
-
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
-                .getPreferredLocale());
-
-        List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
-
-        try {
-            ClientRulesDto clientRules = retrieveClientRules();
-
-            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
-
-            List<PersonnelDto> formedByPersonnel = this.customerDao.findLoanOfficerThatFormedOffice(officeId);
-
-            return new ClientFormCreationDto(clientDropdowns, customFieldDtos, clientRules, officeId, officeName,
-                    formedByPersonnelId, formedByPersonnelName, personnelList, applicableFees, formedByPersonnel,
-                    savingsOfferings, parentCustomerMeeting, centerDisplayName, groupDisplayName);
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
-    }
-
-    private ClientDropdownsDto retrieveClientDropdownData(UserContext userContext) throws PersistenceException {
-        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(
-                SpouseFatherLookupEntity.class, userContext.getLocaleId());
-
+    private ClientDropdownsDto retrieveClientDropdownData() {
         List<ValueListElement> salutations = this.customerDao.retrieveSalutations();
         List<ValueListElement> genders = this.customerDao.retrieveGenders();
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
@@ -230,7 +157,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<ValueListElement> livingStatus = this.customerDao.retrieveLivingStatus();
 
         ClientDropdownsDto clientDropdowns = new ClientDropdownsDto(salutations, genders, maritalStatuses, citizenship,
-                ethinicity, educationLevels, businessActivity, poverty, handicapped, spouseFather, livingStatus);
+                ethinicity, educationLevels, businessActivity, poverty, handicapped, livingStatus);
         return clientDropdowns;
     }
 
@@ -240,8 +167,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
-        try {
-            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
+            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
             ClientRulesDto clientRules = retrieveClientRules();
 
@@ -257,9 +183,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             return new ClientPersonalInfoDto(clientDropdowns, customFieldDtos, clientRules, customerDetailDto,
                     clientDetailDto);
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
     }
 
     private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<ApplicableAccountFeeDto> feesToApply) {
@@ -702,14 +625,13 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
-        try {
             ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
 
             List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
             List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
                     fieldDefinitions, userContext);
 
-            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
+            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
             ClientRulesDto clientRules = retrieveClientRules();
 
@@ -741,9 +663,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             return new ClientFamilyInfoDto(clientDropdowns, customFieldDtos, customerDetail, clientDetail,
                     familyMembers, clientFamilyDetails);
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
     }
 
     private void addFamilyDetailsDtoToMap(Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails,

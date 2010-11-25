@@ -28,12 +28,12 @@ import java.util.Map;
 import java.util.PropertyResourceBundle;
 
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.ValueListElement;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;

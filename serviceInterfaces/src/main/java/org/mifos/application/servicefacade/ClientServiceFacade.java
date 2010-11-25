@@ -18,22 +18,13 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.master.business;
+package org.mifos.application.servicefacade;
 
-import java.io.Serializable;
+import org.mifos.dto.screen.ClientFormCreationDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface ValueListElement extends Serializable {
+public interface ClientServiceFacade {
 
-    public abstract Integer getId();
-
-    public abstract void setId(Integer id);
-
-    public abstract String getName();
-
-    public abstract void setName(String name);
-
-    public abstract String getValueKey();
-
-    public abstract void setValueKey(String valueKey);
-
+    @PreAuthorize("isFullyAuthenticated()")
+    ClientFormCreationDto retrieveClientFormCreationData(Short groupFlag, Short officeId, String parentGroupId);
 }

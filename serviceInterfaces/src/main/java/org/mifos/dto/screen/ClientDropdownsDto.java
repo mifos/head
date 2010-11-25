@@ -18,12 +18,11 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
 import java.util.List;
 
-import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.business.ValueListElement;
+import org.mifos.dto.domain.ValueListElement;
 
 public class ClientDropdownsDto {
 
@@ -36,14 +35,14 @@ public class ClientDropdownsDto {
     private final List<ValueListElement> businessActivity;
     private final List<ValueListElement> poverty;
     private final List<ValueListElement> handicapped;
-    private final List<? extends MasterDataEntity> spouseFather;
     private final List<ValueListElement> livingStatus;
 
+    @SuppressWarnings("PMD")
     public ClientDropdownsDto(List<ValueListElement> salutations, List<ValueListElement> genders,
             List<ValueListElement> maritalStatuses, List<ValueListElement> citizenship,
             List<ValueListElement> ethinicity, List<ValueListElement> educationLevels,
             List<ValueListElement> businessActivity, List<ValueListElement> poverty,
-            List<ValueListElement> handicapped, List<? extends MasterDataEntity> spouseFather, List<ValueListElement> livingStatus) {
+            List<ValueListElement> handicapped, List<ValueListElement> livingStatus) {
 
         this.salutations = salutations;
         this.genders = genders;
@@ -54,7 +53,6 @@ public class ClientDropdownsDto {
         this.businessActivity = businessActivity;
         this.poverty = poverty;
         this.handicapped = handicapped;
-        this.spouseFather = spouseFather;
         this.livingStatus = livingStatus;
     }
 
@@ -92,10 +90,6 @@ public class ClientDropdownsDto {
 
     public List<ValueListElement> getHandicapped() {
         return this.handicapped;
-    }
-
-    public List<? extends MasterDataEntity> getSpouseFather() {
-        return this.spouseFather;
     }
 
     public List<ValueListElement> getLivingStatus() {

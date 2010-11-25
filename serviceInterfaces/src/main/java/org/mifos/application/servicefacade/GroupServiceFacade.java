@@ -45,9 +45,9 @@ public interface GroupServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     GroupInformationDto getGroupInformationDto(String globalCustNum);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_GROUP')")
     CenterDto retrieveGroupDetailsForUpdate(String globalCustNum);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_GROUP')")
     void updateGroup(GroupUpdate groupUpdate);
 }

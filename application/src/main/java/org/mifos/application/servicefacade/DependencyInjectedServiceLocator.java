@@ -106,6 +106,7 @@ public class DependencyInjectedServiceLocator {
     private static CustomerServiceFacade customerServiceFacade;
     private static CenterServiceFacade centerServiceFacade;
     private static GroupServiceFacade groupServiceFacade;
+    private static ClientServiceFacade clientServiceFacade;
     private static ClientDetailsServiceFacade clientDetailsServiceFacade;
     private static LegacyLoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
@@ -239,6 +240,17 @@ public class DependencyInjectedServiceLocator {
             groupServiceFacade = new GroupServiceFacadeWebTier(customerService, officeDao, personnelDao,customerDao);
         }
         return groupServiceFacade;
+    }
+
+    public static ClientServiceFacade locateClientServiceFacade() {
+        if (clientServiceFacade == null) {
+
+            customerService = DependencyInjectedServiceLocator.locateCustomerService();
+
+            clientServiceFacade = new ClientServiceFacadeWebTier(customerService, officeDao, personnelDao,customerDao);
+        }
+        return clientServiceFacade;
+
     }
 
     public static ClientDetailsServiceFacade locateClientDetailsServiceFacade() {

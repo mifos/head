@@ -22,8 +22,8 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.application.master.business.ValueListElement;
 import org.mifos.customers.client.business.FamilyDetailDTO;
+import org.mifos.dto.domain.ValueListElement;
 
 public class ClientFamilyDetailsDto {
 

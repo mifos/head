@@ -27,7 +27,6 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +39,8 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
-import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.application.master.business.SpouseFatherLookupEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
@@ -48,10 +48,8 @@ import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
-import org.mifos.application.servicefacade.ClientFormCreationDto;
 import org.mifos.application.servicefacade.ClientMfiInfoDto;
 import org.mifos.application.servicefacade.ClientPersonalInfoDto;
-import org.mifos.application.servicefacade.ClientRulesDto;
 import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
@@ -70,8 +68,10 @@ import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
+import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -154,6 +154,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                               @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
+        UserContext userContext = getUserContext(request);
 
         actionForm.clearMostButNotAllFieldsOnActionForm();
         SessionUtils.removeAttribute(CustomerConstants.CUSTOMER_MEETING, request);
@@ -162,7 +163,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Short groupFlag = actionForm.getGroupFlagValue();
         String parentGroupId = actionForm.getParentGroupId();
 
-        ClientFormCreationDto clientFormCreationDto = this.customerServiceFacade.retrieveClientFormCreationData(groupFlag, officeId, parentGroupId);
+        ClientFormCreationDto clientFormCreationDto = this.clientServiceFacade.retrieveClientFormCreationData(groupFlag, officeId, parentGroupId);
 
         if (clientFormCreationDto.getFormedByPersonnelId() != null) {
             actionForm.setFormedByPersonnel(clientFormCreationDto.getFormedByPersonnelId().toString());
@@ -178,20 +179,14 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setLoanOfficerName(clientFormCreationDto.getFormedByPersonnelName());
         actionForm.setCustomFields(clientFormCreationDto.getCustomFieldViews());
 
-        // FIXME - keithw - hack while doing customer service facades clean up.
-        List<ApplicableAccountFeeDto> defaultFees = new ArrayList<ApplicableAccountFeeDto>();
-        List<FeeDto> clientDefaultFees = clientFormCreationDto.getApplicableFees().getDefaultFees();
-        for (FeeDto feeDto : clientDefaultFees) {
-            defaultFees.add(new ApplicableAccountFeeDto(feeDto.getFeeIdValue().intValue(), feeDto.getFeeName(), feeDto.getAmount(), feeDto.isRemoved(), feeDto.isWeekly(), feeDto.isMonthly(), feeDto.isPeriodic(), feeDto.getFeeSchedule()));
-        }
+        List<ApplicableAccountFeeDto> defaultFees = clientFormCreationDto.getDefaultFees();
         actionForm.setDefaultFees(defaultFees);
 
-        List<ApplicableAccountFeeDto> additionalFees = new ArrayList<ApplicableAccountFeeDto>();
-        List<FeeDto> clientAdditionalFees = clientFormCreationDto.getApplicableFees().getAdditionalFees();
-        for (FeeDto feeDto : clientAdditionalFees) {
-            additionalFees.add(new ApplicableAccountFeeDto(feeDto.getFeeIdValue().intValue(), feeDto.getFeeName(), feeDto.getAmount(), feeDto.isRemoved(), feeDto.isWeekly(), feeDto.isMonthly(), feeDto.isPeriodic(), feeDto.getFeeSchedule()));
-        }
+        List<ApplicableAccountFeeDto> additionalFees = clientFormCreationDto.getAdditionalFees();
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, additionalFees, request);
+
+        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getClientDropdowns().getSalutations(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFormCreationDto.getClientDropdowns().getGenders(), request);
@@ -202,7 +197,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, clientFormCreationDto.getClientDropdowns().getBusinessActivity(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.POVERTY_STATUS, clientFormCreationDto.getClientDropdowns().getPoverty(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, clientFormCreationDto.getClientDropdowns().getHandicapped(), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFormCreationDto.getClientDropdowns().getSpouseFather(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFormCreationDto.getCustomFieldViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto.getPersonnelList(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, clientFormCreationDto.getFormedByPersonnelList(), request);
@@ -565,7 +559,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, personalInfo.getClientDropdowns().getBusinessActivity(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.POVERTY_STATUS, personalInfo.getClientDropdowns().getPoverty(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, personalInfo.getClientDropdowns().getHandicapped(), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, personalInfo.getClientDropdowns().getSpouseFather(), request);
+
+        UserContext userContext = getUserContext(request);
+        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         boolean isFamilyDetailsRequired = personalInfo.getClientRules().isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
@@ -667,8 +664,11 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, clientFamilyInfo.getClientDropdowns().getLivingStatus(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFamilyInfo.getClientDropdowns().getGenders(), request);
-        SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFamilyInfo.getClientDropdowns().getSpouseFather(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFamilyInfo.getCustomFieldViews(), request);
+
+        UserContext userContext = getUserContext(request);
+        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
 

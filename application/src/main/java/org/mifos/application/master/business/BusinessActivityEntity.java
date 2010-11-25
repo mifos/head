@@ -22,6 +22,7 @@ package org.mifos.application.master.business;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.LocalizedTextLookup;
+import org.mifos.dto.domain.ValueListElement;
 
 /**
  * An individual item from a database based list (aka lookup values). This class
