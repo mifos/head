@@ -20,14 +20,43 @@
 
 package org.mifos.accounts.loan.business;
 
+import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.DateUtils.currentDate;
+import static org.mifos.framework.util.helpers.DateUtils.getCurrentDateWithoutTimeStamp;
+import static org.mifos.framework.util.helpers.DateUtils.getDateFromToday;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -112,7 +141,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -120,35 +148,6 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.DateUtils.currentDate;
-import static org.mifos.framework.util.helpers.DateUtils.getCurrentDateWithoutTimeStamp;
-import static org.mifos.framework.util.helpers.DateUtils.getDateFromToday;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 

@@ -24,29 +24,37 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerService;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.FamilyDetailDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ClientDropdownsDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ClientServiceFacadeWebTier implements ClientServiceFacade {
@@ -182,5 +190,59 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         ClientRulesDto clientRules = new ClientRulesDto(centerHierarchyExists, maxNumberOfFamilyMembers,
                 familyDetailsRequired);
         return clientRules;
+    }
+
+    @Override
+    public ClientFamilyDetailsDto retrieveClientFamilyDetails() {
+
+        List<ValueListElement> genders = new ArrayList<ValueListElement>();
+        List<ValueListElement> livingStatus = new ArrayList<ValueListElement>();
+        List<FamilyDetailDto> familyDetails = new ArrayList<FamilyDetailDto>();
+        boolean familyDetailsRequired = ClientRules.isFamilyDetailsRequired();
+
+        if (familyDetailsRequired) {
+
+            genders = this.customerDao.retrieveGenders();
+            livingStatus = this.customerDao.retrieveLivingStatus();
+
+            familyDetails.add(new FamilyDetailDto());
+        }
+
+        return new ClientFamilyDetailsDto(familyDetailsRequired, familyDetails, genders, livingStatus);
+    }
+
+    @Override
+    public ProcessRulesDto previewClient(String governmentId, DateTime dateOfBirth, String clientName, boolean defaultFeeRemoval, Short officeId, Short loanOfficerId) {
+
+        try {
+            MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserContext userContext = toUserContext(user);
+
+            boolean clientPendingApprovalStateEnabled = ProcessFlowRules.isClientPendingApprovalStateEnabled();
+            boolean governmentIdValidationFailing = false;
+            boolean duplicateNameOnClosedClient = false;
+            boolean duplicateNameOnBlackListedClient = false;
+
+            if (defaultFeeRemoval) {
+                customerDao.checkPermissionForDefaultFeeRemoval(userContext, officeId, loanOfficerId);
+            }
+
+            if (StringUtils.isNotBlank(governmentId)) {
+                governmentIdValidationFailing = this.customerDao.validateGovernmentIdForClient(governmentId);
+            }
+            if (!governmentIdValidationFailing) {
+                duplicateNameOnBlackListedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName,
+                        dateOfBirth);
+                if (!duplicateNameOnBlackListedClient) {
+                    duplicateNameOnClosedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName,
+                            dateOfBirth);
+                }
+            }
+
+            return new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
+                    duplicateNameOnClosedClient, duplicateNameOnBlackListedClient);
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 }
