@@ -62,7 +62,6 @@ import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
-import org.mifos.customers.client.business.service.ClientDetailsServiceFacade;
 import org.mifos.customers.office.business.service.LegacyOfficeServiceFacade;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -114,7 +113,6 @@ public abstract class BaseAction extends DispatchAction {
     protected GroupServiceFacade groupServiceFacade = DependencyInjectedServiceLocator.locateGroupServiceFacade();
     protected ClientServiceFacade clientServiceFacade = DependencyInjectedServiceLocator.locateClientServiceFacade();
     protected MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
-    protected ClientDetailsServiceFacade clientDetailsServiceFacade = DependencyInjectedServiceLocator.locateClientDetailsServiceFacade();
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
     protected SavingsServiceFacade savingsServiceFacade = DependencyInjectedServiceLocator.locateSavingsServiceFacade();
     protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
@@ -142,7 +140,6 @@ public abstract class BaseAction extends DispatchAction {
             this.groupServiceFacade = springAppContext.getBean(GroupServiceFacade.class);
             this.clientServiceFacade = springAppContext.getBean(ClientServiceFacade.class);
             this.meetingServiceFacade = springAppContext.getBean(MeetingServiceFacade.class);
-            this.clientDetailsServiceFacade = springAppContext.getBean(ClientDetailsServiceFacade.class);
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
             this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);
             this.legacyOfficeServiceFacade = springAppContext.getBean(LegacyOfficeServiceFacade.class);

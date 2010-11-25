@@ -17,30 +17,26 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.customers.util.helpers;
+package org.mifos.dto.screen;
 
+import java.io.Serializable;
 import java.util.List;
 
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.dto.screen.LoanCycleCounter;
-import org.mifos.framework.util.helpers.Money;
-
-/**
- *
- */
-public class ClientPerformanceHistoryDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+public class ClientPerformanceHistoryDto implements Serializable {
 
     private final Integer loanCycleNumber;
-    private final Money lastLoanAmount;
+    private final String lastLoanAmount;
     private final Integer noOfActiveLoans;
     private final String delinquentPortfolioAmount;
-    private final Money totalSavingsAmount;
+    private final String totalSavingsAmount;
     private final Integer meetingsAttended;
     private final Integer meetingsMissed;
     private final List<LoanCycleCounter> loanCycleCounters;
 
-    public ClientPerformanceHistoryDto(final Integer loanCycleNumber, final Money lastLoanAmount,
-            final Integer noOfActiveLoans, final String delinquentPortfolioAmount, final Money totalSavingsAmount,
+    public ClientPerformanceHistoryDto(final Integer loanCycleNumber, final String lastLoanAmount,
+            final Integer noOfActiveLoans, final String delinquentPortfolioAmount, final String totalSavingsAmount,
             final Integer meetingsAttended, final Integer meetingsMissed, final List<LoanCycleCounter> loanCycleCounters) {
 
         this.loanCycleNumber = loanCycleNumber;
@@ -57,7 +53,7 @@ public class ClientPerformanceHistoryDto implements DataTransferObject {
         return this.loanCycleNumber;
     }
 
-    public Money getLastLoanAmount() {
+    public String getLastLoanAmount() {
         return this.lastLoanAmount;
     }
 
@@ -69,7 +65,7 @@ public class ClientPerformanceHistoryDto implements DataTransferObject {
         return this.delinquentPortfolioAmount;
     }
 
-    public Money getTotalSavingsAmount() {
+    public String getTotalSavingsAmount() {
         return this.totalSavingsAmount;
     }
 

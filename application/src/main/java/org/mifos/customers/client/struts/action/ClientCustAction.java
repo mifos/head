@@ -39,7 +39,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
-import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -56,12 +55,9 @@ import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.service.ClientInformationDto;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -71,12 +67,12 @@ import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
-import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
+import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
@@ -84,7 +80,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -312,6 +307,9 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         String clientName = clientNameDetail.getDisplayName();
         String givenDateOfBirth = actionForm.getDateOfBirth();
 
+        ClientNameDetailDto spouseName = actionForm.getSpouseName();
+        spouseName.setNames(ClientRules.getNameSequence());
+
         DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
         ProcessRulesDto processRules = this.clientServiceFacade.previewClient(governmentId, dateOfBirth, clientName, actionForm.isDefaultFeeRemoved(), actionForm.getOfficeIdValue(), actionForm.getLoanOfficerIdValue());
 
@@ -321,6 +319,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         addWarningMessages(request, processRules);
         actionForm.setEditFamily("edit");
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth)));
+        actionForm.setClientName(clientNameDetail);
+        actionForm.setSpouseName(spouseName);
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
@@ -537,11 +537,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
                              @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        // John W - UserContext object passed because some status' need to be looked up for internationalisation based
-        // on UserContext info
-        UserContext userContext = getUserContext(request);
-        ClientInformationDto clientInformationDto = clientDetailsServiceFacade.getClientInformationDto(
-                ((ClientCustActionForm) form).getGlobalCustNum(), userContext);
+        String clientSystemId = ((ClientCustActionForm) form).getGlobalCustNum();
+        ClientInformationDto clientInformationDto = clientServiceFacade.getClientInformationDto(clientSystemId);
         SessionUtils.removeThenSetAttribute("clientInformationDto", clientInformationDto, request);
 
         // John W - for breadcrumb or another other action downstream that exists business_key set (until refactored)
