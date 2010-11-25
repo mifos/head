@@ -20,18 +20,11 @@
 
 package org.mifos.application.servicefacade;
 
-import java.util.List;
-
-import org.joda.time.DateTime;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.dto.domain.ClientRulesDto;
-import org.mifos.dto.domain.CustomerDetailsDto;
-import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
@@ -39,8 +32,6 @@ import org.mifos.security.util.UserContext;
 public interface CustomerServiceFacade {
 
     OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy();
-
-    CustomerDetailsDto createNewClient(ClientCustActionForm actionForm, MeetingBO meeting, List<SavingsDetailDto> allowedSavingProducts, List<CustomerCustomFieldEntity> customFields) throws ApplicationException;
 
     CustomerSearch search(String searchString) throws ApplicationException;
 

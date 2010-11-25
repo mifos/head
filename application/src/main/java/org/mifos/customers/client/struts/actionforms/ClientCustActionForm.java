@@ -47,9 +47,6 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
-import org.mifos.customers.client.business.ClientFamilyDetailDto;
-import org.mifos.customers.client.business.ClientNameDetailDto;
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -57,6 +54,9 @@ import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.FamilyDetailDto;
 import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.screen.ClientFamilyDetailDto;
+import org.mifos.dto.screen.ClientNameDetailDto;
+import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -200,12 +200,11 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
                     familyDetails = new ClientFamilyDetailDto(getFamilyRelationship(row), getFamilyGender(row),
                             getFamilyLivingStatus(row), DateUtils.getDateAsSentFromBrowser(getFamilyDateOfBirth(row)));
                     familyDetails.setDisplayName(familyNames.getDisplayName());
+                    familyDetails.setDateOfBirthForBrowser(getFamilyDateOfBirth(row));
                 } else {
-                    familyDetails = new ClientFamilyDetailDto(getFamilyRelationship(row), getFamilyGender(row),
-                            getFamilyLivingStatus(row), null);
+                    familyDetails = new ClientFamilyDetailDto(getFamilyRelationship(row), getFamilyGender(row),getFamilyLivingStatus(row), null);
                     familyDetails.setDisplayName(familyNames.getDisplayName());
                 }
-
             } catch (InvalidDateException e) {
             }
 

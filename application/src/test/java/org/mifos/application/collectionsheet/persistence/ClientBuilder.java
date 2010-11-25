@@ -31,13 +31,13 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
-import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.screen.ClientNameDetailDto;
+import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.security.util.UserContext;
 
@@ -103,6 +103,7 @@ public class ClientBuilder {
         this.clientDetailEntity.updateClientDetails(clientPersonalDetailDto);
 
         ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto();
+        clientNameDetailDto.setNames("first_name,middle_name,last_name,second_last_name".split(","));
         this.clientNameDetailEntity = new ClientNameDetailEntity(null, null, clientNameDetailDto);
 
         if (parentCustomer == null) {

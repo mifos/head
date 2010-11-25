@@ -75,6 +75,9 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.screen.ClientFamilyDetailDto;
+import org.mifos.dto.screen.ClientNameDetailDto;
+import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -317,6 +320,7 @@ public class ClientBO extends CustomerBO {
         this.firstName = clientNameDetailDto.getFirstName();
         this.lastName = clientNameDetailDto.getLastName();
         this.secondLastName = clientNameDetailDto.getSecondLastName();
+        clientNameDetailDto.setNames(ClientRules.getNameSequence());
 
         this.addNameDetailSet(new ClientNameDetailEntity(this, null, clientNameDetailDto));
         if (spouseNameDetailView != null) {

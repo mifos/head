@@ -39,6 +39,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -53,29 +54,37 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientFamilyDetailDto;
-import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.service.ClientInformationDto;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
+import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
+import org.mifos.dto.domain.GroupCreationDetail;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
+import org.mifos.dto.screen.ClientNameDetailDto;
+import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -298,7 +307,9 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                                  @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         String governmentId = actionForm.getGovernmentId();
-        String clientName = actionForm.getClientName().getDisplayName();
+        ClientNameDetailDto clientNameDetail = actionForm.getClientName();
+        clientNameDetail.setNames(ClientRules.getNameSequence());
+        String clientName = clientNameDetail.getDisplayName();
         String givenDateOfBirth = actionForm.getDateOfBirth();
 
         DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
@@ -462,14 +473,57 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
         List<SavingsDetailDto> allowedSavingProducts = getSavingsOfferingsFromSession(request);
 
-        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
-        CustomerDetailsDto clientDetails = this.customerServiceFacade.createNewClient(actionForm, meeting, allowedSavingProducts, customerCustomFields);
+//        List<CustomerCustomFieldEntity> customerCustomFields = CustomerCustomFieldEntity.fromDto(actionForm.getCustomFields(), null);
+
+        if (ClientRules.isFamilyDetailsRequired()) {
+            actionForm.setFamilyDateOfBirth();
+            actionForm.constructFamilyDetails();
+        }
+
+        List<Short> selectedSavingProducts = actionForm.getSelectedOfferings();
+        String clientName = actionForm.getClientName().getDisplayName();
+        Short clientStatus = actionForm.getStatusValue().getValue();
+        java.sql.Date mfiJoiningDate = DateUtils.getDateAsSentFromBrowser(actionForm.getMfiJoiningDate());
+        String externalId = actionForm.getExternalId();
+        AddressDto address = null;
+        if (actionForm.getAddress() != null) {
+            address = Address.toDto(actionForm.getAddress());
+        }
+        Short formedBy = actionForm.getFormedByPersonnelValue();
+        java.sql.Date dateOfBirth = DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth());
+        String governmentId = actionForm.getGovernmentId();
+        boolean trained = isTrained(actionForm.getTrainedValue());
+        java.sql.Date trainedDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate());
+        Short groupFlagValue = actionForm.getGroupFlagValue();
+        ClientNameDetailDto clientNameDetailDto = actionForm.getClientName();
+        ClientPersonalDetailDto clientPersonalDetailDto = actionForm.getClientDetailView();
+        InputStream picture = actionForm.getCustomerPicture();
+        String parentGroupId = actionForm.getParentGroupId();
+        List<ClientNameDetailDto> familyNames = actionForm.getFamilyNames();
+        List<ClientFamilyDetailDto> familyDetails = actionForm.getFamilyDetails();
+        Short loanOfficerId = actionForm.getLoanOfficerIdValue();
+        Short officeId = actionForm.getOfficeIdValue();
+
+        ClientCreationDetail clientCreationDetail = new ClientCreationDetail(selectedSavingProducts, clientName, clientStatus, mfiJoiningDate, externalId,
+                address, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlagValue, clientNameDetailDto, clientPersonalDetailDto, picture,
+                actionForm.getFeesToApply(), parentGroupId, familyNames, familyDetails, loanOfficerId, officeId);
+
+        MeetingDto meetingDto = null;
+        if (meeting != null) {
+            meetingDto = meeting.toDto();
+        }
+
+        CustomerDetailsDto clientDetails = this.clientServiceFacade.createNewClient(clientCreationDetail, meetingDto, allowedSavingProducts);
 
         actionForm.setCustomerId(clientDetails.getId().toString());
         actionForm.setGlobalCustNum(clientDetails.getGlobalCustNum());
         actionForm.setEditFamily("notEdit");
         createClientQuestionnaire.saveResponses(request, actionForm, clientDetails.getId());
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    private boolean isTrained(Short trainedValue) {
+        return Short.valueOf("1").equals(trainedValue);
     }
 
     @TransactionDemarcate(joinToken = true)
