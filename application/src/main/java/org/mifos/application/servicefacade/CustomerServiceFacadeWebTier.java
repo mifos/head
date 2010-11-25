@@ -40,12 +40,9 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.SpouseFatherLookupEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
-import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
@@ -60,7 +57,6 @@ import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientPersonalDetailDto;
-import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
@@ -529,49 +525,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
-    }
-
-    @Override
-    public ClientFamilyDetailsDto retrieveClientFamilyDetails() {
-
-        List<ValueListElement> genders = new ArrayList<ValueListElement>();
-        List<ValueListElement> livingStatus = new ArrayList<ValueListElement>();
-        List<FamilyDetailDTO> familyDetails = new ArrayList<FamilyDetailDTO>();
-        boolean familyDetailsRequired = ClientRules.isFamilyDetailsRequired();
-
-        if (familyDetailsRequired) {
-
-            genders = this.customerDao.retrieveGenders();
-            livingStatus = this.customerDao.retrieveLivingStatus();
-
-            familyDetails.add(new FamilyDetailDTO());
-        }
-
-        return new ClientFamilyDetailsDto(familyDetailsRequired, familyDetails, genders, livingStatus);
-    }
-
-    @Override
-    public ProcessRulesDto previewClient(String governmentId, DateTime dateOfBirth, String clientName) {
-
-        boolean clientPendingApprovalStateEnabled = ProcessFlowRules.isClientPendingApprovalStateEnabled();
-        boolean governmentIdValidationFailing = false;
-        boolean duplicateNameOnClosedClient = false;
-        boolean duplicateNameOnBlackListedClient = false;
-
-        if (StringUtils.isNotBlank(governmentId)) {
-            governmentIdValidationFailing = this.customerDao.validateGovernmentIdForClient(governmentId);
-        }
-        if (!governmentIdValidationFailing) {
-            duplicateNameOnBlackListedClient = this.customerDao.validateForBlackListedClientsOnNameAndDob(clientName,
-                    dateOfBirth);
-            if (!duplicateNameOnBlackListedClient) {
-                duplicateNameOnClosedClient = this.customerDao.validateForClosedClientsOnNameAndDob(clientName,
-                        dateOfBirth);
-            }
-        }
-
-        return new ProcessRulesDto(clientPendingApprovalStateEnabled, governmentIdValidationFailing,
-                duplicateNameOnClosedClient, duplicateNameOnBlackListedClient);
     }
 
     private ClientRulesDto retrieveClientRules() {

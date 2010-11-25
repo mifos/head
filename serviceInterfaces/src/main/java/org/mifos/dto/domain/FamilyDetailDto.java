@@ -18,25 +18,25 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.client.business;
+package org.mifos.dto.domain;
 
-public class FamilyDetailDTO {
+public class FamilyDetailDto {
 
-    private short relationship=0;
+    private Short relationship = 0;
     private String firstName;
     private String middleName;
     private String lastName;
     private String dateOfBirthDD;
     private String dateOfBirthMM;
     private String dateOfBirthYY;
-    private short gender=0;
-    private short livingStatus=0;
+    private Short gender = 0;
+    private Short livingStatus = 0;
 
-    public short getRelationship() {
+    public Short getRelationship() {
         return this.relationship;
     }
 
-    public void setRelationship(short relationship) {
+    public void setRelationship(Short relationship) {
         this.relationship = relationship;
     }
 
@@ -88,21 +88,19 @@ public class FamilyDetailDTO {
         this.dateOfBirthYY = dateOfBirthYY;
     }
 
-    public short getGender() {
+    public Short getGender() {
         return this.gender;
     }
 
-    public void setGender(short gender) {
+    public void setGender(Short gender) {
         this.gender = gender;
     }
 
-    public short getLivingStatus() {
+    public Short getLivingStatus() {
         return this.livingStatus;
     }
 
-    public void setLivingStatus(short livingStatus) {
+    public void setLivingStatus(Short livingStatus) {
         this.livingStatus = livingStatus;
     }
-
-
 }

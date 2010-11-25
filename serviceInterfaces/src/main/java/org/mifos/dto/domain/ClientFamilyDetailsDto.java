@@ -18,21 +18,19 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.domain;
 
 import java.util.List;
 
-import org.mifos.customers.client.business.FamilyDetailDTO;
-import org.mifos.dto.domain.ValueListElement;
 
 public class ClientFamilyDetailsDto {
 
     private final boolean familyDetailsRequired;
-    private final List<FamilyDetailDTO> familyDetails;
+    private final List<FamilyDetailDto> familyDetails;
     private final List<ValueListElement> genders;
     private final List<ValueListElement> livingStatus;
 
-    public ClientFamilyDetailsDto(boolean familyDetailsRequired, List<FamilyDetailDTO> familyDetails,
+    public ClientFamilyDetailsDto(boolean familyDetailsRequired, List<FamilyDetailDto> familyDetails,
             List<ValueListElement> genders, List<ValueListElement> livingStatus) {
         this.familyDetailsRequired = familyDetailsRequired;
         this.familyDetails = familyDetails;
@@ -44,7 +42,7 @@ public class ClientFamilyDetailsDto {
         return this.familyDetailsRequired;
     }
 
-    public List<FamilyDetailDTO> getFamilyDetails() {
+    public List<FamilyDetailDto> getFamilyDetails() {
         return this.familyDetails;
     }
 
