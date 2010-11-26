@@ -21,11 +21,10 @@
 package org.mifos.customers.client.business;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.ConfigConstants;
+import org.mifos.customers.api.DataTransferObject;
 import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.DataTransferObject;
 import org.mifos.framework.business.util.Name;
 
 public class ClientNameDetailDto implements DataTransferObject {
@@ -38,6 +37,7 @@ public class ClientNameDetailDto implements DataTransferObject {
     private String lastName;
     private String secondLastName;
     private Integer customerNameId;
+    private String[] names;
 
     public ClientNameDetailDto() {
         super();
@@ -82,7 +82,7 @@ public class ClientNameDetailDto implements DataTransferObject {
 
     public String getDisplayName() {
         displayName = new StringBuilder();
-        String[] names = ClientRules.getNameSequence();
+//        String[] names = ClientRules.getNameSequence();
         addToName(displayName, names[0], false);
         for (int i = 1; i < names.length; i++) {
             addToName(displayName, names[i], true);
@@ -154,6 +154,10 @@ public class ClientNameDetailDto implements DataTransferObject {
 
     public void setCustomerNameId(Integer customerNameId) {
         this.customerNameId = customerNameId;
+    }
+
+    public void setNames(String[] names) {
+        this.names = names;
     }
 
 }

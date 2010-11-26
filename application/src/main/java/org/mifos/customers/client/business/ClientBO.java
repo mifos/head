@@ -543,7 +543,12 @@ public class ClientBO extends CustomerBO {
 
         if (personalInfo.getSpouseFather() != null) {
             // can be null when family details configuration is turned on
-            this.getSpouseName().updateNameDetails(personalInfo.getSpouseFather());
+            if (this.getSpouseName() != null) {
+                this.getSpouseName().updateNameDetails(personalInfo.getSpouseFather());
+            } else {
+                ClientNameDetailEntity spouseFatherNameDetailEntity = new ClientNameDetailEntity(this, personalInfo.getSpouseFather().getSecondLastName(), personalInfo.getSpouseFather());
+                addNameDetailSet(spouseFatherNameDetailEntity);
+            }
         }
         this.updateClientDetails(personalInfo.getClientDetail());
 

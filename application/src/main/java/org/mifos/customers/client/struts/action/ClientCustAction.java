@@ -587,8 +587,18 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setGovernmentId(personalInfo.getClientDetail().getGovernmentId());
         actionForm.setDateOfBirth(personalInfo.getClientDetail().getDateOfBirth());
         actionForm.setClientDetailView(personalInfo.getClientDetail().getCustomerDetail());
-        actionForm.setClientName(personalInfo.getClientDetail().getClientName());
-        actionForm.setSpouseName(personalInfo.getClientDetail().getSpouseName());
+//        actionForm.setClientName(personalInfo.getClientDetail().getClientName());
+//        actionForm.setSpouseName(personalInfo.getClientDetail().getSpouseName());
+
+        ClientNameDetailDto clientName = personalInfo.getClientDetail().getClientName();
+        clientName.setNames(ClientRules.getNameSequence());
+        actionForm.setClientName(clientName);
+
+        ClientNameDetailDto spouseName = personalInfo.getClientDetail().getSpouseName();
+        if (spouseName != null) {
+            spouseName.setNames(ClientRules.getNameSequence());
+            actionForm.setSpouseName(spouseName);
+        }
         actionForm.setCustomFields(personalInfo.getCustomFieldViews());
 
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
@@ -601,9 +611,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
                                                  @SuppressWarnings("unused") HttpServletResponse httpservletresponse) throws Exception {
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
 
-//        String governmentId = actionForm.getGovernmentId();
         String dateOfBirth = actionForm.getDateOfBirth();
-//        String clientName = actionForm.getClientName().getDisplayName();
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(dateOfBirth)));
 
         ClientRulesDto clientRules = this.customerServiceFacade.retrieveClientDetailsForPreviewingEditOfPersonalInfo();
@@ -617,6 +625,17 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
+
+        ClientNameDetailDto clientName = actionForm.getClientName();
+        clientName.setNames(ClientRules.getNameSequence());
+        actionForm.setClientName(clientName);
+
+        ClientNameDetailDto spouseName = actionForm.getSpouseName();
+        if (spouseName != null) {
+            spouseName.setNames(ClientRules.getNameSequence());
+            actionForm.setSpouseName(spouseName);
+        }
+
         return mapping.findForward(ActionForwards.previewEditPersonalInfo_success.toString());
     }
 
