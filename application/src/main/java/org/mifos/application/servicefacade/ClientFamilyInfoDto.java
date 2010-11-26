@@ -23,11 +23,11 @@ package org.mifos.application.servicefacade;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.customers.client.business.ClientFamilyDetailDto;
-import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.screen.ClientDropdownsDto;
+import org.mifos.dto.screen.ClientFamilyDetailDto;
+import org.mifos.dto.screen.ClientNameDetailDto;
 
 public class ClientFamilyInfoDto {
 

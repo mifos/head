@@ -20,10 +20,10 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.customers.client.business.ClientNameDetailDto;
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.api.DataTransferObject;
+import org.mifos.dto.screen.ClientNameDetailDto;
+import org.mifos.dto.screen.ClientPersonalDetailDto;
 
 public class ClientDetailDto implements DataTransferObject {
 

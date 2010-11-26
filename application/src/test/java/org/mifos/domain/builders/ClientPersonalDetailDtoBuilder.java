@@ -20,7 +20,7 @@
 
 package org.mifos.domain.builders;
 
-import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.dto.screen.ClientPersonalDetailDto;
 
 public class ClientPersonalDetailDtoBuilder {
 
