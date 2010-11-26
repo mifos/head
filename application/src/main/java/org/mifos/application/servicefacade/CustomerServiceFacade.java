@@ -54,6 +54,10 @@ public interface CustomerServiceFacade {
 
     GroupSearchResultsDto searchGroups(boolean searchForAddingClientsToGroup, String normalizedSearchString, Short loggedInUserId);
 
+    ClientFamilyDetailsDto retrieveClientFamilyDetails();
+
+    ProcessRulesDto previewClient(String governmentId, DateTime dateOfBirth, String clientName);
+
     ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId);
 
     ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo();

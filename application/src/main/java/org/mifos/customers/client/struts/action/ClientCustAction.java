@@ -46,9 +46,11 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.servicefacade.ClientFamilyDetailsDto;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
 import org.mifos.application.servicefacade.ClientMfiInfoDto;
 import org.mifos.application.servicefacade.ClientPersonalInfoDto;
+import org.mifos.application.servicefacade.ProcessRulesDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
@@ -66,10 +68,8 @@ import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
-import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
-import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
@@ -225,7 +225,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
 
-        ClientFamilyDetailsDto clientFamilyDetails = this.clientServiceFacade.retrieveClientFamilyDetails();
+        ClientFamilyDetailsDto clientFamilyDetails = this.customerServiceFacade.retrieveClientFamilyDetails();
 
         if (clientFamilyDetails.isFamilyDetailsRequired()) {
 
@@ -300,13 +300,13 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         String governmentId = actionForm.getGovernmentId();
         String clientName = actionForm.getClientName().getDisplayName();
         String givenDateOfBirth = actionForm.getDateOfBirth();
-
+        if (actionForm.isDefaultFeeRemoved()) {
+            customerDao.checkPermissionForDefaultFeeRemoval(getUserContext(request), actionForm.getOfficeIdValue(), actionForm.getLoanOfficerIdValue());
+        }
         DateTime dateOfBirth = new DateTime(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth));
-        ProcessRulesDto processRules = this.clientServiceFacade.previewClient(governmentId, dateOfBirth, clientName, actionForm.isDefaultFeeRemoved(), actionForm.getOfficeIdValue(), actionForm.getLoanOfficerIdValue());
-
+        ProcessRulesDto processRules = this.customerServiceFacade.previewClient(governmentId, dateOfBirth, clientName);
         String pendingApprovalState = processRules.isClientPendingApprovalStateEnabled() ? CustomerConstants.YES : CustomerConstants.NO;
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, pendingApprovalState, request);
-
         addWarningMessages(request, processRules);
         actionForm.setEditFamily("edit");
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(givenDateOfBirth)));

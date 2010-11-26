@@ -50,12 +50,12 @@ import org.mifos.customers.center.util.helpers.ValidateMethods;
 import org.mifos.customers.client.business.ClientFamilyDetailDto;
 import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.customers.client.business.FamilyDetailDTO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.struts.actionforms.CustomerActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.FamilyDetailDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -77,7 +77,7 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
     private MeetingBO parentCustomerMeeting;
 
     private String groupFlag;
-    private List<FamilyDetailDto> familyDetailBean = new ArrayList<FamilyDetailDto>();
+    private List<FamilyDetailDTO> familyDetailBean = new ArrayList<FamilyDetailDTO>();
     private ClientPersonalDetailDto clientPersonalDetailDto;
     private ClientNameDetailDto clientName;
     private ClientNameDetailDto spouseName;
@@ -170,11 +170,11 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
         this.editFamily = editFamily;
     }
 
-    public List<FamilyDetailDto> getFamilyDetailBean() {
+    public List<FamilyDetailDTO> getFamilyDetailBean() {
         return this.familyDetailBean;
     }
 
-    public void setFamilyDetailBean(List<FamilyDetailDto> familyDetailBean) {
+    public void setFamilyDetailBean(List<FamilyDetailDTO> familyDetailBean) {
         this.familyDetailBean = familyDetailBean;
     }
 
