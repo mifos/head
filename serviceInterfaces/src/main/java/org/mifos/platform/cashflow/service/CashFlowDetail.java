@@ -29,13 +29,15 @@ import java.util.List;
 public class CashFlowDetail implements Serializable {
     private static final long serialVersionUID = -6731316163493318834L;
     List<MonthlyCashFlowDetail> monthlyCashFlowDetails;
+    private BigDecimal totalCapital;
+    private BigDecimal totalLiability;
 
     public CashFlowDetail() {
-        monthlyCashFlowDetails = new ArrayList<MonthlyCashFlowDetail>();
+        this(new ArrayList<MonthlyCashFlowDetail>());
     }
 
     public CashFlowDetail(List<MonthlyCashFlowDetail> monthlyCashFlows) {
-        monthlyCashFlowDetails = new ArrayList<MonthlyCashFlowDetail>(monthlyCashFlows);
+        monthlyCashFlowDetails = monthlyCashFlows;
         for (MonthlyCashFlowDetail monthlyCashFlowDetail : monthlyCashFlowDetails) {
             monthlyCashFlowDetail.setCashFlowDetail(this);
         }
@@ -53,5 +55,21 @@ public class CashFlowDetail implements Serializable {
             }
         }
         return cumulative;
+    }
+
+    public void setTotalCapital(BigDecimal totalCapital) {
+        this.totalCapital = totalCapital;
+    }
+
+    public void setTotalLiability(BigDecimal totalLiability) {
+        this.totalLiability = totalLiability;
+    }
+
+    public BigDecimal getTotalCapital() {
+        return totalCapital;
+    }
+
+    public BigDecimal getTotalLiability() {
+        return totalLiability;
     }
 }

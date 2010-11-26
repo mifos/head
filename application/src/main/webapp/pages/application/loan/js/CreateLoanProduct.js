@@ -159,9 +159,17 @@ function showCashFlowInputs() {
     var isVariableInstallmentType = document.getElementById("createLoanProduct.checkbox.cashFlowValidation");
     if (isVariableInstallmentType.checked == true || isVariableInstallmentType.checked == "checked") {
         document.getElementById("cashFlowThresholdDiv").style.display = "block";
+        document.getElementById("cashFlowIndebtednessRatioDiv").style.display = "block";
+        document.getElementById("cashFlowRepaymentCapacityDiv").style.display = "block";
         document.getElementById("cashFlowThresholdInputDiv").style.display = "block";
+        document.getElementById("cashFlowIndebtednessRatioInputDiv").style.display = "block";
+        document.getElementById("cashFlowRepaymentCapacityInputDiv").style.display = "block";
     } else {
         document.getElementById("cashFlowThresholdDiv").style.display = "none";
+        document.getElementById("cashFlowIndebtednessRatioDiv").style.display = "none";
+        document.getElementById("cashFlowRepaymentCapacityDiv").style.display = "none";
         document.getElementById("cashFlowThresholdInputDiv").style.display = "none";
+        document.getElementById("cashFlowIndebtednessRatioInputDiv").style.display = "none";
+        document.getElementById("cashFlowRepaymentCapacityInputDiv").style.display = "none";
    }
 }

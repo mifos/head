@@ -11,5 +11,7 @@
 			<key column="cash_flow_id" not-null="true"/>
 			<one-to-many class="org.mifos.platform.cashflow.domain.MonthlyCashFlow"/>
 		</bag>
+        <property name="totalCapital" column="capital" access="field"/>
+        <property name="totalLiability" column="liability" access="field"/>
 	</class>
 </hibernate-mapping>

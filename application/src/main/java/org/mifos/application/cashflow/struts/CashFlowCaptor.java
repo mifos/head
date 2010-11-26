@@ -17,12 +17,12 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.questionnaire.struts;
+package org.mifos.application.cashflow.struts;
 
-import org.mifos.platform.cashflow.CashFlowService;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 
-import javax.servlet.http.HttpServletRequest;
+public interface CashFlowCaptor {
+    CashFlowForm getCashFlowForm();
 
-public interface CashFlowServiceLocator {
-    CashFlowService getService(HttpServletRequest request);
+    void setCashFlowForm(CashFlowForm cashFlowForm);
 }

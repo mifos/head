@@ -19,6 +19,7 @@
  */
 package org.mifos.platform.cashflow.builder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.mifos.platform.cashflow.service.CashFlowDetail;
@@ -40,4 +41,13 @@ public class CashFlowDetailsBuilder {
         return cashFlowDetail;
     }
 
+    public CashFlowDetailsBuilder withTotalCapital(double totalCapital) {
+        cashFlowDetail.setTotalCapital(new BigDecimal(totalCapital));
+        return this;
+    }
+
+    public CashFlowDetailsBuilder withTotalLiability(double totalLiability) {
+        cashFlowDetail.setTotalLiability(new BigDecimal(totalLiability));
+        return this;
+    }
 }

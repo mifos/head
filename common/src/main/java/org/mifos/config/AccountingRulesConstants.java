@@ -30,10 +30,15 @@ public class AccountingRulesConstants {
     public static final String CURRENCY_CODE = "AccountingRules.CurrencyCode";
     public static final String ADDITIONAL_CURRENCY_CODES = "AccountingRules.AdditionalCurrencyCodes";
     public static final String DIGITS_AFTER_DECIMAL_FOR_INTEREST = "AccountingRules.DigitsAfterDecimalForInterest";
-    public static final String DIGITS_AFTER_DECIMAL_FOR_CASHFLOW_THRESHOLD = "AccountingRules.DigitsAfterDecimalForCashflowThreshold";
+    public static final String DIGITS_AFTER_DECIMAL_FOR_CASHFLOW_VALIDATIONS = "AccountingRules.DigitsAfterDecimalForCashFlowValidations";
     public static final String MAX_INTEREST = "AccountingRules.MaxInterest";
     public static final String MIN_INTEREST = "AccountingRules.MinInterest";
-    public static final String CASHFLOW_THRESHOLD = "AccountingRules.MaxCashFlowThreshold";
+    public static final String MAX_CASH_FLOW_THRESHOLD = "AccountingRules.MaxCashFlowThreshold";
+    public static final String MIN_CASH_FLOW_THRESHOLD = "AccountingRules.MinCashFlowThreshold";
+    public static final String MAX_INDEBTEDNESS_RATIO = "AccountingRules.MaxIndebtednessRatio";
+    public static final String MIN_INDEBTEDNESS_RATIO = "AccountingRules.MinIndebtednessRatio";
+    public static final String MAX_REPAYMENT_CAPACITY = "AccountingRules.MaxRepaymentCapacity";
+    public static final String MIN_REPAYMENT_CAPACITY= "AccountingRules.MinRepaymentCapacity";
     public static final String INITIAL_ROUNDING_MODE = "AccountingRules.InitialRoundingMode";
     public static final String INITIAL_ROUND_OFF_MULTIPLE = "AccountingRules.InitialRoundOffMultiple";
     public static final String FINAL_ROUNDING_MODE = "AccountingRules.FinalRoundingMode";

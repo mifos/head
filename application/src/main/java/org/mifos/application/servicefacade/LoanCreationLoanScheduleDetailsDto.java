@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import org.joda.time.DateTime;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 
@@ -68,5 +69,15 @@ public class LoanCreationLoanScheduleDetailsDto {
 
     public List<PaymentDataHtmlBean> getPaymentDataBeans() {
         return this.paymentDataBeans;
+    }
+
+    public DateTime firstInstallmentDueDate() {
+        RepaymentScheduleInstallment firstInstallment = this.installments.get(0);
+        return new DateTime(firstInstallment.getDueDateValue());
+    }
+
+    public DateTime lastInstallmentDueDate() {
+        RepaymentScheduleInstallment lastInstallment = this.installments.get(this.installments.size() - 1);
+        return new DateTime(lastInstallment.getDueDateValue());
     }
 }

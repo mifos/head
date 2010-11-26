@@ -65,7 +65,7 @@ public class AccountingRules {
      */
     private static final Short DIGITS_BEFORE_DECIMAL_FOR_INTEREST = 10;
 
-    private static final Short DIGITS_BEFORE_DECIMAL_FOR_CASHFLOW_THRESHOLD = 10;
+    private static final Short DIGITS_BEFORE_DECIMAL_FOR_CASH_FLOW_VALIDATIONS = 10;
 
     // FIXME: we should use a standard caching mechanism rather than ad hoc caches like
     // this.  Also, we need to consider if this should be thread safe since this initial
@@ -160,8 +160,28 @@ public class AccountingRules {
         return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
     }
 
-    public static Double getCashFlowThreshold() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.CASHFLOW_THRESHOLD);
+    public static Double getMaxCashFlowThreshold() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_CASH_FLOW_THRESHOLD);
+    }
+
+    public static Double getMinCashFlowThreshold() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_CASH_FLOW_THRESHOLD);
+    }
+
+    public static Double getMaxIndebtednessRatio() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_INDEBTEDNESS_RATIO);
+    }
+
+    public static Double getMinIndebtednessRatio() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INDEBTEDNESS_RATIO);
+    }
+
+    public static Double getMaxRepaymentCapacity() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_REPAYMENT_CAPACITY);
+    }
+
+    public static Double getMinRepaymentCapacity() {
+        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_REPAYMENT_CAPACITY);
     }
 
 
@@ -195,12 +215,12 @@ public class AccountingRules {
     }
 
 
-    public static Short getDigitsBeforeDecimalForCashFlowThreshold() {
-        return DIGITS_BEFORE_DECIMAL_FOR_CASHFLOW_THRESHOLD;
+    public static Short getDigitsBeforeDecimalForCashFlowValidations() {
+        return DIGITS_BEFORE_DECIMAL_FOR_CASH_FLOW_VALIDATIONS;
     }
 
-    public static Short getDigitsAfterDecimalForCashFlowThreshold() {
-        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_CASHFLOW_THRESHOLD);
+    public static Short getDigitsAfterDecimalForCashFlowValidations() {
+        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_CASHFLOW_VALIDATIONS);
     }
 
     // the defaultValue passed in should be the value from database
@@ -417,4 +437,6 @@ public class AccountingRules {
         ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS,
                 numberOfInterestDays);
     }
+
+
 }

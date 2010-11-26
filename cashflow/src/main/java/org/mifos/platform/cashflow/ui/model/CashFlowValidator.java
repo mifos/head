@@ -39,6 +39,44 @@ public class CashFlowValidator {
             validateRevenue(messageContext, monthlyCashFlowForm);
             validateNotes(messageContext, monthlyCashFlowForm);
         }
+        validateTotalCapitalAndLiability(cashFlow, messageContext);
+    }
+
+    private void validateTotalCapitalAndLiability(CashFlowForm cashFlow, MessageContext messageContext) {
+        if(cashFlow.isCaptureCapitalLiabilityInfo()){
+            validateTotalCapital(messageContext, cashFlow.getTotalCapital());
+            validateTotalLiability(messageContext, cashFlow.getTotalLiability());
+        }
+    }
+
+    private void validateTotalCapital(MessageContext messageContext, BigDecimal totalCapital) {
+        if(isNull(totalCapital)){
+            String message = format("Total Capital should not be empty");
+            constructErrorMessage(CashFlowConstants.TOTAL_CAPITAL_SHOULD_NOT_BE_EMPTY, message, messageContext);
+            return;
+        }
+
+        if ((totalCapital.doubleValue() == 0)) {
+            String message = format("Total Capital needs to be a value greater than zero");
+            constructErrorMessage(CashFlowConstants.TOTAL_CAPITAL_SHOULD_BE_GREATER_THAN_ZERO, message, messageContext);
+        }
+
+        if (totalCapital.doubleValue() < 0) {
+            String message = format("Total Capital needs to be non negative");
+            constructErrorMessage(CashFlowConstants.TOTAL_CAPITAL_SHOULD_BE_NON_NEGATIVE, message, messageContext);
+        }
+    }
+
+    private void validateTotalLiability(MessageContext messageContext, BigDecimal totalLiability) {
+        if(isNull(totalLiability)){
+            String message = format("Total Liability should not be empty");
+            constructErrorMessage(CashFlowConstants.TOTAL_LIABILITY_SHOULD_NOT_BE_EMPTY, message, messageContext);
+            return;
+        }
+        if (totalLiability.doubleValue() < 0) {
+            String message = format("{0} needs to be non negative", CashFlowConstants.TOTAL_LIABILITY);
+            constructErrorMessage(CashFlowConstants.TOTAL_LIABILITY_SHOULD_BE_NON_NEGATIVE, message, messageContext);
+        }
     }
 
     private void validateExpense(MessageContext messageContext, MonthlyCashFlowForm monthlyCashFlowForm) {

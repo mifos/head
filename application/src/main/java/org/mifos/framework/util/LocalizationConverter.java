@@ -47,8 +47,8 @@ public class LocalizationConverter {
     private short digitsBeforeDecimalForMoney;
     private short digitsAfterDecimalForInterest;
     private short digitsBeforeDecimalForInterest;
-    private short digitsBeforeDecimalForCashFlowThreshold;
-    private short digitsAfterDecimalForCashFlowThreshold;
+    private short digitsBeforeDecimalForCashFlowValidations;
+    private short digitsAfterDecimalForCashFlowValidations;
     // the decimalFormatLocale is introduced because the double format is not
     // supported for
     // 1.1 realease yet and the English format is still used no matter what the
@@ -75,8 +75,8 @@ public class LocalizationConverter {
         digitsBeforeDecimalForMoney = AccountingRules.getDigitsBeforeDecimal();
         digitsAfterDecimalForInterest = AccountingRules.getDigitsAfterDecimalForInterest();
         digitsBeforeDecimalForInterest = AccountingRules.getDigitsBeforeDecimalForInterest();
-        digitsBeforeDecimalForCashFlowThreshold = AccountingRules.getDigitsBeforeDecimalForCashFlowThreshold();
-        digitsAfterDecimalForCashFlowThreshold = AccountingRules.getDigitsAfterDecimalForCashFlowThreshold();
+        digitsBeforeDecimalForCashFlowValidations = AccountingRules.getDigitsBeforeDecimalForCashFlowValidations();
+        digitsAfterDecimalForCashFlowValidations = AccountingRules.getDigitsAfterDecimalForCashFlowValidations();
         currentLocale = Localization.getInstance().getMainLocale();
         // for this 1.1. release this will be defaulted to the English locale
         // and
@@ -231,22 +231,12 @@ public class LocalizationConverter {
             return result;
         }
 
-        try {
-            Double interest = getDoubleValueForInterest(doubleStr);
-            if ((interest > AccountingRules.getMaxInterest()) || (interest < AccountingRules.getMinInterest())) {
-                errors.add(ConversionError.INTEREST_OUT_OF_RANGE);
-            } else {
-                result.setDoubleValue(interest);
-            }
-
-        } catch (Exception ex) {
-            result.getErrors().add(ConversionError.CONVERSION_ERROR);
-        }
-
-        return result;
+        return validateTheValueIsWithinTheRange(ConversionError.INTEREST_OUT_OF_RANGE, AccountingRules.getMinInterest(), AccountingRules.getMaxInterest(), result, errors, getDoubleValueForPercent(doubleStr));
     }
 
-    public DoubleConversionResult parseDoubleForCashFlowThreshold(String doubleStr) {
+    public DoubleConversionResult parseDoubleForCashFlowValidations(String doubleStr,
+                                                                    ConversionError cashFlowValidationOutOfRange,
+                                                                    Double minimumLimit, Double maximumLimit) {
         DoubleConversionResult result = new DoubleConversionResult();
         if (doubleStr == null) {
             List<ConversionError> errors = new ArrayList<ConversionError>();
@@ -255,28 +245,30 @@ public class LocalizationConverter {
             return result;
         }
 
-        List<ConversionError> errors = checkDigits(digitsBeforeDecimalForCashFlowThreshold, digitsAfterDecimalForCashFlowThreshold,
-                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD,
-                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD, doubleStr, false);
+        List<ConversionError> errors = checkDigits(digitsBeforeDecimalForCashFlowValidations, digitsAfterDecimalForCashFlowValidations,
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_VALIDATION,
+                ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_VALIDATION,
+                doubleStr, false);
         result.setErrors(errors);
 
         if (errors.size() > 0) {
             return result;
         }
 
+        return validateTheValueIsWithinTheRange(cashFlowValidationOutOfRange, minimumLimit, maximumLimit, result, errors, getDoubleValueForPercent(doubleStr));
+    }
 
+    private DoubleConversionResult validateTheValueIsWithinTheRange(ConversionError outOfRangeConversionError, Double minimumLimit, Double maximumLimit, DoubleConversionResult result, List<ConversionError> errors, Double validationValue) {
         try {
-            Double cashFlowThreshold = getDoubleValueForInterest(doubleStr);
-            if (cashFlowThreshold < 0 ) {
-                errors.add(ConversionError.CASHFLOW_THRESHOLD_OUT_OF_RANGE);
+            if ((validationValue > maximumLimit) || (validationValue < minimumLimit)) {
+                errors.add(outOfRangeConversionError);
             } else {
-                result.setDoubleValue(cashFlowThreshold);
+                result.setDoubleValue(validationValue);
             }
 
         } catch (Exception ex) {
             result.getErrors().add(ConversionError.CONVERSION_ERROR);
         }
-
         return result;
     }
 
@@ -322,7 +314,7 @@ public class LocalizationConverter {
         return errors;
     }
 
-    private Double getDoubleValueForInterest(String doubleValueString) {
+    private Double getDoubleValueForPercent(String doubleValueString) {
 
         if (currentDecimalFormatForInterest == null) {
             loadDecimalFormats();

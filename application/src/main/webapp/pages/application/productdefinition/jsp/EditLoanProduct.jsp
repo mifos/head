@@ -684,16 +684,38 @@ explanation of the license and how it is applied.
 						</tr>
 						<tr class="fontnormal">
 							<td width="30%" align="right" valign="top">
-							<div id="cashFlowThresholdDiv" style="display: none;"><mifos:mifoslabel
-								name="product.cashFlowThreshold"
-								bundle="ProductDefUIResources" isColonRequired="yes" /></div>
+							    <div id="cashFlowThresholdDiv" style="display: none;">
+							        <mifos:mifoslabel name="product.cashFlowThreshold" bundle="ProductDefUIResources" isColonRequired="yes"/>
+							    </div>
 							</td>
 							<td valign="top">
-							<div id="cashFlowThresholdInputDiv" style="display: none;">
-							<mifos:decimalinput
-								styleId="editLoanProduct.input.cashFlowThreshold"
-								property="cashFlowThreshold" /> <mifos:mifoslabel
-								name="product.perc" bundle="ProductDefUIResources" /></div>
+							    <div id="cashFlowThresholdInputDiv" style="display: none;">
+							        <mifos:decimalinput styleId="editLoanProduct.input.cashFlowThreshold" property="cashFlowThreshold"/>
+							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
+							</td>
+						</tr>
+						<tr class="fontnormal">
+							<td width="30%" align="right" valign="top">
+							    <div id="cashFlowIndebtednessRatioDiv" style="display: none;">
+							        <mifos:mifoslabel name="product.indebtednessRatio" bundle="ProductDefUIResources" isColonRequired="yes"/>
+							    </div>
+							</td>
+							<td valign="top">
+							    <div id="cashFlowIndebtednessRatioInputDiv" style="display: none;">
+							        <mifos:decimalinput styleId="editLoanProduct.input.indebtednessRatio" property="indebtednessRatio" disabled="true"/>
+							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
+							</td>
+						</tr>
+						<tr class="fontnormal">
+							<td width="30%" align="right" valign="top">
+							    <div id="cashFlowRepaymentCapacityDiv" style="display: none;">
+							        <mifos:mifoslabel name="product.repaymentCapacity" bundle="ProductDefUIResources" isColonRequired="yes"/>
+							    </div>
+							</td>
+							<td valign="top">
+							    <div id="cashFlowRepaymentCapacityInputDiv" style="display: none;">
+							        <mifos:decimalinput styleId="editLoanProduct.input.repaymentCapacity" property="repaymentCapacity" disabled="true"/>
+							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>
 

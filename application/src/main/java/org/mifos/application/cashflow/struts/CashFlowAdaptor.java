@@ -17,11 +17,12 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.questionnaire.struts;
+package org.mifos.application.cashflow.struts;
 
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.platform.cashflow.CashFlowConstants;
 import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.cashflow.service.CashFlowBoundary;
@@ -54,14 +55,14 @@ public class CashFlowAdaptor {
     }
 
     public ActionForward renderCashFlow(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate,
-                                        String joinUrl, String cancelUrl, ActionMapping mapping, HttpServletRequest request) {
+                                        String joinUrl, String cancelUrl, ActionMapping mapping,
+                                        HttpServletRequest request, LoanOfferingBO loanOffering) {
         CashFlowService cashFlowService = cashFlowServiceLocator.getService(request);
         if (cashFlowService == null) {
             return null;
         }
-        CashFlowBoundary cashFlowBoundary = cashFlowService.
-                getCashFlowBoundary(firstInstallmentDueDate, lastInstallmentDueDate);
-        prepareCashFlowContext(joinUrl, cancelUrl, cashFlowBoundary, request.getSession());
+        CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(firstInstallmentDueDate, lastInstallmentDueDate);
+        prepareCashFlowContext(joinUrl, cancelUrl, loanOffering.shouldCaptureCapitalAndLiabilityInformation(), cashFlowBoundary, request.getSession());
         return mapping.findForward(cashFlowUrl);
     }
 
@@ -79,25 +80,30 @@ public class CashFlowAdaptor {
         return cashFlowId;
     }
 
-    private void prepareCashFlowContext(String joinUrl, String cancelUrl,
+    private void prepareCashFlowContext(String joinUrl, String cancelUrl, boolean captureCapitalAndLiabilityInformation,
                                         CashFlowBoundary cashFlowBoundary, HttpSession session) {
         session.setAttribute(CashFlowConstants.START_MONTH, cashFlowBoundary.getStartMonth());
         session.setAttribute(CashFlowConstants.START_YEAR, cashFlowBoundary.getStartYear());
         session.setAttribute(CashFlowConstants.NO_OF_MONTHS, cashFlowBoundary.getNumberOfMonths());
         session.setAttribute(CashFlowConstants.JOIN_URL, joinUrl);
         session.setAttribute(CashFlowConstants.CANCEL_URL, cancelUrl);
+        session.setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO, captureCapitalAndLiabilityInformation);
     }
 
     private CashFlowDetail mapToCashFlowDetail(CashFlowCaptor cashFlowCaptor) {
         List<MonthlyCashFlowDetail> monthlyCashFlowDetails = new ArrayList<MonthlyCashFlowDetail>();
-        for (MonthlyCashFlowForm monthlyCashFlowForm : cashFlowCaptor.getCashFlowForm().getMonthlyCashFlows()) {
+        CashFlowForm cashFlowForm = cashFlowCaptor.getCashFlowForm();
+        for (MonthlyCashFlowForm monthlyCashFlowForm : cashFlowForm.getMonthlyCashFlows()) {
             MonthlyCashFlowDetail monthlyCashFlowDetail = new MonthlyCashFlowDetail(monthlyCashFlowForm.getDateTime(),
                     monthlyCashFlowForm.getRevenue(),
                     monthlyCashFlowForm.getExpense(),
                     monthlyCashFlowForm.getNotes());
             monthlyCashFlowDetails.add(monthlyCashFlowDetail);
         }
-        return new CashFlowDetail(monthlyCashFlowDetails);
+        CashFlowDetail cashFlowDetail = new CashFlowDetail(monthlyCashFlowDetails);
+        cashFlowDetail.setTotalCapital(cashFlowForm.getTotalCapital());
+        cashFlowDetail.setTotalLiability(cashFlowForm.getTotalLiability());
+        return cashFlowDetail;
     }
 
     public void cleanCashFlowContext(HttpSession session) {

@@ -79,6 +79,8 @@ public class CashFlowServiceImpl implements CashFlowService {
         CashFlow cashFlow = new CashFlow();
         for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {
             cashFlow.add(mapToMonthlyCashFlow(monthlyCashFlowDetail));
+            cashFlow.setTotalCapital(cashFlowDetail.getTotalCapital());
+            cashFlow.setTotalLiability(cashFlowDetail.getTotalLiability());
         }
         return cashFlow;
     }

@@ -87,7 +87,7 @@ public class CashFlowTest extends UiTestCaseBase {
         String loanProductName = formParameters.getOfferingName();
         int frequency = formParameters.getFreqOfInstallments();
 
-        createAndValidateLoanProductWithCashFlow("99.99",formParameters);
+        createAndValidateLoanProductWithCashFlow("89.99",formParameters);
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,loanProductName).

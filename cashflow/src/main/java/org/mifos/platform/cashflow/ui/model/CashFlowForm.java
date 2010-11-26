@@ -23,6 +23,7 @@ import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class CashFlowForm implements Serializable {
     private static final long serialVersionUID = -3806820293757764245L;
 
     private CashFlowDetail cashFlowDetail;
+    private boolean captureCapitalLiabilityInfo;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public CashFlowForm() {
@@ -41,6 +43,22 @@ public class CashFlowForm implements Serializable {
         this.cashFlowDetail = cashFlowDetail;
     }
 
+    public void setTotalCapital(BigDecimal totalCapital) {
+        cashFlowDetail.setTotalCapital(totalCapital);
+    }
+
+    public void setTotalLiability(BigDecimal totalLiability) {
+        cashFlowDetail.setTotalLiability(totalLiability);
+    }
+
+    public BigDecimal getTotalCapital() {
+        return cashFlowDetail.getTotalCapital();
+    }
+
+    public BigDecimal getTotalLiability() {
+        return cashFlowDetail.getTotalLiability();
+    }
+
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public List<MonthlyCashFlowForm> getMonthlyCashFlows() {
         List<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
@@ -50,4 +68,11 @@ public class CashFlowForm implements Serializable {
         return monthlyCashFlows;
     }
 
+    public void setCaptureCapitalLiabilityInfo(boolean captureCapitalLiabilityInfo) {
+        this.captureCapitalLiabilityInfo = captureCapitalLiabilityInfo;
+    }
+
+    public boolean isCaptureCapitalLiabilityInfo() {
+        return captureCapitalLiabilityInfo;
+    }
 }

@@ -45,6 +45,6 @@ public class MessageMatcher extends TypeSafeMatcher<MessageResolver> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("Messages do not match");
+        description.appendText(errorCode);
     }
 }

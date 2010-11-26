@@ -61,4 +61,8 @@ public class CashFlowDetail extends AbstractEntity {
     public void setRepaymentCapacity(Double repaymentCapacity) {
         this.repaymentCapacity = repaymentCapacity;
     }
+
+    public boolean shouldCaptureCapitalAndLiabilityInformation() {
+        return indebtednessRatio != null && indebtednessRatio > 0;
+    }
 }

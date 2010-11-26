@@ -21,24 +21,21 @@ import static org.mockito.Mockito.when;
 
 public class LoanOfferingBOTest {
 
- @Test
-    @ExpectedException(value = ProductDefinitionException.class)
-    public void testInvalidConnectionThrowsExceptionInUpdate() throws PersistenceException{
-        final LoanPrdPersistence loanPrdPersistence = mock(LoanPrdPersistence.class);
-        LoanOfferingBO loanOfferingBO = new LoanOfferingBO(){
-            @Override
-            protected LoanPrdPersistence getLoanPrdPersistence() {
-                return loanPrdPersistence;
-            }
-        };
-        try {
-            when(loanPrdPersistence.createOrUpdate(loanOfferingBO)).thenThrow(new PersistenceException("some exception"));
-            loanOfferingBO.update((short) 1, "Loan Product", "LOAN", null, null, null, null,
-                    "Loan Product updated", PrdStatus.LOAN_ACTIVE, null, null, (short) 0, null, new Money(new MifosCurrency(new Short("1"),"",new BigDecimal(123), ""), "1000"),
-                    new Money(new MifosCurrency(new Short("1"),"",new BigDecimal(123), ""), "2000"), 12.0, 2.0, 3.0, (short) 20, (short) 1, (short) 12, false,
-                    false, false, null, null, (short) 2, RecurrenceType.WEEKLY, true);
-            Assert.fail("should fail because of invalid session");
-        } catch (ProductDefinitionException e) {
-        }
+    @Test
+    public void shouldCaptureCapitalAndLiabilityInformation() {
+        LoanOfferingBO loanOfferingBO = new LoanOfferingBO();
+        CashFlowDetail cashFlowDetail = new CashFlowDetail();
+        cashFlowDetail.setIndebtednessRatio(123d);
+        loanOfferingBO.setCashFlowDetail(cashFlowDetail);
+        Assert.assertTrue(loanOfferingBO.shouldCaptureCapitalAndLiabilityInformation());
+        cashFlowDetail.setIndebtednessRatio(0d);
+        Assert.assertFalse(loanOfferingBO.shouldCaptureCapitalAndLiabilityInformation());
+        cashFlowDetail.setIndebtednessRatio(-3d);
+        Assert.assertFalse(loanOfferingBO.shouldCaptureCapitalAndLiabilityInformation());
+        cashFlowDetail.setIndebtednessRatio(null);
+        Assert.assertFalse(loanOfferingBO.shouldCaptureCapitalAndLiabilityInformation());
+        loanOfferingBO.setCashFlowDetail(null);
+        Assert.assertFalse(loanOfferingBO.shouldCaptureCapitalAndLiabilityInformation());
     }
+
 }

@@ -22,22 +22,20 @@ package org.mifos.platform.cashflow.builder;
 import org.mifos.platform.cashflow.domain.CashFlow;
 import org.mifos.platform.cashflow.domain.MonthlyCashFlow;
 
-import java.util.ArrayList;
+public class CashFlowBuilder {
+    private CashFlow cashFlow;
 
-public class CashFlowEntityBuilder {
-    private CashFlow cashFlowEntity;
-
-    public CashFlowEntityBuilder() {
-        cashFlowEntity = new CashFlow();
+    public CashFlowBuilder() {
+        cashFlow = new CashFlow();
     }
 
-    public CashFlowEntityBuilder withMonthlyCashFlow(MonthlyCashFlow monthlyCashFlow){
-        cashFlowEntity.add(monthlyCashFlow);
+    public CashFlowBuilder withMonthlyCashFlow(MonthlyCashFlow monthlyCashFlow){
+        cashFlow.add(monthlyCashFlow);
         return this;
     }
 
     public CashFlow build(){
-        return cashFlowEntity;
+        return cashFlow;
     }
 
 }

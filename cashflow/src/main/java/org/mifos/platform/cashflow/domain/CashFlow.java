@@ -20,6 +20,7 @@
 package org.mifos.platform.cashflow.domain;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,8 @@ public class CashFlow implements Serializable {
     private Integer id;
     private final List<MonthlyCashFlow> monthlyCashFlows;
     private static final long serialVersionUID = 4972764856147916800L;
+    private BigDecimal totalLiability;
+    private BigDecimal totalCapital;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public CashFlow() {
@@ -47,5 +50,21 @@ public class CashFlow implements Serializable {
 
     public void add(MonthlyCashFlow monthlyCashFlow) {
         monthlyCashFlows.add(monthlyCashFlow);
+    }
+
+    public BigDecimal getTotalLiability() {
+        return totalLiability;
+    }
+
+    public BigDecimal getTotalCapital() {
+        return totalCapital;
+    }
+
+    public void setTotalCapital(BigDecimal totalCapital) {
+        this.totalCapital = totalCapital;
+    }
+
+    public void setTotalLiability(BigDecimal totalLiability) {
+        this.totalLiability = totalLiability;
     }
 }

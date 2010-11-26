@@ -59,6 +59,9 @@ import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.struts.action.AccountAppAction;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.cashflow.struts.CashFlowAdaptor;
+import org.mifos.application.cashflow.struts.CashFlowCaptor;
+import org.mifos.application.cashflow.struts.DefaultCashFlowServiceLocator;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -74,9 +77,6 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.questionnaire.struts.CashFlowAdaptor;
-import org.mifos.application.questionnaire.struts.CashFlowCaptor;
-import org.mifos.application.questionnaire.struts.CashFlowServiceLocator;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -112,7 +112,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
@@ -125,7 +124,6 @@ import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.service.MifosServiceFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -259,13 +257,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private QuestionGroupFilterForLoan questionGroupFilter;
     private QuestionnaireFlowAdapter createLoanQuestionnaire;
     private CashFlowAdaptor cashFlowAdaptor =
-            new CashFlowAdaptor(ActionForwards.capture_cash_flow.toString(),
-                    new CashFlowServiceLocator() {
-                        @Override
-                        public CashFlowService getService(HttpServletRequest request) {
-                            return MifosServiceFactory.getCashFlowService(request);
-                        }
-                    });
+            new CashFlowAdaptor(ActionForwards.capture_cash_flow.toString(), new DefaultCashFlowServiceLocator());
 
     private static final String SHOW_PREVIEW = "loanAccountAction.do?method=showPreview";
     private static final String CUSTOMER_SEARCH_URL = "custSearchAction.do?method=loadMainSearch";
@@ -633,13 +625,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
 
-        questionGroupFilter.setLoanOfferingBO(getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()));
+        questionGroupFilter.setLoanOfferingBO(loanOffering);
         ActionForward pageAfterQuestionnaire = mapping.findForward(ActionForwards.schedulePreview_success.toString());
         if (loanOffering.isCashFlowCheckEnabled()) {
             pageAfterQuestionnaire = cashFlowAdaptor.renderCashFlow(
-                    firstInstallmentDueDate(loanScheduleDetailsDto),
-                    lastInstallmentDueDate(loanScheduleDetailsDto),
-                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request);
+                    loanScheduleDetailsDto.firstInstallmentDueDate(),
+                    loanScheduleDetailsDto.lastInstallmentDueDate(),
+                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request,loanOffering);
         }
         return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.valueOf(pageAfterQuestionnaire.getName()));
     }
@@ -1806,19 +1798,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             }
         }
         return actionErrors;
-    }
-
-    private DateTime lastInstallmentDueDate(LoanCreationLoanScheduleDetailsDto loanCreationLoanScheduleDetailsDto) {
-        List<RepaymentScheduleInstallment> repaymentScheduleInstallments = loanCreationLoanScheduleDetailsDto.getInstallments();
-        int indexOfLastInstallment = repaymentScheduleInstallments.size() - 1;
-        RepaymentScheduleInstallment lastInstallment = repaymentScheduleInstallments.get(indexOfLastInstallment);
-        return new DateTime(lastInstallment.getDueDateValue());
-    }
-
-    private DateTime firstInstallmentDueDate(LoanCreationLoanScheduleDetailsDto loanCreationLoanScheduleDetailsDto) {
-        List<RepaymentScheduleInstallment> repaymentScheduleInstallments = loanCreationLoanScheduleDetailsDto.getInstallments();
-        RepaymentScheduleInstallment firstInstallment = repaymentScheduleInstallments.get(0);
-        return new DateTime(firstInstallment.getDueDateValue());
     }
 
 }

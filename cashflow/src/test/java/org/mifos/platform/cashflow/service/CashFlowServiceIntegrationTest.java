@@ -25,6 +25,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.cashflow.builder.CashFlowDetailsBuilder;
+import org.mifos.platform.cashflow.domain.CashFlow;
+import org.mifos.platform.cashflow.persistence.CashFlowDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -33,6 +35,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"/test-cashflow-dbContext.xml", "/test-cashflow-persistenceContext.xml", "/META-INF/spring/CashFlowContext.xml"})
 @TransactionConfiguration(transactionManager = "platformTransactionManager", defaultRollback = true)
@@ -40,21 +45,31 @@ public class CashFlowServiceIntegrationTest {
 
     @Autowired
     private CashFlowService cashFlowService;
+
+    @Autowired
+    private CashFlowDao cashFlowDao;
+
     private BigDecimal revenue = new BigDecimal(100.21d);
     private BigDecimal expense = new BigDecimal(50.37d);
 
     @Test
     @Transactional
-    public void shouldSaveCashFlow() {
-        Integer cashFlowId = cashFlowService.save(getCashFlowDetails());
-        Assert.assertNotNull(cashFlowId);
+    public void shouldSaveCashFlowWithTotalCapitalAndTotalLiability() {
+        Integer cashFlowId = cashFlowService.save(getCashFlowDetails(123d, 456d));
+        CashFlow cashFlow = cashFlowDao.getDetails(cashFlowId);
+        BigDecimal totalLiability = cashFlow.getTotalLiability();
+        BigDecimal totalCapital = cashFlow.getTotalCapital();
+        assertThat(totalCapital.doubleValue(), is(123d));
+        assertThat(totalLiability.doubleValue(), is(456d));
     }
 
-    private CashFlowDetail getCashFlowDetails() {
+    private CashFlowDetail getCashFlowDetails(double totalCapital, double totalLiability) {
         DateTime dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15);
         return new CashFlowDetailsBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime, revenue, expense, "my notes")).
                 withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime.plusMonths(1), revenue.add(new BigDecimal(20.01)), expense.add(new BigDecimal(10.22)), "my other notes")).
+                withTotalCapital(totalCapital).
+                withTotalLiability(totalLiability).
                 build();
     }
 }

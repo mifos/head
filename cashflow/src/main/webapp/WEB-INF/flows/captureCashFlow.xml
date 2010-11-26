@@ -10,11 +10,13 @@
                 expression="cashFlowController.prepareCashFlowForm(
                     externalContext.sessionMap.startYear,
                     externalContext.sessionMap.startMonth,
-                    externalContext.sessionMap.noOfMonths)"
+                    externalContext.sessionMap.noOfMonths,
+                    externalContext.sessionMap.captureCapitalLiabilityInfo)"
                 result="cashFlow"/>
-        <set name="flowScope.joinUrl" value="externalContext.sessionMap.joinUrl" type="string"></set>
-        <set name="flowScope.flowKey" value="requestParameters.currentFlowKey" type="string"></set>
-        <set name="flowScope.cancelUrl" value="externalContext.sessionMap.cancelUrl" type="string"></set>
+        <set name="flowScope.joinUrl" value="externalContext.sessionMap.joinUrl" type="string"/>
+        <set name="flowScope.flowKey" value="requestParameters.currentFlowKey" type="string"/>
+        <set name="flowScope.cancelUrl" value="externalContext.sessionMap.cancelUrl" type="string"/>
+        <set name="flowScope.captureCapitalLiabilityInfo" value="externalContext.sessionMap.captureCapitalLiabilityInfo" type="boolean"/>
     </on-start>
 
     <view-state id="captureCashFlow" model="cashFlow">

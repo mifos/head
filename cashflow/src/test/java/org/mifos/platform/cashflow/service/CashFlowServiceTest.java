@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.cashflow.CashFlowService;
 import org.mifos.platform.cashflow.builder.CashFlowDetailsBuilder;
-import org.mifos.platform.cashflow.builder.CashFlowEntityBuilder;
+import org.mifos.platform.cashflow.builder.CashFlowBuilder;
 import org.mifos.platform.cashflow.domain.CashFlow;
 import org.mifos.platform.cashflow.domain.MonthlyCashFlow;
 import org.mifos.platform.cashflow.matchers.CashFlowMatcher;
@@ -36,6 +36,8 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+
+import static org.mockito.Matchers.any;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CashFlowServiceTest {
@@ -54,7 +56,7 @@ public class CashFlowServiceTest {
 
     @Test
     public void shouldSaveCashFlow() {
-        Mockito.when(cashFlowDao.create(Mockito.<CashFlow>any())).thenReturn(new Integer(10));
+        Mockito.when(cashFlowDao.create(Mockito.<CashFlow>any())).thenReturn(10);
         Integer cashFlowId = cashFlowService.save(getCashFlowDetails());
         Mockito.verify(cashFlowDao, Mockito.times(1)).create(
                 Mockito.argThat(new CashFlowMatcher(getCashFlowEntity()))
@@ -110,15 +112,19 @@ public class CashFlowServiceTest {
 
     private CashFlowDetail getCashFlowDetails() {
         DateTime dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15);
-        return new CashFlowDetailsBuilder().
-                withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime, revenue, expense, "my notes")).
-                withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime.plusMonths(1), revenue.add(new BigDecimal(20.01)), expense.add(new BigDecimal(10.22)), "my other notes")).
-                build();
+        return new CashFlowDetailsBuilder()
+                .withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime, revenue, expense, "my notes"))
+                .withMonthlyCashFlow(new MonthlyCashFlowDetail(dateTime.plusMonths(1), revenue.add(new BigDecimal(20.01)), expense.add(new BigDecimal(10.22)), "my other notes"))
+                .withTotalCapital(123d)
+                .withTotalLiability(123d)
+                .build();
     }
+
+
 
     private CashFlow getCashFlowEntity() {
         DateTime dateTime = new DateTime(2010, 10, 1, 2, 3, 4, 5);
-        return new CashFlowEntityBuilder().
+        return new CashFlowBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlow(dateTime.plusMonths(1), revenue.add(new BigDecimal(20.01)), expense.add(new BigDecimal(10.22)), "my other notes")).
                 withMonthlyCashFlow(new MonthlyCashFlow(dateTime, revenue, expense, "my notes")).
                 build();

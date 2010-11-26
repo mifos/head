@@ -2444,10 +2444,9 @@ public class LoanPrdActionForm extends BaseActionForm {
             maxInterestResult = parseDoubleForInterest(maxInterestRate);
             errorList = maxInterestResult.getErrors();
             if (errorList.size() > 0) {
-                for (int i = 0; i < errorList.size(); i++) {
+                for (ConversionError anErrorList : errorList) {
                     addError(errors, ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT,
-                            ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT, getConversionErrorText(errorList
-                                    .get(i), locale));
+                            ProductDefinitionConstants.ERRORMAXINTERESTINVALIDFORMAT, getConversionErrorText(anErrorList, locale));
                 }
             } else {
                 maxInterest = maxInterestResult.getDoubleValue();
@@ -2508,35 +2507,80 @@ public class LoanPrdActionForm extends BaseActionForm {
     }
 
     private void validateCashFlow(ActionErrors actionErrors, Locale locale) {
+        validateCashFlowThreshold(actionErrors, locale);
+        validateIndebtednessRatio(actionErrors, locale);
+        validateRepaymentCapacity(actionErrors, locale);
+    }
 
-        DoubleConversionResult cashFlowThresholdResult = null;
+    private void validateCashFlowThreshold(ActionErrors actionErrors, Locale locale) {
         Double cashFlowThreshold = null;
-        List<ConversionError> errorList = null;
-
         if(getCashFlowValidation()) {
-            if(this.cashFlowThreshold != null && (!this.cashFlowThreshold.trim().equals(""))){
-
-                cashFlowThresholdResult = parseDoubleForCashFlowThreshold(this.cashFlowThreshold);
-
-                errorList = cashFlowThresholdResult.getErrors();
+            if(StringUtils.isNotBlank(this.cashFlowThreshold)){
+                DoubleConversionResult cashFlowThresholdResult = parseDoubleForCashFlowThreshold(this.cashFlowThreshold);
+                List<ConversionError> errorList = cashFlowThresholdResult.getErrors();
                 if (errorList.size() > 0) {
-                    for (int i = 0; i < errorList.size(); i++) {
-                        addError(actionErrors, this.cashFlowThreshold,
-                                ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT, getConversionErrorText(errorList
-                                        .get(i), locale));
+                    for (ConversionError anErrorList : errorList) {
+                        addError(actionErrors, ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT,
+                                ProductDefinitionConstants.CASHFLOW_WARNING_THRESHOLD_INVALID_FORMAT, getConversionErrorText(anErrorList, locale));
                     }
                 } else {
                     cashFlowThreshold = cashFlowThresholdResult.getDoubleValue();
                 }
             }
-
             if(cashFlowThreshold != null) {
-                if(cashFlowThreshold >= AccountingRules.getCashFlowThreshold()) {
-                    addError(actionErrors,"cashFlowThreshold",ProductDefinitionConstants.CASHFLOW_THRESHOLD_INVALID, String.valueOf(AccountingRules.getCashFlowThreshold()));
+                if(cashFlowThreshold >= AccountingRules.getMaxCashFlowThreshold()) {
+                    addError(actionErrors,"cashFlowThreshold",ProductDefinitionConstants.CASHFLOW_THRESHOLD_INVALID, String.valueOf(AccountingRules.getMaxCashFlowThreshold()));
                 }
                 cashFlowThresholdValue = cashFlowThreshold;
             }
+        }
+    }
 
+    private void validateIndebtednessRatio(ActionErrors actionErrors, Locale locale) {
+        Double indebtednessRatio = null;
+        if(getCashFlowValidation()) {
+            if(StringUtils.isNotBlank(this.indebtednessRatio)){
+                DoubleConversionResult indebtednessRatioResult = parseDoubleForIndebtednessRatio(this.indebtednessRatio);
+                List<ConversionError> errorList = indebtednessRatioResult.getErrors();
+                if (errorList.size() > 0) {
+                    for (ConversionError anErrorList : errorList) {
+                        addError(actionErrors, ProductDefinitionConstants.INDEBTEDNESS_RATIO_INVALID_FORMAT,
+                                ProductDefinitionConstants.INDEBTEDNESS_RATIO_INVALID_FORMAT, getConversionErrorText(anErrorList, locale));
+                    }
+                } else {
+                    indebtednessRatio = indebtednessRatioResult.getDoubleValue();
+                }
+            }
+            if(indebtednessRatio != null) {
+                if(indebtednessRatio >= AccountingRules.getMaxIndebtednessRatio()) {
+                    addError(actionErrors,"indebtednessRatio",ProductDefinitionConstants.INDEBTEDNESS_RATIO_INVALID, String.valueOf(AccountingRules.getMaxIndebtednessRatio()));
+                }
+                indebtednessRatioValue = indebtednessRatio;
+            }
+        }
+    }
+
+    private void validateRepaymentCapacity(ActionErrors actionErrors, Locale locale) {
+        Double repaymentCapacity = null;
+        if(getCashFlowValidation()) {
+            if(StringUtils.isNotBlank(this.repaymentCapacity)){
+                DoubleConversionResult repaymentCapacityResult = parseDoubleForRepaymentCapacity(this.repaymentCapacity);
+                List<ConversionError> errorList = repaymentCapacityResult.getErrors();
+                if (errorList.size() > 0) {
+                    for (ConversionError anErrorList : errorList) {
+                        addError(actionErrors, ProductDefinitionConstants.REPAYMENT_CAPACITY_INVALID_FORMAT,
+                                ProductDefinitionConstants.REPAYMENT_CAPACITY_INVALID_FORMAT, getConversionErrorText(anErrorList, locale));
+                    }
+                } else {
+                    repaymentCapacity = repaymentCapacityResult.getDoubleValue();
+                }
+            }
+            if(repaymentCapacity != null) {
+                if(repaymentCapacity >= AccountingRules.getMaxRepaymentCapacity()) {
+                    addError(actionErrors,"repaymentCapacity",ProductDefinitionConstants.REPAYMENT_CAPACITY_INVALID, String.valueOf(AccountingRules.getMaxRepaymentCapacity()));
+                }
+                repaymentCapacityValue = repaymentCapacity;
+            }
         }
     }
 
@@ -3011,11 +3055,33 @@ public class LoanPrdActionForm extends BaseActionForm {
         return getDoubleValue(cashFlowThreshold);
     }
 
+    public String getIndebtednessRatio() {
+        return indebtednessRatio;
+    }
+
+    public String getRepaymentCapacity() {
+        return repaymentCapacity;
+    }
+
+    public void setRepaymentCapacity(String repaymentCapacity) {
+        this.repaymentCapacity = repaymentCapacity;
+    }
+
+    public void setIndebtednessRatio(String indebtednessRatio) {
+        this.indebtednessRatio = indebtednessRatio;
+    }
+
     public Double getIndebtednessRatioValue() {
-        return indebtednessRatioValue;
+        if (StringUtils.isEmpty(indebtednessRatio)) {
+            return indebtednessRatioValue;
+        }
+        return getDoubleValue(indebtednessRatio);
     }
 
     public Double getRepaymentCapacityValue() {
-        return repaymentCapacityValue;
+        if (StringUtils.isEmpty(repaymentCapacity)) {
+            return repaymentCapacityValue;
+        }
+        return getDoubleValue(repaymentCapacity);
     }
 }

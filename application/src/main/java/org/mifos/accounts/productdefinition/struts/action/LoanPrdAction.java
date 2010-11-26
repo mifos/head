@@ -630,8 +630,13 @@ public class LoanPrdAction extends BaseAction {
         setVariableInstallmentDetailsOnLoanProductForm(loanPrdActionForm, loanProduct);
 
         loanPrdActionForm.setCashFlowValidation(loanProduct.isCashFlowCheckEnabled());
-        if(loanProduct.getCashFlowDetail()!=null) {
-            loanPrdActionForm.setCashFlowThreshold(loanProduct.getCashFlowDetail().getCashFlowThreshold().toString());
+        CashFlowDetail cashFlowDetail = loanProduct.getCashFlowDetail();
+        if(cashFlowDetail != null) {
+            loanPrdActionForm.setCashFlowThreshold(cashFlowDetail.getCashFlowThreshold().toString());
+            Double indebtednessRatio = cashFlowDetail.getIndebtednessRatio();
+            if (indebtednessRatio != null) loanPrdActionForm.setIndebtednessRatio(indebtednessRatio.toString());
+            Double repaymentCapacity = cashFlowDetail.getRepaymentCapacity();
+            if (repaymentCapacity != null) loanPrdActionForm.setRepaymentCapacity(repaymentCapacity.toString());
         }
 
         if (loanProduct.isLoanAmountTypeSameForAllLoan()) {

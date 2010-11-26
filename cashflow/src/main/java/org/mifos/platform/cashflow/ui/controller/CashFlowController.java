@@ -38,8 +38,10 @@ public class CashFlowController {
     }
 
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public CashFlowForm prepareCashFlowForm(int startYear, int startMonth, int noOfMonths) {
-        return new CashFlowForm(cashFlowService.cashFlowFor(startYear, startMonth, noOfMonths));
+    public CashFlowForm prepareCashFlowForm(int startYear, int startMonth, int noOfMonths, boolean captureCapitalLiabilityInfo) {
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowService.cashFlowFor(startYear, startMonth, noOfMonths));
+        cashFlowForm.setCaptureCapitalLiabilityInfo(captureCapitalLiabilityInfo);
+        return cashFlowForm;
     }
 
 }

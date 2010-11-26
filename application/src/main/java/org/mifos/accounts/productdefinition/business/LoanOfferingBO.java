@@ -1516,4 +1516,9 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public Short getDefaultNumOfEligibleInstallmentsSameForAllLoan() {
         return getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall();
     }
+
+    public boolean shouldCaptureCapitalAndLiabilityInformation() {
+        return cashFlowDetail != null && cashFlowDetail.shouldCaptureCapitalAndLiabilityInformation();
+    }
+
 }

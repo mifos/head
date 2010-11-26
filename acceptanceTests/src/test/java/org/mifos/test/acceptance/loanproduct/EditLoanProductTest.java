@@ -137,7 +137,7 @@ public class EditLoanProductTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlow() throws Exception {
         createNewLoanProductAndNavigateToEditLoanPage();
-        setAndValidateCashFlow("99.9");
+        setAndValidateCashFlow("89.9");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception

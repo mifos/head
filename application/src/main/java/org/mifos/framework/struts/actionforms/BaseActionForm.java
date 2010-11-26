@@ -35,6 +35,7 @@ import org.apache.struts.validator.ValidatorActionForm;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
@@ -99,8 +100,23 @@ public class BaseActionForm extends ValidatorActionForm {
     }
 
     protected DoubleConversionResult parseDoubleForCashFlowThreshold(String doubleString){
-        return new LocalizationConverter().parseDoubleForCashFlowThreshold(doubleString);
+        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
+                ConversionError.CASH_FLOW_THRESHOLD_OUT_OF_RANGE,
+                AccountingRules.getMinCashFlowThreshold(), AccountingRules.getMaxCashFlowThreshold());
     }
+
+    protected DoubleConversionResult parseDoubleForIndebtednessRatio(String doubleString){
+        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
+                ConversionError.INDEBTEDNESS_RATIO_OUT_OF_RANGE,
+                AccountingRules.getMinIndebtednessRatio(), AccountingRules.getMaxIndebtednessRatio());
+    }
+
+    protected DoubleConversionResult parseDoubleForRepaymentCapacity(String doubleString){
+        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
+                ConversionError.REPAYMENT_CAPACITY_OUT_OF_RANGE,
+                AccountingRules.getMinRepaymentCapacity(), AccountingRules.getMaxRepaymentCapacity());
+    }
+
 
     protected Short getShortValue(String str) {
         return StringUtils.isNotBlank(str) ? Short.valueOf(str) : null;
