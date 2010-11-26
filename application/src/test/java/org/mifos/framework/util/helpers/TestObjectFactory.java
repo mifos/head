@@ -123,7 +123,6 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
@@ -142,6 +141,8 @@ import org.mifos.customers.checklist.business.CheckListDetailEntity;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientNameDetailDto;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.exceptions.CustomerException;
@@ -160,8 +161,6 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.screen.ClientNameDetailDto;
-import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
@@ -468,7 +467,7 @@ public class TestObjectFactory {
     }
 
     public static ClientNameDetailDto clientNameView(final NameType nameType, final String customerName) {
-        return new ClientNameDetailDto(nameType.getValue(), SAMPLE_SALUTATION, customerName, "middle", customerName, "secondLast");
+        return new ClientNameDetailDto(nameType, SAMPLE_SALUTATION, customerName, "middle", customerName, "secondLast");
     }
 
     public static ClientBO createClient(final String customerName, final MeetingBO meeting, final CustomerStatus status) {
@@ -476,14 +475,12 @@ public class TestObjectFactory {
 
         try {
             PersonnelBO systemUser = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
-            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), SAMPLE_SALUTATION,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT, SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
-            clientNameDetailDto.setNames(ClientRules.getNameSequence());
-
-            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE.getValue(), SAMPLE_SALUTATION,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
             ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short
-.valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
+                    .valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));
             client = new ClientBO(TestUtils.makeUserWithLocales(), clientNameDetailDto.getDisplayName(), status, null,
                     null, null, null, getFees(), null, systemUser, new OfficePersistence()
                             .getOffice(SAMPLE_BRANCH_OFFICE), meeting, systemUser, new DateTimeService()
@@ -502,10 +499,9 @@ public class TestObjectFactory {
         ClientBO client;
         Short personnel = PersonnelConstants.SYSTEM_USER;
         try {
-            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.MAYBE_CLIENT.getValue(), SAMPLE_SALUTATION,
+            ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.MAYBE_CLIENT, SAMPLE_SALUTATION,
                     customerName, "", customerName, "");
-            clientNameDetailDto.setNames(ClientRules.getNameSequence());
-            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE.getValue(), SAMPLE_SALUTATION,
+            ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, SAMPLE_SALUTATION,
                     customerName, "middle", customerName, "secondLast");
             ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short
                     .valueOf("1"), Short.valueOf("1"), Short.valueOf("41"));

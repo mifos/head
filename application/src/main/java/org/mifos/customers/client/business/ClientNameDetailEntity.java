@@ -20,10 +20,8 @@
 
 package org.mifos.customers.client.business;
 
-import org.mifos.config.ClientRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
-import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Name;
 
@@ -44,9 +42,8 @@ public class ClientNameDetailEntity extends AbstractEntity {
         this.nameType = view.getNameType();
         this.salutation = view.getSalutation();
         this.secondMiddleName = secondMiddleName;
-        view.setNames(ClientRules.getNameSequence());
         this.displayName = view.getDisplayName();
-        this.name = new Name(view.getFirstName(), view.getMiddleName(), view.getSecondLastName(), view.getLastName());
+        this.name = view.asName();
     }
 
     protected ClientNameDetailEntity() {
@@ -112,17 +109,14 @@ public class ClientNameDetailEntity extends AbstractEntity {
         this.nameType = nameView.getNameType();
         this.salutation = nameView.getSalutation();
         this.displayName = nameView.getDisplayName();
-        this.name = new Name(nameView.getFirstName(), nameView.getMiddleName(), nameView.getSecondLastName(), nameView.getLastName());
+        this.name = nameView.asName();
     }
 
     public ClientNameDetailDto toDto() {
 
-        ClientNameDetailDto clientNameDetail = new ClientNameDetailDto(this.nameType, this.salutation,
+        return new ClientNameDetailDto(this.nameType, this.salutation,
                 new StringBuilder(this.displayName), this.name.getFirstName(),
                 this.name.getMiddleName(), this.name.getLastName(), this.name.getSecondLastName(), this.customerNameId);
-        clientNameDetail.setNames(ClientRules.getNameSequence());
-
-        return clientNameDetail;
     }
 
     public boolean isNotClientNameType() {

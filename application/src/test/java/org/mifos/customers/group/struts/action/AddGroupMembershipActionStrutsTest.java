@@ -29,9 +29,10 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.config.ClientRules;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.group.business.GroupBO;
@@ -42,8 +43,6 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.screen.ClientNameDetailDto;
-import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -172,11 +171,9 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
-        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), 1, "Client", "", "1", "");
-        clientNameDetailDto.setNames(ClientRules.getNameSequence());
-        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE.getValue(), 1, "first", "middle",
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT, 1, "Client", "", "1", "");
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, 1, "first", "middle",
                 "last", "secondLast");
-        spouseNameDetailView.setNames(ClientRules.getNameSequence());
         ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
         client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus

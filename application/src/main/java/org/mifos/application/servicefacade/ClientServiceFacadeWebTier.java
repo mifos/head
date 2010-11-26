@@ -20,56 +20,31 @@
 
 package org.mifos.application.servicefacade;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountFeesEntity;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
-import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
-import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.service.CustomerService;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.ClientDetailEntity;
-import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
-import org.mifos.customers.client.business.ClientNameDetailEntity;
-import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
-import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.FamilyDetailDto;
-import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.ProcessRulesDto;
@@ -77,14 +52,7 @@ import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ClientDropdownsDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
-import org.mifos.dto.screen.ClientNameDetailDto;
-import org.mifos.framework.business.util.Address;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.MifosUser;
-import org.mifos.security.util.ActivityMapper;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -276,201 +244,5 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
-    }
-
-    @Override
-    public CustomerDetailsDto createNewClient(ClientCreationDetail actionForm, MeetingDto meetingDto, List<SavingsDetailDto> allowedSavingProducts) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        try {
-
-            ClientBO client = null;
-//            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
-
-            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
-            List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
-            for (Short productId : actionForm.getSelectedSavingProducts()) {
-                if (productId != null) {
-                    for (SavingsDetailDto savingsOffering : allowedSavingProducts) {
-                        if (productId.equals(savingsOffering.getPrdOfferingId())) {
-
-                            SavingsOfferingBO savingsProduct = new SavingsPrdPersistence().getSavingsProduct(productId);
-                            selectedOfferings.add(savingsProduct);
-                        }
-                    }
-                }
-            }
-
-            List<ClientInitialSavingsOfferingEntity> offeringsAssociatedInCreate = new ArrayList<ClientInitialSavingsOfferingEntity>();
-            for (SavingsOfferingBO offering : selectedOfferings) {
-                offeringsAssociatedInCreate.add(new ClientInitialSavingsOfferingEntity(null, offering));
-            }
-
-            Short personnelId = null;
-            Short officeId = null;
-
-            ClientNameDetailDto spouseNameDetailView = null;
-            if (ClientRules.isFamilyDetailsRequired()) {
-//                actionForm.setFamilyDateOfBirth();
-//                actionForm.constructFamilyDetails();
-            } else {
-                spouseNameDetailView = actionForm.getClientNameDetailDto();
-            }
-
-            String secondMiddleName = null;
-            ClientNameDetailEntity clientNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, actionForm.getClientNameDetailDto());
-
-            ClientNameDetailEntity spouseFatherNameDetailEntity = null;
-            if (spouseNameDetailView != null) {
-                spouseFatherNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, spouseNameDetailView);
-            }
-
-            ClientDetailEntity clientDetailEntity = new ClientDetailEntity();
-            clientDetailEntity.updateClientDetails(actionForm.getClientPersonalDetailDto());
-
-            DateTime dob = new DateTime(actionForm.getDateOfBirth());
-            boolean trainedBool = actionForm.isTrained();
-            DateTime trainedDateTime = null;
-            if (actionForm.getTrainedDate() != null) {
-                trainedDateTime = new DateTime(actionForm.getTrainedDate());
-            }
-            String clientFirstName = actionForm.getClientNameDetailDto().getFirstName();
-            String clientLastName = actionForm.getClientNameDetailDto().getLastName();
-            String secondLastName = actionForm.getClientNameDetailDto().getSecondLastName();
-
-            Blob pictureAsBlob = null;
-            if (actionForm.getPicture() != null) {
-                pictureAsBlob = new ClientPersistence().createBlob(actionForm.getPicture());
-            }
-
-            CustomerStatus clientStatus = CustomerStatus.fromInt(actionForm.getClientStatus());
-            PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getFormedBy());
-            Address address = null;
-            if (actionForm.getAddress() != null) {
-                AddressDto dto = actionForm.getAddress();
-                address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(), dto.getPhoneNumber());
-            }
-
-            if (YesNoFlag.YES.getValue().equals(actionForm.getGroupFlag())) {
-
-                Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
-                CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
-
-                if (group.getPersonnel() != null) {
-                    personnelId = group.getPersonnel().getPersonnelId();
-                }
-
-                if (group.getParentCustomer() != null) {
-//                    actionForm.setGroupDisplayName(group.getDisplayName());
-                    if (group.getParentCustomer() != null) {
-//                        actionForm.setCenterDisplayName(group.getParentCustomer().getDisplayName());
-                    }
-                }
-
-                officeId = group.getOffice().getOfficeId();
-
-                List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
-                client = ClientBO.createNewInGroupHierarchy(userContext, actionForm.getClientName(), clientStatus, new DateTime(
-                       actionForm.getDateOfBirth()), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
-                       actionForm.getGovernmentId(), trainedBool, trainedDateTime, actionForm.getGroupFlag(), clientFirstName, clientLastName,
-                        secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob,
-                        offeringsAssociatedInCreate, actionForm.getExternalId(), address);
-
-                if (ClientRules.isFamilyDetailsRequired()) {
-                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
-                }
-
-                this.customerService.createClient(client, client.getCustomerMeetingValue(), feesForCustomerAccount,selectedOfferings);
-
-            } else {
-                personnelId = actionForm.getLoanOfficerId();
-                officeId = actionForm.getOfficeId();
-
-                checkPermissionForCreate(actionForm.getClientStatus(), userContext, officeId, personnelId);
-
-                PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(personnelId);
-                OfficeBO office = this.officeDao.findOfficeById(officeId);
-
-                int lastSearchIdCustomerValue = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(officeId);
-
-                MeetingBO clientMeeting = null;
-                if (meetingDto != null) {
-                    // FIXME - pull out assembly code from dto to domain object for meeting (also in center service facade)
-                    MeetingDetailsDto meetingDetailsDto = meetingDto.getMeetingDetailsDto();
-                    clientMeeting = new MeetingBO(RecurrenceType.fromInt(meetingDetailsDto.getRecurrenceTypeId().shortValue()),
-                                                      meetingDetailsDto.getEvery().shortValue(),
-                                                      meetingDto.getMeetingStartDate().toDateMidnight().toDate(),
-                                                      MeetingType.CUSTOMER_MEETING);
-
-                    RankOfDay rank = null;
-                    Integer weekOfMonth = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-                    if (weekOfMonth != null && weekOfMonth > 0) {
-                        rank = RankOfDay.getRankOfDay(meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth()+1);
-                    }
-
-                    WeekDay weekDay = null;
-                    Integer weekDayNum = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-                    if (weekDayNum != null && weekDayNum > 0) {
-                        weekDay = WeekDay.getWeekDay(meetingDetailsDto.getRecurrenceDetails().getDayOfWeek());
-                    }
-
-                    if (rank != null && weekDay != null) {
-                        clientMeeting = new MeetingBO(weekDay, rank, meetingDetailsDto.getEvery().shortValue(), meetingDto.getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-                    }
-                    clientMeeting.setUserContext(userContext);
-                }
-
-
-                List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
-                client = ClientBO.createNewOutOfGroupHierarchy(userContext, actionForm.getClientName(), clientStatus, new DateTime(
-                        actionForm.getMfiJoiningDate()), office, loanOfficer, clientMeeting, formedBy, customerCustomFields,
-                        clientNameDetailEntity, dob, actionForm.getGovernmentId(), trainedBool, trainedDateTime, actionForm.getGroupFlag(),
-                        clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity,
-                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, actionForm.getExternalId(), address,
-                        lastSearchIdCustomerValue);
-
-                if (ClientRules.isFamilyDetailsRequired()) {
-                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
-                }
-
-                this.customerService.createClient(client, clientMeeting, feesForCustomerAccount, selectedOfferings);
-            }
-
-            return new CustomerDetailsDto(client.getCustomerId(), client.getGlobalCustNum());
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        } catch (CustomerException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        } catch (ApplicationException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        }
-    }
-
-    private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<ApplicableAccountFeeDto> feesToApply) {
-        List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
-        for (ApplicableAccountFeeDto feeDto : feesToApply) {
-            FeeBO fee = new FeePersistence().getFee(feeDto.getFeeId().shortValue());
-            Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeDto.getAmount());
-
-            AccountBO nullReferenceForNow = null;
-            AccountFeesEntity accountFee = new AccountFeesEntity(nullReferenceForNow, fee, feeAmount);
-            feesForCustomerAccount.add(accountFee);
-        }
-        return feesForCustomerAccount;
-    }
-
-    private void checkPermissionForCreate(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(newState, userContext, recordOfficeId, recordLoanOfficerId)) {
-            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
-
-    private boolean isPermissionAllowed(Short newState, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
-                recordOfficeId, recordLoanOfficerId);
     }
 }

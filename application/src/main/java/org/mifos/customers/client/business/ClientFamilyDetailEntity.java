@@ -22,9 +22,7 @@ package org.mifos.customers.client.business;
 
 import java.sql.Date;
 
-import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.framework.business.AbstractEntity;
-import org.mifos.framework.util.helpers.DateUtils;
 
 public class ClientFamilyDetailEntity extends AbstractEntity {
 
@@ -109,12 +107,6 @@ public class ClientFamilyDetailEntity extends AbstractEntity {
     }
 
     public ClientFamilyDetailDto toDto() {
-        String dateOfBirthForBrowser = "";
-        if(dateOfBirth != null) {
-            dateOfBirthForBrowser = DateUtils.makeDateAsSentFromBrowser(getDateOfBirth());
-        }
-        ClientFamilyDetailDto familyDetailDto = new ClientFamilyDetailDto(relationship, gender, livingStatus, dateOfBirth);
-        familyDetailDto.setDateOfBirthForBrowser(dateOfBirthForBrowser);
-        return familyDetailDto;
+        return new ClientFamilyDetailDto(relationship, gender, livingStatus, dateOfBirth);
     }
 }

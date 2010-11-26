@@ -23,9 +23,9 @@ package org.mifos.application.servicefacade;
 import java.io.InputStream;
 import java.util.List;
 
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
+import org.mifos.customers.client.business.ClientNameDetailDto;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.screen.ClientNameDetailDto;
-import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.business.util.Address;
 
 public class ClientPersonalInfoUpdate {

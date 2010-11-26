@@ -23,7 +23,6 @@ package org.mifos.customers.client.business;
 import java.util.Date;
 
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.business.AbstractEntity;
 
 public class ClientDetailEntity extends AbstractEntity {

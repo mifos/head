@@ -20,15 +20,7 @@
 
 package org.mifos.customers.client.struts.action;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Locale;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -54,6 +46,8 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
+import org.mifos.customers.client.business.ClientNameDetailDto;
+import org.mifos.customers.client.business.ClientPersonalDetailDto;
 import org.mifos.customers.client.business.ClientTestUtils;
 import org.mifos.customers.client.business.NameType;
 import org.mifos.customers.client.business.service.ClientInformationDto;
@@ -73,8 +67,6 @@ import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.SavingsDetailDto;
-import org.mifos.dto.screen.ClientNameDetailDto;
-import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
@@ -95,6 +87,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
 
 public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
     public ClientCustActionStrutsTest() throws Exception {
@@ -1253,14 +1252,12 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Short povertyStatus = Short.valueOf("41");
 
         StaticHibernateUtil.startTransaction();
-        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), salutation, "Client", "", "1", "");
-        clientNameDetailDto.setNames(ClientRules.getNameSequence());
-        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE.getValue(), TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
-        spouseNameDetailView.setNames(ClientRules.getNameSequence());
-
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT, salutation, "Client", "",
+                "1", "");
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE,
+                TestObjectFactory.SAMPLE_SALUTATION, "first", "middle", "last", "secondLast");
         ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(ethincity, citizenship, handicapped,
                 businessActivities, ClientPersonalDetailDto.MARRIED, educationLevel, numChildren, gender, povertyStatus);
-
         client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
                 .fromInt(new Short("1")), null, null, new Address(), getCustomFields(), null, null, personnel, office,
                 meeting, personnel, new java.util.Date(), null, null, null, YesNoFlag.NO.getValue(),
@@ -1478,11 +1475,9 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         OfficeBO office = new OfficePersistence().getOffice(TestObjectFactory.HEAD_OFFICE);
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.TEST_USER);
         meeting = getMeeting();
-        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT.getValue(), 1, "Client", "", "1", "");
-        clientNameDetailDto.setNames(ClientRules.getNameSequence());
-        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE.getValue(), 1, "first", "middle", "last", "secondLast");
-        spouseNameDetailView.setNames(ClientRules.getNameSequence());
-
+        ClientNameDetailDto clientNameDetailDto = new ClientNameDetailDto(NameType.CLIENT, 1, "Client", "", "1", "");
+        ClientNameDetailDto spouseNameDetailView = new ClientNameDetailDto(NameType.SPOUSE, 1, "first", "middle",
+                "last", "secondLast");
         ClientPersonalDetailDto clientPersonalDetailDto = new ClientPersonalDetailDto(1, 1, 1, 1, 1, 1, Short.valueOf("1"), Short
                 .valueOf("1"), Short.valueOf("41"));
         client = new ClientBO(TestUtils.makeUser(), clientNameDetailDto.getDisplayName(), CustomerStatus
