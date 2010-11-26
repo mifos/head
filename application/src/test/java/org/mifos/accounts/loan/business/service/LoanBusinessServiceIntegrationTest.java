@@ -20,20 +20,7 @@
 
 package org.mifos.accounts.loan.business.service;
 
-import static java.util.Arrays.asList;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,7 +35,9 @@ import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -62,6 +51,18 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 
 public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -77,7 +78,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
     @Before
     public void setUp() throws Exception {
-        loanBusinessService = new LoanBusinessService();
+        loanBusinessService = DependencyInjectedServiceLocator.locateLoanBusinessService();
         accountPersistence = new AccountPersistence();
     }
 
@@ -101,7 +102,6 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testFindBySystemId() throws Exception {
         accountBO = getLoanAccount();
-        loanBusinessService = new LoanBusinessService();
         LoanBO loanBO = loanBusinessService.findBySystemId(accountBO.getGlobalAccountNum());
         Assert.assertEquals(loanBO.getGlobalAccountNum(), accountBO.getGlobalAccountNum());
         Assert.assertEquals(loanBO.getAccountId(), accountBO.getAccountId());
@@ -110,7 +110,6 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testFindIndividualLoans() throws Exception {
         accountBO = getLoanAccount();
-        loanBusinessService = new LoanBusinessService();
         List<LoanBO> listLoanBO = loanBusinessService.findIndividualLoans(accountBO.getAccountId().toString());
         Assert.assertEquals(0, listLoanBO.size());
     }
@@ -118,7 +117,6 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testGetLoanAccountsActiveInGoodBadStanding() throws Exception {
         accountBO = getLoanAccount();
-        loanBusinessService = new LoanBusinessService();
         List<LoanBO> loanBO = loanBusinessService.getLoanAccountsActiveInGoodBadStanding(accountBO.getCustomer()
                 .getCustomerId());
         Assert.assertEquals(Short.valueOf("1"), loanBO.get(0).getAccountType().getAccountTypeId());
@@ -206,7 +204,6 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     public void testGetAllLoanAccounts() throws Exception {
         int initialLoanAccountsSize = loanBusinessService.getAllLoanAccounts().size();
         accountBO = getLoanAccount();
-        loanBusinessService = new LoanBusinessService();
         List<LoanBO> loanAccounts = loanBusinessService.getAllLoanAccounts();
         Assert.assertNotNull(loanAccounts);
         Assert.assertEquals(initialLoanAccountsSize+1, loanAccounts.size());
@@ -255,7 +252,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
                 accountBusinessServiceMock);
 
         Assert.assertEquals(asList(loanMock1), new LoanBusinessService(new LoanPersistence(), configServiceMock,
-                accountBusinessServiceMock).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
+                accountBusinessServiceMock, createMock(HolidayService.class)).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
 
         verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
                 accountBusinessServiceMock);

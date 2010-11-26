@@ -23,19 +23,11 @@ package org.mifos.accounts.loan.struts.action;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.application.master.business.service.MasterDataService;
-import org.mifos.config.business.service.ConfigurationBusinessService;
-import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
-import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
@@ -43,6 +35,7 @@ import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.questionnaire.service.SectionDetail;
 import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -82,9 +75,7 @@ public class LoanAccountActionTest {
 
     @Before
     public void setUp() {
-        loanAccountAction = new LoanAccountAction(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
-                new LoanPrdBusinessService(), new ClientBusinessService(), new MasterDataService(),
-                new ConfigurationPersistence(), new AccountBusinessService());
+        loanAccountAction = new LoanAccountAction();
     }
 
     @Test

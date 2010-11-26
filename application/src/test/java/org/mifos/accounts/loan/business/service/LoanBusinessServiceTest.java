@@ -28,10 +28,12 @@ import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -57,12 +59,18 @@ public class LoanBusinessServiceTest {
     @Mock
     private LoanBO loanBO;
 
+    @Mock
+    private HolidayService holidayService;
+
+    private Short officeId;
+
     @Before
     public void setupAndInjectDependencies() {
-        loanBusinessService = new LoanBusinessService();
+        loanBusinessService = new LoanBusinessService(null, null, null, holidayService);
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        officeId = Short.valueOf("1");
     }
 
     @Test
@@ -219,7 +227,10 @@ public class LoanBusinessServiceTest {
                 installment4, installment5, installment6, installment7);
         Date initialDisbursementDate = getDate(2010, 8, 25);
         Date disbursementDate = getDate(2010, 8, 30);
-        loanBusinessService.adjustInstallmentGapsPostDisbursal(installments,initialDisbursementDate,disbursementDate);
+        when(holidayService.getNextWorkingDay(Matchers.<Date>any(), eq(officeId))).thenReturn(getDate(2010, 9, 6),
+                getDate(2010, 9, 13), getDate(2010, 9, 20), getDate(2010, 10, 20), getDate(2010, 10, 30),
+                getDate(2010, 11, 6), getDate(2010, 11, 23));
+        loanBusinessService.adjustInstallmentGapsPostDisbursal(installments, initialDisbursementDate, disbursementDate, officeId);
         assertInstallmentDueDate(installment1, "06-Sep-2010");
         assertInstallmentDueDate(installment2, "13-Sep-2010");
         assertInstallmentDueDate(installment3, "20-Sep-2010");
@@ -227,6 +238,7 @@ public class LoanBusinessServiceTest {
         assertInstallmentDueDate(installment5, "30-Oct-2010");
         assertInstallmentDueDate(installment6, "06-Nov-2010");
         assertInstallmentDueDate(installment7, "23-Nov-2010");
+        verify(holidayService, times(7)).getNextWorkingDay(Matchers.<Date>any(), eq(officeId));
     }
 
     @Test
@@ -249,7 +261,10 @@ public class LoanBusinessServiceTest {
                 installment4, installment5, installment6, installment7);
         Date initialDisbursementDate = getDate(2010, 8, 25);
         Date disbursementDate = getDate(2010, 8, 20);
-        loanBusinessService.adjustInstallmentGapsPostDisbursal(installments,initialDisbursementDate,disbursementDate);
+        when(holidayService.getNextWorkingDay(Matchers.<Date>any(), eq(officeId))).thenReturn(getDate(2010, 8, 27),
+                getDate(2010, 9, 3), getDate(2010, 9, 10), getDate(2010, 10, 11), getDate(2010, 10, 21),
+                getDate(2010, 10, 28), getDate(2010, 11, 15));
+        loanBusinessService.adjustInstallmentGapsPostDisbursal(installments, initialDisbursementDate, disbursementDate, officeId);
         assertInstallmentDueDate(installment1, "27-Aug-2010");
         assertInstallmentDueDate(installment2, "03-Sep-2010");
         assertInstallmentDueDate(installment3, "10-Sep-2010");
@@ -257,6 +272,7 @@ public class LoanBusinessServiceTest {
         assertInstallmentDueDate(installment5, "21-Oct-2010");
         assertInstallmentDueDate(installment6, "28-Oct-2010");
         assertInstallmentDueDate(installment7, "15-Nov-2010");
+        verify(holidayService, times(7)).getNextWorkingDay(Matchers.<Date>any(), eq(officeId));
     }
 
     private void assertInstallmentDueDate(RepaymentScheduleInstallment installment, String expectedDueDate) {

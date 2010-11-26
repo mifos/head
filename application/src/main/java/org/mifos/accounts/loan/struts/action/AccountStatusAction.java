@@ -20,12 +20,6 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -36,6 +30,7 @@ import org.mifos.accounts.loan.struts.actionforms.AccountStatusActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ProcessFlowRules;
@@ -56,10 +51,15 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+
 public class AccountStatusAction extends BaseAction {
     private MasterDataService masterService;
 
-    private LoanBusinessService loanService;
+    private LoanBusinessService loanService = DependencyInjectedServiceLocator.locateLoanBusinessService();
 
     public AccountStatusAction() {
         super();
@@ -192,15 +192,11 @@ public class AccountStatusAction extends BaseAction {
 
     private List<LoanBO> getSearchResults(final String officeId, final String personnelId, final String currentStatus)
             throws Exception {
-        loanService = new LoanBusinessService();
-
         return loanService.getSearchResults(officeId, personnelId, currentStatus);
     }
 
     private List updateAccountsStatus(final List<String> accountList, final String newStatus, final String comments,
             final UserContext userContext, final CustomerPersistence customerPersistence) throws Exception {
-        loanService = new LoanBusinessService();
-
         List accountNumbers = new ArrayList();
 
         for (String accountId : accountList) {

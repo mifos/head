@@ -60,10 +60,9 @@ public class InstallmentsValidatorImpl implements InstallmentsValidator {
     }
 
     private void validateBusinessRulesForInstallments(List<RepaymentScheduleInstallment> installments,
-                                                      InstallmentValidationContext installmentValidationContext,
-                                                      Errors errors) {
-        errors.addErrors(installmentRulesValidator.validateForDisbursementDate(installments, installmentValidationContext.getDisbursementDate()));
-        errors.addErrors(installmentRulesValidator.validateDueDatesForVariableInstallments(installments, installmentValidationContext.getVariableInstallmentDetails()));
-        errors.addErrors(installmentRulesValidator.validateForHolidays(installments, installmentValidationContext.getFiscalCalendarRules()));
+                                                      InstallmentValidationContext context, Errors errors) {
+        errors.addErrors(installmentRulesValidator.validateForDisbursementDate(installments, context.getDisbursementDate()));
+        errors.addErrors(installmentRulesValidator.validateDueDatesForVariableInstallments(installments, context.getVariableInstallmentDetails()));
+        errors.addErrors(installmentRulesValidator.validateForHolidays(installments, context.getHolidayServiceFacade(), context.getOfficeId()));
     }
 }

@@ -1843,4 +1843,8 @@ public class AccountBO extends AbstractBusinessObject {
     public void setAccountCustomFields(Set<AccountCustomFieldEntity> accountCustomFields) {
         this.accountCustomFields = accountCustomFields;
     }
+
+    public Short getOfficeId() {
+        return office.getOfficeId();
+    }
 }

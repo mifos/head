@@ -20,12 +20,14 @@
 
 package org.mifos.application.admin.servicefacade;
 
-import java.util.List;
-import java.util.Map;
-
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.dto.domain.OfficeHoliday;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public interface HolidayServiceFacade {
 
@@ -38,4 +40,10 @@ public interface HolidayServiceFacade {
     OfficeHoliday retrieveHolidayDetailsForPreview(HolidayDetails holidayDetail, List<Short> officeIds);
 
     List<String> retrieveOtherHolidayNamesWithTheSameDate(HolidayDetails holidayDetail, List<Short> branchIds);
+
+    boolean isWorkingDay(Calendar day, Short officeId);
+
+    Calendar getNextWorkingDay(Calendar day, Short officeId);
+
+    Date getNextWorkingDay(Date day, Short officeId);
 }

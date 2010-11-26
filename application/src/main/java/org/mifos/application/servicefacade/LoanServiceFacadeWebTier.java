@@ -34,14 +34,20 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.service.*;
-import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
-import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
-import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.service.AccountFeesDto;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.LoanInformationDto;
+import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
+import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
+import org.mifos.accounts.loan.business.service.LoanService;
+import org.mifos.accounts.loan.business.service.LoanSummaryDto;
+import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
@@ -66,6 +72,7 @@ import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -88,7 +95,6 @@ import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.AccountingRules;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -122,8 +128,11 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
@@ -142,13 +151,15 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final FundDao fundDao;
     private final LoanDao loanDao;
     private final InstallmentsValidator installmentsValidator;
-    private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
-    LoanBusinessService loanBusinessService;
+    private final ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+    private final LoanBusinessService loanBusinessService;
+    private HolidayServiceFacade holidayServiceFacade;
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
                                     PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao,
                                     InstallmentsValidator installmentsValidator,
-                                    ScheduleCalculatorAdaptor scheduleCalculatorAdaptor, LoanBusinessService loanBusinessService) {
+                                    ScheduleCalculatorAdaptor scheduleCalculatorAdaptor, LoanBusinessService loanBusinessService,
+                                    HolidayServiceFacade holidayServiceFacade) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
@@ -157,6 +168,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         this.installmentsValidator = installmentsValidator;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
         this.loanBusinessService = loanBusinessService;
+        this.holidayServiceFacade = holidayServiceFacade;
     }
 
     @Override
@@ -196,7 +208,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     public LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(final Integer customerId)
             throws ApplicationException {
 
-        final CustomerBO customer = customerDao.findCustomerById(customerId);
+        final CustomerBO customer = loadCustomer(customerId);
 
         final CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
         final Date nextMeetingDate = customer.getCustomerAccount().getNextMeetingDate();
@@ -231,6 +243,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 isGroup, isGlimEnabled, loanCreationGlimDto, clientDetails);
     }
 
+    private CustomerBO loadCustomer(Integer customerId) {
+        return customerDao.findCustomerById(customerId);
+    }
+
     @Override
     public LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(UserContext userContext,
             Integer customerId, Short productId) throws ApplicationException {
@@ -250,7 +266,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
 
         // setDateIntoForm
-        CustomerBO customer = customerDao.findCustomerById(customerId);
+        CustomerBO customer = loadCustomer(customerId);
         LoanAmountOption eligibleLoanAmount = loanOffering.eligibleLoanAmount(customer.getMaxLoanAmount(loanOffering),
                 customer.getMaxLoanCycleForProduct(loanOffering));
         LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
@@ -321,7 +337,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
         LocalizationConverter localizationConverter = new LocalizationConverter();
-        CustomerBO customer = customerDao.findCustomerById(customerId);
+        CustomerBO customer = loadCustomer(customerId);
 
         if (loanActionForm.isDefaultFeeRemoved()) {
             customerDao.checkPermissionForDefaultFeeRemovalFromLoan(userContext, customer);
@@ -396,7 +412,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
         LocalizationConverter localizationConverter = new LocalizationConverter();
-        CustomerBO customer = customerDao.findCustomerById(customerId);
+        CustomerBO customer = loadCustomer(customerId);
 
         new LoanService().validateDisbursementDateForNewLoan(customer.getOfficeId(), disbursementDate);
 
@@ -541,7 +557,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds,
             List<BusinessActivityEntity> businessActEntity) {
 
-        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        CustomerBO customer = loadCustomer(customerId);
         final boolean isGroup = customer.isGroup();
         final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
 
@@ -551,7 +567,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             if (StringUtils.isNotEmpty(clientIdAsString)) {
 
                 LoanAccountDetailsDto tempLoanAccount = new LoanAccountDetailsDto();
-                ClientBO client = (ClientBO) this.customerDao.findCustomerById(Integer.valueOf(clientIdAsString));
+                ClientBO client = (ClientBO) loadCustomer(Integer.valueOf(clientIdAsString));
 
                 LoanAccountDetailsDto account = null;
                 for (LoanAccountDetailsDto tempAccount : accountDetails) {
@@ -587,7 +603,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     public LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
             FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException {
 
-        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        CustomerBO customer = loadCustomer(customerId);
         boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
 
         if (!isPermissionAllowed(loanActionForm.getState().getValue(), userContext, customer.getOffice().getOfficeId(),
@@ -631,7 +647,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     public LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
             LoanAccountActionForm loanAccountActionForm) throws ApplicationException {
 
-        CustomerBO customer = customerDao.findCustomerById(customerId);
+        CustomerBO customer = loadCustomer(customerId);
         LoanBO loan = redoLoan(customer, loanAccountActionForm, disbursementDate, userContext);
 
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
@@ -687,7 +703,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     @Override
     public LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm,
             DateTime disbursementDate, UserContext userContext) throws ApplicationException {
-        CustomerBO customer = customerDao.findCustomerById(customerId);
+        CustomerBO customer = loadCustomer(customerId);
         return redoLoan(customer, loanAccountActionForm, disbursementDate, userContext);
     }
 
@@ -1082,10 +1098,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
     @Override
     public Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails,
-                                       List<RepaymentScheduleInstallment> installments) {
-        FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
-        InstallmentValidationContext installmentValidationContext = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, fiscalCalendarRules);
-        return installmentsValidator.validateInputInstallments(installments, installmentValidationContext);
+                                            List<RepaymentScheduleInstallment> installments, Integer customerId) {
+        Short officeId = loadCustomer(customerId).getOfficeId();
+        InstallmentValidationContext context = new InstallmentValidationContext(disbursementDate, variableInstallmentDetails, holidayServiceFacade, officeId);
+        return installmentsValidator.validateInputInstallments(installments, context);
     }
 
     @Override

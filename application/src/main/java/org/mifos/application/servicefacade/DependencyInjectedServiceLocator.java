@@ -20,6 +20,10 @@
 
 package org.mifos.application.servicefacade;
 
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.api.AccountService;
+import org.mifos.accounts.api.StandardAccountService;
+import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.fees.business.service.FeeService;
 import org.mifos.accounts.fees.business.service.FeeServiceImpl;
 import org.mifos.accounts.fees.persistence.FeeDao;
@@ -70,6 +74,8 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.office.business.service.LegacyOfficeServiceFacade;
@@ -124,6 +130,8 @@ public class DependencyInjectedServiceLocator {
     private static HolidayService holidayService;
     private static FeeService feeService;
     private static PersonnelService personnelService;
+    private static AccountBusinessService accountBusinessService;
+    private static ConfigurationBusinessService configurationBusinessService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -134,6 +142,7 @@ public class DependencyInjectedServiceLocator {
     private static LoanPersistence loanPersistence = new LoanPersistence();
     private static AccountPersistence accountPersistence = new AccountPersistence();
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
+    private static AcceptedPaymentTypePersistence acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
 
     private static GenericDao genericDao = new GenericDaoHibernate();
     private static FundDao fundDao = new FundDaoHibernate(genericDao);
@@ -162,6 +171,10 @@ public class DependencyInjectedServiceLocator {
     private static InstallmentsValidator installmentsValidator;
     private static LoanBusinessService loanBusinessService;
 
+    // rules
+    private static FiscalCalendarRules fiscalCalendarRules;
+    private static StandardAccountService accountService;
+
     public static CollectionSheetService locateCollectionSheetService() {
 
         if (collectionSheetService == null) {
@@ -183,7 +196,7 @@ public class DependencyInjectedServiceLocator {
     public static HolidayService locateHolidayService() {
 
         if (holidayService == null) {
-            holidayService = new HolidayServiceImpl(officeDao, holidayDao, hibernateTransactionHelper);
+            holidayService = new HolidayServiceImpl(officeDao, holidayDao, hibernateTransactionHelper, locateFiscalCalendarRules());
         }
         return holidayService;
     }
@@ -252,16 +265,39 @@ public class DependencyInjectedServiceLocator {
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
             loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
-                    fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor(),locateLoanBusinessService());
+                    fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor(),
+                    locateLoanBusinessService(), locateHolidayServiceFacade());
         }
         return loanServiceFacade;
     }
 
     public static LoanBusinessService locateLoanBusinessService() {
         if (loanBusinessService == null) {
-            loanBusinessService= new LoanBusinessService();
+            loanBusinessService= new LoanBusinessService(loanPersistence, locateConfigurationBusinessService(), locateAccountBusinessService(), locateHolidayService());
         }
         return loanBusinessService;
+    }
+
+    public static AccountService locateAccountService() {
+        if (accountService == null) {
+            accountService = new StandardAccountService(accountPersistence, loanPersistence, acceptedPaymentTypePersistence,
+                    locatePersonnelDao(), locateCustomerDao(), locateLoanBusinessService());
+        }
+        return accountService;
+    }
+
+    private static AccountBusinessService locateAccountBusinessService() {
+        if (accountBusinessService == null) {
+            accountBusinessService = new AccountBusinessService();
+        }
+        return accountBusinessService;
+    }
+
+    private static ConfigurationBusinessService locateConfigurationBusinessService() {
+        if (configurationBusinessService == null) {
+            configurationBusinessService = new ConfigurationBusinessService();
+        }
+        return configurationBusinessService;
     }
 
     public static LegacyLoginServiceFacade locationLoginServiceFacade() {
@@ -303,10 +339,16 @@ public class DependencyInjectedServiceLocator {
         return checkListServiceFacade;
     }
 
+    public static FiscalCalendarRules locateFiscalCalendarRules() {
+        if (fiscalCalendarRules == null) {
+            fiscalCalendarRules = new FiscalCalendarRules();
+        }
+        return fiscalCalendarRules;
+    }
+
     public static HolidayServiceFacade locateHolidayServiceFacade() {
         if (holidayServiceFacade == null) {
-            holidayService = locateHolidayService();
-            holidayServiceFacade = new HolidayServiceFacadeWebTier(holidayService, holidayDao);
+            holidayServiceFacade = new HolidayServiceFacadeWebTier(locateHolidayService(), holidayDao);
         }
         return holidayServiceFacade;
     }

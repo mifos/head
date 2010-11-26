@@ -20,12 +20,6 @@
 
 package org.mifos.accounts.api;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
@@ -56,6 +50,12 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
  * business objects, only DTOs.
@@ -66,7 +66,6 @@ public class StandardAccountService implements AccountService {
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private final PersonnelDao personnelDao;
     private CustomerDao customerDao;
-
     private LoanBusinessService loanBusinessService;
 
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
@@ -78,34 +77,6 @@ public class StandardAccountService implements AccountService {
         this.personnelDao = personnelDao;
         this.customerDao = customerDao;
         this.loanBusinessService = loanBusinessService;
-    }
-
-    public void setLoanBusinessService(LoanBusinessService loanBusinessService) {
-        this.loanBusinessService = loanBusinessService;
-    }
-
-    public LoanPersistence getLoanPersistence() {
-        return this.loanPersistence;
-    }
-
-    public void setLoanPersistence(LoanPersistence loanPersistence) {
-        this.loanPersistence = loanPersistence;
-    }
-
-    public AccountPersistence getAccountPersistence() {
-        return this.accountPersistence;
-    }
-
-    public void setAccountPersistence(AccountPersistence accountPersistence) {
-        this.accountPersistence = accountPersistence;
-    }
-
-    public AcceptedPaymentTypePersistence getAcceptedPaymentTypePersistence() {
-        return this.acceptedPaymentTypePersistence;
-    }
-
-    public void setAcceptedPaymentTypePersistence(AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) {
-        this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
     }
 
     @Override
@@ -133,7 +104,7 @@ public class StandardAccountService implements AccountService {
     public void makePaymentNoCommit(AccountPaymentParametersDto accountPaymentParametersDto)
             throws PersistenceException, AccountException {
         final int accountId = accountPaymentParametersDto.getAccountId();
-        final AccountBO account = getAccountPersistence().getAccount(accountId);
+        final AccountBO account = this.accountPersistence.getAccount(accountId);
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
         if (validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
             throw new AccountException("errors.invalidTxndate");
@@ -158,7 +129,7 @@ public class StandardAccountService implements AccountService {
 
         account.applyPayment(paymentData);
 
-        getAccountPersistence().createOrUpdate(account);
+        this.accountPersistence.createOrUpdate(account);
 
     }
 
@@ -166,7 +137,7 @@ public class StandardAccountService implements AccountService {
     public void disburseLoans(List<AccountPaymentParametersDto> accountPaymentParametersDtoList, Locale locale) throws Exception {
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
-            LoanBO loan = getLoanPersistence().getAccount(accountPaymentParametersDto.getAccountId());
+            LoanBO loan = this.loanPersistence.getAccount(accountPaymentParametersDto.getAccountId());
 
             PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().getMasterDataEntity(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
@@ -198,7 +169,7 @@ public class StandardAccountService implements AccountService {
         boolean variableInstallmentsAllowed = loan.isVariableInstallmentsAllowed();
         if (variableInstallmentsAllowed) {
             Date newDisbursementDate = loan.getDisbursementDate();
-            loanBusinessService.adjustInstallmentGapsPostDisbursal(installments, oldDisbursementDate, newDisbursementDate);
+            loanBusinessService.adjustInstallmentGapsPostDisbursal(installments, oldDisbursementDate, newDisbursementDate, loan.getOfficeId());
             loanBusinessService.computeInstallmentScheduleUsingDailyInterest(new LoanScheduleGenerationDto(
                     newDisbursementDate, loan, variableInstallmentsAllowed, amount, interestRate), installments);
         }
@@ -206,7 +177,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromId(Integer id) throws PersistenceException {
-        LoanBO loan = getLoanPersistence().getAccount(id);
+        LoanBO loan = this.loanPersistence.getAccount(id);
         if (null == loan) {
             throw new PersistenceException("loan not found for id " + id);
         }
@@ -215,7 +186,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws PersistenceException {
-        LoanBO loan = getLoanPersistence().findByExternalId(externalId);
+        LoanBO loan = this.loanPersistence.findByExternalId(externalId);
         if (null == loan) {
             throw new PersistenceException("loan not found for external id " + externalId);
         }
@@ -231,7 +202,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public List<InvalidPaymentReason> validateLoanDisbursement(AccountPaymentParametersDto payment) throws Exception {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
-        LoanBO loanAccount = getLoanPersistence().getAccount(payment.getAccountId());
+        LoanBO loanAccount = this.loanPersistence.getAccount(payment.getAccountId());
         if ((loanAccount.getState() != AccountState.LOAN_APPROVED)
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
             errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
@@ -261,7 +232,7 @@ public class StandardAccountService implements AccountService {
     public List<InvalidPaymentReason> validatePayment(AccountPaymentParametersDto payment) throws PersistenceException,
             AccountException {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
-        AccountBO accountBo = getAccountPersistence().getAccount(payment.getAccountId());
+        AccountBO accountBo = this.accountPersistence.getAccount(payment.getAccountId());
         if (!accountBo.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
@@ -300,7 +271,7 @@ public class StandardAccountService implements AccountService {
     public List<AccountPaymentParametersDto> lookupPayments(AccountReferenceDto accountRef)
     throws PersistenceException {
         final int accountId = accountRef.getAccountId();
-        final AccountBO account = getAccountPersistence().getAccount(accountId);
+        final AccountBO account = this.accountPersistence.getAccount(accountId);
         List<AccountPaymentParametersDto> paymentDtos = new ArrayList<AccountPaymentParametersDto>();
         for (AccountPaymentEntity paymentEntity : account.getAccountPayments()) {
             paymentDtos.add(makePaymentDto(paymentEntity));
@@ -349,7 +320,7 @@ public class StandardAccountService implements AccountService {
 
     private List<PaymentTypeDto> getPaymentTypes(short transactionType) throws PersistenceException {
         final Short IGNORED_LOCALE_ID = 1;
-        List<PaymentTypeEntity> paymentTypeEntities = getAcceptedPaymentTypePersistence()
+        List<PaymentTypeEntity> paymentTypeEntities = this.acceptedPaymentTypePersistence
                 .getAcceptedPaymentTypesForATransaction(IGNORED_LOCALE_ID, transactionType);
         List<PaymentTypeDto> paymentTypeDtos = new ArrayList<PaymentTypeDto>();
         for (PaymentTypeEntity paymentTypeEntity : paymentTypeEntities) {
@@ -361,7 +332,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromGlobalAccountNumber(String globalAccountNumber)
             throws PersistenceException {
-        AccountBO accountBo = getAccountPersistence().findBySystemId(globalAccountNumber);
+        AccountBO accountBo = this.accountPersistence.findBySystemId(globalAccountNumber);
         if (null == accountBo) {
             throw new PersistenceException("loan not found for global account number " + globalAccountNumber);
         }
@@ -371,7 +342,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName(
             String clientGovernmentId, String loanProductShortName) throws Exception {
-        AccountBO accountBo = getAccountPersistence().findLoanByClientGovernmentIdAndProductShortName(
+        AccountBO accountBo = this.accountPersistence.findLoanByClientGovernmentIdAndProductShortName(
                 clientGovernmentId, loanProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("loan not found for client government id " + clientGovernmentId
@@ -383,7 +354,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName(
             String clientGovernmentId, String savingsProductShortName) throws Exception {
-        AccountBO accountBo = getAccountPersistence().findSavingsByClientGovernmentIdAndProductShortName(
+        AccountBO accountBo = this.accountPersistence.findSavingsByClientGovernmentIdAndProductShortName(
                 clientGovernmentId, savingsProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("savings not found for client government id " + clientGovernmentId
@@ -395,7 +366,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromClientPhoneNumberAndLoanProductShortName(
             String phoneNumber, String loanProductShortName) throws Exception {
-        AccountBO accountBo = getAccountPersistence().findLoanByClientPhoneNumberAndProductShortName(
+        AccountBO accountBo = this.accountPersistence.findLoanByClientPhoneNumberAndProductShortName(
                 phoneNumber, loanProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("loan not found for client phone number " + phoneNumber
@@ -419,7 +390,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(
             String phoneNumber, String savingsProductShortName) throws Exception {
-        AccountBO accountBo = getAccountPersistence().findSavingsByClientPhoneNumberAndProductShortName(
+        AccountBO accountBo = this.accountPersistence.findSavingsByClientPhoneNumberAndProductShortName(
                 phoneNumber, savingsProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("savings not found for client phone number " + phoneNumber
@@ -442,7 +413,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public BigDecimal getTotalPaymentDueAmount(AccountReferenceDto account) throws Exception {
-        AccountBO accountBo = getAccountPersistence().getAccount(account.getAccountId());
+        AccountBO accountBo = this.accountPersistence.getAccount(account.getAccountId());
         return accountBo.getTotalAmountDue().getAmount();
     }
 
@@ -454,7 +425,7 @@ public class StandardAccountService implements AccountService {
 
 	@Override
 	public boolean receiptExists(String receiptNumber) throws Exception {
-		List<AccountPaymentEntity> existentPaymentsWIthGivenReceiptNumber = getAccountPersistence().findAccountPaymentsByReceiptNumber(receiptNumber);
+        List<AccountPaymentEntity> existentPaymentsWIthGivenReceiptNumber = this.accountPersistence.findAccountPaymentsByReceiptNumber(receiptNumber);
 		return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
 	}
 }

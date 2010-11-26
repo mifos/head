@@ -20,19 +20,22 @@
 
 package org.mifos.application.holiday.util.helpers;
 
-import static org.mifos.framework.util.helpers.DateUtils.getDateWithoutTimeStamp;
+import org.mifos.application.holiday.business.HolidayBO;
+import org.mifos.config.FiscalCalendarRules;
+import org.mifos.framework.util.DateTimeService;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.application.holiday.business.HolidayBO;
-import org.mifos.config.FiscalCalendarRules;
-import org.mifos.framework.util.DateTimeService;
+import static org.mifos.framework.util.helpers.DateUtils.getDateWithoutTimeStamp;
 
 /**
- * Helper methods related to holidays logic
+ * Use {@link org.mifos.application.holiday.persistence.HolidayServiceFacadeWebTier} instead of HolidayUtils.
+ * HolidayUtils contains static dependencies & static methods -> very bad for effective unit testing &
+ * dependency management.
  */
+@Deprecated
 public class HolidayUtils {
     private static final FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
 

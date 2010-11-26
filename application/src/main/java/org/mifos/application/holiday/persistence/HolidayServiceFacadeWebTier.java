@@ -20,22 +20,23 @@
 
 package org.mifos.application.holiday.persistence;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
+import org.joda.time.LocalDate;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.dto.domain.OfficeHoliday;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
 
@@ -49,7 +50,6 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
 
     @Override
     public void createHoliday(HolidayDetails holidayDetails, List<Short> officeIds) {
-
         this.holidayService.create(holidayDetails, officeIds);
     }
 
@@ -116,4 +116,20 @@ public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
         }
         return holidayNames;
     }
+
+    @Override
+    public boolean isWorkingDay(Calendar day, Short officeId) {
+        return holidayService.isWorkingDay(day, officeId);
+    }
+
+    @Override
+    public Calendar getNextWorkingDay(Calendar day, Short officeId) {
+        return holidayService.getNextWorkingDay(day, officeId);
+    }
+
+    @Override
+    public Date getNextWorkingDay(Date day, Short officeId) {
+        return holidayService.getNextWorkingDay(day, officeId);
+    }
+
 }

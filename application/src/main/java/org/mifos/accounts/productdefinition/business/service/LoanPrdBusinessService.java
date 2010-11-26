@@ -20,9 +20,6 @@
 
 package org.mifos.accounts.productdefinition.business.service;
 
-import java.util.Iterator;
-import java.util.List;
-
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
@@ -36,7 +33,6 @@ import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
-import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.business.CustomerLevelEntity;
@@ -45,6 +41,9 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
+
+import java.util.Iterator;
+import java.util.List;
 
 public class LoanPrdBusinessService implements BusinessService {
 

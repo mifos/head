@@ -23,13 +23,8 @@ package org.mifos.accounts.struts.action;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.AccountService;
-import org.mifos.accounts.api.StandardAccountService;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
@@ -38,10 +33,10 @@ import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.MasterConstants;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.persistence.CustomerDaoHibernate;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.PaymentTypeDto;
@@ -71,7 +66,7 @@ public class AccountApplyPaymentAction extends BaseAction {
     private List<PaymentTypeDto> feePaymentTypeDtos;
 
     public AccountApplyPaymentAction() throws Exception {
-        accountService = new StandardAccountService(accountPersistence, new LoanPersistence(), new AcceptedPaymentTypePersistence(), null, new CustomerDaoHibernate(new GenericDaoHibernate()), new LoanBusinessService());
+        accountService = DependencyInjectedServiceLocator.locateAccountService();
         loanPaymentTypeDtos = accountService.getLoanPaymentTypes();
         feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }

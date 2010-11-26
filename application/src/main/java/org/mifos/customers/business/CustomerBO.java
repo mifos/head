@@ -1378,7 +1378,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     }
 
     public Short getOfficeId() {
-        return getOffice().getOfficeId();
+        return office.getOfficeId();
     }
 
     public final void addChild(final CustomerBO existingClient) {

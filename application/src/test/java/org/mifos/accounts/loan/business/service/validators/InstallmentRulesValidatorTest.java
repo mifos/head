@@ -7,8 +7,8 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.ErrorEntry;
@@ -35,9 +35,10 @@ public class InstallmentRulesValidatorTest {
     private MifosCurrency rupee;
     private InstallmentRulesValidator installmentRulesValidator;
     private Locale locale;
+    private Short officeId;
 
     @Mock
-    private FiscalCalendarRules fiscalCalendarRules;
+    private HolidayServiceFacade holidayServiceFacade;
 
     @Before
     public void setupAndInjectDependencies() {
@@ -45,6 +46,7 @@ public class InstallmentRulesValidatorTest {
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         installmentRulesValidator = new InstallmentRulesValidatorImpl();
+        officeId = Short.valueOf("1");
     }
 
     @Test
@@ -138,10 +140,10 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();
         RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withInstallment(2).build();
         Calendar holiday = installment1.getDueDateValueAsCalendar();
-        when(fiscalCalendarRules.isWorkingDay(holiday)).thenReturn(false);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForHolidays(asList(installment1, installment2), fiscalCalendarRules);
+        when(holidayServiceFacade.isWorkingDay(holiday, officeId)).thenReturn(false);
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateForHolidays(asList(installment1, installment2), holidayServiceFacade, officeId);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, "1");
-        verify(fiscalCalendarRules, times(1)).isWorkingDay(holiday);
+        verify(holidayServiceFacade, times(1)).isWorkingDay(holiday, officeId);
     }
 
     @Test

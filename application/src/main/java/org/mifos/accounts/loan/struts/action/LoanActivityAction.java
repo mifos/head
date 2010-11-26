@@ -22,6 +22,7 @@ package org.mifos.accounts.loan.struts.action;
 
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.struts.action.AccountAppAction;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.framework.business.service.BusinessService;
 
 public class LoanActivityAction extends AccountAppAction {
@@ -32,7 +33,7 @@ public class LoanActivityAction extends AccountAppAction {
     // MifosLogManager.getLogger(LoggerConstants.ACCOUNTSLOGGER);
 
     public LoanActivityAction() throws Exception {
-        loanService = new LoanBusinessService();
+        loanService = DependencyInjectedServiceLocator.locateLoanBusinessService();
     }
 
     @Override

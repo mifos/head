@@ -20,19 +20,6 @@
 
 package org.mifos.application.holiday.persistence;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -59,6 +46,19 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 
@@ -107,7 +107,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     public void shouldSaveFutureHoliday() throws Exception {
 
         List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext((short) 1);
-        assertTrue(holidays.isEmpty());
+        int initialCount = holidays.size();
 
         OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
         Holiday futureHoliday = new HolidayBuilder().from(new DateTime()).to(new DateTime().plusDays(1)).appliesTo(
@@ -119,6 +119,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
 
         holidays = holidayDao.findAllHolidaysThisYearAndNext(headOffice.getOfficeId());
         assertFalse(holidays.isEmpty());
+        assertThat(holidays.size() - initialCount, is(1));
     }
 
     @Test
@@ -131,30 +132,54 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         DateTime thirdOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(3).toDateMidnight()
                 .toDateTime();
 
+        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(new Short("1"));
+        int initialCountOfHolidays = holidays.size();
+
+        List<Holiday> futureHolidays = holidayDao.findAllHolidaysFromDateAndNext(new Short("1"), secondOfJanNextYear.toLocalDate().toString());
+        int initialCountOfFutureHolidays = futureHolidays.size();
+
         Holiday holiday1 = new HolidayBuilder().from(secondlastDayOfYear).to(secondlastDayOfYear).build();
         Holiday holiday2 = new HolidayBuilder().from(secondOfJanNextYear).to(secondOfJanNextYear).build();
         Holiday holiday3 = new HolidayBuilder().from(thirdOfJanNextYear).to(thirdOfJanNextYear).build();
         Holiday holiday4 = new HolidayBuilder().from(lastDayOfYear).to(lastDayOfYear).build();
-        insert(holiday2);
-        insert(holiday3);
-        insert(holiday1);
-        insert(holiday4);
+        insertHoliday(holiday2);
+        insertHoliday(holiday3);
+        insertHoliday(holiday1);
+        insertHoliday(holiday4);
 
-        List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(new Short("1"));
+        holidays = holidayDao.findAllHolidaysThisYearAndNext(new Short("1"));
 
-        assertThat(holidays.size(), is(4));
+        assertThat(holidays.size() - initialCountOfHolidays, is(4));
 
         assertTrue(holidays.get(0).encloses(secondlastDayOfYear.toDate()));
         assertTrue(holidays.get(1).encloses(lastDayOfYear.toDate()));
         assertTrue(holidays.get(2).encloses(secondOfJanNextYear.toDate()));
         assertTrue(holidays.get(3).encloses(thirdOfJanNextYear.toDate()));
 
-        List<Holiday> futureHolidays = holidayDao.findAllHolidaysFromDateAndNext(new Short("1"), secondOfJanNextYear.toLocalDate().toString());
+        futureHolidays = holidayDao.findAllHolidaysFromDateAndNext(new Short("1"), secondOfJanNextYear.toLocalDate().toString());
 
-        assertThat(futureHolidays.size(), is(2));
+        assertThat(futureHolidays.size() - initialCountOfFutureHolidays, is(2));
 
         assertTrue(futureHolidays.get(0).encloses(secondOfJanNextYear.toDate()));
         assertTrue(futureHolidays.get(1).encloses(thirdOfJanNextYear.toDate()));
+    }
+    
+    @Test
+    public void shouldFindWhetherGivenDateIsAHoliday() {
+        Short officeId = Short.valueOf("1");
+        DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
+        insertHoliday(new HolidayBuilder().from(secondlastDayOfYear).to(secondlastDayOfYear).build());
+        assertThat(holidayDao.isHoliday(officeId, secondlastDayOfYear.toLocalDate().toString()), is(true));
+
+        DateTime thirdOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(3).toDateMidnight().toDateTime();
+        DateTime sixthOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(6).toDateMidnight().toDateTime();
+        DateTime tenthOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(10).toDateMidnight().toDateTime();
+        DateTime eleventhOfJanNextYear = new DateTime().plusYears(1).withMonthOfYear(1).withDayOfMonth(11).toDateMidnight().toDateTime();
+        insertHoliday(new HolidayBuilder().from(thirdOfJanNextYear).to(tenthOfJanNextYear).build());
+        assertThat(holidayDao.isHoliday(officeId, thirdOfJanNextYear.toLocalDate().toString()), is(true));
+        assertThat(holidayDao.isHoliday(officeId, sixthOfJanNextYear.toLocalDate().toString()), is(true));
+        assertThat(holidayDao.isHoliday(officeId, tenthOfJanNextYear.toLocalDate().toString()), is(true));
+        assertThat(holidayDao.isHoliday(officeId, eleventhOfJanNextYear.toLocalDate().toString()), is(false));
     }
 
     @Test
@@ -276,7 +301,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(officeNames, hasItem(branch1.getOfficeName()));
     }
 
-    private void insert(final Holiday holiday) {
+    private void insertHoliday(final Holiday holiday) {
         OfficeBO headOffice = IntegrationTestObjectMother.findOfficeById(Short.valueOf("1"));
 
         HolidayDetails holidayDetails = new HolidayDetails("HolidayDaoTest", holiday.getFromDate().toDate(), holiday

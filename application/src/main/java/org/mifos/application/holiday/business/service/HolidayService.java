@@ -20,6 +20,8 @@
 
 package org.mifos.application.holiday.business.service;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.dto.domain.HolidayDetails;
@@ -28,4 +30,9 @@ public interface HolidayService {
 
     void create(HolidayDetails holidayDetails, List<Short> officeIds);
 
+    boolean isWorkingDay(Calendar day, Short officeId);
+
+    Calendar getNextWorkingDay(Calendar day, Short officeId);
+
+    Date getNextWorkingDay(Date day, Short officeId);
 }

@@ -21,6 +21,7 @@
 package org.mifos.accounts.productdefinition.struts.action;
 
 import org.mifos.accounts.productdefinition.business.*;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.slf4j.Logger;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -95,7 +96,7 @@ public class LoanPrdAction extends BaseAction {
 
     @Override
     protected BusinessService getService() {
-        return new LoanBusinessService();
+        return DependencyInjectedServiceLocator.locateLoanBusinessService();
     }
 
     @Override

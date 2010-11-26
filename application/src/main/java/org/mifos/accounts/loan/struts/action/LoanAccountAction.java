@@ -262,7 +262,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private static final String SHOW_PREVIEW = "loanAccountAction.do?method=showPreview";
     private static final String CUSTOMER_SEARCH_URL = "custSearchAction.do?method=loadMainSearch";
 
-    public LoanAccountAction() throws Exception {
+    public LoanAccountAction() {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
                 new LoanPrdBusinessService(), new ClientBusinessService(), new MasterDataService(),
                 new ConfigurationPersistence(), new AccountBusinessService());
@@ -550,7 +550,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
             VariableInstallmentDetailsBO variableInstallmentDetails = loanOffering.getVariableInstallmentDetails();
             java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
-            Errors errors = loanServiceFacade.validateInputInstallments(disbursementDate, variableInstallmentDetails, installments);
+            Errors errors = loanServiceFacade.validateInputInstallments(disbursementDate, variableInstallmentDetails, installments, loanActionForm.getCustomerIdValue());
             ActionErrors actionErrors = getActionErrors(errors);
             actionErrors.add(validateCashflowAndInstallmentDates(installments, loanActionForm.getCashFlowForm()));
             if (actionErrors.isEmpty()) {

@@ -20,28 +20,36 @@
 
 package org.mifos.application.holiday.business.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.joda.time.DateTime;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.util.helpers.HolidayConstants;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.service.BusinessRuleException;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 public class HolidayServiceImpl implements HolidayService {
 
     private final OfficeDao officeDao;
     private final HolidayDao holidayDao;
     private final HibernateTransactionHelper hibernateTransactionHelper;
+    private final FiscalCalendarRules fiscalCalendarRules;
 
-    public HolidayServiceImpl(OfficeDao officeDao, HolidayDao holidayDao, HibernateTransactionHelper hibernateTransactionHelper) {
+    public HolidayServiceImpl(OfficeDao officeDao, HolidayDao holidayDao,
+                              HibernateTransactionHelper hibernateTransactionHelper,
+                              FiscalCalendarRules fiscalCalendarRules) {
         this.officeDao = officeDao;
         this.holidayDao = holidayDao;
         this.hibernateTransactionHelper = hibernateTransactionHelper;
+        this.fiscalCalendarRules = fiscalCalendarRules;
     }
 
     @Override
@@ -73,5 +81,31 @@ public class HolidayServiceImpl implements HolidayService {
         } finally {
             hibernateTransactionHelper.closeSession();
         }
+    }
+
+    @Override
+    public boolean isWorkingDay(Calendar day, Short officeId) {
+        if (!fiscalCalendarRules.isWorkingDay(day)) return false;
+        String dateAsLocalString = new DateTime(day.getTime().getTime()).toLocalDate().toString();
+        return !holidayDao.isHoliday(officeId, dateAsLocalString);
+    }
+
+    @Override
+    public Calendar getNextWorkingDay(Calendar day, Short officeId) {
+        while (!isWorkingDay(day, officeId)) {
+            day.add(Calendar.DATE, 1);
+        }
+        return day;
+    }
+
+    @Override
+    public Date getNextWorkingDay(Date day, Short officeId) {
+        return getNextWorkingDay(getCalendarDate(day), officeId).getTime();
+    }
+
+    private static Calendar getCalendarDate(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
     }
 }

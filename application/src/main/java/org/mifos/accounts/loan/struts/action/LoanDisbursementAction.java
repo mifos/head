@@ -27,28 +27,25 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.AccountService;
-import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
-import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
+import org.mifos.dto.domain.AccountReferenceDto;
+import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -70,10 +67,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import org.mifos.customers.persistence.CustomerDaoHibernate;
-import org.mifos.dto.domain.AccountPaymentParametersDto;
-import org.mifos.dto.domain.AccountReferenceDto;
-import org.mifos.dto.domain.UserReferenceDto;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
@@ -81,16 +74,7 @@ import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
 public class LoanDisbursementAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(LoanDisbursementAction.class);
 
-    private AccountService accountService = null;
-
-    public AccountService getAccountService() {
-        return accountService;
-    }
-
-    public LoanDisbursementAction() {
-        accountService = new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
-                new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()), new CustomerDaoHibernate(new GenericDaoHibernate()), new LoanBusinessService());
-    }
+    private AccountService accountService = DependencyInjectedServiceLocator.locateAccountService();
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("loanDisbursementAction");
@@ -192,7 +176,7 @@ public class LoanDisbursementAction extends BaseAction {
             payment.add(new AccountPaymentParametersDto(new UserReferenceDto(uc.getId()), new AccountReferenceDto(
                     loanAccountId), disbursalAmount, new LocalDate(trxnDate), paymentType, comment,
                     new LocalDate(receiptDate), actionForm.getReceiptId(), null));
-            getAccountService().disburseLoans(payment,uc.getPreferredLocale());
+            accountService.disburseLoans(payment,uc.getPreferredLocale());
 
         } catch (Exception e) {
             if (e.getMessage().startsWith("errors.")) {
@@ -207,7 +191,7 @@ public class LoanDisbursementAction extends BaseAction {
     }
 
     private org.mifos.dto.domain.PaymentTypeDto getLoanDisbursementTypeDtoForId(short id) throws Exception {
-        for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : getAccountService().getLoanDisbursementTypes()) {
+        for (org.mifos.dto.domain.PaymentTypeDto paymentTypeDto : accountService.getLoanDisbursementTypes()) {
             if (paymentTypeDto.getValue() == id) {
                 return paymentTypeDto;
             }

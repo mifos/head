@@ -62,6 +62,7 @@
     	<constructor-arg ref="installmentsValidator" />
     	<constructor-arg ref="scheduleCalculatorAdaptor" />
     	<constructor-arg ref="loanBusinessService" />
+    	<constructor-arg ref="holidayServiceFacade" />
     </bean>
     
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" >
@@ -128,6 +129,7 @@
     	<constructor-arg ref="officeDao" />
     	<constructor-arg ref="holidayDao" />
     	<constructor-arg ref="hibernateTransactionHelper" />
+        <constructor-arg ref="fiscalCalendarRules" />
     </bean>
     
     <bean id="feeService" class="org.mifos.accounts.fees.business.service.FeeServiceImpl" >
@@ -173,4 +175,5 @@
 
     <bean name="scheduleCalculatorAdaptor" class="org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor"/>
 
+    <bean name="fiscalCalendarRules" class="org.mifos.config.FiscalCalendarRules"/>
 </beans>

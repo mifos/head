@@ -39,6 +39,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -119,12 +120,15 @@ public class LoanServiceFacadeWebTierTest {
     private InstallmentsValidator installmentsValidator;
 
     @Mock
-    ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+    private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+
+    @Mock
+    private HolidayServiceFacade holidayServiceFacade;
 
     @Before
     public void setupAndInjectDependencies() {
         loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, 
-                fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService);
+                fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade);
     }
 
     @Test
@@ -231,12 +235,18 @@ public class LoanServiceFacadeWebTierTest {
 
     @Test
     public void shouldValidateInstallments() {
+        int customerId = 121;
         Errors errors = new Errors();
         when(installmentsValidator.validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class))).thenReturn(errors);
-        Errors actual = loanServiceFacade.validateInputInstallments(null, null, new ArrayList<RepaymentScheduleInstallment>());
+        when(customerDao.findCustomerById(customerId)).thenReturn(customer);
+        when(customer.getOfficeId()).thenReturn(Short.valueOf("1"));
+        Errors actual = loanServiceFacade.validateInputInstallments(null, null, new ArrayList<RepaymentScheduleInstallment>(), customerId);
         assertThat(actual, is(errors));
         verify(installmentsValidator).validateInputInstallments(anyListOf(RepaymentScheduleInstallment.class), any(InstallmentValidationContext.class));
+        verify(customerDao).findCustomerById(customerId);
+        verify(customer).getOfficeId();
     }
+    
     @Test
     public void shouldValidateInstallmentSchedule() {
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();

@@ -4,7 +4,7 @@ import org.apache.commons.collections.CollectionUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.config.FiscalCalendarRules;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.ErrorEntry;
@@ -44,11 +44,11 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
     }
 
     @Override
-    public List<ErrorEntry> validateForHolidays(List<RepaymentScheduleInstallment> installments, FiscalCalendarRules fiscalCalendarRules) {
+    public List<ErrorEntry> validateForHolidays(List<RepaymentScheduleInstallment> installments, HolidayServiceFacade holidayServiceFacade, Short officeId) {
         List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
         for (RepaymentScheduleInstallment installment : installments) {
             Calendar dueDate = installment.getDueDateValueAsCalendar();
-            if (dueDate != null && !fiscalCalendarRules.isWorkingDay(dueDate)) {
+            if (dueDate != null && !holidayServiceFacade.isWorkingDay(dueDate, officeId)) {
                 String identifier = installment.getInstallmentNumberAsString();
                 errorEntries.add(new ErrorEntry(AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, identifier));
             }

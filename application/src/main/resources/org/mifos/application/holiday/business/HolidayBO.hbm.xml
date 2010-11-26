@@ -34,7 +34,19 @@
    	       ]]>
 	</query>
 	
-	
+	<query name="holiday.findGivenDateInCurrentAndFutureOfficeHolidays">
+   	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
+   	       			join office.holidays holidayBO,
+   	       			org.mifos.customers.office.business.OfficeBO branch
+                    where holidayBO.holidayFromDate <= date(:CURRENT_DATE)
+                    and holidayBO.holidayThruDate >= date(:CURRENT_DATE)
+					and branch.searchId like concat(office.searchId, '%')
+					and branch.officeId = :OFFICE_ID
+                    order by holidayBO.holidayFromDate
+   	       ]]>
+	</query>
+
+
 	<query name="holiday.getOfficeHolidays">
    	       <![CDATA[select distinct holidayBO from org.mifos.customers.office.business.OfficeBO office
    	       			   join office.holidays holidayBO

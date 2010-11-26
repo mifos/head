@@ -20,18 +20,16 @@
 
 package org.mifos.accounts.loan.business.service;
 
-import java.util.*;
-
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanActivityDto;
+import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.application.holiday.util.helpers.HolidayUtils;
+import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
@@ -43,21 +41,24 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 public class LoanBusinessService implements BusinessService {
 
     private LoanPersistence loanPersistence;
     private ConfigurationBusinessService configService;
     private AccountBusinessService accountBusinessService;
+    private HolidayService holidayService;
 
     public LoanPersistence getLoanPersistence() {
         if (loanPersistence == null) {
             loanPersistence = new LoanPersistence();
         }
         return loanPersistence;
-    }
-
-    public void setLoanPersistence(final LoanPersistence loanPersistence) {
-        this.loanPersistence = loanPersistence;
     }
 
     public ConfigurationBusinessService getConfigService() {
@@ -67,10 +68,6 @@ public class LoanBusinessService implements BusinessService {
         return configService;
     }
 
-    public void setConfigService(final ConfigurationBusinessService configService) {
-        this.configService = configService;
-    }
-
     public AccountBusinessService getAccountBusinessService() {
         if (accountBusinessService == null) {
             accountBusinessService = new AccountBusinessService();
@@ -78,19 +75,18 @@ public class LoanBusinessService implements BusinessService {
         return accountBusinessService;
     }
 
-    public void setAccountBusinessService(final AccountBusinessService accountBusinessService) {
-        this.accountBusinessService = accountBusinessService;
-    }
-
+    // Use {@link org.mifos.application.servicefacade.DependencyInjectedServiceLocator} to create instances of this service
+    @Deprecated
     public LoanBusinessService() {
-        this(new LoanPersistence(), new ConfigurationBusinessService(), new AccountBusinessService());
+        this(new LoanPersistence(), new ConfigurationBusinessService(), new AccountBusinessService(), null);
     }
 
-    LoanBusinessService(final LoanPersistence loanPersistence, final ConfigurationBusinessService configService,
-            final AccountBusinessService accountBusinessService) {
-        this.setLoanPersistence(loanPersistence);
-        this.setConfigService(configService);
-        this.setAccountBusinessService(accountBusinessService);
+    public LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService,
+                               AccountBusinessService accountBusinessService, HolidayService holidayService) {
+        this.loanPersistence = loanPersistence;
+        this.configService = configService;
+        this.accountBusinessService = accountBusinessService;
+        this.holidayService = holidayService;
     }
 
     @Override
@@ -310,13 +306,13 @@ public class LoanBusinessService implements BusinessService {
     }
 
     public void adjustInstallmentGapsPostDisbursal(List<RepaymentScheduleInstallment> installments,
-                                                     Date oldDisbursementDate, Date newDisbursementDate) {
+                                                   Date oldDisbursementDate, Date newDisbursementDate, Short officeId) {
         Date oldPrevDate = oldDisbursementDate, newPrevDate = newDisbursementDate;
         for (RepaymentScheduleInstallment installment : installments) {
             Date currentDueDate = installment.getDueDateValue();
             long delta = DateUtils.getNumberOfDaysBetweenTwoDates(currentDueDate, oldPrevDate);
             Date newDueDate = DateUtils.addDays(newPrevDate, (int) delta);
-            installment.setDueDateValue(HolidayUtils.getNextWorkingDay(newDueDate));
+            installment.setDueDateValue(holidayService.getNextWorkingDay(newDueDate, officeId));
             oldPrevDate = currentDueDate;
             newPrevDate = installment.getDueDateValue();
         }
