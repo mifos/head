@@ -43,9 +43,9 @@ public interface LoginConstants {
     String SETTINGS_PASSWORD_UPDATE_FAILURE = "settings_update_failure";
     String LOGINACTION = "loginAction.do";
 
-    String KEYUSERINACTIVE = "AbstractUserDetailsAuthenticationProvider.disabled";
-    String KEYUSERLOCKED = "AbstractUserDetailsAuthenticationProvider.locked";
-    String KEYINVALIDUSER = "AbstractUserDetailsAuthenticationProvider.badCredentials";
+    String KEYUSERINACTIVE = "errors.inactiveuser";
+    String KEYUSERLOCKED = "errors.lockeduser";
+    String KEYINVALIDUSER = "errors.invaliduser";
 
     String IllEGALSTATE = "errors.IllegalState";
     String SESSIONTIMEOUT = "errors.sessiontimeout";

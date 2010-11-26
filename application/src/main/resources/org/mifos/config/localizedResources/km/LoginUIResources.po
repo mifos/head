@@ -32,7 +32,7 @@ msgstr "អ្នកបានចាកចេញពីក្នុងប្រព
 msgid "You have been logged out of the system because Mifos is shutting down."
 msgstr ""
 
-#: AbstractUserDetailsAuthenticationProvider.disabled
+#: errors.inactiveuser
 msgid ""
 "The user account is currently inactive. Please try again later or contact "
 "the system administrator."
@@ -47,14 +47,14 @@ msgstr ""
 "សូមបញ្ជាក់ពីឈ្មោះរបស់អ្នកប្រើប្រាស់ដែលមានសុពលភាព ពាកសំងាត់ "
 "ដើម្បីប្រើប្រាស់នៅក្នុងប្រព័ន្ធ"
 
-#: AbstractUserDetailsAuthenticationProvider.badCredentials
-msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
+#: errors.invaliduser
+msgctxt "errors.invaliduser"
 msgid "Please specify valid username/password to access the application."
 msgstr ""
 "សូមបញ្ជាក់ពីឈ្មោះរបស់អ្នកប្រើប្រាស់ដែលមានសុពលភាព ពាកសំងាត់ "
 "ដើម្បីប្រើប្រាស់នៅក្នុងប្រព័ន្ធ"
 
-#: AbstractUserDetailsAuthenticationProvider.locked
+#: errors.lockeduser
 msgid ""
 "The user account is currently locked. Please try again later or contact the "
 "system administrator."

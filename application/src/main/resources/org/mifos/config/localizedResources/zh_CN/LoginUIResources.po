@@ -28,7 +28,7 @@ msgstr "由于批量任务正在运行，您已经从系统登录中注销。"
 msgid "You have been logged out of the system because Mifos is shutting down."
 msgstr "由于Mifos正在关闭，您已经从系统登录中注销"
 
-#: AbstractUserDetailsAuthenticationProvider.disabled
+#: errors.inactiveuser
 msgid ""
 "The user account is currently inactive. Please try again later or contact "
 "the system administrator."
@@ -39,12 +39,12 @@ msgctxt "errors.invalidoldpassword"
 msgid "Please specify valid username/password to access the application."
 msgstr "请填写正确的登录名和密码以便登录系统。"
 
-#: AbstractUserDetailsAuthenticationProvider.badCredentials
-msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
+#: errors.invaliduser
+msgctxt "errors.invaliduser"
 msgid "Please specify valid username/password to access the application."
 msgstr "请填写正确的登录名和密码以便登录系统。"
 
-#: AbstractUserDetailsAuthenticationProvider.locked
+#: errors.lockeduser
 msgid ""
 "The user account is currently locked. Please try again later or contact the "
 "system administrator."
