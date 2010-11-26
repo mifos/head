@@ -231,7 +231,7 @@ public class LocalizationConverter {
             return result;
         }
 
-        return validateTheValueIsWithinTheRange(ConversionError.INTEREST_OUT_OF_RANGE, AccountingRules.getMinInterest(), AccountingRules.getMaxInterest(), result, errors, getDoubleValueForPercent(doubleStr));
+        return validateTheValueIsWithinTheRange(ConversionError.INTEREST_OUT_OF_RANGE, AccountingRules.getMinInterest(), AccountingRules.getMaxInterest(), result, errors, doubleStr);
     }
 
     public DoubleConversionResult parseDoubleForCashFlowValidations(String doubleStr,
@@ -255,17 +255,20 @@ public class LocalizationConverter {
             return result;
         }
 
-        return validateTheValueIsWithinTheRange(cashFlowValidationOutOfRange, minimumLimit, maximumLimit, result, errors, getDoubleValueForPercent(doubleStr));
+        return validateTheValueIsWithinTheRange(cashFlowValidationOutOfRange, minimumLimit, maximumLimit, result, errors, doubleStr);
     }
 
-    private DoubleConversionResult validateTheValueIsWithinTheRange(ConversionError outOfRangeConversionError, Double minimumLimit, Double maximumLimit, DoubleConversionResult result, List<ConversionError> errors, Double validationValue) {
+    private DoubleConversionResult validateTheValueIsWithinTheRange(ConversionError outOfRangeConversionError,
+                                                                    Double minimumLimit, Double maximumLimit,
+                                                                    DoubleConversionResult result,
+                                                                    List<ConversionError> errors, String validationValue) {
         try {
-            if ((validationValue > maximumLimit) || (validationValue < minimumLimit)) {
+            Double value = getDoubleValueForPercent(validationValue);
+            if ((value > maximumLimit) || (value < minimumLimit)) {
                 errors.add(outOfRangeConversionError);
             } else {
-                result.setDoubleValue(validationValue);
+                result.setDoubleValue(value);
             }
-
         } catch (Exception ex) {
             result.getErrors().add(ConversionError.CONVERSION_ERROR);
         }
