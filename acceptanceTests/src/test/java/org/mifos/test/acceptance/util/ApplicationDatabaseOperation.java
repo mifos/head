@@ -43,6 +43,10 @@ public class ApplicationDatabaseOperation {
         return doesEntityExist("select count(fee_name) from fees where fee_name = '" + feeName + "';");
     }
 
+    public boolean doesDecliningPrincipalBalanceExist() throws SQLException {
+        return doesEntityExist("select * from lookup_value where lookup_name='InterestTypes-DecliningPrincipalBalance';");
+    }
+
     private boolean doesEntityExist(String entityCountQuery) throws SQLException {
         ResultSet resultSet = null;
         try{
@@ -74,5 +78,11 @@ public class ApplicationDatabaseOperation {
     private Connection getConnection() throws SQLException {
         connection = dataSource.getConnection();
         return connection;
+    }
+
+    public void insertDecliningPrincipalBalanceInterestType() throws SQLException {
+        getStatement().execute("insert into lookup_value(lookup_id,entity_id,lookup_name) values((select max(lv.lookup_id)+1 from lookup_value lv), 37, 'InterestTypes-DecliningPrincipalBalance');");
+        getStatement().execute("insert into interest_types (interest_type_id, lookup_id, category_id, descripton) values(5,(select lookup_id from lookup_value where entity_id =37 and lookup_name='InterestTypes-DecliningPrincipalBalance'),1,'InterestTypes-DecliningPrincipalBalance');");
+        closeConnection();
     }
 }

@@ -80,6 +80,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
         dataSetup.createClient(clientName, officeName, userName);
+        dataSetup.addDecliningPrincipalBalance();
         feeTestHelper = new FeeTestHelper(dataSetup);
     }
 

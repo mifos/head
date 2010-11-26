@@ -119,4 +119,11 @@ public class TestDataSetup {
         clientPersonalInfoParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
         return clientPersonalInfoParameters;
     }
+
+    public void addDecliningPrincipalBalance() throws SQLException {
+        if (!applicationDatabaseOperation.doesDecliningPrincipalBalanceExist()) {
+            applicationDatabaseOperation.insertDecliningPrincipalBalanceInterestType();
+        }
+        //To change body of created methods use File | Settings | File Templates.
+    }
 }

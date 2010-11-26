@@ -73,9 +73,10 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
         dataSetup.createClient(clientName, officeName, userName);
+        dataSetup.addDecliningPrincipalBalance();
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyDecliningPrincipleLoan() throws Exception {
 
