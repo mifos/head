@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <!-- This MessageSource will load localized text from external
-         resource bundle files  -->
-    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" abstract="false"
-        lazy-init="default" autowire="default">
+
+    <!-- Since MessageLookup is MessageSourceAware, the messageSource will be injected -->
+    <bean id="messageLookup" class="org.mifos.application.master.MessageLookup" abstract="false" lazy-init="default" autowire="default" factory-method="getInstance" />
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basenames">
             <list>
-                <value>org/mifos/config/localizedResources/LookupValueMessages</value>
-                <value>org/mifos/config/localizedResources/MessageLookupMessages</value>
-                <value>org/mifos/config/localizedResources/reporterrors</value>
-                <value>org/mifos/config/localizedResources/SharedMessages</value>
-                <value>org/mifos/config/localizedResources/LoginUIResources</value>
+                <value>classpath:org/mifos/ui/localizedProperties/messages</value>
+                <value>classpath:org/mifos/ui/localizedProperties/LookupValueMessages</value>
+                <value>classpath:org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages</value>
+                <value>classpath:org/mifos/ui/localizedProperties/FtlDefinedLabelsMessages</value>
+                <value>classpath:org/mifos/config/localizedResources/MessageLookupMessages</value>
+                <value>classpath:org/mifos/config/localizedResources/reporterrors</value>
+                <value>classpath:org/mifos/config/localizedResources/SharedMessages</value>
+                <value>classpath:org/mifos/config/localizedResources/LoginUIResources</value>
             </list>
         </property>
-    </bean>
-
-    <!-- Since MessageLookup is MessageSourceAware, the messageSource
-         will be injected -->
-    <bean id="messageLookup" class="org.mifos.application.master.MessageLookup" abstract="false" lazy-init="default"
-        autowire="default" factory-method="getInstance">
+        <property name="fileEncodings" value="UTF-8" />
+        <property name="defaultEncoding" value="UTF-8" />
     </bean>
 </beans>
