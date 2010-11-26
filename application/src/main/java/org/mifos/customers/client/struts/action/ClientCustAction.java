@@ -638,8 +638,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setGovernmentId(personalInfo.getClientDetail().getGovernmentId());
         actionForm.setDateOfBirth(personalInfo.getClientDetail().getDateOfBirth());
         actionForm.setClientDetailView(personalInfo.getClientDetail().getCustomerDetail());
-//        actionForm.setClientName(personalInfo.getClientDetail().getClientName());
-//        actionForm.setSpouseName(personalInfo.getClientDetail().getSpouseName());
 
         ClientNameDetailDto clientName = personalInfo.getClientDetail().getClientName();
         clientName.setNames(ClientRules.getNameSequence());
@@ -650,6 +648,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             spouseName.setNames(ClientRules.getNameSequence());
             actionForm.setSpouseName(spouseName);
         }
+        spouseName.setNames(ClientRules.getNameSequence());
+        actionForm.setSpouseName(spouseName);
         actionForm.setCustomFields(personalInfo.getCustomFieldViews());
 
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
