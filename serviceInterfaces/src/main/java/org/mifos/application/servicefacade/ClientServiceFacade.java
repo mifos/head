@@ -30,7 +30,6 @@ import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
-import org.mifos.dto.screen.ClientInformationDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ClientServiceFacade {
@@ -46,7 +45,4 @@ public interface ClientServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     CustomerDetailsDto createNewClient(ClientCreationDetail clientCreationDetail, MeetingDto meeting, List<SavingsDetailDto> allowedSavingProducts);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    ClientInformationDto getClientInformationDto(String globalCustNum);
 }

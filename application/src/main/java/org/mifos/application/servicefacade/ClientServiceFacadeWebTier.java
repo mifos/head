@@ -35,20 +35,16 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
-import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.service.CustomerService;
@@ -56,7 +52,6 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
-import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.client.persistence.ClientPersistence;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
@@ -64,8 +59,6 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
@@ -74,33 +67,21 @@ import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.CustomerAccountSummaryDto;
-import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
-import org.mifos.dto.domain.CustomerFlagDto;
-import org.mifos.dto.domain.CustomerMeetingDto;
-import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.FamilyDetailDto;
-import org.mifos.dto.domain.LoanDetailDto;
 import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
-import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.ClientDropdownsDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
-import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
-import org.mifos.dto.screen.ClientPerformanceHistoryDto;
-import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
@@ -491,82 +472,5 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             Short recordLoanOfficerId) {
         return ActivityMapper.getInstance().isSavePermittedForCustomer(newState.shortValue(), userContext,
                 recordOfficeId, recordLoanOfficerId);
-    }
-
-    @Override
-    public ClientInformationDto getClientInformationDto(String globalCustNum) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        ClientBO client = customerDao.findClientBySystemId(globalCustNum);
-        if (client == null) {
-            throw new MifosRuntimeException("Client not found for globalCustNum, levelId: " + globalCustNum);
-        }
-
-        ClientDisplayDto clientDisplay = this.customerDao.getClientDisplayDto(client.getCustomerId(), userContext);
-
-        Integer clientId = client.getCustomerId();
-
-        CustomerAccountSummaryDto customerAccountSummary = this.customerDao.getCustomerAccountSummaryDto(
-                clientId);
-
-        ClientPerformanceHistoryDto clientPerformanceHistory = assembleClientPerformanceHistoryDto(client.getClientPerformanceHistory(), clientId);
-
-        CustomerAddressDto clientAddress = this.customerDao.getCustomerAddressDto(client);
-
-        List<CustomerNoteDto> recentCustomerNotes = customerDao.getRecentCustomerNoteDto(clientId);
-
-        List<CustomerFlagDto> customerFlags = customerDao.getCustomerFlagDto(client.getCustomerFlags());
-
-        List<LoanDetailDto> loanDetail = customerDao.getLoanDetailDto(client.getOpenLoanAccounts());
-
-        List<SavingsDetailDto> savingsDetail = customerDao.getSavingsDetailDto(clientId, userContext);
-
-        CustomerMeetingDto customerMeeting = customerDao.getCustomerMeetingDto(client.getCustomerMeeting(), userContext);
-
-        Boolean activeSurveys = new SurveysPersistence().isActiveSurveysForSurveyType(SurveyType.CLIENT);
-
-        List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(clientId);
-
-        List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(clientId,
-                EntityType.CLIENT.getValue(), userContext);
-
-        return new ClientInformationDto(clientDisplay, customerAccountSummary, clientPerformanceHistory, clientAddress,
-                recentCustomerNotes, customerFlags, loanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys, customFields);
-    }
-
-    private ClientPerformanceHistoryDto assembleClientPerformanceHistoryDto(
-            ClientPerformanceHistoryEntity clientPerformanceHistory, Integer clientId) {
-
-        Integer loanCycleNumber = clientPerformanceHistory.getLoanCycleNumber();
-
-        Money lastLoanAmount = clientPerformanceHistory.getLastLoanAmount();
-
-        Integer noOfActiveLoans = clientPerformanceHistory.getNoOfActiveLoans();
-
-        String delinquentPortfolioAmountString;
-        try {
-            Money delinquentPortfolioAmount = clientPerformanceHistory.getDelinquentPortfolioAmount();
-            delinquentPortfolioAmountString = delinquentPortfolioAmount.toString();
-        } catch (CurrencyMismatchException e) {
-            delinquentPortfolioAmountString = localizedMessageLookup("errors.multipleCurrencies");
-        }
-
-        // TODO currency mismatch check
-        Money totalSavingsAmount = clientPerformanceHistory.getTotalSavingsAmount();
-
-        Integer meetingsAttended = this.customerDao.numberOfMeetings(true, clientId).getMeetingsAttended();
-        Integer meetingsMissed = customerDao.numberOfMeetings(false, clientId).getMeetingsMissed();
-
-        List<LoanCycleCounter> loanCycleCounters = this.customerDao.fetchLoanCycleCounter(clientId,CustomerLevel.CLIENT.getValue());
-
-        return new ClientPerformanceHistoryDto(loanCycleNumber, lastLoanAmount.toString(), noOfActiveLoans,
-                delinquentPortfolioAmountString, totalSavingsAmount.toString(), meetingsAttended, meetingsMissed,
-                loanCycleCounters);
-    }
-
-    protected String localizedMessageLookup(String key) {
-        return MessageLookup.getInstance().lookup(key);
     }
 }

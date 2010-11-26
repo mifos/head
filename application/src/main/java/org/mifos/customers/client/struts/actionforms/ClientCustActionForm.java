@@ -193,7 +193,6 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
             familyNames.setLastName(getFamilyLastName(row));
             familyNames.setNameType(getFamilyRelationship(row));
             familyNames.setDisplayName(new StringBuilder(getFamilyFirstName(row) + getFamilyLastName(row)));
-            familyNames.setNames(ClientRules.getNameSequence());
             ClientFamilyDetailDto familyDetails = null;
 
             try {

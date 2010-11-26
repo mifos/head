@@ -64,6 +64,8 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.struts.uihelpers.CustomerUIHelperFn;
+import org.mifos.customers.util.helpers.ClientDisplayDto;
+import org.mifos.customers.util.helpers.ClientFamilyDetailDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
@@ -85,8 +87,6 @@ import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.ClientDisplayDto;
-import org.mifos.dto.screen.ClientFamilyDetailOtherDto;
 import org.mifos.dto.screen.GroupDisplayDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
@@ -96,7 +96,6 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.ChapterNum;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.ActivityMapper;
@@ -1303,11 +1302,11 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         String spouseFatherValue = null;
         String spouseFatherName = null;
-        List<ClientFamilyDetailOtherDto> familyDetails = null;
+        List<ClientFamilyDetailDto> familyDetails = null;
         Boolean areFamilyDetailsRequired = ClientRules.isFamilyDetailsRequired();
 
         if (areFamilyDetailsRequired) {
-            familyDetails = new ArrayList<ClientFamilyDetailOtherDto>();
+            familyDetails = new ArrayList<ClientFamilyDetailDto>();
 
             List<Object[]> familyDetailsQueryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
                     "getClientFamilyDetailDto", queryParameters);
@@ -1323,12 +1322,8 @@ public class CustomerDaoHibernate implements CustomerDao {
                 final String gender = MessageLookup.getInstance().lookup(genderLookup, userContext);
                 final String livingStatus = MessageLookup.getInstance().lookup(livingStatusLookup, userContext);
 
-                String dateOfBirthAsString = "";
-                if (familyDateOfBirth != null) {
-                    dateOfBirthAsString = DateUtils.makeDateAsSentFromBrowser(familyDateOfBirth);
-                }
-                familyDetails.add(new ClientFamilyDetailOtherDto(relationship, familyDisplayName, familyDateOfBirth, gender,
-                        livingStatus, dateOfBirthAsString));
+                familyDetails.add(new ClientFamilyDetailDto(relationship, familyDisplayName, familyDateOfBirth, gender,
+                        livingStatus));
             }
         } else {
 
@@ -1342,17 +1337,12 @@ public class CustomerDaoHibernate implements CustomerDao {
             }
         }
 
-        Integer age = null;
-        if (dateOfBirth != null) {
-            age = DateUtils.DateDiffInYears(new java.sql.Date(dateOfBirth.getTime()));
-        }
-
         return new ClientDisplayDto(customerId, globalCustNum, displayName, parentCustomerDisplayName, branchId, branchName,
                 externalId, customerFormedByDisplayName, customerActivationDate, customerLevelId, customerStatusId,
                 customerStatusName, trainedDate, dateOfBirth, governmentId, clientUnderGroup, blackListed,
                 loanOfficerId, loanOfficerName, businessActivities, handicapped, maritalStatus, citizenship, ethnicity,
                 educationLevel, povertyStatus, numChildren, isCustomerPicture, areFamilyDetailsRequired,
-                spouseFatherValue, spouseFatherName, familyDetails, age);
+                spouseFatherValue, spouseFatherName, familyDetails);
     }
 
     @Override

@@ -18,29 +18,27 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.dto.screen;
+package org.mifos.customers.util.helpers;
 
 import java.util.Date;
 
-@SuppressWarnings("PMD")
-@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
-public class ClientFamilyDetailOtherDto {
+import org.mifos.framework.util.helpers.DateUtils;
+
+public class ClientFamilyDetailDto {
 
     private final String relationship;
     private final String displayName;
     private final Date dateOfBirth;
     private final String gender;
     private final String livingStatus;
-    private final String dateOfBirthForBrowser;
 
-    public ClientFamilyDetailOtherDto(final String relationship, final String displayName, final Date dateOfBirth,
-            final String gender, final String livingStatus, String dateOfBirthAsString) {
+    public ClientFamilyDetailDto(final String relationship, final String displayName, final Date dateOfBirth,
+            final String gender, final String livingStatus) {
         this.relationship = relationship;
         this.displayName = displayName;
         this.dateOfBirth = dateOfBirth;
         this.gender = gender;
         this.livingStatus = livingStatus;
-        this.dateOfBirthForBrowser = dateOfBirthAsString;
     }
 
     public String getRelationship() {
@@ -64,6 +62,9 @@ public class ClientFamilyDetailOtherDto {
     }
 
     public String getDateOfBirthForBrowser() {
-        return this.dateOfBirthForBrowser;
+        if (getDateOfBirth() != null) {
+            return DateUtils.makeDateAsSentFromBrowser(getDateOfBirth());
+        }
+        return null;
     }
 }
