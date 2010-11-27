@@ -130,4 +130,8 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
     public boolean isBeforeOrOn(LocalDate date) {
         return new LocalDate(this.actionDate).isBefore(date) || new LocalDate(this.actionDate).isEqual(date);
     }
+
+    public boolean isNotPaid() {
+        return !isPaid();
+    }
 }

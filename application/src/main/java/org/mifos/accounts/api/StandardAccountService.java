@@ -237,9 +237,7 @@ public class StandardAccountService implements AccountService {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
         if (accountBo instanceof LoanBO) {
-            if (!accountBo.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING)
-                    && !accountBo.getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING)
-                    && !accountBo.getState().equals(AccountState.CUSTOMER_ACCOUNT_ACTIVE)) {
+            if (((LoanBO)accountBo).paymentsNotAllowed()) {
                 errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
             }
         }

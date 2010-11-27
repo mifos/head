@@ -200,8 +200,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getTotalDue() {
-        return principal.subtract(principalPaid).add(getInterestDue()).add(getPenaltyDue()).add(getMiscFeeDue());
-
+        return principal.subtract(principalPaid).add(getEffectiveInterestDue()).add(getPenaltyDue()).add(getMiscFeeDue());
     }
 
     public Money getTotalDueWithoutPricipal() {
@@ -471,7 +470,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getExtraInterest() {
-        return extraInterest==null? Money.zero():extraInterest;
+        return extraInterest==null? Money.zero(interest.getCurrency()):extraInterest;
     }
 
     public void setExtraInterest(Money extraInterest) {
@@ -479,7 +478,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getExtraInterestPaid() {
-        return extraInterestPaid==null? Money.zero():extraInterestPaid;
+        return extraInterestPaid==null? Money.zero(interestPaid.getCurrency()):extraInterestPaid;
     }
 
     public void setExtraInterestPaid(Money extraInterestPaid) {

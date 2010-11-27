@@ -1104,8 +1104,8 @@ public class AccountBO extends AbstractBusinessObject {
             if (getConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
                 // payment date for loans must be >= disbursement date
                 if (this instanceof LoanBO) {
-                    Date apporvalDate = this.getAccountApprovalDate();
-                    return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(apporvalDate)) >= 0;
+                    Date approvalDate = this.getAccountApprovalDate();
+                    return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(approvalDate)) >= 0;
                 }
                 // must be >= creation date for other accounts
                 return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(this.getCreatedDate())) >= 0;

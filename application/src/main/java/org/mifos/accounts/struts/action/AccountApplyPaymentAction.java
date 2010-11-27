@@ -139,7 +139,8 @@ public class AccountApplyPaymentAction extends BaseAction {
         Integer accountId = Integer.valueOf(actionForm.getAccountId());
         String paymentType = request.getParameter(Constants.INPUT);
         UserReferenceDto userReferenceDto = new UserReferenceDto(userContext.getId());
-        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountId, paymentType, userContext.getLocaleId(), userReferenceDto);
+        AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountId, paymentType,
+                userContext.getLocaleId(), userReferenceDto);
 
         validateAccountPayment(accountPaymentDto, accountId, request, userContext);
 
