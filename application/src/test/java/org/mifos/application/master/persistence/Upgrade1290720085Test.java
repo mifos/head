@@ -42,7 +42,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class Upgrade1283341654Test {
+public class Upgrade1290720085Test {
 
     @Mock
     private QuestionnaireMigration questionnaireMigration;
@@ -53,18 +53,18 @@ public class Upgrade1283341654Test {
     @Mock
     private CustomerDao customerDao;
 
-    private Upgrade1283341654 upgrade1283341654;
+    private Upgrade1290720085 upgrade1290720085;
 
     @Before
     public void setUp() {
-        upgrade1283341654 = new Upgrade1283341654(questionnaireMigration);
+        upgrade1290720085 = new Upgrade1290720085(questionnaireMigration);
     }
 
     @Test
     public void shouldMigrateViewClientSurveys() throws PersistenceException, IOException, SQLException {
         List<Integer> qgIds = asList(1111, 2222);
         when(questionnaireMigration.migrateSurveys()).thenReturn(qgIds);
-        List<Integer> questionGroupIds = upgrade1283341654.migrateSurveys();
+        List<Integer> questionGroupIds = upgrade1290720085.migrateSurveys();
         assertThat(questionGroupIds, is(qgIds));
         verify(questionnaireMigration).migrateSurveys();
     }
@@ -72,7 +72,7 @@ public class Upgrade1283341654Test {
     @Test
     public void shouldMigrateAdditionalFields() throws IOException, SQLException {
         when(questionnaireMigration.migrateAdditionalFields()).thenReturn(asList(3333));
-        List<Integer> questionGroupIds = upgrade1283341654.migrateAdditionalFields();
+        List<Integer> questionGroupIds = upgrade1290720085.migrateAdditionalFields();
         assertThat(questionGroupIds, is(notNullValue()));
         assertThat(questionGroupIds.size(), is(1));
         assertThat(questionGroupIds.get(0), is(3333));

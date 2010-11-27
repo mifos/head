@@ -20,34 +20,40 @@
 
 package org.mifos.application.master.persistence;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.application.questionnaire.migration.QuestionnaireMigration;
 import org.mifos.framework.persistence.Upgrade;
+import org.mifos.framework.util.DateTimeService;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Upgrade1283341654 extends Upgrade {
+public class Upgrade1290720085 extends Upgrade {
     private QuestionnaireMigration questionnaireMigration;
-    private static final Logger logger = LoggerFactory.getLogger(Upgrade1283341654.class);
 
-    public Upgrade1283341654() {
+    public Upgrade1290720085() {
         super();
     }
 
     // Should only be used from tests to inject mocks
-    public Upgrade1283341654(QuestionnaireMigration questionnaireMigration) {
+    public Upgrade1290720085(QuestionnaireMigration questionnaireMigration) {
         this.questionnaireMigration = questionnaireMigration;
     }
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
+        long time1 = new DateTimeService().getCurrentDateTime().getMillis();
+        logMessage(" - migrating surveys...");
         migrateSurveys();
+        logMessage("    - took " + (new DateTimeService().getCurrentDateTime().getMillis() - time1) + " msec");
+        
+        time1 = new DateTimeService().getCurrentDateTime().getMillis();
+        logMessage(" - migrating additional fields...");
         migrateAdditionalFields();
+        logMessage("    - took " + (new DateTimeService().getCurrentDateTime().getMillis() - time1) + " msec");
     }
 
     // Intended to be invoked from MigrateAction for manual migration of surveys
@@ -68,7 +74,18 @@ public class Upgrade1283341654 extends Upgrade {
 
     @Override
     public void setUpgradeContext(ApplicationContext upgradeContext) {
+        if (upgradeContext == null) {
+            // workaround for LatestTestAfterCheckpointIntegrationTest
+            upgradeContext = new ClassPathXmlApplicationContext(
+                                    "classpath:/org/mifos/config/resources/applicationContext.xml",
+                                    "classpath:META-INF/spring/QuestionnaireContext.xml");
+        }
         super.setUpgradeContext(upgradeContext);
         initializeDependencies();
+    }
+
+    private void logMessage(String finalMessage) {
+        System.out.println(finalMessage);
+        getLogger().info(finalMessage);
     }
 }

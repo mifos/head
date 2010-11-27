@@ -265,42 +265,7 @@
   <account_action account_action_id="19" lookup_id="573"/>
   <account_action account_action_id="20" lookup_id="610"/>
   <account_activity/>
-  <account_custom_field account_custom_field_id="166" account_id="15" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="167" account_id="19" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="168" account_id="23" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="169" account_id="27" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="170" account_id="32" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="171" account_id="36" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="172" account_id="40" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="173" account_id="44" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="174" account_id="49" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="175" account_id="53" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="176" account_id="57" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="177" account_id="61" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="178" account_id="67" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="179" account_id="71" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="180" account_id="75" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="181" account_id="79" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="182" account_id="84" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="183" account_id="88" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="184" account_id="92" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="185" account_id="96" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="186" account_id="101" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="187" account_id="105" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="188" account_id="109" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="189" account_id="113" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="190" account_id="119" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="191" account_id="123" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="192" account_id="127" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="193" account_id="131" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="194" account_id="136" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="195" account_id="140" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="196" account_id="144" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="197" account_id="148" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="198" account_id="153" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="199" account_id="157" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="200" account_id="161" field_id="8" field_value="2010-07-16"/>
-  <account_custom_field account_custom_field_id="201" account_id="165" field_id="8" field_value="2010-07-16"/>
+  <account_custom_field/>
   <account_fees account_fee_id="1" account_id="166" fee_id="6" account_fee_amnt="90.0000" account_fee_amnt_currency_id="2" fee_amnt="90.0000" version_no="0"/>
   <account_fees account_fee_id="2" account_id="166" fee_id="7" account_fee_amnt="900.0000" account_fee_amnt_currency_id="2" fee_amnt="900.0000" version_no="0"/>
   <account_fees account_fee_id="3" account_id="167" fee_id="7" account_fee_amnt="900.0000" account_fee_amnt_currency_id="2" fee_amnt="900.0000" version_no="0"/>
@@ -1525,6 +1490,7 @@
   <applied_upgrades upgrade_id="1288013750"/>
   <applied_upgrades upgrade_id="1288349766"/>
   <applied_upgrades upgrade_id="1288869198"/>
+  <applied_upgrades upgrade_id="1290720085"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -2545,7 +2511,7 @@
   <currency currency_id="177" currency_name="Kwacha" rounding_amount="1.000" currency_code="ZMK"/>
   <currency currency_id="178" currency_name="Zimbabwe dollar" rounding_amount="1.000" currency_code="ZWD"/>
   <cust_perf_history/>
-  <custom_field_definition field_id="8" entity_id="100" field_type="3" entity_type="21" mandatory_flag="0" default_value="2010-07-16"/>
+  <custom_field_definition/>
   <customer customer_id="1" customer_level_id="3" global_cust_num="0002-000000001" loan_officer_id="2" status_id="13" branch_id="2" display_name="MyCenter1232993841778" display_address="" external_id="" created_date="2009-01-26" search_id="1.1" max_child_count="1" mfi_joining_date="2009-01-26" customer_activation_date="2009-01-26" created_by="1" blacklisted="0" discriminator="CENTER" version_no="2"/>
   <customer customer_id="2" customer_level_id="2" global_cust_num="0002-000000002" loan_officer_id="2" customer_formedby_id="2" status_id="9" branch_id="2" display_name="MyGroup1232993846342" display_address="" external_id="" trained="0" parent_customer_id="1" created_date="2009-01-26" updated_date="2009-01-30" search_id="1.1.1" max_child_count="1" customer_activation_date="2009-01-26" created_by="1" updated_by="1" blacklisted="0" discriminator="GROUP" version_no="3"/>
   <customer customer_id="3" customer_level_id="1" global_cust_num="0002-000000003" loan_officer_id="2" customer_formedby_id="2" status_id="3" branch_id="2" display_name="Stu1232993852651 Client1232993852651" first_name="Stu1232993852651" last_name="Client1232993852651" second_last_name="" display_address="" external_id="" date_of_birth="1949-07-03" group_flag="1" trained="0" parent_customer_id="2" created_date="2009-01-26" updated_date="2009-01-26" search_id="1.1.1.1" max_child_count="0" government_id="" customer_activation_date="2009-01-26" created_by="1" updated_by="1" blacklisted="0" discriminator="CLIENT" version_no="2"/>
@@ -8669,11 +8635,81 @@
   <program_fund/>
   <question_choice_tags/>
   <question_choices/>
-  <question_group/>
-  <question_group_event_sources/>
-  <question_group_instance/>
-  <question_group_response/>
-  <questions/>
+  <question_group id="1" title="Additional_Fields_Create Savings" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group_event_sources id="1" question_group_id="1" event_source_id="12"/>
+  <question_group_instance id="1" question_group_id="1" entity_id="136" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="2" question_group_id="1" entity_id="71" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="3" question_group_id="1" entity_id="140" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="4" question_group_id="1" entity_id="67" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="5" question_group_id="1" entity_id="131" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="6" question_group_id="1" entity_id="79" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="7" question_group_id="1" entity_id="15" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="8" question_group_id="1" entity_id="75" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="9" question_group_id="1" entity_id="153" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="10" question_group_id="1" entity_id="84" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="11" question_group_id="1" entity_id="19" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="12" question_group_id="1" entity_id="157" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="13" question_group_id="1" entity_id="23" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="14" question_group_id="1" entity_id="144" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="15" question_group_id="1" entity_id="92" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="16" question_group_id="1" entity_id="27" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="17" question_group_id="1" entity_id="148" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="18" question_group_id="1" entity_id="88" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="19" question_group_id="1" entity_id="32" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="20" question_group_id="1" entity_id="101" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="21" question_group_id="1" entity_id="36" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="22" question_group_id="1" entity_id="96" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="23" question_group_id="1" entity_id="161" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="24" question_group_id="1" entity_id="40" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="25" question_group_id="1" entity_id="109" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="26" question_group_id="1" entity_id="165" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="27" question_group_id="1" entity_id="44" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="28" question_group_id="1" entity_id="105" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="29" question_group_id="1" entity_id="119" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="30" question_group_id="1" entity_id="49" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="31" question_group_id="1" entity_id="53" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="32" question_group_id="1" entity_id="113" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="33" question_group_id="1" entity_id="127" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="34" question_group_id="1" entity_id="57" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="35" question_group_id="1" entity_id="123" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_instance id="36" question_group_id="1" entity_id="61" date_conducted="2009-01-29" completed_status="1" created_by="1" version_id="1" event_source_id="12"/>
+  <question_group_response id="1" question_group_instance_id="1" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="2" question_group_instance_id="2" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="3" question_group_instance_id="3" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="4" question_group_instance_id="4" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="5" question_group_instance_id="5" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="6" question_group_instance_id="6" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="7" question_group_instance_id="7" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="8" question_group_instance_id="8" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="9" question_group_instance_id="9" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="10" question_group_instance_id="10" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="11" question_group_instance_id="11" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="12" question_group_instance_id="12" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="13" question_group_instance_id="13" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="14" question_group_instance_id="14" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="15" question_group_instance_id="15" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="16" question_group_instance_id="16" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="17" question_group_instance_id="17" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="18" question_group_instance_id="18" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="19" question_group_instance_id="19" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="20" question_group_instance_id="20" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="21" question_group_instance_id="21" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="22" question_group_instance_id="22" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="23" question_group_instance_id="23" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="24" question_group_instance_id="24" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="25" question_group_instance_id="25" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="26" question_group_instance_id="26" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="27" question_group_instance_id="27" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="28" question_group_instance_id="28" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="29" question_group_instance_id="29" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="30" question_group_instance_id="30" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="31" question_group_instance_id="31" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="32" question_group_instance_id="32" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="33" question_group_instance_id="33" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="34" question_group_instance_id="34" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="35" question_group_instance_id="35" sections_questions_id="1" response="2010-07-16"/>
+  <question_group_response id="36" question_group_instance_id="36" sections_questions_id="1" response="2010-07-16"/>
+  <questions question_id="1" answer_type="5" question_state="1" question_text="Custom date field" nickname="49efa8754c8468ba6887fc1aca69dfbd"/>
   <recommended_amnt_unit recommended_amnt_unit_id="1" lookup_id="120"/>
   <recommended_amnt_unit recommended_amnt_unit_id="2" lookup_id="121"/>
   <recur_on_day recur_on_day_id="1" details_id="1" days="2" version_no="0"/>
@@ -9710,8 +9746,8 @@
   <savings_trxn_detail/>
   <savings_type savings_type_id="1" lookup_id="118"/>
   <savings_type savings_type_id="2" lookup_id="119"/>
-  <sections/>
-  <sections_questions/>
+  <sections id="1" question_group_id="1" name="Misc" sequence_number="0"/>
+  <sections_questions id="1" section_id="1" question_id="1" is_required="0" sequence_number="0"/>
   <spouse_father_lookup spouse_father_id="1" lookup_id="128"/>
   <spouse_father_lookup spouse_father_id="2" lookup_id="129"/>
   <supported_locale locale_id="1" country_id="6" lang_id="1" locale_name="EN" default_locale="1"/>

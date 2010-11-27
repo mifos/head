@@ -79,17 +79,7 @@
   <account_action account_action_id="19" lookup_id="573"/>
   <account_action account_action_id="20" lookup_id="610"/>
   <account_activity/>
-  <account_custom_field account_custom_field_id="333" account_id="4" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="334" account_id="6" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="335" account_id="8" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="336" account_id="12" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="337" account_id="14" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="338" account_id="16" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="339" account_id="18" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="340" account_id="22" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="341" account_id="24" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="342" account_id="26" field_id="15" field_value="2010-07-15"/>
-  <account_custom_field account_custom_field_id="343" account_id="28" field_id="15" field_value="2010-07-15"/>
+  <account_custom_field/>
   <account_fees/>
   <account_flag_detail/>
   <account_notes account_notes_id="1" account_id="4" note="Approved." comment_date="2008-12-04" officer_id="1"/>
@@ -423,6 +413,7 @@
   <applied_upgrades upgrade_id="1288013750"/>
   <applied_upgrades upgrade_id="1288349766"/>
   <applied_upgrades upgrade_id="1288869198"/>
+  <applied_upgrades upgrade_id="1290720085"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -859,7 +850,7 @@
   <currency currency_id="177" currency_name="Kwacha" rounding_amount="1.000" currency_code="ZMK"/>
   <currency currency_id="178" currency_name="Zimbabwe dollar" rounding_amount="1.000" currency_code="ZWD"/>
   <cust_perf_history/>
-  <custom_field_definition field_id="15" entity_id="107" field_type="3" entity_type="22" mandatory_flag="0" default_value="2010-07-15"/>
+  <custom_field_definition/>
   <customer customer_id="1" customer_level_id="3" global_cust_num="0002-000000001" loan_officer_id="2" status_id="13" branch_id="2" display_name="Center1" display_address="" external_id="" created_date="2008-12-04" search_id="1.1" max_child_count="1" mfi_joining_date="2008-12-04" customer_activation_date="2008-12-04" created_by="1" blacklisted="0" discriminator="CENTER" version_no="2"/>
   <customer customer_id="2" customer_level_id="2" global_cust_num="0002-000000002" loan_officer_id="2" customer_formedby_id="2" status_id="9" branch_id="2" display_name="Group1" display_address="" external_id="" trained="0" parent_customer_id="1" created_date="2008-12-04" updated_date="2008-12-04" search_id="1.1.1" max_child_count="3" customer_activation_date="2008-12-04" created_by="1" updated_by="1" blacklisted="0" discriminator="GROUP" version_no="5"/>
   <customer customer_id="3" customer_level_id="1" global_cust_num="0002-000000003" loan_officer_id="2" customer_formedby_id="2" status_id="3" branch_id="2" display_name="Client - Veronica Abisya" first_name="Client - Veronica" last_name="Abisya" second_last_name="" display_address="" external_id="" date_of_birth="1949-07-03" group_flag="1" trained="0" parent_customer_id="2" created_date="2008-12-04" updated_date="2008-12-04" search_id="1.1.1.1" max_child_count="0" government_id="" customer_activation_date="2008-12-04" created_by="1" updated_by="1" blacklisted="0" discriminator="CLIENT" version_no="2"/>
@@ -3009,11 +3000,31 @@
   <program_fund/>
   <question_choice_tags/>
   <question_choices/>
-  <question_group/>
-  <question_group_event_sources/>
-  <question_group_instance/>
-  <question_group_response/>
-  <questions/>
+  <question_group id="1" title="Additional_Fields_Create Loan" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group_event_sources id="1" question_group_id="1" event_source_id="2"/>
+  <question_group_instance id="1" question_group_id="1" entity_id="16" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="2" question_group_id="1" entity_id="18" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="3" question_group_id="1" entity_id="4" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="4" question_group_id="1" entity_id="6" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="5" question_group_id="1" entity_id="22" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="6" question_group_id="1" entity_id="8" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="7" question_group_id="1" entity_id="24" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="8" question_group_id="1" entity_id="26" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="9" question_group_id="1" entity_id="12" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="10" question_group_id="1" entity_id="28" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_instance id="11" question_group_id="1" entity_id="14" date_conducted="2008-12-04" completed_status="1" created_by="1" version_id="1" event_source_id="2"/>
+  <question_group_response id="1" question_group_instance_id="1" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="2" question_group_instance_id="2" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="3" question_group_instance_id="3" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="4" question_group_instance_id="4" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="5" question_group_instance_id="5" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="6" question_group_instance_id="6" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="7" question_group_instance_id="7" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="8" question_group_instance_id="8" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="9" question_group_instance_id="9" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="10" question_group_instance_id="10" sections_questions_id="1" response="2010-07-15"/>
+  <question_group_response id="11" question_group_instance_id="11" sections_questions_id="1" response="2010-07-15"/>
+  <questions question_id="1" answer_type="5" question_state="1" question_text="Custom date field" nickname="49efa8754c8468ba6887fc1aca69dfbd"/>
   <recommended_amnt_unit recommended_amnt_unit_id="1" lookup_id="120"/>
   <recommended_amnt_unit recommended_amnt_unit_id="2" lookup_id="121"/>
   <recur_on_day recur_on_day_id="1" details_id="1" days="2" version_no="0"/>
@@ -3256,8 +3267,8 @@
   <savings_trxn_detail/>
   <savings_type savings_type_id="1" lookup_id="118"/>
   <savings_type savings_type_id="2" lookup_id="119"/>
-  <sections/>
-  <sections_questions/>
+  <sections id="1" question_group_id="1" name="Misc" sequence_number="0"/>
+  <sections_questions id="1" section_id="1" question_id="1" is_required="0" sequence_number="0"/>
   <spouse_father_lookup spouse_father_id="1" lookup_id="128"/>
   <spouse_father_lookup spouse_father_id="2" lookup_id="129"/>
   <supported_locale locale_id="1" country_id="6" lang_id="1" locale_name="EN" default_locale="1"/>

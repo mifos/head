@@ -1494,6 +1494,7 @@
   <applied_upgrades upgrade_id="1288013750"/>
   <applied_upgrades upgrade_id="1288349766"/>
   <applied_upgrades upgrade_id="1288869198"/>
+  <applied_upgrades upgrade_id="1290720085"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -9049,6 +9050,11 @@
   <question_group id="22" title="ViewGroupQG2" date_of_creation="2010-10-01" state="1" is_editable="1" is_ppi="0"/>
   <question_group id="23" title="ViewCenterQG" date_of_creation="2010-10-01" state="1" is_editable="1" is_ppi="0"/>
   <question_group id="24" title="ViewCenterQG2" date_of_creation="2010-10-01" state="1" is_editable="1" is_ppi="0"/>
+  <question_group id="25" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group id="26" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group id="27" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group id="28" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group id="29" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
   <question_group_event_sources id="3" question_group_id="3" event_source_id="3"/>
   <question_group_event_sources id="4" question_group_id="4" event_source_id="3"/>
   <question_group_event_sources id="5" question_group_id="1" event_source_id="7"/>
@@ -9073,6 +9079,11 @@
   <question_group_event_sources id="26" question_group_id="22" event_source_id="8"/>
   <question_group_event_sources id="27" question_group_id="23" event_source_id="10"/>
   <question_group_event_sources id="29" question_group_id="24" event_source_id="10"/>
+  <question_group_event_sources id="30" question_group_id="25" event_source_id="3"/>
+  <question_group_event_sources id="31" question_group_id="26" event_source_id="8"/>
+  <question_group_event_sources id="32" question_group_id="27" event_source_id="10"/>
+  <question_group_event_sources id="33" question_group_id="28" event_source_id="7"/>
+  <question_group_event_sources id="34" question_group_id="29" event_source_id="13"/>
   <question_group_instance/>
   <question_group_response/>
   <questions question_id="1" answer_type="1" question_state="1" question_text="question 7" nickname="9b79e8a822b7eeb6e238bb98eb895edd"/>
@@ -10138,6 +10149,11 @@
   <sections id="46" question_group_id="23" name="Sec 2" sequence_number="1"/>
   <sections id="47" question_group_id="24" name="Sec 1" sequence_number="0"/>
   <sections id="48" question_group_id="24" name="Sec 2" sequence_number="1"/>
+  <sections id="49" question_group_id="25" name="Misc" sequence_number="0"/>
+  <sections id="50" question_group_id="26" name="Misc" sequence_number="0"/>
+  <sections id="51" question_group_id="27" name="Misc" sequence_number="0"/>
+  <sections id="52" question_group_id="28" name="Misc" sequence_number="0"/>
+  <sections id="53" question_group_id="29" name="Misc" sequence_number="0"/>
   <sections_questions id="1" section_id="1" question_id="4" is_required="0" sequence_number="0"/>
   <sections_questions id="2" section_id="1" question_id="2" is_required="1" sequence_number="1"/>
   <sections_questions id="3" section_id="1" question_id="5" is_required="0" sequence_number="2"/>
@@ -10313,6 +10329,21 @@
   <sections_questions id="173" section_id="48" question_id="17" is_required="0" sequence_number="1"/>
   <sections_questions id="174" section_id="48" question_id="4" is_required="0" sequence_number="2"/>
   <sections_questions id="175" section_id="48" question_id="15" is_required="1" sequence_number="3"/>
+  <sections_questions id="176" section_id="49" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="177" section_id="49" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="178" section_id="49" question_id="2" is_required="0" sequence_number="2"/>
+  <sections_questions id="179" section_id="50" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="180" section_id="50" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="181" section_id="50" question_id="2" is_required="0" sequence_number="2"/>
+  <sections_questions id="182" section_id="51" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="183" section_id="51" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="184" section_id="51" question_id="2" is_required="0" sequence_number="2"/>
+  <sections_questions id="185" section_id="52" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="186" section_id="52" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="187" section_id="52" question_id="2" is_required="0" sequence_number="2"/>
+  <sections_questions id="188" section_id="53" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="189" section_id="53" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="190" section_id="53" question_id="2" is_required="0" sequence_number="2"/>
   <spouse_father_lookup spouse_father_id="1" lookup_id="128"/>
   <spouse_father_lookup spouse_father_id="2" lookup_id="129"/>
   <supported_locale locale_id="1" country_id="6" lang_id="1" locale_name="EN" default_locale="1"/>
@@ -10362,7 +10393,7 @@
   <supported_locale locale_id="45" country_id="50" lang_id="10" locale_name="Lao-Laos" default_locale="0"/>
   <supported_locale locale_id="46" country_id="25" lang_id="1" locale_name="English-Lebanon-AlMajmoua" default_locale="0"/>
   <supported_locale locale_id="47" country_id="51" lang_id="11" locale_name="Hungarian-Hungary" default_locale="0"/>
-  <survey survey_id="1" survey_name="Survey 1" survey_applies_to="all" date_of_creation="2009-07-29" state="1"/>
+  <survey survey_id="1" survey_name="Survey 1" survey_applies_to="savings" date_of_creation="2009-07-29" state="1"/>
   <survey_instance/>
   <survey_questions surveyquestion_id="1" survey_id="1" question_id="1" question_order="0" mandatory="1"/>
   <survey_questions surveyquestion_id="2" survey_id="1" question_id="3" question_order="1" mandatory="0"/>
