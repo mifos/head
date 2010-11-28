@@ -21,6 +21,7 @@
 package org.mifos.security.authentication;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpSession;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.LoginActivityDto;
 import org.mifos.application.servicefacade.LegacyLoginServiceFacade;
+import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -46,6 +48,7 @@ import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -71,6 +74,8 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
             ServletException {
 
+        LocaleContextHolder.setLocale(Localization.getInstance().getMainLocale());
+
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         AuthenticationException denied = null;
@@ -80,18 +85,14 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             allowAuthenticationToContinue = false;
 
             request.getSession(false).invalidate();
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
-            String errorMessage = resources.getString(LoginConstants.BATCH_JOB_RUNNING);
-            denied = new AuthenticationServiceException(errorMessage);
+            denied = new AuthenticationServiceException(LoginConstants.BATCH_JOB_RUNNING);
         }
 
         ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class.getName());
         if (shutdownManager.isShutdownDone()) {
             allowAuthenticationToContinue = false;
             request.getSession(false).invalidate();
-            ResourceBundle resources = ResourceBundle.getBundle(FilePaths.LOGIN_UI_PROPERTY_FILE);
-            String errorMessage = resources.getString(LoginConstants.SHUTDOWN);
-            denied = new AuthenticationServiceException(errorMessage);
+            denied = new AuthenticationServiceException(LoginConstants.SHUTDOWN);
         }
 
         if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
