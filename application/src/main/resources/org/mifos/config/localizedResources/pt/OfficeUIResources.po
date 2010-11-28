@@ -1,9 +1,9 @@
-#. extracted from OfficeUIResources.properties, OfficeUIResources_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/OfficeUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -386,8 +386,8 @@ msgid "Please select {0}."
 msgstr "Por Favor selecione {0}."
 
 #: Office.mandatory_textbox
+#, fuzzy
 msgctxt "Office.mandatory_textbox"
-"Office.mandatory_textbox"
 msgid "Please specify {0}."
 msgstr "Por Favor especifique {0}."
 

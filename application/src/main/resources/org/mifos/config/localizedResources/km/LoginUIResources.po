@@ -1,10 +1,10 @@
 # extracted from LoginUIResources.properties
-#. extracted from LoginUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LoginUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: 2009-09-23 01:51-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,35 +32,12 @@ msgstr "អ្នកបានចាកចេញពីក្នុងប្រព
 msgid "You have been logged out of the system because Mifos is shutting down."
 msgstr ""
 
-#: AbstractUserDetailsAuthenticationProvider.disabled
-msgid ""
-"The user account is currently inactive. Please try again later or contact "
-"the system administrator."
-msgstr ""
-"គណនីរបស់អ្នកប្រើប្រាស់គឺមិនដំណើរការទេនាពេលនេះ។សូមសាកល្បងម្តងទៀតនាពេលក្រោយ "
-"ឬទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធ"
-
 #: errors.invalidoldpassword
 msgctxt "errors.invalidoldpassword"
 msgid "Please specify valid username/password to access the application."
 msgstr ""
 "សូមបញ្ជាក់ពីឈ្មោះរបស់អ្នកប្រើប្រាស់ដែលមានសុពលភាព ពាកសំងាត់ "
 "ដើម្បីប្រើប្រាស់នៅក្នុងប្រព័ន្ធ"
-
-#: AbstractUserDetailsAuthenticationProvider.badCredentials
-msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
-msgid "Please specify valid username/password to access the application."
-msgstr ""
-"សូមបញ្ជាក់ពីឈ្មោះរបស់អ្នកប្រើប្រាស់ដែលមានសុពលភាព ពាកសំងាត់ "
-"ដើម្បីប្រើប្រាស់នៅក្នុងប្រព័ន្ធ"
-
-#: AbstractUserDetailsAuthenticationProvider.locked
-msgid ""
-"The user account is currently locked. Please try again later or contact the "
-"system administrator."
-msgstr ""
-"គណនីរបស់អ្នកប្រើប្រាស់នាពេលនេះត្រូវបានបិទ សូមព្យាយាមម្តងទៀតនាពេលក្រោយឬ​ "
-"សូមទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធ"
 
 #: errors.logoutout
 msgid ""
@@ -136,12 +113,12 @@ msgid "Confirm New Password"
 msgstr "បញ្ជាក់ពាក្យសំងាត់ថ្មី"
 
 #: login.login
-msgid "Login"
-msgstr "បើកចូល"
+msgid "Log In"
+msgstr ""
 
 #: login.logout
-msgid "Logout"
-msgstr "ចាកចេញ"
+msgid "Log Out"
+msgstr ""
 
 #: login.newpassword
 msgid "New Password"
@@ -167,9 +144,33 @@ msgstr "អ្នកប្រើប្រាស់"
 msgid "Welcome to mifos"
 msgstr "ស្វាគមន៍ការមកប្រើប្រាស់ម៉ាយហ្វូស"
 
+#. # Spring security specific messages overrides org.springframwork.security/message.properties
+#: AbstractUserDetailsAuthenticationProvider.locked
+msgid ""
+"The user account is currently locked. Please try again later or contact the "
+"system administrator."
+msgstr ""
+"គណនីរបស់អ្នកប្រើប្រាស់នាពេលនេះត្រូវបានបិទ សូមព្យាយាមម្តងទៀតនាពេលក្រោយឬ​ "
+"សូមទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធ"
+
+#: AbstractUserDetailsAuthenticationProvider.disabled
+msgid ""
+"The user account is currently inactive. Please try again later or contact "
+"the system administrator."
+msgstr ""
+"គណនីរបស់អ្នកប្រើប្រាស់គឺមិនដំណើរការទេនាពេលនេះ។សូមសាកល្បងម្តងទៀតនាពេលក្រោយ "
+"ឬទាក់ទងអ្នកគ្រប់គ្រងប្រព័ន្ធ"
+
 #: AbstractUserDetailsAuthenticationProvider.badCredentials
+#, fuzzy
 msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
 msgid "Please specify valid username/password to access the application."
 msgstr ""
 "សូមបញ្ជាក់ពីឈ្មោះរបស់អ្នកប្រើប្រាស់ដែលមានសុពលភាព ពាកសំងាត់ "
 "ដើម្បីប្រើប្រាស់នៅក្នុងប្រព័ន្ធ"
+
+#~ msgid "Login"
+#~ msgstr "បើកចូល"
+
+#~ msgid "Logout"
+#~ msgstr "ចាកចេញ"

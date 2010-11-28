@@ -1,9 +1,9 @@
-#. extracted from LoginUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LoginUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:47+0800\n"
+"POT-Creation-Date: 2010-11-28 11:25+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,27 +28,10 @@ msgstr "由于批量任务正在运行，您已经从系统登录中注销。"
 msgid "You have been logged out of the system because Mifos is shutting down."
 msgstr "由于Mifos正在关闭，您已经从系统登录中注销"
 
-#: AbstractUserDetailsAuthenticationProvider.disabled
-msgid ""
-"The user account is currently inactive. Please try again later or contact "
-"the system administrator."
-msgstr "该用户处于非活动状态。请稍后重试或联系系统管理员。"
-
 #: errors.invalidoldpassword
 msgctxt "errors.invalidoldpassword"
 msgid "Please specify valid username/password to access the application."
 msgstr "请填写正确的登录名和密码以便登录系统。"
-
-#: AbstractUserDetailsAuthenticationProvider.badCredentials
-msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
-msgid "Please specify valid username/password to access the application."
-msgstr "请填写正确的登录名和密码以便登录系统。"
-
-#: AbstractUserDetailsAuthenticationProvider.locked
-msgid ""
-"The user account is currently locked. Please try again later or contact the "
-"system administrator."
-msgstr "该用户处于锁定状态。请稍后重试或联系系统管理员。"
 
 #: errors.logoutout
 msgid ""
@@ -116,12 +99,12 @@ msgid "Confirm New Password"
 msgstr "确认新密码"
 
 #: login.login
-msgid "Login"
-msgstr "登录"
+msgid "Log In"
+msgstr ""
 
 #: login.logout
-msgid "Logout"
-msgstr "注销"
+msgid "Log Out"
+msgstr ""
 
 #: login.newpassword
 msgid "New Password"
@@ -147,7 +130,27 @@ msgstr "用户名"
 msgid "Welcome to mifos"
 msgstr "欢迎使用Mifos"
 
+#. # Spring security specific messages overrides org.springframwork.security/message.properties
+#: AbstractUserDetailsAuthenticationProvider.locked
+msgid ""
+"The user account is currently locked. Please try again later or contact the "
+"system administrator."
+msgstr "该用户处于锁定状态。请稍后重试或联系系统管理员。"
+
+#: AbstractUserDetailsAuthenticationProvider.disabled
+msgid ""
+"The user account is currently inactive. Please try again later or contact "
+"the system administrator."
+msgstr "该用户处于非活动状态。请稍后重试或联系系统管理员。"
+
 #: AbstractUserDetailsAuthenticationProvider.badCredentials
+#, fuzzy
 msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
 msgid "Please specify valid username/password to access the application."
 msgstr "请填写正确的登录名和密码以便登录系统。"
+
+#~ msgid "Login"
+#~ msgstr "登录"
+
+#~ msgid "Logout"
+#~ msgstr "注销"

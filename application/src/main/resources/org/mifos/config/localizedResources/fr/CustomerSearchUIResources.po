@@ -1,9 +1,9 @@
-#. extracted from CustomerSearchUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CustomerSearchUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:27+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,8 +116,9 @@ msgid "the search tool below"
 msgstr "L'outil de recherche ci-dessous"
 
 #: CustomerSearch.searchby
+#, fuzzy
 msgctxt "CustomerSearch.searchby"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr "Recherche par nom, ID système ou numéro de compte"
 
 #: CustomerSearch.searchinstruction1
@@ -125,13 +126,14 @@ msgid "To search, enter a"
 msgstr "Pour chercher, entrer un"
 
 #: CustomerSearch.searchnamesysid
-msgid "name, system ID or account number"
-msgstr "nom, ID système ou numéro de compte"
+msgid "name, system ID, phone number or account number"
+msgstr ""
 
 #: CustomerSearch.searchstring
+#, fuzzy
 msgctxt "CustomerSearch.searchstring"
-msgid "Search by name, system ID or account number"
-msgstr "Recherche par nom, ID systèm ou numéro de compte"
+msgid "Search by name, system ID, phone number or account number"
+msgstr "Recherche par nom, ID système ou numéro de compte"
 
 #: CustomerSearch.select
 msgid "Select a"
@@ -201,3 +203,10 @@ msgstr "<LI>"
 #: errors.suffix
 msgid "</LI>"
 msgstr "</LI>"
+
+#~ msgid "name, system ID or account number"
+#~ msgstr "nom, ID système ou numéro de compte"
+
+#~ msgctxt "CustomerSearch.searchstring"
+#~ msgid "Search by name, system ID or account number"
+#~ msgstr "Recherche par nom, ID systèm ou numéro de compte"

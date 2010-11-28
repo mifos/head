@@ -1,9 +1,9 @@
-#. extracted from ConfigurationUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ConfigurationUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:47+0800\n"
+"POT-Creation-Date: 2010-11-28 11:24+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -460,9 +460,10 @@ msgid "Second last name"
 msgstr "第二姓氏"
 
 #: configuration.select_category
+#, fuzzy
 msgid ""
-"Click on a category below to view and edit the additional fields defined for "
-"that category or"
+"Click on a category below to view the additional fields defined for that "
+"category."
 msgstr "点击下面的分类来查看编辑该分类已定义的附加栏位或"
 
 #: configuration.sequence_number

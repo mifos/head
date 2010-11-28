@@ -1,10 +1,10 @@
 # extracted from ProductDefinitionResources.properties
-#. extracted from ProductDefinitionResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ProductDefinitionResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:50+0800\n"
+"POT-Creation-Date: 2010-11-28 11:29+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -202,7 +202,7 @@ msgid "Please specify a valid {0}. {0} should be greater than or equal to {1}."
 msgstr ""
 
 #: errors.maxValue
-msgid "Value of {0} cannot be greate than {1}."
+msgid "Value of {0} cannot be greater than {1}."
 msgstr ""
 
 #: errors.maximumlength
@@ -558,7 +558,7 @@ msgstr ""
 
 #: product.clickcancelprdmixinfo
 msgid ""
-"Click Cancel to return to product mix deatils without submitting "
+"Click Cancel to return to product mix details without submitting "
 "information."
 msgstr ""
 
@@ -866,7 +866,7 @@ msgid "Inactive"
 msgstr ""
 
 #: product.inclInLoanCycleCounter
-msgid "Include in {0} cycle counter."
+msgid "Include in {0} cycle counter"
 msgstr ""
 
 #: product.inclin
@@ -875,6 +875,10 @@ msgstr ""
 
 #: product.inclloancyccounter
 msgid "Include in loan cycle counter"
+msgstr ""
+
+#: product.include.interest.waiver
+msgid "Can waive interest on Prepay loan"
 msgstr ""
 
 #: product.inf
@@ -1630,4 +1634,132 @@ msgstr ""
 #: produt.edit
 msgctxt "produt.edit"
 msgid "Edit"
+msgstr ""
+
+#: product.questiongroups
+msgid "Question Groups"
+msgstr ""
+
+#: product.assocquestiongroups
+msgid "Associate Question Groups"
+msgstr ""
+
+#: product.assocedquestiongroups
+msgid "Associated Question Groups"
+msgstr ""
+
+#: product.clickquestiongroups
+msgid "Click on a question group in the left box to select. Then click Add."
+msgstr ""
+
+#: product.canConfigureVariableInstallments
+msgid "Can configure variable installments"
+msgstr ""
+
+#: product.minimumGapBetweenInstallments
+msgid "Minimum gap between installments"
+msgstr ""
+
+#: product.maximumGapBetweenInstallments
+msgid "Maximum gap between installments"
+msgstr ""
+
+#: product.minimumInstallmentAmount
+msgid "Minimum installment amount"
+msgstr ""
+
+#: product.notApplicable
+msgid "N/A"
+msgstr ""
+
+#: product.cashFlowValidation
+msgid "Compare with Cash Flow"
+msgstr ""
+
+#: product.cashFlowThreshold
+msgid "Warning Threshold"
+msgstr ""
+
+#: product.indebtednessRatio
+msgid "Indebtedness Rate"
+msgstr ""
+
+#: product.repaymentCapacity
+msgid "Repayment Capacity"
+msgstr ""
+
+#: errors.minGapMoreThanMaxGapForVariableInstallmentProduct
+msgid ""
+"Minimum gap must be less than the maximum gap for loans with variable "
+"installments"
+msgstr ""
+
+#: errors.variableInstallmentMinGapNegativeOrZero
+msgid ""
+"Minimum gap must not be zero or negative for loans with variable "
+"installments"
+msgstr ""
+
+#: errors.variableInstallmentMaxGapNegativeOrZero
+msgid ""
+"Maximum gap must not be zero or negative for loans with variable "
+"installments"
+msgstr ""
+
+#: errors.variableInstallmentMinGapMoreThanAllowed
+msgid ""
+"Minimum gap must be less than 4 digits for loans with variable installments"
+msgstr ""
+
+#: errors.variableInstallmentMaxGapMoreThanAllowed
+msgid ""
+"Maximum gap must be less than 4 digits for loans with variable installments"
+msgstr ""
+
+#: errors.minInstallmentAmountInvalidFormat
+msgid ""
+"The min installment amount for variable installments is invalid because {0}"
+msgstr ""
+
+#: errors.cashFlowThresholdInvalid
+msgid "Warning Threshold should be a value less than {0}"
+msgstr ""
+
+#: errors.indebtednessRatioInvalid
+msgid "Inebtedness Ratio should be a value less than {0}"
+msgstr ""
+
+#: errors.repaymentCapacityInvalid
+msgid "Repayment Capacity should be a value less than {0}"
+msgstr ""
+
+#: errors.variableInstallmentMinGapNotProvided
+msgid "Please specify the minimum gap for variable installments"
+msgstr ""
+
+#: errors.cashflowwarninginvalidformat
+msgid "The Warning Threshold is invalid because {0}"
+msgstr ""
+
+#: errors.indebtednessRatioInvalidFormat
+msgid "The Indebtedness Ratio is invalid because {0}"
+msgstr ""
+
+#: errors.repaymentCapacityInvalidFormat
+msgid "The Repayment Capacity is invalid because {0}"
+msgstr ""
+
+#: errors.interestTypeInvalidForVariableInstallment
+msgid ""
+"The selected interest type is invalid for variable installment loan product"
+msgstr ""
+
+#: errors.periodicFeeNotApplicableForVariableInstallment
+msgctxt "errors.periodicFeeNotApplicableForVariableInstallment"
+msgid "{0} fee cannot be applied to variable installment loan product"
+msgstr ""
+
+#: errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan
+msgctxt "errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan"
+msgid "{0} fee cannot be applied to variable installment loan product"
 msgstr ""

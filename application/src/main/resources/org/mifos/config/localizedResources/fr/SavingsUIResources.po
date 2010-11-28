@@ -1,9 +1,9 @@
-#. extracted from SavingsUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SavingsUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:27+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -574,8 +574,9 @@ msgstr "'pour faire des changements."
 msgid "Total amount due"
 msgstr "Total de montant prévu en"
 
-#: Savings.totalAmountDue.on
-msgctxt "Savings.totalAmountDue.on"
+#: Savings.totalAmountDueOn
+#, fuzzy
+msgctxt "Savings.totalAmountDueOn"
 msgid "Total amount due on"
 msgstr "Montant total prévu en"
 

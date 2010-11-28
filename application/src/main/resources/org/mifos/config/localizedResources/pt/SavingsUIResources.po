@@ -1,9 +1,9 @@
-#. extracted from SavingsUIResources.properties, SavingsUIResources_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SavingsUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -221,10 +221,12 @@ msgid "Then click Continue."
 msgstr "Depois clique Continuar."
 
 #: Savings.clickContinueOrCancel
+#, fuzzy
 msgid ""
 "Then click Continue. Click Cancel to return to Clients &amp; Accounts "
 "without submitting information."
 msgstr ""
+"Clique Cancelar para voltar à Clientes &amp; Contas sem submeter informação."
 
 #: Savings.clickPreview
 msgid "Then click Preview. "
@@ -294,8 +296,9 @@ msgid "details now"
 msgstr "detalhes agora"
 
 #: Savings.accountdetails
+#, fuzzy
 msgid "account details now"
-msgstr ""
+msgstr "detalhes da conta"
 
 #: Savings.detailsWithOutClosing
 msgid "account details without closing the account."
@@ -571,9 +574,10 @@ msgid "Total amount due"
 msgstr "Valor Total em dívida"
 
 #: Savings.totalAmountDueOn
+#, fuzzy
 msgctxt "Savings.totalAmountDueOn"
 msgid "Total amount due on"
-msgstr ""
+msgstr "Valor Total devido em "
 
 #: Savings.totalDeposits
 msgid "Total deposits"

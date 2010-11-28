@@ -1,9 +1,9 @@
-#. extracted from FrameworkUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/FrameworkUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:28+0530\n"
 "PO-Revision-Date: 2009-11-09 21:04+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,8 +64,8 @@ msgid "Home"
 msgstr "Kezdőlap"
 
 #: framework.logout
-msgid "Logout"
-msgstr "Kijelentkezés"
+msgid "Log Out"
+msgstr ""
 
 #: framework.manageCollectionSheets
 msgid "Manage collection sheets"
@@ -84,9 +84,13 @@ msgid "Search"
 msgstr "Keresés"
 
 #: framework.searchCriteria
-msgid "Search by name, system ID or account number "
+#, fuzzy
+msgid "Search by name, system ID, phone number or account number "
 msgstr "Keresés név, rendszerazonosító vagy számlaszám alapján"
 
 #: framework.yoursettings
 msgid "Your settings"
 msgstr "Saját beállítások"
+
+#~ msgid "Logout"
+#~ msgstr "Kijelentkezés"

@@ -1,10 +1,10 @@
 # extracted from AdmindocumentsUIResources.properties
-#. extracted from AdmindocumentsUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/AdmindocumentsUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:47+0800\n"
+"POT-Creation-Date: 2010-11-28 11:25+0530\n"
 "PO-Revision-Date: 2010-02-13 14:27-0800\n"
 "Last-Translator: Ryan Sturgill <sturgillr@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"

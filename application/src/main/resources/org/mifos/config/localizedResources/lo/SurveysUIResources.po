@@ -1,10 +1,10 @@
 # extracted from SurveysUIResources.properties
-#. extracted from SurveysUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SurveysUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:50+0800\n"
+"POT-Creation-Date: 2010-11-28 11:29+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -232,7 +232,7 @@ msgid "Attach survey"
 msgstr ""
 
 #: Surveys.attachasurvey
-msgid "Attach a survey"
+msgid "Attach a Survey"
 msgstr ""
 
 #: Surveys.between
@@ -408,7 +408,7 @@ msgid "Loan accounts"
 msgstr ""
 
 #: Surveys.mainpage_instructions
-msgid "Click on a survey below to view details and make changes or"
+msgid "Click on a survey below to view details."
 msgstr ""
 
 #: Surveys.manageQuestions
@@ -500,7 +500,7 @@ msgid "Survey name"
 msgstr ""
 
 #: Surveys.viewQuestions_instructions
-msgid "Click on a question below to view details and make changes or "
+msgid "Click on a question below to view details. "
 msgstr ""
 
 #: Surveys.viewQuestions_ppi_note
@@ -601,4 +601,8 @@ msgstr ""
 
 #: erros.invalidnumberofchoices
 msgid "Please specify at least 2 choices for this type of answer."
+msgstr ""
+
+#: Questionnaire.EditAdditonalInformation
+msgid "Edit Additional Information"
 msgstr ""

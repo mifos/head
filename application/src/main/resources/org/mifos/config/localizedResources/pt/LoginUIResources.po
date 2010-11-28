@@ -1,9 +1,9 @@
-#. extracted from LoginUIResources.properties, LoginUIResources_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LoginUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,36 +30,13 @@ msgstr "Foi desconectado do sistema porque estão a decorrer trabalhos em série
 msgid "You have been logged out of the system because Mifos is shutting down."
 msgstr ""
 
-#: AbstractUserDetailsAuthenticationProvider.disabled
-msgid ""
-"The user account is currently inactive. Please try again later or contact "
-"the system administrator."
-msgstr ""
-"A conta do usuário está actualmente inactiva. Por favor tente novamente mais "
-"tarde ou contacte o administrador do sistema."
-
 #: errors.invalidoldpassword
+#, fuzzy
 msgctxt "errors.invalidoldpassword"
-"errors.invalidoldpassword"
 msgid "Please specify valid username/password to access the application."
 msgstr ""
 "Para aceder a aplicação, por favor especifique um Nome de usuário/Password "
 "válido."
-
-#: AbstractUserDetailsAuthenticationProvider.badCredentials
-msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
-msgid "Please specify valid username/password to access the application."
-msgstr ""
-"Para aceder a aplicação, por favor especifique um Nome do usuário/Password "
-"válido."
-
-#: AbstractUserDetailsAuthenticationProvider.locked
-msgid ""
-"The user account is currently locked. Please try again later or contact the "
-"system administrator."
-msgstr ""
-"A conta do usuário está actualmente bloqueada. Por favor tente novamente "
-"mais tarde ou contacte o administrador do sistema."
 
 #: errors.logoutout
 msgid ""
@@ -166,7 +143,27 @@ msgstr "Nome do Usuário"
 msgid "Welcome to mifos"
 msgstr "Bem Vindo ao Mifos"
 
+#. # Spring security specific messages overrides org.springframwork.security/message.properties
+#: AbstractUserDetailsAuthenticationProvider.locked
+msgid ""
+"The user account is currently locked. Please try again later or contact the "
+"system administrator."
+msgstr ""
+"A conta do usuário está actualmente bloqueada. Por favor tente novamente "
+"mais tarde ou contacte o administrador do sistema."
+
+#: AbstractUserDetailsAuthenticationProvider.disabled
+msgid ""
+"The user account is currently inactive. Please try again later or contact "
+"the system administrator."
+msgstr ""
+"A conta do usuário está actualmente inactiva. Por favor tente novamente mais "
+"tarde ou contacte o administrador do sistema."
+
 #: AbstractUserDetailsAuthenticationProvider.badCredentials
+#, fuzzy
 msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
 msgid "Please specify valid username/password to access the application."
 msgstr ""
+"Para aceder a aplicação, por favor especifique um Nome de usuário/Password "
+"válido."

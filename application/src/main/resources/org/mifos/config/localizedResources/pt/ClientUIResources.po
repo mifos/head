@@ -1,9 +1,9 @@
-#. extracted from ClientUIResources.properties, ClientUIResources_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ClientUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -928,8 +928,8 @@ msgid "Last Name:"
 msgstr "Último Nome:"
 
 #: client.LastNameValue
+#, fuzzy
 msgctxt "client.LastNameValue"
-"client.LastNameValue"
 msgid "Last Name"
 msgstr "Último Nome"
 
@@ -1791,19 +1791,30 @@ msgstr ""
 "\"fechado\". Por favor reveja esse registro do cliente antes de continuar."
 
 #: warning.clientWithSameNameDOBExistInClosed
+#, fuzzy
 msgid ""
 "A record matching this client was found in \"closed\" status with same name "
 "and date of birth.  Please review that client record before continuing."
 msgstr ""
+"Um registro que corresponde a este cliente foi encontrado no Estado "
+"\"fechado\". Por favor reveja esse registro do cliente antes de continuar."
 
 #: warning.clientWithSameNameDOBExistInBlackListed
+#, fuzzy
 msgid ""
 "A record matching this client was found in \"blacklisted\" status with same "
 "name and date of birth.  Please review that client record before continuing."
 msgstr ""
+"Um registro que corresponde a este cliente foi encontrado no Estado "
+"\"fechado\". Por favor reveja esse registro do cliente antes de continuar."
 
 #: client.ViewQuestionGroupResponsesLink
+#, fuzzy
 msgid "View Additional Information"
+msgstr "Informação adicional"
+
+#: client.ViewQuestionGroupForClosedClientResponsesLink
+msgid "View Additional Information for Closed Client"
 msgstr ""
 
 #: client.QuestionGroupInstances
@@ -1823,5 +1834,6 @@ msgid "<li>Please specify a number lesser than {0} for {1}</li>"
 msgstr ""
 
 #: questionnaire.invalid.numeric.response
+#, fuzzy
 msgid "<li>Please specify a number for {0}</li>"
-msgstr ""
+msgstr "<li>Por favor especifique o valor para {0}.</li>"

@@ -1,10 +1,10 @@
 # extracted from CustomerSearchUIResources.properties
-#. extracted from CustomerSearchUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CustomerSearchUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:50+0800\n"
+"POT-Creation-Date: 2010-11-28 11:29+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -118,7 +118,7 @@ msgstr ""
 
 #: CustomerSearch.searchby
 msgctxt "CustomerSearch.searchby"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr ""
 
 #: CustomerSearch.searchinstruction1
@@ -126,12 +126,12 @@ msgid "To search, enter a"
 msgstr ""
 
 #: CustomerSearch.searchnamesysid
-msgid "name, system ID or account number"
+msgid "name, system ID, phone number or account number"
 msgstr ""
 
 #: CustomerSearch.searchstring
 msgctxt "CustomerSearch.searchstring"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr ""
 
 #: CustomerSearch.select

@@ -1,9 +1,9 @@
-#. extracted from adminUIResources.properties, adminUIResources_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/adminUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -44,8 +44,9 @@ msgid "accounts"
 msgstr "contas"
 
 #: admin.manage.accounts
+#, fuzzy
 msgid "Manage accounts"
-msgstr ""
+msgstr "Gerir {0} contas"
 
 #: admin.admin
 msgid "admin"
@@ -242,16 +243,18 @@ msgid "{0} rows were read"
 msgstr ""
 
 #: admin.importexport.rowsNoError
+#, fuzzy
 msgid "{0} rows contained no errors and will be imported"
-msgstr ""
+msgstr "{0} linhas não conteem erros e serão importadas."
 
 #: admin.importexport.rowsIgnored
 msgid "{0} rows will be ignored"
 msgstr ""
 
 #: admin.importexport.rowsError
+#, fuzzy
 msgid "{0} rows contained errors and were not imported"
-msgstr ""
+msgstr "{0} linhas não conteem erros e serão importadas."
 
 #: admin.importexport.amountImported
 msgid "Total amount of transactions imported: {0}"
@@ -330,8 +333,9 @@ msgid "Questions"
 msgstr "questões"
 
 #: admin.question
+#, fuzzy
 msgid "Question"
-msgstr ""
+msgstr "questões"
 
 #: admin.questiongroups
 msgid "Question Groups"
@@ -358,8 +362,9 @@ msgid "reports"
 msgstr "relatórios"
 
 #: admin.manage.reports
+#, fuzzy
 msgid "Manage reports"
-msgstr ""
+msgstr "Gerir Importações"
 
 #: admin.reverse
 msgid "Reverse"
@@ -386,9 +391,10 @@ msgid "Manage surveys"
 msgstr ""
 
 #: admin.view.surveys
+#, fuzzy
 msgctxt "admin.view.surveys"
 msgid "View surveys"
-msgstr ""
+msgstr "Ver pesquisas"
 
 #: admin.shutdown.title
 msgid "Shutdown Information"
@@ -527,8 +533,9 @@ msgid "System Information"
 msgstr "Informação do Sistema"
 
 #: admin.view.sysinfo.title
+#, fuzzy
 msgid "View System Information"
-msgstr ""
+msgstr "Informação do Sistema"
 
 #: admin.sysinfo.welcome
 msgid "Welcome to the Mifos system information area."
@@ -718,8 +725,9 @@ msgid "Migrate Surveys"
 msgstr ""
 
 #: admin.questionnaire.migration.migrate.additional.fields
+#, fuzzy
 msgid "Migrate Additional Fields"
-msgstr ""
+msgstr "Ver campos adicionais"
 
 #: admin.migrate.questiongroups
 msgid "Migrate to Question Groups"

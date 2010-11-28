@@ -1,9 +1,9 @@
-#. extracted from SurveysUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SurveysUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:27+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -235,7 +235,8 @@ msgid "Attach survey"
 msgstr "Attacher étude"
 
 #: Surveys.attachasurvey
-msgid "Attach a survey"
+#, fuzzy
+msgid "Attach a Survey"
 msgstr "Attacher une étude"
 
 #: Surveys.between
@@ -420,10 +421,8 @@ msgid "Loan accounts"
 msgstr "Comptes de prêt"
 
 #: Surveys.mainpage_instructions
-msgid "Click on a survey below to view details and make changes or"
+msgid "Click on a survey below to view details."
 msgstr ""
-"Cliquer sur une étude ci-dessous pour afficher les détails et faire des "
-"changements ou"
 
 #: Surveys.manageQuestions
 msgid "Manage questions"
@@ -517,10 +516,8 @@ msgid "Survey name"
 msgstr "Nom de létude"
 
 #: Surveys.viewQuestions_instructions
-msgid "Click on a question below to view details and make changes or "
+msgid "Click on a question below to view details. "
 msgstr ""
-"Cliquer sur une question ci-dessous pour afficher les détails et faire des "
-"changements ou"
 
 #: Surveys.viewQuestions_ppi_note
 msgid "Note: questions flagged as PPI may not be attached to general surveys."
@@ -623,3 +620,18 @@ msgstr "</li>"
 #: erros.invalidnumberofchoices
 msgid "Please specify at least 2 choices for this type of answer."
 msgstr "Veuiller indiquer au moins deux choix pour ce type de réponse."
+
+#: Questionnaire.EditAdditonalInformation
+#, fuzzy
+msgid "Edit Additional Information"
+msgstr "Editer les informations de question"
+
+#~ msgid "Click on a survey below to view details and make changes or"
+#~ msgstr ""
+#~ "Cliquer sur une étude ci-dessous pour afficher les détails et faire des "
+#~ "changements ou"
+
+#~ msgid "Click on a question below to view details and make changes or "
+#~ msgstr ""
+#~ "Cliquer sur une question ci-dessous pour afficher les détails et faire des "
+#~ "changements ou"

@@ -1,9 +1,9 @@
-#. extracted from FrameworkUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/FrameworkUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:47+0800\n"
+"POT-Creation-Date: 2010-11-28 11:24+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -63,8 +63,8 @@ msgid "Home"
 msgstr "首页"
 
 #: framework.logout
-msgid "Logout"
-msgstr "注销"
+msgid "Log Out"
+msgstr ""
 
 #: framework.manageCollectionSheets
 msgid "Manage collection sheets"
@@ -83,9 +83,13 @@ msgid "Search"
 msgstr "搜索"
 
 #: framework.searchCriteria
-msgid "Search by name, system ID or account number "
+#, fuzzy
+msgid "Search by name, system ID, phone number or account number "
 msgstr "搜索姓名、系统ID或帐号"
 
 #: framework.yoursettings
 msgid "Your settings"
 msgstr "个人设定"
+
+#~ msgid "Logout"
+#~ msgstr "注销"

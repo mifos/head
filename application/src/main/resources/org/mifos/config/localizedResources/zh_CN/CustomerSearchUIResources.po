@@ -1,9 +1,9 @@
-#. extracted from CustomerSearchUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CustomerSearchUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:47+0800\n"
+"POT-Creation-Date: 2010-11-28 11:24+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -115,8 +115,9 @@ msgid "the search tool below"
 msgstr "下面的搜索工具"
 
 #: CustomerSearch.searchby
+#, fuzzy
 msgctxt "CustomerSearch.searchby"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr "搜索名称、系统ID或帐号"
 
 #: CustomerSearch.searchinstruction1
@@ -124,13 +125,14 @@ msgid "To search, enter a"
 msgstr "如要搜索，输入"
 
 #: CustomerSearch.searchnamesysid
-msgid "name, system ID or account number"
-msgstr "名称、系统序号或帐号"
+msgid "name, system ID, phone number or account number"
+msgstr ""
 
 #: CustomerSearch.searchstring
+#, fuzzy
 msgctxt "CustomerSearch.searchstring"
-msgid "Search by name, system ID or account number"
-msgstr "搜索名称、系统序号或帐号"
+msgid "Search by name, system ID, phone number or account number"
+msgstr "搜索名称、系统ID或帐号"
 
 #: CustomerSearch.select
 msgid "Select a"
@@ -195,3 +197,10 @@ msgstr "<LI>"
 #: errors.suffix
 msgid "</LI>"
 msgstr "</LI>"
+
+#~ msgid "name, system ID or account number"
+#~ msgstr "名称、系统序号或帐号"
+
+#~ msgctxt "CustomerSearch.searchstring"
+#~ msgid "Search by name, system ID or account number"
+#~ msgstr "搜索名称、系统序号或帐号"

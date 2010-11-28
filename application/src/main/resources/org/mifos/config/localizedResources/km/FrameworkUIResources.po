@@ -1,9 +1,9 @@
-#. extracted from FrameworkUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/FrameworkUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-11-28 11:25+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,8 +64,8 @@ msgid "Home"
 msgstr "ទំព័រដើម"
 
 #: framework.logout
-msgid "Logout"
-msgstr "ចាកចេញ"
+msgid "Log Out"
+msgstr ""
 
 #: framework.manageCollectionSheets
 msgid "Manage collection sheets"
@@ -84,9 +84,13 @@ msgid "Search"
 msgstr "ស្វែងរក"
 
 #: framework.searchCriteria
-msgid "Search by name, system ID or account number "
+#, fuzzy
+msgid "Search by name, system ID, phone number or account number "
 msgstr "ស្វែងរកតាមឈ្មោះ លេខសំគាល់ប្រព័ន្ធ ឬលេខគណនេយ្យ"
 
 #: framework.yoursettings
 msgid "Your settings"
 msgstr "ការកំនត់របស់អ្នក"
+
+#~ msgid "Logout"
+#~ msgstr "ចាកចេញ"

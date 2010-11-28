@@ -1,10 +1,10 @@
 # extracted from adminUIResources.properties
-#. extracted from adminUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/adminUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -59,6 +59,10 @@ msgstr ""
 
 #: admin.admintasks
 msgid "Administrative tasks"
+msgstr ""
+
+#: admin.batchjobs.link
+msgid "Batch Jobs"
 msgstr ""
 
 #: admin.belowisthelistof
@@ -233,6 +237,34 @@ msgstr ""
 
 #: admin.importexport.title
 msgid "Manage Imports"
+msgstr ""
+
+#: admin.importexport.rowsWereRead
+msgid "{0} rows were read"
+msgstr ""
+
+#: admin.importexport.rowsNoError
+msgid "{0} rows contained no errors and will be imported"
+msgstr ""
+
+#: admin.importexport.rowsIgnored
+msgid "{0} rows will be ignored"
+msgstr ""
+
+#: admin.importexport.rowsError
+msgid "{0} rows contained errors and were not imported"
+msgstr ""
+
+#: admin.importexport.amountImported
+msgid "Total amount of transactions imported: {0}"
+msgstr ""
+
+#: admin.importexport.amountError
+msgid "Total amount of transactions with error: {0}"
+msgstr ""
+
+#: admin.importexport.downloadLog
+msgid "Save Error Log"
 msgstr ""
 
 #: admin.infoclickonlabel
@@ -667,5 +699,25 @@ msgid "Please select file to upload."
 msgstr ""
 
 #: errors.importexport.already_submitted
-msgid "Same file has been already imported."
+msgid "Same file has been already imported. Please import a different file."
+msgstr ""
+
+#: admin.uploadPPI
+msgid "Activate Question Group"
+msgstr ""
+
+#: admin.questionnaire.migration
+msgid "Questionnaire Migration"
+msgstr ""
+
+#: admin.questionnaire.migration.migrate.surveys
+msgid "Migrate Surveys"
+msgstr ""
+
+#: admin.questionnaire.migration.migrate.additional.fields
+msgid "Migrate Additional Fields"
+msgstr ""
+
+#: admin.migrate.questiongroups
+msgid "Migrate to Question Groups"
 msgstr ""

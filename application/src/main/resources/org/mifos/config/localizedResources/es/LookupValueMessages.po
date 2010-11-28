@@ -4,14 +4,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-10-07 12:09+0530\n"
+"POT-Creation-Date: 2010-11-28 11:28+0530\n"
 "PO-Revision-Date: 2009-08-07 19:55-0700\n"
 "Last-Translator: Aida Ocana <aocana@att.net>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Translate Toolkit 1.5.3\n"
+"X-Generator: Translate Toolkit 1.7.0\n"
 "X-Accelerator-Marker: &\n"
 
 #. # Key value pairs in this file are for LOOKUP_VALUE entries
@@ -618,6 +618,10 @@ msgstr "Nunca recalcule"
 msgid "Declining Balance"
 msgstr "Disminución de saldo"
 
+#: InterestTypes-DecliningPrincipalBalance
+msgid "Declining Balance-Interest Recalculation"
+msgstr ""
+
 #: InterestTypes-DecliningBalance-EqualPrincipalInstallment
 msgid "Declining Balance-Equal Principal Installment"
 msgstr "Disminución de saldo-Plazos iguales para el principal"
@@ -850,6 +854,10 @@ msgstr "Puede definir el campo diseñado a la medida"
 
 #: Permissions-CanManageQuestionGroups
 msgid "Can manage question groups"
+msgstr ""
+
+#: Permissions-CanActivateQuestionGroups
+msgid "Can activate question groups"
 msgstr ""
 
 #: Permissions-CanDefineHiddenMandatoryFields

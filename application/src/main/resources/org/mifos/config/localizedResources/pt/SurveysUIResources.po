@@ -1,9 +1,9 @@
-#. extracted from SurveysUIResources.properties, SurveysUIResources_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SurveysUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -619,5 +619,6 @@ msgid "Please specify at least 2 choices for this type of answer."
 msgstr "Por favor especifique pelo menos 2 opções para este tipo de resposta."
 
 #: Questionnaire.EditAdditonalInformation
+#, fuzzy
 msgid "Edit Additional Information"
-msgstr ""
+msgstr "Editar Informação da Questão"

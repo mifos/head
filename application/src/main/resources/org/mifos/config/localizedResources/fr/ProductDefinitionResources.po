@@ -1,9 +1,9 @@
-#. extracted from ProductDefinitionResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ProductDefinitionResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:27+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -239,7 +239,8 @@ msgstr ""
 "Veuiller spécifier un  {0} valide. {0} doit être plus grand au égal à {1}."
 
 #: errors.maxValue
-msgid "Value of {0} cannot be greate than {1}."
+#, fuzzy
+msgid "Value of {0} cannot be greater than {1}."
 msgstr "La valeur de {0} ne peut pas être supérieure à {1}."
 
 #: errors.maximumlength
@@ -544,9 +545,10 @@ msgid "Submit"
 msgstr "Valider"
 
 #: product.bylastloanamount
+#, fuzzy
 msgctxt "product.bylastloanamount"
 msgid "By last loan amount"
-msgstr ""
+msgstr "Montant max du prêt"
 
 #: product.byloancycle
 msgid "By loan cycle"
@@ -626,8 +628,9 @@ msgid "Click Cancel to return to"
 msgstr "Cliquer sur annuler pour revenir aux"
 
 #: product.clickcancelprdmixinfo
+#, fuzzy
 msgid ""
-"Click Cancel to return to product mix deatils without submitting "
+"Click Cancel to return to product mix details without submitting "
 "information."
 msgstr ""
 "Cliquez sur annuler pour revenir aux détails du produit de prêt sans valider "
@@ -969,7 +972,8 @@ msgid "Inactive"
 msgstr "Inactif"
 
 #: product.inclInLoanCycleCounter
-msgid "Include in {0} cycle counter."
+#, fuzzy
+msgid "Include in {0} cycle counter"
 msgstr "Inclure dans {0} compteur de cycle"
 
 #: product.inclin
@@ -980,6 +984,10 @@ msgstr "Inclure dans"
 msgid "Include in loan cycle counter"
 msgstr "Inclure dans le compteur du cycle de prêt"
 
+#: product.include.interest.waiver
+msgid "Can waive interest on Prepay loan"
+msgstr ""
+
 #: product.inf
 msgid "information"
 msgstr "information"
@@ -989,9 +997,10 @@ msgid "product information"
 msgstr "Informations produit"
 
 #: product.installbylastloanamount
+#, fuzzy
 msgctxt "product.installbylastloanamount"
 msgid "By last loan amount"
-msgstr ""
+msgstr "Montant max du prêt"
 
 #: product.installbyloancycle
 msgid "By loan Cycle"
@@ -1756,3 +1765,135 @@ msgstr "Oui"
 msgctxt "produt.edit"
 msgid "Edit"
 msgstr "Editer"
+
+#: product.questiongroups
+msgid "Question Groups"
+msgstr ""
+
+#: product.assocquestiongroups
+msgid "Associate Question Groups"
+msgstr ""
+
+#: product.assocedquestiongroups
+msgid "Associated Question Groups"
+msgstr ""
+
+#: product.clickquestiongroups
+#, fuzzy
+msgid "Click on a question group in the left box to select. Then click Add."
+msgstr ""
+"Cliquez sur le fonds dans la zone gauche pour la sélectionner, ensuite "
+"cliquez sur ajouter."
+
+#: product.canConfigureVariableInstallments
+msgid "Can configure variable installments"
+msgstr ""
+
+#: product.minimumGapBetweenInstallments
+msgid "Minimum gap between installments"
+msgstr ""
+
+#: product.maximumGapBetweenInstallments
+msgid "Maximum gap between installments"
+msgstr ""
+
+#: product.minimumInstallmentAmount
+msgid "Minimum installment amount"
+msgstr ""
+
+#: product.notApplicable
+msgid "N/A"
+msgstr ""
+
+#: product.cashFlowValidation
+msgid "Compare with Cash Flow"
+msgstr ""
+
+#: product.cashFlowThreshold
+msgid "Warning Threshold"
+msgstr ""
+
+#: product.indebtednessRatio
+msgid "Indebtedness Rate"
+msgstr ""
+
+#: product.repaymentCapacity
+msgid "Repayment Capacity"
+msgstr ""
+
+#: errors.minGapMoreThanMaxGapForVariableInstallmentProduct
+msgid ""
+"Minimum gap must be less than the maximum gap for loans with variable "
+"installments"
+msgstr ""
+
+#: errors.variableInstallmentMinGapNegativeOrZero
+msgid ""
+"Minimum gap must not be zero or negative for loans with variable "
+"installments"
+msgstr ""
+
+#: errors.variableInstallmentMaxGapNegativeOrZero
+msgid ""
+"Maximum gap must not be zero or negative for loans with variable "
+"installments"
+msgstr ""
+
+#: errors.variableInstallmentMinGapMoreThanAllowed
+msgid ""
+"Minimum gap must be less than 4 digits for loans with variable installments"
+msgstr ""
+
+#: errors.variableInstallmentMaxGapMoreThanAllowed
+msgid ""
+"Maximum gap must be less than 4 digits for loans with variable installments"
+msgstr ""
+
+#: errors.minInstallmentAmountInvalidFormat
+msgid ""
+"The min installment amount for variable installments is invalid because {0}"
+msgstr ""
+
+#: errors.cashFlowThresholdInvalid
+msgid "Warning Threshold should be a value less than {0}"
+msgstr ""
+
+#: errors.indebtednessRatioInvalid
+msgid "Inebtedness Ratio should be a value less than {0}"
+msgstr ""
+
+#: errors.repaymentCapacityInvalid
+msgid "Repayment Capacity should be a value less than {0}"
+msgstr ""
+
+#: errors.variableInstallmentMinGapNotProvided
+msgid "Please specify the minimum gap for variable installments"
+msgstr ""
+
+#: errors.cashflowwarninginvalidformat
+#, fuzzy
+msgid "The Warning Threshold is invalid because {0}"
+msgstr "Le taux d'intérêt max est invalide car {0}"
+
+#: errors.indebtednessRatioInvalidFormat
+msgid "The Indebtedness Ratio is invalid because {0}"
+msgstr ""
+
+#: errors.repaymentCapacityInvalidFormat
+msgid "The Repayment Capacity is invalid because {0}"
+msgstr ""
+
+#: errors.interestTypeInvalidForVariableInstallment
+msgid ""
+"The selected interest type is invalid for variable installment loan product"
+msgstr ""
+
+#: errors.periodicFeeNotApplicableForVariableInstallment
+msgctxt "errors.periodicFeeNotApplicableForVariableInstallment"
+msgid "{0} fee cannot be applied to variable installment loan product"
+msgstr ""
+
+#: errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan
+msgctxt "errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan"
+msgid "{0} fee cannot be applied to variable installment loan product"
+msgstr ""

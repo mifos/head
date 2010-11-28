@@ -1,9 +1,9 @@
-#. extracted from LookupValueMessages.properties, LookupValueMessages_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LookupValueMessages.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -614,6 +614,10 @@ msgstr "Nunca Recalcular"
 msgid "Declining Balance"
 msgstr "Saldo Descendente"
 
+#: InterestTypes-DecliningPrincipalBalance
+msgid "Declining Balance-Interest Recalculation"
+msgstr ""
+
 #: InterestTypes-DecliningBalance-EqualPrincipalInstallment
 msgid "Declining Balance-Equal Principal Installment"
 msgstr "Saldo Descendente-Igual ao Capital da Parcela"
@@ -784,10 +788,8 @@ msgid "Can blacklist Savings account"
 msgstr "Pode adicionar Contas de Popanças à Lista Negra"
 
 #: Permissions-CanChangeStateToPartialApplication
+#, fuzzy
 msgctxt "Permissions-CanChangeStateToPartialApplication"
-"Permissions-CanChangeStateToPartialApplication"
-"Permissions-CanChangeStateToPartialApplication"
-"Permissions-CanChangeStateToPartialApplication"
 msgid "Can change state to partial application"
 msgstr "Pode mudar o Estado de Aplicações Parciais"
 
@@ -843,6 +845,10 @@ msgstr "Pode definir campos personalizados"
 
 #: Permissions-CanManageQuestionGroups
 msgid "Can manage question groups"
+msgstr ""
+
+#: Permissions-CanActivateQuestionGroups
+msgid "Can activate question groups"
 msgstr ""
 
 #: Permissions-CanDefineHiddenMandatoryFields
@@ -1234,8 +1240,8 @@ msgid "Can edit Center status"
 msgstr "Pode editar Estado do Centro"
 
 #: Permissions-Centers-CanEditFeeAmountAttachedToTheAccount
+#, fuzzy
 msgctxt "Permissions-Centers-CanEditFeeAmountAttachedToTheAccount"
-"Permissions-Centers-CanEditFeeAmountAttachedToTheAccount"
 msgid "Can edit fee amount attached to the account"
 msgstr "Pode editar valor da comissão anexada à conta"
 
@@ -1308,8 +1314,8 @@ msgid "Can Blacklist a Client"
 msgstr "Pode adicionar um cliente à Lista Negra"
 
 #: Permissions-Clients-CanChangeStateToActive
+#, fuzzy
 msgctxt "Permissions-Clients-CanChangeStateToActive"
-"Permissions-Clients-CanChangeStateToActive"
 msgid "Can change state to active"
 msgstr "Pode mudar o Estado para activo"
 
@@ -1319,8 +1325,8 @@ msgid "Can change state to application pending approval"
 msgstr "Pode mudar o Estado para Aplicação Esperando Aprovação"
 
 #: Permissions-Clients-CanChangeStateToCancelled
+#, fuzzy
 msgctxt "Permissions-Clients-CanChangeStateToCancelled"
-"Permissions-Clients-CanChangeStateToCancelled"
 msgid "Can change state to Cancelled"
 msgstr "Pode mudar o Estado para Cancelado"
 

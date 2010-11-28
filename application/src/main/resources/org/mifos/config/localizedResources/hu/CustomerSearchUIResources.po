@@ -1,9 +1,9 @@
-#. extracted from CustomerSearchUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CustomerSearchUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:28+0530\n"
 "PO-Revision-Date: 2009-11-09 15:59+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -116,8 +116,9 @@ msgid "the search tool below"
 msgstr "az alábbi kereső eszköz"
 
 #: CustomerSearch.searchby
+#, fuzzy
 msgctxt "CustomerSearch.searchby"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr "Keresés név, rendszerazonosító vagy számlaszám szerint"
 
 #: CustomerSearch.searchinstruction1
@@ -125,12 +126,13 @@ msgid "To search, enter a"
 msgstr "A kereséshez adjon meg egy"
 
 #: CustomerSearch.searchnamesysid
-msgid "name, system ID or account number"
-msgstr "nevet, rendszerazonosítót vagy számlaszámot"
+msgid "name, system ID, phone number or account number"
+msgstr ""
 
 #: CustomerSearch.searchstring
+#, fuzzy
 msgctxt "CustomerSearch.searchstring"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr "Keresés név, rendszerazonosító vagy számlaszám szerint"
 
 #: CustomerSearch.select
@@ -200,3 +202,10 @@ msgstr "<LI>"
 #: errors.suffix
 msgid "</LI>"
 msgstr "</LI>"
+
+#~ msgid "name, system ID or account number"
+#~ msgstr "nevet, rendszerazonosítót vagy számlaszámot"
+
+#~ msgctxt "CustomerSearch.searchstring"
+#~ msgid "Search by name, system ID or account number"
+#~ msgstr "Keresés név, rendszerazonosító vagy számlaszám szerint"

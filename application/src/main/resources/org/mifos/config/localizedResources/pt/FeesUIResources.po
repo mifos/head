@@ -1,9 +1,9 @@
-#. extracted from FeesUIResources.properties, FeesUIResources_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/FeesUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -311,8 +311,8 @@ msgid "If weeks, specify the following:"
 msgstr "Se semanas, especifique o seguinte:"
 
 #: Fees.labelThe
+#, fuzzy
 msgctxt "Fees.labelThe"
-"Fees.labelThe"
 msgid "The"
 msgstr "O/A (s)"
 

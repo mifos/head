@@ -1,10 +1,10 @@
 # extracted from UIResources.properties
-#. extracted from UIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/UIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-11-28 11:25+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -52,11 +52,41 @@ msgid ""
 "%s"
 msgstr ""
 
+#: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
+msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
+msgid ""
+"the number of digits before the decimal separator exceeds the allowed number "
+"%s"
+msgstr ""
+
+#: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
+msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
+msgid ""
+"the number of digits after the decimal separator exceeds the allowed number "
+"%s"
+msgstr ""
+
 #: ID
 msgid "ID"
 msgstr ""
 
 #: INTEREST_OUT_OF_RANGE
+msgctxt "INTEREST_OUT_OF_RANGE"
+msgid "it is not in between %s1 and %s2."
+msgstr ""
+
+#: CASH_FLOW_THRESHOLD_OUT_OF_RANGE
+msgctxt "CASH_FLOW_THRESHOLD_OUT_OF_RANGE"
+msgid "it is not in between %s1 and %s2."
+msgstr ""
+
+#: INDEBTEDNESS_RATIO_OUT_OF_RANGE
+msgctxt "INDEBTEDNESS_RATIO_OUT_OF_RANGE"
+msgid "it is not in between %s1 and %s2."
+msgstr ""
+
+#: REPAYMENT_CAPACITY_OUT_OF_RANGE
+msgctxt "REPAYMENT_CAPACITY_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
 msgstr ""
 

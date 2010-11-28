@@ -1,9 +1,9 @@
-#. extracted from GroupUIResources.properties, GroupUIResources_pt.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/GroupUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1114,8 +1114,8 @@ msgstr ""
 "favor Selecione apenas tipos de taxas válidas."
 
 #: errors.Customer.hasActiveAccount
+#, fuzzy
 msgctxt "errors.Customer.hasActiveAccount"
-"errors.Customer.hasActiveAccount"
 msgid ""
 "The membership cannot be changed since there are Active accounts present."
 msgstr ""
