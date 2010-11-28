@@ -10,20 +10,6 @@
     <bean id="localeResolver" class="org.mifos.ui.core.localisation.MifosLocaleResolver">
 		<constructor-arg ref="adminServiceFacade" />
 	</bean>
-	    	 
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basenames">
-            <list>
-                <value>classpath:org/mifos/ui/localizedProperties/messages</value>
-                <value>classpath:org/mifos/ui/localizedProperties/LookupValueMessages</value>
-                <value>classpath:org/mifos/platform/questionnaire/ui/localizedProperties/questionnaire_messages</value>                
-                <value>classpath:org/mifos/platform/cashflow/ui/localizedProperties/cashflow_messages</value>                
-                <value>classpath:org/mifos/ui/localizedProperties/FtlDefinedLabelsMessages</value>
-            </list>
-        </property>
-        <property name="fileEncodings" value="UTF-8" />
-        <property name="defaultEncoding" value="UTF-8" />
-    </bean>
 
     <bean id="webExceptionResolverHandler" class="org.mifos.framework.servlet.UncaughtExceptionHandler">
     	<property name="exceptionMappings">

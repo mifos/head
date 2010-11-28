@@ -30,7 +30,7 @@ msgstr ""
 msgid "You have been logged out of the system because Mifos is shutting down."
 msgstr ""
 
-#: errors.inactiveuser
+#: AbstractUserDetailsAuthenticationProvider.disabled
 msgid ""
 "The user account is currently inactive. Please try again later or contact "
 "the system administrator."
@@ -41,12 +41,12 @@ msgctxt "errors.invalidoldpassword"
 msgid "Please specify valid username/password to access the application."
 msgstr "عيّن إسم المستخدم/كلمة السعر لدخول التطبيق"
 
-#: errors.invaliduser
-msgctxt "errors.invaliduser"
+#: AbstractUserDetailsAuthenticationProvider.badCredentials
+msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
 msgid "Please specify valid username/password to access the application."
 msgstr "عيّن إسم المستخدم/كلمة السعر لدخول التطبيق"
 
-#: errors.lockeduser
+#: AbstractUserDetailsAuthenticationProvider.locked
 msgid ""
 "The user account is currently locked. Please try again later or contact the "
 "system administrator."
