@@ -20,13 +20,11 @@
 
 package org.mifos.application.servicefacade;
 
-import java.io.InputStream;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,10 +34,9 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
-import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -109,14 +106,12 @@ import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPerformanceHistoryDto;
-import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
@@ -131,13 +126,15 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     private final PersonnelDao personnelDao;
     private final CustomerDao customerDao;
     private final CustomerService customerService;
+    private final FeeDao feeDao;
 
     public ClientServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
-            PersonnelDao personnelDao, CustomerDao customerDao) {
+            PersonnelDao personnelDao, CustomerDao customerDao, FeeDao feeDao) {
         this.customerService = customerService;
         this.officeDao = officeDao;
         this.personnelDao = personnelDao;
         this.customerDao = customerDao;
+        this.feeDao = feeDao;
     }
 
     @Override
@@ -155,6 +152,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         String officeName = "";
         List<FeeBO> fees = new ArrayList<FeeBO>();
 
+        Short applicableOfficeId = officeId;
         if (YesNoFlag.YES.getValue().equals(groupFlag)) {
 
             Integer parentCustomerId = Integer.valueOf(parentGroupId);
@@ -171,7 +169,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 centerDisplayName = parentCustomer.getParentCustomer().getDisplayName();
             }
 
-            officeId = parentCustomer.getOffice().getOfficeId();
+            applicableOfficeId = parentCustomer.getOffice().getOfficeId();
             officeName = parentCustomer.getOffice().getOfficeName();
 
             if (parentCustomer.getCustomerMeeting() != null) {
@@ -184,8 +182,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         } else if (YesNoFlag.NO.getValue().equals(groupFlag)) {
 
-            CenterCreation centerCreation = new CenterCreation(officeId, userContext.getId(), userContext.getLevelId(),
-                    userContext.getPreferredLocale());
+            CenterCreation centerCreation = new CenterCreation(applicableOfficeId, userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
             personnelList = this.personnelDao.findActiveLoanOfficersForOffice(centerCreation);
             fees = this.customerDao.retrieveFeesApplicableToClients();
         }
@@ -201,26 +198,26 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             additionalFees.add(new ApplicableAccountFeeDto(fee.getFeeIdValue().intValue(), fee.getFeeName(), fee.getAmount(), fee.isRemoved(), fee.isWeekly(), fee.isMonthly(), fee.isPeriodic(), fee.getFeeSchedule()));
         }
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
-                .getPreferredLocale());
+//        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
+//        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
 
+        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
         List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
 
-            ClientRulesDto clientRules = retrieveClientRules();
+        ClientRulesDto clientRules = retrieveClientRules();
 
-            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
+        ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
-            List<PersonnelDto> formedByPersonnel = this.customerDao.findLoanOfficerThatFormedOffice(officeId);
+        List<PersonnelDto> formedByPersonnel = this.customerDao.findLoanOfficerThatFormedOffice(applicableOfficeId);
 
-            MeetingDto parentMeeting = null;
-            if (parentCustomerMeeting != null) {
-                parentMeeting = parentCustomerMeeting.toDto();
-            }
-            return new ClientFormCreationDto(clientDropdowns, customFieldDtos, clientRules, officeId, officeName,
-                    formedByPersonnelId, formedByPersonnelName, personnelList, formedByPersonnel,
-                    savingsOfferings, parentMeeting, centerDisplayName, groupDisplayName,
-                    additionalFees, defaultFees);
+        MeetingDto parentMeeting = null;
+        if (parentCustomerMeeting != null) {
+            parentMeeting = parentCustomerMeeting.toDto();
+        }
+
+        return new ClientFormCreationDto(clientDropdowns, customFieldDtos, clientRules, applicableOfficeId, officeName,
+                formedByPersonnelId, formedByPersonnelName, personnelList, formedByPersonnel, savingsOfferings,
+                parentMeeting, centerDisplayName, groupDisplayName, additionalFees, defaultFees);
     }
 
     private UserContext toUserContext(MifosUser user) {
@@ -486,7 +483,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     private List<AccountFeesEntity> convertFeeViewsToAccountFeeEntities(List<ApplicableAccountFeeDto> feesToApply) {
         List<AccountFeesEntity> feesForCustomerAccount = new ArrayList<AccountFeesEntity>();
         for (ApplicableAccountFeeDto feeDto : feesToApply) {
-            FeeBO fee = new FeePersistence().getFee(feeDto.getFeeId().shortValue());
+            FeeBO fee = this.feeDao.findById(feeDto.getFeeId().shortValue());
             Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(feeDto.getAmount());
 
             AccountBO nullReferenceForNow = null;
