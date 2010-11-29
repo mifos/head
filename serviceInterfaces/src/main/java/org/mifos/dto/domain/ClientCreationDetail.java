@@ -53,12 +53,13 @@ public class ClientCreationDetail {
     private final List<ClientFamilyDetailDto> familyDetails;
     private final Short loanOfficerId;
     private final Short officeId;
+    private final ClientNameDetailDto spouseFatherName;
 
     public ClientCreationDetail(List<Short> selectedSavingProducts, String clientName, Short clientStatus,
             Date mfiJoiningDate, String externalId, AddressDto address, Short formedBy, Date dateOfBirth,
             String governmentId, boolean trained, Date trainedDate, Short groupFlag,
             ClientNameDetailDto clientNameDetailDto, ClientPersonalDetailDto clientPersonalDetailDto,
-            InputStream picture, List<ApplicableAccountFeeDto> feesToApply, String parentGroupId,
+            ClientNameDetailDto spouseFatherName, InputStream picture, List<ApplicableAccountFeeDto> feesToApply, String parentGroupId,
             List<ClientNameDetailDto> familyNames, List<ClientFamilyDetailDto> familyDetails,
             Short loanOfficerId, Short officeId) {
         this.selectedSavingProducts = selectedSavingProducts;
@@ -75,6 +76,7 @@ public class ClientCreationDetail {
         this.groupFlag = groupFlag;
         this.clientNameDetailDto = clientNameDetailDto;
         this.clientPersonalDetailDto = clientPersonalDetailDto;
+        this.spouseFatherName = spouseFatherName;
         this.picture = picture;
         this.feesToApply = feesToApply;
         this.parentGroupId = parentGroupId;
@@ -166,5 +168,9 @@ public class ClientCreationDetail {
 
     public Short getOfficeId() {
         return this.officeId;
+    }
+
+    public ClientNameDetailDto getSpouseFatherName() {
+        return this.spouseFatherName;
     }
 }

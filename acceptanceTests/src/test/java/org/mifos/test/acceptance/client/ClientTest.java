@@ -108,7 +108,6 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)
     public void createClientAndChangeStatusTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities,
                 "acceptance_small_003_dbunit.xml",
@@ -327,7 +326,6 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=false)
     public void createClientWithQuestionGroups() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 

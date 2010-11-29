@@ -497,6 +497,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Short groupFlagValue = actionForm.getGroupFlagValue();
         ClientNameDetailDto clientNameDetailDto = actionForm.getClientName();
         ClientPersonalDetailDto clientPersonalDetailDto = actionForm.getClientDetailView();
+        ClientNameDetailDto spouseFatherName = actionForm.getSpouseName();
         InputStream picture = actionForm.getCustomerPicture();
         String parentGroupId = actionForm.getParentGroupId();
         List<ClientNameDetailDto> familyNames = actionForm.getFamilyNames();
@@ -505,8 +506,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Short officeId = actionForm.getOfficeIdValue();
 
         ClientCreationDetail clientCreationDetail = new ClientCreationDetail(selectedSavingProducts, clientName, clientStatus, mfiJoiningDate, externalId,
-                address, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlagValue, clientNameDetailDto, clientPersonalDetailDto, picture,
-                actionForm.getFeesToApply(), parentGroupId, familyNames, familyDetails, loanOfficerId, officeId);
+                address, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlagValue, clientNameDetailDto, clientPersonalDetailDto, spouseFatherName,
+                picture, actionForm.getFeesToApply(), parentGroupId, familyNames, familyDetails, loanOfficerId, officeId);
 
         MeetingDto meetingDto = null;
         if (meeting != null) {

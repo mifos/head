@@ -335,7 +335,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 //                actionForm.setFamilyDateOfBirth();
 //                actionForm.constructFamilyDetails();
             } else {
-                spouseNameDetailView = actionForm.getClientNameDetailDto();
+                spouseNameDetailView = actionForm.getSpouseFatherName();
             }
 
             String secondMiddleName = null;
