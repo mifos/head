@@ -65,7 +65,7 @@ public class ScheduleCalculatorAdaptorTest {
     @Test
     public void shouldComputeExtraInterestForDecliningPrincipalBalance() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Mockito.when(loanBO.isDecliningPrincipalBalance()).thenReturn(true);
+        Mockito.when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         Mockito.when(loanBO.getDisbursementDate()).thenReturn(getDate(23, 9, 2010));
         Mockito.when(loanBO.getLoanAmount()).thenReturn(new Money(rupee,LOAN_AMOUNT));
@@ -74,7 +74,7 @@ public class ScheduleCalculatorAdaptorTest {
 
         scheduleCalculatorAdaptor.computeExtraInterest(loanBO, getDate(30, 10, 2010));
 
-        Mockito.verify(loanBO, Mockito.times(1)).isDecliningPrincipalBalance();
+        Mockito.verify(loanBO, Mockito.times(1)).isDecliningBalanceInterestRecalculation();
         Mockito.verify(loanBO, Mockito.times(1)).getLoanScheduleEntities();
         Mockito.verify(loanBO, Mockito.times(1)).getDisbursementDate();
         Mockito.verify(loanBO, Mockito.times(1)).getLoanAmount();
@@ -90,7 +90,7 @@ public class ScheduleCalculatorAdaptorTest {
     @Test
     public void shouldNotComputeExtraInterestForNonPrincipalBalanceInterestTypes() {
         ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Mockito.when(loanBO.isDecliningPrincipalBalance()).thenReturn(false);
+        Mockito.when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
         Mockito.when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         Mockito.when(loanBO.getDisbursementDate()).thenReturn(getDate(23, 9, 2010));
         Mockito.when(loanBO.getLoanAmount()).thenReturn(new Money(rupee,LOAN_AMOUNT));

@@ -60,7 +60,7 @@ explanation of the license and how it is applied.
 								</span>
 								<mifos:mifoslabel name="loan.repayment_sched" bundle="loanUIResources" />
                                 <c:choose>
-                                        <c:when test="${BusinessKey.decliningPrincipalBalance}">
+                                        <c:when test="${BusinessKey.decliningBalanceInterestRecalculation}">
                                             <html-el:text property="scheduleViewDate" styleId="scheduleViewDate" name="loanAccountActionForm" styleClass="date-pick required" size="10" />
                                             <html-el:button styleId="loanRepayment.view" property="viewScheduleButton"
                                                 onclick="LoanRepayment.submit(this.form,'getLoanRepaymentSchedule&accountId=${param.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}');" styleClass="buttn" >

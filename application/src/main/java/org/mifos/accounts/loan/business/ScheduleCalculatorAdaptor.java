@@ -35,7 +35,7 @@ import java.util.Map;
 public class ScheduleCalculatorAdaptor {
 
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {
-        if (loan.isDecliningPrincipalBalance()) {
+        if (loan.isDecliningBalanceInterestRecalculation()) {
             Schedule schedule = mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
                     loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
             ScheduleCalculator scheduleCalculator = new ScheduleCalculator();
