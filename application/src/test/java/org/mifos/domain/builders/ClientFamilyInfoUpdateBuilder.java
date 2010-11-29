@@ -23,7 +23,7 @@ package org.mifos.domain.builders;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.servicefacade.ClientFamilyInfoUpdate;
+import org.mifos.dto.domain.ClientFamilyInfoUpdate;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 

@@ -23,9 +23,11 @@ package org.mifos.application.servicefacade;
 import java.io.InputStream;
 import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -57,6 +59,7 @@ import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
+import org.mifos.customers.client.business.ClientFamilyDetailEntity;
 import org.mifos.customers.client.business.ClientInitialSavingsOfferingEntity;
 import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
@@ -75,6 +78,7 @@ import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
+import org.mifos.dto.domain.ClientFamilyInfoUpdate;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
@@ -96,6 +100,8 @@ import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ClientDetailDto;
 import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.ClientDropdownsDto;
+import org.mifos.dto.screen.ClientFamilyDetailDto;
+import org.mifos.dto.screen.ClientFamilyInfoDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
@@ -645,6 +651,76 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         } catch (InvalidDateException e) {
             throw new MifosRuntimeException(e);
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public ClientFamilyInfoDto retrieveFamilyInfoForEdit(String clientGlobalCustNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
+
+//        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
+//        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),fieldDefinitions, userContext);
+
+        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
+        ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
+
+        ClientRulesDto clientRules = retrieveClientRules();
+
+        CustomerDetailDto customerDetail = client.toCustomerDetailDto();
+        ClientDetailDto clientDetail = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
+
+        List<ClientNameDetailDto> familyMembers = new ArrayList<ClientNameDetailDto>();
+        Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails = new HashMap<Integer, List<ClientFamilyDetailDto>>();
+        int familyMemberCount = 0;
+        for (ClientNameDetailEntity clientNameDetailEntity : client.getNameDetailSet()) {
+
+            if (clientNameDetailEntity.isNotClientNameType()) {
+
+                ClientNameDetailDto nameView1 = clientNameDetailEntity.toDto();
+                familyMembers.add(nameView1);
+
+                for (ClientFamilyDetailEntity clientFamilyDetailEntity : client.getFamilyDetailSet()) {
+
+                    if (clientNameDetailEntity.matchesCustomerId(clientFamilyDetailEntity.getClientName()
+                            .getCustomerNameId())) {
+                        ClientFamilyDetailDto clientFamilyDetail = clientFamilyDetailEntity.toDto();
+
+                        addFamilyDetailsDtoToMap(clientFamilyDetails, familyMemberCount, clientFamilyDetail);
+                    }
+                }
+                familyMemberCount++;
+            }
+        }
+
+        return new ClientFamilyInfoDto(clientDropdowns, customFieldDtos, customerDetail, clientDetail, familyMembers, clientFamilyDetails);
+    }
+
+    private void addFamilyDetailsDtoToMap(Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails,
+            int familyMemberCount, ClientFamilyDetailDto clientFamilyDetail) {
+        final Integer mapKey = Integer.valueOf(familyMemberCount);
+        if (clientFamilyDetails.containsKey(mapKey)) {
+            clientFamilyDetails.get(mapKey).add(clientFamilyDetail);
+        } else {
+            List<ClientFamilyDetailDto> clientFamilyDetailsList = new ArrayList<ClientFamilyDetailDto>();
+            clientFamilyDetailsList.add(clientFamilyDetail);
+            clientFamilyDetails.put(mapKey, clientFamilyDetailsList);
+        }
+    }
+
+    @Override
+    public void updateFamilyInfo(ClientFamilyInfoUpdate clientFamilyInfoUpdate) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            this.customerService.updateClientFamilyInfo(userContext, clientFamilyInfoUpdate);
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }

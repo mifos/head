@@ -46,7 +46,6 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.ClientFamilyInfoDto;
 import org.mifos.application.servicefacade.ClientMfiInfoDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
@@ -64,12 +63,14 @@ import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
+import org.mifos.dto.domain.ClientFamilyInfoUpdate;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
+import org.mifos.dto.screen.ClientFamilyInfoDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
@@ -78,7 +79,6 @@ import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -761,7 +761,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.clearMostButNotAllFieldsOnActionForm();
         ClientBO clientFromSession = getClientFromSession(request);
 
-        ClientFamilyInfoDto clientFamilyInfo = this.customerServiceFacade.retrieveFamilyInfoForEdit(clientFromSession.getGlobalCustNum());
+        ClientFamilyInfoDto clientFamilyInfo = this.clientServiceFacade.retrieveFamilyInfoForEdit(clientFromSession.getGlobalCustNum());
 
         SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, clientFamilyInfo.getClientDropdowns().getLivingStatus(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFamilyInfo.getClientDropdowns().getGenders(), request);
@@ -853,7 +853,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         ClientBO clientInSession = getClientFromSession(request);
 
         Integer customerId = clientInSession.getCustomerId();
-        this.customerServiceFacade.updateFamilyInfo(customerId, clientInSession.getVersionNo(), actionForm);
+
+        ClientFamilyInfoUpdate clientFamilyInfoUpdate = new ClientFamilyInfoUpdate(customerId, clientInSession.getVersionNo(),
+                actionForm.getFamilyPrimaryKey(), actionForm.getFamilyNames(), actionForm.getFamilyDetails());
+        this.clientServiceFacade.updateFamilyInfo(clientFamilyInfoUpdate);
 
         actionForm.setFamilyDateOfBirth();
         actionForm.constructFamilyDetails();

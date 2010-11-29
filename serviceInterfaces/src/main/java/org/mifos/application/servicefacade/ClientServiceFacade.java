@@ -25,11 +25,13 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
+import org.mifos.dto.domain.ClientFamilyInfoUpdate;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
+import org.mifos.dto.screen.ClientFamilyInfoDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
@@ -60,4 +62,10 @@ public interface ClientServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void updateClientPersonalInfo(Integer oldClientVersionNumber, Integer customerId, ClientCreationDetail clientCreationDetail);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateFamilyInfo(ClientFamilyInfoUpdate clientFamilyInfoUpdate);
 }

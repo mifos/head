@@ -18,17 +18,13 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
 import java.util.List;
 import java.util.Map;
 
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
-import org.mifos.dto.screen.ClientDetailDto;
-import org.mifos.dto.screen.ClientDropdownsDto;
-import org.mifos.dto.screen.ClientFamilyDetailDto;
-import org.mifos.dto.screen.ClientNameDetailDto;
 
 public class ClientFamilyInfoDto {
 

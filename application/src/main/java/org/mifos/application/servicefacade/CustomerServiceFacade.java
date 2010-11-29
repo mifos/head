@@ -43,10 +43,6 @@ public interface CustomerServiceFacade {
 
     GroupSearchResultsDto searchGroups(boolean searchForAddingClientsToGroup, String normalizedSearchString, Short loggedInUserId);
 
-    ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum);
-
-    void updateFamilyInfo(Integer customerId, Integer versionNo, ClientCustActionForm actionForm) throws ApplicationException;
-
     ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId);
 
     void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, ClientCustActionForm actionForm) throws ApplicationException;
