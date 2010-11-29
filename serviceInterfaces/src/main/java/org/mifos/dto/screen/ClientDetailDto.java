@@ -18,14 +18,13 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
-import org.mifos.customers.client.util.helpers.ClientConstants;
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.dto.screen.ClientNameDetailDto;
-import org.mifos.dto.screen.ClientPersonalDetailDto;
+import java.io.Serializable;
 
-public class ClientDetailDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+public class ClientDetailDto implements Serializable {
 
     private final String governmentId;
     private final String dateOfBirth;
@@ -112,15 +111,15 @@ public class ClientDetailDto implements DataTransferObject {
 
     public String getGroupFlagAsString() {
         if (this.groupFlagIsSet) {
-            return ClientConstants.YES;
+            return "1";
         }
-        return ClientConstants.NO;
+        return "0";
     }
 
     public String getTrainedAsString() {
         if (this.trained) {
-            return ClientConstants.YES;
+            return "1";
         }
-        return ClientConstants.NO;
+        return "0";
     }
 }
