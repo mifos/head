@@ -48,7 +48,6 @@ import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.ClientFamilyInfoDto;
 import org.mifos.application.servicefacade.ClientMfiInfoDto;
-import org.mifos.application.servicefacade.ClientPersonalInfoDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
@@ -75,6 +74,7 @@ import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
+import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
@@ -600,7 +600,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         final String clientSystemId = clientFromSession.getGlobalCustNum();
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
 
-        ClientPersonalInfoDto personalInfo = this.customerServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId);
+        ClientPersonalInfoDto personalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId);
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, personalInfo.getClientDropdowns().getSalutations(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, personalInfo.getClientDropdowns().getGenders(), request);
@@ -649,7 +649,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             spouseName.setNames(ClientRules.getNameSequence());
             actionForm.setSpouseName(spouseName);
         }
-        spouseName.setNames(ClientRules.getNameSequence());
         actionForm.setSpouseName(spouseName);
         actionForm.setCustomFields(personalInfo.getCustomFieldViews());
 
@@ -666,7 +665,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         String dateOfBirth = actionForm.getDateOfBirth();
         actionForm.setAge(calculateAge(DateUtils.getDateAsSentFromBrowser(dateOfBirth)));
 
-        ClientRulesDto clientRules = this.customerServiceFacade.retrieveClientDetailsForPreviewingEditOfPersonalInfo();
+        ClientRulesDto clientRules = this.clientServiceFacade.retrieveClientDetailsForPreviewingEditOfPersonalInfo();
 
         boolean isFamilyDetailsRequired = clientRules.isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
@@ -711,15 +710,46 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updatePersonalInfo(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-                                            @SuppressWarnings("unused") HttpServletResponse response) throws ApplicationException {
+                                            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         ClientCustActionForm actionForm = (ClientCustActionForm) form;
         ClientBO clientInSession = getClientFromSession(request);
         Integer oldClientVersionNumber = clientInSession.getVersionNo();
         Integer customerId = clientInSession.getCustomerId();
-        UserContext userContext = getUserContext(request);
 
-        this.customerServiceFacade.updateClientPersonalInfo(userContext, oldClientVersionNumber, customerId, actionForm);
+        List<Short> selectedSavingProducts = actionForm.getSelectedOfferings();
+        String clientName = actionForm.getClientName().getDisplayName();
+        Short clientStatus = null;
+        java.sql.Date mfiJoiningDate = DateUtils.getDateAsSentFromBrowser(actionForm.getMfiJoiningDate());
+        String externalId = actionForm.getExternalId();
+        AddressDto address = null;
+        if (actionForm.getAddress() != null) {
+            address = Address.toDto(actionForm.getAddress());
+        }
+        Short formedBy = actionForm.getFormedByPersonnelValue();
+        java.sql.Date dateOfBirth = DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth());
+        String governmentId = actionForm.getGovernmentId();
+        boolean trained = isTrained(actionForm.getTrainedValue());
+        java.sql.Date trainedDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate());
+        Short groupFlagValue = actionForm.getGroupFlagValue();
+        ClientNameDetailDto clientNameDetailDto = actionForm.getClientName();
+        ClientPersonalDetailDto clientPersonalDetailDto = actionForm.getClientDetailView();
+        ClientNameDetailDto spouseFatherName = actionForm.getSpouseName();
+        InputStream picture = actionForm.getCustomerPicture();
+        String parentGroupId = actionForm.getParentGroupId();
+        List<ClientNameDetailDto> familyNames = actionForm.getFamilyNames();
+        List<ClientFamilyDetailDto> familyDetails = actionForm.getFamilyDetails();
+        Short loanOfficerId = actionForm.getLoanOfficerIdValue();
+        Short officeId = actionForm.getOfficeIdValue();
+
+        ClientCreationDetail clientCreationDetail = new ClientCreationDetail(selectedSavingProducts, clientName, clientStatus, mfiJoiningDate, externalId,
+                address, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlagValue, clientNameDetailDto, clientPersonalDetailDto, spouseFatherName,
+                picture, actionForm.getFeesToApply(), parentGroupId, familyNames, familyDetails, loanOfficerId, officeId);
+        if (actionForm.getPicture() != null) {
+            clientCreationDetail.setPictureFileName(actionForm.getPicture().getFileName());
+        }
+
+        this.clientServiceFacade.updateClientPersonalInfo(oldClientVersionNumber, customerId, clientCreationDetail);
 
         return mapping.findForward(ActionForwards.updatePersonalInfo_success.toString());
     }

@@ -62,6 +62,7 @@ import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.ClientDetailDto;
 import org.mifos.dto.screen.ClientDropdownsDto;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
@@ -133,30 +134,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         ClientDropdownsDto clientDropdowns = new ClientDropdownsDto(salutations, genders, maritalStatuses, citizenship,
                 ethinicity, educationLevels, businessActivity, poverty, handicapped, livingStatus);
         return clientDropdowns;
-    }
-
-    @Override
-    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId) {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
-
-            ClientRulesDto clientRules = retrieveClientRules();
-
-            ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
-
-            List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao
-                    .retrieveCustomFieldEntitiesForClient();
-            List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
-                    customFieldDefinitions, userContext);
-
-            CustomerDetailDto customerDetailDto = client.toCustomerDetailDto();
-            ClientDetailDto clientDetailDto = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
-
-            return new ClientPersonalInfoDto(clientDropdowns, customFieldDtos, clientRules, customerDetailDto,
-                    clientDetailDto);
     }
 
     private ClientNameDetailDto spouseFatherName(ClientCustActionForm actionForm) {
@@ -316,84 +293,49 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     @Override
-    public ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo() {
-        return retrieveClientRules();
-    }
-
-    @Override
-    public void updateClientPersonalInfo(UserContext userContext, Integer oldClientVersionNumber, Integer customerId,
-            ClientCustActionForm actionForm) throws ApplicationException {
-
-        List<CustomFieldDto> customFields = actionForm.getCustomFields();
-
-        ClientNameDetailDto spouseFather = null;
-        if (!ClientRules.isFamilyDetailsRequired()) {
-            spouseFather = spouseFatherName(actionForm);
-        }
-
-        InputStream picture = null;
-        if (actionForm.getPicture() != null && StringUtils.isNotBlank(actionForm.getPicture().getFileName())) {
-            picture = picture(actionForm);
-        }
-
-        Address address = address(actionForm);
-        ClientNameDetailDto clientNameDetails = clientNameDetailName(actionForm);
-        ClientPersonalDetailDto clientDetail = clientPersonalDetailDto(actionForm);
-
-        String governmentId = governmentId(actionForm);
-        String clientDisplayName = clientName(actionForm);
-        String dateOfBirth = actionForm.getDateOfBirth();
-
-        ClientPersonalInfoUpdate personalInfo = new ClientPersonalInfoUpdate(customerId, oldClientVersionNumber,
-                customFields, address, clientDetail, clientNameDetails, spouseFather, picture, governmentId,
-                clientDisplayName, dateOfBirth);
-
-        this.customerService.updateClientPersonalInfo(userContext, personalInfo);
-    }
-
-    @Override
     public ClientFamilyInfoDto retrieveFamilyInfoForEdit(String clientGlobalCustNum) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
-            ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
 
-            List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-            List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
-                    fieldDefinitions, userContext);
+        ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
 
-            ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
+        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
+        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
+                fieldDefinitions, userContext);
 
-            ClientRulesDto clientRules = retrieveClientRules();
+        ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
-            CustomerDetailDto customerDetail = client.toCustomerDetailDto();
-            ClientDetailDto clientDetail = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
+        ClientRulesDto clientRules = retrieveClientRules();
 
-            List<ClientNameDetailDto> familyMembers = new ArrayList<ClientNameDetailDto>();
-            Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails = new HashMap<Integer, List<ClientFamilyDetailDto>>();
-            int familyMemberCount = 0;
-            for (ClientNameDetailEntity clientNameDetailEntity : client.getNameDetailSet()) {
+        CustomerDetailDto customerDetail = client.toCustomerDetailDto();
+        ClientDetailDto clientDetail = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
 
-                if (clientNameDetailEntity.isNotClientNameType()) {
+        List<ClientNameDetailDto> familyMembers = new ArrayList<ClientNameDetailDto>();
+        Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails = new HashMap<Integer, List<ClientFamilyDetailDto>>();
+        int familyMemberCount = 0;
+        for (ClientNameDetailEntity clientNameDetailEntity : client.getNameDetailSet()) {
 
-                    ClientNameDetailDto nameView1 = clientNameDetailEntity.toDto();
-                    familyMembers.add(nameView1);
+            if (clientNameDetailEntity.isNotClientNameType()) {
 
-                    for (ClientFamilyDetailEntity clientFamilyDetailEntity : client.getFamilyDetailSet()) {
+                ClientNameDetailDto nameView1 = clientNameDetailEntity.toDto();
+                familyMembers.add(nameView1);
 
-                        if (clientNameDetailEntity.matchesCustomerId(clientFamilyDetailEntity.getClientName()
-                                .getCustomerNameId())) {
-                            ClientFamilyDetailDto clientFamilyDetail = clientFamilyDetailEntity.toDto();
+                for (ClientFamilyDetailEntity clientFamilyDetailEntity : client.getFamilyDetailSet()) {
 
-                            addFamilyDetailsDtoToMap(clientFamilyDetails, familyMemberCount, clientFamilyDetail);
-                        }
+                    if (clientNameDetailEntity.matchesCustomerId(clientFamilyDetailEntity.getClientName()
+                            .getCustomerNameId())) {
+                        ClientFamilyDetailDto clientFamilyDetail = clientFamilyDetailEntity.toDto();
+
+                        addFamilyDetailsDtoToMap(clientFamilyDetails, familyMemberCount, clientFamilyDetail);
                     }
-                    familyMemberCount++;
                 }
+                familyMemberCount++;
             }
+        }
 
-            return new ClientFamilyInfoDto(clientDropdowns, customFieldDtos, customerDetail, clientDetail,
-                    familyMembers, clientFamilyDetails);
+        return new ClientFamilyInfoDto(clientDropdowns, customFieldDtos, customerDetail, clientDetail, familyMembers,
+                clientFamilyDetails);
     }
 
     private void addFamilyDetailsDtoToMap(Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails,

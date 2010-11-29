@@ -20,10 +20,12 @@
 
 package org.mifos.application.servicefacade;
 
+import java.io.InputStream;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
@@ -35,6 +37,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -76,6 +79,7 @@ import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.CustomerFlagDto;
 import org.mifos.dto.domain.CustomerMeetingDto;
@@ -89,17 +93,21 @@ import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.ClientDetailDto;
 import org.mifos.dto.screen.ClientDisplayDto;
 import org.mifos.dto.screen.ClientDropdownsDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPerformanceHistoryDto;
+import org.mifos.dto.screen.ClientPersonalDetailDto;
+import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
@@ -298,7 +306,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public CustomerDetailsDto createNewClient(ClientCreationDetail actionForm, MeetingDto meetingDto, List<SavingsDetailDto> allowedSavingProducts) {
+    public CustomerDetailsDto createNewClient(ClientCreationDetail clientCreationDetail, MeetingDto meetingDto, List<SavingsDetailDto> allowedSavingProducts) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -306,11 +314,10 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         try {
 
             ClientBO client = null;
-//            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
 
-            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
+            List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(clientCreationDetail.getFeesToApply());
             List<SavingsOfferingBO> selectedOfferings = new ArrayList<SavingsOfferingBO>();
-            for (Short productId : actionForm.getSelectedSavingProducts()) {
+            for (Short productId : clientCreationDetail.getSelectedSavingProducts()) {
                 if (productId != null) {
                     for (SavingsDetailDto savingsOffering : allowedSavingProducts) {
                         if (productId.equals(savingsOffering.getPrdOfferingId())) {
@@ -335,11 +342,11 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 //                actionForm.setFamilyDateOfBirth();
 //                actionForm.constructFamilyDetails();
             } else {
-                spouseNameDetailView = actionForm.getSpouseFatherName();
+                spouseNameDetailView = clientCreationDetail.getSpouseFatherName();
             }
 
             String secondMiddleName = null;
-            ClientNameDetailEntity clientNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, actionForm.getClientNameDetailDto());
+            ClientNameDetailEntity clientNameDetailEntity = new ClientNameDetailEntity(null, secondMiddleName, clientCreationDetail.getClientNameDetailDto());
 
             ClientNameDetailEntity spouseFatherNameDetailEntity = null;
             if (spouseNameDetailView != null) {
@@ -347,34 +354,34 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             }
 
             ClientDetailEntity clientDetailEntity = new ClientDetailEntity();
-            clientDetailEntity.updateClientDetails(actionForm.getClientPersonalDetailDto());
+            clientDetailEntity.updateClientDetails(clientCreationDetail.getClientPersonalDetailDto());
 
-            DateTime dob = new DateTime(actionForm.getDateOfBirth());
-            boolean trainedBool = actionForm.isTrained();
+            DateTime dob = new DateTime(clientCreationDetail.getDateOfBirth());
+            boolean trainedBool = clientCreationDetail.isTrained();
             DateTime trainedDateTime = null;
-            if (actionForm.getTrainedDate() != null) {
-                trainedDateTime = new DateTime(actionForm.getTrainedDate());
+            if (clientCreationDetail.getTrainedDate() != null) {
+                trainedDateTime = new DateTime(clientCreationDetail.getTrainedDate());
             }
-            String clientFirstName = actionForm.getClientNameDetailDto().getFirstName();
-            String clientLastName = actionForm.getClientNameDetailDto().getLastName();
-            String secondLastName = actionForm.getClientNameDetailDto().getSecondLastName();
+            String clientFirstName = clientCreationDetail.getClientNameDetailDto().getFirstName();
+            String clientLastName = clientCreationDetail.getClientNameDetailDto().getLastName();
+            String secondLastName = clientCreationDetail.getClientNameDetailDto().getSecondLastName();
 
             Blob pictureAsBlob = null;
-            if (actionForm.getPicture() != null) {
-                pictureAsBlob = new ClientPersistence().createBlob(actionForm.getPicture());
+            if (clientCreationDetail.getPicture() != null) {
+                pictureAsBlob = new ClientPersistence().createBlob(clientCreationDetail.getPicture());
             }
 
-            CustomerStatus clientStatus = CustomerStatus.fromInt(actionForm.getClientStatus());
-            PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getFormedBy());
+            CustomerStatus clientStatus = CustomerStatus.fromInt(clientCreationDetail.getClientStatus());
+            PersonnelBO formedBy = this.personnelDao.findPersonnelById(clientCreationDetail.getFormedBy());
             Address address = null;
-            if (actionForm.getAddress() != null) {
-                AddressDto dto = actionForm.getAddress();
+            if (clientCreationDetail.getAddress() != null) {
+                AddressDto dto = clientCreationDetail.getAddress();
                 address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(), dto.getPhoneNumber());
             }
 
-            if (YesNoFlag.YES.getValue().equals(actionForm.getGroupFlag())) {
+            if (YesNoFlag.YES.getValue().equals(clientCreationDetail.getGroupFlag())) {
 
-                Integer parentGroupId = Integer.parseInt(actionForm.getParentGroupId());
+                Integer parentGroupId = Integer.parseInt(clientCreationDetail.getParentGroupId());
                 CustomerBO group = this.customerDao.findCustomerById(parentGroupId);
 
                 if (group.getPersonnel() != null) {
@@ -391,23 +398,23 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 officeId = group.getOffice().getOfficeId();
 
                 List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
-                client = ClientBO.createNewInGroupHierarchy(userContext, actionForm.getClientName(), clientStatus, new DateTime(
-                       actionForm.getDateOfBirth()), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
-                       actionForm.getGovernmentId(), trainedBool, trainedDateTime, actionForm.getGroupFlag(), clientFirstName, clientLastName,
+                client = ClientBO.createNewInGroupHierarchy(userContext, clientCreationDetail.getClientName(), clientStatus, new DateTime(
+                       clientCreationDetail.getDateOfBirth()), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
+                       clientCreationDetail.getGovernmentId(), trainedBool, trainedDateTime, clientCreationDetail.getGroupFlag(), clientFirstName, clientLastName,
                         secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob,
-                        offeringsAssociatedInCreate, actionForm.getExternalId(), address);
+                        offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address);
 
                 if (ClientRules.isFamilyDetailsRequired()) {
-                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
+                    client.setFamilyAndNameDetailSets(clientCreationDetail.getFamilyNames(), clientCreationDetail.getFamilyDetails());
                 }
 
                 this.customerService.createClient(client, client.getCustomerMeetingValue(), feesForCustomerAccount,selectedOfferings);
 
             } else {
-                personnelId = actionForm.getLoanOfficerId();
-                officeId = actionForm.getOfficeId();
+                personnelId = clientCreationDetail.getLoanOfficerId();
+                officeId = clientCreationDetail.getOfficeId();
 
-                checkPermissionForCreate(actionForm.getClientStatus(), userContext, officeId, personnelId);
+                checkPermissionForCreate(clientCreationDetail.getClientStatus(), userContext, officeId, personnelId);
 
                 PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(personnelId);
                 OfficeBO office = this.officeDao.findOfficeById(officeId);
@@ -443,15 +450,15 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
 
                 List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
-                client = ClientBO.createNewOutOfGroupHierarchy(userContext, actionForm.getClientName(), clientStatus, new DateTime(
-                        actionForm.getMfiJoiningDate()), office, loanOfficer, clientMeeting, formedBy, customerCustomFields,
-                        clientNameDetailEntity, dob, actionForm.getGovernmentId(), trainedBool, trainedDateTime, actionForm.getGroupFlag(),
+                client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientCreationDetail.getClientName(), clientStatus, new DateTime(
+                        clientCreationDetail.getMfiJoiningDate()), office, loanOfficer, clientMeeting, formedBy, customerCustomFields,
+                        clientNameDetailEntity, dob, clientCreationDetail.getGovernmentId(), trainedBool, trainedDateTime, clientCreationDetail.getGroupFlag(),
                         clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity,
-                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, actionForm.getExternalId(), address,
+                        clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address,
                         lastSearchIdCustomerValue);
 
                 if (ClientRules.isFamilyDetailsRequired()) {
-                    client.setFamilyAndNameDetailSets(actionForm.getFamilyNames(), actionForm.getFamilyDetails());
+                    client.setFamilyAndNameDetailSets(clientCreationDetail.getFamilyNames(), clientCreationDetail.getFamilyDetails());
                 }
 
                 this.customerService.createClient(client, clientMeeting, feesForCustomerAccount, selectedOfferings);
@@ -568,5 +575,78 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
     protected String localizedMessageLookup(String key) {
         return MessageLookup.getInstance().lookup(key);
+    }
+
+    @Override
+    public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
+
+        ClientRulesDto clientRules = retrieveClientRules();
+
+        ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
+
+        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
+        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
+                customFieldDefinitions, userContext);
+
+        CustomerDetailDto customerDetailDto = client.toCustomerDetailDto();
+        ClientDetailDto clientDetailDto = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
+
+        return new ClientPersonalInfoDto(clientDropdowns, customFieldDtos, clientRules, customerDetailDto, clientDetailDto);
+    }
+
+    @Override
+    public ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo() {
+        return retrieveClientRules();
+    }
+
+    @Override
+    public void updateClientPersonalInfo(Integer oldClientVersionNumber, Integer customerId, ClientCreationDetail clientUpdateDetails) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
+        ClientNameDetailDto spouseFather = null;
+        if (!ClientRules.isFamilyDetailsRequired()) {
+            spouseFather = clientUpdateDetails.getSpouseFatherName();
+        }
+
+        InputStream picture = null;
+        if (clientUpdateDetails.getPicture() != null && StringUtils.isNotBlank(clientUpdateDetails.getPictureFileName())) {
+            picture = clientUpdateDetails.getPicture();
+        }
+
+        Address address = null;
+        AddressDto addressDto = clientUpdateDetails.getAddress();
+        if (addressDto != null) {
+            address = new Address(addressDto.getLine1(), addressDto.getLine2(), addressDto.getLine3(), addressDto.getCity(),
+                    addressDto.getState(), addressDto.getCountry(), addressDto.getZip(), addressDto.getPhoneNumber());
+        }
+
+        ClientNameDetailDto clientNameDetails = clientUpdateDetails.getClientNameDetailDto();
+        ClientPersonalDetailDto clientDetail = clientUpdateDetails.getClientPersonalDetailDto();
+
+        String governmentId = clientUpdateDetails.getGovernmentId();
+        String clientDisplayName = clientUpdateDetails.getClientName();
+        try {
+            String dateOfBirth = DateUtils.getLocalDateString(new DateTime(clientUpdateDetails.getDateOfBirth()), Locale.getDefault());
+
+            ClientPersonalInfoUpdate personalInfo = new ClientPersonalInfoUpdate(customerId, oldClientVersionNumber,
+                    customFields, address, clientDetail, clientNameDetails, spouseFather, picture, governmentId,
+                    clientDisplayName, dateOfBirth);
+
+            this.customerService.updateClientPersonalInfo(userContext, personalInfo);
+
+        } catch (InvalidDateException e) {
+            throw new MifosRuntimeException(e);
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 }

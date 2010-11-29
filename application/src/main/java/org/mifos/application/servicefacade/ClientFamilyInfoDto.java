@@ -25,6 +25,7 @@ import java.util.Map;
 
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.screen.ClientDetailDto;
 import org.mifos.dto.screen.ClientDropdownsDto;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientNameDetailDto;

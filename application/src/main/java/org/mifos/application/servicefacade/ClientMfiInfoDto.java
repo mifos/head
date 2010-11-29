@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.screen.ClientDetailDto;
 
 public class ClientMfiInfoDto {
 

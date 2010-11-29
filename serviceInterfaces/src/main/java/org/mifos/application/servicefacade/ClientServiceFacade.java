@@ -25,12 +25,14 @@ import java.util.List;
 import org.joda.time.DateTime;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
+import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
+import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ClientServiceFacade {
@@ -49,4 +51,13 @@ public interface ClientServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     ClientInformationDto getClientInformationDto(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateClientPersonalInfo(Integer oldClientVersionNumber, Integer customerId, ClientCreationDetail clientCreationDetail);
 }
