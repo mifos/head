@@ -1516,12 +1516,13 @@ public class LoanBO extends AccountBO {
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
         validationForMakePayment(paymentData);
         pay(paymentData);
-        AccountPaymentEntity accountPayment = getAccountPayment(paymentData);
-        LoanPaymentTypes loanPaymentTypes = getLoanPaymentType(paymentData.getTotalAmount());
-        applyPaymentsToInstallments(paymentData, loanPaymentTypes, accountPayment);
-        handleLoanArrearsAging(loanPaymentTypes);
-        addLoanActivity(buildLoanActivity(accountPayment.getAccountTrxns(), paymentData.getPersonnel(), AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
-        return accountPayment;
+        AccountPaymentEntity accountPaymentEntity = getAccountPaymentEntity(paymentData);
+        LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
+        applyPaymentsToInstallments(paymentData, loanPaymentType, accountPaymentEntity);
+        handleLoanArrearsAging(loanPaymentType);
+        addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), paymentData.getPersonnel(),
+                AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
+        return accountPaymentEntity;
     }
 
     private void handleLoanArrearsAging(LoanPaymentTypes loanPaymentTypes) throws AccountException {
@@ -1594,19 +1595,13 @@ public class LoanBO extends AccountBO {
         return getState().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING);
     }
 
-    private AccountPaymentEntity getAccountPayment(PaymentData paymentData) {
+    private AccountPaymentEntity getAccountPaymentEntity(PaymentData paymentData) {
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
                 paymentData.getReceiptNum(), paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData
                         .getPaymentTypeId()), paymentData.getTransactionDate());
         accountPayment.setCreatedByUser(paymentData.getPersonnel());
         accountPayment.setComment(paymentData.getComment());
         return accountPayment;
-    }
-
-    private LoanPaymentTypes handleLoanPayment(PaymentData paymentData) {
-        final LoanPaymentTypes loanPaymentTypes = getLoanPaymentType(paymentData.getTotalAmount());
-        pay(paymentData);
-        return loanPaymentTypes;
     }
 
     private void validationForMakePayment(PaymentData paymentData) throws AccountException {
@@ -2679,33 +2674,18 @@ public class LoanBO extends AccountBO {
 
     private Money pay(final PaymentData paymentData) {
         Money balanceAmount = paymentData.getTotalAmount();
-        // duplicate guard clauses to get list of installments only when payment can be down
-        if (balanceAmount.isGreaterThanZero()) {
-            balanceAmount = pay(paymentData, balanceAmount, getDetailsOfInstallmentsInArrears());
-        }
-        if (balanceAmount.isGreaterThanZero()) {
-            balanceAmount = pay(paymentData, balanceAmount, Arrays.asList(getDetailsOfNextInstallment()));
-        }
-        if (balanceAmount.isGreaterThanZero()) {
-            balanceAmount = pay(paymentData, balanceAmount, getApplicableIdsForFutureInstallments());
+        for (AccountActionDateEntity accountActionDate : getAccountActionDatesSortedByInstallmentId()) {
+            if (isInstallmentUnpaid(accountActionDate) && balanceAmount.isGreaterThanZero()) {
+                LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate, balanceAmount);
+                paymentData.addAccountPaymentData(loanPayment);
+                balanceAmount = balanceAmount.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
+            }
         }
         return balanceAmount;
     }
 
-    private Money pay(PaymentData paymentData, final Money amount, List<AccountActionDateEntity> installments) {
-        Money balance = amount;
-        for (AccountActionDateEntity accountActionDate : installments) {
-            if (isInstallmentUnpaid(accountActionDate) && balance.isGreaterThanZero()) {
-                LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate, balance);
-                paymentData.addAccountPaymentData(loanPayment);
-                balance = balance.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
-            }
-        }
-        return balance;
-    }
-
-    private boolean isInstallmentUnpaid(AccountActionDateEntity nextInstallment) {
-        return nextInstallment != null && nextInstallment.isNotPaid();
+    private boolean isInstallmentUnpaid(AccountActionDateEntity installment) {
+        return installment != null && installment.isNotPaid();
     }
 
     private void changeLoanStatus(final AccountState newAccountState, final PersonnelBO personnel)

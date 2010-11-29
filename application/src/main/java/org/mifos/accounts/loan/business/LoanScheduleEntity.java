@@ -203,7 +203,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return principal.subtract(principalPaid).add(getEffectiveInterestDue()).add(getPenaltyDue()).add(getMiscFeeDue());
     }
 
-    public Money getTotalDueWithoutPricipal() {
+    public Money getTotalDueWithoutPrincipal() {
         return getInterestDue().add(getPenaltyDue()).add(getMiscFeeDue());
     }
 

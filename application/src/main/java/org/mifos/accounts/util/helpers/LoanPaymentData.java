@@ -138,15 +138,15 @@ public class LoanPaymentData extends AccountPaymentData {
     }
 
     public Money getAmountPaidWithoutFeeForInstallment() {
-        return getInterestPaid().add(getPenaltyPaid()).add(getPrincipalPaid()).add(getMiscFeePaid())
-                .add(getMiscPenaltyPaid());
+        return interestPaid.add(penaltyPaid).add(principalPaid).add(miscFeePaid)
+                .add(miscPenaltyPaid);
     }
 
     public Money getFeeAmountPaidForInstallment() {
-        Money totalFeePaid = new Money(getPrincipalPaid().getCurrency());
-        if (!getFeesPaid().isEmpty()) {
-            for (Short feeId : getFeesPaid().keySet()) {
-                totalFeePaid = totalFeePaid.add(getFeesPaid().get(feeId));
+        Money totalFeePaid = new Money(principalPaid.getCurrency());
+        if (!feesPaid.isEmpty()) {
+            for (Short feeId : feesPaid.keySet()) {
+                totalFeePaid = totalFeePaid.add(feesPaid.get(feeId));
             }
         }
         return totalFeePaid;
