@@ -257,7 +257,7 @@ public class DependencyInjectedServiceLocator {
 
             customerService = DependencyInjectedServiceLocator.locateCustomerService();
 
-            clientServiceFacade = new ClientServiceFacadeWebTier(customerService, officeDao, personnelDao,customerDao);
+            clientServiceFacade = new ClientServiceFacadeWebTier(customerService, officeDao, personnelDao,customerDao, feeDao);
         }
         return clientServiceFacade;
     }
