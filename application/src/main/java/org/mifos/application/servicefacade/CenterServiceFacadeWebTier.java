@@ -28,6 +28,7 @@ import java.util.Locale;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountStateMachines;
@@ -49,6 +50,7 @@ import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.PositionEntity;
@@ -92,6 +94,7 @@ import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.mifos.dto.screen.CustomerNoteFormDto;
 import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.mifos.dto.screen.ListElement;
@@ -99,6 +102,9 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -113,6 +119,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private final PersonnelDao personnelDao;
     private final CustomerDao customerDao;
     private final CustomerService customerService;
+    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     public CenterServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
@@ -557,5 +564,50 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             return amount.negate();
         }
         return amount;
+    }
+
+    @Override
+    public CustomerNoteFormDto retrieveCustomerNote(String globalCustNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CustomerBO customer = this.customerDao.findCustomerBySystemId(globalCustNum);
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+
+        Integer customerLevel = customer.getCustomerLevel().getId().intValue();
+        String globalNum = customer.getGlobalCustNum();
+        String displayName = customer.getDisplayName();
+        LocalDate commentDate = new LocalDate();
+        String commentUser = loggedInUser.getDisplayName();
+
+        return new CustomerNoteFormDto(globalNum, displayName, customerLevel, commentDate, commentUser, "");
+    }
+
+    @Override
+    public void createCustomerNote(CustomerNoteFormDto customerNoteForm) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CustomerBO customer = this.customerDao.findCustomerBySystemId(customerNoteForm.getGlobalNum());
+        customer.updateDetails(userContext);
+
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+
+        CustomerNoteEntity customerNote = new CustomerNoteEntity(customerNoteForm.getComment(),
+                new DateTimeService().getCurrentJavaSqlDate(), loggedInUser, customer);
+        customer.addCustomerNotes(customerNote);
+
+        try {
+            this.transactionHelper.startTransaction();
+            this.customerDao.save(customer);
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(customer.getCustomerAccount().getAccountId().toString(), e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
     }
 }

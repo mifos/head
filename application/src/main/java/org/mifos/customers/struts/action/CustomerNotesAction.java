@@ -23,33 +23,22 @@ package org.mifos.customers.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.struts.actionforms.CustomerNotesActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.dto.screen.CustomerNoteFormDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.struts.action.SearchAction;
-import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -58,20 +47,12 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CustomerNotesAction extends SearchAction {
 
     private static final Logger logger = LoggerFactory.getLogger(CustomerNotesAction.class);
-
-    @Override
-    protected BusinessService getService() {
-        return getCustomerBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("customerNotesAction");
@@ -85,52 +66,67 @@ public class CustomerNotesAction extends SearchAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+                             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In CustomerNotesAction::load()");
-        clearActionForm(form);
+
+        CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
+        notesActionForm.setComment("");
+        notesActionForm.setCommentDate("");
+
         UserContext userContext = getUserContext(request);
-        CustomerBO customerBO = getCustomerBusinessService().getCustomer(
-                Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
+        Integer customerId = Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId());
+        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
         customerBO.setUserContext(userContext);
-        setFormAttributes(userContext, form, customerBO);
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(userContext.getId());
+
+        CustomerNoteFormDto noteDto = this.centerServiceFacade.retrieveCustomerNote(customerBO.getGlobalCustNum());
+
+        notesActionForm.setLevelId(noteDto.getCustomerLevel().toString());
+        notesActionForm.setGlobalCustNum(noteDto.getGlobalNum());
+        notesActionForm.setCustomerName(noteDto.getDisplayName());
+        notesActionForm.setCommentDate(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
+
+        if (customerBO.isCenter()) {
+            notesActionForm.setInput("center");
+        } else if (customerBO.isGroup()) {
+            notesActionForm.setInput("group");
+        } else if (customerBO.isClient()) {
+            notesActionForm.setInput("client");
+        }
+
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
-        SessionUtils.setAttribute(CustomerConstants.PERSONNEL_NAME, personnelBO.getDisplayName(), request);
+        SessionUtils.setAttribute(CustomerConstants.PERSONNEL_NAME, noteDto.getCommentUser(), request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In CustomerNotesAction::preview()");
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In CustomerNotesAction::previous()");
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In CustomerNotesAction::cancel()");
         return mapping.findForward(getDetailCustomerPage(form));
     }
 
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In CustomerNotesAction::create()");
         ActionForward forward = null;
         CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
-        CustomerBO customerBO = getCustomerBusinessService().getCustomer(
-                Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
+        Integer customerId = Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId());
+        CustomerBO customerBO = this.customerDao.findCustomerById(customerId);
         UserContext uc = getUserContext(request);
+
         if (customerBO.getPersonnel() != null) {
             checkPermissionForAddingNotes(AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel(), uc, customerBO
                     .getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
@@ -138,14 +134,13 @@ public class CustomerNotesAction extends SearchAction {
             checkPermissionForAddingNotes(AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel(), uc, customerBO
                     .getOffice().getOfficeId(), uc.getId());
         }
-        PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(uc.getId());
-        CustomerNoteEntity customerNote = new CustomerNoteEntity(notesActionForm.getComment(), new DateTimeService()
-                .getCurrentJavaSqlDate(), personnelBO, customerBO);
-        customerBO.addCustomerNotes(customerNote);
-        customerBO.setUserContext(uc);
-        customerBO.update();
+
+        CustomerNoteFormDto customerNoteForm = new CustomerNoteFormDto(customerBO.getGlobalCustNum(), customerBO.getDisplayName(),
+                customerBO.getCustomerLevel().getId().intValue(), new LocalDate(), "", notesActionForm.getComment());
+
+        this.centerServiceFacade.createCustomerNote(customerNoteForm);
+
         forward = mapping.findForward(getDetailCustomerPage(notesActionForm));
-        customerBO = null;
         return forward;
     }
 
@@ -166,8 +161,7 @@ public class CustomerNotesAction extends SearchAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
@@ -180,34 +174,8 @@ public class CustomerNotesAction extends SearchAction {
         return mapping.findForward(forward);
     }
 
-    private void clearActionForm(ActionForm form) {
-        ((CustomerNotesActionForm) form).setComment("");
-        ((CustomerNotesActionForm) form).setCommentDate("");
-    }
-
     @Override
     protected QueryResult getSearchResult(ActionForm form) throws ApplicationException {
-        return getCustomerBusinessService().getAllCustomerNotes(
-                Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
-    }
-
-    private CustomerBusinessService getCustomerBusinessService() {
-        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
-    }
-
-    private void setFormAttributes(UserContext userContext, ActionForm form, CustomerBO customerBO)
-            throws ApplicationException, InvalidDateException {
-        CustomerNotesActionForm notesActionForm = (CustomerNotesActionForm) form;
-        notesActionForm.setLevelId(customerBO.getCustomerLevel().getId().toString());
-        notesActionForm.setGlobalCustNum(customerBO.getGlobalCustNum());
-        notesActionForm.setCustomerName(customerBO.getDisplayName());
-        notesActionForm.setCommentDate(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
-        if (customerBO instanceof CenterBO) {
-            notesActionForm.setInput("center");
-        } else if (customerBO instanceof GroupBO) {
-            notesActionForm.setInput("group");
-        } else if (customerBO instanceof ClientBO) {
-            notesActionForm.setInput("client");
-        }
+        return new CustomerPersistence().getAllCustomerNotes(Integer.valueOf(((CustomerNotesActionForm) form).getCustomerId()));
     }
 }

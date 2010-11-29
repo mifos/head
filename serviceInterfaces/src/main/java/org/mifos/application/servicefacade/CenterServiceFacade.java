@@ -30,6 +30,7 @@ import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.mifos.dto.screen.CustomerNoteFormDto;
 import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -70,4 +71,10 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void initializeClientStates(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    CustomerNoteFormDto retrieveCustomerNote(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void createCustomerNote(CustomerNoteFormDto customerNoteForm);
 }
