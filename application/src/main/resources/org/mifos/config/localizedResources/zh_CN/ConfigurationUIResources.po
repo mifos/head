@@ -480,11 +480,11 @@ msgstr "眷属/父亲资料"
 
 #: configuration.spousefathermiddlename
 msgid "Relative middle name"
-msgstr ""
+msgstr "眷属中间名"
 
 #: configuration.spousefathersecondlastname
 msgid "Relative second last name"
-msgstr ""
+msgstr "眷属第二姓"
 
 #: configuration.state
 msgid "State"

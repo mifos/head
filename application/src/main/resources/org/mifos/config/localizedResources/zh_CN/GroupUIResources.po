@@ -1138,7 +1138,7 @@ msgstr "请填写必要的附加信息。"
 msgid ""
 "Please enter a valid date (format dd/mm/yyyy) in additional information "
 "field."
-msgstr ""
+msgstr "请在附加信息栏填写有效日期(日/月/年）"
 
 #: errors.Customer.specifyFeeAmount
 msgid "Please specify fee amount."

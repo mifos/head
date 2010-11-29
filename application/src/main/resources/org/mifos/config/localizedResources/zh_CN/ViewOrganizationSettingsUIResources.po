@@ -52,7 +52,7 @@ msgstr "国家"
 
 #: VOS.currencies
 msgid "Currencies"
-msgstr ""
+msgstr "币值"
 
 #: VOS.currency
 msgid "Currency"

@@ -241,7 +241,7 @@ msgstr "如果满意点击“提交”按钮"
 msgid ""
 "If satisfied click Submit. Click Cancel to return to account details without "
 "closing the account."
-msgstr ""
+msgstr "如果满意点击“提交”按钮，或者点击“取消”按钮返回至账户详情页面。"
 
 #: Savings.clickSubmitOnPreview
 msgid "Click Submit if you are satisfied or click '"
@@ -662,7 +662,7 @@ msgstr "请填写必要的附加信息。"
 
 #: errors.Account.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr ""
+msgstr "请在{0}内填写有效日期（日/月/年)"
 
 #: errors.createfailed
 msgid ""
@@ -742,7 +742,7 @@ msgstr "注释的长度不能大于{0}个字符。"
 
 #: errors.mustBeGreaterThanZero
 msgid "{0} must be greater than 0"
-msgstr ""
+msgstr "{0}必须大于0"
 
 #: errors.prefix
 msgid "<LI>"

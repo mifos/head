@@ -1,12 +1,11 @@
 # extracted from LookupValueMessages.properties
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LookupValueMessages.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:28+0530\n"
-"PO-Revision-Date: 2009-08-07 19:55-0700\n"
-"Last-Translator: Aida Ocana <aocana@att.net>\n"
+"POT-Creation-Date: 2010-08-23 16:56+0200\n"
+"PO-Revision-Date: 2010-11-24 10:58-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -773,9 +772,7 @@ msgstr "Puede agregar notas a la cuenta de Ahorros"
 
 #: Permissions-CanAdjustPaymentWhenAccountStatusIsClosedObligationMet
 msgid "Can adjust payment when account status is \"closed-obligation met\""
-msgstr ""
-"Puede ajustar el pago cuando el estado de la cuenta este en \"cerrado-"
-"obligación cumplida\""
+msgstr "Puede ajustar el pago cuando el estado de la cuenta este en \"cerrado-obligación cumplida\""
 
 #: Permissions-CanAdministerReports
 msgid "Can Administer Reports"
@@ -812,14 +809,11 @@ msgstr "Puede crear multiple cuentas de préstamos"
 
 #: Permissions-CanCreateNewLoanAccountInSaveForLaterState
 msgid "Can create new loan account in Save for later state"
-msgstr ""
-"Puede crear un nuevo préstamo en el estado de Guardar para más adelante "
+msgstr "Puede crear un nuevo préstamo en el estado de Guardar para más adelante "
 
 #: Permissions-CanCreateNewLoanAccountInSubmitForApprovalState
 msgid "Can create new loan account in Submit for approval state"
-msgstr ""
-"Puede crear una nueva cuenta de préstamo en el estado de Enviar para ser "
-"aprobado"
+msgstr "Puede crear una nueva cuenta de préstamo en el estado de Enviar para ser aprobado"
 
 #: Permissions-CanCreateNewOffice
 msgid "Can create new office"
@@ -831,14 +825,11 @@ msgstr "Puede crear un nuevo papel"
 
 #: Permissions-CanCreateNewSavingsAccountInSaveForLaterState
 msgid "Can create new Savings account in Save for later state"
-msgstr ""
-"Puede crear una nueva cuenta de Ahorros en el estado de Guardar para más "
-"adelante"
+msgstr "Puede crear una nueva cuenta de Ahorros en el estado de Guardar para más adelante"
 
 #: Permissions-CanCreateNewSavingsAccountInSubmitForApprovalState
 msgid "Can create new Savings account in submit for approval state"
-msgstr ""
-"Puede crear una cuenta de Ahorro en el estado de Enviar para ser aprobada"
+msgstr "Puede crear una cuenta de Ahorro en el estado de Enviar para ser aprobada"
 
 #: Permissions-CanCreateNewSystemUsers
 msgid "Can create new system users"
@@ -1026,15 +1017,15 @@ msgstr "Puede revocar el desembolso del préstamo"
 
 #: Permissions-CanRunBatchJobsOnDemand
 msgid "Can run Batch Jobs on demand"
-msgstr ""
+msgstr "Puede procesar Lotes por encargo"
 
 #: Permissions-CanShutdownMifos
 msgid "Can open shutdown page"
-msgstr ""
+msgstr "Puede abrir página de apagado"
 
 #: Permissions-CanViewActiveSessions
 msgid "Can view active sessions"
-msgstr ""
+msgstr "Puede ver sesiones activas"
 
 #: Permissions-CanStartMifosShutDown
 msgid "Can shut down Mifos"
@@ -1046,7 +1037,7 @@ msgstr "Puede desbloquear un usuario"
 
 #: Permissions-CanUpdateBatchJobsConfiguration
 msgid "Can update Batch Jobs configuration"
-msgstr ""
+msgstr "Puede actualizar configuración de lotes"
 
 #: Permissions-CanUpdateSavingsAccount
 msgid "Can update Savings account"
@@ -1094,8 +1085,7 @@ msgstr "Puede ver el reporte Resumido del Centro"
 
 #: Permissions-CanViewClientFeesChargesAndPenaltiesReport
 msgid "Can view Client Fees, Charges and Penalties report"
-msgstr ""
-"Puede ver el reporte de las cuotas de los clientes, los cargos y las multas"
+msgstr "Puede ver el reporte de las cuotas de los clientes, los cargos y las multas"
 
 #: Permissions-CanViewClientLoanRepaymentSchedule
 msgid "Can view Client Loan repayment schedule"
@@ -1131,8 +1121,7 @@ msgstr "Puede ver el reporte de la Hoja de Recaudación"
 
 #: Permissions-CanViewDailyCashConfirmationReportStaffWise
 msgid "Can view Daily Cash Confirmation Report - Staff Wise"
-msgstr ""
-"Puede ver el reporte de Confirmación Diario de Caja por parte del Personal "
+msgstr "Puede ver el reporte de Confirmación Diario de Caja por parte del Personal "
 
 #: Permissions-CanViewDailyCashFlowReportBranch
 msgid "Can view Daily Cash Flow Report - Branch"
@@ -1140,9 +1129,7 @@ msgstr "Puede ver el reporte de Flujo de Caja Diario - Sucursal "
 
 #: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
 msgid "Can view Daily Portfolio quality data report - Aging analysis"
-msgstr ""
-"Puede ver el reporte Diario de Datos de Calidad de la Cartera - Análisis de "
-"Madurez"
+msgstr "Puede ver el reporte Diario de Datos de Calidad de la Cartera - Análisis de Madurez"
 
 #: Permissions-CanViewDailyTransactionSummaryReport
 msgid "Can view Daily Transaction Summary report"
@@ -1169,12 +1156,8 @@ msgid "Can view Loan Accounts reports"
 msgstr "Puede ver los reportes de las Cuentas de Préstamos"
 
 #: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
-msgid ""
-"Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, "
-"Sequency Wise"
-msgstr ""
-"Puede ver la Distribución de Productos de Préstamo - con relación a su "
-"actividad, su tamaño, el producto, la secuencia "
+msgid "Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, Sequency Wise"
+msgstr "Puede ver la Distribución de Productos de Préstamo - con relación a su actividad, su tamaño, el producto, la secuencia "
 
 #: Permissions-CanViewLoansPendingApprovalReport
 msgid "Can view Loans pending approval report"
@@ -1936,3 +1919,4 @@ msgstr "Aplica a las cuentas existentes y futuras"
 #: feeUpdationType-AppliesToFutureAccounts
 msgid "Applies to future accounts"
 msgstr "Aplica a las cuentas futuras"
+

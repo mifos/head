@@ -105,7 +105,7 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         CreateSavingsAccountSubmitParameters submitAccountParameters = new CreateSavingsAccountSubmitParameters();
         submitAccountParameters.setAmount("248.0");
 
-        verifySavingsAccountCreation(searchParameters, submitAccountParameters);
+        verifySavingsAccountCreationWithQG(searchParameters, submitAccountParameters);
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -161,5 +161,11 @@ public class CreateSavingsAccountTest extends UiTestCaseBase {
         savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
     }
 
-
+    private void verifySavingsAccountCreationWithQG(CreateSavingsAccountSearchParameters searchParameters,
+                                                    CreateSavingsAccountSubmitParameters submitAccountParameters) {
+        SavingsAccountDetailPage savingsAccountPage = savingsAccountHelper.createSavingsAccountWithQG(searchParameters, submitAccountParameters);
+        savingsAccountPage.verifyPage();
+        savingsAccountPage.verifySavingsAmount(submitAccountParameters.getAmount());
+        savingsAccountPage.verifySavingsProduct(searchParameters.getSavingsProduct());
+    }
 }

@@ -457,7 +457,7 @@ msgid ""
 "Office cannot be moved to a new parent office because there are future "
 "holidays applied to either the current parent office or the future parent "
 "office. Office can be moved after holidays have passed."
-msgstr ""
+msgstr "无发更改上级机构，因为新上级机构或现有上级机构有指定假日。指定假日过后可做更改"
 
 #: error.office.invalidparentoffice
 msgid ""
@@ -487,7 +487,7 @@ msgstr "请填写必要的附加信息。"
 
 #: error.office.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr ""
+msgstr "请在{0}内填写有效日期（日/月/年)"
 
 #: error.versionnodonotmatch
 msgid ""

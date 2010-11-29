@@ -589,7 +589,7 @@ msgstr "请填写必要的附加信息"
 
 #: error.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr ""
+msgstr "请在{0}内填写有效日期（日/月/年)"
 
 #: error.dob
 msgid "Please specify date of birth."

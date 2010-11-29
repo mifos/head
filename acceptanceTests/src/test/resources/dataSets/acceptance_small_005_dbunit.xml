@@ -1494,6 +1494,7 @@
   <applied_upgrades upgrade_id="1288013750"/>
   <applied_upgrades upgrade_id="1288349766"/>
   <applied_upgrades upgrade_id="1288869198"/>
+  <applied_upgrades upgrade_id="1290720085"/>
   <attendance/>
   <batch_branch_cash_confirmation_report/>
   <batch_branch_confirmation_disbursement/>
@@ -8663,8 +8664,16 @@
   <question_choices choice_id="2" question_id="1" choice_text="Everything" choice_order="1" ppi="N"/>
   <question_choices choice_id="3" question_id="3" choice_text="Yes" choice_order="0" ppi="N"/>
   <question_choices choice_id="4" question_id="3" choice_text="No" choice_order="1" ppi="N"/>
-  <question_group/>
-  <question_group_event_sources/>
+  <question_group id="1" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group id="2" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group id="3" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group id="4" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group id="5" title="Survey 1" date_of_creation="2010-11-26" state="1" is_editable="0" is_ppi="0"/>
+  <question_group_event_sources id="1" question_group_id="1" event_source_id="3"/>
+  <question_group_event_sources id="2" question_group_id="2" event_source_id="8"/>
+  <question_group_event_sources id="3" question_group_id="3" event_source_id="10"/>
+  <question_group_event_sources id="4" question_group_id="4" event_source_id="7"/>
+  <question_group_event_sources id="5" question_group_id="5" event_source_id="13"/>
   <question_group_instance/>
   <question_group_response/>
   <questions question_id="1" answer_type="1" question_state="1" question_text="What is up?" nickname="450aaef74a0f5246eca6bbeddf10c0d5"/>
@@ -9665,8 +9674,26 @@
   <savings_trxn_detail/>
   <savings_type savings_type_id="1" lookup_id="118"/>
   <savings_type savings_type_id="2" lookup_id="119"/>
-  <sections/>
-  <sections_questions/>
+  <sections id="1" question_group_id="1" name="Misc" sequence_number="0"/>
+  <sections id="2" question_group_id="2" name="Misc" sequence_number="0"/>
+  <sections id="3" question_group_id="3" name="Misc" sequence_number="0"/>
+  <sections id="4" question_group_id="4" name="Misc" sequence_number="0"/>
+  <sections id="5" question_group_id="5" name="Misc" sequence_number="0"/>
+  <sections_questions id="1" section_id="1" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="2" section_id="1" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="3" section_id="1" question_id="2" is_required="0" sequence_number="2"/>
+  <sections_questions id="4" section_id="2" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="5" section_id="2" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="6" section_id="2" question_id="2" is_required="0" sequence_number="2"/>
+  <sections_questions id="7" section_id="3" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="8" section_id="3" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="9" section_id="3" question_id="2" is_required="0" sequence_number="2"/>
+  <sections_questions id="10" section_id="4" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="11" section_id="4" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="12" section_id="4" question_id="2" is_required="0" sequence_number="2"/>
+  <sections_questions id="13" section_id="5" question_id="1" is_required="1" sequence_number="0"/>
+  <sections_questions id="14" section_id="5" question_id="3" is_required="0" sequence_number="1"/>
+  <sections_questions id="15" section_id="5" question_id="2" is_required="0" sequence_number="2"/>
   <spouse_father_lookup spouse_father_id="1" lookup_id="128"/>
   <spouse_father_lookup spouse_father_id="2" lookup_id="129"/>
   <supported_locale locale_id="1" country_id="6" lang_id="1" locale_name="EN" default_locale="1"/>
@@ -9716,7 +9743,7 @@
   <supported_locale locale_id="45" country_id="50" lang_id="10" locale_name="Lao-Laos" default_locale="0"/>
   <supported_locale locale_id="46" country_id="25" lang_id="1" locale_name="English-Lebanon-AlMajmoua" default_locale="0"/>
   <supported_locale locale_id="47" country_id="51" lang_id="11" locale_name="Hungarian-Hungary" default_locale="0"/>
-  <survey survey_id="1" survey_name="Survey 1" survey_applies_to="all" date_of_creation="2009-07-29" state="1"/>
+  <survey survey_id="1" survey_name="Survey 1" survey_applies_to="savings" date_of_creation="2009-07-29" state="1"/>
   <survey_instance/>
   <survey_questions surveyquestion_id="1" survey_id="1" question_id="1" question_order="0" mandatory="1"/>
   <survey_questions surveyquestion_id="2" survey_id="1" question_id="3" question_order="1" mandatory="0"/>

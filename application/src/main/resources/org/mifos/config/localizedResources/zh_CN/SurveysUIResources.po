@@ -605,10 +605,4 @@ msgstr "请为该类型的答案至少指定两个备选。"
 #: Questionnaire.EditAdditonalInformation
 #, fuzzy
 msgid "Edit Additional Information"
-msgstr "编辑问题信息"
-
-#~ msgid "Click on a survey below to view details and make changes or"
-#~ msgstr "点击下面的调查来查看详情及进行修改或"
-
-#~ msgid "Click on a question below to view details and make changes or "
-#~ msgstr "点击下面的问题来查看详情及进行修改或"
+msgstr "编辑附加信息"

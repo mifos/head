@@ -1,12 +1,11 @@
 # extracted from OfficeUIResources.properties
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/OfficeUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:28+0530\n"
-"PO-Revision-Date: 2009-08-08 20:55-0700\n"
-"Last-Translator: Aida Ocana <aocana@att.net>\n"
+"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"PO-Revision-Date: 2010-11-24 11:02-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,93 +53,47 @@ msgid "Edit office information"
 msgstr "Edite la información de la oficina"
 
 #: Office.error.creationFailed
-msgid ""
-"An unexpected error has occurred during office creation. Please try again "
-"later or contact the system administrator."
-msgstr ""
-"Un error inesperado ocurrió durante la creación de la oficina. Por favor, "
-"inténtelo de nuevo más tarde o póngase en contacto con el administrador del "
-"sistema."
+msgid "An unexpected error has occurred during office creation. Please try again later or contact the system administrator."
+msgstr "Un error inesperado ocurrió durante la creación de la oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con el administrador del sistema."
 
 #: Office.error.errorInLoadingMasterData
-msgid ""
-"The application could not load the office hierarchy. Please try again later "
-"or contact the system administrator."
-msgstr ""
-"La aplicación no pudo cargar la jerarquía de la oficina. Por favor, "
-"inténtelo de nuevo más tarde o póngase en contacto con el administrador del "
-"sistema."
+msgid "The application could not load the office hierarchy. Please try again later or contact the system administrator."
+msgstr "La aplicación no pudo cargar la jerarquía de la oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con el administrador del sistema."
 
 #: Office.error.getFailed
 msgctxt "Office.error.getFailed"
-msgid ""
-"An unexpected error has occurred while retrieving the office details. Please "
-"try again later or contact the system administrator."
-msgstr ""
-"Un error inesperado ocurrió durante la recuperación de los detalles de la "
-"oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con "
-"el administrador del sistema. "
+msgid "An unexpected error has occurred while retrieving the office details. Please try again later or contact the system administrator."
+msgstr "Un error inesperado ocurrió durante la recuperación de los detalles de la oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con el administrador del sistema. "
 
 #: Office.error.hasActiveChildern
-msgid ""
-"The office status cannot be updated as the office has active sub office(s) "
-"under it."
-msgstr ""
-"El estado de la oficina no puede ser actualizado ya que la oficina tiene "
-"sub-oficina(s) bajo a la misma."
+msgid "The office status cannot be updated as the office has active sub office(s) under it."
+msgstr "El estado de la oficina no puede ser actualizado ya que la oficina tiene sub-oficina(s) bajo a la misma."
 
 #: Office.error.hasActiveOfficeWithThisLevel
-msgid ""
-"The office level cannot be removed as there are offices present at this "
-"level."
-msgstr ""
-"El nivel de las oficinas no se puede eliminar ya que hay oficinas presentes "
-"en este nivel."
+msgid "The office level cannot be removed as there are offices present at this level."
+msgstr "El nivel de las oficinas no se puede eliminar ya que hay oficinas presentes en este nivel."
 
 #: Office.error.hasActivePersonnel
-msgid ""
-"The office status cannot be updated as the office has active personnel "
-"associated with it."
-msgstr ""
-"El estado de la oficina no puede ser actualizado ya que la oficina tiene "
-"personal activo asociado a la misma."
+msgid "The office status cannot be updated as the office has active personnel associated with it."
+msgstr "El estado de la oficina no puede ser actualizado ya que la oficina tiene personal activo asociado a la misma."
 
 #: Office.error.loadFailed
 msgctxt "Office.error.loadFailed"
-msgid ""
-"An unexpected error has occurred while retrieving the office details. Please "
-"try again later or contact the system administrator."
-msgstr ""
-"Un error inesperado ocurrió durante la recuperación de los detalles de la "
-"oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con "
-"el administrador del sistema. "
+msgid "An unexpected error has occurred while retrieving the office details. Please try again later or contact the system administrator."
+msgstr "Un error inesperado ocurrió durante la recuperación de los detalles de la oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con el administrador del sistema. "
 
 #: Office.error.updationFailed
-msgid ""
-"An unexpected error has occurred while changing the office details. Please "
-"try again later or contact the system administrator."
-msgstr ""
-"Un error inesperado ocurrió durante el cambio de los detalles de la oficina. "
-"Por favor, inténtelo de nuevo más tarde o póngase en contacto con el "
-"administrador del sistema. "
+msgid "An unexpected error has occurred while changing the office details. Please try again later or contact the system administrator."
+msgstr "Un error inesperado ocurrió durante el cambio de los detalles de la oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con el administrador del sistema. "
 
 #: Office.error.updationHierarchyFailed
 msgctxt "Office.error.updationHierarchyFailed"
-msgid ""
-"An unexpected error has occurred during the office hierarchy change. Please "
-"try again later or contact the system administrator."
-msgstr ""
-"Un error inesperado se ha producido durante el cambio de la jerarquía de la "
-"oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con "
-"el administrador del sistema."
+msgid "An unexpected error has occurred during the office hierarchy change. Please try again later or contact the system administrator."
+msgstr "Un error inesperado se ha producido durante el cambio de la jerarquía de la oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con el administrador del sistema."
 
 #: Office.formOfficeType.nameExist
-msgid ""
-"This Office name already exists in the application. Please specify a "
-"different name."
-msgstr ""
-"Este nombre de Oficina ya existe en la aplicación. Por favor, especifique un "
-"nombre diferente."
+msgid "This Office name already exists in the application. Please specify a different name."
+msgstr "Este nombre de Oficina ya existe en la aplicación. Por favor, especifique un nombre diferente."
 
 #: Office.formOfficeType.pleaseLelect
 msgctxt "Office.formOfficeType.pleaseLelect"
@@ -153,12 +106,8 @@ msgid "Please specify an Office type."
 msgstr "Por favor, especifique un tipo de oficina."
 
 #: Office.formOfficeType.shortNameExist
-msgid ""
-"This Office short name already exists in the application. Please specify a "
-"different name."
-msgstr ""
-"Este Abrevación de Oficina ya existe en la aplicación. Por favor, "
-"especifique un nombre diferente."
+msgid "This Office short name already exists in the application. Please specify a different name."
+msgstr "Este Abrevación de Oficina ya existe en la aplicación. Por favor, especifique un nombre diferente."
 
 #: Office.formParentOffice.requiredmsg
 msgid "Please specify a Parent office."
@@ -217,13 +166,8 @@ msgid "City:"
 msgstr "Ciudad\\:"
 
 #: Office.labelCompleteTheFields
-msgid ""
-"Complete the fields below. Then click Preview. Click Cancel to return to "
-"Admin without submitting information."
-msgstr ""
-"Complete los campos de abajo. A continuación, haga clic en Vista Previa. "
-"Haga clic en Cancelar para volver al administrador sin enviar la "
-"información."
+msgid "Complete the fields below. Then click Preview. Click Cancel to return to Admin without submitting information."
+msgstr "Complete los campos de abajo. A continuación, haga clic en Vista Previa. Haga clic en Cancelar para volver al administrador sin enviar la información."
 
 #: Office.labelCountry
 msgid "Country:"
@@ -263,18 +207,12 @@ msgid "View offices"
 msgstr "Ver oficinas"
 
 #: Office.labelMandatoryInstructions
-msgid ""
-"Preview the fields below. Then click Confirm. Click Cancel to return to "
-"Office Details without submitting information."
-msgstr ""
-"Vea los campos de abajo. A continuación, haga clic en Confirmar. Haga clic "
-"en Cancelar para regresar a los Detalles de la Oficina sin enviar la "
-"información."
+msgid "Preview the fields below. Then click Confirm. Click Cancel to return to Office Details without submitting information."
+msgstr "Vea los campos de abajo. A continuación, haga clic en Confirmar. Haga clic en Cancelar para regresar a los Detalles de la Oficina sin enviar la información."
 
 #: Office.labelMaxMinLevel
 msgid "The office hierarchy can have minimum two and maximum five levels"
-msgstr ""
-"La jerarquía de la oficina puede tener mínimo dos y máximo de cinco niveles"
+msgstr "La jerarquía de la oficina puede tener mínimo dos y máximo de cinco niveles"
 
 #: Office.labelNo
 msgid "No"
@@ -285,11 +223,8 @@ msgid "Note:"
 msgstr "Nota\\:"
 
 #: Office.labelNoteInstruction
-msgid ""
-"The highest and lowest hierarchy levels cannot be removed from the system."
-msgstr ""
-"Los más altos y más bajos niveles de jerarquía no pueden ser eliminados del "
-"sistema."
+msgid "The highest and lowest hierarchy levels cannot be removed from the system."
+msgstr "Los más altos y más bajos niveles de jerarquía no pueden ser eliminados del sistema."
 
 #: Office.labelOfficeAddress
 msgid "Office address"
@@ -304,13 +239,8 @@ msgid "Office code:"
 msgstr "Código de Oficina\\:"
 
 #: Office.labelOfficeCreatedInstruction
-msgid ""
-"You can enter a system ID number into the search box to access center "
-"details which <br> also include a center's account and performance data."
-msgstr ""
-"Usted puede introducir un número de sistema de identificación en el cuadro "
-"de búsqueda para acceder a los detalles del centro que <br>  también "
-"incluirá un centro de la cuenta y datos de rendimiento."
+msgid "You can enter a system ID number into the search box to access center details which <br> also include a center's account and performance data."
+msgstr "Usted puede introducir un número de sistema de identificación en el cuadro de búsqueda para acceder a los detalles del centro que <br>  también incluirá un centro de la cuenta y datos de rendimiento."
 
 #: Office.labelOfficeDetails
 msgid "Office details"
@@ -390,8 +320,7 @@ msgstr "Ver jerarquía de la oficina"
 
 #: Office.labelViewOfficeInstruction
 msgid "Click on an office below to view details and make changes or"
-msgstr ""
-"Haga clic en la oficina de abajo para ver los detalles y realizar cambios o"
+msgstr "Haga clic en la oficina de abajo para ver los detalles y realizar cambios o"
 
 #: Office.mandatory_selectbox
 msgid "Please select {0}."
@@ -469,12 +398,8 @@ msgid "Custom field:"
 msgstr "Campo personalizado\\:"
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you required permissions and try again.<br><br>"
-msgstr ""
-"Usted no tiene permisos para realizar esta actividad. Póngase en contacto "
-"con el administrador del sistema que provee permisos y vuelva a intentarlo."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again.<br><br>"
+msgstr "Usted no tiene permisos para realizar esta actividad. Póngase en contacto con el administrador del sistema que provee permisos y vuelva a intentarlo."
 
 #: error.noofficelevel
 msgid "This level does not exist."
@@ -485,11 +410,8 @@ msgid "This status does not exist."
 msgstr "Este estado no existe."
 
 #: error.office.childhasmorelevel
-msgid ""
-"Can not update office type as child office type has more level than this."
-msgstr ""
-"No se puede actualizar el tipo de oficina como oficina tipo hijo porque "
-"tiene más alto nivel que este."
+msgid "Can not update office type as child office type has more level than this."
+msgstr "No se puede actualizar el tipo de oficina como oficina tipo hijo porque tiene más alto nivel que este."
 
 #: error.office.duplicateName
 msgid "This office name already exist"
@@ -500,29 +422,16 @@ msgid "This office short name already exist"
 msgstr "La Abrevación de esta oficina ya existe"
 
 #: error.office.futureholidaysnotthesame
-msgid ""
-"Office cannot be moved to a new parent office because there are future "
-"holidays applied to either the current parent office or the future parent "
-"office. Office can be moved after holidays have passed."
-msgstr ""
+msgid "Office cannot be moved to a new parent office because there are future holidays applied to either the current parent office or the future parent office. Office can be moved after holidays have passed."
+msgstr "No se puede mover oficina a nueva oficina matriz porque hay días festivos aplicados a la oficina matriz actual o la oficina matriz futura. Se puede mover oficina despues de que los días festivos hubieran pasados."
 
 #: error.office.invalidparentoffice
-msgid ""
-"Can not update parent office as this office level is greater than that of "
-"new parent."
-msgstr ""
-"No se puede actualizar el nivel de  oficina padre porque es mayor que el de "
-"la oficina padre nuevo"
+msgid "Can not update parent office as this office level is greater than that of new parent."
+msgstr "No se puede actualizar el nivel de  oficina padre porque es mayor que el de la oficina padre nuevo"
 
 #: error.office.levelNotConfigured
-msgid ""
-"Cannot create this office as the configuration of this level has been "
-"modified by another user. Please try creating again or change the office "
-"type."
-msgstr ""
-"No se puede crear esta oficina porque la configuración de este nivel ha sido "
-"modificado por otro usuario. Por favor, intente crearla de nuevo o cambie "
-"el tipo de oficina."
+msgid "Cannot create this office as the configuration of this level has been modified by another user. Please try creating again or change the office type."
+msgstr "No se puede crear esta oficina porque la configuración de este nivel ha sido modificado por otro usuario. Por favor, intente crearla de nuevo o cambie el tipo de oficina."
 
 #: error.office.mandatory_field
 msgctxt "error.office.mandatory_field"
@@ -535,37 +444,23 @@ msgstr "el número máximo de oficinas permitidas son 9999"
 
 #: error.office.provideadditionalInformation
 msgid "Please specify required additional information for '{0}' field."
-msgstr ""
-"Por favor especifique la informacion adicional requerida para el campo '{0}'"
+msgstr "Por favor especifique la informacion adicional requerida para el campo '{0}'"
 
 #: error.office.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr ""
-"Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo '{0}'."
+msgstr "Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo '{0}'."
 
 #: error.versionnodonotmatch
-msgid ""
-"The record has already been modified by another user. Please navigate to the "
-"details page and start the activity again."
-msgstr ""
-"Este archivo ha sido modificado por otro usuario. Por favor, vaya a la "
-"página de detalles y empiece la actividad de nuevo."
+msgid "The record has already been modified by another user. Please navigate to the details page and start the activity again."
+msgstr "Este archivo ha sido modificado por otro usuario. Por favor, vaya a la página de detalles y empiece la actividad de nuevo."
 
 #: errors.office.officelevelnotconfigured
-msgid ""
-"The office cannot be made active as this office level is not configured "
-"currently."
-msgstr ""
-"La oficina no puede ser activada ya que el nivel de oficina no está "
-"configurado actualmente."
+msgid "The office cannot be made active as this office level is not configured currently."
+msgstr "La oficina no puede ser activada ya que el nivel de oficina no está configurado actualmente."
 
 #: errors.office.parentinvalid
-msgid ""
-"The office cannot be activated as the parent office is not a valid parent "
-"now."
-msgstr ""
-"La oficina no se puede activar porque la oficina padre no es una oficina "
-"padre válida ahora."
+msgid "The office cannot be activated as the parent office is not a valid parent now."
+msgstr "La oficina no se puede activar porque la oficina padre no es una oficina padre válida ahora."
 
 #: errors.office.parentnotactive
 msgid "The office cannot be activated as the parent office is inactive."
@@ -577,13 +472,8 @@ msgstr "El tamaño mínimo para el Abrevación de las oficinas es {2} caracteres
 
 #: errors.office.updationhierarchyfailed
 msgctxt "errors.office.updationhierarchyfailed"
-msgid ""
-"An unexpected error has occurred during the office hierarchy change. Please "
-"try again later or contact the system administrator."
-msgstr ""
-"Un error inesperado se ha producido durante el cambio de jerarquía de la "
-"oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con "
-"el administrador del sistema."
+msgid "An unexpected error has occurred during the office hierarchy change. Please try again later or contact the system administrator."
+msgstr "Un error inesperado se ha producido durante el cambio de jerarquía de la oficina. Por favor, inténtelo de nuevo más tarde o póngase en contacto con el administrador del sistema."
 
 #: errors.prefix
 msgid "<li>"

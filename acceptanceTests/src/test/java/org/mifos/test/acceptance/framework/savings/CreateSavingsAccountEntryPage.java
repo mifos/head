@@ -45,6 +45,21 @@ public class CreateSavingsAccountEntryPage extends AbstractPage {
 
     }
 
+    public CreateSavingsAccountConfirmationPage submitWithQGAndNavigateToSavingsAccountConfirmationPage(CreateSavingsAccountSubmitParameters formParameters) {
+        selenium.type("continuecreatesavingsaccount.input.recommendedAmount",formParameters.getAmount());
+        selenium.click("continuecreatesavingsaccount.button.preview");
+        waitForPageToLoad();
+
+        // TODO - select some answer
+        selenium.click("captureQuestionResponses.button.continue");
+        waitForPageToLoad();
+        
+        selenium.isVisible("createsavingsaccountpreview.button.submitForApproval");
+        selenium.click("createsavingsaccountpreview.button.submitForApproval");
+        waitForPageToLoad();
+        return new CreateSavingsAccountConfirmationPage(selenium);
+
+    }
 }
 
 

@@ -276,7 +276,7 @@ msgstr "由于{2}，最小贷款金额格式{0}{1}无效"
 
 #: errors.mustNotBeNegative
 msgid "{0} must not be negative."
-msgstr ""
+msgstr "{0}必须是正数"
 
 #: errors.prefix
 msgid "<LI>"
@@ -638,7 +638,7 @@ msgstr "请填写下面的栏位，然后点击“预览”按钮。点击“取
 
 #: product.currency
 msgid "Currency"
-msgstr ""
+msgstr "币值"
 
 #: product.cyclecounter
 msgid "cycle counter"

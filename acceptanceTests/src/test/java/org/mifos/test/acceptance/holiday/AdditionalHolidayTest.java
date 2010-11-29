@@ -603,11 +603,17 @@ public class AdditionalHolidayTest extends UiTestCaseBase {
         selenium.click("createsavingsaccount.button.continue");
         selenium.waitForPageToLoad("30000");
 
+        /* TODO - additional fields have been removed in 1.7.x
         selenium.type("customField[0].fieldValueDD", "11");
         selenium.type("customField[0].fieldValueMM", "03");
         selenium.type("customField[0].fieldValueYY", "2009");
+        */
 
         selenium.click("continuecreatesavingsaccount.button.preview");
+        selenium.waitForPageToLoad("30000");
+
+        // TODO - select some answer
+        selenium.click("captureQuestionResponses.button.continue");
         selenium.waitForPageToLoad("30000");
 
         selenium.click("createsavingsaccountpreview.button.submitForApproval");
