@@ -338,10 +338,7 @@ explanation of the license and how it is applied.
 		                                                </c:otherwise>
 		                                            </c:choose>
                                                 </span>
-                                              </td>
-                                        </tr>
-                                        <tr>
-                                            <td height="23" class="fontnormal">
+                                                <br/>
                                                 <mifos:mifoslabel name="product.indebtednessRatio" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                 <span class="fontnormal">
 	                                                <c:choose>
@@ -354,10 +351,7 @@ explanation of the license and how it is applied.
 		                                                </c:otherwise>
 		                                            </c:choose>
                                                 </span>
-                                              </td>
-                                        </tr>
-                                        <tr>
-                                            <td height="23" class="fontnormal">
+                                                <br/>
                                                 <mifos:mifoslabel name="product.repaymentCapacity" bundle="ProductDefUIResources" isColonRequired="yes" />
                                                 <span class="fontnormal">
 	                                                <c:choose>

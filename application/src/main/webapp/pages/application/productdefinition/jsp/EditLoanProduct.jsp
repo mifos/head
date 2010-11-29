@@ -702,7 +702,7 @@ explanation of the license and how it is applied.
 							</td>
 							<td valign="top">
 							    <div id="cashFlowIndebtednessRatioInputDiv" style="display: none;">
-							        <mifos:decimalinput styleId="editLoanProduct.input.indebtednessRatio" property="indebtednessRatio" disabled="true"/>
+							        <mifos:decimalinput styleId="editLoanProduct.input.indebtednessRatio" property="indebtednessRatio"/>
 							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>
@@ -714,7 +714,7 @@ explanation of the license and how it is applied.
 							</td>
 							<td valign="top">
 							    <div id="cashFlowRepaymentCapacityInputDiv" style="display: none;">
-							        <mifos:decimalinput styleId="editLoanProduct.input.repaymentCapacity" property="repaymentCapacity" disabled="true"/>
+							        <mifos:decimalinput styleId="editLoanProduct.input.repaymentCapacity" property="repaymentCapacity"/>
 							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>
