@@ -54,7 +54,6 @@ public class ClientCreationDetail {
     private final Short loanOfficerId;
     private final Short officeId;
     private final ClientNameDetailDto spouseFatherName;
-    private String pictureFileName;
 
     public ClientCreationDetail(List<Short> selectedSavingProducts, String clientName, Short clientStatus,
             Date mfiJoiningDate, String externalId, AddressDto address, Short formedBy, Date dateOfBirth,
@@ -173,13 +172,5 @@ public class ClientCreationDetail {
 
     public ClientNameDetailDto getSpouseFatherName() {
         return this.spouseFatherName;
-    }
-
-    public String getPictureFileName() {
-        return this.pictureFileName;
-    }
-
-    public void setPictureFileName(String pictureFileName) {
-        this.pictureFileName = pictureFileName;
     }
 }

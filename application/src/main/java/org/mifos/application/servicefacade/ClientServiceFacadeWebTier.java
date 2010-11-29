@@ -79,6 +79,8 @@ import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
+import org.mifos.dto.domain.ClientMfiInfoUpdate;
+import org.mifos.dto.domain.ClientPersonalInfoUpdate;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
@@ -104,6 +106,7 @@ import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientFamilyInfoDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
+import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPerformanceHistoryDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
@@ -611,46 +614,13 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     @Override
-    public void updateClientPersonalInfo(Integer oldClientVersionNumber, Integer customerId, ClientCreationDetail clientUpdateDetails) {
+    public void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        ClientNameDetailDto spouseFather = null;
-        if (!ClientRules.isFamilyDetailsRequired()) {
-            spouseFather = clientUpdateDetails.getSpouseFatherName();
-        }
-
-        InputStream picture = null;
-        if (clientUpdateDetails.getPicture() != null && StringUtils.isNotBlank(clientUpdateDetails.getPictureFileName())) {
-            picture = clientUpdateDetails.getPicture();
-        }
-
-        Address address = null;
-        AddressDto addressDto = clientUpdateDetails.getAddress();
-        if (addressDto != null) {
-            address = new Address(addressDto.getLine1(), addressDto.getLine2(), addressDto.getLine3(), addressDto.getCity(),
-                    addressDto.getState(), addressDto.getCountry(), addressDto.getZip(), addressDto.getPhoneNumber());
-        }
-
-        ClientNameDetailDto clientNameDetails = clientUpdateDetails.getClientNameDetailDto();
-        ClientPersonalDetailDto clientDetail = clientUpdateDetails.getClientPersonalDetailDto();
-
-        String governmentId = clientUpdateDetails.getGovernmentId();
-        String clientDisplayName = clientUpdateDetails.getClientName();
         try {
-            String dateOfBirth = DateUtils.getLocalDateString(new DateTime(clientUpdateDetails.getDateOfBirth()), Locale.getDefault());
-
-            ClientPersonalInfoUpdate personalInfo = new ClientPersonalInfoUpdate(customerId, oldClientVersionNumber,
-                    customFields, address, clientDetail, clientNameDetails, spouseFather, picture, governmentId,
-                    clientDisplayName, dateOfBirth);
-
             this.customerService.updateClientPersonalInfo(userContext, personalInfo);
-
-        } catch (InvalidDateException e) {
-            throw new MifosRuntimeException(e);
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
@@ -659,8 +629,8 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     @Override
     public ClientFamilyInfoDto retrieveFamilyInfoForEdit(String clientGlobalCustNum) {
 
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
+//        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+//        UserContext userContext = toUserContext(user);
 
         ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
 
@@ -721,6 +691,49 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         try {
             this.customerService.updateClientFamilyInfo(userContext, clientFamilyInfoUpdate);
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+
+    @Override
+    public ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
+
+        String groupDisplayName = "";
+        String centerDisplayName = "";
+        if (client.getParentCustomer() != null) {
+            groupDisplayName = client.getParentCustomer().getDisplayName();
+            if (client.getParentCustomer().getParentCustomer() != null) {
+                centerDisplayName = client.getParentCustomer().getParentCustomer().getDisplayName();
+            }
+        }
+
+        List<PersonnelDto> loanOfficersList = new ArrayList<PersonnelDto>();
+        if (!client.isClientUnderGroup()) {
+            CenterCreation centerCreation = new CenterCreation(client.getOffice().getOfficeId(), userContext.getId(),
+                    userContext.getLevelId(), userContext.getPreferredLocale());
+            loanOfficersList = this.personnelDao.findActiveLoanOfficersForOffice(centerCreation);
+        }
+
+        CustomerDetailDto customerDetail = client.toCustomerDetailDto();
+        ClientDetailDto clientDetail = client.toClientDetailDto(ClientRules.isFamilyDetailsRequired());
+        return new ClientMfiInfoDto(groupDisplayName, centerDisplayName, loanOfficersList, customerDetail, clientDetail);
+    }
+
+    @Override
+    public void updateClientMfiInfo(ClientMfiInfoUpdate clientMfiInfoUpdate) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            this.customerService.updateClientMfiInfo(userContext, clientMfiInfoUpdate);
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }

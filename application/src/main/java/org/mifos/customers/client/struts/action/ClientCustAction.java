@@ -27,6 +27,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +35,13 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -46,8 +49,8 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.ClientMfiInfoDto;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.customers.business.CustomerBO;
@@ -55,6 +58,7 @@ import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -64,7 +68,10 @@ import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
+import org.mifos.dto.domain.ClientMfiInfoUpdate;
+import org.mifos.dto.domain.ClientPersonalInfoUpdate;
 import org.mifos.dto.domain.ClientRulesDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ProcessRulesDto;
@@ -73,6 +80,7 @@ import org.mifos.dto.screen.ClientFamilyDetailDto;
 import org.mifos.dto.screen.ClientFamilyInfoDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
+import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
@@ -717,39 +725,36 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Integer oldClientVersionNumber = clientInSession.getVersionNo();
         Integer customerId = clientInSession.getCustomerId();
 
-        List<Short> selectedSavingProducts = actionForm.getSelectedOfferings();
-        String clientName = actionForm.getClientName().getDisplayName();
-        Short clientStatus = null;
-        java.sql.Date mfiJoiningDate = DateUtils.getDateAsSentFromBrowser(actionForm.getMfiJoiningDate());
-        String externalId = actionForm.getExternalId();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
         AddressDto address = null;
         if (actionForm.getAddress() != null) {
             address = Address.toDto(actionForm.getAddress());
         }
-        Short formedBy = actionForm.getFormedByPersonnelValue();
-        java.sql.Date dateOfBirth = DateUtils.getDateAsSentFromBrowser(actionForm.getDateOfBirth());
-        String governmentId = actionForm.getGovernmentId();
-        boolean trained = isTrained(actionForm.getTrainedValue());
-        java.sql.Date trainedDate = DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate());
-        Short groupFlagValue = actionForm.getGroupFlagValue();
-        ClientNameDetailDto clientNameDetailDto = actionForm.getClientName();
-        ClientPersonalDetailDto clientPersonalDetailDto = actionForm.getClientDetailView();
-        ClientNameDetailDto spouseFatherName = actionForm.getSpouseName();
-        InputStream picture = actionForm.getCustomerPicture();
-        String parentGroupId = actionForm.getParentGroupId();
-        List<ClientNameDetailDto> familyNames = actionForm.getFamilyNames();
-        List<ClientFamilyDetailDto> familyDetails = actionForm.getFamilyDetails();
-        Short loanOfficerId = actionForm.getLoanOfficerIdValue();
-        Short officeId = actionForm.getOfficeIdValue();
 
-        ClientCreationDetail clientCreationDetail = new ClientCreationDetail(selectedSavingProducts, clientName, clientStatus, mfiJoiningDate, externalId,
-                address, formedBy, dateOfBirth, governmentId, trained, trainedDate, groupFlagValue, clientNameDetailDto, clientPersonalDetailDto, spouseFatherName,
-                picture, actionForm.getFeesToApply(), parentGroupId, familyNames, familyDetails, loanOfficerId, officeId);
-        if (actionForm.getPicture() != null) {
-            clientCreationDetail.setPictureFileName(actionForm.getPicture().getFileName());
+        ClientNameDetailDto spouseFather = null;
+        if (!ClientRules.isFamilyDetailsRequired()) {
+            spouseFather = actionForm.getSpouseName();
         }
 
-        this.clientServiceFacade.updateClientPersonalInfo(oldClientVersionNumber, customerId, clientCreationDetail);
+        InputStream picture = null;
+        if (actionForm.getPicture() != null && StringUtils.isNotBlank(actionForm.getPicture().getFileName())) {
+            picture = actionForm.getCustomerPicture();
+        }
+
+        ClientNameDetailDto clientNameDetails = actionForm.getClientName();
+        ClientPersonalDetailDto clientDetail = actionForm.getClientDetailView();
+
+        String governmentId = actionForm.getGovernmentId();
+        String clientDisplayName = actionForm.getClientName().getDisplayName();
+
+        String dateOfBirth = actionForm.getDateOfBirth();
+
+        ClientPersonalInfoUpdate personalInfo = new ClientPersonalInfoUpdate(customerId, oldClientVersionNumber,
+                customFields, address, clientDetail, clientNameDetails, spouseFather, picture, governmentId,
+                clientDisplayName, dateOfBirth);
+
+        this.clientServiceFacade.updateClientPersonalInfo(personalInfo);
 
         return mapping.findForward(ActionForwards.updatePersonalInfo_success.toString());
     }
@@ -875,7 +880,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         String clientSystemId = clientFromSession.getGlobalCustNum();
 
-        ClientMfiInfoDto mfiInfoDto = this.customerServiceFacade.retrieveMfiInfoForEdit(clientSystemId);
+        ClientMfiInfoDto mfiInfoDto = this.clientServiceFacade.retrieveMfiInfoForEdit(clientSystemId);
 
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, ClientRules.getCenterHierarchyExists(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, mfiInfoDto.getLoanOfficersList(), request);
@@ -924,9 +929,56 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         Integer clientId = clientInSession.getCustomerId();
         Integer oldVersionNumber = clientInSession.getVersionNo();
 
-        this.customerServiceFacade.updateClientMfiInfo(clientId, oldVersionNumber, actionForm);
+        boolean trained = false;
+        if (trainedValue(actionForm) != null && trainedValue(actionForm).equals(YesNoFlag.YES.getValue())) {
+            trained = true;
+        }
+
+        DateTime trainedDate = null;
+        try {
+            java.sql.Date inputDate = trainedDate(actionForm);
+            if (inputDate != null) {
+                trainedDate = new DateTime(trainedDate(actionForm));
+            }
+        } catch (InvalidDateException e) {
+            throw new CustomerException(ClientConstants.TRAINED_DATE_MANDATORY);
+        }
+
+        Short personnelId = Short.valueOf("-1");
+        if (groupFlagValue(actionForm).equals(YesNoFlag.NO.getValue())) {
+            if (actionForm.getLoanOfficerIdValue() != null) {
+                personnelId = actionForm.getLoanOfficerIdValue();
+            }
+        } else if (groupFlagValue(actionForm).equals(YesNoFlag.YES.getValue())) {
+            // TODO for an urgent fix this reads client to get personnelId.
+            // Client is read again in updateClientMfiInfo. Refactor to only read in
+            // updateClientMfiInfo.
+            ClientBO client = (ClientBO) this.customerDao.findCustomerById(clientId);
+            personnelId = client.getPersonnel().getPersonnelId();
+        }
+
+        ClientMfiInfoUpdate clientMfiInfoUpdate = new ClientMfiInfoUpdate(clientId, oldVersionNumber, personnelId,
+                externalId(actionForm), trained, trainedDate);
+
+        this.clientServiceFacade.updateClientMfiInfo(clientMfiInfoUpdate);
 
         return mapping.findForward(ActionForwards.updateMfiInfo_success.toString());
+    }
+
+    private Date trainedDate(ClientCustActionForm actionForm) throws InvalidDateException {
+        return DateUtils.getDateAsSentFromBrowser(actionForm.getTrainedDate());
+    }
+
+    private Short trainedValue(ClientCustActionForm actionForm) {
+        return actionForm.getTrainedValue();
+    }
+
+    private String externalId(ClientCustActionForm actionForm) {
+        return actionForm.getExternalId();
+    }
+
+    private Short groupFlagValue(ClientCustActionForm actionForm) {
+        return actionForm.getGroupFlagValue();
     }
 
     private int calculateAge(Date date) {

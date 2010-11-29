@@ -18,22 +18,20 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.domain;
 
 import java.io.InputStream;
 import java.util.List;
 
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
-import org.mifos.framework.business.util.Address;
 
 public class ClientPersonalInfoUpdate {
 
     private final Integer customerId;
     private final Integer originalClientVersionNumber;
     private final List<CustomFieldDto> clientCustomFields;
-    private final Address address;
+    private final AddressDto address;
     private final ClientPersonalDetailDto clientDetail;
     private final ClientNameDetailDto clientNameDetails;
     private final ClientNameDetailDto spouseFather;
@@ -42,7 +40,8 @@ public class ClientPersonalInfoUpdate {
     private final String clientDisplayName;
     private final String dateOfBirth;
 
-    public ClientPersonalInfoUpdate(Integer customerId, Integer originalClientVersionNumber, List<CustomFieldDto> clientCustomFields, Address address,
+    @SuppressWarnings("PMD")
+    public ClientPersonalInfoUpdate(Integer customerId, Integer originalClientVersionNumber, List<CustomFieldDto> clientCustomFields, AddressDto address,
             ClientPersonalDetailDto clientDetail, ClientNameDetailDto clientNameDetails, ClientNameDetailDto spouseFather,
             InputStream picture, String governmentId, String clientDisplayName, String dateOfBirth) {
         this.customerId = customerId;
@@ -70,7 +69,7 @@ public class ClientPersonalInfoUpdate {
         return this.clientCustomFields;
     }
 
-    public Address getAddress() {
+    public AddressDto getAddress() {
         return this.address;
     }
 

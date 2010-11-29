@@ -18,13 +18,12 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
 import java.util.List;
 
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.PersonnelDto;
-import org.mifos.dto.screen.ClientDetailDto;
 
 public class ClientMfiInfoDto {
 

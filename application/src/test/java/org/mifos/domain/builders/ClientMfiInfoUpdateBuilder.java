@@ -21,7 +21,7 @@
 package org.mifos.domain.builders;
 
 import org.joda.time.DateTime;
-import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
+import org.mifos.dto.domain.ClientMfiInfoUpdate;
 
 public class ClientMfiInfoUpdateBuilder {
 

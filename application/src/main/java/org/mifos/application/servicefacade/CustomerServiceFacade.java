@@ -21,7 +21,6 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.struts.actionforms.ClientCustActionForm;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
@@ -42,8 +41,4 @@ public interface CustomerServiceFacade {
     boolean isGroupHierarchyRequired();
 
     GroupSearchResultsDto searchGroups(boolean searchForAddingClientsToGroup, String normalizedSearchString, Short loggedInUserId);
-
-    ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId);
-
-    void updateClientMfiInfo(Integer clientId, Integer oldVersionNumber, ClientCustActionForm actionForm) throws ApplicationException;
 }

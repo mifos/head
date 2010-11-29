@@ -26,6 +26,8 @@ import org.joda.time.DateTime;
 import org.mifos.dto.domain.ClientCreationDetail;
 import org.mifos.dto.domain.ClientFamilyDetailsDto;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
+import org.mifos.dto.domain.ClientMfiInfoUpdate;
+import org.mifos.dto.domain.ClientPersonalInfoUpdate;
 import org.mifos.dto.domain.ClientRulesDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
@@ -34,6 +36,7 @@ import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.screen.ClientFamilyInfoDto;
 import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
+import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -54,18 +57,24 @@ public interface ClientServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     ClientInformationDto getClientInformationDto(String globalCustNum);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
     ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId);
 
     @PreAuthorize("isFullyAuthenticated()")
     ClientRulesDto retrieveClientDetailsForPreviewingEditOfPersonalInfo();
 
-    @PreAuthorize("isFullyAuthenticated()")
-    void updateClientPersonalInfo(Integer oldClientVersionNumber, Integer customerId, ClientCreationDetail clientCreationDetail);
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
+    void updateClientPersonalInfo(ClientPersonalInfoUpdate personalInfo);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
     ClientFamilyInfoDto retrieveFamilyInfoForEdit(String globalCustNum);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_PERSONAL_INFO')")
     void updateFamilyInfo(ClientFamilyInfoUpdate clientFamilyInfoUpdate);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_MFI_INFO')")
+    ClientMfiInfoDto retrieveMfiInfoForEdit(String clientSystemId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_MFI_INFO')")
+    void updateClientMfiInfo(ClientMfiInfoUpdate clientMfiInfoUpdate);
 }

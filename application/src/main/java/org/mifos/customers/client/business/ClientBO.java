@@ -30,8 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountBO;
@@ -48,13 +46,12 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.ClientMfiInfoUpdate;
-import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
@@ -70,9 +67,10 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ClientFamilyInfoUpdate;
+import org.mifos.dto.domain.ClientMfiInfoUpdate;
+import org.mifos.dto.domain.ClientPersonalInfoUpdate;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.ClientDetailDto;
 import org.mifos.dto.screen.ClientFamilyDetailDto;
@@ -83,6 +81,8 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 /**
@@ -557,7 +557,15 @@ public class ClientBO extends CustomerBO {
         this.updateClientDetails(personalInfo.getClientDetail());
 
         setDisplayName(personalInfo.getClientDisplayName());
-        updateAddress(personalInfo.getAddress());
+        Address address = null;
+        if (personalInfo.getAddress() != null) {
+            ;
+        } {
+            address = new Address(personalInfo.getAddress().getLine1(), personalInfo.getAddress().getLine2(), personalInfo.getAddress().getLine3(),
+                    personalInfo.getAddress().getCity(), personalInfo.getAddress().getState(), personalInfo.getAddress().getCountry(),
+                    personalInfo.getAddress().getZip(), personalInfo.getAddress().getPhoneNumber());
+            updateAddress(address);
+        }
     }
 
     /**

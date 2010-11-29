@@ -24,18 +24,18 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
+import org.mifos.dto.domain.AddressDto;
+import org.mifos.dto.domain.ClientPersonalInfoUpdate;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
-import org.mifos.framework.business.util.Address;
 
 public class ClientPersonalInfoUpdateBuilder {
 
     private Integer customerId = Integer.valueOf(-1);
     private Integer originalClientVersionNumber = Integer.valueOf(1);
     private List<CustomFieldDto> clientCustomFields = new ArrayList<CustomFieldDto>();
-    private Address address = null;
+    private AddressDto address = null;
     private ClientPersonalDetailDto clientDetail = new ClientPersonalDetailDtoBuilder().build();
     private ClientNameDetailDto clientNameDetails = null;
     private ClientNameDetailDto spouseFather = null;

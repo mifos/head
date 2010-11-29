@@ -34,6 +34,7 @@ public class ClientPersonalInfoDto {
     private final CustomerDetailDto customerDetail;
     private final ClientDetailDto clientDetail;
 
+    @SuppressWarnings("PMD")
     public ClientPersonalInfoDto(ClientDropdownsDto clientDropdowns, List<CustomFieldDto> customFieldDtos, ClientRulesDto clientRules, CustomerDetailDto customerDetailDto, ClientDetailDto clientDetailDto) {
         this.clientDropdowns = clientDropdowns;
         this.customFieldDtos = customFieldDtos;
