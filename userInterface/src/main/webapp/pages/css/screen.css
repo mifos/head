@@ -598,7 +598,7 @@ input.span-24, textarea.span-24 {
 	padding-left:160px;
 }
 .prepend-5 {
-	padding-left:200px;
+	padding-left:100px;
 }
 .prepend-6 {
 	padding-left:240px;
@@ -672,7 +672,7 @@ div.colborder {
 	margin-left:-80px;
 }
 .pull-3 {
-	margin-left:-120px;
+	/*margin-left:-120px;*/
 }
 .pull-4 {
 	margin-left:-160px;

@@ -454,3 +454,7 @@ input[type="checkbox"], input.checkbox {
 .black {
     color: #000;
 }
+
+.relative {
+    position:relative;
+}
