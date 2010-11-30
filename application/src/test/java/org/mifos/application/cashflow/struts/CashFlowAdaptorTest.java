@@ -1,12 +1,16 @@
 package org.mifos.application.cashflow.struts;
 
+import org.apache.struts.action.ActionMapping;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.platform.cashflow.CashFlowConstants;
 import org.mifos.platform.cashflow.CashFlowService;
+import org.mifos.platform.cashflow.service.CashFlowBoundary;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
@@ -20,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -49,13 +54,34 @@ public class CashFlowAdaptorTest {
         when(request.getSession()).thenReturn(httpSession);
         when(cashFlowServiceLocator.getService(request)).thenReturn(cashFlowService);
         CashFlowDetail cashFlowDetail = getCashFlowDetails(totalCapital, totalLiability);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null);
         when(cashFlowCaptor.getCashFlowForm()).thenReturn(cashFlowForm);
         cashFlowAdaptor.save(cashFlowCaptor,request);
         verify(cashFlowService).save(argThat(new CashFlowDetailMatcher(totalCapital, totalLiability)));
         verify(request).getSession();
     }
 
+    @Test
+    public void renderCashFlow() {
+        DateTime firstInstallment = new DateTime(2010, 10, 11, 12, 13, 14, 15);
+        DateTime lastInstallment = firstInstallment.plusMonths(4);
+        CashFlowBoundary cashFlowBoundary = new CashFlowBoundary(11,2010,12);
+        LoanOfferingBO loanOfferingBO = mock(LoanOfferingBO.class);
+        when(cashFlowServiceLocator.getService(request)).thenReturn(cashFlowService);
+        when(cashFlowService.getCashFlowBoundary(firstInstallment, lastInstallment)).thenReturn(cashFlowBoundary);
+        when(request.getSession()).thenReturn(httpSession);
+        when(loanOfferingBO.shouldCaptureCapitalAndLiabilityInformation()).thenReturn(true);
+        String cancelUrl = "cancelUrl";
+        String joinUrl = "joinUrl";
+        cashFlowAdaptor.renderCashFlow(firstInstallment, lastInstallment, joinUrl, cancelUrl,mock(ActionMapping.class),request, loanOfferingBO);
+        verify(httpSession).setAttribute(CashFlowConstants.CANCEL_URL,cancelUrl);
+        verify(httpSession).setAttribute(CashFlowConstants.JOIN_URL,joinUrl);
+        verify(httpSession).setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO,true);
+        verify(httpSession).setAttribute(CashFlowConstants.START_MONTH,cashFlowBoundary.getStartMonth());
+        verify(httpSession).setAttribute(CashFlowConstants.NO_OF_MONTHS,cashFlowBoundary.getNumberOfMonths());
+        verify(httpSession).setAttribute(CashFlowConstants.START_YEAR,cashFlowBoundary.getStartYear());
+    }
+    
     private CashFlowDetail getCashFlowDetails(double totalCapital, double totalLiability) {
         DateTime dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15);
         BigDecimal revenue = new BigDecimal(123);
@@ -77,7 +103,7 @@ public class CashFlowAdaptorTest {
             this.totalCapital = totalCapital;
             this.totalLiability = totalLiability;
         }
-
+//TODO: Praveena&Buddy
         @Override
         public boolean matchesSafely(CashFlowDetail cashFlowDetail) {
             return cashFlowDetail.getTotalCapital().doubleValue() == totalCapital &&

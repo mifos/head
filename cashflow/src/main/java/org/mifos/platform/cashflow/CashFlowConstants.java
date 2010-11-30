@@ -37,7 +37,7 @@ public class CashFlowConstants {
     public static final String TOTAL_LIABILITY_SHOULD_NOT_BE_EMPTY = "cashFlowForm.totalLiability.should.not.be.empty";
     public static final String TOTAL_CAPITAL_SHOULD_BE_NON_NEGATIVE = "cashFlowForm.totalCapital.should.be.non.negative";
     public static final String TOTAL_LIABILITY_SHOULD_BE_NON_NEGATIVE = "cashFlowForm.totalLiability.should.be.non.negative";
-    public static final int FIRST_DAY = 1;
 
+    public static final int FIRST_DAY = 1;
     public static final int EXTRA_DURATION_FOR_CASH_FLOW_SCHEDULE = 1;
 }

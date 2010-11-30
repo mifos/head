@@ -622,18 +622,28 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto.isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
+        SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT_VALUE, loanActionForm.getLoanAmountValue().getAmount(), request);
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
 
         questionGroupFilter.setLoanOfferingBO(loanOffering);
-        ActionForward pageAfterQuestionnaire = mapping.findForward(ActionForwards.schedulePreview_success.toString());
+        ActionForward pageAfterQuestionnaire = getPageAfterQuestionnaire(mapping, request, loanOffering, loanScheduleDetailsDto, cashFlowAdaptor);
+        return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.valueOf(pageAfterQuestionnaire.getName()));
+    }
+
+    // Intentionally made 'public' to aid testing
+    // CashFlowAdaptor passed to aid testing 
+    public ActionForward getPageAfterQuestionnaire(ActionMapping mapping, HttpServletRequest request,
+                                                    LoanOfferingBO loanOffering,
+                                                    LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto,
+                                                    CashFlowAdaptor cashFlowAdaptor) {
         if (loanOffering.isCashFlowCheckEnabled()) {
-            pageAfterQuestionnaire = cashFlowAdaptor.renderCashFlow(
+            return cashFlowAdaptor.renderCashFlow(
                     loanScheduleDetailsDto.firstInstallmentDueDate(),
                     loanScheduleDetailsDto.lastInstallmentDueDate(),
-                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request,loanOffering);
+                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request, loanOffering);
         }
-        return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.valueOf(pageAfterQuestionnaire.getName()));
+        return mapping.findForward(ActionForwards.schedulePreview_success.toString());
     }
 
     private DateTime getDisbursementDate(LoanAccountActionForm loanActionForm, Locale locale) throws InvalidDateException {

@@ -22,6 +22,8 @@ package org.mifos.platform.cashflow.builder;
 import org.mifos.platform.cashflow.domain.CashFlow;
 import org.mifos.platform.cashflow.domain.MonthlyCashFlow;
 
+import java.math.BigDecimal;
+
 public class CashFlowBuilder {
     private CashFlow cashFlow;
 
@@ -38,4 +40,13 @@ public class CashFlowBuilder {
         return cashFlow;
     }
 
+    public CashFlowBuilder withTotalCapital(Double totalCapital) {
+        cashFlow.setTotalCapital(new BigDecimal(totalCapital));
+        return this;
+    }
+
+    public CashFlowBuilder withTotalLiability(Double totalLiability) {
+        cashFlow.setTotalLiability(new BigDecimal(totalLiability));
+        return this;
+    }
 }

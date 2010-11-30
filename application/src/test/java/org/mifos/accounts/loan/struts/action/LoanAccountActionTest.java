@@ -20,10 +20,15 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.application.cashflow.struts.CashFlowAdaptor;
+import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
@@ -48,6 +53,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -68,14 +75,25 @@ public class LoanAccountActionTest {
     private FlowManager flowManager;
 
     @Mock
-    private LoanBO loanBO;
+    private LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto;
+
+    @Mock
+    private CashFlowAdaptor cashFlowAdaptor;
+
+    @Mock
+    private LoanOfferingBO loanOffering;
+
+    @Mock
+    private ActionMapping mapping;
 
     private LoanAccountAction loanAccountAction;
     public static final String FLOW_KEY = "FlowKey";
 
     @Before
     public void setUp() {
-        loanAccountAction = new LoanAccountAction();
+        loanAccountAction = new LoanAccountAction(){
+            
+        };
     }
 
     @Test
@@ -93,6 +111,26 @@ public class LoanAccountActionTest {
         verify(request, times(1)).getAttribute(Constants.CURRENTFLOWKEY);
         verify(request, times(1)).getSession();
         verify(session, times(1)).getAttribute(Constants.FLOWMANAGER);
+    }
+
+    @Test
+    public void shouldSchedulePreviewForCashFlow() {
+        DateTime firstInstallmentDueDate = new DateTime();
+        DateTime lastInstallmentDueDate = firstInstallmentDueDate.plusMonths(12);
+        when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
+        when(loanScheduleDetailsDto.firstInstallmentDueDate()).thenReturn(firstInstallmentDueDate);
+        when(loanScheduleDetailsDto.lastInstallmentDueDate()).thenReturn(lastInstallmentDueDate);
+        ActionForward cashFlowForward = new ActionForward("cashFlow");
+        when(cashFlowAdaptor.renderCashFlow(eq(firstInstallmentDueDate), eq(lastInstallmentDueDate), anyString(),
+                                anyString(), eq(mapping), eq(request), eq(loanOffering))).thenReturn(cashFlowForward);
+        ActionForward pageAfterQuestionnaire = loanAccountAction.getPageAfterQuestionnaire(mapping, request, loanOffering,
+                                loanScheduleDetailsDto, cashFlowAdaptor);
+        assertThat(pageAfterQuestionnaire, is(cashFlowForward));
+        verify(loanOffering).isCashFlowCheckEnabled();
+        verify(loanScheduleDetailsDto).firstInstallmentDueDate();
+        verify(loanScheduleDetailsDto).lastInstallmentDueDate();
+        verify(cashFlowAdaptor).renderCashFlow(eq(firstInstallmentDueDate), eq(lastInstallmentDueDate), anyString(),
+                                anyString(), eq(mapping), eq(request), eq(loanOffering));
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {

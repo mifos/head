@@ -74,7 +74,7 @@ public class CashFlowValidator {
             return;
         }
         if (totalLiability.doubleValue() < 0) {
-            String message = format("{0} needs to be non negative", CashFlowConstants.TOTAL_LIABILITY);
+            String message = format("Total Liability needs to be non negative");
             constructErrorMessage(CashFlowConstants.TOTAL_LIABILITY_SHOULD_BE_NON_NEGATIVE, message, messageContext);
         }
     }

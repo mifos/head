@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2005-2010 Grameen Foundation USA
  * All rights reserved.
@@ -25,8 +26,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.cashflow.CashFlowService;
-import org.mifos.platform.cashflow.builder.CashFlowDetailsBuilder;
 import org.mifos.platform.cashflow.builder.CashFlowBuilder;
+import org.mifos.platform.cashflow.builder.CashFlowDetailsBuilder;
 import org.mifos.platform.cashflow.domain.CashFlow;
 import org.mifos.platform.cashflow.domain.MonthlyCashFlow;
 import org.mifos.platform.cashflow.matchers.CashFlowMatcher;
@@ -36,8 +37,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-
-import static org.mockito.Matchers.any;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CashFlowServiceTest {
@@ -110,6 +110,18 @@ public class CashFlowServiceTest {
         Assert.assertEquals(cashFlowBoundary.getNumberOfMonths(), 4);
     }
 
+    @Test
+    public void cashFlowFor() {
+        DateTime dateTime = new DateTime(2012, 12, 1, 1, 1, 1, 1);
+        CashFlowDetail cashFlowDetail = cashFlowService.cashFlowFor(2012, 12, 3);
+        List<MonthlyCashFlowDetail> cashFlowDetails = cashFlowDetail.getMonthlyCashFlowDetails();
+        Assert.assertEquals(3, cashFlowDetails.size());
+        for (int index = 0, monthlyCashFlowDetailsSize = cashFlowDetails.size(); index < monthlyCashFlowDetailsSize; index++) {
+            MonthlyCashFlowDetail monthlyCashFlowDetail = cashFlowDetails.get(index);
+            Assert.assertEquals(dateTime.plusMonths(index), monthlyCashFlowDetail.getDateTime());
+        }
+    }
+
     private CashFlowDetail getCashFlowDetails() {
         DateTime dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15);
         return new CashFlowDetailsBuilder()
@@ -127,6 +139,8 @@ public class CashFlowServiceTest {
         return new CashFlowBuilder().
                 withMonthlyCashFlow(new MonthlyCashFlow(dateTime.plusMonths(1), revenue.add(new BigDecimal(20.01)), expense.add(new BigDecimal(10.22)), "my other notes")).
                 withMonthlyCashFlow(new MonthlyCashFlow(dateTime, revenue, expense, "my notes")).
+                withTotalCapital(123d).
+                withTotalLiability(123d).
                 build();
     }
 }

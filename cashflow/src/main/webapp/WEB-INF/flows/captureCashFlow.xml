@@ -11,6 +11,7 @@
                     externalContext.sessionMap.startYear,
                     externalContext.sessionMap.startMonth,
                     externalContext.sessionMap.noOfMonths,
+                    externalContext.sessionMap.loanAmountValue,
                     externalContext.sessionMap.captureCapitalLiabilityInfo)"
                 result="cashFlow"/>
         <set name="flowScope.joinUrl" value="externalContext.sessionMap.joinUrl" type="string"/>

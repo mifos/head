@@ -24,6 +24,8 @@ import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.mifos.platform.cashflow.domain.CashFlow;
 
+import static org.hamcrest.CoreMatchers.is;
+
 public class CashFlowMatcher extends TypeSafeMatcher<CashFlow> {
     private CashFlow cashFlow;
 
@@ -35,6 +37,8 @@ public class CashFlowMatcher extends TypeSafeMatcher<CashFlow> {
     public boolean matchesSafely(CashFlow cashFlowEntity) {
         Assert.assertEquals(this.cashFlow.getId(), cashFlowEntity.getId());
         Assert.assertThat(this.cashFlow.getMonthlyCashFlows(), new MonthlyCashFlowsMatcher(cashFlowEntity.getMonthlyCashFlows()));
+        Assert.assertThat(this.cashFlow.getTotalCapital().doubleValue(), is(cashFlowEntity.getTotalCapital().doubleValue()));
+        Assert.assertThat(this.cashFlow.getTotalLiability().doubleValue(), is(cashFlowEntity.getTotalLiability().doubleValue()));
         return true;
     }
 

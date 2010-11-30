@@ -20,9 +20,12 @@
 package org.mifos.platform.cashflow.ui.controller;
 
 import org.mifos.platform.cashflow.CashFlowService;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+
+import java.math.BigDecimal;
 
 @Controller
 public class CashFlowController {
@@ -38,10 +41,10 @@ public class CashFlowController {
     }
 
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public CashFlowForm prepareCashFlowForm(int startYear, int startMonth, int noOfMonths, boolean captureCapitalLiabilityInfo) {
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowService.cashFlowFor(startYear, startMonth, noOfMonths));
-        cashFlowForm.setCaptureCapitalLiabilityInfo(captureCapitalLiabilityInfo);
-        return cashFlowForm;
+    public CashFlowForm prepareCashFlowForm(int startYear, int startMonth, int noOfMonths, BigDecimal loanAmount,
+                                            boolean captureCapitalLiabilityInfo) {
+        CashFlowDetail cashFlowDetail = cashFlowService.cashFlowFor(startYear, startMonth, noOfMonths);
+        return new CashFlowForm(cashFlowDetail, captureCapitalLiabilityInfo, loanAmount);
     }
 
 }

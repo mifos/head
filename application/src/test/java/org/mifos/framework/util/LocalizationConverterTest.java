@@ -211,6 +211,30 @@ public class LocalizationConverterTest extends TestCase {
 
     }
 
+    public void testParseDoubleForCashFlowValidations() {
+        MifosCurrency mifosCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        LocalizationConverter localizationConverter = new LocalizationConverter(mifosCurrency);
+        DoubleConversionResult result = parseForCashFlow(localizationConverter, "22.59");
+        assertThat(result.getDoubleValue(), is(22.59));
+        result = parseForCashFlow(localizationConverter, "222,59562");
+        assertThat(result.getErrors().get(0), is(ConversionError.NOT_ALL_NUMBER));
+        result = parseForCashFlow(localizationConverter, "2a5922");
+        assertThat(result.getErrors().get(0), is(ConversionError.NOT_ALL_NUMBER));
+        result = parseForCashFlow(localizationConverter, "22222222222.5");
+        assertThat(result.getErrors().get(0), is(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_VALIDATION));
+        result = parseForCashFlow(localizationConverter, "222.595690");
+        assertThat(result.getErrors().get(0), is(ConversionError.EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_VALIDATION));
+        result = parseForCashFlow(localizationConverter, "222.59");
+        assertThat(result.getErrors().get(0), is(ConversionError.CASH_FLOW_THRESHOLD_OUT_OF_RANGE));
+    }
+
+    private DoubleConversionResult parseForCashFlow(LocalizationConverter localizationConverter, String doubleValueStr) {
+        return localizationConverter.parseDoubleForCashFlowValidations(doubleValueStr,
+                ConversionError.CASH_FLOW_THRESHOLD_OUT_OF_RANGE,
+                AccountingRules.getMinCashFlowThreshold(),
+                AccountingRules.getMaxCashFlowThreshold());
+    }
+
     /*
      * get convert a string to a double to the config locale and the format is
      * the money format 7.1

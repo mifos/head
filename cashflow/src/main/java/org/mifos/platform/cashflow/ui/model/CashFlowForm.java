@@ -32,15 +32,17 @@ public class CashFlowForm implements Serializable {
 
     private CashFlowDetail cashFlowDetail;
     private boolean captureCapitalLiabilityInfo;
+    private BigDecimal loanAmount;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public CashFlowForm() {
         super();
     }
 
-    public CashFlowForm(CashFlowDetail cashFlowDetail) {
-        super();
+    public CashFlowForm(CashFlowDetail cashFlowDetail, boolean captureCapitalLiabilityInfo, BigDecimal loanAmount) {
         this.cashFlowDetail = cashFlowDetail;
+        this.captureCapitalLiabilityInfo = captureCapitalLiabilityInfo;
+        this.loanAmount = loanAmount;
     }
 
     public void setTotalCapital(BigDecimal totalCapital) {
@@ -66,10 +68,6 @@ public class CashFlowForm implements Serializable {
             monthlyCashFlows.add(new MonthlyCashFlowForm(monthlyCashFlowDetail));
         }
         return monthlyCashFlows;
-    }
-
-    public void setCaptureCapitalLiabilityInfo(boolean captureCapitalLiabilityInfo) {
-        this.captureCapitalLiabilityInfo = captureCapitalLiabilityInfo;
     }
 
     public boolean isCaptureCapitalLiabilityInfo() {
