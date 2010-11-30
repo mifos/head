@@ -129,6 +129,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -616,7 +617,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto = retrieveLoanSchedule(request, loanActionForm, userContext, disbursementDate);
         setAttributesForSchedulePreview(request, loanActionForm, disbursementDate, loanScheduleDetailsDto);
         questionGroupFilter.setLoanOfferingBO(loanOffering);
-        ActionForward pageAfterQuestionnaire = getPageAfterQuestionnaire(mapping, request, loanOffering, loanScheduleDetailsDto, cashFlowAdaptor);
+        BigDecimal loanAmount = loanActionForm.getLoanAmountAsBigDecimal();
+        ActionForward pageAfterQuestionnaire = getPageAfterQuestionnaire(mapping, request, loanOffering, loanScheduleDetailsDto, cashFlowAdaptor, loanAmount);
         return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.valueOf(pageAfterQuestionnaire.getName()));
     }
 
@@ -625,7 +627,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto.isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
-        SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT_VALUE, loanActionForm.getLoanAmountValue().getAmount(), request);
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
     }
@@ -633,14 +634,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     // Intentionally made 'public' to aid testing
     // CashFlowAdaptor passed to aid testing 
     public ActionForward getPageAfterQuestionnaire(ActionMapping mapping, HttpServletRequest request,
-                                                    LoanOfferingBO loanOffering,
-                                                    LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto,
-                                                    CashFlowAdaptor cashFlowAdaptor) {
+                                                   LoanOfferingBO loanOffering,
+                                                   LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto,
+                                                   CashFlowAdaptor cashFlowAdaptor, BigDecimal loanAmount) {
         if (loanOffering.isCashFlowCheckEnabled()) {
             return cashFlowAdaptor.renderCashFlow(
                     loanScheduleDetailsDto.firstInstallmentDueDate(),
                     loanScheduleDetailsDto.lastInstallmentDueDate(),
-                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request, loanOffering);
+                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request, loanOffering, loanAmount);
         }
         return mapping.findForward(ActionForwards.schedulePreview_success.toString());
     }

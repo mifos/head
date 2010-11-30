@@ -46,6 +46,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -121,16 +122,17 @@ public class LoanAccountActionTest {
         when(loanScheduleDetailsDto.firstInstallmentDueDate()).thenReturn(firstInstallmentDueDate);
         when(loanScheduleDetailsDto.lastInstallmentDueDate()).thenReturn(lastInstallmentDueDate);
         ActionForward cashFlowForward = new ActionForward("cashFlow");
+        BigDecimal loanAmount = new BigDecimal(2000);
         when(cashFlowAdaptor.renderCashFlow(eq(firstInstallmentDueDate), eq(lastInstallmentDueDate), anyString(),
-                                anyString(), eq(mapping), eq(request), eq(loanOffering))).thenReturn(cashFlowForward);
+                                anyString(), eq(mapping), eq(request), eq(loanOffering), eq(loanAmount))).thenReturn(cashFlowForward);
         ActionForward pageAfterQuestionnaire = loanAccountAction.getPageAfterQuestionnaire(mapping, request, loanOffering,
-                                loanScheduleDetailsDto, cashFlowAdaptor);
+                                loanScheduleDetailsDto, cashFlowAdaptor, loanAmount);
         assertThat(pageAfterQuestionnaire, is(cashFlowForward));
         verify(loanOffering).isCashFlowCheckEnabled();
         verify(loanScheduleDetailsDto).firstInstallmentDueDate();
         verify(loanScheduleDetailsDto).lastInstallmentDueDate();
         verify(cashFlowAdaptor).renderCashFlow(eq(firstInstallmentDueDate), eq(lastInstallmentDueDate), anyString(),
-                                anyString(), eq(mapping), eq(request), eq(loanOffering));
+                                anyString(), eq(mapping), eq(request), eq(loanOffering), eq(loanAmount));
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {

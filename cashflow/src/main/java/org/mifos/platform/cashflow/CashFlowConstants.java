@@ -35,10 +35,11 @@ public class CashFlowConstants {
     public static final String TOTAL_CAPITAL_SHOULD_BE_GREATER_THAN_ZERO = "cashFlowForm.totalCapital.should.be.greater.than.zero";
     public static final String TOTAL_CAPITAL_SHOULD_NOT_BE_EMPTY = "cashFlowForm.totalCapital.should.not.be.empty";
     public static final String TOTAL_LIABILITY_SHOULD_NOT_BE_EMPTY = "cashFlowForm.totalLiability.should.not.be.empty";
-    public static final String TOTAL_CAPITAL_SHOULD_BE_NON_NEGATIVE = "cashFlowForm.totalCapital.should.be.non.negative";
     public static final String TOTAL_LIABILITY_SHOULD_BE_NON_NEGATIVE = "cashFlowForm.totalLiability.should.be.non.negative";
+    public static final String INDEBTEDNESS_RATIO_MORE_THAN_ALLOWED= "cashFlowForm.indebtednessRatio.more.than.allowed";
+    public static final String INDEBTEDNESS_RATIO="indebtednessRatio";
 
     public static final int FIRST_DAY = 1;
     public static final int EXTRA_DURATION_FOR_CASH_FLOW_SCHEDULE = 1;
-    public static final String INDEBTEDNESS_RATIO="indebtednessRatio";
+    public static final String LOAN_AMOUNT_VALUE="loanAmountValue";
 }

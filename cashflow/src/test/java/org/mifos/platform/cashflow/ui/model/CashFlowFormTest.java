@@ -8,9 +8,11 @@ import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class CashFlowFormTest {
     
@@ -29,5 +31,25 @@ public class CashFlowFormTest {
         expected.add(new MonthlyCashFlowForm(cashFlowDetail2));
         assertThat(actual.get(0),new MonthlyCashFlowFormMatcher(expected.get(0)));
         assertThat(actual.get(1),new MonthlyCashFlowFormMatcher(expected.get(1)));
+    }
+
+    @Test
+    public void shouldForValidateIndebtednessRate() {
+        CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
+        cashFlowDetail.setTotalCapital(BigDecimal.TEN);
+        cashFlowDetail.setTotalLiability(BigDecimal.TEN);
+        CashFlowForm cashFlowForm;
+        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), null);
+        assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
+        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), 0d);
+        assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
+        cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 123d);
+        assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
+        cashFlowForm = new CashFlowForm(null, true, new BigDecimal(123), 123d);
+        assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
+        cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(123), 123d);
+        assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
+        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), 123d);
+        assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(true));
     }
 }

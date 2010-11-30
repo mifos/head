@@ -133,7 +133,6 @@ public interface CustomerConstants {
 
     String DISBURSEMENT_DATE ="disbursementDate";
     String LOAN_AMOUNT="loanAmount";
-    String LOAN_AMOUNT_VALUE="loanAmountValue";
     String ACCOUNT_FEES="accountFees";
 
     String STATUS_LIST = "statusList";

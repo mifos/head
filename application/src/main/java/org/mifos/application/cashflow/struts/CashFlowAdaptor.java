@@ -33,6 +33,7 @@ import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,13 +57,13 @@ public class CashFlowAdaptor {
 
     public ActionForward renderCashFlow(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate,
                                         String joinUrl, String cancelUrl, ActionMapping mapping,
-                                        HttpServletRequest request, LoanOfferingBO loanOffering) {
+                                        HttpServletRequest request, LoanOfferingBO loanOffering, BigDecimal loanAmount) {
         CashFlowService cashFlowService = cashFlowServiceLocator.getService(request);
         if (cashFlowService == null) {
             return null;
         }
         CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(firstInstallmentDueDate, lastInstallmentDueDate);
-        prepareCashFlowContext(joinUrl, cancelUrl, cashFlowBoundary, request.getSession(), loanOffering);
+        prepareCashFlowContext(joinUrl, cancelUrl, cashFlowBoundary, request.getSession(), loanOffering, loanAmount);
         return mapping.findForward(cashFlowUrl);
     }
 
@@ -81,7 +82,7 @@ public class CashFlowAdaptor {
     }
 
     private void prepareCashFlowContext(String joinUrl, String cancelUrl, CashFlowBoundary cashFlowBoundary,
-                                        HttpSession session, LoanOfferingBO loanOffering) {
+                                        HttpSession session, LoanOfferingBO loanOffering, BigDecimal loanAmount) {
         session.setAttribute(CashFlowConstants.START_MONTH, cashFlowBoundary.getStartMonth());
         session.setAttribute(CashFlowConstants.START_YEAR, cashFlowBoundary.getStartYear());
         session.setAttribute(CashFlowConstants.NO_OF_MONTHS, cashFlowBoundary.getNumberOfMonths());
@@ -89,6 +90,7 @@ public class CashFlowAdaptor {
         session.setAttribute(CashFlowConstants.CANCEL_URL, cancelUrl);
         session.setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO, loanOffering.shouldCaptureCapitalAndLiabilityInformation());
         session.setAttribute(CashFlowConstants.INDEBTEDNESS_RATIO, loanOffering.getIndebtednessRatio());
+        session.setAttribute(CashFlowConstants.LOAN_AMOUNT_VALUE, loanAmount);
     }
 
     private CashFlowDetail mapToCashFlowDetail(CashFlowCaptor cashFlowCaptor) {

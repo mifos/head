@@ -82,4 +82,9 @@ public class CashFlowForm implements Serializable {
     public Double getIndebtednessRatio() {
         return indebtednessRatio;
     }
+
+    public boolean shouldForValidateIndebtednessRate() {
+        return captureCapitalLiabilityInfo && indebtednessRatio != null && indebtednessRatio > 0 &&
+                loanAmount != null && cashFlowDetail != null && cashFlowDetail.shouldForValidateIndebtednessRate();
+    }
 }

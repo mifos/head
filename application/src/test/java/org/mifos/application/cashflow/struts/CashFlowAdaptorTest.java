@@ -44,7 +44,7 @@ public class CashFlowAdaptorTest {
 
     @Before
     public void setUp() throws Exception {
-        cashFlowAdaptor = new CashFlowAdaptor("",cashFlowServiceLocator);
+        cashFlowAdaptor = new CashFlowAdaptor("", cashFlowServiceLocator);
     }
 
     @Test
@@ -54,9 +54,9 @@ public class CashFlowAdaptorTest {
         when(request.getSession()).thenReturn(httpSession);
         when(cashFlowServiceLocator.getService(request)).thenReturn(cashFlowService);
         CashFlowDetail cashFlowDetail = getCashFlowDetails(totalCapital, totalLiability);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null, indebtednessRatio);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, null);
         when(cashFlowCaptor.getCashFlowForm()).thenReturn(cashFlowForm);
-        cashFlowAdaptor.save(cashFlowCaptor,request);
+        cashFlowAdaptor.save(cashFlowCaptor, request);
         verify(cashFlowService).save(argThat(new CashFlowDetailMatcher(totalCapital, totalLiability)));
         verify(request).getSession();
     }
@@ -65,23 +65,28 @@ public class CashFlowAdaptorTest {
     public void renderCashFlow() {
         DateTime firstInstallment = new DateTime(2010, 10, 11, 12, 13, 14, 15);
         DateTime lastInstallment = firstInstallment.plusMonths(4);
-        CashFlowBoundary cashFlowBoundary = new CashFlowBoundary(11,2010,12);
+        CashFlowBoundary cashFlowBoundary = new CashFlowBoundary(11, 2010, 12);
         LoanOfferingBO loanOfferingBO = mock(LoanOfferingBO.class);
+        double indebtednessRatio = 123d;
+        when(loanOfferingBO.getIndebtednessRatio()).thenReturn(indebtednessRatio);
         when(cashFlowServiceLocator.getService(request)).thenReturn(cashFlowService);
         when(cashFlowService.getCashFlowBoundary(firstInstallment, lastInstallment)).thenReturn(cashFlowBoundary);
         when(request.getSession()).thenReturn(httpSession);
         when(loanOfferingBO.shouldCaptureCapitalAndLiabilityInformation()).thenReturn(true);
         String cancelUrl = "cancelUrl";
         String joinUrl = "joinUrl";
-        cashFlowAdaptor.renderCashFlow(firstInstallment, lastInstallment, joinUrl, cancelUrl,mock(ActionMapping.class),request, loanOfferingBO);
-        verify(httpSession).setAttribute(CashFlowConstants.CANCEL_URL,cancelUrl);
-        verify(httpSession).setAttribute(CashFlowConstants.JOIN_URL,joinUrl);
-        verify(httpSession).setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO,true);
-        verify(httpSession).setAttribute(CashFlowConstants.START_MONTH,cashFlowBoundary.getStartMonth());
-        verify(httpSession).setAttribute(CashFlowConstants.NO_OF_MONTHS,cashFlowBoundary.getNumberOfMonths());
-        verify(httpSession).setAttribute(CashFlowConstants.START_YEAR,cashFlowBoundary.getStartYear());
+        BigDecimal loanAmount = BigDecimal.valueOf(2000);
+        cashFlowAdaptor.renderCashFlow(firstInstallment, lastInstallment, joinUrl, cancelUrl, mock(ActionMapping.class), request, loanOfferingBO, loanAmount);
+        verify(httpSession).setAttribute(CashFlowConstants.CANCEL_URL, cancelUrl);
+        verify(httpSession).setAttribute(CashFlowConstants.JOIN_URL, joinUrl);
+        verify(httpSession).setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO, true);
+        verify(httpSession).setAttribute(CashFlowConstants.START_MONTH, cashFlowBoundary.getStartMonth());
+        verify(httpSession).setAttribute(CashFlowConstants.NO_OF_MONTHS, cashFlowBoundary.getNumberOfMonths());
+        verify(httpSession).setAttribute(CashFlowConstants.START_YEAR, cashFlowBoundary.getStartYear());
+        verify(httpSession).setAttribute(CashFlowConstants.INDEBTEDNESS_RATIO, indebtednessRatio);
+        verify(httpSession).setAttribute(CashFlowConstants.LOAN_AMOUNT_VALUE, loanAmount);
     }
-    
+
     private CashFlowDetail getCashFlowDetails(double totalCapital, double totalLiability) {
         DateTime dateTime = new DateTime(2010, 10, 11, 12, 13, 14, 15);
         BigDecimal revenue = new BigDecimal(123);
@@ -103,7 +108,8 @@ public class CashFlowAdaptorTest {
             this.totalCapital = totalCapital;
             this.totalLiability = totalLiability;
         }
-//TODO: Praveena&Buddy
+
+        //TODO: Praveena&Buddy
         @Override
         public boolean matchesSafely(CashFlowDetail cashFlowDetail) {
             return cashFlowDetail.getTotalCapital().doubleValue() == totalCapital &&

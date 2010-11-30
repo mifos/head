@@ -40,35 +40,47 @@ public class CashFlowValidator {
             validateNotes(messageContext, monthlyCashFlowForm);
         }
         validateTotalCapitalAndLiability(cashFlow, messageContext);
+        validateIndebtednessRatio(cashFlow, messageContext);
     }
 
     private void validateTotalCapitalAndLiability(CashFlowForm cashFlow, MessageContext messageContext) {
-        if(cashFlow.isCaptureCapitalLiabilityInfo()){
+        if (cashFlow.isCaptureCapitalLiabilityInfo()) {
             validateTotalCapital(messageContext, cashFlow.getTotalCapital());
             validateTotalLiability(messageContext, cashFlow.getTotalLiability());
         }
     }
 
+    private void validateIndebtednessRatio(CashFlowForm cashFlowForm, MessageContext messageContext) {
+        if (cashFlowForm.shouldForValidateIndebtednessRate()) {
+            Double indebtednessRatio = cashFlowForm.getIndebtednessRatio();
+            BigDecimal loanAmount = cashFlowForm.getLoanAmount();
+            BigDecimal totalCapital = cashFlowForm.getTotalCapital();
+            BigDecimal totalLiability = cashFlowForm.getTotalLiability();
+            Double calculatedIndebtednessRatio = totalLiability.add(loanAmount).multiply(BigDecimal.valueOf(100)).
+                    divide(totalCapital).doubleValue();
+            if (calculatedIndebtednessRatio >= indebtednessRatio) {
+                String message = format("Indebtedness rate of the client is {0} which is greater than the allowable value of {1}",
+                        calculatedIndebtednessRatio, indebtednessRatio);
+                constructErrorMessage(CashFlowConstants.INDEBTEDNESS_RATIO_MORE_THAN_ALLOWED, message, messageContext, calculatedIndebtednessRatio, indebtednessRatio);
+            }
+        }
+    }
+
     private void validateTotalCapital(MessageContext messageContext, BigDecimal totalCapital) {
-        if(isNull(totalCapital)){
+        if (isNull(totalCapital)) {
             String message = format("Total Capital should not be empty");
             constructErrorMessage(CashFlowConstants.TOTAL_CAPITAL_SHOULD_NOT_BE_EMPTY, message, messageContext);
             return;
         }
 
-        if ((totalCapital.doubleValue() == 0)) {
+        if ((totalCapital.doubleValue() <= 0)) {
             String message = format("Total Capital needs to be a value greater than zero");
             constructErrorMessage(CashFlowConstants.TOTAL_CAPITAL_SHOULD_BE_GREATER_THAN_ZERO, message, messageContext);
-        }
-
-        if (totalCapital.doubleValue() < 0) {
-            String message = format("Total Capital needs to be non negative");
-            constructErrorMessage(CashFlowConstants.TOTAL_CAPITAL_SHOULD_BE_NON_NEGATIVE, message, messageContext);
         }
     }
 
     private void validateTotalLiability(MessageContext messageContext, BigDecimal totalLiability) {
-        if(isNull(totalLiability)){
+        if (isNull(totalLiability)) {
             String message = format("Total Liability should not be empty");
             constructErrorMessage(CashFlowConstants.TOTAL_LIABILITY_SHOULD_NOT_BE_EMPTY, message, messageContext);
             return;

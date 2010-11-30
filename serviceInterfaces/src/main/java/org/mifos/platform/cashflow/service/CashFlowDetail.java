@@ -72,4 +72,8 @@ public class CashFlowDetail implements Serializable {
     public BigDecimal getTotalLiability() {
         return totalLiability;
     }
+
+    public boolean shouldForValidateIndebtednessRate() {
+        return totalCapital != null && totalCapital.compareTo(BigDecimal.ZERO) > 0 && totalLiability != null;
+    }
 }

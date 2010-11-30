@@ -23,6 +23,7 @@ package org.mifos.accounts.loan.struts.actionforms;
 import static org.apache.commons.lang.StringUtils.isBlank;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -1536,6 +1537,10 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     public void initializeInstallments(List<RepaymentScheduleInstallment> installments) {
         this.installments = installments;
+    }
+
+    public BigDecimal getLoanAmountAsBigDecimal() {
+        return loanAmountValue.getAmount();
     }
 
 
