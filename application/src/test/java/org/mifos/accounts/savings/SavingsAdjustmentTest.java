@@ -33,7 +33,6 @@ import java.util.Map;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.financial.business.COABO;
@@ -163,7 +162,6 @@ public class SavingsAdjustmentTest {
         assertFalse(result);
     }
 
-    @Ignore
     @Test
     public void canAdjustLastTransactionThatIsADeposit() {
 
@@ -269,7 +267,6 @@ public class SavingsAdjustmentTest {
         assertFalse(result);
     }
 
-    @Ignore
     @Test
     public void canAdjustLastTransactionThatIsAWithdrawal() {
 
@@ -295,8 +292,6 @@ public class SavingsAdjustmentTest {
         assertTrue(result);
     }
 
-
-    @Ignore
     @Test
     public void accountBalanceIsUpdatedWhenLastDepositIsAdjusted() {
 
@@ -321,7 +316,6 @@ public class SavingsAdjustmentTest {
         assertThat(savingsAccount.getSavingsBalance(), is(TestUtils.createMoney(25)));
     }
 
-    @Ignore
     @Test
     public void savingsPerformanceDetailsAreUpdatedWhenLastDepositIsAdjusted() {
 
@@ -346,7 +340,6 @@ public class SavingsAdjustmentTest {
         assertThat(savingsAccount.getSavingsPerformance().getTotalDeposits(), is(TestUtils.createMoney(25)));
     }
 
-    @Ignore
     @Test
     public void accountActivitysRecordAdjustmentOfLastTransactionWithAReversalAndDepositTransactions() {
 
@@ -373,7 +366,6 @@ public class SavingsAdjustmentTest {
         assertThat(activitysAfter.size(), is(3));
     }
 
-    @Ignore
     @Test
     public void accountBalanceIsUpdatedWhenLastWithdrawalIsAdjusted() {
 
@@ -398,7 +390,6 @@ public class SavingsAdjustmentTest {
         assertThat(savingsAccount.getSavingsBalance(), is(TestUtils.createMoney(75)));
     }
 
-    @Ignore
     @Test
     public void accountActivitysRecordAdjustmentOfLastTransactionWithAReversalAndWithdrawalTransactions() {
 

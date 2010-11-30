@@ -89,7 +89,7 @@ public class MonthlyOnLastDayOfMonthInterestScheduledEvent implements InterestSc
     private LocalDate findNextMatchingDateFromList(LocalDate after, List<LocalDate> allMatchingDates) {
         LocalDate nextMatchingDate = after;
         for (LocalDate matchingDate : allMatchingDates) {
-            if (matchingDate.isAfter(after)) {
+            if (matchingDate.isAfter(after) || matchingDate.isEqual(after)) {
                 nextMatchingDate = matchingDate;
                 break;
             }

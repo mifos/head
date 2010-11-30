@@ -200,7 +200,7 @@ public class MonthlyOnLastDayOfMonthInterestScheduledEventTest {
     }
 
     @Test
-    public void shouldFindNearestMatchingDateAfterALegalEndOfMonthDate() {
+    public void shouldFindNearestMatchingDateAfterOrOnALegalEndOfMonthDate() {
 
         // setup
         int every = 1;
@@ -209,7 +209,7 @@ public class MonthlyOnLastDayOfMonthInterestScheduledEventTest {
         // exercise test
         LocalDate nextMatchingDate = monthlyEvent.nextMatchingDateAfter(jan1st, jan31st);
 
-        assertThat(nextMatchingDate, is(feb28th));
+        assertThat(nextMatchingDate, is(jan31st));
     }
 
     @Test
