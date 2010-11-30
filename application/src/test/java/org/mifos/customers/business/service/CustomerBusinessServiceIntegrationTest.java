@@ -33,7 +33,6 @@ import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateMachines;
@@ -43,7 +42,6 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -54,20 +52,14 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.business.CenterBO;
-import org.mifos.customers.checklist.business.CheckListBO;
-import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficecFixture;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -139,23 +131,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
         Assert.assertEquals(2, queryResult.getSize());
         Assert.assertEquals(2, queryResult.get(0, 10).size());
 
-    }
-
-    @Test
-    @Ignore
-    public void testFailureGetRecentActivityView() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
-        StaticHibernateUtil.flushSession();
-        center = TestObjectFactory.getCenter(center.getCustomerId());
-
-        try {
-            service.getAllActivityView(center.getGlobalCustNum());
-            Assert.assertTrue(false);
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        }
-        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -252,36 +227,6 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
                 .search("MyCenter", Short.valueOf("3"), Short.valueOf("1"), Short.valueOf("1"));
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
-    }
-
-    @Test
-    public void testGetAllClosedAccounts() throws Exception {
-        getCustomer();
-        groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
-                "WITHDRAW LOAN ACCOUNT");
-        clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(), null, "WITHDRAW LOAN ACCOUNT");
-        clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(),
-                AccountStateFlag.SAVINGS_REJECTED.getValue(), "WITHDRAW LOAN ACCOUNT");
-        TestObjectFactory.updateObject(groupAccount);
-        TestObjectFactory.updateObject(clientAccount);
-        TestObjectFactory.updateObject(clientSavingsAccount);
-        Assert.assertEquals(1, service
-                .getAllClosedAccount(client.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue()).size());
-        Assert.assertEquals(1, service.getAllClosedAccount(group.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue())
-                .size());
-        Assert.assertEquals(1,
-                service.getAllClosedAccount(client.getCustomerId(), AccountTypes.SAVINGS_ACCOUNT.getValue()).size());
-    }
-
-    @Test
-    public void testGetAllClosedAccountsWhenNoAccountsClosed() throws Exception {
-        getCustomer();
-        Assert.assertEquals(0, service
-                .getAllClosedAccount(client.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue()).size());
-        Assert.assertEquals(0, service.getAllClosedAccount(group.getCustomerId(), AccountTypes.LOAN_ACCOUNT.getValue())
-                .size());
-        Assert.assertEquals(0,
-                service.getAllClosedAccount(client.getCustomerId(), AccountTypes.SAVINGS_ACCOUNT.getValue()).size());
     }
 
     @Test

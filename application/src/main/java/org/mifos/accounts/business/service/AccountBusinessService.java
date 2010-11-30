@@ -57,7 +57,6 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -65,7 +64,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -84,16 +82,6 @@ public class AccountBusinessService implements BusinessService {
             throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
                     new Object[] { accountGlobalNum });
         }
-    }
-
-    public List<TransactionHistoryDto> getTrxnHistory(AccountBO accountBO, UserContext uc) {
-        accountBO.setUserContext(uc);
-        List<TransactionHistoryDto> transactionHistories = accountBO.getTransactionHistoryView();
-        for (TransactionHistoryDto transactionHistoryDto : transactionHistories) {
-            transactionHistoryDto.setUserPrefferedPostedDate(DateUtils.getUserLocaleDate(uc.getPreferredLocale(), transactionHistoryDto.getPostedDate().toString()));
-            transactionHistoryDto.setUserPrefferedTransactionDate(DateUtils.getUserLocaleDate(uc.getPreferredLocale(), transactionHistoryDto.getTransactionDate().toString()));
-        }
-        return transactionHistories;
     }
 
     public AccountBO getAccount(Integer accountId) throws ServiceException {

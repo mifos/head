@@ -1072,14 +1072,14 @@ public class CustomerDaoHibernate implements CustomerDao {
         return avgLoanAmountInGoodOrBadStanding.toString();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public String getTotalLoanAmountForGroup(String groupSearchId, Short groupOfficeId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("SEARCH_STRING", groupSearchId);
         queryParameters.put("SEARCH_STRING2", groupSearchId + ".%");
         queryParameters.put("OFFICE_ID", groupOfficeId);
-        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery(
-                "Customer.getTotalLoanAmountForGroup", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("Customer.getTotalLoanAmountForGroup", queryParameters);
 
         if (queryResult.size() > 1) {
             return localizedMessageLookup("errors.multipleCurrencies");
@@ -1718,6 +1718,7 @@ public class CustomerDaoHibernate implements CustomerDao {
         return retrieveMasterData(queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -1725,28 +1726,28 @@ public class CustomerDaoHibernate implements CustomerDao {
         return (Iterator<CustomerCustomFieldEntity>) genericDao.executeNamedQueryIterator("CustomerCustomFieldEntity.getResponses", queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CLIENT.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao
-                .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.GROUP.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao
-                .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("phoneNumberStripped", MifosStringUtils.removeNondigits(phoneNumber));
-        List<CustomerBO> queryResult = (List<CustomerBO>) genericDao
-                .executeNamedQuery("Customer.findCustomersWithGivenPhoneNumber", queryParameters);
+        List<CustomerBO> queryResult = (List<CustomerBO>) genericDao.executeNamedQuery("Customer.findCustomersWithGivenPhoneNumber", queryParameters);
         List<CustomerDto> customerDtos = new ArrayList<CustomerDto>();
         for (CustomerBO customerBO : queryResult) {
             CustomerDto customerDto = new CustomerDto(customerBO.getCustomerId(), customerBO.getDisplayName(),
@@ -1757,10 +1758,26 @@ public class CustomerDaoHibernate implements CustomerDao {
         return customerDtos;
     }
 
+    @SuppressWarnings("unchecked")
     public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CENTER.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao
-                .executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<AccountBO> retrieveAllClosedLoanAndSavingsAccounts(Integer customerId) {
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("customerId", customerId);
+        List<AccountBO> queryResult = (List<AccountBO>) this.genericDao.executeNamedQuery("customer.viewallclosedloanandsavingsaccounts", queryParameters);
+
+        List<AccountBO> closedLoanAndSavingsAccounts = new ArrayList<AccountBO>();
+        if (queryResult != null) {
+            closedLoanAndSavingsAccounts.addAll(queryResult);
+        }
+
+        return closedLoanAndSavingsAccounts;
     }
 }

@@ -30,9 +30,11 @@ import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.mifos.dto.screen.ClosedAccountDto;
 import org.mifos.dto.screen.CustomerNoteFormDto;
 import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.dto.screen.CustomerStatusDetailDto;
+import org.mifos.dto.screen.TransactionHistoryDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface CenterServiceFacade {
@@ -77,4 +79,16 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void createCustomerNote(CustomerNoteFormDto customerNoteForm);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ClosedAccountDto> retrieveAllClosedAccounts(Integer customerId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<TransactionHistoryDto> retrieveAccountTransactionHistory(String globalAccountNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerRecentActivityDto> retrieveAllAccountActivity(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void waiveChargeDue(Integer accountId, Integer waiveType);
 }

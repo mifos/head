@@ -782,9 +782,8 @@ public class CustomerPersistence extends Persistence {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("customerId", customerId);
         queryParameters.put("accountTypeId", accountTypeId);
-        List queryResult = executeNamedQuery(NamedQueryConstants.VIEWALLCLOSEDACCOUNTS, queryParameters);
+        List queryResult = executeNamedQuery("customer.viewallclosedaccounts", queryParameters);
         return queryResult;
-
     }
 
     public Short getLoanOfficerForCustomer(final Integer customerId) throws PersistenceException {

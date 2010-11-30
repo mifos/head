@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -81,6 +79,8 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Clients, groups, and centers are stored in the db as customer accounts.
@@ -435,11 +435,6 @@ public class CustomerAccountBO extends AccountBO {
         Money chargeWaived = ((CustomerScheduleEntity) accountActionDateEntity).waiveCharges();
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             addCustomerActivity(buildCustomerActivity(chargeWaived, AccountConstants.AMNT_WAIVED, userContext.getId()));
-        }
-        try {
-            new AccountPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
         }
     }
 

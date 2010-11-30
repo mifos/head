@@ -33,9 +33,9 @@ import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.struts.actionforms.CustActionForm;
+import org.mifos.dto.screen.ClosedAccountDto;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -64,10 +64,10 @@ public class CustAction extends SearchAction {
         UserContext userContext = getUserContext(request);
 
         Integer customerId = getIntegerValue(((CustActionForm) form).getCustomerId());
-        CustomerBO customer = this.customerDao.findCustomerById(customerId);
-        CustomerBusinessService customerService = new CustomerBusinessService();
-        List<AccountBO> loanAccountsList = customerService.getAllClosedAccount(customerId, AccountTypes.LOAN_ACCOUNT.getValue());
-        List<AccountBO> savingsAccountList = customerService.getAllClosedAccount(customerId,AccountTypes.SAVINGS_ACCOUNT.getValue());
+        List<ClosedAccountDto> allClosedAccounts = this.centerServiceFacade.retrieveAllClosedAccounts(customerId);
+
+        List<AccountBO> loanAccountsList = new CustomerPersistence().getAllClosedAccount(customerId, AccountTypes.LOAN_ACCOUNT.getValue());
+        List<AccountBO> savingsAccountList = new CustomerPersistence().getAllClosedAccount(customerId,AccountTypes.SAVINGS_ACCOUNT.getValue());
         for (AccountBO savingsBO : savingsAccountList) {
             setLocaleIdForToRetrieveMasterDataName(savingsBO, userContext);
         }

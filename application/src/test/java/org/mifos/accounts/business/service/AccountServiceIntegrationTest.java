@@ -25,9 +25,7 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 import java.sql.Date;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.List;
 
@@ -50,7 +48,6 @@ import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
@@ -62,7 +59,6 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.ApplicableCharge;
-import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -70,11 +66,9 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerFeeScheduleEntity;
 import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -115,55 +109,6 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
             // TODO Whoops, cleanup didnt work, reset db
 
         }
-    }
-
-    @Test
-    public void testGetTrxnHistory() throws Exception {
-        AccountBusinessService accountBusinessService = new AccountBusinessService();
-        Date currentDate = new Date(System.currentTimeMillis());
-        accountBO = getLoanAccount();
-        LoanBO loan = (LoanBO) accountBO;
-
-        UserContext uc = TestUtils.makeUser();
-        List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
-        accntActionDates.addAll(loan.getAccountActionDates());
-        PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
-                .createMoney(100), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
-                currentDate);
-
-        loan.applyPaymentWithPersist(accountPaymentDataView);
-        TestObjectFactory.flushandCloseSession();
-        loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
-        loan.setUserContext(uc);
-
-        List<TransactionHistoryDto> trxnHistlist = accountBusinessService.getTrxnHistory(loan, uc);
-        Collections.sort(trxnHistlist);
-        Assert.assertNotNull("Account TrxnHistoryView list object should not be null", trxnHistlist);
-        Assert.assertTrue("Account TrxnHistoryView list object Size should be greater than zero",
-                trxnHistlist.size() > 0);
-        for (TransactionHistoryDto view : trxnHistlist) {
-            Assert.assertEquals("100.0", view.getBalance());
-            Assert.assertNotNull(view.getClientName());
-            Assert.assertEquals("-", view.getDebit());
-            Assert.assertEquals("100.0", view.getCredit());
-            Assert.assertNotNull(view.getGlcode());
-            Assert.assertEquals("-", view.getNotes());
-            Assert.assertNotNull(view.getPostedBy());
-            Assert.assertNotNull(view.getType());
-            Assert.assertNotNull(view.getUserPrefferedPostedDate());
-            Assert.assertNotNull(view.getUserPrefferedTransactionDate());
-            Assert.assertNotNull(view.getAccountTrxnId());
-            Assert.assertNull(view.getLocale());
-            Assert.assertNotNull(view.getPaymentId());
-            Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(view
-                    .getPostedDate().getTime()));
-            Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils.getDateWithoutTimeStamp(view
-                    .getTransactionDate().getTime()));
-            break;
-        }
-        TestObjectFactory.flushandCloseSession();
-        accountBO = TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
-
     }
 
     @Test
