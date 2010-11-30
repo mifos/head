@@ -25,8 +25,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -35,30 +33,21 @@ import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.struts.actionforms.CustActionForm;
-import org.mifos.framework.business.AbstractBusinessObject;
-import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CustAction extends SearchAction {
 
     private static final Logger logger = LoggerFactory.getLogger(CustAction.class);
-
-    @Override
-    protected BusinessService getService() {
-        return new DummyBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("custAction");
@@ -74,13 +63,11 @@ public class CustAction extends SearchAction {
         logger.debug("In CustAction::getClosedAccounts()");
         UserContext userContext = getUserContext(request);
 
-        // FIXME - #000022 - refactor away from customer business service
         Integer customerId = getIntegerValue(((CustActionForm) form).getCustomerId());
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
         CustomerBusinessService customerService = new CustomerBusinessService();
-        List<AccountBO> loanAccountsList = customerService.getAllClosedAccount(customerId, AccountTypes.LOAN_ACCOUNT
-                .getValue());
-        List<AccountBO> savingsAccountList = customerService.getAllClosedAccount(customerId,
-                AccountTypes.SAVINGS_ACCOUNT.getValue());
+        List<AccountBO> loanAccountsList = customerService.getAllClosedAccount(customerId, AccountTypes.LOAN_ACCOUNT.getValue());
+        List<AccountBO> savingsAccountList = customerService.getAllClosedAccount(customerId,AccountTypes.SAVINGS_ACCOUNT.getValue());
         for (AccountBO savingsBO : savingsAccountList) {
             setLocaleIdForToRetrieveMasterDataName(savingsBO, userContext);
         }
@@ -115,14 +102,6 @@ public class CustAction extends SearchAction {
         accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
         for (AccountFlagMapping accountFlagMapping : accountBO.getAccountFlags()) {
             accountFlagMapping.getFlag().setLocaleId(userContext.getLocaleId());
-        }
-    }
-
-    private class DummyBusinessService implements BusinessService {
-
-        @Override
-        public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
-            return null;
         }
     }
 }
