@@ -27,8 +27,9 @@ public class CashFlowControllerTest {
         Mockito.when(cashFlowService.cashFlowFor(2012, 1, 12)).thenReturn(cashFlowDetail);
         CashFlowController cashFlowController = new CashFlowController(cashFlowService);
         BigDecimal loanAmount = new BigDecimal("1234");
-        CashFlowForm cashFlowForm = cashFlowController.prepareCashFlowForm(2012, 1, 12, loanAmount, true);
-        CashFlowForm expectedCashFlowForm = new CashFlowForm(cashFlowDetail, true, loanAmount);
+        Double indebtednessRatio = 12d;
+        CashFlowForm cashFlowForm = cashFlowController.prepareCashFlowForm(2012, 1, 12, loanAmount, indebtednessRatio, true);
+        CashFlowForm expectedCashFlowForm = new CashFlowForm(cashFlowDetail, true, loanAmount, indebtednessRatio);
         assertThat(cashFlowForm, new CashFlowFormMatcher(expectedCashFlowForm));
         Mockito.verify(cashFlowService).cashFlowFor(2012, 1, 12);
     }

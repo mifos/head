@@ -54,7 +54,7 @@ public class CashFlowAdaptorTest {
         when(request.getSession()).thenReturn(httpSession);
         when(cashFlowServiceLocator.getService(request)).thenReturn(cashFlowService);
         CashFlowDetail cashFlowDetail = getCashFlowDetails(totalCapital, totalLiability);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null, indebtednessRatio);
         when(cashFlowCaptor.getCashFlowForm()).thenReturn(cashFlowForm);
         cashFlowAdaptor.save(cashFlowCaptor,request);
         verify(cashFlowService).save(argThat(new CashFlowDetailMatcher(totalCapital, totalLiability)));

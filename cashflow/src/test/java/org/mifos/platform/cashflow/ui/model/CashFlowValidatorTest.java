@@ -40,7 +40,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(123d));
         cashFlowDetail.setTotalLiability(new BigDecimal(456d));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext,never()).addMessage(Matchers.<MessageResolver>anyObject());
@@ -52,7 +52,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         cashFlowDetail.setTotalCapital(null);
         cashFlowDetail.setTotalLiability(null);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,false,null);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,false,null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext,never()).addMessage(Matchers.<MessageResolver>anyObject());
@@ -64,7 +64,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(0));
         cashFlowDetail.setTotalLiability(new BigDecimal(0));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.TOTAL_CAPITAL_SHOULD_BE_GREATER_THAN_ZERO)));
@@ -76,7 +76,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         cashFlowDetail.setTotalCapital(null);
         cashFlowDetail.setTotalLiability(null);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.TOTAL_CAPITAL_SHOULD_NOT_BE_EMPTY)));
@@ -89,7 +89,7 @@ public class CashFlowValidatorTest {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         cashFlowDetail.setTotalCapital(new BigDecimal(-23));
         cashFlowDetail.setTotalLiability(new BigDecimal(-1));
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail,true,null, 0d);
         cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.TOTAL_CAPITAL_SHOULD_BE_NON_NEGATIVE)));

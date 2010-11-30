@@ -62,7 +62,7 @@ public class CashFlowAdaptor {
             return null;
         }
         CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(firstInstallmentDueDate, lastInstallmentDueDate);
-        prepareCashFlowContext(joinUrl, cancelUrl, loanOffering.shouldCaptureCapitalAndLiabilityInformation(), cashFlowBoundary, request.getSession());
+        prepareCashFlowContext(joinUrl, cancelUrl, cashFlowBoundary, request.getSession(), loanOffering);
         return mapping.findForward(cashFlowUrl);
     }
 
@@ -80,14 +80,15 @@ public class CashFlowAdaptor {
         return cashFlowId;
     }
 
-    private void prepareCashFlowContext(String joinUrl, String cancelUrl, boolean captureCapitalAndLiabilityInformation,
-                                        CashFlowBoundary cashFlowBoundary, HttpSession session) {
+    private void prepareCashFlowContext(String joinUrl, String cancelUrl, CashFlowBoundary cashFlowBoundary,
+                                        HttpSession session, LoanOfferingBO loanOffering) {
         session.setAttribute(CashFlowConstants.START_MONTH, cashFlowBoundary.getStartMonth());
         session.setAttribute(CashFlowConstants.START_YEAR, cashFlowBoundary.getStartYear());
         session.setAttribute(CashFlowConstants.NO_OF_MONTHS, cashFlowBoundary.getNumberOfMonths());
         session.setAttribute(CashFlowConstants.JOIN_URL, joinUrl);
         session.setAttribute(CashFlowConstants.CANCEL_URL, cancelUrl);
-        session.setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO, captureCapitalAndLiabilityInformation);
+        session.setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO, loanOffering.shouldCaptureCapitalAndLiabilityInformation());
+        session.setAttribute(CashFlowConstants.INDEBTEDNESS_RATIO, loanOffering.getIndebtednessRatio());
     }
 
     private CashFlowDetail mapToCashFlowDetail(CashFlowCaptor cashFlowCaptor) {

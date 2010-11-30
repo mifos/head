@@ -39,7 +39,9 @@ public class CashFlowFormMatcher extends TypeSafeMatcher<CashFlowForm> {
             for(MonthlyCashFlowForm monthlyCashFlowForm: this.cashFlowForm.getMonthlyCashFlows()){
                 Assert.assertThat(cashFlowForm.getMonthlyCashFlows(), Matchers.hasItem(new MonthlyCashFlowFormMatcher(monthlyCashFlowForm)));
             }
-            return this.cashFlowForm.isCaptureCapitalLiabilityInfo() == cashFlowForm.isCaptureCapitalLiabilityInfo();
+            return this.cashFlowForm.isCaptureCapitalLiabilityInfo() == cashFlowForm.isCaptureCapitalLiabilityInfo() &&
+                    this.cashFlowForm.getIndebtednessRatio().equals(cashFlowForm.getIndebtednessRatio()) &&
+                    this.cashFlowForm.getLoanAmount().equals(cashFlowForm.getLoanAmount());
         }
         return false;
     }

@@ -609,26 +609,25 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         UserContext userContext = getUserContext(request);
-
         Short productId = loanActionForm.getPrdOfferingIdValue();
         LoanOfferingBO loanOffering = getLoanOffering(productId, userContext.getLocaleId());
         setVariableInstallmentDetailsOnForm(loanOffering, loanActionForm);
-
         DateTime disbursementDate = getDisbursementDate(loanActionForm, userContext.getPreferredLocale());
-
         LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto = retrieveLoanSchedule(request, loanActionForm, userContext, disbursementDate);
-        setGlimOnSession(request, loanActionForm, loanScheduleDetailsDto);
+        setAttributesForSchedulePreview(request, loanActionForm, disbursementDate, loanScheduleDetailsDto);
+        questionGroupFilter.setLoanOfferingBO(loanOffering);
+        ActionForward pageAfterQuestionnaire = getPageAfterQuestionnaire(mapping, request, loanOffering, loanScheduleDetailsDto, cashFlowAdaptor);
+        return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.valueOf(pageAfterQuestionnaire.getName()));
+    }
 
+    private void setAttributesForSchedulePreview(HttpServletRequest request, LoanAccountActionForm loanActionForm, DateTime disbursementDate, LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto) throws PageExpiredException {
+        setGlimOnSession(request, loanActionForm, loanScheduleDetailsDto);
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto.isLoanPendingApprovalDefined(), request);
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT_VALUE, loanActionForm.getLoanAmountValue().getAmount(), request);
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
-
-        questionGroupFilter.setLoanOfferingBO(loanOffering);
-        ActionForward pageAfterQuestionnaire = getPageAfterQuestionnaire(mapping, request, loanOffering, loanScheduleDetailsDto, cashFlowAdaptor);
-        return createLoanQuestionnaire.fetchAppliedQuestions(mapping, loanActionForm, request, ActionForwards.valueOf(pageAfterQuestionnaire.getName()));
     }
 
     // Intentionally made 'public' to aid testing

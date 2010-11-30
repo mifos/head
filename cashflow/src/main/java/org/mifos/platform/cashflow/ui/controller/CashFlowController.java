@@ -42,9 +42,9 @@ public class CashFlowController {
 
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public CashFlowForm prepareCashFlowForm(int startYear, int startMonth, int noOfMonths, BigDecimal loanAmount,
-                                            boolean captureCapitalLiabilityInfo) {
+                                            Double indebtednessRatio, boolean captureCapitalLiabilityInfo) {
         CashFlowDetail cashFlowDetail = cashFlowService.cashFlowFor(startYear, startMonth, noOfMonths);
-        return new CashFlowForm(cashFlowDetail, captureCapitalLiabilityInfo, loanAmount);
+        return new CashFlowForm(cashFlowDetail, captureCapitalLiabilityInfo, loanAmount, indebtednessRatio);
     }
 
 }

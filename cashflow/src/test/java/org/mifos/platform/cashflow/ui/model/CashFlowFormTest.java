@@ -22,7 +22,7 @@ public class CashFlowFormTest {
         monthlyCashFlowDetails.add(cashFlowDetail1);
         monthlyCashFlowDetails.add(cashFlowDetail2);
         CashFlowDetail cashFlowDetail = new CashFlowDetail(monthlyCashFlowDetails);
-        CashFlowForm cashFlowForm= new CashFlowForm(cashFlowDetail,false,null);
+        CashFlowForm cashFlowForm= new CashFlowForm(cashFlowDetail, false, null, 0d);
         List<MonthlyCashFlowForm> actual = cashFlowForm.getMonthlyCashFlows();
         List<MonthlyCashFlowForm> expected = new ArrayList<MonthlyCashFlowForm>();
         expected.add(new MonthlyCashFlowForm(cashFlowDetail1));

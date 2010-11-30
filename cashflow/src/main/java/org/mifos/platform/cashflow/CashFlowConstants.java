@@ -40,4 +40,5 @@ public class CashFlowConstants {
 
     public static final int FIRST_DAY = 1;
     public static final int EXTRA_DURATION_FOR_CASH_FLOW_SCHEDULE = 1;
+    public static final String INDEBTEDNESS_RATIO="indebtednessRatio";
 }

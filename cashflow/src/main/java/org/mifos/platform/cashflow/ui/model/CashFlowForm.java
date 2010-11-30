@@ -33,16 +33,17 @@ public class CashFlowForm implements Serializable {
     private CashFlowDetail cashFlowDetail;
     private boolean captureCapitalLiabilityInfo;
     private BigDecimal loanAmount;
+    private Double indebtednessRatio;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public CashFlowForm() {
-        super();
     }
 
-    public CashFlowForm(CashFlowDetail cashFlowDetail, boolean captureCapitalLiabilityInfo, BigDecimal loanAmount) {
+    public CashFlowForm(CashFlowDetail cashFlowDetail, boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio) {
         this.cashFlowDetail = cashFlowDetail;
         this.captureCapitalLiabilityInfo = captureCapitalLiabilityInfo;
         this.loanAmount = loanAmount;
+        this.indebtednessRatio = indebtednessRatio;
     }
 
     public void setTotalCapital(BigDecimal totalCapital) {
@@ -72,5 +73,13 @@ public class CashFlowForm implements Serializable {
 
     public boolean isCaptureCapitalLiabilityInfo() {
         return captureCapitalLiabilityInfo;
+    }
+
+    public BigDecimal getLoanAmount() {
+        return loanAmount;
+    }
+
+    public Double getIndebtednessRatio() {
+        return indebtednessRatio;
     }
 }
