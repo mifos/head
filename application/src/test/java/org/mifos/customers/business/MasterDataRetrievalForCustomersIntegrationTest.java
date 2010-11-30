@@ -28,7 +28,6 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -36,13 +35,10 @@ import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.util.StandardTestingService;
-import org.mifos.framework.util.helpers.DatabaseSetup;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 public class MasterDataRetrievalForCustomersIntegrationTest extends MifosIntegrationTestCase {
 

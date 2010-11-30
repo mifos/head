@@ -34,7 +34,6 @@ import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mockito.Mockito;
 import org.springframework.test.annotation.ExpectedException;
 

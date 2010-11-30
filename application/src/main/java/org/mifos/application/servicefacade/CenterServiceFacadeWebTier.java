@@ -33,6 +33,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
@@ -686,7 +687,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     }
 
     @Override
-    public void waiveChargeDue(Integer accountId, Integer waiveType) {
+    public void waiveChargesDue(Integer accountId, Integer waiveType) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -727,6 +728,81 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             throw new MifosRuntimeException(e);
         } catch (ApplicationException e) {
             throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public void waiveChargesOverDue(Integer accountId, Integer waiveType) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
+            account.updateDetails(userContext);
+
+            WaiveEnum waiveEnum = WaiveEnum.fromInt(waiveType);
+
+            if (account.getPersonnel() != null) {
+                new AccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account
+                        .getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(), account
+                        .getPersonnel().getPersonnelId());
+            } else {
+                new AccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account
+                        .getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(), userContext.getId());
+            }
+
+            this.transactionHelper.startTransaction();
+            account.waiveAmountOverDue(waiveEnum);
+            this.customerDao.save(account);
+            this.transactionHelper.commitTransaction();
+
+        } catch (ServiceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void removeAccountFee(Integer accountId, Short feeId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
+
+            account.updateDetails(userContext);
+
+            if (account.getPersonnel() != null) {
+                new AccountBusinessService().checkPermissionForRemoveFees(account.getType(),
+                        account.getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(),
+                        account.getPersonnel().getPersonnelId());
+            } else {
+                new AccountBusinessService().checkPermissionForRemoveFees(account.getType(),
+                        account.getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(), userContext.getId());
+            }
+
+            this.transactionHelper.startTransaction();
+            account.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feeId, userContext.getId());
+            this.customerDao.save(account);
+            this.transactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            this.transactionHelper.closeSession();
         }
     }
 }

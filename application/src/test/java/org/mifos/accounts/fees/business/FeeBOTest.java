@@ -2,14 +2,11 @@ package org.mifos.accounts.fees.business;
 
 import junit.framework.Assert;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.test.annotation.ExpectedException;

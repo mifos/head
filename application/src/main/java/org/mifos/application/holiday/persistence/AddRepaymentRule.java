@@ -28,7 +28,6 @@ import java.sql.SQLException;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.LookUpEntity;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.framework.persistence.Upgrade;
 
 public class AddRepaymentRule extends Upgrade {

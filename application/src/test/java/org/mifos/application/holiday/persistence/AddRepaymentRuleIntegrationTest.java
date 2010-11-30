@@ -20,7 +20,6 @@
 
 package org.mifos.application.holiday.persistence;
 
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
 import junit.framework.Assert;
 
 import org.junit.Test;

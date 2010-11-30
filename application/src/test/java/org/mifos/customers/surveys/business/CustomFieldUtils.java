@@ -22,7 +22,6 @@ package org.mifos.customers.surveys.business;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;

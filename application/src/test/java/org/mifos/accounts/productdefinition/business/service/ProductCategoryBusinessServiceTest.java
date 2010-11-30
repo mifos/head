@@ -1,9 +1,6 @@
 package org.mifos.accounts.productdefinition.business.service;
 
 import org.junit.Test;
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;

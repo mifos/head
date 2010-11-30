@@ -35,7 +35,6 @@ import org.quartz.TriggerUtils;
 import org.quartz.SimpleTrigger;
 import org.quartz.Scheduler;
 import org.springframework.batch.core.BatchStatus;
-import org.springframework.batch.core.ExitStatus;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;

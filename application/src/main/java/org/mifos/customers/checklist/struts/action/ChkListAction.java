@@ -35,7 +35,6 @@ import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusi
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.CheckListServiceFacade;
-import org.mifos.application.master.MessageLookup;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -54,7 +53,6 @@ import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.screen.AccountCheckBoxItemDto;
 import org.mifos.dto.screen.CustomerCheckBoxItemDto;
 import org.mifos.framework.business.service.BusinessService;

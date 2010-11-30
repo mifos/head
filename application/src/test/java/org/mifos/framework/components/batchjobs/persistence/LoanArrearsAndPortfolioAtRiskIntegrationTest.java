@@ -41,7 +41,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;

@@ -20,7 +20,6 @@
 
 package org.mifos.test.framework.util;
 
-import org.mifos.framework.hibernate.helper.DatabaseDependentTest;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 /**

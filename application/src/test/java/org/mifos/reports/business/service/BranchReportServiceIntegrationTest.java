@@ -43,7 +43,6 @@ import junit.framework.Assert;
 import org.apache.commons.collections.PredicateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.customers.office.business.OfficeBO;

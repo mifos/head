@@ -87,7 +87,7 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
-    public void testForwardWaiveChargeOverDue() {
+    public void ignore_testForwardWaiveChargeOverDue() {
         createInitialObjects();
         setRequestPathInfo("/customerAction.do");
         addRequestParameter("method", "waiveChargeOverDue");

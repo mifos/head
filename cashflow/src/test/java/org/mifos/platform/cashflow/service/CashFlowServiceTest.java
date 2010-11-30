@@ -37,8 +37,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
-import static org.mockito.Matchers.any;
-
 @RunWith(MockitoJUnitRunner.class)
 public class CashFlowServiceTest {
 

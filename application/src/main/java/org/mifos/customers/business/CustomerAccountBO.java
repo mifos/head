@@ -45,7 +45,6 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
-import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
@@ -449,11 +448,6 @@ public class CustomerAccountBO extends AccountBO {
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             addCustomerActivity(buildCustomerActivity(chargeWaived, AccountConstants.AMNT_WAIVED, userContext.getId()));
         }
-        try {
-            new AccountPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
     }
 
     public void applyPeriodicFeesToNewSchedule () {
@@ -544,12 +538,6 @@ public class CustomerAccountBO extends AccountBO {
         FeeBO feesBO = getAccountFeesObject(feeId);
         String description = feesBO.getFeeName() + " " + AccountConstants.FEES_REMOVED;
         updateAccountActivity(null, null, null, null, personnelId, description);
-        try {
-            new AccountPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
-
     }
 
     @Override

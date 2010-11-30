@@ -7,7 +7,6 @@ import org.mifos.framework.util.helpers.Money;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 public class LoanScheduleGenerationDto implements DataTransferObject {
     private Date disbursementDate;

@@ -49,7 +49,6 @@ import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.core.io.ClassPathResource;
 

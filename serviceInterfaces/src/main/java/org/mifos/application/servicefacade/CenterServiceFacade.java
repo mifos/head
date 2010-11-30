@@ -90,5 +90,11 @@ public interface CenterServiceFacade {
     List<CustomerRecentActivityDto> retrieveAllAccountActivity(String globalCustNum);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void waiveChargeDue(Integer accountId, Integer waiveType);
+    void waiveChargesDue(Integer accountId, Integer waiveType);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void waiveChargesOverDue(Integer accountId, Integer waiveType);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void removeAccountFee(Integer accountId, Short feeId);
 }

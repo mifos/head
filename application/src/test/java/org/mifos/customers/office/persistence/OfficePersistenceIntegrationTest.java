@@ -20,16 +20,12 @@
 
 package org.mifos.customers.office.persistence;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeTemplate;
 import org.mifos.customers.office.business.OfficeTemplateImpl;

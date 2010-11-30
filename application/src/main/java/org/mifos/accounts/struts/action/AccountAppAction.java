@@ -34,14 +34,10 @@ import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -94,18 +90,12 @@ public class AccountAppAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Integer accountId = getIntegerValue(request.getParameter("accountId"));
         Short feeId = getShortValue(request.getParameter("feeId"));
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
+
         AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
-        if (accountBO.getPersonnel() != null) {
-            getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),
-                    accountBO.getCustomer().getLevel(), uc, accountBO.getOffice().getOfficeId(),
-                    accountBO.getPersonnel().getPersonnelId());
-        } else {
-            getAccountBusinessService().checkPermissionForRemoveFees(accountBO.getType(),
-                    accountBO.getCustomer().getLevel(), uc, accountBO.getOffice().getOfficeId(), uc.getId());
-        }
-        accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feeId, uc.getId());
+
+        this.centerServiceFacade.removeAccountFee(accountId, feeId);
+
         String fromPage = request.getParameter(CenterConstants.FROM_PAGE);
         StringBuilder forward = new StringBuilder();
         forward = forward.append(AccountConstants.REMOVE + "_" + fromPage + "_" + AccountConstants.CHARGES);
@@ -122,7 +112,7 @@ public class AccountAppAction extends BaseAction {
         Integer accountId = getIntegerValue(request.getParameter("accountId"));
 
         WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
-        this.centerServiceFacade.waiveChargeDue(accountId, waiveEnum.ordinal());
+        this.centerServiceFacade.waiveChargesDue(accountId, waiveEnum.ordinal());
 
         AccountBO account = getAccountBusinessService().getAccount(accountId);
         account.updateDetails(uc);
@@ -136,19 +126,14 @@ public class AccountAppAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
         Integer accountId = getIntegerValue(request.getParameter("accountId"));
-        AccountBO account = getAccountBusinessService().getAccount(accountId);
-        account.setUserContext(uc);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
         WaiveEnum waiveEnum = getWaiveType(request.getParameter(AccountConstants.WAIVE_TYPE));
-        if (account.getPersonnel() != null) {
-            getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
-                    account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(),
-                    account.getPersonnel().getPersonnelId());
-        } else {
-            getAccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
-                    account.getCustomer().getLevel(), uc, account.getOffice().getOfficeId(), uc.getId());
-        }
-        account.waiveAmountOverDue(waiveEnum);
+
+        this.centerServiceFacade.waiveChargesOverDue(accountId, waiveEnum.ordinal());
+
+        AccountBO account = getAccountBusinessService().getAccount(accountId);
+        account.updateDetails(uc);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
+
         return mapping.findForward("waiveChargesOverDue_Success");
     }
 
@@ -166,14 +151,6 @@ public class AccountAppAction extends BaseAction {
 
     protected CustomerBO getCustomer(Integer customerId) {
         return this.customerDao.findCustomerById(customerId);
-    }
-
-    protected CustomerBO getCustomerBySystemId(String systemId) throws ServiceException {
-        return getCustomerBusinessService().findBySystemId(systemId);
-    }
-
-    protected CustomerBusinessService getCustomerBusinessService() {
-        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
     }
 
     protected AccountBusinessService getAccountBusinessService() {

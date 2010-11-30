@@ -38,7 +38,6 @@ import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.config.util.helpers.CustomFieldsListBoxData;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
