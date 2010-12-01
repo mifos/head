@@ -40,7 +40,7 @@ public interface AccountService {
      *
      * @param accountPaymentParametersDto the parameters to make a loan payment
      */
-    void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) throws Exception;
+    void makePayment(AccountPaymentParametersDto accountPaymentParametersDto);
 
     /**
      * Make multiple loan account payments within a single transaction.
@@ -208,9 +208,9 @@ public interface AccountService {
      * @param accountRef is a reference to the account for which payment information is requested.
      */
     List<AccountPaymentParametersDto> lookupPayments(AccountReferenceDto accountRef) throws Exception;
-    
+
     /**
-     * Checks if given receipt number already exists in account_payments table 
+     * Checks if given receipt number already exists in account_payments table
      */
     boolean receiptExists(String receiptNumber) throws Exception;
 

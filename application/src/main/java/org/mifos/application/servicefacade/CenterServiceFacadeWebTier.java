@@ -77,6 +77,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterDisplayDto;
@@ -108,6 +109,8 @@ import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.util.Address;
+import org.mifos.framework.components.audit.business.service.AuditBusinessService;
+import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -841,6 +844,25 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
                 this.transactionHelper.rollbackTransaction();
                 throw new BusinessRuleException(e.getKey(), e);
             }
+        }
+    }
+
+    @Override
+    public List<AuditLogDto> retrieveChangeLogs(Integer centerId) {
+
+        try {
+            List<AuditLogDto> auditLogs = new ArrayList<AuditLogDto>();
+
+            Short entityType = EntityType.CENTER.getValue();
+            AuditBusinessService auditBusinessService = new AuditBusinessService();
+            List<AuditLogView> centerAuditLogs = auditBusinessService.getAuditLogRecords(entityType, centerId);
+            for (AuditLogView auditLogView : centerAuditLogs) {
+                auditLogs.add(auditLogView.toDto());
+            }
+
+            return auditLogs;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
         }
     }
 }

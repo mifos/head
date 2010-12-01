@@ -65,10 +65,6 @@ public class AccountApplyPaymentAction extends BaseAction {
         feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }
 
-    public AccountService getAccountService() {
-        return accountService;
-    }
-
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("applyPaymentAction");
         security.allow("load", SecurityConstants.VIEW);
@@ -143,7 +139,7 @@ public class AccountApplyPaymentAction extends BaseAction {
                 userReferenceDto, new AccountReferenceDto(accountId), new BigDecimal(amount), actionForm.getTrxnDateAsLocalDate(),
                 paymentTypeDto, AccountConstants.NO_COMMENT, actionForm.getReceiptDateAsLocalDate(), actionForm.getReceiptId(), null);
 
-        getAccountService().makePayment(accountPaymentParametersDto);
+        this.accountServiceFacade.makePayment(accountPaymentParametersDto);
 
         return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
 

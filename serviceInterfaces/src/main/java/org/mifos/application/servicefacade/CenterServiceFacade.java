@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
+import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterDto;
@@ -56,6 +57,9 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void initializeCenterStates(String centerGlobalNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<AuditLogDto> retrieveChangeLogs(Integer centerId);
 
     // General
     @PreAuthorize("isFullyAuthenticated()")

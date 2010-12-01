@@ -25,15 +25,18 @@ import java.util.HashSet;
 import java.util.List;
 
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
@@ -56,6 +59,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
  */
 public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
+    private AccountService accountService = DependencyInjectedServiceLocator.locateAccountService();
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Override
@@ -206,5 +210,10 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) {
+        this.accountService.makePayment(accountPaymentParametersDto);
     }
 }

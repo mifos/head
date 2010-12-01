@@ -194,7 +194,8 @@ public abstract class BaseAction extends DispatchAction {
         }
     }
 
-    protected TransactionDemarcate getTransaction(ActionForm actionForm, HttpServletRequest request) {
+    @SuppressWarnings("unchecked")
+    protected TransactionDemarcate getTransaction(@SuppressWarnings("unused") ActionForm actionForm, HttpServletRequest request) {
         TransactionDemarcate annotation = null;
         try {
             String methodName = request.getParameter(MethodNameConstants.METHOD);
@@ -207,7 +208,8 @@ public abstract class BaseAction extends DispatchAction {
         return annotation;
     }
 
-    protected boolean isCloseSessionAnnotationPresent(ActionForm actionForm, HttpServletRequest request) {
+    @SuppressWarnings("unchecked")
+    protected boolean isCloseSessionAnnotationPresent(@SuppressWarnings("unused") ActionForm actionForm, HttpServletRequest request) {
         boolean isAnnotationPresent = false;
         try {
             String methodName = request.getParameter(MethodNameConstants.METHOD);
@@ -435,8 +437,8 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward loadChangeLog(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward loadChangeLog(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Short entityType = EntityType.getEntityValue(request.getParameter(AuditConstants.ENTITY_TYPE).toUpperCase());
         Integer entityId = Integer.valueOf(request.getParameter(AuditConstants.ENTITY_ID));
         AuditBusinessService auditBusinessService = new AuditBusinessService();
@@ -447,8 +449,8 @@ public abstract class BaseAction extends DispatchAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward cancelChangeLog(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancelChangeLog(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(AuditConstants.CANCEL + request.getParameter(AuditConstants.ENTITY_TYPE)
                 + AuditConstants.CHANGE_LOG);
     }
@@ -466,8 +468,8 @@ public abstract class BaseAction extends DispatchAction {
      * call
      * "ActionMapping mapping = request.getAttribute(Constants.ACTION_MAPPING)"
      */
-    public ActionForward findActionMapping(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward findActionMapping(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute(Constants.ACTION_MAPPING, mapping);
         // welcome is a global forward, present in all actions
         return mapping.findForward(ActionForwards.welcome.toString());

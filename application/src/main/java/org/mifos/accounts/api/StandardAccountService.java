@@ -39,6 +39,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.ConfigurationManager;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -47,8 +48,11 @@ import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.BusinessRuleException;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -61,12 +65,14 @@ import java.util.Locale;
  * business objects, only DTOs.
  */
 public class StandardAccountService implements AccountService {
+
     private AccountPersistence accountPersistence;
     private LoanPersistence loanPersistence;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private final PersonnelDao personnelDao;
     private CustomerDao customerDao;
     private LoanBusinessService loanBusinessService;
+    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
                                   AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
@@ -80,11 +86,18 @@ public class StandardAccountService implements AccountService {
     }
 
     @Override
-    public void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) throws PersistenceException,
-            AccountException {
-        StaticHibernateUtil.startTransaction();
-        makePaymentNoCommit(accountPaymentParametersDto);
-        StaticHibernateUtil.commitTransaction();
+    public void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) {
+        try {
+            transactionHelper.startTransaction();
+            makePaymentNoCommit(accountPaymentParametersDto);
+            transactionHelper.commitTransaction();
+        } catch (PersistenceException e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 
     @Override
