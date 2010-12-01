@@ -23,16 +23,12 @@ package org.mifos.customers.business.service;
 import static org.mifos.framework.util.helpers.NumberUtils.getPercentage;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.client.business.CustomerPictureEntity;
@@ -40,15 +36,12 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -110,17 +103,6 @@ public class CustomerBusinessService implements BusinessService {
         }
     }
 
-    public List<CustomerRecentActivityDto> getAllActivityView(String globalCustNum) throws ServiceException {
-        CustomerBO customerBO = findBySystemId(globalCustNum);
-        List<CustomerActivityEntity> customerActivityDetails = customerBO.getCustomerAccount()
-                .getCustomerActivitDetails();
-        List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
-        for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
-            customerActivityViewList.add(getCustomerActivityView(customerActivityEntity, Locale.getDefault()));
-        }
-        return customerActivityViewList;
-    }
-
     public QueryResult search(String searchString, Short officeId, Short userId, Short userOfficeId)
             throws ServiceException {
 
@@ -170,14 +152,6 @@ public class CustomerBusinessService implements BusinessService {
     public CustomerPictureEntity retrievePicture(Integer customerId) throws ServiceException {
         try {
             return customerPersistence.retrievePicture(customerId);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
-    public List<AccountBO> getAllClosedAccount(Integer customerId, Short accountTypeId) throws ServiceException {
-        try {
-            return customerPersistence.getAllClosedAccount(customerId, accountTypeId);
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
@@ -375,32 +349,6 @@ public class CustomerBusinessService implements BusinessService {
         } catch (PersistenceException pe) {
             throw new ServiceException(pe);
         }
-    }
-
-    private CustomerRecentActivityDto getCustomerActivityView(CustomerActivityEntity customerActivityEntity, Locale locale) {
-        CustomerRecentActivityDto customerRecentActivityDto = new CustomerRecentActivityDto();
-
-        String preferredDate = DateUtils.getUserLocaleDate(locale, customerActivityEntity.getCreatedDate().toString());
-        customerRecentActivityDto.setActivityDate(customerActivityEntity.getCreatedDate());
-        customerRecentActivityDto.setUserPrefferedDate(preferredDate);
-        customerRecentActivityDto.setDescription(customerActivityEntity.getDescription());
-        Money amount = removeSign(customerActivityEntity.getAmount());
-        if (amount.isZero()) {
-            customerRecentActivityDto.setAmount("-");
-        } else {
-            customerRecentActivityDto.setAmount(amount.toString());
-        }
-        if (customerActivityEntity.getPersonnel() != null) {
-            customerRecentActivityDto.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
-        }
-        return customerRecentActivityDto;
-    }
-
-    private Money removeSign(Money amount) {
-        if (amount != null && amount.isLessThanZero()) {
-            return amount.negate();
-        }
-        return amount;
     }
 
     private Integer getCustomerCountForOffice(CustomerLevel customerLevel, OfficeBO office) throws ServiceException {

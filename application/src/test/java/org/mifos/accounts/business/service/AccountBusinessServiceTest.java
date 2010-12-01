@@ -3,7 +3,6 @@ package org.mifos.accounts.business.service;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.PersistenceException;

@@ -20,13 +20,11 @@
 
 package org.mifos.framework.persistence;
 
-import java.sql.Connection;
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 
 
 public class UpgradeIntegrationTest extends MifosIntegrationTestCase {

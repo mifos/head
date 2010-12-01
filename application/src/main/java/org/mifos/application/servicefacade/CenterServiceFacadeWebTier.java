@@ -28,12 +28,18 @@ import java.util.Locale;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountStateMachines;
+import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -46,9 +52,11 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.PositionEntity;
@@ -92,13 +100,20 @@ import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
+import org.mifos.dto.screen.ClosedAccountDto;
+import org.mifos.dto.screen.CustomerNoteFormDto;
 import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.dto.screen.CustomerStatusDetailDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -113,6 +128,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private final PersonnelDao personnelDao;
     private final CustomerDao customerDao;
     private final CustomerService customerService;
+    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     public CenterServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
@@ -557,5 +573,236 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             return amount.negate();
         }
         return amount;
+    }
+
+    @Override
+    public CustomerNoteFormDto retrieveCustomerNote(String globalCustNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CustomerBO customer = this.customerDao.findCustomerBySystemId(globalCustNum);
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+
+        Integer customerLevel = customer.getCustomerLevel().getId().intValue();
+        String globalNum = customer.getGlobalCustNum();
+        String displayName = customer.getDisplayName();
+        LocalDate commentDate = new LocalDate();
+        String commentUser = loggedInUser.getDisplayName();
+
+        return new CustomerNoteFormDto(globalNum, displayName, customerLevel, commentDate, commentUser, "");
+    }
+
+    @Override
+    public void createCustomerNote(CustomerNoteFormDto customerNoteForm) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CustomerBO customer = this.customerDao.findCustomerBySystemId(customerNoteForm.getGlobalNum());
+        customer.updateDetails(userContext);
+
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+
+        CustomerNoteEntity customerNote = new CustomerNoteEntity(customerNoteForm.getComment(),
+                new DateTimeService().getCurrentJavaSqlDate(), loggedInUser, customer);
+        customer.addCustomerNotes(customerNote);
+
+        try {
+            this.transactionHelper.startTransaction();
+            this.customerDao.save(customer);
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(customer.getCustomerAccount().getAccountId().toString(), e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public List<ClosedAccountDto> retrieveAllClosedAccounts(Integer customerId) {
+        List<ClosedAccountDto> closedAccounts = new ArrayList<ClosedAccountDto>();
+
+        List<AccountBO> allClosedAccounts = this.customerDao.retrieveAllClosedLoanAndSavingsAccounts(customerId);
+        for (AccountBO account : allClosedAccounts) {
+            LocalDate closedDate = new LocalDate(account.getClosedDate());
+            ClosedAccountDto closedAccount = new ClosedAccountDto(account.getAccountId(), account.getGlobalAccountNum(), account.getType().getValue().intValue(), account.getState().getValue().intValue(), closedDate);
+            closedAccounts.add(closedAccount);
+        }
+        return closedAccounts;
+    }
+
+    @Override
+    public List<TransactionHistoryDto> retrieveAccountTransactionHistory(String globalAccountNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            AccountBO account = new AccountBusinessService().findBySystemId(globalAccountNum);
+            account.updateDetails(userContext);
+
+            List<TransactionHistoryDto> transactionHistories = account.getTransactionHistoryView();
+            for (TransactionHistoryDto transactionHistoryDto : transactionHistories) {
+                transactionHistoryDto.setUserPrefferedPostedDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), transactionHistoryDto.getPostedDate().toString()));
+                transactionHistoryDto.setUserPrefferedTransactionDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), transactionHistoryDto.getTransactionDate().toString()));
+            }
+            return transactionHistories;
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<CustomerRecentActivityDto> retrieveAllAccountActivity(String globalCustNum) {
+        List<CustomerRecentActivityDto> customerActivityViewList = new ArrayList<CustomerRecentActivityDto>();
+
+        CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
+        List<CustomerActivityEntity> customerActivityDetails = customerBO.getCustomerAccount().getCustomerActivitDetails();
+
+        for (CustomerActivityEntity customerActivityEntity : customerActivityDetails) {
+            customerActivityViewList.add(assembleCustomerActivityDto(customerActivityEntity, Locale.getDefault()));
+        }
+        return customerActivityViewList;
+    }
+
+    private CustomerRecentActivityDto assembleCustomerActivityDto(CustomerActivityEntity customerActivityEntity, Locale locale) {
+        CustomerRecentActivityDto customerRecentActivityDto = new CustomerRecentActivityDto();
+
+        String preferredDate = DateUtils.getUserLocaleDate(locale, customerActivityEntity.getCreatedDate().toString());
+        customerRecentActivityDto.setActivityDate(customerActivityEntity.getCreatedDate());
+        customerRecentActivityDto.setUserPrefferedDate(preferredDate);
+        customerRecentActivityDto.setDescription(customerActivityEntity.getDescription());
+        Money amount = removeSign(customerActivityEntity.getAmount());
+        if (amount.isZero()) {
+            customerRecentActivityDto.setAmount("-");
+        } else {
+            customerRecentActivityDto.setAmount(amount.toString());
+        }
+        if (customerActivityEntity.getPersonnel() != null) {
+            customerRecentActivityDto.setPostedBy(customerActivityEntity.getPersonnel().getDisplayName());
+        }
+        return customerRecentActivityDto;
+    }
+
+    @Override
+    public void waiveChargesDue(Integer accountId, Integer waiveType) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
+            account.updateDetails(userContext);
+            PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+
+            WaiveEnum waiveEnum = WaiveEnum.fromInt(waiveType);
+            if (account.getPersonnel() != null) {
+                new AccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
+                        account.getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(),
+                        account.getPersonnel().getPersonnelId());
+            } else {
+                new AccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(),
+                        account.getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(), userContext.getId());
+            }
+
+            if (account.isLoanAccount()) {
+                ((LoanBO)account).waiveAmountDue(waiveEnum);
+            } else if (account.isSavingsAccount()) {
+                ((SavingsBO)account).waiveNextDepositAmountDue(loggedInUser);
+            } else  {
+                try {
+                    this.transactionHelper.startTransaction();
+                    ((CustomerAccountBO)account).waiveAmountDue();
+                    this.customerDao.save(account);
+                    this.transactionHelper.commitTransaction();
+                } catch (Exception e) {
+                    this.transactionHelper.rollbackTransaction();
+                    throw new BusinessRuleException(account.getAccountId().toString(), e);
+                } finally {
+                    this.transactionHelper.closeSession();
+                }
+            }
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public void waiveChargesOverDue(Integer accountId, Integer waiveType) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
+            account.updateDetails(userContext);
+
+            WaiveEnum waiveEnum = WaiveEnum.fromInt(waiveType);
+
+            if (account.getPersonnel() != null) {
+                new AccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account
+                        .getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(), account
+                        .getPersonnel().getPersonnelId());
+            } else {
+                new AccountBusinessService().checkPermissionForWaiveDue(waiveEnum, account.getType(), account
+                        .getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(), userContext.getId());
+            }
+
+            this.transactionHelper.startTransaction();
+            account.waiveAmountOverDue(waiveEnum);
+            this.customerDao.save(account);
+            this.transactionHelper.commitTransaction();
+
+        } catch (ServiceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void removeAccountFee(Integer accountId, Short feeId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
+
+            account.updateDetails(userContext);
+
+            if (account.getPersonnel() != null) {
+                new AccountBusinessService().checkPermissionForRemoveFees(account.getType(),
+                        account.getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(),
+                        account.getPersonnel().getPersonnelId());
+            } else {
+                new AccountBusinessService().checkPermissionForRemoveFees(account.getType(),
+                        account.getCustomer().getLevel(), userContext, account.getOffice().getOfficeId(), userContext.getId());
+            }
+
+            this.transactionHelper.startTransaction();
+            account.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feeId, userContext.getId());
+            this.customerDao.save(account);
+            this.transactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
     }
 }

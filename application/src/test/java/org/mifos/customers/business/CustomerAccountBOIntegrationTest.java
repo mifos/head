@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
-import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -59,7 +58,6 @@ import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.PaymentTypeEntity;
@@ -264,92 +262,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testWaiveChargeOverDue() throws Exception {
-        createInitialObjects();
-        TestObjectFactory.flushandCloseSession();
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        CustomerAccountBO customerAccountBO = group.getCustomerAccount();
-        changeFirstInstallmentDateToPreviousDate(customerAccountBO);
-        TestObjectFactory.updateObject(customerAccountBO);
-        TestObjectFactory.flushandCloseSession();
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        userContext = TestUtils.makeUser();
-        customerAccountBO = group.getCustomerAccount();
-        customerAccountBO.setUserContext(userContext);
-        customerAccountBO.waiveAmountOverDue(WaiveEnum.ALL);
-        for (AccountActionDateEntity accountAction : customerAccountBO.getAccountActionDates()) {
-            CustomerScheduleEntity accountActionDateEntity = (CustomerScheduleEntity) accountAction;
-            for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountActionDateEntity
-                    .getAccountFeesActionDetails()) {
-                if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
-                } else {
-                    Assert.assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
-                }
-            }
-        }
-    }
-
-    @Test
-    public void testRemoveFees() throws NumberFormatException, SystemException, ApplicationException {
-        createInitialObjects();
-        CustomerAccountBO customerAccountBO = group.getCustomerAccount();
-        for (AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()) {
-            FeeBO feesBO = accountFeesEntity.getFees();
-            customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feesBO.getFeeId(), Short.valueOf("1"));
-        }
-        StaticHibernateUtil.flushAndClearSession();
-        group = TestObjectFactory.getGroup(group.getCustomerId());
-        customerAccountBO = group.getCustomerAccount();
-
-        checkActivity(new Money(getCurrency()), customerAccountBO);
-
-        getInactiveFee();
-    }
-
-    private AccountFeesEntity getInactiveFee() {
-        Set<AccountFeesEntity> fees = group.getCustomerAccount().getAccountFees();
-        Assert.assertEquals(1, fees.size());
-        AccountFeesEntity accountFeesEntity = fees.iterator().next();
-        Assert.assertEquals(FeeStatus.INACTIVE, accountFeesEntity.getFeeStatusAsEnum());
-        return accountFeesEntity;
-    }
-
-    @Test
-    public void testRemoveFeeWithNonActiveCustomer() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-                CUSTOMER_MEETING));
-        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PARTIAL, center);
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCustomer(center.getCustomerId());
-        group = TestObjectFactory.getCustomer(group.getCustomerId());
-        customerAccountBO = group.getCustomerAccount();
-        UserContext uc = TestUtils.makeUser();
-        customerAccountBO.setUserContext(uc);
-        for (AccountFeesEntity accountFeesEntity : customerAccountBO.getAccountFees()) {
-            FeeBO feesBO = accountFeesEntity.getFees();
-            customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(feesBO.getFeeId(), Short.valueOf("1"));
-        }
-        StaticHibernateUtil.flushAndClearSession();
-        checkActivity(null, customerAccountBO);
-
-        AccountFeesEntity accountFeesEntity = getInactiveFee();
-        // TODO: race condition - will fail when run just at midnight
-        Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
-                .getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
-    }
-
-    private void checkActivity(final Money expectedAmount, final CustomerAccountBO customerAccountBO) {
-        List<CustomerActivityEntity> customerActivitySet = customerAccountBO.getCustomerActivitDetails();
-        Assert.assertEquals(1, customerActivitySet.size());
-        CustomerActivityEntity customerActivityEntity = customerActivitySet.get(0);
-        Assert.assertEquals(1, customerActivityEntity.getPersonnel().getPersonnelId().intValue());
-        Assert.assertEquals("Maintenance Fee removed", customerActivityEntity.getDescription());
-        Assert.assertEquals(expectedAmount, customerActivityEntity.getAmount());
-    }
-
-    @Test
     public void testUpdateAccountActivity() throws NumberFormatException, SystemException, ApplicationException {
         createInitialObjects();
         CustomerAccountBO customerAccountBO = group.getCustomerAccount();
@@ -510,55 +422,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 //        }
 //    }
 
-    @Test
-    public void testApplyPeriodicFeeToPartialPending() throws Exception {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
-                CUSTOMER_MEETING));
-
-        // The factory creates a "maint
-        center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_PENDING, center);
-        TestObjectFactory.flushandCloseSession();
-        center = TestObjectFactory.getCustomer(center.getCustomerId());
-        group = TestObjectFactory.getCustomer(group.getCustomerId());
-        customerAccountBO = group.getCustomerAccount();
-        FeeBO periodicFee = TestObjectFactory.createPeriodicAmountFee("Periodic Fee", FeeCategory.ALLCUSTOMERS, "200",
-                RecurrenceType.WEEKLY, Short.valueOf("2"));
-        UserContext uc = TestUtils.makeUser();
-        customerAccountBO.setUserContext(uc);
-
-        customerAccountBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
-                .getAmountDoubleValue());
-        StaticHibernateUtil.flushAndClearSession();
-        AccountFeesEntity accountFeesEntity = customerAccountBO.getAccountFees(periodicFee.getFeeId());
-        Assert.assertEquals(Short.valueOf("1"), accountFeesEntity.getFeeStatus());
-        Assert.assertNull(accountFeesEntity.getLastAppliedDate());
-        Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
-                .getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
-        Assert.assertEquals(1, customerAccountBO.getCustomerActivitDetails().size());
-
-        customerAccountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(periodicFee.getFeeId(), Short.valueOf("1"));
-        StaticHibernateUtil.flushAndClearSession();
-        Assert.assertEquals(2, customerAccountBO.getCustomerActivitDetails().size());
-        Assert.assertEquals(2, customerAccountBO.getAccountFees().size());
-        for (AccountFeesEntity accountFees : customerAccountBO.getAccountFees()) {
-            if (accountFees.getFees().getFeeName().equals("Periodic Fee")) {
-                Assert.assertEquals(Short.valueOf("2"), accountFees.getFeeStatus());
-                Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
-                        .getDateWithoutTimeStamp(accountFees.getStatusChangeDate().getTime()));
-            }
-        }
-
-        customerAccountBO.applyCharge(periodicFee.getFeeId(), ((AmountFeeBO) periodicFee).getFeeAmount()
-                .getAmountDoubleValue());
-        StaticHibernateUtil.flushAndClearSession();
-        Assert.assertEquals(3, customerAccountBO.getCustomerActivitDetails().size());
-        accountFeesEntity = customerAccountBO.getAccountFees(periodicFee.getFeeId());
-        Assert.assertEquals(Short.valueOf("1"), accountFeesEntity.getFeeStatus());
-        Assert.assertNull(accountFeesEntity.getLastAppliedDate());
-        Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), DateUtils
-                .getDateWithoutTimeStamp(accountFeesEntity.getStatusChangeDate().getTime()));
-    }
 
     @Test
     public void testApplyUpfrontFee() throws Exception {

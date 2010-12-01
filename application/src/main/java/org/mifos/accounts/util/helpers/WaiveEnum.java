@@ -21,5 +21,15 @@
 package org.mifos.accounts.util.helpers;
 
 public enum WaiveEnum {
-    FEES, PENALTY, ALL
+    FEES, PENALTY, ALL;
+
+    public static WaiveEnum fromInt(Integer waiveTypeOrdinal) {
+        WaiveEnum waiveType = WaiveEnum.ALL;
+        if (waiveTypeOrdinal == 0) {
+            waiveType = WaiveEnum.FEES;
+        } else if (waiveTypeOrdinal == 1) {
+            waiveType = WaiveEnum.PENALTY;
+        }
+        return waiveType;
+    }
 }

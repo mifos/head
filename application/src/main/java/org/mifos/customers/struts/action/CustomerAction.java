@@ -20,6 +20,8 @@
 
 package org.mifos.customers.struts.action;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,6 +32,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.struts.action.AccountAppAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -57,28 +60,29 @@ public class CustomerAction extends AccountAppAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
-    public ActionForward forwardWaiveChargeDue(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward forwardWaiveChargeDue(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String type = request.getParameter("type");
         return mapping.findForward("waive" + type + "Charges_Success");
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
-    public ActionForward forwardWaiveChargeOverDue(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward forwardWaiveChargeOverDue(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String type = request.getParameter("type");
         return mapping.findForward("waive" + type + "Charges_Success");
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward getAllActivity(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward getAllActivity(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
+            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In CustomerAction::getAllActivity()");
         String type = request.getParameter("type");
         String globalCustNum = request.getParameter("globalCustNum");
-        SessionUtils.setCollectionAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST, getCustomerBusinessService()
-                .getAllActivityView(globalCustNum), request);
+        List<CustomerRecentActivityDto> recentCustomerActivity = this.centerServiceFacade.retrieveAllAccountActivity(globalCustNum);
+
+        SessionUtils.setCollectionAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST, recentCustomerActivity, request);
         return mapping.findForward("view" + type + "Activity");
     }
 }

@@ -20,7 +20,6 @@
 package org.mifos.platform.cashflow.service;
 
 import org.joda.time.DateTime;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.platform.cashflow.CashFlowService;

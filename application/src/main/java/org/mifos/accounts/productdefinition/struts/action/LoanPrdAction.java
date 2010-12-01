@@ -36,7 +36,6 @@ import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;

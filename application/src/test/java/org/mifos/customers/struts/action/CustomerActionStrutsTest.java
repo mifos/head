@@ -23,13 +23,10 @@ package org.mifos.customers.struts.action;
 import junit.framework.Assert;
 
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -41,25 +38,9 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private UserContext userContext;
-
     private CustomerBO client;
-
     private CustomerBO group;
-
     private CustomerBO center;
-
-    private AccountBO account;
-
-    private LoanBO groupAccount;
-
-    private LoanBO clientAccount;
-
-    private SavingsBO centerSavingsAccount;
-
-    private SavingsBO groupSavingsAccount;
-
-    private SavingsBO clientSavingsAccount;
-
     private String flowKey;
 
     @Override
@@ -84,19 +65,13 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Override
     public void tearDown() throws Exception {
-        centerSavingsAccount = null;
-        groupSavingsAccount = null;
-        clientSavingsAccount = null;
-        groupAccount = null;
-        clientAccount = null;
-        account = null;
         client = null;
         group = null;
         center = null;
         super.tearDown();
     }
 
-    public void testForwardWaiveChargeDue() {
+    public void ignore_testForwardWaiveChargeDue() {
         createInitialObjects();
         setRequestPathInfo("/customerAction.do");
         addRequestParameter("method", "waiveChargeDue");
@@ -112,7 +87,7 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
-    public void testForwardWaiveChargeOverDue() {
+    public void ignore_testForwardWaiveChargeOverDue() {
         createInitialObjects();
         setRequestPathInfo("/customerAction.do");
         addRequestParameter("method", "waiveChargeOverDue");

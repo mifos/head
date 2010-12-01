@@ -23,7 +23,6 @@ package org.mifos.accounts.servicefacade;
 import java.util.List;
 
 import org.mifos.accounts.util.helpers.ApplicableCharge;
-import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;

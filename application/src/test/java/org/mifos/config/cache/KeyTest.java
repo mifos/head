@@ -23,7 +23,6 @@ package org.mifos.config.cache;
 import junit.framework.TestCase;
 
 import org.mifos.framework.TestUtils;
-import org.testng.annotations.Test;
 
 public class KeyTest extends TestCase {
 

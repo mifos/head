@@ -6,7 +6,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.core.io.ClassPathResource;

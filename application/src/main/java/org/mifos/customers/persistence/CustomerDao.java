@@ -246,4 +246,6 @@ public interface CustomerDao {
     List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber);
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator();
+
+    List<AccountBO> retrieveAllClosedLoanAndSavingsAccounts(Integer customerId);
 }

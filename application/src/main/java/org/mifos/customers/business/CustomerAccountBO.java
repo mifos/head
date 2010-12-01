@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -47,7 +45,6 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
-import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
@@ -81,6 +78,8 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Clients, groups, and centers are stored in the db as customer accounts.
@@ -436,11 +435,6 @@ public class CustomerAccountBO extends AccountBO {
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             addCustomerActivity(buildCustomerActivity(chargeWaived, AccountConstants.AMNT_WAIVED, userContext.getId()));
         }
-        try {
-            new AccountPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
     }
 
     @Override
@@ -453,11 +447,6 @@ public class CustomerAccountBO extends AccountBO {
         }
         if (chargeWaived != null && chargeWaived.isGreaterThanZero()) {
             addCustomerActivity(buildCustomerActivity(chargeWaived, AccountConstants.AMNT_WAIVED, userContext.getId()));
-        }
-        try {
-            new AccountPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
         }
     }
 
@@ -549,12 +538,6 @@ public class CustomerAccountBO extends AccountBO {
         FeeBO feesBO = getAccountFeesObject(feeId);
         String description = feesBO.getFeeName() + " " + AccountConstants.FEES_REMOVED;
         updateAccountActivity(null, null, null, null, personnelId, description);
-        try {
-            new AccountPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new AccountException(e);
-        }
-
     }
 
     @Override

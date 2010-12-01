@@ -1,17 +1,16 @@
 package org.mifos.customers.business.service;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomerBusinessServiceTest {
@@ -24,18 +23,6 @@ public class CustomerBusinessServiceTest {
         try {
             when(customerPersistence.getCustomer(customerId)).thenThrow(new PersistenceException("some exception"));
             service.getCustomer(customerId);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    public void testInvalidConnectionGetAllClosedAccount() throws PersistenceException {
-        Integer customerId = new Integer(1);
-        Short id = AccountTypes.LOAN_ACCOUNT.getValue();
-        try {
-            when(customerPersistence.getAllClosedAccount(customerId, id)).thenThrow(new PersistenceException("some exception"));
-            service.getAllClosedAccount(customerId, id);
             junit.framework.Assert.fail("should fail because of invalid session");
         } catch (ServiceException e) {
         }

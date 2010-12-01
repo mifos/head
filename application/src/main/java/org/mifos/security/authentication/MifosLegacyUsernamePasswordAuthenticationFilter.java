@@ -21,10 +21,7 @@
 package org.mifos.security.authentication;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Random;
-import java.util.ResourceBundle;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -42,7 +39,6 @@ import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ServletUtils;

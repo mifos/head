@@ -110,8 +110,6 @@ public interface NamedQueryConstants {
 
     // For client closedacc, changelog,fee details
     String VIEWALLSAVINGSCLOSEDACCOUNTS = "accounts.viewallsavingsclosedaccounts";
-    String VIEWALLCLOSEDACCOUNTS = "customer.viewallclosedaccounts";
-
     String GROUP_SEARCH_WITHOUT_CENTER = "group_SearchWithoutCenter";
     String GROUP_SEARCH_WITHOUT_CENTER_FOR_ADDING_GROUPMEMBER = "group_SearchWithoutCenterForAddingGroupMember";
 

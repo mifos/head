@@ -36,7 +36,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 

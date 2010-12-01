@@ -45,7 +45,6 @@ import org.mifos.security.util.UserContext;
 public class SearchAction extends BaseAction {
 
     public SearchAction() {
-
     }
 
     @Override
@@ -59,15 +58,9 @@ public class SearchAction extends BaseAction {
         }
     }
 
-    public ActionForward searchPrev(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward searchPrev(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        // Integer current =
-        // (Integer)SessionUtils.getAttribute("current",request);
-
-        // if( current ==null) throw new
-        // PageExpiredException(ExceptionConstants.PAGEEXPIREDEXCEPTION);
-        // SessionUtils.setRemovableAttribute("current",current-1,TableTagConstants.PATH,request.getSession());
         checkForValidData(request);
         SessionUtils.setRemovableAttribute("meth", "previous", TableTagConstants.PATH, request.getSession());
         setPerspective(request);
@@ -78,14 +71,8 @@ public class SearchAction extends BaseAction {
         return mapping.findForward(forwardkey);
     }
 
-    public ActionForward searchNext(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        // Integer current=1;
-        // if(null !=SessionUtils.getAttribute("current",request.getSession()))
-        // {
-        // current=(Integer)SessionUtils.getAttribute("current",request.getSession());
-        // }
-        // SessionUtils.setRemovableAttribute("current",current+1,TableTagConstants.PATH,request.getSession());
+    public ActionForward searchNext(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         checkForValidData(request);
         SessionUtils.setRemovableAttribute("meth", "next", TableTagConstants.PATH, request.getSession());
         setPerspective(request);
@@ -115,22 +102,20 @@ public class SearchAction extends BaseAction {
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         cleanUpSearch(request);
         SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, getSearchResult(form), request);
         return mapping.findForward(ActionForwards.search_success.toString());
     }
 
-    protected QueryResult getSearchResult(ActionForm form) throws Exception {
+    protected QueryResult getSearchResult(@SuppressWarnings("unused") ActionForm form) throws Exception {
         return null;
     }
 
     private void checkForValidData(HttpServletRequest request) throws PageExpiredException {
-
         SessionUtils.getAttribute(Constants.SEARCH_STRING, request);
         SessionUtils.getAttribute(Constants.OFFICE_NAME, request);
         SessionUtils.getAttribute(Constants.BRANCH_ID, request);
-
     }
 
     protected void checkPermissionForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel,

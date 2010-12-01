@@ -2,7 +2,6 @@ package org.mifos.accounts.productdefinition.business.service;
 
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
-import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;

@@ -21,8 +21,6 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +45,6 @@ import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
 

@@ -31,7 +31,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
-import org.mifos.framework.persistence.TestDatabase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.MockFormFile;
 import org.mifos.reports.business.ReportsBO;

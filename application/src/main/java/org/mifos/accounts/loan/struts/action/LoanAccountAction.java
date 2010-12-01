@@ -95,6 +95,7 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.util.helpers.CustomerConstants;
@@ -1119,7 +1120,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanBO individualLoan;
         if (isRedoOperation) {
             individualLoan = LoanBO.redoIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
-                    getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
+                    new CustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
                             .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
                     loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
                     loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),
@@ -1127,7 +1128,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         } else {
             individualLoan = LoanBO.createIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
-                    getCustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
+                    new CustomerBusinessService().findBySystemId(loanAccountDetail.getClientId()), loanActionForm
                             .getState(), new Money(loan.getCurrency(), loanAccountDetail.getLoanAmount().toString()),
                     loan.getNoOfInstallments(), loan.getDisbursementDate(), false, isRepaymentIndepOfMeetingEnabled,
                     loan.getInterestRate(), loan.getGracePeriodDuration(), loan.getFund(), new ArrayList<FeeDto>(),

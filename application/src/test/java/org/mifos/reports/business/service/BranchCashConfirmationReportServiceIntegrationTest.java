@@ -32,7 +32,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.customers.office.business.service.OfficeBusinessService;

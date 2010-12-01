@@ -83,9 +83,6 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import edu.emory.mathcs.backport.java.util.Arrays;
-import edu.emory.mathcs.backport.java.util.Collections;
-
 public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCase {
 
     public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;

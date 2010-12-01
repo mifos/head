@@ -31,7 +31,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.TestDatabase;
 
 public class SaveCollectionSheetStructureValidatorClientStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 

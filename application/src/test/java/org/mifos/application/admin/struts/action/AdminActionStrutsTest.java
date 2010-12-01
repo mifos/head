@@ -22,7 +22,6 @@ package org.mifos.application.admin.struts.action;
 
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
