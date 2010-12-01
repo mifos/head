@@ -61,16 +61,19 @@ public class PPITestDataGenerator {
     private static final String HELP_OPTION_NAME = "h";
     private static final String TEST_DATA_FILE_OPTION_NAME = "f";
     private static final String TEST_DATA_DIRECTORY_OPTION_NAME = "a";
+    private static final String CLIENT_GLOBAL_ID_OPTION_NAME = "i";
 
     // Options
     private final Options options = new Options();
     private Option helpOption;
     private Option allFilesInDirecoryOption;
     private Option testDataFileOption;
+    private Option clientGlobalIdOption;
 
     // Variables for data from command line
     String testDataDirectoryName;
     String dataSetName;
+    String clientGlobalId;
 
     QuestionnaireServiceFacade questionnaireServiceFacade;
     CustomerDao customerDao;
@@ -147,7 +150,10 @@ public class PPITestDataGenerator {
         applicationInitializer.dbUpgrade(applicationContext);
         applicationInitializer.setAttributesOnContext(null);
 
-        CustomerBO customer = customerDao.findClientBySystemId("0006-000000063");
+        CustomerBO customer = customerDao.findClientBySystemId(clientGlobalId);
+        if (customer == null) {
+            fail("Could not find customer for global id: " + clientGlobalId);
+        }
         System.out.println("Found: " + customer.getDisplayName());
 
         Properties properties = new Properties();
@@ -215,9 +221,16 @@ public class PPITestDataGenerator {
         .withDescription( "Use the test data file with this name-- include the full file path (e.g. /home/me/testData/Bangladesh2009Testing.properties" )
         .create( TEST_DATA_FILE_OPTION_NAME );
 
+        clientGlobalIdOption = OptionBuilder.withArgName( "global id of client" )
+        .withLongOpt("clientGlobalId")
+        .hasArg()
+        .withDescription( "The global (or system) Id of the client to use when creating PPI survey results (e.g. 0003-000000006)")
+        .create( CLIENT_GLOBAL_ID_OPTION_NAME );
+
         options.addOption(helpOption);
         options.addOption(allFilesInDirecoryOption);
         options.addOption(testDataFileOption);
+        options.addOption(clientGlobalIdOption);
     }
 
     public void parseOptions(String[] args) throws URISyntaxException {
@@ -240,7 +253,11 @@ public class PPITestDataGenerator {
             } else {
                 fail("Specify either a data set (-f) or data directory (-a)");
             }
-
+            if( line.hasOption( CLIENT_GLOBAL_ID_OPTION_NAME ) ) {
+                clientGlobalId = line.getOptionValue(CLIENT_GLOBAL_ID_OPTION_NAME);
+            } else {
+                missingOption(clientGlobalIdOption);
+            }
         } catch( ParseException exp ) {
             fail( "Parsing failed.  Reason: " + exp.getMessage() );
         }
