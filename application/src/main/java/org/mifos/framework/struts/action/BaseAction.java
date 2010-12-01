@@ -88,6 +88,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -117,6 +118,7 @@ public abstract class BaseAction extends DispatchAction {
     protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
     protected FeeServiceFacade feeServiceFacade = DependencyInjectedServiceLocator.locateFeeServiceFacade();
     protected FundServiceFacade fundServiceFacade = DependencyInjectedServiceLocator.locateFundServiceFacade();
+    protected AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade = DependencyInjectedServiceLocator.locateAuthenticationAuthorizationServiceFacade();
 
     protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
@@ -142,6 +144,7 @@ public abstract class BaseAction extends DispatchAction {
             this.feeServiceFacade = springAppContext.getBean(FeeServiceFacade.class);
             this.fundServiceFacade = springAppContext.getBean(FundServiceFacade.class);
             this.savingsServiceFacade = springAppContext.getBean(SavingsServiceFacade.class);
+            this.authenticationAuthorizationServiceFacade = springAppContext.getBean(AuthenticationAuthorizationServiceFacade.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }

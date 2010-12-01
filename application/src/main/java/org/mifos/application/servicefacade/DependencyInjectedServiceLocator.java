@@ -93,6 +93,8 @@ import org.mifos.customers.personnel.persistence.PersonnelDaoHibernate;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.security.AuthenticationAuthorizationServiceFacade;
+import org.mifos.security.AuthenticationAuthorizationServiceFacadeImpl;
 
 /**
  * I contain static factory methods for locating/creating application services.
@@ -120,6 +122,7 @@ public class DependencyInjectedServiceLocator {
     private static PersonnelServiceFacade personnelServiceFacade;
     private static RolesPermissionServiceFacade rolesPermissionServiceFacade;
     private static CheckListServiceFacade checkListServiceFacade;
+    private static AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade;
 
     // services
     private static CollectionSheetService collectionSheetService;
@@ -330,6 +333,13 @@ public class DependencyInjectedServiceLocator {
             savingsServiceFacade = new SavingsServiceFacadeWebTier(savingsDao, personnelDao, customerDao);
         }
         return savingsServiceFacade;
+    }
+
+    public static AuthenticationAuthorizationServiceFacade locateAuthenticationAuthorizationServiceFacade() {
+        if (authenticationAuthorizationServiceFacade == null) {
+            authenticationAuthorizationServiceFacade = new AuthenticationAuthorizationServiceFacadeImpl(personnelDao);
+        }
+        return authenticationAuthorizationServiceFacade;
     }
 
     public static CustomerDao locateCustomerDao() {

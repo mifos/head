@@ -81,12 +81,19 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.security.MifosUser;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -145,6 +152,7 @@ public class PersonAction extends SearchAction {
         return security;
     }
 
+    @SuppressWarnings("unused")
     @TransactionDemarcate(saveToken = true)
     public ActionForward chooseOffice(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -153,7 +161,7 @@ public class PersonAction extends SearchAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PersonActionForm personActionForm = (PersonActionForm) form;
         OfficeBO office = ((PersonnelBusinessService) getService()).getOffice(getShortValue(personActionForm.getOfficeId()));
         SessionUtils.setAttribute(PersonnelConstants.OFFICE, office, request);
@@ -174,7 +182,7 @@ public class PersonAction extends SearchAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         PersonActionForm personActionForm = (PersonActionForm) form;
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
@@ -185,6 +193,7 @@ public class PersonAction extends SearchAction {
         return createGroupQuestionnaire.fetchAppliedQuestions(mapping, personActionForm, request, ActionForwards.preview_success);
     }
 
+    @SuppressWarnings("unused")
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -195,7 +204,7 @@ public class PersonAction extends SearchAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         PersonActionForm personActionForm = (PersonActionForm) form;
         CreateOrUpdatePersonnelInformation perosonnelInfo = translateFormToCreatePersonnelInformationDto(request, personActionForm);
@@ -280,26 +289,27 @@ public class PersonAction extends SearchAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PersonActionForm actionform = (PersonActionForm) form;
         actionform.clear();
         PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnel.getPersonnelId());
         personnel = null;
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnelBO, request);
-        loadUpdateMasterData(request, actionform);
+        loadUpdateMasterData(request);
         setValuesInActionForm(actionform, request);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewManage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PersonActionForm actionForm = (PersonActionForm) form;
         updateRoleLists(request, actionForm);
         return mapping.findForward(ActionForwards.previewManage_success.toString());
     }
 
+    @SuppressWarnings("unused")
     @TransactionDemarcate(joinToken = true)
     public ActionForward previousManage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -311,34 +321,8 @@ public class PersonAction extends SearchAction {
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PersonActionForm actionForm = (PersonActionForm) form;
-
-//        UserContext userContext = getUserContext(request);
-//        PersonnelLevel level = PersonnelLevel.fromInt(getShortValue(actionForm.getLevel()));
-//        PersonnelStatus personnelStatus = PersonnelStatus.getPersonnelStatus(getShortValue(actionForm.getStatus()));
-//        OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(
-//                BusinessServiceName.Office);
-//        OfficeBO office = officeService.getOffice(getShortValue(actionForm.getOfficeId()));
-//        Integer title = getIntegerValue(actionForm.getTitle());
-//        Short perefferedLocale = getLocaleId(getPerefferedLocale(actionForm, userContext));
-//
-//        PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-//
-//        PersonnelBO personnelInit = ((PersonnelBusinessService) getService()).getPersonnel(Short.valueOf(actionForm
-//                .getPersonnelId()));
-//        checkVersionMismatch(personnel.getVersionNo(), personnelInit.getVersionNo());
-//        personnelInit.setVersionNo(personnel.getVersionNo());
-//        personnelInit.setUserContext(getUserContext(request));
-//        setInitialObjectForAuditLogging(personnelInit);
-//
-//        personnelInit.update(personnelStatus, level, office, title, perefferedLocale, actionForm.getUserPassword(),
-//                actionForm.getEmailId(), getRoles(request, actionForm), actionForm.getCustomFields(), actionForm
-//                        .getName(), getIntegerValue(actionForm.getMaritalStatus()), getIntegerValue(actionForm
-//                        .getGender()), actionForm.getAddress(), userContext.getId());
-//
-//        request.setAttribute("displayName", personnelInit.getDisplayName());
-//        request.setAttribute("globalPersonnelNum", personnelInit.getGlobalPersonnelNum());
 
         try {
             CreateOrUpdatePersonnelInformation perosonnelInfo = translateFormToCreatePersonnelInformationDto(request, actionForm);
@@ -350,12 +334,28 @@ public class PersonAction extends SearchAction {
             request.setAttribute("displayName", name.getDisplayName());
             request.setAttribute("globalPersonnelNum", globalPersonnelNum);
 
+            reloadUserDetailsForSecurityContext(perosonnelInfo.getUserName());
+
             return mapping.findForward(ActionForwards.update_success.toString());
         } catch (BusinessRuleException e) {
             throw new PersonnelException(e.getMessageKey(), e);
         }
     }
 
+    private void reloadUserDetailsForSecurityContext(String username) {
+        UserDetails userSecurityDetails = this.authenticationAuthorizationServiceFacade.loadUserByUsername(username);
+        MifosUser reloadedUserDetails = (MifosUser) userSecurityDetails;
+
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        if (securityContext == null) {
+            securityContext = new SecurityContextImpl();
+            SecurityContextHolder.setContext(securityContext);
+        }
+        Authentication authentication = new UsernamePasswordAuthenticationToken(reloadedUserDetails, reloadedUserDetails, reloadedUserDetails.getAuthorities());
+        securityContext.setAuthentication(authentication);
+    }
+
+    @SuppressWarnings("unused")
     @TransactionDemarcate(joinToken = true)
     public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -363,6 +363,7 @@ public class PersonAction extends SearchAction {
         return mapping.findForward(method + "_failure");
     }
 
+    @SuppressWarnings("unused")
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -379,7 +380,7 @@ public class PersonAction extends SearchAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         PersonActionForm personActionForm = (PersonActionForm) form;
 
@@ -410,6 +411,7 @@ public class PersonAction extends SearchAction {
         return URLEncoder.encode(url, "UTF-8");
     }
 
+    @SuppressWarnings("unused")
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadUnLockUser(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -417,6 +419,7 @@ public class PersonAction extends SearchAction {
         return mapping.findForward(ActionForwards.loadUnLockUser_success.toString());
     }
 
+    @SuppressWarnings("unused")
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward unLockUserAccount(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -445,6 +448,7 @@ public class PersonAction extends SearchAction {
         return actionForward;
     }
 
+    @SuppressWarnings("unused")
     @TransactionDemarcate(saveToken = true)
     public ActionForward loadSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -487,9 +491,9 @@ public class PersonAction extends SearchAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
     }
 
+    @SuppressWarnings("unchecked")
     private void updatePersonnelLevelList(HttpServletRequest request) throws PageExpiredException {
-        List<MasterDataEntity> levelList = (List<MasterDataEntity>) SessionUtils.getAttribute(
-                PersonnelConstants.PERSONNEL_LEVEL_LIST, request);
+        List<MasterDataEntity> levelList = (List<MasterDataEntity>) SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request);
         for (MasterDataEntity level : levelList) {
             if (level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
                 levelList.remove(level);
@@ -499,28 +503,27 @@ public class PersonAction extends SearchAction {
 
     }
 
+    @SuppressWarnings("unchecked")
     private void loadCreateMasterData(HttpServletRequest request, PersonActionForm personActionForm) throws Exception {
         loadMasterData(request);
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
         loadCreateCustomFields(personActionForm, customFieldDefs, getUserContext(request));
     }
 
-    private void loadUpdateMasterData(HttpServletRequest request, PersonActionForm personActionForm) throws Exception {
+
+    private void loadUpdateMasterData(HttpServletRequest request) throws Exception {
         loadMasterData(request);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
         SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, getMasterEntities(
                 PersonnelStatusEntity.class, getUserContext(request).getLocaleId()), request);
-        OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.Office);
+        OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Office);
         OfficeBO loggedInOffice = officeService.getOffice(userContext.getBranchId());
-        SessionUtils.setCollectionAttribute(PersonnelConstants.OFFICE_LIST, officeService
-                .getChildOffices(loggedInOffice.getSearchId()), request);
+        SessionUtils.setCollectionAttribute(PersonnelConstants.OFFICE_LIST, officeService.getChildOffices(loggedInOffice.getSearchId()), request);
     }
 
     private void loadCreateCustomFields(PersonActionForm actionForm, List<CustomFieldDefinitionEntity> customFieldDefs,
-            UserContext userContext) throws SystemException, ApplicationException {
+            UserContext userContext) throws SystemException {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
@@ -588,12 +591,12 @@ public class PersonAction extends SearchAction {
         SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
     }
 
+    @SuppressWarnings("unchecked")
     private List<CustomFieldDto> createCustomFieldViews(Set<PersonnelCustomFieldEntity> customFieldEntities,
             HttpServletRequest request) throws ApplicationException {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
         Locale locale = getUserContext(request).getPreferredLocale();
         for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
             for (PersonnelCustomFieldEntity customFieldEntity : customFieldEntities) {
@@ -612,6 +615,7 @@ public class PersonAction extends SearchAction {
         return customFields;
     }
 
+    @SuppressWarnings("unchecked")
     private List<RoleBO> getRoles(HttpServletRequest request, PersonActionForm personActionForm)
             throws PageExpiredException {
         boolean addFlag = false;
@@ -629,19 +633,19 @@ public class PersonAction extends SearchAction {
         }
         if (addFlag) {
             return selectList;
-        } else {
-            return null;
         }
+
+        return null;
     }
 
+    @SuppressWarnings("unchecked")
     private void updateRoleLists(HttpServletRequest request, PersonActionForm personActionForm)
             throws PageExpiredException {
 
         boolean addFlag = false;
         List<RoleBO> selectList = new ArrayList<RoleBO>();
         if (personActionForm.getPersonnelRoles() != null) {
-            List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST,
-                    request);
+            List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST, request);
             for (RoleBO role : masterList) {
                 for (String roleId : personActionForm.getPersonnelRoles()) {
                     if (roleId != null && role.getId().intValue() == Integer.valueOf(roleId).intValue()) {
