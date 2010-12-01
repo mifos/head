@@ -24,7 +24,6 @@ import java.util.List;
 
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.dto.domain.UserReferenceDto;
-import org.mifos.framework.util.helpers.Money;
 
 
 /**
@@ -35,11 +34,11 @@ public class AccountPaymentDto {
     private final AccountTypeDto accountType;
     private final int version;
     private final List<ListItem<Short>> paymentTypeList;
-    private final Money totalPaymentDue;
+    private final String totalPaymentDue;
     private final UserReferenceDto userMakingPayment;
 
     public AccountPaymentDto(AccountTypeDto accountType, int version, List<ListItem<Short>> paymentTypeList,
-            Money totalPaymentDue, UserReferenceDto userMakingPayment) {
+            String totalPaymentDue, UserReferenceDto userMakingPayment) {
         this.accountType = accountType;
         this.version = version;
         this.paymentTypeList = paymentTypeList;
@@ -59,13 +58,11 @@ public class AccountPaymentDto {
         return this.paymentTypeList;
     }
 
-    public Money getTotalPaymentDue() {
+    public String getTotalPaymentDue() {
         return this.totalPaymentDue;
     }
 
     public UserReferenceDto getUserMakingPayment() {
         return this.userMakingPayment;
     }
-
-
 }

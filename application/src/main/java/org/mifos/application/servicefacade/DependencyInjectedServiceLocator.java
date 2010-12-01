@@ -62,6 +62,8 @@ import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsDaoHibernate;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
+import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
 import org.mifos.application.admin.servicefacade.CheckListServiceFacade;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
@@ -178,6 +180,7 @@ public class DependencyInjectedServiceLocator {
     // rules
     private static FiscalCalendarRules fiscalCalendarRules;
     private static StandardAccountService accountService;
+    private static AccountServiceFacade accountServiceFacade;
 
     public static CollectionSheetService locateCollectionSheetService() {
 
@@ -264,6 +267,13 @@ public class DependencyInjectedServiceLocator {
             clientServiceFacade = new ClientServiceFacadeWebTier(customerService, officeDao, personnelDao,customerDao, feeDao);
         }
         return clientServiceFacade;
+    }
+
+    public static AccountServiceFacade locateAccountServiceFacade() {
+        if (accountServiceFacade == null) {
+            accountServiceFacade = new WebTierAccountServiceFacade();
+        }
+        return accountServiceFacade;
     }
 
     public static LoanServiceFacade locateLoanServiceFacade() {

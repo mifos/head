@@ -43,6 +43,7 @@ import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
@@ -112,6 +113,7 @@ public abstract class BaseAction extends DispatchAction {
     protected CenterServiceFacade centerServiceFacade = DependencyInjectedServiceLocator.locateCenterServiceFacade();
     protected GroupServiceFacade groupServiceFacade = DependencyInjectedServiceLocator.locateGroupServiceFacade();
     protected ClientServiceFacade clientServiceFacade = DependencyInjectedServiceLocator.locateClientServiceFacade();
+    protected AccountServiceFacade accountServiceFacade = DependencyInjectedServiceLocator.locateAccountServiceFacade();
     protected MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
     protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
     protected SavingsServiceFacade savingsServiceFacade = DependencyInjectedServiceLocator.locateSavingsServiceFacade();
@@ -139,6 +141,7 @@ public abstract class BaseAction extends DispatchAction {
             this.centerServiceFacade = springAppContext.getBean(CenterServiceFacade.class);
             this.groupServiceFacade = springAppContext.getBean(GroupServiceFacade.class);
             this.clientServiceFacade = springAppContext.getBean(ClientServiceFacade.class);
+            this.accountServiceFacade = springAppContext.getBean(AccountServiceFacade.class);
             this.meetingServiceFacade = springAppContext.getBean(MeetingServiceFacade.class);
             this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
             this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);

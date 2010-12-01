@@ -104,6 +104,9 @@
     	<constructor-arg ref="feeDao" />
     </bean>
     
+    <bean id="accountServiceFacade" class="org.mifos.accounts.servicefacade.WebTierAccountServiceFacade" >
+    </bean>
+    
     <bean id="meetingServiceFacade" class="org.mifos.application.servicefacade.MeetingServiceFacadeWebTier" >
     	<constructor-arg ref="customerService" />
     </bean>

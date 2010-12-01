@@ -24,6 +24,8 @@ import java.io.Serializable;
 /**
  * I am a DTO for items within a list e.g. a dropdown list.
  */
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "NP_EQUALS_SHOULD_HANDLE_NULL_ARGUMENT", "BC_EQUALS_METHOD_SHOULD_WORK_FOR_ALL_OBJECTS"}, justification="should disable at filter level and also for pmd - not important for us")
 public class ListItem<T> implements Serializable {
 
     private final T id;

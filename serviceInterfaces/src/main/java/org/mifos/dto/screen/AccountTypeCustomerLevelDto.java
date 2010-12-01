@@ -18,9 +18,10 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.servicefacade;
+package org.mifos.dto.screen;
 
 public class AccountTypeCustomerLevelDto {
+
     private final Short accountType;
     private final Short customerLevelId;
 
@@ -36,5 +37,4 @@ public class AccountTypeCustomerLevelDto {
     public Short getCustomerLevelId() {
         return this.customerLevelId;
     }
-
 }

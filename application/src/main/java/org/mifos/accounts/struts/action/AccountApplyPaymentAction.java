@@ -20,18 +20,20 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.api.AccountService;
-import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
-import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
-import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -41,8 +43,6 @@ import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -53,15 +53,9 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import java.util.List;
-
 public class AccountApplyPaymentAction extends BaseAction {
-    private AccountServiceFacade accountServiceFacade = new WebTierAccountServiceFacade();
+
     private AccountService accountService = null;
-    private AccountPersistence accountPersistence = new AccountPersistence();
     private List<PaymentTypeDto> loanPaymentTypeDtos;
     private List<PaymentTypeDto> feePaymentTypeDtos;
 
@@ -75,16 +69,6 @@ public class AccountApplyPaymentAction extends BaseAction {
         return accountService;
     }
 
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return null;
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
-
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("applyPaymentAction");
         security.allow("load", SecurityConstants.VIEW);
@@ -96,10 +80,12 @@ public class AccountApplyPaymentAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
-        clearActionForm(actionForm);
+        actionForm.setReceiptDate(null);
+        actionForm.setReceiptId(null);
+        actionForm.setPaymentTypeId(null);
         actionForm.setTransactionDate(DateUtils.makeDateAsSentFromBrowser());
 
         final AccountReferenceDto accountReferenceDto = new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId()));
@@ -111,29 +97,28 @@ public class AccountApplyPaymentAction extends BaseAction {
         SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, accountPaymentDto.getAccountType().name(), request);
         SessionUtils.setAttribute(Constants.ACCOUNT_ID, Integer.valueOf(actionForm.getAccountId()), request);
 
-        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE,
-                accountPaymentDto.getPaymentTypeList(), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, accountPaymentDto.getPaymentTypeList(), request);
 
         actionForm.setAmount(accountPaymentDto.getTotalPaymentDue().toString());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward applyPayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
         Integer accountId = Integer.valueOf(actionForm.getAccountId());
@@ -142,7 +127,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountId, paymentType,
                 userContext.getLocaleId(), userReferenceDto);
 
-        validateAccountPayment(accountPaymentDto, accountId, request, userContext);
+        validateAccountPayment(accountPaymentDto, accountId, request);
 
         PaymentTypeDto paymentTypeDto;
         String amount = "0";
@@ -164,9 +149,9 @@ public class AccountApplyPaymentAction extends BaseAction {
 
     }
 
-    private void validateAccountPayment(AccountPaymentDto accountPaymentDto, Integer accountId, HttpServletRequest request, UserContext userContext) throws Exception {
+    private void validateAccountPayment(AccountPaymentDto accountPaymentDto, Integer accountId, HttpServletRequest request) throws Exception {
         checkVersion(request, accountPaymentDto.getVersion());
-        checkPermission(userContext, accountId);
+        checkPermission(accountId);
     }
 
     private void checkVersion(HttpServletRequest request, int accountVersion) throws Exception {
@@ -174,8 +159,8 @@ public class AccountApplyPaymentAction extends BaseAction {
         checkVersionMismatch(savedAccountVersion, accountVersion);
     }
 
-    private void checkPermission(UserContext userContext, Integer accountId) throws ServiceException, CustomerException {
-        if (!accountServiceFacade.isPaymentPermitted(userContext, accountId)) {
+    private void checkPermission(Integer accountId) throws CustomerException {
+        if (!accountServiceFacade.isPaymentPermitted(accountId)) {
             throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
         }
     }
@@ -199,15 +184,9 @@ public class AccountApplyPaymentAction extends BaseAction {
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancel(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(getForward(((AccountApplyPaymentActionForm) form).getInput()));
-    }
-
-    private void clearActionForm(AccountApplyPaymentActionForm actionForm) throws InvalidDateException {
-        actionForm.setReceiptDate(null);
-        actionForm.setReceiptId(null);
-        actionForm.setPaymentTypeId(null);
     }
 
     private String getForward(String input) {
@@ -219,17 +198,13 @@ public class AccountApplyPaymentAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         String forward = null;
         if (method != null) {
             forward = method + "_failure";
         }
         return mapping.findForward(forward);
-    }
-
-    public AccountPersistence getAccountPersistence() {
-        return accountPersistence;
     }
 }

@@ -22,11 +22,10 @@ package org.mifos.accounts.servicefacade;
 
 import java.util.List;
 
-import org.mifos.accounts.util.helpers.ApplicableCharge;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.UserReferenceDto;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.util.UserContext;
+import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 /**
  * Interface for presentation layer to access accounts
@@ -34,16 +33,18 @@ import org.mifos.security.util.UserContext;
  */
 public interface AccountServiceFacade {
 
-    AccountPaymentDto getAccountPaymentInformation(
-            Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto) throws Exception;
+    @PreAuthorize("isFullyAuthenticated()")
+    List<ApplicableCharge> getApplicableFees(Integer accountId);
 
-    boolean isPaymentPermitted(final UserContext userContext, Integer accountId) throws ServiceException;
+    @PreAuthorize("isFullyAuthenticated()")
+    void applyCharge(Integer accountId, Short feeId, Double chargeAmount);
 
-    List<ApplicableCharge> getApplicableFees(Integer accountId, UserContext userContext) throws ServiceException;
+    @PreAuthorize("isFullyAuthenticated()")
+    AccountTypeCustomerLevelDto getAccountTypeCustomerLevelDto(Integer accountId);
 
-    void applyCharge(Integer accountId, UserContext userContext, Short feeId, Double chargeAmount) throws ServiceException, ApplicationException;
+    @PreAuthorize("isFullyAuthenticated()")
+    AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto);
 
-    AccountTypeCustomerLevelDto getAccountTypeCustomerLevelDto(Integer accountId) throws ServiceException;
-
-
+    @PreAuthorize("isFullyAuthenticated()")
+    boolean isPaymentPermitted(Integer accountId);
 }

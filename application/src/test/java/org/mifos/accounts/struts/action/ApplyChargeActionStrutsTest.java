@@ -32,16 +32,23 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -131,6 +138,13 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testUpdateSuccess() {
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         accountBO = getLoanAccount(client, meeting);

@@ -172,4 +172,10 @@ public class ApplyChargeActionForm extends BaseActionForm {
             return null;
         }
     }
+
+    public void clear() {
+        setAccountId(null);
+        setChargeType(null);
+        setChargeAmount(null);
+    }
 }

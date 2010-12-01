@@ -20,26 +20,35 @@
 
 package org.mifos.accounts.servicefacade;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.accounts.util.helpers.ApplicableCharge;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.mifos.service.BusinessRuleException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Concrete implementation of service to manipulate accounts from the presentation layer.
@@ -47,85 +56,132 @@ import java.util.List;
  */
 public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
+    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
     @Override
-    public AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto) throws Exception {
-        AccountBO account = new AccountBusinessService().getAccount(accountId);
+    public AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto) {
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
 
-        UserReferenceDto accountUser = userReferenceDto;
-        if (account.getPersonnel() != null) {
-            accountUser = new UserReferenceDto(account.getPersonnel().getPersonnelId());
-        }
-
-        List<ListItem<Short>> paymentTypeList = constructPaymentTypeList(paymentType, localeId);
-        AccountTypeDto accountType = AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId());
-        return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, account.getTotalPaymentDue(), accountUser);
-    }
-
-    private List<ListItem<Short>> constructPaymentTypeList(String paymentType, Short localeId) throws Exception {
-        List<PaymentTypeEntity> paymentTypeList = null;
-        if (paymentType != null && paymentType.trim() != Constants.EMPTY_STRING) {
-            if (paymentType.equals(Constants.LOAN)) {
-                paymentTypeList = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(localeId,
-                        TrxnTypes.loan_repayment.getValue());
-            } else {
-                paymentTypeList = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(localeId,
-                        TrxnTypes.fee.getValue());
+            UserReferenceDto accountUser = userReferenceDto;
+            if (account.getPersonnel() != null) {
+                accountUser = new UserReferenceDto(account.getPersonnel().getPersonnelId());
             }
-        }
 
-        List<ListItem<Short>> listItems = new ArrayList<ListItem<Short>>();
-        for (PaymentTypeEntity paymentTypeEntity : paymentTypeList) {
-            listItems.add(new ListItem<Short>(paymentTypeEntity.getId(), paymentTypeEntity.getName()));
+            List<ListItem<Short>> paymentTypeList = constructPaymentTypeList(paymentType, localeId);
+            AccountTypeDto accountType = AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId());
+            return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, account.getTotalPaymentDue().toString(), accountUser);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
         }
-        return listItems;
+    }
+
+    private List<ListItem<Short>> constructPaymentTypeList(String paymentType, Short localeId) {
+
+        try {
+            List<PaymentTypeEntity> paymentTypeList = null;
+            if (paymentType != null && paymentType.trim() != Constants.EMPTY_STRING) {
+                if (paymentType.equals(Constants.LOAN)) {
+
+                    paymentTypeList = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(
+                            localeId, TrxnTypes.loan_repayment.getValue());
+                } else {
+                    paymentTypeList = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(
+                            localeId, TrxnTypes.fee.getValue());
+                }
+            }
+
+            List<ListItem<Short>> listItems = new ArrayList<ListItem<Short>>();
+            for (PaymentTypeEntity paymentTypeEntity : paymentTypeList) {
+                listItems.add(new ListItem<Short>(paymentTypeEntity.getId(), paymentTypeEntity.getName()));
+            }
+            return listItems;
+
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     @Override
-    public boolean isPaymentPermitted(final UserContext userContext, Integer accountId)
-            throws ServiceException {
-        AccountBO account = new AccountBusinessService().getAccount(accountId);
-        CustomerLevel customerLevel = null;
-        if (account.getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            customerLevel = account.getCustomer().getLevel();
-        }
+    public boolean isPaymentPermitted(Integer accountId) {
 
-        Short personnelId = userContext.getId();
-        if (account.getPersonnel() != null) {
-            personnelId = account.getPersonnel().getPersonnelId();
-        }
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
-        return ActivityMapper.getInstance().isPaymentPermittedForAccounts(account.getType(), customerLevel,
-                userContext, account.getOffice().getOfficeId(), personnelId);
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
+
+            CustomerLevel customerLevel = null;
+            if (account.getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
+                customerLevel = account.getCustomer().getLevel();
+            }
+
+            Short personnelId = userContext.getId();
+            if (account.getPersonnel() != null) {
+                personnelId = account.getPersonnel().getPersonnelId();
+            }
+
+            return ActivityMapper.getInstance().isPaymentPermittedForAccounts(account.getType(), customerLevel,
+                    userContext, account.getOffice().getOfficeId(), personnelId);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 
     @Override
-    public List<ApplicableCharge> getApplicableFees(Integer accountId, UserContext userContext) throws ServiceException {
-        return new AccountBusinessService().getAppllicableFees(accountId, userContext);
+    public List<ApplicableCharge> getApplicableFees(Integer accountId) {
+        try {
+            MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserContext userContext = toUserContext(user);
+
+            return new AccountBusinessService().getAppllicableFees(accountId, userContext);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    private UserContext toUserContext(MifosUser user) {
+        UserContext userContext = new UserContext();
+        userContext.setBranchId(user.getBranchId());
+        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setName(user.getUsername());
+        userContext.setLevelId(user.getLevelId());
+        userContext.setRoles(new HashSet<Short>(user.getRoleIds()));
+        return userContext;
     }
 
     @Override
-    public void applyCharge(Integer accountId, UserContext userContext, Short feeId, Double chargeAmount)
-            throws ApplicationException {
+    public void applyCharge(Integer accountId, Short feeId, Double chargeAmount) {
 
-        AccountBO account = new AccountBusinessService().getAccount(accountId);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
 
-        account.setUserContext(userContext);
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
+            account.updateDetails(userContext);
 
-        CustomerLevel customerLevel = null;
-        if (account.getType().equals(AccountTypes.CUSTOMER_ACCOUNT)) {
-            customerLevel = account.getCustomer().getLevel();
+            CustomerLevel customerLevel = null;
+            if (account.isCustomerAccount()) {
+                customerLevel = account.getCustomer().getLevel();
+            }
+            if (account.getPersonnel() != null) {
+                checkPermissionForApplyCharges(account.getType(), customerLevel, userContext,
+                        account.getOffice().getOfficeId(), account.getPersonnel().getPersonnelId());
+            } else {
+                checkPermissionForApplyCharges(account.getType(), customerLevel, userContext,
+                        account.getOffice().getOfficeId(), userContext.getId());
+            }
+
+            this.transactionHelper.startTransaction();
+            account.applyCharge(feeId, chargeAmount);
+            this.transactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
         }
-        if (account.getPersonnel() != null) {
-            checkPermissionForApplyCharges(account.getType(), customerLevel, userContext, account.getOffice()
-                    .getOfficeId(), account.getPersonnel().getPersonnelId());
-        } else {
-            checkPermissionForApplyCharges(account.getType(), customerLevel, userContext, account.getOffice()
-                    .getOfficeId(), userContext.getId());
-        }
-
-        account.applyCharge(feeId, chargeAmount);
-        account.update();
-
     }
 
     private void checkPermissionForApplyCharges(AccountTypes accountTypes, CustomerLevel customerLevel,
@@ -142,10 +198,13 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     }
 
     @Override
-    public AccountTypeCustomerLevelDto getAccountTypeCustomerLevelDto(Integer accountId) throws ServiceException {
+    public AccountTypeCustomerLevelDto getAccountTypeCustomerLevelDto(Integer accountId) {
 
-        AccountBO account = new AccountBusinessService().getAccount(accountId);
-        return new AccountTypeCustomerLevelDto(account.getType().getValue(), account.getCustomer().getCustomerLevel()
-                .getId());
+        try {
+            AccountBO account = new AccountBusinessService().getAccount(accountId);
+            return new AccountTypeCustomerLevelDto(account.getType().getValue(), account.getCustomer().getCustomerLevel().getId());
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

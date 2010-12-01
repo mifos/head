@@ -1841,4 +1841,8 @@ public class AccountBO extends AbstractBusinessObject {
     public Short getOfficeId() {
         return office.getOfficeId();
     }
+
+    public boolean isCustomerAccount() {
+        return AccountTypes.CUSTOMER_ACCOUNT.equals(this.getType());
+    }
 }
