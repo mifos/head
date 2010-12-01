@@ -1,12 +1,11 @@
 # extracted from FrameworkUIResources.properties
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/FrameworkUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:28+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-11-30 13:44-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -69,7 +68,7 @@ msgstr "Inicio"
 
 #: framework.logout
 msgid "Log Out"
-msgstr ""
+msgstr "Desconectar"
 
 #: framework.manageCollectionSheets
 msgid "Manage collection sheets"
@@ -88,9 +87,8 @@ msgid "Search"
 msgstr "Buscar"
 
 #: framework.searchCriteria
-#, fuzzy
 msgid "Search by name, system ID, phone number or account number "
-msgstr "Buscar por nombre, ID del sistema, o número de cuenta"
+msgstr "Buscar por nombre, ID del sistema, número de teléfono, o número de cuenta"
 
 #: framework.yoursettings
 msgid "Your settings"

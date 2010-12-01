@@ -114,6 +114,7 @@
 		<propertyName name="comment" displayKey="Group.comment" parentName="customerNotes" />
 
  		<propertyName name="_customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
+ 		<propertyName name="_org.mifos.customers.business.CustomerBO.customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
 
   		<propertyName name="customerStatus" displayKey="Group.statusId" doNotLog="No" lookUp="yes">
 			<entityName name="CustomerStatus">
@@ -263,6 +264,7 @@
 
 		<propertyName name="commentId" parentName="customerNotes" doNotLog="yes" />
  		<propertyName name="_customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
+ 		<propertyName name="_org.mifos.customers.business.CustomerBO.customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
  		<propertyName name="commentDate" parentName="customerNotes" doNotLog="yes" />
   		<propertyName name="customerStatus" displayKey="Group.statusId" doNotLog="No" lookUp="yes">
 			<entityName name="CustomerStatus">
@@ -399,6 +401,7 @@
 
 		<propertyName name="commentId" parentName="customerNotes" doNotLog="yes" />
  		<propertyName name="_customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
+ 		<propertyName name="_org.mifos.customers.business.CustomerBO.customerFlagsBackref" parentName="customerFlags" doNotLog="yes" />
  		<propertyName name="commentDate" parentName="customerNotes" doNotLog="yes" />
   		<propertyName name="customerStatus" displayKey="Group.statusId" doNotLog="No" lookUp="yes">
 			<entityName name="CustomerStatus">

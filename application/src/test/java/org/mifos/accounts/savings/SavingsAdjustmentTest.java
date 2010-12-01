@@ -292,7 +292,6 @@ public class SavingsAdjustmentTest {
         assertTrue(result);
     }
 
-
     @Test
     public void accountBalanceIsUpdatedWhenLastDepositIsAdjusted() {
 
@@ -416,5 +415,4 @@ public class SavingsAdjustmentTest {
         List<SavingsActivityEntity> activitysAfter = new ArrayList<SavingsActivityEntity>(savingsAccount.getSavingsActivityDetails());
         assertThat(activitysAfter.size(), is(3));
     }
-
 }

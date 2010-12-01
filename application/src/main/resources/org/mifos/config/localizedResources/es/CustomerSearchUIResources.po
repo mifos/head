@@ -1,12 +1,11 @@
 # extracted from CustomerSearchUIResources.properties
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CustomerSearchUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:28+0530\n"
-"PO-Revision-Date: 2009-06-21 20:54-0700\n"
-"Last-Translator: Jesus Fernandez-Munoz <jfernandezmunoz@yahoo.es>\n"
+"PO-Revision-Date: 2010-11-30 13:42-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -117,10 +116,9 @@ msgid "the search tool below"
 msgstr "la herramienta de búsqueda de abajo"
 
 #: CustomerSearch.searchby
-#, fuzzy
 msgctxt "CustomerSearch.searchby"
 msgid "Search by name, system ID, phone number or account number"
-msgstr "Buscar por nombre, ID del sistema o número de cuenta"
+msgstr "Buscar por nombre, ID del sistema, número de teléfono, o número de cuenta"
 
 #: CustomerSearch.searchinstruction1
 msgid "To search, enter a"
@@ -128,13 +126,12 @@ msgstr "Para buscar, introduzca un"
 
 #: CustomerSearch.searchnamesysid
 msgid "name, system ID, phone number or account number"
-msgstr ""
+msgstr "nombre, ID del sistema, número de teléfono, o número de cuenta"
 
 #: CustomerSearch.searchstring
-#, fuzzy
 msgctxt "CustomerSearch.searchstring"
 msgid "Search by name, system ID, phone number or account number"
-msgstr "Buscar por nombre, ID del sistema o número de cuenta"
+msgstr "Buscar por nombre, ID del sistema, número de teléfono, o número de cuenta"
 
 #: CustomerSearch.select
 msgid "Select a"
@@ -165,12 +162,8 @@ msgid "account you can"
 msgstr "cuenta usted puede"
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you the required permissions and try again."
-msgstr ""
-"No tiene permiso para realizar esta actividad. Contacte con el Administrador "
-"del Sistema para obtener los permisos necesarios e inténtelo de nuevo."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgstr "No tiene permiso para realizar esta actividad. Contacte con el Administrador del Sistema para obtener los permisos necesarios e inténtelo de nuevo."
 
 #: errors.footer
 msgid "</UL>"
@@ -185,12 +178,8 @@ msgid "Please select a Branch to proceed."
 msgstr "Por favor seleccione una sucursal para continuar."
 
 #: errors.namemandatory
-msgid ""
-"Please specify the Name, System ID or Account Number to be searched for in "
-"the application."
-msgstr ""
-"Por favor especifique el Nombre, ID del sistema o Número de Cuenta que desea "
-"buscar."
+msgid "Please specify the Name, System ID or Account Number to be searched for in the application."
+msgstr "Por favor especifique el Nombre, ID del sistema o Número de Cuenta que desea buscar."
 
 #: errors.nosearchstring
 msgid "Please specify Name to be searched."
@@ -203,10 +192,3 @@ msgstr "<LI>"
 #: errors.suffix
 msgid "</LI>"
 msgstr "</LI>"
-
-#~ msgid "name, system ID or account number"
-#~ msgstr "nombre, ID del sistema o número de cuenta"
-
-#~ msgctxt "CustomerSearch.searchstring"
-#~ msgid "Search by name, system ID or account number"
-#~ msgstr "Buscar por nombre, ID del sistema o número de cuenta"
