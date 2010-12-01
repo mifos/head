@@ -1,11 +1,10 @@
-#. extracted from CustomerSearchUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:47+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:24+0530\n"
+"PO-Revision-Date: 2010-12-01 14:34+0800\n"
+"Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -100,7 +99,7 @@ msgstr "或账户"
 
 #: CustomerSearch.s
 msgid "s"
-msgstr ""
+msgstr " "
 
 #: CustomerSearch.search
 msgid "Search"
@@ -116,7 +115,7 @@ msgstr "下面的搜索工具"
 
 #: CustomerSearch.searchby
 msgctxt "CustomerSearch.searchby"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr "搜索名称、系统ID或帐号"
 
 #: CustomerSearch.searchinstruction1
@@ -124,13 +123,13 @@ msgid "To search, enter a"
 msgstr "如要搜索，输入"
 
 #: CustomerSearch.searchnamesysid
-msgid "name, system ID or account number"
-msgstr "名称、系统序号或帐号"
+msgid "name, system ID, phone number or account number"
+msgstr "名字，系统ID， 电话号或账户号"
 
 #: CustomerSearch.searchstring
 msgctxt "CustomerSearch.searchstring"
-msgid "Search by name, system ID or account number"
-msgstr "搜索名称、系统序号或帐号"
+msgid "Search by name, system ID, phone number or account number"
+msgstr "搜索名称、系统ID或帐号"
 
 #: CustomerSearch.select
 msgid "Select a"
@@ -161,9 +160,7 @@ msgid "account you can"
 msgstr "账户您可以"
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you the required permissions and try again."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
 msgstr "您没有进行该操作的权限。请您在请求系统管理员授予您权限后重试。"
 
 #: errors.footer
@@ -179,9 +176,7 @@ msgid "Please select a Branch to proceed."
 msgstr "请选择一个部门以便继续。"
 
 #: errors.namemandatory
-msgid ""
-"Please specify the Name, System ID or Account Number to be searched for in "
-"the application."
+msgid "Please specify the Name, System ID or Account Number to be searched for in the application."
 msgstr "请输入要搜索的名称、系统序号或帐号。"
 
 #: errors.nosearchstring
@@ -195,3 +190,10 @@ msgstr "<LI>"
 #: errors.suffix
 msgid "</LI>"
 msgstr "</LI>"
+
+#~ msgid "name, system ID or account number"
+#~ msgstr "名称、系统序号或帐号"
+#~ msgctxt "CustomerSearch.searchstring"
+
+#~ msgid "Search by name, system ID or account number"
+#~ msgstr "搜索名称、系统序号或帐号"

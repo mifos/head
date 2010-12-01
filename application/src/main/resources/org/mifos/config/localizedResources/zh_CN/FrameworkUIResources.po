@@ -1,11 +1,10 @@
-#. extracted from FrameworkUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:47+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:24+0530\n"
+"PO-Revision-Date: 2010-12-01 14:13+0800\n"
+"Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -63,8 +62,8 @@ msgid "Home"
 msgstr "首页"
 
 #: framework.logout
-msgid "Logout"
-msgstr "注销"
+msgid "Log Out"
+msgstr "退出"
 
 #: framework.manageCollectionSheets
 msgid "Manage collection sheets"
@@ -83,9 +82,12 @@ msgid "Search"
 msgstr "搜索"
 
 #: framework.searchCriteria
-msgid "Search by name, system ID or account number "
-msgstr "搜索姓名、系统ID或帐号"
+msgid "Search by name, system ID, phone number or account number "
+msgstr "以名字，系统ID，电话号或账户号来搜索"
 
 #: framework.yoursettings
 msgid "Your settings"
 msgstr "个人设定"
+
+#~ msgid "Logout"
+#~ msgstr "注销"
