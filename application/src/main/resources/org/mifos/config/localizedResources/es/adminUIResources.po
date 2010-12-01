@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-08-02 03:49+0800\n"
-"PO-Revision-Date: 2010-11-30 15:03-0800\n"
+"PO-Revision-Date: 2010-12-01 14:05-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -46,7 +46,7 @@ msgstr "cuentas"
 
 #: admin.manage.accounts
 msgid "Manage accounts"
-msgstr "Administra {0} cuentas"
+msgstr "Administrar Cuentas"
 
 #: admin.admin
 msgid "admin"
@@ -269,44 +269,44 @@ msgstr "Guardar Registro de Errores"
 
 #: admin.infoclickonlabel
 msgid "Click on"
-msgstr "Haga clic en"
+msgstr "Pulse en"
 
 #: admin.manageLoanAccounts
 msgid "Manage {0} accounts"
-msgstr "Administra {0} cuentas"
+msgstr "Administrar {0} cuentas"
 
 #: admin.manageProductMix
 msgid "Manage product mix"
-msgstr "Administra varios productos"
+msgstr "Administrar combinación de productos"
 
 #: admin.manageProducts
 msgid "Manage {0} products"
-msgstr "Administra {0} productos"
+msgstr "Administrar {0} productos"
 
 #: admin.manageloanprd
 msgid "Manage Loan Products"
-msgstr "Administra Productos de Préstamos"
+msgstr "Administrar Productos de Préstamos"
 
 #: admin.manageorg
 msgid "Manage organization"
-msgstr "Admisnitra la organización"
+msgstr "Administrar Organización"
 
 #: admin.manageprd
 msgid "Manage products"
-msgstr "Administra los productos"
+msgstr "Administrar los productos"
 
 #: admin.manageroles&per
 msgid "Manage roles and permissions"
-msgstr "Administra las funciones y los permisos"
+msgstr "Administrar las funciones y los permisos"
 
 #: admin.managesavprd
 msgid "Manage Savings Products"
-msgstr "Administra los productos de ahorros"
+msgstr "Administrar los productos de ahorros"
 
 # could also be read as mezcla
 #: admin.mix
 msgid "mix"
-msgstr "varios"
+msgstr "combinación"
 
 #: admin.office
 msgid "Offices"
@@ -362,7 +362,7 @@ msgstr "reportes"
 
 #: admin.manage.reports
 msgid "Manage reports"
-msgstr "Administrar importaciones"
+msgstr "Administrar reportes"
 
 #: admin.reverse
 msgid "Reverse"
@@ -395,7 +395,7 @@ msgstr "Ver encuestas"
 
 #: admin.shutdown.title
 msgid "Shutdown Information"
-msgstr "Informacion de cerrado del sistema"
+msgstr "Información del apagado del sistema"
 
 #: admin.shutdown.link
 msgid "Shutdown"
@@ -403,7 +403,7 @@ msgstr "Apagado"
 
 #: admin.shutdown.button.submit
 msgid "Start shutdown"
-msgstr "Comienza a cerrar el sistema"
+msgstr "Comienza a apagar el sistema"
 
 #: admin.shutdown.button.cancel
 msgid "Cancel shutdown"
@@ -411,7 +411,7 @@ msgstr "Cancelar el apagado del sistema"
 
 #: admin.shutdown.button.refresh
 msgid "Refresh"
-msgstr "Refresacar"
+msgstr "Refrescar"
 
 #: admin.shutdown.welcome
 msgid "Welcome to the Mifos shutdown management area."
@@ -423,7 +423,7 @@ msgstr "Sesiones activas"
 
 #: admin.shutdown.status
 msgid "Shutdown status"
-msgstr "Estatus de apagado"
+msgstr "Estado de apagado"
 
 #: admin.shutdown.status.none
 msgid "Not planned"
@@ -447,7 +447,7 @@ msgstr "segundos"
 
 #: admin.sysadmin.title
 msgid "System Administration"
-msgstr "Sistema de Administracion"
+msgstr "Administración del Sistema"
 
 #: admin.sysinfo.applicationversion
 msgid "Mifos Database Version"
@@ -520,7 +520,7 @@ msgstr "Identificador de la version"
 
 #: admin.sysinfo.buildNumber
 msgid "Build Number"
-msgstr "Numero de version"
+msgstr "Número de version"
 
 #: admin.sysinfo.buildDate
 msgid "Build Date"
