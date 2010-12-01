@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-08-02 03:49+0800\n"
-"PO-Revision-Date: 2010-11-24 10:48-0800\n"
+"PO-Revision-Date: 2010-11-30 15:53-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -170,7 +170,7 @@ msgid "Please specify a valid {0}. {0} should be greater than or equal to {1}."
 msgstr "Por favor especifique un {0} válido. {0} ha de ser igual o mayor que {1}."
 
 #: errors.maxValue
-msgid "Value of {0} cannot be greate than {1}."
+msgid "Value of {0} cannot be greater than {1}."
 msgstr "El valor de {0} no puede ser mayor que {1}."
 
 #: errors.maximumlength
@@ -808,6 +808,10 @@ msgstr "Incluir en"
 #: product.inclloancyccounter
 msgid "Include in loan cycle counter"
 msgstr "Incluir en contador de ciclo de préstamo"
+
+#: product.include.interest.waiver
+msgid "Can waive interest on Prepay loan"
+msgstr "Puede eliminar interés en Pagar por adelantado un préstamo"
 
 #: product.inf
 msgid "information"
@@ -1550,4 +1554,122 @@ msgstr "Sí"
 msgctxt "produt.edit"
 msgid "Edit"
 msgstr "Editar"
+
+#: product.questiongroups
+msgid "Question Groups"
+msgstr "Grupos de Preguntas"
+
+#: product.assocquestiongroups
+msgid "Associate Question Groups"
+msgstr "Associar Grupos de Preguntas"
+
+#: product.assocedquestiongroups
+msgid "Associated Question Groups"
+msgstr "Grupos de Preguntas Asociados"
+
+#: product.clickquestiongroups
+msgid "Click on a question group in the left box to select. Then click Add."
+msgstr "Pulse en un grupo de preguntas en el recuadrado de la izquierda para seleccionar. A continuación, pulse en Añadir."
+
+#: product.canConfigureVariableInstallments
+msgid "Can configure variable installments"
+msgstr "Puede configurar pagos variables"
+
+#: product.minimumGapBetweenInstallments
+msgid "Minimum gap between installments"
+msgstr "Intervalo mínimo entre pagos"
+
+#: product.maximumGapBetweenInstallments
+msgid "Maximum gap between installments"
+msgstr "Intervalo máximo entre pagos"
+
+#: product.minimumInstallmentAmount
+msgid "Minimum installment amount"
+msgstr "Cantidad de pago mínima"
+
+#: product.notApplicable
+msgid "N/A"
+msgstr "N/A"
+
+#: product.cashFlowValidation
+msgid "Compare with Cash Flow"
+msgstr "Comparar con Flujo de Caja"
+
+#: product.cashFlowThreshold
+msgid "Warning Threshold"
+msgstr "Umbral de Advertencia"
+
+#: product.indebtednessRatio
+msgid "Indebtedness Rate"
+msgstr "Índice de Endeudamiento"
+
+#: product.repaymentCapacity
+msgid "Repayment Capacity"
+msgstr "Capacidad de Pago"
+
+#: errors.minGapMoreThanMaxGapForVariableInstallmentProduct
+msgid "Minimum gap must be less than the maximum gap for loans with variable installments"
+msgstr "Intervalo mínimo debe ser menos que el intervalo máximo para préstamos con pagos variables"
+
+#: errors.variableInstallmentMinGapNegativeOrZero
+msgid "Minimum gap must not be zero or negative for loans with variable installments"
+msgstr "Intervalo mínimo no debe ser cero o negativo para préstamos con pagos variables"
+
+#: errors.variableInstallmentMaxGapNegativeOrZero
+msgid "Maximum gap must not be zero or negative for loans with variable installments"
+msgstr "Intervalo máximo no debe ser cero o negativo para préstamos con pagos variables"
+
+#: errors.variableInstallmentMinGapMoreThanAllowed
+msgid "Minimum gap must be less than 4 digits for loans with variable installments"
+msgstr "Intervalo mínimo debe ser menos que cuatro dígitos para préstamos con pagos variables"
+
+#: errors.variableInstallmentMaxGapMoreThanAllowed
+msgid "Maximum gap must be less than 4 digits for loans with variable installments"
+msgstr "Intervalo máximo debe ser menos que cuatro dígitos para préstamos con pagos variables"
+
+#: errors.minInstallmentAmountInvalidFormat
+msgid "The min installment amount for variable installments is invalid because {0}"
+msgstr "La cantida de pago mínima para pagos variables no es válida porque {0}"
+
+#: errors.cashFlowThresholdInvalid
+msgid "Warning Threshold should be a value less than {0}"
+msgstr "Umbral de advertencia debe ser un valor menos que {0}"
+
+#: errors.indebtednessRatioInvalid
+msgid "Inebtedness Ratio should be a value less than {0}"
+msgstr "Índice de Endeudamiento debe ser un valor menos que {0}"
+
+#: errors.repaymentCapacityInvalid
+msgid "Repayment Capacity should be a value less than {0}"
+msgstr "Capacidad de Pago debe ser un valor menos que {0}"
+
+#: errors.variableInstallmentMinGapNotProvided
+msgid "Please specify the minimum gap for variable installments"
+msgstr "Por favor especifique el intervalo mínimo para pagos variables"
+
+#: errors.cashflowwarninginvalidformat
+msgid "The Warning Threshold is invalid because {0}"
+msgstr "El interés máximo no es válido debido a {0}"
+
+#: errors.indebtednessRatioInvalidFormat
+msgid "The Indebtedness Ratio is invalid because {0}"
+msgstr "El Índice de Endeudamiento no es válido porque {0}"
+
+#: errors.repaymentCapacityInvalidFormat
+msgid "The Repayment Capacity is invalid because {0}"
+msgstr "La Capacidad de Pago no es válida porque {0}"
+
+#: errors.interestTypeInvalidForVariableInstallment
+msgid "The selected interest type is invalid for variable installment loan product"
+msgstr "El tipo de interés seleccionado no es válido para producto de préstamo de pago variable"
+
+#: errors.periodicFeeNotApplicableForVariableInstallment
+msgctxt "errors.periodicFeeNotApplicableForVariableInstallment"
+msgid "{0} fee cannot be applied to variable installment loan product"
+msgstr "{0} cuota no puede aplicar a producto de préstamo de pago variable"
+
+#: errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan
+msgctxt "errors.feeCaliculatedAsPercentOfInterestCannotBeAppliedToVariableInstallmentLoan"
+msgid "{0} fee cannot be applied to variable installment loan product"
+msgstr "{0} cuota no puede aplicar a producto de préstamo de pago variable"
 

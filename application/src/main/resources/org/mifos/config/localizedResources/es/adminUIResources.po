@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-08-02 03:49+0800\n"
-"PO-Revision-Date: 2010-11-24 11:14-0800\n"
+"PO-Revision-Date: 2010-11-30 15:03-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -59,6 +59,10 @@ msgstr "documentos administrativos"
 #: admin.admintasks
 msgid "Administrative tasks"
 msgstr "Tareas administrativas"
+
+#: admin.batchjobs.link
+msgid "Batch Jobs"
+msgstr "Lotes"
 
 #: admin.belowisthelistof
 msgid "Below is the list of"
@@ -234,6 +238,34 @@ msgstr "Has importado transacciones exitósamente."
 #: admin.importexport.title
 msgid "Manage Imports"
 msgstr "Administrar importaciones"
+
+#: admin.importexport.rowsWereRead
+msgid "{0} rows were read"
+msgstr "{0} filas fueron leídas"
+
+#: admin.importexport.rowsNoError
+msgid "{0} rows contained no errors and will be imported"
+msgstr "{0} no tuvieron errores y serán importadas."
+
+#: admin.importexport.rowsIgnored
+msgid "{0} rows will be ignored"
+msgstr "{0} filas no se tendrán en cuenta"
+
+#: admin.importexport.rowsError
+msgid "{0} rows contained errors and were not imported"
+msgstr "{0} filas no tuvieron errores y serán importadas."
+
+#: admin.importexport.amountImported
+msgid "Total amount of transactions imported: {0}"
+msgstr "Cantidad total de transacciones importada: {0}"
+
+#: admin.importexport.amountError
+msgid "Total amount of transactions with error: {0}"
+msgstr "Cantidad total de transacciones con error: {0}"
+
+#: admin.importexport.downloadLog
+msgid "Save Error Log"
+msgstr "Guardar Registro de Errores"
 
 #: admin.infoclickonlabel
 msgid "Click on"
@@ -668,8 +700,31 @@ msgid "Please select file to upload."
 msgstr "Seleccione un archivo para cargar"
 
 #: errors.importexport.already_submitted
-msgid "Same file has been already imported."
-msgstr "El archivo ya ha sido importado"
+msgid "Same file has been already imported. Please import a different file."
+msgstr "Mismo archivo ya ha sido importado. Por favor importe otro archivo."
+
+#: admin.uploadPPI
+msgid "Activate Question Group"
+msgstr "Activar Grupo de Preguntas"
+
+#: admin.questionnaire.migration
+msgid "Questionnaire Migration"
+msgstr "Migración de Encuesta"
+
+#: admin.questionnaire.migration.migrate.surveys
+msgid "Migrate Surveys"
+msgstr "Migrar Encuestas"
+
+#: admin.questionnaire.migration.migrate.additional.fields
+msgid "Migrate Additional Fields"
+msgstr "Migrar campos adicionales"
+
+#: admin.migrate.questiongroups
+msgid "Migrate to Question Groups"
+msgstr "Migrar a Grupos de Pregunta"
+
+#~ msgid "Same file has been already imported."
+#~ msgstr "El archivo ya ha sido importado"
 
 #~ msgid "Define new"
 #~ msgstr "Definir nuevo"

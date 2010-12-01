@@ -1,10 +1,10 @@
 # extracted from CenterUIResources.properties
-#. extracted from CenterUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CenterUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:28+0530\n"
 "PO-Revision-Date: 2010-02-24 11:15-0800\n"
 "Last-Translator: Daniel fdec <ddshore@hotmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"

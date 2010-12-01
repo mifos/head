@@ -1,12 +1,11 @@
 # extracted from FrameworkUIResources.properties
-#. extracted from FrameworkUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:28+0530\n"
+"PO-Revision-Date: 2010-11-30 13:44-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -68,7 +67,7 @@ msgid "Home"
 msgstr "Inicio"
 
 #: framework.logout
-msgid "Logout"
+msgid "Log Out"
 msgstr "Desconectar"
 
 #: framework.manageCollectionSheets
@@ -88,9 +87,12 @@ msgid "Search"
 msgstr "Buscar"
 
 #: framework.searchCriteria
-msgid "Search by name, system ID or account number "
-msgstr "Buscar por nombre, ID del sistema, o número de cuenta"
+msgid "Search by name, system ID, phone number or account number "
+msgstr "Buscar por nombre, ID del sistema, número de teléfono, o número de cuenta"
 
 #: framework.yoursettings
 msgid "Your settings"
 msgstr "Su configuración"
+
+#~ msgid "Logout"
+#~ msgstr "Desconectar"

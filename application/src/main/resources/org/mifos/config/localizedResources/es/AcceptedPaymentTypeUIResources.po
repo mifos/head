@@ -1,10 +1,10 @@
 # extracted from AcceptedPaymentTypeUIResources.properties
-#. extracted from AcceptedPaymentTypeUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/AcceptedPaymentTypeUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:28+0530\n"
 "PO-Revision-Date: 2009-05-16 20:14-0700\n"
 "Last-Translator: Jesus Fernandez-Munoz <jfernandezmunoz@yahoo.es>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
