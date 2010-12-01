@@ -432,9 +432,9 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         verifyCellValueOfInstallments(1,4,"3.8");
         verifyCellValueOfInstallments(2,4,"2.6");
         verifyCellValueOfInstallments(3,4,"1.3");
-        verifyCellValueOfInstallments(1,5,"336.0");
-        verifyCellValueOfInstallments(2,5,"336.0");
-        verifyCellValueOfInstallments(3,5,"335.7");
+        verifyCellValueOfInstallments(1,6,"336.0");
+        verifyCellValueOfInstallments(2,6,"336.0");
+        verifyCellValueOfInstallments(3,6,"335.7");
         return this;
         //To change body of created methods use File | Settings | File Templates.
     }
