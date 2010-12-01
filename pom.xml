@@ -46,6 +46,7 @@
         <module>api</module>
         <module>questionnaire</module>
         <module>cashflow</module>
+        <module>savings</module>
         <module>acceptanceTests</module>
     </modules>
 
@@ -106,6 +107,11 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-cashflow</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-savings</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>

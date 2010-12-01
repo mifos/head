@@ -25,5 +25,6 @@ import java.io.Serializable;
 /**
  * Abstract class for persistent objects.
  */
+@SuppressWarnings("PMD")
 public abstract class AbstractEntity implements Serializable {
 }
