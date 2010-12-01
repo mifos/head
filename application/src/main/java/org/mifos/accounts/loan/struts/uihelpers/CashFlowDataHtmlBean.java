@@ -54,4 +54,7 @@ public class CashFlowDataHtmlBean {
         return monthYear;
     }
 
+    public String getMonthYearAsString() {
+        return getMonth() + " " + getYear();
+    }
 }

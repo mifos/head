@@ -20,12 +20,8 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.customers.client.business.service.ClientBusinessService;
-import java.util.Date;
-import java.util.List;
-
 import org.joda.time.DateTime;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.business.FundBO;
@@ -41,12 +37,17 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
+
+import java.util.Date;
+import java.util.List;
 
 
 public interface LoanServiceFacade {
@@ -108,4 +109,8 @@ public interface LoanServiceFacade {
     Errors validateInputInstallments(Date disbursementDate, VariableInstallmentDetailsBO variableInstallmentDetails, List<RepaymentScheduleInstallment> installments, Integer customerId);
 
     Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
+
+    Errors validateCashFlowForInstallments(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException;
+
+    Errors validateCashFlowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm);
 }

@@ -20,10 +20,15 @@
 
 package org.mifos.platform.validations;
 
+import org.mifos.platform.util.CollectionUtils;
+
+import java.util.List;
+
 public class ErrorEntry {
     private final String fieldName;
     private final String errorCode;
     private final String defaultMessage;
+    private List<String> args;
 
     public ErrorEntry(String errorCode, String fieldName) {
         this(errorCode, fieldName, null);
@@ -49,5 +54,17 @@ public class ErrorEntry {
 
     public String getDefaultMessage() {
         return defaultMessage;
+    }
+
+    public void setArgs(List<String> args) {
+        this.args = args;
+    }
+
+    public boolean hasErrorArgs() {
+        return CollectionUtils.isNotEmpty(args);
+    }
+
+    public List<String> getArgs() {
+        return args;
     }
 }

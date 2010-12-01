@@ -719,4 +719,18 @@ public class DateUtils {
         String userfmt = convertToCurrentDateFormat(format.toPattern());
         return convertUserToDbFmt(givenDate, userfmt);
     }
+
+    // TODO: Add unit tests
+    public static boolean firstLessOrEqualSecond(Date firstDate, Date secondDate) {
+        Calendar firstCalendarDate = Calendar.getInstance();
+        firstCalendarDate.setTime(firstDate);
+
+        Calendar secondCalendarDate = Calendar.getInstance();
+        secondCalendarDate.setTime(secondDate);
+
+        firstCalendarDate.set(Calendar.DAY_OF_MONTH, 1);
+
+        return firstCalendarDate.compareTo(secondCalendarDate) <= 0;
+    }
+
 }

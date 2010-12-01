@@ -54,11 +54,13 @@ import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -68,6 +70,7 @@ import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsB
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -121,6 +124,9 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
+import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
+import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
@@ -128,6 +134,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -153,13 +160,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final InstallmentsValidator installmentsValidator;
     private final ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private final LoanBusinessService loanBusinessService;
-    private HolidayServiceFacade holidayServiceFacade;
+    private final HolidayServiceFacade holidayServiceFacade;
+    private final LoanPrdBusinessService loanPrdBusinessService;
 
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
                                     PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao,
                                     InstallmentsValidator installmentsValidator,
                                     ScheduleCalculatorAdaptor scheduleCalculatorAdaptor, LoanBusinessService loanBusinessService,
-                                    HolidayServiceFacade holidayServiceFacade) {
+                                    HolidayServiceFacade holidayServiceFacade, LoanPrdBusinessService loanPrdBusinessService) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
@@ -169,6 +177,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
         this.loanBusinessService = loanBusinessService;
         this.holidayServiceFacade = holidayServiceFacade;
+        this.loanPrdBusinessService = loanPrdBusinessService;
     }
 
     @Override
@@ -1107,5 +1116,61 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     @Override
     public Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
         return installmentsValidator.validateInstallmentSchedule(installments, variableInstallmentDetailsBO);
+    }
+
+    @Override
+    public Errors validateCashFlowForInstallments(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException {
+        Errors errors = new Errors();
+        LoanOfferingBO loanOfferingBO = loanPrdBusinessService.getLoanOffering(loanActionForm.getPrdOfferingIdValue(), localeId);
+        if (loanOfferingBO.shouldValidateCashFlowForInstallments()) {
+            CashFlowDetail cashFlowDetail = loanOfferingBO.getCashFlowDetail();
+            List<CashFlowDataHtmlBean> cashFlowDataHtmlBeans = loanActionForm.getCashflowDataHtmlBeans();
+            if (CollectionUtils.isNotEmpty(cashFlowDataHtmlBeans)) {
+                for (CashFlowDataHtmlBean cashflowDataHtmlBean : cashFlowDataHtmlBeans) {
+                    validateCashFlow(errors, cashFlowDetail.getCashFlowThreshold(), cashflowDataHtmlBean);
+                }
+                errors.addErrors(validateCashFlowAndInstallmentDates(loanActionForm.getInstallments(), loanActionForm.getCashFlowForm()));
+            }
+        }
+        return errors;
+    }
+
+    private void validateCashFlow(Errors errors, Double cashFlowThreshold, CashFlowDataHtmlBean cashflowDataHtmlBean) {
+        String cashFlowAndInstallmentDiffPercent = cashflowDataHtmlBean.getDiffCumulativeCashflowAndInstallmentPercent();
+        String monthYearAsString = cashflowDataHtmlBean.getMonthYearAsString();
+        String cumulativeCashFlow = cashflowDataHtmlBean.getCumulativeCashFlow();
+        if (StringUtils.isNotEmpty(cashFlowAndInstallmentDiffPercent) && Double.valueOf(cashFlowAndInstallmentDiffPercent) > cashFlowThreshold) {
+            errors.addError(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, monthYearAsString, cashFlowThreshold.toString());
+        }
+        if (StringUtils.isNotEmpty(cumulativeCashFlow)) {
+            Double cumulativeCashFlowValue = Double.valueOf(cumulativeCashFlow);
+            if (cumulativeCashFlowValue < 0) {
+                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, monthYearAsString);
+            } else if (cumulativeCashFlowValue == 0) {
+                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, monthYearAsString);
+            }
+        }
+    }
+
+    @Override
+    public Errors validateCashFlowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm) {
+        Errors errors = new Errors();
+        if (cashFlowForm == null) return errors;
+        List<MonthlyCashFlowForm> monthlyCashFlows = cashFlowForm.getMonthlyCashFlows();
+        if (CollectionUtils.isNotEmpty(installments) && CollectionUtils.isNotEmpty(monthlyCashFlows)) {
+            boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDateTime().toDate(), installments.get(0).getDueDateValue());
+            boolean upperBound = DateUtils.firstLessOrEqualSecond(installments.get(installments.size() - 1).getDueDateValue(), monthlyCashFlows.get(monthlyCashFlows.size() - 1).getDateTime().toDate());
+
+            SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy", installments.get(0).getLocale());
+
+            if (!lowerBound) {
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, df.format(installments.get(0).getDueDateValue()));
+            }
+
+            if (!upperBound) {
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, df.format(installments.get(installments.size() - 1).getDueDateValue()));
+            }
+        }
+        return errors;
     }
 }

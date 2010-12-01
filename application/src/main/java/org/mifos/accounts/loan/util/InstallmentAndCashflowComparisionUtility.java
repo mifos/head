@@ -1,16 +1,17 @@
 package org.mifos.accounts.loan.util;
 
+import org.joda.time.DateTime;
+import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import org.joda.time.DateTime;
-import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
-
+// TODO: Move this mapping logic to an appropriate layer - buddy/srikanth
 public class InstallmentAndCashflowComparisionUtility {
 
     private List<MonthlyCashFlowForm> monthlyCashFlows;
@@ -18,85 +19,71 @@ public class InstallmentAndCashflowComparisionUtility {
 
 
     public InstallmentAndCashflowComparisionUtility(List<RepaymentScheduleInstallment> installments,
-            List<MonthlyCashFlowForm> monthlyCashFlows) {
+                                                    List<MonthlyCashFlowForm> monthlyCashFlows) {
         this.installments = installments;
         this.monthlyCashFlows = monthlyCashFlows;
     }
 
 
-    public void setMonthlyCashFlows(List<MonthlyCashFlowForm> monthlyCashFlows) {
-        this.monthlyCashFlows = monthlyCashFlows;
+    public List<CashFlowDataHtmlBean> mapToCashflowDataHtmlBeans() {
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = null;
+        if (monthlyCashFlows != null && monthlyCashFlows.size() > 0) {
+            cashflowDataHtmlBeans = new ArrayList<CashFlowDataHtmlBean>();
+            for (MonthlyCashFlowForm monthlyCashflowform : monthlyCashFlows) {
+                CashFlowDataHtmlBean cashflowDataHtmlBean = mapCashFlowDataHtmlBean(monthlyCashflowform);
+                cashflowDataHtmlBeans.add(cashflowDataHtmlBean);
+            }
+        }
+        return cashflowDataHtmlBeans;
+    }
+
+    private CashFlowDataHtmlBean mapCashFlowDataHtmlBean(MonthlyCashFlowForm monthlyCashflowform) {
+        CashFlowDataHtmlBean cashflowDataHtmlBean = new CashFlowDataHtmlBean();
+        cashflowDataHtmlBean.setMonth(monthlyCashflowform.getMonth());
+        cashflowDataHtmlBean.setYear(String.valueOf(monthlyCashflowform.getYear()));
+        cashflowDataHtmlBean.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow()));
+        String cumulativeCashflowAndInstallment = computeDiffBetweenCumulativeAndInstallment(monthlyCashflowform.getDateTime(), monthlyCashflowform.getCumulativeCashFlow());
+        cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallment(cumulativeCashflowAndInstallment);
+        String cashflowAndInstallmentPercent = computeDiffBetweenCumulativeAndInstallmentPercent(monthlyCashflowform.getDateTime(), monthlyCashflowform.getCumulativeCashFlow());
+        cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallmentPercent(cashflowAndInstallmentPercent);
+        cashflowDataHtmlBean.setNotes(monthlyCashflowform.getNotes());
+        cashflowDataHtmlBean.setMonthYear(monthlyCashflowform.getDateTime().toDate());
+        return cashflowDataHtmlBean;
     }
 
 
-    public List<MonthlyCashFlowForm> getMonthlyCashFlows() {
-        return monthlyCashFlows;
+    private String computeDiffBetweenCumulativeAndInstallment(DateTime dateOfCashFlow, BigDecimal cashflow) {
+        BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
+        return String.valueOf(cashflow.subtract(totalInstallmentForMonth).setScale(2, RoundingMode.HALF_UP));
     }
 
-    public void setInstallments(List<RepaymentScheduleInstallment> installments) {
-        this.installments = installments;
-    }
-
-
-    public List<RepaymentScheduleInstallment> getInstallments() {
-        return installments;
-    }
-
-    public List<CashFlowDataHtmlBean> getCashflowDataHtmlBeans(){
-         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = null;
-
-         if(getMonthlyCashFlows() != null && getMonthlyCashFlows().size() > 0) {
-             cashflowDataHtmlBeans = new ArrayList<CashFlowDataHtmlBean>();
-             for(MonthlyCashFlowForm monthlyCashflowform : getMonthlyCashFlows()) {
-                 CashFlowDataHtmlBean cashflowDataHtmlBean = new CashFlowDataHtmlBean();
-                 cashflowDataHtmlBean.setMonth(monthlyCashflowform.getMonth());
-                 cashflowDataHtmlBean.setYear(String.valueOf(monthlyCashflowform.getYear()));
-                 cashflowDataHtmlBean.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow()));
-                 cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallment(computeDiffBetweenCumulativeAndInstallment(monthlyCashflowform.getDateTime(),monthlyCashflowform.getCumulativeCashFlow()));
-                 cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallmentPercent(computeDiffBetweenCumulativeAndInstallmentPercent(monthlyCashflowform.getDateTime(),monthlyCashflowform.getCumulativeCashFlow()));
-                 cashflowDataHtmlBean.setNotes(monthlyCashflowform.getNotes());
-                 cashflowDataHtmlBean.setMonthYear(monthlyCashflowform.getDateTime().toDate());
-                 cashflowDataHtmlBeans.add(cashflowDataHtmlBean);
-             }
-         }
-
-
-         return cashflowDataHtmlBeans;
-     }
-
-
-     private String computeDiffBetweenCumulativeAndInstallment(DateTime dateOfCashFlow, BigDecimal cashflow) {
-         BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
-         return String.valueOf(cashflow.subtract(totalInstallmentForMonth).setScale(2,RoundingMode.HALF_UP));
-     }
-
-     private String computeDiffBetweenCumulativeAndInstallmentPercent(DateTime dateOfCashFlow, BigDecimal cashflow) {
-         BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
-         String value= "";
-         if(cashflow.doubleValue()!=0) {
+    private String computeDiffBetweenCumulativeAndInstallmentPercent(DateTime dateOfCashFlow, BigDecimal cashflow) {
+        BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
+        String value = "";
+        if (cashflow.doubleValue() != 0) {
             value = String.valueOf(totalInstallmentForMonth.multiply(new BigDecimal(100)).divide(cashflow, 2, RoundingMode.HALF_UP));
-         }else {
-             value = "Infinity";
-         }
-         return value;
-     }
+        } else {
+            value = "Infinity";
+        }
+        return value;
+    }
 
 
-     private BigDecimal cumulativeTotalForMonth(DateTime dateOfCashFlow) {
-         BigDecimal value = new BigDecimal(0).setScale(2);
-         for(RepaymentScheduleInstallment repaymentScheduleInstallment:getInstallments()) {
-             Calendar dueDate = Calendar.getInstance();
-             dueDate.setTime(repaymentScheduleInstallment.getDueDateValue());
+    private BigDecimal cumulativeTotalForMonth(DateTime dateOfCashFlow) {
+        BigDecimal value = new BigDecimal(0).setScale(2);
+        for (RepaymentScheduleInstallment repaymentScheduleInstallment : installments) {
+            Calendar dueDate = Calendar.getInstance();
+            dueDate.setTime(repaymentScheduleInstallment.getDueDateValue());
 
-             Calendar cashFlowDate = Calendar.getInstance();
-             cashFlowDate.setTime(dateOfCashFlow.toDate());
+            Calendar cashFlowDate = Calendar.getInstance();
+            cashFlowDate.setTime(dateOfCashFlow.toDate());
 
 
-             if((dueDate.get(Calendar.MONTH) == cashFlowDate.get(Calendar.MONTH))&&(dueDate.get(Calendar.YEAR) == cashFlowDate.get(Calendar.YEAR))){
-                 value = value.add(repaymentScheduleInstallment.getTotalValue().getAmount());
-             }
-         }
-         return value;
-     }
+            if ((dueDate.get(Calendar.MONTH) == cashFlowDate.get(Calendar.MONTH)) && (dueDate.get(Calendar.YEAR) == cashFlowDate.get(Calendar.YEAR))) {
+                value = value.add(repaymentScheduleInstallment.getTotalValue().getAmount());
+            }
+        }
+        return value;
+    }
 
 }

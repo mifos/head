@@ -38,6 +38,7 @@ import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
+import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -75,7 +76,13 @@ import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.hasItem;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyBoolean;
+import static org.mockito.Mockito.anyObject;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -103,6 +110,9 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private LoanBusinessService loanBusinessService;
 
+    @Mock
+    private LoanPrdBusinessService loanPrdBusinessService;
+
     // test data
     @Mock
     private CustomerBO customer;
@@ -128,7 +138,7 @@ public class LoanServiceFacadeWebTierTest {
     @Before
     public void setupAndInjectDependencies() {
         loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, 
-                fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade);
+                fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
     }
 
     @Test

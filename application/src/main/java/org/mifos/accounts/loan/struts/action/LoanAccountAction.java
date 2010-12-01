@@ -43,13 +43,10 @@ import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
-import org.mifos.accounts.loan.util.MonthYearComparator;
 import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
@@ -114,7 +111,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
-import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validations.ErrorEntry;
@@ -132,7 +128,6 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -493,55 +488,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private ActionErrors validateCashFlowForInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
-        UserContext userContext = getUserContext(request);
-        CashFlowDetail cashFlowDetail = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId()).
-                getCashFlowDetail();
-        ActionErrors errors = new ActionErrors();
-        if (cashFlowDetail != null) {
-            Double cashFlowThresholdPercent = cashFlowDetail.getCashFlowThreshold();
-            //Do not compare or validate if cash flow threshold is null or zero
-            if (cashFlowThresholdPercent != null && cashFlowThresholdPercent != 0) {
-                List<CashFlowDataHtmlBean> cashFlowDataHtmlBeans = loanActionForm.getCashflowDataHtmlBeans();
-                if (cashFlowDataHtmlBeans != null && cashFlowDataHtmlBeans.size() != 0) {
-                    for (CashFlowDataHtmlBean cashflowDataHtmlBean : cashFlowDataHtmlBeans) {
-                        String cashFlowAndInstallmentDiffPercent = cashflowDataHtmlBean.getDiffCumulativeCashflowAndInstallmentPercent();
-                        if (StringUtils.isNotEmpty(cashFlowAndInstallmentDiffPercent) && Double.valueOf(cashFlowAndInstallmentDiffPercent) > cashFlowThresholdPercent) {
-                            errors.add(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new ActionMessage(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, cashflowDataHtmlBean.getMonth() + " " + cashflowDataHtmlBean.getYear(), String.valueOf(cashFlowThresholdPercent)));
-                        }
-                        String cumulativeCashFlow = cashflowDataHtmlBean.getCumulativeCashFlow();
-                        if (StringUtils.isNotEmpty(cumulativeCashFlow) && Double.valueOf(cumulativeCashFlow) < 0) {
-                            errors.add(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, cashflowDataHtmlBean.getMonth() + " " + cashflowDataHtmlBean.getYear()));
-                        } else if (StringUtils.isNotEmpty(cumulativeCashFlow) && Double.valueOf(cumulativeCashFlow) == 0) {
-                            errors.add(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new ActionMessage(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, cashflowDataHtmlBean.getMonth() + " " + cashflowDataHtmlBean.getYear()));
-                        }
-                    }
-                    errors.add(validateCashflowAndInstallmentDates(loanActionForm.getInstallments(), loanActionForm.getCashFlowForm()));
-                }
-            }
-        }
-        return errors;
+        return getActionErrors(loanServiceFacade.validateCashFlowForInstallments(loanActionForm, getUserContext(request).getLocaleId()));
     }
 
     private ActionErrors validateCashflowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm) {
-        ActionErrors errors = new ActionErrors();
-        if(cashFlowForm != null) {
-            List<MonthlyCashFlowForm> monthlyCashFlows = cashFlowForm.getMonthlyCashFlows();
-            if((installments != null && installments.size() > 0) && (monthlyCashFlows != null && monthlyCashFlows.size() > 0)) {
-                boolean lowerBound = MonthYearComparator.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDateTime().toDate(), installments.get(0).getDueDateValue());
-                boolean upperBound = MonthYearComparator.firstLessOrEqualSecond(installments.get(installments.size()-1).getDueDateValue(),monthlyCashFlows.get(monthlyCashFlows.size()-1).getDateTime().toDate());
-
-                SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy", installments.get(0).getLocale());
-
-                if(!lowerBound) {
-                    errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(0).getDueDateValue())));
-                }
-
-                if(!upperBound) {
-                    errors.add(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new ActionMessage(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE ,df.format(installments.get(installments.size()-1).getDueDateValue())));
-                }
-            }
-        }
-        return errors;
+        return getActionErrors(loanServiceFacade.validateCashFlowAndInstallmentDates(installments, cashFlowForm));
     }
 
     private boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
@@ -597,7 +548,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
                     loanForm.getInstallments(),loanForm.getCashFlowForm().getMonthlyCashFlows());
 
-            loanForm.setCashflowDataHtmlBeans(cashflowUtility.getCashflowDataHtmlBeans());
+            loanForm.setCashflowDataHtmlBeans(cashflowUtility.mapToCashflowDataHtmlBeans());
             cashflowBound = true;
         }
         return cashflowBound;
@@ -731,8 +682,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         //----to display errors on second page
         if (forward.equals(ActionForwards.preview_success)) {
             if (cashFlowBounded) {
-                ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request,
-                        (LoanAccountActionForm) form);
+                ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request, (LoanAccountActionForm) form);
                 if (!validateCashflowForInstallments.isEmpty()) {
                     addErrors(request, validateCashflowForInstallments);
                 }
@@ -1804,7 +1754,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         ActionErrors actionErrors = new ActionErrors();
         if (errors.hasErrors()) {
             for (ErrorEntry errorEntry : errors.getErrorEntries()) {
-                ActionMessage actionMessage = new ActionMessage(errorEntry.getErrorCode(), errorEntry.getFieldName());
+                ActionMessage actionMessage;
+                if (errorEntry.hasErrorArgs()) {
+                    actionMessage = new ActionMessage(errorEntry.getErrorCode(), errorEntry.getArgs().toArray());
+                } else {
+                    actionMessage = new ActionMessage(errorEntry.getErrorCode(), errorEntry.getFieldName());
+                }
                 actionErrors.add(errorEntry.getErrorCode(), actionMessage);
             }
         }

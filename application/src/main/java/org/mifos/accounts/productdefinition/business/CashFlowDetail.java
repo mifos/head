@@ -65,4 +65,8 @@ public class CashFlowDetail extends AbstractEntity {
     public boolean shouldCaptureCapitalAndLiabilityInformation() {
         return indebtednessRatio != null && indebtednessRatio > 0;
     }
+
+    public boolean isNonZeroThreshold() {
+        return cashFlowThreshold != null && cashFlowThreshold > 0;
+    }
 }

@@ -52,6 +52,7 @@ import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.persistance.StandardClientAttendanceDao;
 import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDaoHibernate;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
@@ -169,7 +170,10 @@ public class DependencyInjectedServiceLocator {
     private static ListOfInstallmentsValidator listOfInstallmentsValidator;
     private static InstallmentRulesValidator installmentRulesValidator;
     private static InstallmentsValidator installmentsValidator;
+
+    // business services
     private static LoanBusinessService loanBusinessService;
+    private static LoanPrdBusinessService loanPrdBusinessService;
 
     // rules
     private static FiscalCalendarRules fiscalCalendarRules;
@@ -266,14 +270,21 @@ public class DependencyInjectedServiceLocator {
         if (loanServiceFacade == null) {
             loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
                     fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor(),
-                    locateLoanBusinessService(), locateHolidayServiceFacade());
+                    locateLoanBusinessService(), locateHolidayServiceFacade(), locateLoanPrdBusinessService());
         }
         return loanServiceFacade;
     }
 
+    public static LoanPrdBusinessService locateLoanPrdBusinessService() {
+        if (loanPrdBusinessService == null) {
+            loanPrdBusinessService = new LoanPrdBusinessService();
+        }
+        return loanPrdBusinessService;
+    }
+
     public static LoanBusinessService locateLoanBusinessService() {
         if (loanBusinessService == null) {
-            loanBusinessService= new LoanBusinessService(loanPersistence, locateConfigurationBusinessService(), locateAccountBusinessService(), locateHolidayService());
+            loanBusinessService = new LoanBusinessService(loanPersistence, locateConfigurationBusinessService(), locateAccountBusinessService(), locateHolidayService());
         }
         return loanBusinessService;
     }

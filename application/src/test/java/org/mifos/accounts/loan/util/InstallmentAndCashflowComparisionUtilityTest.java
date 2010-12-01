@@ -47,7 +47,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("50.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
@@ -68,7 +68,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("49.44",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
@@ -89,7 +89,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("0.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
@@ -110,7 +110,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("-50.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
@@ -137,7 +137,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("100.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
@@ -158,7 +158,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("66.67",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
@@ -179,7 +179,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("Infinity",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
@@ -202,7 +202,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("100.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
@@ -223,7 +223,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("200.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
@@ -250,7 +250,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
         InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.getCashflowDataHtmlBeans();
+        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
         Assert.assertEquals("71.43",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());

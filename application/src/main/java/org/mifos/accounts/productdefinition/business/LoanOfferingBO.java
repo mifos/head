@@ -1524,4 +1524,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public Double getIndebtednessRatio() {
         return cashFlowDetail != null ? cashFlowDetail.getIndebtednessRatio() : Double.valueOf(0);
     }
+
+    public boolean shouldValidateCashFlowForInstallments() {
+        return isCashFlowCheckEnabled() && cashFlowDetail != null && cashFlowDetail.isNonZeroThreshold();
+    }
 }
