@@ -123,6 +123,10 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
         StaticHibernateUtil.flushAndClearSession();
     }
 
+    /**
+     * need to clean up set up of tests data for savings account.
+     */
+    @Ignore
     @Test
     public void testThatNoSchedulesAreUpdatedWhenHolidaysDontAffectThem() throws Exception {
 
@@ -159,6 +163,10 @@ public class ApplyHolidayChangesHelperIntegrationTest extends MifosIntegrationTe
 
     }
 
+    /**
+     * need to clean up set up of tests data for savings account.
+     */
+    @Ignore
     @Test
     public void testThatTaskRunsSuccessfullyWhenNoHolidaysNeedApplying() throws Exception {
 

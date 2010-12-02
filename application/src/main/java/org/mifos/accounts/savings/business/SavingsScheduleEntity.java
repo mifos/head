@@ -26,6 +26,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.Money;
 
@@ -38,6 +39,13 @@ public class SavingsScheduleEntity extends AccountActionDateEntity {
 
     protected SavingsScheduleEntity() {
         super(null, null, null, null, null);
+    }
+
+    // only used for active savings account
+    public SavingsScheduleEntity(CustomerBO customer, Short installmentId, Date actionDate, PaymentStatus paymentStatus, Money deposit, MifosCurrency mifosCurrency) {
+        super(null, customer, installmentId, actionDate, paymentStatus);
+        this.deposit = deposit;
+        this.depositPaid = new Money(mifosCurrency);
     }
 
     public SavingsScheduleEntity(AccountBO account, CustomerBO customer, Short installmentId, Date actionDate,

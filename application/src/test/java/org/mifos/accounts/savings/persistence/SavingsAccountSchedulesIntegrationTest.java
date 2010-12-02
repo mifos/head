@@ -143,7 +143,9 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(center)
-                                                              .build();
+                                                              .withMember(client)
+                                                              .withCreatedBy(IntegrationTestObjectMother.testUser())
+                                                              .buildJointSavingsAccount();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         List<AccountActionDateEntity> savingSchedules = savingsAccount.getAccountActionDatesSortedByInstallmentId();
@@ -162,7 +164,9 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(group)
-                                                              .build();
+                                                              .withMember(client)
+                                                              .withCreatedBy(IntegrationTestObjectMother.testUser())
+                                                              .buildJointSavingsAccount();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         List<AccountActionDateEntity> savingSchedules = savingsAccount.getAccountActionDatesSortedByInstallmentId();
@@ -181,6 +185,7 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(group)
+                                                              .withCreatedBy(IntegrationTestObjectMother.testUser())
                                                               .build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
@@ -200,6 +205,7 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(client)
+                                                              .withCreatedBy(IntegrationTestObjectMother.testUser())
                                                               .build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
@@ -219,7 +225,8 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(center)
-                                                              .build();
+                                                              .withCreatedBy(IntegrationTestObjectMother.testUser())
+                                                              .buildJointSavingsAccount();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         List<AccountActionDateEntity> savingSchedules = savingsAccount.getAccountActionDatesSortedByInstallmentId();
@@ -236,7 +243,8 @@ public class SavingsAccountSchedulesIntegrationTest extends MifosIntegrationTest
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(group)
-                                                              .build();
+                                                              .withCreatedBy(IntegrationTestObjectMother.testUser())
+                                                              .buildJointSavingsAccount();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         List<AccountActionDateEntity> savingSchedules = savingsAccount.getAccountActionDatesSortedByInstallmentId();

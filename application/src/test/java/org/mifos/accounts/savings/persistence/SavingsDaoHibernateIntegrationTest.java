@@ -143,7 +143,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         // setup
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToClientsOnly().buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct).withDepositOf("50")
-                .withCustomer(client).build();
+                .withCustomer(client).withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         // exercise test
@@ -171,7 +171,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         // setup
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToGroupsOnly().buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct).withCustomer(group)
-                .build();
+                .withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         // exercise test
@@ -188,7 +188,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         // setup
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToClientsOnly().buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct)
-                .withCustomer(client).build();
+                .withCustomer(client).withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         // exercise test
@@ -216,7 +216,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         // setup
         savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().completeGroup().withSavingsProduct(savingsProduct).withCustomer(group)
-                .build();
+                .withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         // exercise test
@@ -233,7 +233,7 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         // setup
         savingsProduct = new SavingsProductBuilder().voluntary().appliesToClientsOnly().buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().completeGroup().withSavingsProduct(savingsProduct).withCustomer(group)
-                .build();
+                .withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         // exercise test
@@ -262,13 +262,13 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         savingsProduct = new SavingsProductBuilder().voluntary().appliesToGroupsOnly().withShortName("SP1")
                 .buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().completeGroup().perIndividual().withSavingsProduct(
-                savingsProduct).withCustomer(group).build();
+                savingsProduct).withCustomer(group).withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         secondSavingsProduct = new SavingsProductBuilder().mandatory().withShortName("SP2").appliesToCentersOnly()
                 .withName("testSavingPrd2").buildForIntegrationTests();
         secondSavingsAccount = new SavingsAccountBuilder().withSavingsProduct(secondSavingsProduct)
-                .withCustomer(center).build();
+                .withCustomer(center).withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(secondSavingsProduct,
                 secondSavingsAccount);
 
@@ -297,13 +297,13 @@ public class SavingsDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         // setup
         savingsProduct = new SavingsProductBuilder().voluntary().withShortName("SP1").appliesToGroupsOnly().buildForIntegrationTests();
         savingsAccount = new SavingsAccountBuilder().completeGroup().perIndividual().withSavingsProduct(savingsProduct)
-                .withCustomer(group).build();
+                .withCustomer(group).withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
 
         secondSavingsProduct = new SavingsProductBuilder().mandatory().withShortName("SP2").appliesToCentersOnly()
                 .withName("testSavingPrd2").buildForIntegrationTests();
         secondSavingsAccount = new SavingsAccountBuilder().withSavingsProduct(secondSavingsProduct)
-                .withCustomer(center).build();
+                .withCustomer(center).withCreatedBy(IntegrationTestObjectMother.testUser()).build();
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(secondSavingsProduct,
                 secondSavingsAccount);
 

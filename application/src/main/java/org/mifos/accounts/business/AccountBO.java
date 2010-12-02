@@ -277,7 +277,7 @@ public class AccountBO extends AbstractBusinessObject {
             scheduledPayment.setAccount(this);
         }
 
-        this.accountActionDates = new LinkedHashSet<AccountActionDateEntity>();
+        this.accountActionDates = new LinkedHashSet<AccountActionDateEntity>(savingsAccountActivationDetail.getScheduledPayments());
         if (customer != null) {
             this.office = customer.getOffice();
             this.personnel = customer.getPersonnel();

@@ -26,12 +26,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.savings.business.SavingsAccountActivationDetail;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsPaymentStrategy;
 import org.mifos.accounts.savings.business.SavingsPaymentStrategyImpl;
@@ -42,11 +45,14 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
-import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.calendar.CalendarEvent;
+import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -55,39 +61,80 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class SavingsAccountBuilder {
 
-    private final MeetingBO scheduleForInterestCalculation = new MeetingBuilder().savingsInterestCalulationSchedule()
-            .monthly().every(1).build();
-    private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().voluntary().minimumBalance().withInterestRate(Double.valueOf("4.0")).buildForUnitTests();
-    private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
-    private final Date createdDate = new DateTime().minusDays(14).toDate();
-
     private AccountState accountState = AccountState.SAVINGS_ACTIVE;
     private CustomerBO customer;
-    private final Integer offsettingAllowable = Integer.valueOf(1);
+    List<CustomerBO> jointAccountMembers = new ArrayList<CustomerBO>();
+    private SavingsAccountActivationDetail activationDetails;
+    private DateTime activationDate = new DateTime();
+    private LocalDate nextInterestPostingDate = new LocalDate();
+    private Set<AccountActionDateEntity> scheduledPayments = null;
+
+    private final Date createdDate = new DateTime().minusDays(14).toDate();
+    private final Short createdByUserId = TestUtils.makeUserWithLocales().getId();
+    private SavingsOfferingBO savingsProduct = new SavingsProductBuilder().voluntary().minimumBalance().withInterestRate(Double.valueOf("4.0")).buildForUnitTests();
 
     private RecommendedAmountUnit recommendedAmountUnit = RecommendedAmountUnit.COMPLETE_GROUP;
     private Money recommendedAmount = new Money(TestUtils.RUPEE, "13.0");
-    private CustomerPersistence customerDao;
+    private PersonnelBO createdBy = new PersonnelBuilder().asLoanOfficer().build();
+
     private Money savingsBalanceAmount = new Money(TestUtils.RUPEE, "0.0");
+
+    private CustomerPersistence customerDao;
     private SavingsTransactionActivityHelper savingsTransactionActivityHelper = new SavingsTransactionActivityHelperImpl();
-    private SavingsPaymentStrategy savingsPaymentStrategy = new SavingsPaymentStrategyImpl(
-            savingsTransactionActivityHelper);
-    private Set<AccountActionDateEntity> scheduledPayments = new LinkedHashSet<AccountActionDateEntity>();
+    private SavingsPaymentStrategy savingsPaymentStrategy = new SavingsPaymentStrategyImpl(savingsTransactionActivityHelper);
+
+    private List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
     private List<Holiday> holidays = new ArrayList<Holiday>();
-    private DateTime activationDate = new DateTime();
-    private Money interestToBePosted = TestUtils.createMoney("0");
 
     private List<AccountPaymentEntity> deposits = new ArrayList<AccountPaymentEntity>();
     private List<AccountPaymentEntity> withdrawals = new ArrayList<AccountPaymentEntity>();
 
+    public SavingsBO buildJointSavingsAccount() {
+        CalendarEvent calendarEvents = new CalendarEvent(workingDays, holidays);
+        SavingsAccountActivationDetail derivedActivationDetails = SavingsBO.determineAccountActivationDetails(customer, savingsProduct, recommendedAmount,
+                accountState, calendarEvents, jointAccountMembers);
+        return buildAccount(derivedActivationDetails);
+    }
+
+    // build individual savings account
     public SavingsBO build() {
 
-        final SavingsBO savingsAccount = new SavingsBO(savingsProduct, savingsBalanceAmount,
-                savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, accountState, customer, offsettingAllowable,
-                scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
-                createdByUserId, holidays, activationDate);
+        CalendarEvent calendarEvents = new CalendarEvent(workingDays, holidays);
+        SavingsAccountActivationDetail derivedActivationDetails = SavingsBO.determineAccountActivationDetails(customer, savingsProduct, recommendedAmount, accountState, calendarEvents);
+        return buildAccount(derivedActivationDetails);
+    }
+
+    public SavingsBO buildForUnitTests() {
+        List<AccountActionDateEntity> listOfScheduledPayments = new ArrayList<AccountActionDateEntity>();
+        if (scheduledPayments != null) {
+            listOfScheduledPayments = new ArrayList<AccountActionDateEntity>(scheduledPayments);
+        }
+        activationDetails = new SavingsAccountActivationDetail(new LocalDate(activationDate), nextInterestPostingDate, listOfScheduledPayments);
+        return buildAccount(activationDetails);
+    }
+
+    private SavingsBO buildAccount(SavingsAccountActivationDetail derivedActivationDetails) {
+
+        List<AccountActionDateEntity> listOfScheduledPayments = new ArrayList<AccountActionDateEntity>();
+        if (scheduledPayments == null) {
+            listOfScheduledPayments = derivedActivationDetails.getScheduledPayments();
+        } else {
+            listOfScheduledPayments = new ArrayList<AccountActionDateEntity>(scheduledPayments);
+        }
+        activationDetails = new SavingsAccountActivationDetail(new LocalDate(activationDate), nextInterestPostingDate, listOfScheduledPayments);
+
+        SavingsBO savingsAccount = new SavingsBO(accountState, customer, activationDetails,
+                new LocalDate(createdDate), createdByUserId.intValue(), savingsProduct, recommendedAmountUnit,
+                recommendedAmount, createdBy, savingsBalanceAmount);
         savingsAccount.setCustomerPersistence(customerDao);
-        savingsAccount.setInterestToBePosted(interestToBePosted);
+        savingsAccount.setSavingsPaymentStrategy(savingsPaymentStrategy);
+        savingsAccount.setSavingsTransactionActivityHelper(savingsTransactionActivityHelper);
+        savingsAccount.updateDetails(TestUtils.makeUserWithLocales());
+
+//        savingsAccount = new SavingsBO(savingsProduct, savingsBalanceAmount,
+//                savingsPaymentStrategy, savingsTransactionActivityHelper, scheduledPayments, accountState, customer, offsettingAllowable,
+//                scheduleForInterestCalculation, recommendedAmountUnit, recommendedAmount, createdDate,
+//                createdByUserId, holidays, activationDate);
 
         for (AccountPaymentEntity depositPayment : deposits) {
             try {
@@ -202,11 +249,6 @@ public class SavingsAccountBuilder {
         return this;
     }
 
-    public SavingsAccountBuilder withInterestToBePostedAmount(Money interestToBePosted) {
-        this.interestToBePosted = interestToBePosted;
-        return this;
-    }
-
     public SavingsAccountBuilder withDepositOf(String depositAmount) {
         Money amount = TestUtils.createMoney(depositAmount);
         String receiptNumber = null;
@@ -237,6 +279,21 @@ public class SavingsAccountBuilder {
         Date paymentDate = new DateTime().toDate();
         AccountPaymentEntity deposit = new AccountPaymentEntity(null, amount, receiptNumber, receiptDate, paymentType, paymentDate);
         this.withdrawals.add(deposit);
+        return this;
+    }
+
+    public SavingsAccountBuilder withNextInterestPostingDateOf(DateTime nextInterestPostingDate) {
+        this.nextInterestPostingDate = new LocalDate(nextInterestPostingDate);
+        return this;
+    }
+
+    public SavingsAccountBuilder withCreatedBy(PersonnelBO testUser) {
+        this.createdBy = testUser;
+        return this;
+    }
+
+    public SavingsAccountBuilder withMember(CustomerBO withMember) {
+        this.jointAccountMembers.add(withMember);
         return this;
     }
 }

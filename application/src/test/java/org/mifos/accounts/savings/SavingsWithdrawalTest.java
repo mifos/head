@@ -95,8 +95,10 @@ public class SavingsWithdrawalTest {
 
     @Before
     public void setupForEachTest() {
-        savingsAccountBuilder = new SavingsAccountBuilder().withCustomer(savingsAccountCustomer).withTransactionHelper(
-                savingsTransactionActivityHelper).withCustomerDao(customerDao).withSavingsOfficer(savingsOfficer);
+        savingsAccountBuilder = new SavingsAccountBuilder().withCustomer(savingsAccountCustomer)
+                                                           .withTransactionHelper(savingsTransactionActivityHelper)
+                                                           .withCustomerDao(customerDao)
+                                                           .withSavingsOfficer(savingsOfficer);
     }
 
     @Test(expected = AccountException.class)
@@ -104,7 +106,7 @@ public class SavingsWithdrawalTest {
 
         // setup
         final Money zero = new Money(defaultCurrency);
-        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).build();
+        savingsAccount = savingsAccountBuilder.withBalanceOf(zero).buildForUnitTests();
         final Money amountToWithdraw = new Money(TestUtils.RUPEE, "100.0");
 
         // stubbing
@@ -121,7 +123,7 @@ public class SavingsWithdrawalTest {
         // setup
         savingsProduct = new SavingsProductBuilder().withMaxWithdrawalAmount(new Money(TestUtils.RUPEE, "50.0")).buildForUnitTests();
         savingsAccount = savingsAccountBuilder.withSavingsProduct(savingsProduct).withBalanceOf(new Money(TestUtils.RUPEE, "80.0"))
-                .build();
+                .buildForUnitTests();
         final Money amountToWithdraw = new Money(TestUtils.RUPEE, "75.0");
 
         // stubbing
@@ -137,7 +139,7 @@ public class SavingsWithdrawalTest {
         // setup
         savingsProduct = new SavingsProductBuilder().withMaxWithdrawalAmount(new Money(TestUtils.RUPEE, "50.0")).buildForUnitTests();
         savingsAccount = savingsAccountBuilder.withSavingsProduct(savingsProduct).withBalanceOf(new Money(TestUtils.RUPEE, "80.0"))
-                .build();
+                .buildForUnitTests();
         final Money amountToWithdraw = new Money(TestUtils.RUPEE, "25.0");
 
         // stubbing
@@ -157,7 +159,7 @@ public class SavingsWithdrawalTest {
         final Money startingBalance = new Money(TestUtils.RUPEE, "80.0");
         savingsProduct = new SavingsProductBuilder().withMaxWithdrawalAmount(new Money(TestUtils.RUPEE, "50.0")).buildForUnitTests();
         savingsAccount = savingsAccountBuilder.withSavingsProduct(savingsProduct).withBalanceOf(startingBalance)
-                .build();
+                .buildForUnitTests();
         final Money amountToWithdraw = new Money(TestUtils.RUPEE, "25.0");
 
         // stubbing
@@ -177,7 +179,7 @@ public class SavingsWithdrawalTest {
         final Money startingBalance = new Money(TestUtils.RUPEE, "80.0");
         savingsProduct = new SavingsProductBuilder().withMaxWithdrawalAmount(new Money(TestUtils.RUPEE, "50.0")).buildForUnitTests();
         savingsAccount = savingsAccountBuilder.withSavingsProduct(savingsProduct).withBalanceOf(startingBalance)
-                .build();
+                .buildForUnitTests();
         final Money amountToWithdraw = new Money(TestUtils.RUPEE, "25.0");
 
         // stubbing
@@ -197,7 +199,7 @@ public class SavingsWithdrawalTest {
         final Money startingBalance = new Money(TestUtils.RUPEE, "80.0");
         savingsProduct = new SavingsProductBuilder().withMaxWithdrawalAmount(new Money(TestUtils.RUPEE, "50.0")).buildForUnitTests();
         savingsAccount = savingsAccountBuilder.withSavingsProduct(savingsProduct).withBalanceOf(startingBalance)
-                .build();
+                .buildForUnitTests();
         final Money amountToWithdraw = new Money(TestUtils.RUPEE, "25.0");
 
         // stubbing
@@ -219,7 +221,7 @@ public class SavingsWithdrawalTest {
         final Money startingBalance = new Money(TestUtils.RUPEE, "80.0");
         savingsProduct = new SavingsProductBuilder().withMaxWithdrawalAmount(new Money(TestUtils.RUPEE, "50.0")).buildForUnitTests();
         savingsAccount = savingsAccountBuilder.withSavingsProduct(savingsProduct).withBalanceOf(startingBalance)
-                .build();
+                .buildForUnitTests();
         final Money amountToWithdraw = new Money(TestUtils.RUPEE, "25.0");
 
         // stubbing

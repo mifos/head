@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
-import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.config.Localization;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 
@@ -88,11 +87,9 @@ public class UserContext implements Serializable {
         localeId = Localization.getInstance().getLocaleId();
     }
 
-    // this constructor to be used when user can choose a locale at runtime
-    public UserContext(SupportedLocalesEntity localeEntity) {
-        this.preferredLocale = new Locale(localeEntity.getLanguageCode().toLowerCase(), localeEntity.getCountryCode()
-                .toUpperCase());
-        localeId = localeEntity.getLocaleId();
+    public UserContext(Locale preferredLocale, Short localeId) {
+        this.preferredLocale = preferredLocale;
+        this.localeId = localeId;
     }
 
     public Short getOfficeLevelId() {

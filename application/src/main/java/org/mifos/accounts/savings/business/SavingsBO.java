@@ -241,7 +241,7 @@ public class SavingsBO extends AccountBO {
         // default constructor for hibernate
     }
 
-    private static SavingsAccountActivationDetail determineAccountActivationDetails(CustomerBO customer,
+    public static SavingsAccountActivationDetail determineAccountActivationDetails(CustomerBO customer,
             SavingsOfferingBO savingsProduct, Money recommendedOrMandatoryAmount, AccountState savingsAccountState,
             CalendarEvent calendarEvents, List<CustomerBO> activeAndOnHoldClients) {
 
@@ -260,8 +260,8 @@ public class SavingsBO extends AccountBO {
                 short installmentNumber = 1;
                 for (DateTime date : depositDates) {
                     java.sql.Date depositDueDate = new java.sql.Date(date.toDate().getTime());
-                    AccountActionDateEntity scheduledSavingsDeposit = new SavingsScheduleEntity(null, client, installmentNumber,
-                            depositDueDate, PaymentStatus.UNPAID, recommendedOrMandatoryAmount);
+                    AccountActionDateEntity scheduledSavingsDeposit = new SavingsScheduleEntity(client, installmentNumber,
+                            depositDueDate, PaymentStatus.UNPAID, recommendedOrMandatoryAmount, savingsProduct.getCurrency());
                     scheduledPayments.add(scheduledSavingsDeposit);
                 }
             }
@@ -274,7 +274,7 @@ public class SavingsBO extends AccountBO {
 
     }
 
-    private static SavingsAccountActivationDetail determineAccountActivationDetails(CustomerBO customer, SavingsOfferingBO savingsProduct,
+    public static SavingsAccountActivationDetail determineAccountActivationDetails(CustomerBO customer, SavingsOfferingBO savingsProduct,
             Money recommendedOrMandatoryAmount, AccountState savingsAccountState, CalendarEvent calendarEvents) {
 
         List<AccountActionDateEntity> scheduledPayments = new ArrayList<AccountActionDateEntity>();
@@ -291,8 +291,8 @@ public class SavingsBO extends AccountBO {
             short installmentNumber = 1;
             for (DateTime date : depositDates) {
                 java.sql.Date depositDueDate = new java.sql.Date(date.toDate().getTime());
-                AccountActionDateEntity scheduledSavingsDeposit = new SavingsScheduleEntity(null, customer, installmentNumber,
-                        depositDueDate, PaymentStatus.UNPAID, recommendedOrMandatoryAmount);
+                AccountActionDateEntity scheduledSavingsDeposit = new SavingsScheduleEntity(customer, installmentNumber,
+                        depositDueDate, PaymentStatus.UNPAID, recommendedOrMandatoryAmount, savingsProduct.getCurrency());
                 scheduledPayments.add(scheduledSavingsDeposit);
             }
 
@@ -1848,5 +1848,13 @@ public class SavingsBO extends AccountBO {
         }
 
         return new SavingsAccountDetailDto(this.savingsOffering.toFullDto(), recentActivity, recentNoteDtos, this.recommendedAmount.toString(), this.globalAccountNum);
+    }
+
+    public void setSavingsTransactionActivityHelper(SavingsTransactionActivityHelper savingsTransactionActivityHelper) {
+        this.savingsTransactionActivityHelper = savingsTransactionActivityHelper;
+    }
+
+    public void setSavingsPaymentStrategy(SavingsPaymentStrategy savingsPaymentStrategy) {
+        this.savingsPaymentStrategy = savingsPaymentStrategy;
     }
 }

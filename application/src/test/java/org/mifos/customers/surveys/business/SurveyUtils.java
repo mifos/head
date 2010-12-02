@@ -132,7 +132,7 @@ public class SurveyUtils {
 
     public static SavingsBO getSavingsBO(SavingsAccountBuilder builder, Integer savingsId) {
         Money.setDefaultCurrency(TestUtils.RUPEE);
-        SavingsBO savingsBO = builder.build();
+        SavingsBO savingsBO = builder.buildForUnitTests();
         savingsBO.setAccountId(savingsId);
         return savingsBO;
     }

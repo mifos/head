@@ -186,15 +186,15 @@ public class SavingsCloseTest {
         PersonnelBO loggedInUser = new PersonnelBuilder().build();
 
         // pre verification
-        assertTrue(savingsAccount.getAccountStatusChangeHistory().isEmpty());
+        assertThat(savingsAccount.getAccountStatusChangeHistory().size(), is(1));
 
         // exercise test
         savingsAccount.closeAccount(payment, notes, customer, loggedInUser);
 
         // verification
-        assertFalse(savingsAccount.getAccountStatusChangeHistory().isEmpty());
+        assertThat(savingsAccount.getAccountStatusChangeHistory().size(), is(2));
 
-        AccountStatusChangeHistoryEntity closure = savingsAccount.getAccountStatusChangeHistory().get(0);
+        AccountStatusChangeHistoryEntity closure = savingsAccount.getAccountStatusChangeHistory().get(1);
         assertThat(closure.getAccount(), is((AccountBO)savingsAccount));
         assertTrue(closure.getOldStatus().isInState(AccountState.SAVINGS_ACTIVE));
         assertTrue(closure.getNewStatus().isInState(AccountState.SAVINGS_CLOSED));

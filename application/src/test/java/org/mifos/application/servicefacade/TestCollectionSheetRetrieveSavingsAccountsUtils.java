@@ -179,12 +179,19 @@ public class TestCollectionSheetRetrieveSavingsAccountsUtils {
 
         SavingsAccountBuilder savingsAccountBuilder = new SavingsAccountBuilder().withSavingsProduct(savingsProduct)
                                                                                  .withCustomer(customer)
+                                                                                 .withCreatedBy(IntegrationTestObjectMother.testUser())
                                                                                  .completeGroup()
                                                                                  .withRecommendedAmount(TestUtils.createMoney(amount));
         if (isPerIndividual) {
             savingsAccountBuilder.perIndividual();
         }
-        SavingsBO savingsAccount = savingsAccountBuilder.build();
+
+        SavingsBO savingsAccount = null;
+        if (customer.getCustomerLevel().getId().compareTo(CustomerLevel.CENTER.getValue()) == 0) {
+            savingsAccount = savingsAccountBuilder.buildJointSavingsAccount();
+        } else {
+            savingsAccount = savingsAccountBuilder.build();
+        }
 
         IntegrationTestObjectMother.saveSavingsProductAndAssociatedSavingsAccounts(savingsProduct, savingsAccount);
         return savingsAccount;

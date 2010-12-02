@@ -222,6 +222,7 @@ public class GroupPerformanceHistoryUsingCustomerServiceIntegrationTest extends 
 
         SavingsBO groupSavingsAccount = new SavingsAccountBuilder().withSavingsProduct(groupSavingsProduct)
                                                                     .withCustomer(existingActiveClient)
+                                                                    .withCreatedBy(IntegrationTestObjectMother.testUser())
                                                                     .withSavingsOfficer(existingLoanOfficer)
                                                                     .withBalanceOf(new Money(Money.getDefaultCurrency(), "200.0"))
                                                                     .build();
@@ -233,6 +234,7 @@ public class GroupPerformanceHistoryUsingCustomerServiceIntegrationTest extends 
 
         SavingsBO clientSavingsAccount = new SavingsAccountBuilder().withSavingsProduct(clientSavingsProduct)
                                                             .withCustomer(existingActiveClient)
+                                                            .withCreatedBy(IntegrationTestObjectMother.testUser())
                                                             .withSavingsOfficer(existingLoanOfficer).withBalanceOf(new Money(Money.getDefaultCurrency(), "550.0"))
                                                             .build();
         IntegrationTestObjectMother.saveSavingsAccount(clientSavingsAccount);

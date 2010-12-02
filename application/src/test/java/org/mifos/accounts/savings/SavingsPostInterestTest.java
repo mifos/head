@@ -203,6 +203,7 @@ public class SavingsPostInterestTest {
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
         savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
+                                                    .withNextInterestPostingDateOf(nextInterestPostingDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
                                                     .build();
@@ -244,9 +245,9 @@ public class SavingsPostInterestTest {
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
         savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
+                                                    .withNextInterestPostingDateOf(nextInterestPostingDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
                                                     .build();
 
         // pre verification
@@ -283,9 +284,9 @@ public class SavingsPostInterestTest {
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
         savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
+                                                    .withNextInterestPostingDateOf(nextInterestPostingDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
                                                     .build();
 
         // pre verification
@@ -327,14 +328,13 @@ public class SavingsPostInterestTest {
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
-        Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
         savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
+                                                    .withNextInterestPostingDateOf(nextInterestPostingDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
                                                     .build();
 
         // pre verification
@@ -360,14 +360,13 @@ public class SavingsPostInterestTest {
         // setup
         InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
 
-        Money interestToBePosted = TestUtils.createMoney("100");
         DateTime activationDate = new DateTime().withDate(2010, 7, 20);
         DateTime nextInterestPostingDate = new DateTime().withDate(2010, 7, 31);
         savingsAccount = new SavingsAccountBuilder().active()
                                                     .withActivationDate(activationDate)
+                                                    .withNextInterestPostingDateOf(nextInterestPostingDate)
                                                     .withSavingsProduct(savingsProduct)
                                                     .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
                                                     .build();
 
         // pre verification
@@ -389,37 +388,5 @@ public class SavingsPostInterestTest {
 
     private LocalDate endOfMonthAfter(DateTime currentDate) {
         return new LocalDate(currentDate.plusMonths(1).dayOfMonth().withMaximumValue());
-    }
-
-
-    @Test
-    public void whenPostingInterestInterestToBePostedIsResetToZero() {
-
-        // setup
-        InterestScheduledEvent postingSchedule = new MonthlyOnLastDayOfMonthInterestScheduledEvent(1);
-
-        Money interestToBePosted = TestUtils.createMoney("100");
-        DateTime activationDate = new DateTime().withDate(2010, 7, 20);
-        savingsAccount = new SavingsAccountBuilder().active()
-                                                    .withActivationDate(activationDate)
-                                                    .withSavingsProduct(savingsProduct)
-                                                    .withCustomer(client)
-                                                    .withInterestToBePostedAmount(interestToBePosted)
-                                                    .build();
-
-        // pre verification
-        assertThat(savingsAccount.getInterestToBePosted(), is(interestToBePosted));
-
-        InterestCalculationPeriodResult calculationPeriod = new InterestCalculationPeriodResultBuilder().withCalculatedInterest("100").build();
-        InterestPostingPeriodResult interestPostingPeriodResult = new InterestPostingPeriodResultBuilder()
-                                                                                                          .with(calculationPeriod)
-                                                                                                          .build();
-        PersonnelBO createdBy = new PersonnelBuilder().build();
-
-        // exercise
-        savingsAccount.postInterest(postingSchedule, interestPostingPeriodResult, createdBy);
-
-        // verification
-        assertThat(savingsAccount.getInterestToBePosted(), is(TestUtils.createMoney("0")));
     }
 }

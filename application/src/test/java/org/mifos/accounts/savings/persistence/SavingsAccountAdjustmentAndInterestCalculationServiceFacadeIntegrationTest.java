@@ -141,6 +141,7 @@ public class SavingsAccountAdjustmentAndInterestCalculationServiceFacadeIntegrat
                                                               .withActivationDate(mondayTwoWeeksAgo())
                                                               .withSavingsProduct(savingsProduct)
                                                               .withCustomer(client)
+                                                              .withCreatedBy(IntegrationTestObjectMother.testUser())
                                                               .withBalanceOf(TestUtils.createMoney("0"))
                                                               .withDepositOn("20", new DateTime())
                                                               .build();

@@ -99,10 +99,13 @@ public class SavingsIntPostingHelperIntegrationTest extends MifosIntegrationTest
                                                     .buildForIntegrationTests();
         IntegrationTestObjectMother.saveSavingsProducts(mandatoryMinimumBalance);
 
+        DateTime nextInterestPostingDate = new DateTime().minusDays(1);
         savings1 = new SavingsAccountBuilder().active()
                                               .withSavingsProduct(mandatoryMinimumBalance)
                                               .withCustomer(client)
+                                              .withCreatedBy(IntegrationTestObjectMother.testUser())
                                               .withActivationDate(startOfFiscalYear)
+                                              .withNextInterestPostingDateOf(nextInterestPostingDate)
                                               .withBalanceOf(TestUtils.createMoney("0"))
                                               .withDepositOn("300", startOfFiscalYear)
                                               .withDepositOn("200", startOfFiscalYear.plusMonths(1))
