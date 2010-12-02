@@ -202,6 +202,8 @@ public class SavingsPersistence extends Persistence {
         Hibernate.initialize(savings.getCustomer());
         Hibernate.initialize(savings.getCustomer().getOffice());
         Hibernate.initialize(savings.getCustomer().getParentCustomer());
-        Hibernate.initialize(savings.getCustomer().getParentCustomer().getOffice());
+        if (savings.getCustomer().getParentCustomer() != null) {
+            Hibernate.initialize(savings.getCustomer().getParentCustomer().getOffice());
+        }
     }
 }
