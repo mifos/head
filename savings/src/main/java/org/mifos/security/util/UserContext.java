@@ -33,6 +33,8 @@ import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
  *
  * Accessed from jsp's.
  */
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
 public class UserContext implements Serializable {
 
     /**
@@ -71,11 +73,6 @@ public class UserContext implements Serializable {
      * This would hold the levelId of the logged in user
      */
     private Short officeLevelId;
-
-//    public UserContext() {
-//        preferredLocale = Localization.getInstance().getConfiguredLocale();
-//        localeId = Localization.getInstance().getLocaleId();
-//    }
 
     public UserContext(Locale preferredLocale, Short localeId) {
         this.preferredLocale = preferredLocale;

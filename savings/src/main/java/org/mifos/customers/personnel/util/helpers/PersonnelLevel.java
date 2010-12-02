@@ -20,14 +20,15 @@
 
 package org.mifos.customers.personnel.util.helpers;
 
+@SuppressWarnings("PMD")
 public enum PersonnelLevel {
 
     LOAN_OFFICER(1), NON_LOAN_OFFICER(2);
 
-    private short value;
+    private Short value;
 
-    private PersonnelLevel(int value) {
-        this.value = (short) value;
+    private PersonnelLevel(Integer value) {
+        this.value = value.shortValue();
     }
 
     public Short getValue() {
@@ -42,5 +43,4 @@ public enum PersonnelLevel {
         }
         throw new RuntimeException("no level " + id);
     }
-
 }
