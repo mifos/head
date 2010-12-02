@@ -1,11 +1,10 @@
-#. extracted from FieldUIResources.properties, FieldUIResources_pt.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
+"PO-Revision-Date: 2010-11-30 17:51-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -78,7 +77,7 @@ msgstr "Actividades de Negócio"
 
 #: Client.NumberOfChildren
 msgid "Number of Children"
-msgstr ""
+msgstr "Número de Crianças"
 
 #: Client.Citizenship
 msgid "Religion"
@@ -108,7 +107,7 @@ msgstr "ID Externo"
 
 #: Client.FamilyDetails
 msgid "Family Details"
-msgstr ""
+msgstr "Detalhes da Familia"
 
 #: Client.GovernmentId
 msgctxt "Client.GovernmentId"
@@ -148,7 +147,7 @@ msgstr "Segundo último none"
 
 #: Client.SpouseFatherInformation
 msgid "Spouse/Father Information"
-msgstr ""
+msgstr "Informaçao da Cônjuge/Pai"
 
 #: Client.SpouseFatherMiddleName
 msgid "Spouse/Father Middle Name"
@@ -292,3 +291,4 @@ msgstr "Segundo Último Nome"
 msgctxt "Personnel.State"
 msgid "State"
 msgstr "Estado"
+

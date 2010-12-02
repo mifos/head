@@ -1,11 +1,10 @@
-#. extracted from AccountStatusUIResources.properties, AccountStatusUIResources_pt.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
+"PO-Revision-Date: 2010-11-30 17:02-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -104,7 +103,7 @@ msgstr "Nota:"
 
 #: accountStatus.resultsIn
 msgid "results in"
-msgstr ""
+msgstr "resulta em"
 
 #: accountStatus.search
 msgid "Search"
@@ -132,6 +131,5 @@ msgstr "Tipo"
 
 #: accountStauts.searchheader
 msgid "7 results in All branches found for Loans in Pending approval"
-msgstr ""
-"7 resultados encontrados em todos os ramos para empréstimos em pendêcia de "
-"aprovação"
+msgstr "7 resultados encontrados em todos os ramos para empréstimos em pendêcia de aprovação"
+

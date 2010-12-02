@@ -1,11 +1,10 @@
-#. extracted from FeesUIResources.properties, FeesUIResources_pt.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
+"PO-Revision-Date: 2010-11-30 17:48-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,12 +38,8 @@ msgid "GL Code:"
 msgstr "Código do Plano de Contas:"
 
 #: Fees.PreviewFeesInstruction
-msgid ""
-"Review the information below. Click Submit if you are satisfied or click "
-"Edit to make changes."
-msgstr ""
-"Reveja a informação abaixo. Se estiver satisfeito clique Submeter ou clique "
-"Editar para efectuar mudanças."
+msgid "Review the information below. Click Submit if you are satisfied or click Edit to make changes."
+msgstr "Reveja a informação abaixo. Se estiver satisfeito clique Submeter ou clique Editar para efectuar mudanças."
 
 #: Fees.ViewFeesInstruction
 msgid "Click on a fee  below to view details and make changes or"
@@ -115,11 +110,8 @@ msgid "Change applies to"
 msgstr "Alteração se aplica a"
 
 #: Fees.clickOnViewOrDefineNewFees
-msgid ""
-"Click on the links below for viewing the fee details or defining a new fee."
-msgstr ""
-"Clique nos links abaixo para ver os detalhes da comissão ou para definir uma "
-"nova comissão."
+msgid "Click on the links below for viewing the fee details or defining a new fee."
+msgstr "Clique nos links abaixo para ver os detalhes da comissão ou para definir uma nova comissão."
 
 #: Fees.clientfees
 msgid "Client Fees"
@@ -127,7 +119,7 @@ msgstr "Taxas do Cliente"
 
 #: Fees.currency
 msgid "Currency"
-msgstr ""
+msgstr "Moeda"
 
 #: Fees.daily
 msgid "Daily"
@@ -166,12 +158,8 @@ msgid "Edit fee information"
 msgstr "Editar informação da comissão"
 
 #: Fees.editFeesMessage
-msgid ""
-"Complete the fields below. Then click Preview. Click Cancel to return to Fee "
-"Details page without submitting information."
-msgstr ""
-"Complete os campos abaixo. Depois clique Previsualizar. Clique Cancelar para "
-"voltar página de Detalhes da comissão sem submeter informação."
+msgid "Complete the fields below. Then click Preview. Click Cancel to return to Fee Details page without submitting information."
+msgstr "Complete os campos abaixo. Depois clique Previsualizar. Clique Cancelar para voltar página de Detalhes da comissão sem submeter informação."
 
 #: Fees.editfeeinformation
 msgctxt "Fees.editfeeinformation"
@@ -312,7 +300,6 @@ msgstr "Se semanas, especifique o seguinte:"
 
 #: Fees.labelThe
 msgctxt "Fees.labelThe"
-"Fees.labelThe"
 msgid "The"
 msgstr "O/A (s)"
 
@@ -339,12 +326,8 @@ msgid "status"
 msgstr "Estado"
 
 #: Fees.messageForPreviewFeeDetails
-msgid ""
-"Preview the fields below. Then click Submit. Click Cancel to return to Fee "
-"Details without submitting information."
-msgstr ""
-"Previsualize os campos abaixo. Depois clique Submeter. Clique Cancelar para "
-"voltar para Detalhes da Taxa sem submeter informação."
+msgid "Preview the fields below. Then click Submit. Click Cancel to return to Fee Details without submitting information."
+msgstr "Previsualize os campos abaixo. Depois clique Submeter. Clique Cancelar para voltar para Detalhes da Taxa sem submeter informação."
 
 #: Fees.monday
 msgid "Monday"
@@ -498,13 +481,8 @@ msgid "week(s) on"
 msgstr "semana(s) na"
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you the required permissions and try again."
-msgstr ""
-"Não tem permissões para realizar esta actividade. Contacte o seu "
-"administrador de sistema para obter as permissões necessárias e tente "
-"novamente."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgstr "Não tem permissões para realizar esta actividade. Contacte o seu administrador de sistema para obter as permissões necessárias e tente novamente."
 
 #: error.amountCannotBeNull
 msgid "Please enter a valid fee amount/rate."
@@ -512,9 +490,7 @@ msgstr "Por favor, introduza um valor da taxa válida/relação."
 
 #: error.enterRate
 msgid "Please specify rate to select formula for calculating fees."
-msgstr ""
-"Por favor, especifique  uma relação para selecionar a fórmula de cálculo das "
-"taxas."
+msgstr "Por favor, especifique  uma relação para selecionar a fórmula de cálculo das taxas."
 
 #: error.ontimeandpaymentid
 msgid "Please select frequency along with Payment Type."
@@ -530,13 +506,11 @@ msgstr "Por favor, selecione uma freqüência."
 
 #: error.reurmonth
 msgid "Please specify a recurrence pattern value for monthly fee."
-msgstr ""
-"Por favor especificar um valor padrão de recorrência para a taxa mensal."
+msgstr "Por favor especificar um valor padrão de recorrência para a taxa mensal."
 
 #: error.reurweek
 msgid "Please specify a recurrence pattern value for weekly fee."
-msgstr ""
-"Por favor especificar um valor padrão de recorrência para a taxa semanal."
+msgstr "Por favor especificar um valor padrão de recorrência para a taxa semanal."
 
 #: error.versionnodonotmatch
 msgid "This record has already been modified."
@@ -585,8 +559,7 @@ msgstr "Por favor especifique {0}."
 
 #: errors.mandatory_feescategory
 msgid "Please select Customers/Products to which fees apply."
-msgstr ""
-"Por favor selecione Clientes/Produtos para os quais as taxas de aplicam."
+msgstr "Por favor selecione Clientes/Produtos para os quais as taxas de aplicam."
 
 #: errors.mandatory_selectbox
 msgid "Please select the {0}."
@@ -691,3 +664,4 @@ msgstr "O/A (s)"
 msgctxt "meeting.labelWeeks"
 msgid "week(s) "
 msgstr "semanas(s) "
+

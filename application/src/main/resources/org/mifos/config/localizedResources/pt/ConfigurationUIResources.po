@@ -1,11 +1,10 @@
-#. extracted from ConfigurationUIResources.properties, ConfigurationUIResources_pt.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:26+0530\n"
+"PO-Revision-Date: 2010-11-30 17:44-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -232,7 +231,7 @@ msgstr "ID Externo"
 
 #: configuration.familydetails
 msgid "Family Details"
-msgstr ""
+msgstr "Detalhes da Familia"
 
 #: configuration.fields
 msgid "fields"
@@ -275,12 +274,8 @@ msgid "Inactive"
 msgstr "Inactivo"
 
 #: configuration.instruction1
-msgid ""
-"Complete the fields below. Then click Preview. Click Cancel to return to "
-"Admin without submitting information. "
-msgstr ""
-"Complete os campos abaixo. Depois clique Previsualizar. Clique Cancelar para "
-"voltar para Administrador sem submeter informação."
+msgid "Complete the fields below. Then click Preview. Click Cancel to return to Admin without submitting information. "
+msgstr "Complete os campos abaixo. Depois clique Previsualizar. Clique Cancelar para voltar para Administrador sem submeter informação."
 
 #: configuration.instruction2
 msgid "Fields marked with an asterisk are required."
@@ -400,7 +395,7 @@ msgstr "Código Postal"
 
 #: configuration.povertystatus
 msgid "Poverty Status"
-msgstr ""
+msgstr "Estado de Pobreza"
 
 #: configuration.prdtypes
 msgid "Product Types"
@@ -415,14 +410,8 @@ msgid "Preview additional field"
 msgstr "Previsualizar campo adicional"
 
 #: configuration.preview_instruction
-msgid ""
-"Review the information below. Click Submit if you are satisfied or click "
-"Edit to make changes. Click Cancel to return to Admin page without "
-"submitting information."
-msgstr ""
-"Reveja a informação abaixo. Se estiver satisfeito clique Submeter ou clique "
-"Editar para efectuar mudanças. Cliqte Cancelar para voltar para a página do "
-"Administrador sem submeter informação."
+msgid "Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Admin page without submitting information."
+msgstr "Reveja a informação abaixo. Se estiver satisfeito clique Submeter ou clique Editar para efectuar mudanças. Cliqte Cancelar para voltar para a página do Administrador sem submeter informação."
 
 #: configuration.pringrace
 msgid "Principal only grace"
@@ -465,12 +454,8 @@ msgid "Second last name"
 msgstr "Segundo último nome"
 
 #: configuration.select_category
-msgid ""
-"Click on a category below to view the additional fields defined for that "
-"category."
-msgstr ""
-"Clique numa categoria abaixo para ver e modificar os campos adicionais "
-"definidos para essa categoria ou"
+msgid "Click on a category below to view the additional fields defined for that category."
+msgstr "Clique numa categoria abaixo para ver e modificar os campos adicionais definidos para essa categoria ou"
 
 #: configuration.sequence_number
 msgid "Sequence No."
@@ -478,11 +463,11 @@ msgstr "Sequência Número"
 
 #: configuration.source_fund
 msgid "Source of fund"
-msgstr ""
+msgstr "Fonte do Fondo"
 
 #: configuration.spousefatherinformation
 msgid "Spouse/Father Information"
-msgstr ""
+msgstr "Informaçao da Cônjuge/Pai"
 
 #: configuration.spousefathermiddlename
 msgid "Relative middle name"
@@ -542,13 +527,11 @@ msgstr "Comprovativo de Pagamento"
 
 #: configuration.numberofchildren
 msgid "Number of Children"
-msgstr ""
+msgstr "Número de Crianças"
 
 #: errors.default_value_not_date
 msgid "Default value does not match data type date (format (DD/MM/YYYY))"
-msgstr ""
-"O valor pré-definido não coincide com o tipo de dados da Data (Formato "
-"(DD/MM/AAAA))"
+msgstr "O valor pré-definido não coincide com o tipo de dados da Data (Formato (DD/MM/AAAA))"
 
 #: errors.default_value_not_number
 msgid "Default value does not match data type (number)"
@@ -591,3 +574,4 @@ msgstr "</LI>"
 #: errors.toolong
 msgid "Please specify a value of {0} characters or less."
 msgstr "Por favor especifique um valor com {0} caracteres ou menos."
+
