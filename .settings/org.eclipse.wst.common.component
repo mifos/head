@@ -35,5 +35,7 @@
         <wb-resource deploy-path="/" source-path="/cashflow/src/main/webapp/pages"/>
         <wb-resource deploy-path="/" source-path="/savings/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/savings/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/configuration/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/configuration/src/test/java"/>
     </wb-module>
 </project-modules>

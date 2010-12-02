@@ -20,10 +20,19 @@
 
 package org.mifos.application.master.business;
 
-import org.mifos.framework.business.AbstractEntity;
-
-import javax.persistence.*;
 import java.math.BigDecimal;
+
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+
+import org.mifos.framework.business.AbstractEntity;
 
 /**
  * This class denotes the currency object. It contains information such as the
@@ -54,14 +63,17 @@ public final class MifosCurrency extends AbstractEntity {
     private Short currencyId;
 
     /** English multiple-word descriptive name. */
+    @Access(AccessType.FIELD)
     @Column(name = "CURRENCY_NAME")
     private String currencyName;
 
+    @Access(AccessType.FIELD)
     @Column(name = "ROUNDING_AMOUNT")
     private BigDecimal roundingAmount;
 
     /** ISO 4217 currency code. */
 
+    @Access(AccessType.FIELD)
     @Column(name = "CURRENCY_CODE")
     private String currencyCode;
 
@@ -76,39 +88,19 @@ public final class MifosCurrency extends AbstractEntity {
     }
 
     public Short getCurrencyId() {
-        return currencyId;
-    }
-
-    @SuppressWarnings("unused")
-    private void setCurrencyId(Short currencyId) {
-        this.currencyId = currencyId;
+        return this.currencyId;
     }
 
     public String getCurrencyName() {
-        return currencyName;
-    }
-
-    @SuppressWarnings("unused")
-    private void setCurrencyName(String currencyName) {
-        this.currencyName = currencyName;
-    }
-
-    public String getCurrencyCode() {
-        return currencyCode;
-    }
-
-    @SuppressWarnings("unused")
-    private void setCurrencyCode(String currencyCode) {
-        this.currencyCode = currencyCode;
+        return this.currencyName;
     }
 
     public BigDecimal getRoundingAmount() {
-        return roundingAmount;
+        return this.roundingAmount;
     }
 
-    @SuppressWarnings("unused")
-    private void setRoundingAmount(BigDecimal roundingAmount) {
-        this.roundingAmount = roundingAmount;
+    public String getCurrencyCode() {
+        return this.currencyCode;
     }
 
     @Override
@@ -139,5 +131,4 @@ public final class MifosCurrency extends AbstractEntity {
     public String toString() {
         return "ID="+currencyId +";Code="+ currencyCode +";Name=" +currencyName;
     }
-
 }
