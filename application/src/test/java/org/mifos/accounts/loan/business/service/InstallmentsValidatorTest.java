@@ -13,12 +13,10 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.platform.validations.Errors;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -34,8 +32,6 @@ import static org.mockito.Mockito.verify;
 public class InstallmentsValidatorTest {
 
     private RepaymentScheduleInstallmentBuilder installmentBuilder;
-
-    private MifosCurrency rupeeCurrency;
 
     private Locale locale;
 
@@ -59,7 +55,6 @@ public class InstallmentsValidatorTest {
     public void setUp() throws Exception {
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
-        rupeeCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         installmentsValidator = new InstallmentsValidatorImpl(installmentFormatValidator, listOfInstallmentsValidator, installmentRulesValidator);
         officeId = Short.valueOf("1");
     }

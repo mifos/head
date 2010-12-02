@@ -491,8 +491,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return getActionErrors(loanServiceFacade.validateCashFlowForInstallments(loanActionForm, getUserContext(request).getLocaleId()));
     }
 
-    private ActionErrors validateCashflowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm) {
-        return getActionErrors(loanServiceFacade.validateCashFlowAndInstallmentDates(installments, cashFlowForm));
+    private ActionErrors validateCashflowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
+        return getActionErrors(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity));
     }
 
     private boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
@@ -505,7 +505,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             java.sql.Date disbursementDate = loanActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
             Errors errors = loanServiceFacade.validateInputInstallments(disbursementDate, variableInstallmentDetails, installments, loanActionForm.getCustomerIdValue());
             ActionErrors actionErrors = getActionErrors(errors);
-            actionErrors.add(validateCashflowAndInstallmentDates(installments, loanActionForm.getCashFlowForm()));
+            actionErrors.add(validateCashflowAndInstallmentDates(installments, loanActionForm.getCashFlowForm(), loanOffering.getRepaymentCapacity()));
             if (actionErrors.isEmpty()) {
                 loanBusinessService.applyDailyInterestRates(
                         new LoanScheduleGenerationDto(disbursementDate, loanActionForm.getLoanAmountValue(),
@@ -682,16 +682,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         //----to display errors on second page
         if (forward.equals(ActionForwards.preview_success)) {
             if (cashFlowBounded) {
-                ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request, (LoanAccountActionForm) form);
-                if (!validateCashflowForInstallments.isEmpty()) {
-                    addErrors(request, validateCashflowForInstallments);
+                ActionErrors actionErrors = validateCashFlowForInstallments(request, (LoanAccountActionForm) form);
+                if (!actionErrors.isEmpty()) {
+                    addErrors(request, actionErrors);
                 }
             }
         }
-
         return mapping.findForward(forward.name());
     }
-    private void setRedoLoanAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm, String perspective, Integer customerId) throws InvalidDateException, ApplicationException {
+
+    private void setRedoLoanAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm,
+                                                String perspective, Integer customerId) throws InvalidDateException, ApplicationException {
         if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN)) {
             UserContext userContext = getUserContext(request);
             DateTime disbursementDate = getDisbursementDate(loanAccountForm, userContext.getPreferredLocale());

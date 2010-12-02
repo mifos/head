@@ -24,6 +24,7 @@ import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.Locale;
 
 public class MonthlyCashFlowForm implements Serializable {
@@ -91,5 +92,9 @@ public class MonthlyCashFlowForm implements Serializable {
                 "Month=" + getMonth() +
                 "Year=" + getYear() +
                 '}';
+    }
+
+    public Date getDate() {
+        return getDateTime().toDate();
     }
 }

@@ -1528,4 +1528,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public boolean shouldValidateCashFlowForInstallments() {
         return isCashFlowCheckEnabled() && cashFlowDetail != null && cashFlowDetail.isNonZeroThreshold();
     }
+
+    public Double getRepaymentCapacity() {
+        return cashFlowDetail != null ? cashFlowDetail.getRepaymentCapacity() : Double.valueOf(0);
+    }
 }

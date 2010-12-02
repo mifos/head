@@ -69,4 +69,17 @@ public class Errors {
             this.errorEntries.add(errorEntry);
         }
     }
+
+    public boolean hasErrorEntryWithCode(String errorCode) {
+        boolean result = false;
+        if (hasErrors()) {
+            for (ErrorEntry errorEntry : errorEntries) {
+                if (errorCode.equals(errorEntry.getErrorCode())) {
+                    result = true;
+                    break;
+                }
+            }
+        }
+        return result;
+    }
 }

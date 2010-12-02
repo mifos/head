@@ -134,6 +134,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -1129,7 +1130,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 for (CashFlowDataHtmlBean cashflowDataHtmlBean : cashFlowDataHtmlBeans) {
                     validateCashFlow(errors, cashFlowDetail.getCashFlowThreshold(), cashflowDataHtmlBean);
                 }
-                errors.addErrors(validateCashFlowAndInstallmentDates(loanActionForm.getInstallments(), loanActionForm.getCashFlowForm()));
+                errors.addErrors(validateCashFlowForInstallments(loanActionForm.getInstallments(), loanActionForm.getCashFlowForm(), cashFlowDetail.getRepaymentCapacity()));
             }
         }
         return errors;
@@ -1152,14 +1153,15 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
     }
 
+    // TODO: Write unit tests for this method. Currently they only exist for repayment capacity related validations
     @Override
-    public Errors validateCashFlowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm) {
+    public Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
         Errors errors = new Errors();
         if (cashFlowForm == null) return errors;
         List<MonthlyCashFlowForm> monthlyCashFlows = cashFlowForm.getMonthlyCashFlows();
         if (CollectionUtils.isNotEmpty(installments) && CollectionUtils.isNotEmpty(monthlyCashFlows)) {
-            boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDateTime().toDate(), installments.get(0).getDueDateValue());
-            boolean upperBound = DateUtils.firstLessOrEqualSecond(installments.get(installments.size() - 1).getDueDateValue(), monthlyCashFlows.get(monthlyCashFlows.size() - 1).getDateTime().toDate());
+            boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDate(), installments.get(0).getDueDateValue());
+            boolean upperBound = DateUtils.firstLessOrEqualSecond(installments.get(installments.size() - 1).getDueDateValue(), monthlyCashFlows.get(monthlyCashFlows.size() - 1).getDate());
 
             SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy", installments.get(0).getLocale());
 
@@ -1170,7 +1172,22 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             if (!upperBound) {
                 errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, df.format(installments.get(installments.size() - 1).getDueDateValue()));
             }
+
         }
+        validateForRepaymentCapacity(installments, cashFlowForm, repaymentCapacity, errors);
         return errors;
     }
+
+    private void validateForRepaymentCapacity(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity, Errors errors) {
+        if (cashFlowForm == null || CollectionUtils.isEmpty(installments) || repaymentCapacity == null || repaymentCapacity == 0) return;
+        BigDecimal totalInstallmentAmount = BigDecimal.ZERO;
+        for (RepaymentScheduleInstallment installment : installments) {
+            totalInstallmentAmount = totalInstallmentAmount.add(installment.getTotalValue().getAmount());
+        }
+        Double calculatedRepaymentCapacity = cashFlowForm.computeRepaymentCapacity(totalInstallmentAmount).doubleValue();
+        if (calculatedRepaymentCapacity < repaymentCapacity) {
+            errors.addError(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED, calculatedRepaymentCapacity.toString(), repaymentCapacity.toString());
+        }
+    }
+
 }

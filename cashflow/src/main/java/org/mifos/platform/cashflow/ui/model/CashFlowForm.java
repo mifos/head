@@ -19,6 +19,7 @@
  */
 package org.mifos.platform.cashflow.ui.model;
 
+import org.mifos.platform.cashflow.CashFlowConstants;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
@@ -34,6 +35,8 @@ public class CashFlowForm implements Serializable {
     private boolean captureCapitalLiabilityInfo;
     private BigDecimal loanAmount;
     private Double indebtednessRatio;
+    private BigDecimal totalRevenues;
+    private BigDecimal totalExpenses;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public CashFlowForm() {
@@ -86,5 +89,29 @@ public class CashFlowForm implements Serializable {
     public boolean shouldForValidateIndebtednessRate() {
         return captureCapitalLiabilityInfo && indebtednessRatio != null && indebtednessRatio > 0 &&
                 loanAmount != null && cashFlowDetail != null && cashFlowDetail.shouldForValidateIndebtednessRate();
+    }
+
+    public BigDecimal getTotalRevenues() {
+        return totalRevenues;
+    }
+
+    public void setTotalRevenues(BigDecimal totalRevenues) {
+        this.totalRevenues = totalRevenues;
+    }
+
+    public BigDecimal getTotalExpenses() {
+        return totalExpenses;
+    }
+
+    public void setTotalExpenses(BigDecimal totalExpenses) {
+        this.totalExpenses = totalExpenses;
+    }
+
+    public BigDecimal getTotalBalance() {
+        return totalRevenues.subtract(totalExpenses);
+    }
+
+    public BigDecimal computeRepaymentCapacity(BigDecimal totalInstallmentAmount) {
+        return getTotalBalance().add(loanAmount).multiply(CashFlowConstants.HUNDRED).divide(totalInstallmentAmount, 2, BigDecimal.ROUND_HALF_UP);
     }
 }

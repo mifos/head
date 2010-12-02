@@ -41,6 +41,19 @@ public class CashFlowValidator {
         }
         validateTotalCapitalAndLiability(cashFlow, messageContext);
         validateIndebtednessRatio(cashFlow, messageContext);
+        setTotalsOnCashFlowForm(cashFlow, messageContext);
+    }
+
+    private void setTotalsOnCashFlowForm(CashFlowForm cashFlowForm, MessageContext messageContext) {
+        if (!messageContext.hasErrorMessages()) {
+            BigDecimal totalExpenses = BigDecimal.ZERO, totalRevenues = BigDecimal.ZERO;
+            for (MonthlyCashFlowForm monthlyCashFlowForm : cashFlowForm.getMonthlyCashFlows()) {
+                totalExpenses = totalExpenses.add(monthlyCashFlowForm.getExpense());
+                totalRevenues = totalRevenues.add(monthlyCashFlowForm.getRevenue());
+            }
+            cashFlowForm.setTotalExpenses(totalExpenses);
+            cashFlowForm.setTotalRevenues(totalRevenues);
+        }
     }
 
     private void validateTotalCapitalAndLiability(CashFlowForm cashFlow, MessageContext messageContext) {
@@ -56,7 +69,7 @@ public class CashFlowValidator {
             BigDecimal loanAmount = cashFlowForm.getLoanAmount();
             BigDecimal totalCapital = cashFlowForm.getTotalCapital();
             BigDecimal totalLiability = cashFlowForm.getTotalLiability();
-            Double calculatedIndebtednessRatio = totalLiability.add(loanAmount).multiply(BigDecimal.valueOf(100)).
+            Double calculatedIndebtednessRatio = totalLiability.add(loanAmount).multiply(CashFlowConstants.HUNDRED).
                     divide(totalCapital).doubleValue();
             if (calculatedIndebtednessRatio >= indebtednessRatio) {
                 String message = format("Indebtedness rate of the client is {0} which is greater than the allowable value of {1}",

@@ -36,10 +36,12 @@ import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.business.BusinessActivityEntity;
@@ -59,6 +61,8 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
@@ -67,8 +71,10 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
@@ -135,9 +141,18 @@ public class LoanServiceFacadeWebTierTest {
     @Mock
     private HolidayServiceFacade holidayServiceFacade;
 
+    private RepaymentScheduleInstallmentBuilder installmentBuilder;
+
+    private MifosCurrency rupee;
+
+    private Locale locale;
+
     @Before
     public void setupAndInjectDependencies() {
-        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao, 
+        locale = new Locale("en", "GB");
+        installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
+        rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
                 fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
     }
 
@@ -291,5 +306,26 @@ public class LoanServiceFacadeWebTierTest {
             verify(loanBO,never()).getCurrency();
             assertThat(e.getKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));
         }
+    }
+    
+    @Test
+    public void shouldValidateForRepaymentCapacity() {
+        CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
+        cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
+        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
+
+        RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).withTotalValue("10").build();
+        RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).withTotalValue("20").build();
+        RepaymentScheduleInstallment installment3 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).withTotalValue("30").build();
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
+
+        // calcuated repayment capacity is 1631.67
+        Errors errors;
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1600d);
+        assertThat(errors.hasErrorEntryWithCode(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED), is(false));
+
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1700d);
+        assertThat(errors.hasErrorEntryWithCode(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED), is(true));
     }
 }

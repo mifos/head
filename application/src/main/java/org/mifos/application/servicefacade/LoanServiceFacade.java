@@ -112,5 +112,5 @@ public interface LoanServiceFacade {
 
     Errors validateCashFlowForInstallments(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException;
 
-    Errors validateCashFlowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm);
+    Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity);
 }

@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class CashFlowFormTest {
     
@@ -51,5 +52,16 @@ public class CashFlowFormTest {
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
         cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), 123d);
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(true));
+    }
+    
+    @Test
+    public void shouldComputeRepaymentCapacity() {
+        CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
+        cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
+        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
+        BigDecimal repaymentCapacity = cashFlowForm.computeRepaymentCapacity(BigDecimal.valueOf(60));
+        assertThat(repaymentCapacity, is(notNullValue()));
+        assertThat(repaymentCapacity.doubleValue(), is(1631.67));
     }
 }

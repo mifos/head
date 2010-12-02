@@ -18,6 +18,9 @@
  * explanation of the license and how it is applied.
  */
 package org.mifos.platform.cashflow;
+
+import java.math.BigDecimal;
+
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 public class CashFlowConstants {
     public static final String EMPTY_EXPENSE = "CashFlowForm.monthlyCashFlows.expense";
@@ -42,4 +45,5 @@ public class CashFlowConstants {
     public static final int FIRST_DAY = 1;
     public static final int EXTRA_DURATION_FOR_CASH_FLOW_SCHEDULE = 1;
     public static final String LOAN_AMOUNT_VALUE="loanAmountValue";
+    public static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
 }
