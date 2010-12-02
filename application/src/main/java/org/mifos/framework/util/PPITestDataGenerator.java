@@ -21,11 +21,9 @@
 package org.mifos.framework.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Properties;
 
@@ -54,7 +52,6 @@ import org.mifos.service.test.TestingService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-
 @SuppressWarnings( { "PMD.SystemPrintln", "PMD.SingularField" })
 public class PPITestDataGenerator {
     // Command line flag configuration.
@@ -78,7 +75,7 @@ public class PPITestDataGenerator {
     QuestionnaireServiceFacade questionnaireServiceFacade;
     CustomerDao customerDao;
 
-    public static void main(String[] args) throws URISyntaxException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException, FileNotFoundException, IOException {
+    public static void main(String[] args) throws Exception {
         PPITestDataGenerator util = new PPITestDataGenerator();
 
         util.loadTestDataFiles(args);
@@ -99,7 +96,7 @@ public class PPITestDataGenerator {
     }
 
 
-    public void loadTestDataFiles(String[] args) throws IOException, URISyntaxException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException {
+    public void loadTestDataFiles(String[] args) throws IOException, TaskSystemException, PersistenceException, ConfigurationException, FinancialException {
         parseOptions(args);
         ApplicationContext applicationContext = initializeSpring();
         customerDao = applicationContext.getBean(CustomerDaoHibernate.class);
@@ -233,7 +230,7 @@ public class PPITestDataGenerator {
         options.addOption(clientGlobalIdOption);
     }
 
-    public void parseOptions(String[] args) throws URISyntaxException {
+    public void parseOptions(String[] args) {
         // create the command line parser
         CommandLineParser parser = new PosixParser();
         try {
