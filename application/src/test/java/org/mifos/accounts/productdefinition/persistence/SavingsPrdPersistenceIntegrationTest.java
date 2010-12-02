@@ -22,13 +22,13 @@ package org.mifos.accounts.productdefinition.persistence;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import junit.framework.Assert;
 
 import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -43,7 +43,6 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -72,7 +71,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         SavingsTestHelper helper = new SavingsTestHelper();
         createInitialObjects();
         savingsOffering = helper.createSavingsOffering("fsaf6", "ads6");
-        UserContext userContext = new UserContext();
+        UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
         userContext.setId(PersonnelConstants.SYSTEM_USER);
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
@@ -84,7 +83,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
     }
 
     @Test
-    public void testGetTimePerForIntCalcAndFreqPost() throws PersistenceException, ProductDefinitionException {
+    public void testGetTimePerForIntCalcAndFreqPost() throws Exception {
         savingsOffering = createSavingsOfferingBO();
         savingsOffering = new SavingsPrdPersistence().getSavingsProduct(savingsOffering.getPrdOfferingId());
         Assert.assertNotNull("The time period for Int calc should not be null", savingsOffering.getTimePerForInstcalc());

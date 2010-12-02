@@ -20,6 +20,8 @@
 
 package org.mifos.framework.components.tabletag;
 
+import java.util.Locale;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
@@ -30,7 +32,7 @@ public class TableTagExceptionTest extends TestCase {
 
     public void testTableTagException() throws Exception {
         try {
-            UserContext userContext = new UserContext();
+            UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
             Text.getImage(this, "name", userContext.getPreferredLocale());
             Assert.fail();
         } catch (TableTagException tte) {

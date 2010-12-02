@@ -20,10 +20,21 @@
 
 package org.mifos.customers.business;
 
-import org.mifos.customers.client.business.ClientNameDetailEntity;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.framework.util.helpers.MoneyUtils.zero;
+
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
@@ -42,7 +53,9 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.client.business.ClientNameDetailEntity;
 import org.mifos.customers.client.business.ClientPerformanceHistoryEntity;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
@@ -56,7 +69,6 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.ChildrenStateType;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CenterUpdate;
@@ -73,20 +85,8 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
-
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.framework.util.helpers.MoneyUtils.zero;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A class that represents a customer entity after being created.
@@ -137,34 +137,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
     protected CustomerBO() {
         this(null, null, null, null, null);
         this.globalCustNum = null;
-    }
-
-    /**
-     * @deprecated - use minimal legal constructor or static factory methods of subclasses in builder
-     */
-    @Deprecated
-    public CustomerBO(final CustomerLevel customerLevel, final CustomerStatus customerStatus, final String name,
-            final OfficeBO office, final PersonnelBO loanOfficer, final CustomerMeetingEntity customerMeeting,
-            final CustomerBO parentCustomer) {
-        super();
-		this.nameDetailSet = new HashSet<ClientNameDetailEntity>();
-        this.customerId = null;
-        this.displayName = name;
-        this.office = office;
-        this.personnel = loanOfficer;
-        this.customerMeeting = customerMeeting;
-        this.customerMeeting.setCustomer(this);
-        this.parentCustomer = parentCustomer;
-
-        this.accounts = new HashSet<AccountBO>();
-        this.customerLevel = new CustomerLevelEntity(customerLevel);
-        this.customerStatus = new CustomerStatusEntity(customerStatus);
-        this.formedByPersonnel = null;
-
-        this.customerNotes = new HashSet<CustomerNoteEntity>();
-        this.customerFlags = new HashSet<CustomerFlagDetailEntity>();
-        this.userContext = new UserContext();
-        this.userContext.setBranchGlobalNum(office.getGlobalOfficeNum());
     }
 
     /**

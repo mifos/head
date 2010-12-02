@@ -20,9 +20,9 @@
 
 package org.mifos.application.servicefacade;
 
-import java.util.HashSet;
 import java.util.List;
 
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.service.CustomerService;
@@ -81,13 +81,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     }
 
     private UserContext toUserContext(MifosUser user) {
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLevelId(user.getLevelId());
-        userContext.setRoles(new HashSet<Short>(user.getRoleIds()));
-        return userContext;
+        return new UserContextFactory().create(user);
     }
 
     private void checkVersionMismatch(Integer oldVersionNum, Integer newVersionNum) throws ApplicationException {

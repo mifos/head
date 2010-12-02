@@ -25,6 +25,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -264,9 +265,10 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
 
     @Override
     public ListElement createOffice(Short userId, Locale preferredLocale, Short operationMode, OfficeDto officeDto) {
-        UserContext userContext = new UserContext();
-        userContext.setId(userId);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
         userContext.setPreferredLocale(preferredLocale);
+
         OfficeLevel level = OfficeLevel.getOfficeLevel(officeDto.getLevelId());
         OfficeBO parentOffice = officeDao.findOfficeById(officeDto.getParentId());
         AddressDto addressDto = officeDto.getAddress();

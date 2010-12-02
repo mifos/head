@@ -20,6 +20,9 @@
 
 package org.mifos.customers.personnel.business.service;
 
+import java.util.Locale;
+
+import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelService;
@@ -40,7 +43,9 @@ public class PersonnelServiceImpl implements PersonnelService {
     @Override
     public void changePassword(PersonnelBO user, String newPassword) {
 
-        UserContext userContext = new UserContext();
+        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
+        Short localeId = Localization.getInstance().getLocaleId();
+        UserContext userContext = new UserContext(preferredLocale, localeId);
         userContext.setId(user.getPersonnelId());
         userContext.setName(user.getUserName());
 

@@ -67,6 +67,7 @@ import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -156,11 +157,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void deposit(SavingsDepositDto savingsDeposit) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsDeposit.getSavingsId());
         savingsAccount.updateDetails(userContext);
@@ -206,11 +203,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void withdraw(SavingsWithdrawalDto savingsWithdrawal) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsWithdrawal.getSavingsId());
         savingsAccount.updateDetails(userContext);
@@ -254,11 +247,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void adjustTransaction(SavingsAdjustmentDto savingsAdjustment) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
+        UserContext userContext = toUserContext(user);
 
         PersonnelBO updatedBy = this.personnelDao.findPersonnelById(userContext.getId());
         SavingsBO savingsAccount = this.savingsDao.findById(savingsAdjustment.getSavingsId());
@@ -304,11 +293,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void postInterestForLastPostingPeriod(LocalDate dateBatchJobIsScheduled) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
+        UserContext userContext = toUserContext(user);
 
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
 
@@ -438,11 +423,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     private UserContext toUserContext(MifosUser user) {
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        return userContext;
+        return new UserContextFactory().create(user);
     }
 
     @Override
@@ -1020,11 +1001,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void waiveNextDepositAmountDue(Long savingsId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
         savingsAccount.updateDetails(userContext);
@@ -1052,11 +1029,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     public void waiveDepositAmountOverDue(Long savingsId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
+        UserContext userContext = toUserContext(user);
 
         SavingsBO savingsAccount = this.savingsDao.findById(savingsId);
         savingsAccount.updateDetails(userContext);

@@ -88,6 +88,7 @@ import org.mifos.security.util.UserContext;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
@@ -448,7 +449,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group1", CustomerStatus.GROUP_ACTIVE, center);
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "S", currentDate,
                 RecommendedAmountUnit.COMPLETE_GROUP);
-        UserContext user = new UserContext();
+        UserContext user = new UserContext(Locale.getDefault(), Short.valueOf("1"));
         user.setId(PersonnelConstants.SYSTEM_USER);
         account = TestObjectFactory.createSavingsAccount("000100000000020", group, AccountState.SAVINGS_ACTIVE,
                 currentDate, savingsOffering, user);

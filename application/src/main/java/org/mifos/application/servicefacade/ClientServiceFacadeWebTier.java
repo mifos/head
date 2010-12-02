@@ -23,7 +23,6 @@ package org.mifos.application.servicefacade;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +36,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -221,13 +221,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     }
 
     private UserContext toUserContext(MifosUser user) {
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLevelId(user.getLevelId());
-        userContext.setRoles(new HashSet<Short>(user.getRoleIds()));
-        return userContext;
+        return new UserContextFactory().create(user);
     }
 
     private ClientDropdownsDto retrieveClientDropdownData() {

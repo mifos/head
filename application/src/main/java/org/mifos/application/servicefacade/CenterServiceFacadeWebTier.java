@@ -21,7 +21,6 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -39,6 +38,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -144,13 +144,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     }
 
     private UserContext toUserContext(MifosUser user) {
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLevelId(user.getLevelId());
-        userContext.setRoles(new HashSet<Short>(user.getRoleIds()));
-        return userContext;
+        return new UserContextFactory().create(user);
     }
 
     @Override

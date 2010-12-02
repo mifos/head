@@ -237,7 +237,7 @@ public class LoanServiceFacadeWebTierTest {
         }
         verify(loanBO).makeEarlyRepayment(new Money(dollar, "100"), receiptNumber, date, paymentMethod, (short) 1, waiveInterest);
     }
-    
+
     @Test
     public void testMakeEarlyRepaymentForNotWaiverInterestLoanProduct() throws AccountException {
         Mockito.when(loanDao.findByGlobalAccountNum("1")).thenReturn(loanBO);
@@ -271,7 +271,7 @@ public class LoanServiceFacadeWebTierTest {
         verify(customerDao).findCustomerById(customerId);
         verify(customer).getOfficeId();
     }
-    
+
     @Test
     public void shouldValidateInstallmentSchedule() {
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
@@ -287,7 +287,7 @@ public class LoanServiceFacadeWebTierTest {
     public void retrieveLoanRepaymentScheduleShouldComputeOverdue() {
         LoanBO loanBO = new LoanBO() {};
         Mockito.when(loanDao.findById(1)).thenReturn(loanBO);
-        loanServiceFacade.retrieveLoanRepaymentSchedule(new UserContext(),1, new DateMidnight().toDate());
+        loanServiceFacade.retrieveLoanRepaymentSchedule(new UserContext(Locale.getDefault(), Short.valueOf("1")), 1, new DateMidnight().toDate());
         Mockito.verify(scheduleCalculatorAdaptor, Mockito.times(1)).computeExtraInterest(Mockito.eq(loanBO), Mockito.<Date>any());
         Mockito.verify(loanDao, Mockito.times(1)).findById(1);
     }
@@ -307,7 +307,7 @@ public class LoanServiceFacadeWebTierTest {
             assertThat(e.getKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));
         }
     }
-    
+
     @Test
     public void shouldValidateForRepaymentCapacity() {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);

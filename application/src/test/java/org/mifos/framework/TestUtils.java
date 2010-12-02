@@ -91,7 +91,7 @@ public class TestUtils {
     }
 
     public static UserContext makeUser(int role, Locale locale) {
-        UserContext user = new UserContext();
+        UserContext user = new UserContext(Locale.getDefault(), Short.valueOf("1"));
         user.setId(PersonnelConstants.SYSTEM_USER);
         user.setLocaleId(TestObjectFactory.TEST_LOCALE);
         Set<Short> set = new HashSet<Short>();
@@ -334,7 +334,9 @@ public class TestUtils {
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                 field.setAccessible(true);
                 try {
-                    if (Modifier.isStatic(field.getModifiers()) || field.getType().isPrimitive()) return;
+                    if (Modifier.isStatic(field.getModifiers()) || field.getType().isPrimitive()) {
+                        return;
+                    }
                     if (field.get(testCase) instanceof Object) {
                         field.set(testCase, null);
                     }

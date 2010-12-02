@@ -675,7 +675,7 @@ public class AccountBO extends AbstractBusinessObject {
 
         Short oldStatusId = this.getState().getValue();
         if (getUserContext() == null) {
-            setThisUserContext();
+            throw new IllegalStateException("userContext is not set for account.");
         }
 
         try {
@@ -731,31 +731,6 @@ public class AccountBO extends AbstractBusinessObject {
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
-    }
-
-    /*
-     * This hack is used because accountBO.changeStatus uses userContext details. Should try to remove/improve in
-     * refactoring.
-     *
-     * The specific situation that required this hack is when a savings account is inactive and a payment is made (needs
-     * to be changes to active).
-     *
-     * Other 'changeStatus' sitations cater for this by setting values into the account's usercontext at the UI level (a
-     * different hack)
-     */
-    private void setThisUserContext() throws AccountException {
-
-        final PersonnelBO userForUserContext;
-        try {
-            userForUserContext = getPersonnelPersistence().getPersonnel(this.getCreatedBy());
-        } catch (PersistenceException pe) {
-            throw new AccountException(pe);
-        }
-
-        UserContext userContext = new UserContext();
-        userContext.setLocaleId(userForUserContext.getLocaleId());
-        userContext.setId(userForUserContext.getPersonnelId());
-        this.setUserContext(userContext);
     }
 
     /**

@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
-import org.mifos.config.Localization;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 
 /**
@@ -52,20 +51,11 @@ public class UserContext implements Serializable {
      * Set of roles id's associated with the user
      */
     private Set<Short> roles;
-
     private Short branchId;
-
     private String branchGlobalNum;
-
     private Short levelId;
-
     private Short localeId;
-
     private Locale preferredLocale;
-
-    // private Short mfiLocaleId;
-
-    // private Locale mfiLocale;
 
     /**
      * Last login time of the user
@@ -78,14 +68,14 @@ public class UserContext implements Serializable {
     private Short passwordChanged;
 
     /**
-     * This would hold the levelId of the loggen in user
+     * This would hold the levelId of the logged in user
      */
     private Short officeLevelId;
 
-    public UserContext() {
-        preferredLocale = Localization.getInstance().getConfiguredLocale();
-        localeId = Localization.getInstance().getLocaleId();
-    }
+//    public UserContext() {
+//        preferredLocale = Localization.getInstance().getConfiguredLocale();
+//        localeId = Localization.getInstance().getLocaleId();
+//    }
 
     public UserContext(Locale preferredLocale, Short localeId) {
         this.preferredLocale = preferredLocale;
@@ -206,24 +196,19 @@ public class UserContext implements Serializable {
     }
 
     public void setMfiLocaleId(Short mfiLocaleId) {
-        // this.mfiLocaleId = mfiLocaleId;
         this.localeId = mfiLocaleId;
     }
 
     public Locale getMfiLocale() {
-        // return mfiLocale;
         return preferredLocale;
     }
 
     public void setMfiLocale(Locale mfiLocale) {
-        // this.mfiLocale = mfiLocale;
         this.preferredLocale = mfiLocale;
-
     }
 
     public void dump(PrintStream out) {
         out.print("User " + name + ", id=" + id + ", global=" + userGlobalNo + "\n");
         out.print("Locale ID=" + localeId + ", locale=" + preferredLocale + "\n");
     }
-
 }

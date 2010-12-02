@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Locale;
 
 import junit.framework.Assert;
 
@@ -314,7 +315,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering)
             throws NumberFormatException, Exception {
-        UserContext userContext = new UserContext();
+        UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
         userContext.setId(PersonnelConstants.SYSTEM_USER);
         userContext.setBranchGlobalNum("1001");
         return TestObjectFactory.createSavingsAccount(globalAccountNum, group, AccountState.SAVINGS_PENDING_APPROVAL,

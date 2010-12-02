@@ -3,11 +3,13 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.security.MifosUser;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -15,6 +17,7 @@ import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBu
 import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServiceFacade {
 
@@ -39,8 +42,8 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
 
     @Override
     public void createRole(Short userId, String name, List<Short> ActivityIds) throws RolesPermissionException {
-        UserContext userContext = new UserContext();
-        userContext.setId(userId);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
         List<ActivityEntity> activityEntities = getActivityEntities(ActivityIds);
 
         RoleBO role = new RoleBO(userContext, name, activityEntities);

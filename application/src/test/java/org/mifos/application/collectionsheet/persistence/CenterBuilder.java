@@ -21,6 +21,7 @@ package org.mifos.application.collectionsheet.persistence;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -44,7 +45,7 @@ public class CenterBuilder {
     private String name = "Test Center";
     private OfficeBO office = new OfficeBuilder().withGlobalOfficeNum("xxx-9999").withOfficeId(new Short("1")).build();
     private PersonnelBO loanOfficer;
-    private UserContext userContext = new UserContext();
+    private UserContext userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
     private DateTime mfiJoiningDate = new DateTime();
     private int numberOfCustomersInOfficeAlready = 0;
     private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();

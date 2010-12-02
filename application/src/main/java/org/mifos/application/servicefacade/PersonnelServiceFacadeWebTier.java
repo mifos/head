@@ -29,6 +29,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 
 import org.joda.time.DateTime;
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.SupportedLocalesEntity;
@@ -322,11 +323,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     public UserDetailDto updatePersonnel(CreateOrUpdatePersonnelInformation personnel) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setId(Integer.valueOf(user.getUserId()).shortValue());
-        userContext.setName(user.getUsername());
-        userContext.setBranchId(user.getBranchId());
+        UserContext userContext = new UserContextFactory().create(user);
 
         PersonnelBO userForUpdate = this.personnelDao.findPersonnelById(personnel.getId().shortValue());
         userForUpdate.updateDetails(userContext);

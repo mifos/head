@@ -34,7 +34,6 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
-import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -74,7 +73,6 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
-import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
@@ -305,43 +303,6 @@ public class SavingsBO extends AccountBO {
 
     /**
      * @deprecated use minimal legal constructor from builder
-     */
-    @Deprecated
-    public SavingsBO(final SavingsOfferingBO savingsProduct, final Money savingsBalanceAmount, final SavingsPaymentStrategy savingsPaymentStrategy,
-            final SavingsTransactionActivityHelper savingsTransactionActivityHelper,
-            final Set<AccountActionDateEntity> scheduledPayments, final AccountState accountState,
-            final CustomerBO customer, final Integer offsettingAllowable,
-            final MeetingBO scheduleForInterestCalculation, final RecommendedAmountUnit recommendedAmountUnit,
-            final Money recommendedAmount, final Date createdDate,
-            final Short createdByUserId, List<Holiday> holidays, DateTime activationDate) {
-
-        super(AccountTypes.SAVINGS_ACCOUNT, accountState, customer, offsettingAllowable, scheduledPayments,
-                new LinkedHashSet<AccountFeesEntity>(), createdDate, createdByUserId);
-        this.savingsOffering = savingsProduct;
-        this.savingsPaymentStrategy = savingsPaymentStrategy;
-        this.savingsTransactionActivityHelper = savingsTransactionActivityHelper;
-        this.savingsBalance = savingsBalanceAmount;
-//        this.timePerForInstcalc = scheduleForInterestCalculation;
-        this.recommendedAmntUnit = new RecommendedAmntUnitEntity(recommendedAmountUnit);
-        this.recommendedAmount = recommendedAmount;
-        this.userContext = new UserContext();
-        this.userContext.setId(createdByUserId);
-
-        setSavingsPerformance(createSavingsPerformance());
-        try {
-            List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-            setValuesForActiveState(workingDays, holidays, activationDate);
-        } catch (AccountException e) {
-            throw new IllegalStateException("Unable to create savings schedules", e);
-        }
-
-      this.interestRate = this.savingsOffering.getInterestRate();
-      this.interestCalcType = new InterestCalcTypeEntity(InterestCalcType.fromInt(this.savingsOffering.getInterestCalcType().getId()));
-      this.savingsType = new SavingsTypeEntity(this.savingsOffering.getSavingsTypeAsEnum());
-    }
-
-    /**
-     * @deprecated use minimal legal constructor from builder
      * create a constructor that doesnt take customFields or delegate to goActiveForFristTimeAndGenerateSavingsSchedule which contains persistence.
      */
     @Deprecated
@@ -355,14 +316,9 @@ public class SavingsBO extends AccountBO {
         this.savingsBalance = Money.zero();
 
         // inherit details from savings product definition
-//        this.savingsType = savingsOffering.getSavingsType();
-//        this.minAmntForInt = this.savingsOffering.getMinAmntForInt();
-//        this.interestRate = this.savingsOffering.getInterestRate();
-//        this.interestCalcType = this.savingsOffering.getInterestCalcType();
-//        this.timePerForInstcalc = this.createNewMeetingFrom(this.savingsOffering.getTimePerForInstcalc().getMeeting());
-      this.interestRate = this.savingsOffering.getInterestRate();
-      this.interestCalcType = new InterestCalcTypeEntity(InterestCalcType.fromInt(this.savingsOffering.getInterestCalcType().getId()));
-      this.savingsType = new SavingsTypeEntity(this.savingsOffering.getSavingsTypeAsEnum());
+        this.interestRate = this.savingsOffering.getInterestRate();
+        this.interestCalcType = new InterestCalcTypeEntity(InterestCalcType.fromInt(this.savingsOffering.getInterestCalcType().getId()));
+        this.savingsType = new SavingsTypeEntity(this.savingsOffering.getSavingsTypeAsEnum());
 
         this.recommendedAmntUnit = savingsOffering.getRecommendedAmntUnit();
         this.recommendedAmount = recommendedAmount;
@@ -381,14 +337,48 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    /**
+     * use minimal constructor which generates scheduled savings payments correctly and does not
+     * do through this method.
+     */
+    @Deprecated
     private void goActiveForFristTimeAndGenerateSavingsSchedule(final CustomerBO customer) throws AccountException {
 
         HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
 
         CalendarEvent futureCalendarEventsApplicableToOffice = holidayDao.findCalendarEventsForThisYearAndNext(customer
                 .getOfficeId());
-        setValuesForActiveState(futureCalendarEventsApplicableToOffice.getWorkingDays(),
-                futureCalendarEventsApplicableToOffice.getHolidays(), new DateTime(new DateTimeService().getCurrentJavaDateTime()));
+        this.activationDate = new DateTime(new DateTimeService().getCurrentJavaDateTime()).toDate();
+        List<Days> workingDays = futureCalendarEventsApplicableToOffice.getWorkingDays();
+        List<Holiday> holidays = futureCalendarEventsApplicableToOffice.getHolidays();
+
+        logger.debug("In SavingsBO::generateDepositAccountActions()");
+        // deposit happens on each meeting date of the customer. If for
+        // center/group with individual deposits, insert row for every client
+        if (this.getCustomer().getCustomerMeeting() != null && this.getCustomer().getCustomerMeeting().getMeeting() != null) {
+            MeetingBO depositSchedule = this.getCustomer().getCustomerMeeting().getMeeting();
+
+            if (this.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
+                    || this.getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
+                    && this.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
+                this.generateDepositAccountActions(this.getCustomer(), depositSchedule, workingDays, holidays, new DateTime(this.activationDate));
+            } else {
+                List<CustomerBO> children;
+                try {
+                    children = this.getCustomer().getChildren(CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
+                } catch (CustomerException ce) {
+                    throw new AccountException(ce);
+                }
+                for (CustomerBO customer1 : children) {
+                    this.generateDepositAccountActions(customer1, depositSchedule, workingDays, holidays, new DateTime(this.activationDate));
+                }
+            }
+        }
+
+        InterestScheduledEvent interestPostingEvent = new SavingsInterestScheduledEventFactory()
+                .createScheduledEventFrom(this.savingsOffering.getFreqOfPostIntcalc().getMeeting());
+        this.nextIntPostDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),
+                new LocalDate(this.activationDate)).toDateMidnight().toDate();
     }
 
     public Money getRecommendedAmount() {
@@ -662,35 +652,6 @@ public class SavingsBO extends AccountBO {
         }
     }
 
-    /**
-     */
-    @Deprecated
-    private void generateDepositAccountActions(final List<Days> workingDays, final List<Holiday> holidays)
-            throws AccountException {
-        logger.debug("In SavingsBO::generateDepositAccountActions()");
-        // deposit happens on each meeting date of the customer. If for
-        // center/group with individual deposits, insert row for every client
-        if (getCustomer().getCustomerMeeting() != null && getCustomer().getCustomerMeeting().getMeeting() != null) {
-            MeetingBO depositSchedule = getCustomer().getCustomerMeeting().getMeeting();
-
-            if (getCustomer().getCustomerLevel().getId().equals(CustomerLevel.CLIENT.getValue())
-                    || getCustomer().getCustomerLevel().getId().equals(CustomerLevel.GROUP.getValue())
-                    && getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.COMPLETE_GROUP.getValue())) {
-                generateDepositAccountActions(getCustomer(), depositSchedule, workingDays, holidays, new DateTime(this.activationDate));
-            } else {
-                List<CustomerBO> children;
-                try {
-                    children = getCustomer().getChildren(CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD);
-                } catch (CustomerException ce) {
-                    throw new AccountException(ce);
-                }
-                for (CustomerBO customer : children) {
-                    generateDepositAccountActions(customer, depositSchedule, workingDays, holidays, new DateTime(this.activationDate));
-                }
-            }
-        }
-    }
-
     @Deprecated
     public void generateDepositAccountActions(final CustomerBO customer, final MeetingBO meeting,
             final List<Days> workingDays, final List<Holiday> holidays, final DateTime startingFrom) {
@@ -942,22 +903,6 @@ public class SavingsBO extends AccountBO {
                 throw new AccountException(e);
             }
         }
-    }
-
-    /**
-     * remove when all construction of savings is through factory methods and appropriate minimal legal constructor.
-     */
-    @Deprecated
-    private void setValuesForActiveState(final List<Days> workingDays, final List<Holiday> holidays, DateTime activationDate)
-            throws AccountException {
-        this.activationDate = activationDate.toDate();
-        this.generateDepositAccountActions(workingDays, holidays);
-
-//        InterestScheduledEvent interestCalculationEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(getTimePerForInstcalc());
-//        this.nextIntCalcDate = interestCalculationEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),new LocalDate(this.activationDate)).toDateMidnight().toDate();
-
-        InterestScheduledEvent interestPostingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(this.savingsOffering.getFreqOfPostIntcalc().getMeeting());
-        this.nextIntPostDate = interestPostingEvent.nextMatchingDateAfter(new LocalDate(startOfFiscalYear()),new LocalDate(this.activationDate)).toDateMidnight().toDate();
     }
 
     @Override

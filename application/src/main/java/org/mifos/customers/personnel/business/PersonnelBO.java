@@ -28,6 +28,7 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
@@ -794,7 +795,9 @@ public class PersonnelBO extends AbstractBusinessObject {
         // the locales will be set when the UserContext is instantiated
         // and if the user chooses a locale UserContext will be instantiated
         // with his locale
-        UserContext userContext = new UserContext();
+        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
+        Short localeId = Localization.getInstance().getLocaleId();
+        UserContext userContext = new UserContext(preferredLocale, localeId);
         userContext.setId(getPersonnelId());
         userContext.setName(getDisplayName());
         userContext.setLevel(getLevelEnum());

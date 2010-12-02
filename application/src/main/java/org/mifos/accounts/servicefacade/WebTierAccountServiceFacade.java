@@ -21,7 +21,6 @@
 package org.mifos.accounts.servicefacade;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
@@ -145,13 +144,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     }
 
     private UserContext toUserContext(MifosUser user) {
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLevelId(user.getLevelId());
-        userContext.setRoles(new HashSet<Short>(user.getRoleIds()));
-        return userContext;
+        return new UserContextFactory().create(user);
     }
 
     @Override

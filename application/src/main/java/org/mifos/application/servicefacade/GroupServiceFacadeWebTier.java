@@ -21,7 +21,6 @@
 package org.mifos.application.servicefacade;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import org.joda.time.DateTime;
@@ -31,6 +30,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -134,13 +134,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     }
 
     private UserContext toUserContext(MifosUser user) {
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-        userContext.setLevelId(user.getLevelId());
-        userContext.setRoles(new HashSet<Short>(user.getRoleIds()));
-        return userContext;
+        return new UserContextFactory().create(user);
     }
 
     @Override

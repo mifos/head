@@ -71,6 +71,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
 import org.mifos.accounts.productsmix.persistence.ProductMixPersistence;
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.AdminServiceFacade;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -1253,10 +1254,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public void createProductCategory(CreateOrUpdateProductCategory productCategoryDto) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setId(Integer.valueOf(user.getUserId()).shortValue());
-        userContext.setBranchId(user.getBranchId());
+        UserContext userContext = new UserContextFactory().create(user);
 
         this.loanProductDao.validateNameIsAvailableForCategory(productCategoryDto.getProductCategoryName(),
                 productCategoryDto.getProductTypeEntityId());
@@ -1312,10 +1310,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public void updateProductCategory(CreateOrUpdateProductCategory productCategoryDto) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
-        UserContext userContext = new UserContext();
-        userContext.setId(Integer.valueOf(user.getUserId()).shortValue());
-        userContext.setBranchId(user.getBranchId());
+        UserContext userContext = new UserContextFactory().create(user);
 
         HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
         try {
@@ -1425,7 +1420,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 }
                 ProductMixBO alternateproductmix = new ProductMixPersistence().getPrdOfferingMixByPrdOfferingID(
                         oldNotAllowedProduct.getPrdOfferingNotAllowedId().getPrdOfferingId(), productId.shortValue());
-                
+
                 if (null != alternateproductmix) {
                     applicationConfigurationDao.delete(alternateproductmix);
                     StaticHibernateUtil.flushSession();
@@ -1626,16 +1621,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
             validateEndDateIsPastStartDate(loanProductRequest.getProductDetails().getStartDate(), loanProductRequest.getProductDetails().getEndDate());
         }
 
-
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
 
         LoanOfferingBO newLoanProductDetails = this.loanProductAssembler.fromDto(user, loanProductRequest);
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-
         loanProductForUpdate.updateDetails(userContext);
 
         HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
@@ -1711,14 +1700,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         boolean activeOrInactiveSavingsAccountExist = this.savingsProductDao.activeOrInactiveSavingsAccountsExistForProduct(savingsProductRequest.getProductDetails().getId());
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
 
         SavingsOfferingBO newSavingsDetails = new SavingsProductAssembler(this.loanProductDao, this.savingsProductDao, this.generalLedgerDao).fromDto(user, savingsProductRequest);
-
-        UserContext userContext = new UserContext();
-        userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
-        userContext.setName(user.getUsername());
-
         savingsProductForUpdate.updateDetails(userContext);
 
         HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();

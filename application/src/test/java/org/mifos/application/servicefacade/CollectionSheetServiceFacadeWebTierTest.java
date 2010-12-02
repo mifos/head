@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -99,7 +100,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
     @Before
     public void setupSUTAndInjectMocksAsDependencies() {
 
-        userContext = new UserContext();
+        userContext = new UserContext(Locale.getDefault(), Short.valueOf("1"));
         userContext.setBranchId(Short.valueOf("1"));
         userContext.setId(Short.valueOf("1"));
         userContext.setLevel(PersonnelLevel.LOAN_OFFICER);
