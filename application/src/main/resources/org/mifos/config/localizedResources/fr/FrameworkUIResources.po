@@ -1,9 +1,9 @@
-#. extracted from FrameworkUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/FrameworkUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-11-28 11:27+0530\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,8 +64,8 @@ msgid "Home"
 msgstr "Démarrage"
 
 #: framework.logout
-msgid "Logout"
-msgstr "Déconnecter"
+msgid "Log Out"
+msgstr ""
 
 #: framework.manageCollectionSheets
 msgid "Manage collection sheets"
@@ -84,9 +84,13 @@ msgid "Search"
 msgstr "Chercher"
 
 #: framework.searchCriteria
-msgid "Search by name, system ID or account number "
+#, fuzzy
+msgid "Search by name, system ID, phone number or account number "
 msgstr "Chercher par nom, ID système ou numéro de compte"
 
 #: framework.yoursettings
 msgid "Your settings"
 msgstr "Vos paramètres"
+
+#~ msgid "Logout"
+#~ msgstr "Déconnecter"

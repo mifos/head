@@ -1,11 +1,10 @@
-#. extracted from adminUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:27+0530\n"
+"PO-Revision-Date: 2010-12-01 22:33+0100\n"
+"Last-Translator: lassaad <lbhadj@voila.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,13 +59,17 @@ msgstr "Editique"
 msgid "Administrative tasks"
 msgstr "Tâches d'administration"
 
+#: admin.batchjobs.link
+msgid "Batch Jobs"
+msgstr "Tâches de batch"
+
 #: admin.belowisthelistof
 msgid "Below is the list of"
 msgstr "Ci-dessous la liste de"
 
 #: admin.belowislistofadministrativedocuments
 msgid "Below is the list of administrative documents."
-msgstr ""
+msgstr "Ci-dessous la liste des documents administratifs."
 
 #: admin.category
 msgid "category"
@@ -124,7 +127,7 @@ msgstr "Définir les options de recherche"
 
 #: admin.definenew
 msgid "Add New"
-msgstr ""
+msgstr "Ajouter un nouveau"
 
 #: admin.definenewquestion
 msgid "Define new question"
@@ -180,59 +183,87 @@ msgstr "rapport"
 
 #: admin.importexport.enterfileinfo
 msgid "Enter file information"
-msgstr ""
+msgstr "Entrez dossier d'information"
 
 #: admin.importexport.importfilename
 msgid "Import file name"
-msgstr ""
+msgstr "Importer nom de fichier"
 
 #: admin.importexport.importformat
 msgid "Import format"
-msgstr ""
+msgstr "Importer format"
 
 #: admin.importexport.importinformation
 msgid "Import information"
-msgstr ""
+msgstr "Importer des informations"
 
 #: admin.importexport.importstatus
 msgid "Import Status"
-msgstr ""
+msgstr "l'état d'importation"
 
 #: admin.importexport.rowsWithErrors
 msgid "The following row(s) contain errors and will not be imported:"
-msgstr ""
+msgstr "La ligne suivante (s) contiennent des erreurs et ne seront pas importés:"
 
 #: admin.importexport.zeroImportableRows
 msgid "No valid rows were found."
-msgstr ""
+msgstr "Aucune ligne valide n'a été trouvé."
 
 #: admin.importexport.successfulImportRows
 msgid "{0} rows contained no errors and will be imported."
-msgstr ""
+msgstr "{0} lignes contient pas d'erreurs et sera importé."
 
 #: admin.importexport.importtransactions
 msgid "Import transactions"
-msgstr ""
+msgstr "Importer des transactions"
 
 #: admin.importexport.has_been_imported
 msgid "has been imported"
-msgstr ""
+msgstr "a été importé"
 
 #: admin.importexport.reviewandsubmit
 msgid "Review & submit"
-msgstr ""
+msgstr "Examiner et de présenter"
 
 #: admin.importexport.selectimportfile
 msgid "Select import file"
-msgstr ""
+msgstr "Sélectionnez fichier d'importation"
 
 #: admin.importexport.successfully_imported
 msgid "You have successfully imported transactions."
-msgstr ""
+msgstr "Vous avez importé avec succès des transactions."
 
 #: admin.importexport.title
 msgid "Manage Imports"
-msgstr ""
+msgstr "Gérer les importations"
+
+#: admin.importexport.rowsWereRead
+msgid "{0} rows were read"
+msgstr "{0} lignes sont lues"
+
+#: admin.importexport.rowsNoError
+msgid "{0} rows contained no errors and will be imported"
+msgstr "{0} lignes n'ont pas contenu d'erreurs et vont êtres importés"
+
+#: admin.importexport.rowsIgnored
+msgid "{0} rows will be ignored"
+msgstr "{0} lignes vont êtres ignorées"
+
+#: admin.importexport.rowsError
+msgid "{0} rows contained errors and were not imported"
+msgstr "{0} lignes ont contenu des erreurs et ne vont pas être importés"
+
+#: admin.importexport.amountImported
+msgid "Total amount of transactions imported: {0}"
+msgstr "Montant total des transactions importés: {0}"
+
+#: admin.importexport.amountError
+msgid "Total amount of transactions with error: {0}"
+msgstr "Montant total des transactions avec erreurs: {0}"
+
+#: admin.importexport.downloadLog
+msgid "Save Error Log"
+msgstr "Sauveguarder le journal des erreurs"
 
 #: admin.infoclickonlabel
 msgid "Click on"
@@ -276,7 +307,7 @@ msgstr "combinaison"
 
 #: admin.office
 msgid "Offices"
-msgstr ""
+msgstr "Bureaux"
 
 #: admin.orgpref
 msgid "Organization Preferences"
@@ -304,15 +335,15 @@ msgstr "questions"
 
 #: admin.questiongroups
 msgid "Question Groups"
-msgstr ""
+msgstr "Question Groupes"
 
 #: admin.questiongroup
 msgid "Question Group"
-msgstr ""
+msgstr "Question Groupe"
 
 #: admin.define.questions
 msgid "Define questions"
-msgstr ""
+msgstr "Définir questions"
 
 #: admin.redo
 msgid "Redo"
@@ -328,7 +359,7 @@ msgstr "Rapports"
 
 #: admin.manage.reports
 msgid "Manage reports"
-msgstr ""
+msgstr "Gérer les rapports"
 
 #: admin.reverse
 msgid "Reverse"
@@ -352,7 +383,7 @@ msgstr "Etudes"
 
 #: admin.manage.surveys
 msgid "Manage surveys"
-msgstr ""
+msgstr "Gérer les enquêtes"
 
 #: admin.view.surveys
 msgctxt "admin.view.surveys"
@@ -361,59 +392,59 @@ msgstr "Afficher études"
 
 #: admin.shutdown.title
 msgid "Shutdown Information"
-msgstr ""
+msgstr "Arrêt de l'information"
 
 #: admin.shutdown.link
 msgid "Shutdown"
-msgstr ""
+msgstr "Arrêt"
 
 #: admin.shutdown.button.submit
 msgid "Start shutdown"
-msgstr ""
+msgstr "Début d'arrêt"
 
 #: admin.shutdown.button.cancel
 msgid "Cancel shutdown"
-msgstr ""
+msgstr "Annuler l'arrêt"
 
 #: admin.shutdown.button.refresh
 msgid "Refresh"
-msgstr ""
+msgstr "Actualiser"
 
 #: admin.shutdown.welcome
 msgid "Welcome to the Mifos shutdown management area."
-msgstr ""
+msgstr "Bienvenue dans la zone Mifos gestion de l'arrêt"
 
 #: admin.shutdown.users
 msgid "Active sessions"
-msgstr ""
+msgstr "Les sessions actives"
 
 #: admin.shutdown.status
 msgid "Shutdown status"
-msgstr ""
+msgstr "état d'arrêt"
 
 #: admin.shutdown.status.none
 msgid "Not planned"
-msgstr ""
+msgstr "Non prévu"
 
 #: admin.shutdown.status.inprogress
 msgid "In progress (shutting down in {0} hours, {1} minutes, {2} seconds)"
-msgstr ""
+msgstr "En cours (fermeture de {0} heures, {1} minutes, {2} secondes)"
 
 #: admin.shutdown.status.imminent
 msgid "System shutdown is imminent. Please complete current work and log out."
-msgstr ""
+msgstr "L'arrêt du système est imminente. S'il vous plaît compléter les travaux en cours et se déconnecter."
 
 #: admin.shutdown.timeout
 msgid "Schedule in"
-msgstr ""
+msgstr "Pour planifier en"
 
 #: admin.shutdown.timeout.unit
 msgid "seconds"
-msgstr ""
+msgstr "seconde"
 
 #: admin.sysadmin.title
 msgid "System Administration"
-msgstr ""
+msgstr "Administration système"
 
 #: admin.sysinfo.applicationversion
 msgid "Mifos Database Version"
@@ -425,7 +456,7 @@ msgstr "Serveur d'application"
 
 #: admin.sysinfo.customreportsdir
 msgid "Custom Reports Directory"
-msgstr ""
+msgstr "Répertoire des rapports personnalisés "
 
 #: admin.sysinfo.database
 msgid "Database Vendor / Version"
@@ -433,11 +464,11 @@ msgstr "Fournisseur base de donnée/ Version"
 
 #: admin.sysinfo.datetime
 msgid "Date and Time"
-msgstr ""
+msgstr "Date et heure"
 
 #: admin.sysinfo.datetime.iso8601
 msgid "Date and Time in ISO8601 format"
-msgstr ""
+msgstr "Date et heure en format ISO8601"
 
 #: admin.sysinfo.driver
 msgid "Database Driver / Version"
@@ -445,23 +476,23 @@ msgstr "Pilote de base de donnée / Version"
 
 #: admin.sysinfo.source
 msgid "Database Parameter Source"
-msgstr ""
+msgstr "Source de paramètre de base de données"
 
 #: admin.sysinfo.server
 msgid "Database Server"
-msgstr ""
+msgstr "Serveur de base de données"
 
 #: admin.sysinfo.port
 msgid "Database Port"
-msgstr ""
+msgstr "Port de base de données"
 
 #: admin.sysinfo.name
 msgid "Database Name"
-msgstr ""
+msgstr "Nom de base de données"
 
 #: admin.sysinfo.user
 msgid "Database User"
-msgstr ""
+msgstr "Utilisateur de base de données"
 
 #: admin.sysinfo.java
 msgid "Java Vendor / Version"
@@ -473,23 +504,23 @@ msgstr "Système d'exploitation / Arch / Version"
 
 #: admin.sysinfo.osUser
 msgid "Operating System User"
-msgstr ""
+msgstr "Utilisateur de système d'exploitation"
 
 #: admin.sysinfo.releaseName
 msgid "Release Name"
-msgstr ""
+msgstr "Nom de sortie"
 
 #: admin.sysinfo.commitIdentifier
 msgid "Commit Identifier"
-msgstr ""
+msgstr "L'dentifiant de \"commit\""
 
 #: admin.sysinfo.buildNumber
 msgid "Build Number"
-msgstr ""
+msgstr "Numéro de version"
 
 #: admin.sysinfo.buildDate
 msgid "Build Date"
-msgstr ""
+msgstr "Date de compilation"
 
 #: admin.sysinfo.title
 msgid "System Information"
@@ -513,7 +544,7 @@ msgstr "modèles"
 
 #: admin.unableToDetermineConfigurationSource
 msgid "Unable to determine configuration source."
-msgstr ""
+msgstr "Impossible de déterminer la source de configuration"
 
 #: admin.upload
 msgid "upload"
@@ -623,22 +654,15 @@ msgstr "Afficher les utilisateurs système"
 
 #: admin.welcometomifos
 msgid "Welcome to mifos administrative area. Click on a link below to begin."
-msgstr ""
-"Bienvenue à la zone d'administration du mifos. Cliquez sur le lien ci-"
-"dessous pour démarrer."
+msgstr "Bienvenue à la zone d'administration du mifos. Cliquez sur le lien ci-dessous pour démarrer."
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you the required permissions and try again."
-msgstr ""
-"Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre "
-"administrateur système pour t'accorder les permissions requises et essayer "
-"encore."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgstr "Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre administrateur système pour t'accorder les permissions requises et essayer encore."
 
 #: error.shutdown.timeout.invalid
 msgid "Please type valid shutdown timeout (in seconds)."
-msgstr ""
+msgstr "S'il vous plaît entrer timeout arrêt valide (en secondes)."
 
 #: errors.prefix
 msgid "<li>"
@@ -660,19 +684,39 @@ msgstr "Cette action n'est pas autorisée."
 
 #: errors.importexport.toobig
 msgid "The file size is too big (Maximum size allowed id 4MB)."
-msgstr ""
+msgstr "La taille du fichier est trop gros (la taille maximale autorisée est de 4 Mo)."
 
 #: errors.importexport.mandatory_selectbox
 msgid "Please select the import type."
-msgstr ""
+msgstr "S'il vous plaît sélectionner le type d'importation."
 
 #: errors.importexport.mandatory_file
 msgid "Please select file to upload."
-msgstr ""
+msgstr "S'il vous plaît sélectionner le fichier à télécharger."
 
 #: errors.importexport.already_submitted
-msgid "Same file has been already imported."
-msgstr ""
+msgid "Same file has been already imported. Please import a different file."
+msgstr "Même dossier a déjà été importé."
+
+#: admin.uploadPPI
+msgid "Activate Question Group"
+msgstr "Activer le groupe de questions"
+
+#: admin.questionnaire.migration
+msgid "Questionnaire Migration"
+msgstr "Migration de questionnaire"
+
+#: admin.questionnaire.migration.migrate.surveys
+msgid "Migrate Surveys"
+msgstr "Migrer les études"
+
+#: admin.questionnaire.migration.migrate.additional.fields
+msgid "Migrate Additional Fields"
+msgstr "Afficher les champs supplémentaires"
+
+#: admin.migrate.questiongroups
+msgid "Migrate to Question Groups"
+msgstr "Migrer au groupes de question"
 
 #~ msgid "Define new"
 #~ msgstr "Définir un nouveau"

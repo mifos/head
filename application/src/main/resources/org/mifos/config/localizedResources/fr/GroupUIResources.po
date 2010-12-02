@@ -1,11 +1,10 @@
-#. extracted from GroupUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:27+0530\n"
+"PO-Revision-Date: 2010-12-01 17:51+0100\n"
+"Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -44,9 +43,7 @@ msgid "Center"
 msgstr "Centre"
 
 #: Group.EditGroupInstructions
-msgid ""
-"Click Submit to change the {0} or Cancel to return to {1} details page "
-"without changing the {0}"
+msgid "Click Submit to change the {0} or Cancel to return to {1} details page without changing the {0}"
 msgstr "Cliquer sur confirmer pour changer le"
 
 #: Group.FormedBy
@@ -67,7 +64,7 @@ msgstr "s"
 
 #: Group.Selected
 msgid "{0} Selected:"
-msgstr ""
+msgstr "{0} est séléctionné:"
 
 #: Group.Total
 msgid "Total"
@@ -298,9 +295,7 @@ msgid "- Confirm"
 msgstr "- Confirmer"
 
 #: Group.confirmcenterMsg1
-msgid ""
-"Click Submit to change the {0} or Cancel to return to {1} details page "
-"without changing the {0} "
+msgid "Click Submit to change the {0} or Cancel to return to {1} details page without changing the {0} "
 msgstr "Cliquer sur confirmer pour changer le"
 
 #: Group.confirmstatuschange
@@ -341,13 +336,8 @@ msgid "Create a new Group"
 msgstr "Créer un nouveau groupe"
 
 #: Group.createconfirm
-msgid ""
-"You can enter a system ID number into the search box to access {0} details "
-"which also include a {0}'s account and performance data."
-msgstr ""
-"Vous pouvez entré un nombre d'ID système  dans la boîte de recherche pour "
-"accéder {0} Ce qui inclut également un {0} Données de compte et de "
-"performance"
+msgid "You can enter a system ID number into the search box to access {0} details which also include a {0}'s account and performance data."
+msgstr "Vous pouvez entré un nombre d'ID système  dans la boîte de recherche pour accéder {0} Ce qui inclut également un {0} Données de compte et de performance"
 
 #: Group.createconfirmhead1
 msgid "has been assigned the system ID number:"
@@ -355,9 +345,7 @@ msgstr "a été assigné le numéro d'ID système\\:"
 
 #: Group.createconfirmhead2
 msgid "You can enter a system ID number into the search box to access"
-msgstr ""
-"Vous pouvez entré un nombre d'ID système  dans la boîte de recherche pour "
-"accéder"
+msgstr "Vous pouvez entré un nombre d'ID système  dans la boîte de recherche pour accéder"
 
 #: Group.createconfirmhead3
 msgid "which also includes a"
@@ -393,11 +381,8 @@ msgid "Then click Preview."
 msgstr "Ensuite cliquer sur Aperçu."
 
 #: Group.createpagehead3
-msgid ""
-"Click Cancel to return to Clients & Accounts without submitting information."
-msgstr ""
-"Cliquer annuler pour retourner aux Clients et  Comptes sans Valider les "
-"informations."
+msgid "Click Cancel to return to Clients & Accounts without submitting information."
+msgstr "Cliquer annuler pour retourner aux Clients et  Comptes sans Valider les informations."
 
 #: Group.createpagehead4
 msgid "Fields marked with an asterisk are required."
@@ -453,13 +438,11 @@ msgstr "Cliquer sur annuler pour retourner à"
 
 #: Group.editMag2ReturnToDetail
 msgid "Click Cancel to return to {0} Details without submitting information."
-msgstr ""
-"Cliquer sur annuler pour retourner à Détails du {0} sans Valider des "
-"informations."
+msgstr "Cliquer sur annuler pour retourner à Détails du {0} sans Valider des informations."
 
 #: Group.editMag2ReturnToEdit
 msgid "Click Cancel to return to Edit {0} Membership."
-msgstr ""
+msgstr "Cliquer sur Annuler pour retourner à éditer l'appartenace au {0}."
 
 #: Group.editMag3
 msgid "Details without submitting information."
@@ -499,7 +482,7 @@ msgstr "Editer le programme du réunion\\:"
 
 #: Group.editpreviewMsg
 msgid "Click Confirm if you are satisfied or click Edit {0} information."
-msgstr ""
+msgstr "Cliquer sur Confirmer si  satisfais ou Editer les informations de {0}."
 
 #: Group.enter
 msgid "Enter"
@@ -526,12 +509,8 @@ msgid "Enter group information"
 msgstr "Entrer les informations du groupe\\:"
 
 #: Group.externalIdMsg
-msgid ""
-"Useful if necessary to cross-reference a client within a system used prior "
-"to Mifos"
-msgstr ""
-"Utile au besoin pour établir une référence croisée à  un client dans un "
-"système utilisé avant Mifos"
+msgid "Useful if necessary to cross-reference a client within a system used prior to Mifos"
+msgstr "Utile au besoin pour établir une référence croisée à  un client dans un système utilisé avant Mifos"
 
 #: Group.externalid
 msgid "External ID:"
@@ -551,7 +530,7 @@ msgstr "Groupe"
 
 #: Group.groupDetail
 msgid "{0} details"
-msgstr ""
+msgstr "Détails de {0}"
 
 #: Group.groupMembership
 msgid "Group membership:"
@@ -571,11 +550,11 @@ msgstr "Cliquer sur un {0} ci-dessous pour afficher le {1}"
 
 #: Group.groupdetailMsg1
 msgid "Click on a"
-msgstr ""
+msgstr "Cliquer sur"
 
 #: Group.groupdetailMsg2
 msgid "below to view the"
-msgstr ""
+msgstr "ci-dessous pour afficher"
 
 #: Group.groupdetailViewMsg
 msgid "Click on a {0} below to view the {0} details."
@@ -773,9 +752,7 @@ msgstr "Afficher les informations."
 
 #: Group.previewcreatepagehead2
 msgid "Click Submit if you are satisfied or click Edit to make changes."
-msgstr ""
-"Cliquer Valider si vous êtes satsfait ou cliquer sur  Editer pour faire des "
-"modifications."
+msgstr "Cliquer Valider si vous êtes satsfait ou cliquer sur  Editer pour faire des modifications."
 
 #: Group.previewgroupinformation
 msgid "Preview group information"
@@ -783,9 +760,7 @@ msgstr "Prévisualier des informations des groupes"
 
 #: Group.programMsg
 msgid "Click on a program in the left box to select. Then click Add."
-msgstr ""
-"Cliquer sur un programme dans le box à gauche pour choisir. ensuite cliquer "
-"sur ajouter."
+msgstr "Cliquer sur un programme dans le box à gauche pour choisir. ensuite cliquer sur ajouter."
 
 #: Group.programs
 msgid "Programs:"
@@ -825,7 +800,7 @@ msgstr "Réafficher et Valider"
 
 #: Group.s
 msgid "s:"
-msgstr ""
+msgstr "s\\:"
 
 #: Group.savings
 msgid "Savings"
@@ -849,7 +824,7 @@ msgstr "Choisir"
 
 #: Group.selectOr
 msgid "Select {0}/{1}"
-msgstr ""
+msgstr "Selectionner {0}/{1}"
 
 #: Group.size
 msgid "size:"
@@ -909,12 +884,11 @@ msgstr "Prochaines étapes suggérées"
 
 #: Group.sureToDelete
 msgid "Are you sure you want to delete the group membership for this client"
-msgstr ""
-"Etes vous sûre de vouloir supprimer l'appartenance au groupe de ce client"
+msgstr "Etes vous sûre de vouloir supprimer l'appartenance au groupe de ce client"
 
 #: Group.sureToTransferTo
 msgid "Are you sure you want to transfer the {0} to"
-msgstr ""
+msgstr "êtes vous sûr de vouloir trsferer le {0} à"
 
 #: Group.surveys
 msgid "Surveys"
@@ -930,7 +904,7 @@ msgstr "Téléphone\\:"
 
 #: Group.totalPortfolio
 msgid "Total {0} portfolio."
-msgstr ""
+msgstr "Total {0} portefeuille."
 
 #: Group.trainedon
 msgctxt "Group.trainedon"
@@ -954,12 +928,8 @@ msgid "To transfer {0} choose a {1} from the list below."
 msgstr "Pour transférer {0} Choisir un {1} De la liste suivante"
 
 #: Group.transferbranchMsg2
-msgid ""
-"Click Cancel to go back to the {0} details page without submitting "
-"information."
-msgstr ""
-"Cliquer sur annuler pour retourner au {0} page de détails sans valider les "
-"informations."
+msgid "Click Cancel to go back to the {0} details page without submitting information."
+msgstr "Cliquer sur annuler pour retourner au {0} page de détails sans valider les informations."
 
 #: Group.transferbranchMsg3
 msgid "Click Submit to confirm."
@@ -1029,6 +999,10 @@ msgstr "Approuvé"
 msgid "Cancel"
 msgstr "Annuler"
 
+#: button.continue
+msgid "Continue"
+msgstr "Continuer"
+
 #: button.editstatus
 msgid "Edit status"
 msgstr "Editer le statut"
@@ -1067,37 +1041,21 @@ msgid "cfdef.entityId"
 msgstr "cfdef.entityId"
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you the required permissions and try again."
-msgstr ""
-"Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre "
-"administrateur système pour t'accorder les permissions requises et essayer "
-"encore."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgstr "Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre administrateur système pour t'accorder les permissions requises et essayer encore."
 
 #: error.versionnodonotmatch
-msgid ""
-"The record has already been modified by another user. Please navigate to the "
-"details page and start the activity again."
-msgstr ""
-"L'enregistrement vient d'être modifié par un autre utilisateur. Veuiller "
-"retourner à la page des détails et recommencer de nouveau."
+msgid "The record has already been modified by another user. Please navigate to the details page and start the activity again."
+msgstr "L'enregistrement vient d'être modifié par un autre utilisateur. Veuiller retourner à la page des détails et recommencer de nouveau."
 
 #: errors.Customer.clientHasActiveAccount
-msgid ""
-"The membership cannot be changed since its children has Active accounts."
-msgstr ""
-"Le membre ne peut as être changé tant que ces enfants ont des comptes actifs "
-"."
+msgid "The membership cannot be changed since its children has Active accounts."
+msgstr "Le membre ne peut as être changé tant que ces enfants ont des comptes actifs ."
 
 #: errors.Customer.duplicateCustomer
 msgctxt "errors.Customer.duplicateCustomer"
-msgid ""
-"The Name specified already exists in the system. Please specify a different "
-"Name."
-msgstr ""
-"Le nom indiqué existe déjà dans le système.Veuiller spécifier un nom "
-"différent."
+msgid "The Name specified already exists in the system. Please specify a different Name."
+msgstr "Le nom indiqué existe déjà dans le système.Veuiller spécifier un nom différent."
 
 #: errors.Customer.duplicatePeriodicFee
 msgctxt "errors.Customer.duplicatePeriodicFee"
@@ -1105,19 +1063,13 @@ msgid "Same periodic fee cannot be selected multiple times."
 msgstr "Les mêmes frais périodiques  ne peuvent pas être choisi multiples fois."
 
 #: errors.Customer.feeFrequencyMismatch
-msgid ""
-"Meeting frequency and fee recurrence do not match. Please select only valid "
-"fee types."
-msgstr ""
-"La fréquence de réunion et frais récurrente do not match. Veuiller "
-"sélectionner seulement les  types de frais valide."
+msgid "Meeting frequency and fee recurrence do not match. Please select only valid fee types."
+msgstr "La fréquence de réunion et frais récurrente do not match. Veuiller sélectionner seulement les  types de frais valide."
 
 #: errors.Customer.hasActiveAccount
 msgctxt "errors.Customer.hasActiveAccount"
-msgid ""
-"The membership cannot be changed since there are Active accounts present."
-msgstr ""
-"Le membre ne peut as être changé tant qu'il y' a des comptes actifs présent."
+msgid "The membership cannot be changed since there are Active accounts present."
+msgstr "Le membre ne peut as être changé tant qu'il y' a des comptes actifs présent."
 
 #: errors.Customer.invalidLoanOfficer
 msgid "Please select loan officer"
@@ -1129,53 +1081,32 @@ msgid "Please select Meeting schedule."
 msgstr "Veuiller sélectionner le programme de la réunion."
 
 #: errors.Customer.meetingFrequencyMismatch
-msgid ""
-"Customer cannot be transferred to parent with different meeting frequency."
-msgstr ""
-"Le client ne peut pas être transféré à un groupe avec une fréquence "
-"différente de réunions."
+msgid "Customer cannot be transferred to parent with different meeting frequency."
+msgstr "Le client ne peut pas être transféré à un groupe avec une fréquence différente de réunions."
 
 #: errors.Customer.officeInactive
-msgid ""
-"Customer cannot be transferred to the inactive office. Please change office "
-"and try again."
-msgstr ""
-"Le client ne peut pas être transféré au bureau inactif. Veuiller changer le "
-"bureau et essayer encore."
+msgid "Customer cannot be transferred to the inactive office. Please change office and try again."
+msgstr "Le client ne peut pas être transféré au bureau inactif. Veuiller changer le bureau et essayer encore."
 
 #: errors.Customer.parentInactive
-msgid ""
-"Customer cannot be transferred to inactive parent. Please change parent and "
-"try again."
-msgstr ""
-"Le client ne peut pas être transféré au parent inactif. Veuiller changer le "
-"parent et essayer encore."
+msgid "Customer cannot be transferred to inactive parent. Please change parent and try again."
+msgstr "Le client ne peut pas être transféré au parent inactif. Veuiller changer le parent et essayer encore."
 
 #: errors.Customer.sameBranchTransfer
-msgid ""
-"Customer cannot be transferred to the same office. Please change office and "
-"try again."
-msgstr ""
-"Le client ne peut pas être transféré au même bureau. Veuillez changer le "
-"bureau et essayer encore."
+msgid "Customer cannot be transferred to the same office. Please change office and try again."
+msgstr "Le client ne peut pas être transféré au même bureau. Veuillez changer le bureau et essayer encore."
 
 #: errors.Customer.sameParentTransferException
-msgid ""
-"Customer cannot be transferred to this parent. Please change parent and try "
-"again."
-msgstr ""
-"Le client ne peut pas être transféré à ce parent. Veuiller changer le parent "
-"et essayer encore."
+msgid "Customer cannot be transferred to this parent. Please change parent and try again."
+msgstr "Le client ne peut pas être transféré à ce parent. Veuiller changer le parent et essayer encore."
 
 #: errors.Customer.specifyCustomFieldValue
 msgid "Please specify required additional information."
 msgstr "Veuiller indiquer l'information supplémentaire requise ."
 
 #: errors.Customer.customdatefield
-msgid ""
-"Please enter a valid date (format dd/mm/yyyy) in additional information "
-"field."
-msgstr ""
+msgid "Please enter a valid date (format dd/mm/yyyy) in additional information field."
+msgstr "Prière d'entrer une date valide (Format dd/mm/yyyy) dans les champs d'information additionnelles."
 
 #: errors.Customer.specifyFeeAmount
 msgid "Please specify fee amount."
@@ -1195,28 +1126,16 @@ msgid "Please specify Name."
 msgstr "Veuiller spécifier un nom ."
 
 #: errors.Group.ClientActiveAccountsPresent
-msgid ""
-"Group membership couldn't be removed, since the client has an active loan "
-"account"
-msgstr ""
-"L'appartenance au groupe ne peut pas être supprimé, car le client a un "
-"compte de prêt actif."
+msgid "Group membership couldn't be removed, since the client has an active loan account"
+msgstr "L'appartenance au groupe ne peut pas être supprimé, car le client a un compte de prêt actif."
 
 #: errors.Group.ClientIsATitleHolder
-msgid ""
-"The member to remove is a title holder. The title position will be left "
-"empty"
-msgstr ""
-"Le membre à supprimer a un titre dans le groupe. la position qu'occupait ce "
-"client va être vide"
+msgid "The member to remove is a title holder. The title position will be left empty"
+msgstr "Le membre à supprimer a un titre dans le groupe. la position qu'occupait ce client va être vide"
 
 #: errors.Group.GroupActiveAccountsPresent
-msgid ""
-"Group membership couldn't be removed, since the group has an active loan "
-"account."
-msgstr ""
-"L'appartenance au groupe ne peut pas être supprimé, car le client a un "
-"compte de prêt actif."
+msgid "Group membership couldn't be removed, since the group has an active loan account."
+msgstr "L'appartenance au groupe ne peut pas être supprimé, car le client a un compte de prêt actif."
 
 #: errors.InvalidTrainedDate
 msgid "Please enter a valid training date."
@@ -1232,8 +1151,7 @@ msgstr "Veuiller indiquer la date de formation."
 
 #: errors.assignedloanofficerrequired
 msgid "The client status is active. Please select a loan officer."
-msgstr ""
-"Le statut du client est actif. Veuiller sélectionner un agent de crédit."
+msgstr "Le statut du client est actif. Veuiller sélectionner un agent de crédit."
 
 #: errors.branchinactive
 msgid "{0} assigned is in Inactive state."
@@ -1250,12 +1168,8 @@ msgstr "Même frais périodique ne peut pas être sélectionner multiples fois."
 
 #: errors.duplicategroup
 msgctxt "errors.duplicategroup"
-msgid ""
-"The Name specified already exists in the system. Please specify a different "
-"Name."
-msgstr ""
-"Le nom spécifié existe déja dans le système . Veuiller indiquer un nom "
-"différent."
+msgid "The Name specified already exists in the system. Please specify a different Name."
+msgstr "Le nom spécifié existe déja dans le système . Veuiller indiquer un nom différent."
 
 #: errors.feeinactive
 msgid "The Fee assigned is in Inactive state."
@@ -1263,13 +1177,11 @@ msgstr "Le Frais assigné dans un inactif statut"
 
 #: errors.feewithoutmeeting
 msgid "Customer must have a meeting schedule before a Fee can be charged."
-msgstr ""
-"Le client doit avoir un programme de réunion avant qu'un  frais peut être "
-"chargé."
+msgstr "Le client doit avoir un programme de réunion avant qu'un  frais peut être chargé."
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "Le {0} est invalide car {1}"
 
 #: errors.groupclientsareactive
 msgid "Status cannot be changed since it has active {0}s."
@@ -1281,12 +1193,8 @@ msgid "Status cannot be changed since the customer has Active accounts."
 msgstr "Le statut ne peut pas changé depuis que le client a des comptes actifs."
 
 #: errors.groupcreate
-msgid ""
-"{0} create failed. Please try again later or contact the system "
-"administrator."
-msgstr ""
-"{0} La création n'a pas réussi. Veuiller essayer encore plus tard ou "
-"contacter l'administrateur système."
+msgid "{0} create failed. Please try again later or contact the system administrator."
+msgstr "{0} La création n'a pas réussi. Veuiller essayer encore plus tard ou contacter l'administrateur système."
 
 #: errors.grouphasactiveaccounts
 msgctxt "errors.grouphasactiveaccounts"
@@ -1295,70 +1203,43 @@ msgstr "Le statut ne peut pas changé depuis que le client a des comptes actifs.
 
 #: errors.groupinvalidversion
 msgid "{0} {1} information has been changed by another user. Please try again."
-msgstr ""
-"{0} {1} information a été changé par un autre utilisateur. Veuiller essayer "
-"encore."
+msgstr "{0} {1} information a été changé par un autre utilisateur. Veuiller essayer encore."
 
 #: errors.grouploanofficernotassigned
 msgid "Status cannot be changed to Active since Loan officer is not assigned."
-msgstr ""
-"Le statut ne peut pas changé en Actif  depuis que L'agent de crédit n'est "
-"pas affecté."
+msgstr "Le statut ne peut pas changé en Actif  depuis que L'agent de crédit n'est pas affecté."
 
 #: errors.groupnotfound
-msgid ""
-"{1} with the system ID {0} is not found. Please try again with a different "
-"value."
-msgstr ""
-"{1} avec l'ID système {0} n'est paas trouvé. Veuiller essayer encore avec "
-"une valeur différente."
+msgid "{1} with the system ID {0} is not found. Please try again with a different value."
+msgstr "{1} avec l'ID système {0} n'est paas trouvé. Veuiller essayer encore avec une valeur différente."
 
 #: errors.groupupdate
-msgid ""
-"{0} updation failed. Please try again later or contact the system "
-"administrator."
-msgstr ""
-"{0} La mise à jour n'a pas réussi. Veuiller essayer encore plus tard ou "
-"contacter l'administrateur système."
+msgid "{0} updation failed. Please try again later or contact the system administrator."
+msgstr "{0} La mise à jour n'a pas réussi. Veuiller essayer encore plus tard ou contacter l'administrateur système."
 
 #: errors.impossibletocreategrouploan
-msgid ""
-"A group loan cannot be created since there are no active clients associated "
-"with the selected group."
-msgstr ""
-"Un prêt groupe ne peut pas être crée car il n'ya pas de clients associés au "
-"groupe sélctionné."
+msgid "A group loan cannot be created since there are no active clients associated with the selected group."
+msgstr "Un prêt groupe ne peut pas être crée car il n'ya pas de clients associés au groupe sélctionné."
 
 #: errors.incompletechecklist
 msgid "Please select all the items in the checklist, and click submit."
-msgstr ""
-"Veuiller sélectionner tous les articles de la checklist, et cliquer sur "
-"Valider."
+msgstr "Veuiller sélectionner tous les articles de la checklist, et cliquer sur Valider."
 
 #: errors.invalidfeeamt
 msgid "Fee amount cannot be zero or blank."
 msgstr "Le montant de frais ne peut pas être zero ou blanc."
 
 #: errors.loanofficerinactive
-msgid ""
-"Either the Loan officer assigned is in Inactive State or changed to Non-Loan "
-"Officer or might have been transferred to a different {0}."
-msgstr ""
-"L'agent de crédit affecté est dans le statut actif ou est changé en non-"
-"agent de crédit ou pourrait avoir été transféré à un différent {0}."
+msgid "Either the Loan officer assigned is in Inactive State or changed to Non-Loan Officer or might have been transferred to a different {0}."
+msgstr "L'agent de crédit affecté est dans le statut actif ou est changé en non-agent de crédit ou pourrait avoir été transféré à un différent {0}."
 
 #: errors.loanofficerrequired
 msgid "Please select a Loan Officer for saving in the Approved state."
-msgstr ""
-"Veuiller sélectionner un agent de crédit pour l'epargne dans le statut "
-"approuvé."
+msgstr "Veuiller sélectionner un agent de crédit pour l'epargne dans le statut approuvé."
 
 #: errors.loanofficerrequired_activegroup
-msgid ""
-"Specifying a Loan officer is mandatory, since group is in Active/Hold State."
-msgstr ""
-"La spécification de l'agent de crédit est obligataoire , car le groupe est "
-"en statut Actif/bloqué."
+msgid "Specifying a Loan officer is mandatory, since group is in Active/Hold State."
+msgstr "La spécification de l'agent de crédit est obligataoire , car le groupe est en statut Actif/bloqué."
 
 #: errors.mandatory
 msgctxt "errors.mandatory"
@@ -1380,15 +1261,11 @@ msgstr "Le longeur maximale pour {0} champ est {1}."
 
 #: errors.meetingnotassigned
 msgid "Status cannot be changed to Active since Meeting is not assigned."
-msgstr ""
-"Le statut ne peut pas changé en Actif depuis que la réunion n'est pas "
-"assigné."
+msgstr "Le statut ne peut pas changé en Actif depuis que la réunion n'est pas assigné."
 
 #: errors.meetingrrequired
 msgid "Please select the meeting details before saving in the Approved state."
-msgstr ""
-"Veuiller sélectionner les détails de réunion avant d'épargner dans le statut "
-"approuvé."
+msgstr "Veuiller sélectionner les détails de réunion avant d'épargner dans le statut approuvé."
 
 #: errors.nosearchstring
 msgid "Please specify Name to be searched."
@@ -1403,71 +1280,42 @@ msgid "Please specify Mandatory additional information."
 msgstr "Veuiller indiquer l'information supplémentaire obligatoire."
 
 #: errors.samebranch
-msgid ""
-"{0} cannot be transferred to the same office. Please select a different "
-"office and try again."
-msgstr ""
-"{0} ne peut pas êtrer transféré au même bureau. Veuiller sélectionner un "
-"bureau différent et essayer encore."
+msgid "{0} cannot be transferred to the same office. Please select a different office and try again."
+msgstr "{0} ne peut pas êtrer transféré au même bureau. Veuiller sélectionner un bureau différent et essayer encore."
 
 #: errors.sameparent
-msgid ""
-"Customer cannot be transferred to the same parent. Please select a different "
-"parent and try again."
-msgstr ""
-"Client ne peut pas être transféré au même parent. Veuiller sélectionner un "
-"parent différent et essayer encore."
+msgid "Customer cannot be transferred to the same parent. Please select a different parent and try again."
+msgstr "Client ne peut pas être transféré au même parent. Veuiller sélectionner un parent différent et essayer encore."
 
 #: errors.suffix
 msgid "</LI>"
 msgstr "</LI>"
 
 #: errors.traineddate
-msgid ""
-"Please make sure if training is selected, training date is specified; and "
-"vice-versa."
-msgstr ""
-"Veuiller faite sure si la formation est sélectionné, date de formation est "
-"spécifié; et vice-versa."
+msgid "Please make sure if training is selected, training date is specified; and vice-versa."
+msgstr "Veuiller faite sure si la formation est sélectionné, date de formation est spécifié; et vice-versa."
 
 #: errors.transferex_activeloans
 msgctxt "errors.transferex_activeloans"
-msgid ""
-"The membership cannot be changed since there are Active accounts present."
-msgstr ""
-"Le membre ne peut pas changé depuis qu'il y a des comptes actifs présent."
+msgid "The membership cannot be changed since there are Active accounts present."
+msgstr "Le membre ne peut pas changé depuis qu'il y a des comptes actifs présent."
 
 #: errors.transferex_clienthasactiveloan
 msgctxt "errors.transferex_clienthasactiveloan"
-msgid ""
-"The membership cannot be changed since there are Active accounts present."
-msgstr ""
-"Le membre ne peut pas changé depuis qu'il y a des comptes actifs présent."
+msgid "The membership cannot be changed since there are Active accounts present."
+msgstr "Le membre ne peut pas changé depuis qu'il y a des comptes actifs présent."
 
 #: errors.transferex_clienttransferfailed
-msgid ""
-"System Exception occurred. One of the clients could not be transferred. "
-"Please try again."
-msgstr ""
-"Une exception Système s'est produite. Un de ces clients ne peut pas être "
-"transféré. Veuiller essayer encore."
+msgid "System Exception occurred. One of the clients could not be transferred. Please try again."
+msgstr "Une exception Système s'est produite. Un de ces clients ne peut pas être transféré. Veuiller essayer encore."
 
 #: errors.unknownexception
-msgid ""
-"Unknown error occurred. Please try again later or contact the system "
-"administrator."
-msgstr ""
-"Une erreur inconnue s'est produite. Veuiller essayer encore plus tard ou "
-"contacter l'administrateur système."
+msgid "Unknown error occurred. Please try again later or contact the system administrator."
+msgstr "Une erreur inconnue s'est produite. Veuiller essayer encore plus tard ou contacter l'administrateur système."
 
 #: exception.framework.ConcurrencyException
-msgid ""
-"The record you were trying to update was updated by another transaction. "
-"Please search again to get the updated data."
-msgstr ""
-"L'enregistrement que vous essayer de mettre à jour a été mis à jour par une "
-"autre transaction .Veuiller chercher encore pour obtenir des données mise à "
-"jour."
+msgid "The record you were trying to update was updated by another transaction. Please search again to get the updated data."
+msgstr "L'enregistrement que vous essayer de mettre à jour a été mis à jour par une autre transaction .Veuiller chercher encore pour obtenir des données mise à jour."
 
 #: exception.framework.DoubleSubmitException
 msgid "This action is not permissible."
@@ -1496,3 +1344,4 @@ msgstr "n'a pas"
 #: warning.noclientsassigned3
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr "s assigné à lui. Cliquer sur Valider pour approuver le vide"
+

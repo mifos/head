@@ -1,11 +1,10 @@
-#. extracted from CheckListUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2010-11-28 11:27+0530\n"
+"PO-Revision-Date: 2010-12-01 19:12+0100\n"
+"Last-Translator: lassaad <lbhadj@voila.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -61,7 +60,7 @@ msgstr "Nom"
 
 #: checklist.checklistStatus
 msgid "checklist status"
-msgstr ""
+msgstr "Statut de la checklist"
 
 #: checklist.checklistText
 msgid "Text"
@@ -73,7 +72,7 @@ msgstr "Type"
 
 #: checklist.checklist_Name
 msgid "checklist name"
-msgstr ""
+msgstr "Nom de la checklist"
 
 #: checklist.checklist_info
 msgid "Checklist information"
@@ -105,13 +104,11 @@ msgstr "Définir une nouvelle checklist"
 
 #: checklist.description
 msgid "Click on a checklist below to view details and make changes or"
-msgstr ""
-"Cliquez sur la checklist ci dessous pour afficher les détails et faire des "
-"changements ou"
+msgstr "Cliquez sur la checklist ci dessous pour afficher les détails et faire des changements ou"
 
 #: checklist.details
 msgid "details"
-msgstr ""
+msgstr "Détails"
 
 #: checklist.display_status
 msgid "Displayed when moving into Status"
@@ -132,22 +129,12 @@ msgid "Edit Checklist Information"
 msgstr "Editer les informations de la Checklist"
 
 #: checklist.edit_checklist_info
-msgid ""
-"Complete the fields below. Then click Preview. Click Cancel to return  to "
-"Checklist Details without editing information."
-msgstr ""
-"Compléter le champs ci dessous. Ensuite cliquez sur Aperçu. Cliquer sur "
-"annuler pour retourner aux détails de la checklist sans éditer les "
-"informations."
+msgid "Complete the fields below. Then click Preview. Click Cancel to return  to Checklist Details without editing information."
+msgstr "Compléter le champs ci dessous. Ensuite cliquez sur Aperçu. Cliquer sur annuler pour retourner aux détails de la checklist sans éditer les informations."
 
 #: checklist.enter_Info_one
-msgid ""
-"Complete the fields below. Then click Preview. Click Cancel to return to "
-"Admin without submitting information."
-msgstr ""
-"Complétez le champ ci dessous. Ensuite cliquez sur préafficher. Cliquez sur "
-"annuler pour retourner à l'interface d'administration sans Valider les "
-"informations."
+msgid "Complete the fields below. Then click Preview. Click Cancel to return to Admin without submitting information."
+msgstr "Complétez le champ ci dessous. Ensuite cliquez sur préafficher. Cliquez sur annuler pour retourner à l'interface d'administration sans Valider les informations."
 
 #: checklist.enter_Info_two
 msgid "Fields marked with an asterisk are required."
@@ -170,11 +157,8 @@ msgid "items"
 msgstr "Eléments\\:"
 
 #: checklist.items_info
-msgid ""
-"Enter text for each item and click Add to save the item in the list below."
-msgstr ""
-"Entrer un text pour chaque élément et cliquez sur ajouter pour enregistrer "
-"cet élément dans la liste ci dessous."
+msgid "Enter text for each item and click Add to save the item in the list below."
+msgstr "Entrer un text pour chaque élément et cliquez sur ajouter pour enregistrer cet élément dans la liste ci dessous."
 
 #: checklist.loans
 msgid "Loans"
@@ -189,15 +173,8 @@ msgid "On hold"
 msgstr "En Attente"
 
 #: checklist.review_Info
-msgid ""
-"Review the information below. Click Submit if you are satisfied or click "
-"Edit to make changes. Click Cancel to return to Admin without submitting "
-"information."
-msgstr ""
-"Réafficher les informations ci dessous. Cliquez sur Valider si vous êtes "
-"satisfait ou cliquer sur éditer pour faire des changements. Cliquer sur "
-"annuler pour retourner à l'interface d'administration sans Valider les "
-"informations.."
+msgid "Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Admin without submitting information."
+msgstr "Réafficher les informations ci dessous. Cliquez sur Valider si vous êtes satisfait ou cliquer sur éditer pour faire des changements. Cliquer sur annuler pour retourner à l'interface d'administration sans Valider les informations.."
 
 #: checklist.reviewandsubmit
 msgid "Review & submit"
@@ -236,13 +213,8 @@ msgid "View checklists"
 msgstr "Afficher les checklists"
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you the required permissions and try again."
-msgstr ""
-"Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre "
-"administrateur système pour t'accorder les permissions requises et essayer "
-"encore."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgstr "Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre administrateur système pour t'accorder les permissions requises et essayer encore."
 
 #: errors.category_status
 msgid "{0} is already defined. Please define with a different value."
@@ -257,12 +229,8 @@ msgid "<UL>"
 msgstr "<UL>"
 
 #: errors.itemlength
-msgid ""
-"The length of {0} cannot be greater than {1} characters. Please remove the "
-"invalid item(s) to proceed."
-msgstr ""
-"La longueur de  {0} ne peut pas être plus grande que {1} caractère(s). "
-"Veuiller enlever l'élément qui n'est pas valide pour continuer."
+msgid "The length of {0} cannot be greater than {1} characters. Please remove the invalid item(s) to proceed."
+msgstr "La longueur de  {0} ne peut pas être plus grande que {1} caractère(s). Veuiller enlever l'élément qui n'est pas valide pour continuer."
 
 #: errors.mandatory
 msgctxt "errors.mandatory"
@@ -296,16 +264,13 @@ msgstr "</LI>"
 
 #: exception.checklist.creation
 msgid "CheckList Creation Exception."
-msgstr ""
+msgstr "Exception de création de la checklist"
 
 #: exception.framework.DoubleSubmitException
 msgid "This action is not permissible."
 msgstr "Cette action n'est pas autorisée."
 
 #: exceptions.application.checklist.Statusalreadydefined
-msgid ""
-"A checklist is already defined for this status. You may define a checklist "
-"for a different status if required."
-msgstr ""
-"Une checklist est déjà définie pour cet statut. Vous devez définir une "
-"checklist avec un statut différent si nécessaire."
+msgid "A checklist is already defined for this status. You may define a checklist for a different status if required."
+msgstr "Une checklist est déjà définie pour cet statut. Vous devez définir une checklist avec un statut différent si nécessaire."
+
