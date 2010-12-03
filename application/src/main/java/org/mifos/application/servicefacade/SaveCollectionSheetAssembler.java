@@ -226,7 +226,7 @@ public class SaveCollectionSheetAssembler {
                             try {
                                 final PaymentData paymentData = getCustomerAccountPaymentDataView(new Money(account
                                         .getCurrency(), loanPaymentAmount.toString()), payment);
-                                account.applyPayment(paymentData, false);
+                                account.applyPayment(paymentData);
                                 loans.add(account);
                             } catch (AccountException ae) {
                                 logger.warn("Loan repayment on account [" + globalAccountNum
@@ -265,7 +265,7 @@ public class SaveCollectionSheetAssembler {
                     CustomerAccountBO account = null;
                     try {
                         account = findCustomerAccountById(accountId);
-                        account.applyPayment(accountPaymentDataView, false);
+                        account.applyPayment(accountPaymentDataView);
                         customerAccountList.add(account);
                     } catch (AccountException ae) {
                         logger.warn("Payment of collection/fee on account [" + accountId

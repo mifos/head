@@ -36,6 +36,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import java.util.ArrayList;
@@ -45,26 +46,19 @@ import java.util.List;
 public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 
     private CustomerBO center;
-
     private CustomerBO group;
-
-    private CustomerBO client;
-
     private AccountBO account;
 
     @Before
     public void setUp() throws Exception {
-
     }
 
     @After
     public void tearDown() throws Exception {
         account = null;
-        client = null;
         group = null;
         center = null;
         StaticHibernateUtil.flushSession();
-
     }
 
     @Test
@@ -78,23 +72,22 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
                 sampleDate, loanOffering);
         StaticHibernateUtil.flushSession();
         account = new AccountPersistence().getAccount(account.getAccountId());
-       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+        Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accountActionsToBeUpdated = new ArrayList<AccountActionDateEntity>();
         accountActionsToBeUpdated.add(account.getAccountActionDates().iterator().next());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accountActionsToBeUpdated,
-                TestUtils.createMoney("700.0"), null, account.getPersonnel(), "423423", Short
-                .valueOf("1"), sampleDate, sampleDate);
-        account.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.flushSession();
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accountActionsToBeUpdated, TestUtils
+                .createMoney("700.0"), null, account.getPersonnel(), "423423", Short.valueOf("1"), sampleDate,
+                sampleDate);
+        IntegrationTestObjectMother.applyAccountPayment(account, paymentData);
 
-       Assert.assertEquals(1, account.getAccountPayments().size());
+        Assert.assertEquals(1, account.getAccountPayments().size());
         AccountPaymentEntity payment = account.getAccountPayments().iterator().next();
-       Assert.assertEquals(4, payment.getAccountTrxns().size());
+        Assert.assertEquals(4, payment.getAccountTrxns().size());
         // Should we assert something about each of those transactions?
 
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) account).getLoanSummary();
-       Assert.assertEquals(loanSummaryEntity.getOriginalPrincipal().subtract(loanSummaryEntity.getPrincipalPaid()),
+        Assert.assertEquals(loanSummaryEntity.getOriginalPrincipal().subtract(loanSummaryEntity.getPrincipalPaid()),
                 ((LoanBO) account).getLoanActivityDetails().iterator().next().getPrincipalOutstanding());
 
     }

@@ -20,7 +20,9 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
@@ -33,6 +35,7 @@ import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -470,5 +473,20 @@ public class IntegrationTestObjectMother {
 
     public static CustomerBO findCustomerById(Integer customerId) {
         return customerDao.findCustomerById(customerId);
+    }
+
+    public static void applyAccountPayment(AccountBO loan, PaymentData paymentData) {
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            loan.applyPayment(paymentData);
+            StaticHibernateUtil.commitTransaction();
+        } catch (AccountException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
     }
 }

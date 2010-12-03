@@ -37,6 +37,7 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -100,9 +101,9 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
                 TestUtils.createMoney(amount), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
 
-        loan.applyPaymentWithPersist(accountPaymentDataView);
+        IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
+
         TestObjectFactory.updateObject(loan);
-        StaticHibernateUtil.flushSession();
     }
 
     public void testLoadAdjustmentWhenObligationMet() throws Exception {

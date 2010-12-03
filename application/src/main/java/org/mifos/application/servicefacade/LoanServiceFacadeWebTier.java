@@ -787,7 +787,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                         throw new AccountException("errors.invalidTxndate");
                     }
                     payment = PaymentData.createPaymentData(template);
-                    redoLoan.applyPayment(payment, false);
+                    redoLoan.applyPayment(payment);
                 }
             }
         } catch (InvalidDateException ide) {
@@ -1157,7 +1157,9 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     @Override
     public Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
         Errors errors = new Errors();
-        if (cashFlowForm == null) return errors;
+        if (cashFlowForm == null) {
+            return errors;
+        }
         List<MonthlyCashFlowForm> monthlyCashFlows = cashFlowForm.getMonthlyCashFlows();
         if (CollectionUtils.isNotEmpty(installments) && CollectionUtils.isNotEmpty(monthlyCashFlows)) {
             boolean lowerBound = DateUtils.firstLessOrEqualSecond(monthlyCashFlows.get(0).getDate(), installments.get(0).getDueDateValue());
@@ -1179,7 +1181,9 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     private void validateForRepaymentCapacity(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity, Errors errors) {
-        if (cashFlowForm == null || CollectionUtils.isEmpty(installments) || repaymentCapacity == null || repaymentCapacity == 0) return;
+        if (cashFlowForm == null || CollectionUtils.isEmpty(installments) || repaymentCapacity == null || repaymentCapacity == 0) {
+            return;
+        }
         BigDecimal totalInstallmentAmount = BigDecimal.ZERO;
         for (RepaymentScheduleInstallment installment : installments) {
             totalInstallmentAmount = totalInstallmentAmount.add(installment.getTotalValue().getAmount());

@@ -344,7 +344,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         SavingsPaymentData savingsPaymentData = new SavingsPaymentData(accountActionDate);
         paymentData.addAccountPaymentData(savingsPaymentData);
-        savings.applyPaymentWithPersist(paymentData);
+        IntegrationTestObjectMother.applyAccountPayment(savings, paymentData);
+
         Assert.assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
         Assert.assertEquals(TestUtils.createMoney(100.0), savings.getSavingsBalance());
         Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
@@ -376,8 +377,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         SavingsPaymentData savingsPaymentData = new SavingsPaymentData(accountActionDate);
         paymentData.addAccountPaymentData(savingsPaymentData);
-        savings.applyPaymentWithPersist(paymentData);
-
+        IntegrationTestObjectMother.applyAccountPayment(savings, paymentData);
 
         savings = (SavingsBO) accountPersistence.getAccount(savings.getAccountId());
         Assert.assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
@@ -415,9 +415,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         paymentData.setReceiptDate(new Date(System.currentTimeMillis()));
         paymentData.setReceiptNum("34244");
         paymentData.addAccountPaymentData(getSavingsPaymentdata(null));
-        savings.applyPaymentWithPersist(paymentData);
-
-
+        IntegrationTestObjectMother.applyAccountPayment(savings, paymentData);
 
         savings = savingsPersistence.findById(savings.getAccountId());
 

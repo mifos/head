@@ -48,6 +48,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -134,12 +135,10 @@ public class PortfolioAtRiskCalculationIntegrationTest extends MifosIntegrationT
         PersonnelBO personnelBO = new PersonnelPersistence().getPersonnel(TestObjectFactory.getContext().getId());
         LoanScheduleEntity loanSchedule = paymentsArray[0];
         Short paymentTypeId = PaymentTypes.CASH.getValue();
-        PaymentData paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                .getActionDate());
-        loan.applyPayment(paymentData, true);
-        paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                .getActionDate());
-        loan.applyPayment(paymentData, true);
+        PaymentData paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+        IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
+        paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+        IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
     }
 
     private void changeFirstInstallmentDate(AccountBO accountBO, int numberOfDays) {

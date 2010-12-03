@@ -20,14 +20,25 @@
 
 package org.mifos.accounts.loan.business.service;
 
+import static java.util.Arrays.asList;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import junit.framework.Assert;
-import org.junit.After;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -49,20 +60,9 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static java.util.Arrays.asList;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
 
 public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -80,23 +80,6 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     public void setUp() throws Exception {
         loanBusinessService = DependencyInjectedServiceLocator.locateLoanBusinessService();
         accountPersistence = new AccountPersistence();
-    }
-
-    @After
-    public void tearDown() throws Exception {
-        try {
-            accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-            group = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, group.getCustomerId());
-            center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
-            accountBO = null;
-            group = null;
-            center = null;
-        } catch (Exception e) {
-            // TODO Whoops, cleanup didnt work, reset db
-
-        }
-
-        StaticHibernateUtil.flushSession();
     }
 
     @Test
@@ -146,7 +129,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         Assert.assertNotNull(loanRecentActivityView);
     }
 
-    private void applyPayments() throws PersistenceException, AccountException {
+    private void applyPayments() throws PersistenceException {
         Set<AccountActionDateEntity> actionDates = accountBO.getAccountActionDates();
         // Is this always true or does it depend on System.currentTimeMillis?
         // Assert.assertEquals(6, actionDates.size());
@@ -154,7 +137,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
             Assert.assertNotNull(actionDate);
             accountBO = accountPersistence.getAccount(accountBO.getAccountId());
             PaymentData paymentData = createPaymentViewObject(accountBO);
-            accountBO.applyPaymentWithPersist(paymentData);
+            IntegrationTestObjectMother.applyAccountPayment(accountBO, paymentData);
             TestObjectFactory.updateObject(accountBO);
         }
     }
@@ -175,8 +158,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         StaticHibernateUtil.flushAndClearSession();
 
         accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-        List<LoanActivityDto> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO
-                .getGlobalAccountNum());
+        List<LoanActivityDto> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO.getGlobalAccountNum());
         Assert.assertNotNull(loanAllActivityView);
         Assert.assertEquals(6, loanAllActivityView.size());
 

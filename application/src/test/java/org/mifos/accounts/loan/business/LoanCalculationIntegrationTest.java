@@ -20,7 +20,28 @@
 
 package org.mifos.accounts.loan.business;
 
+import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FilenameFilter;
+import java.io.InputStreamReader;
+import java.math.BigDecimal;
+import java.math.MathContext;
+import java.math.RoundingMode;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.apache.commons.lang.StringUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -67,29 +88,10 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.math.MathContext;
-import java.math.RoundingMode;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
-import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 
 /*
  * LoanCalculationTest is a starting point for defining and exploring
@@ -305,9 +307,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (LoanScheduleEntity element : paymentsArray) {
             loanSchedule = element;
             Money amountPaid = loanSchedule.getTotalDueWithFees();
-            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                    .getActionDate());
-            accountBO.applyPayment(paymentData, true);
+            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+            IntegrationTestObjectMother.applyAccountPayment(accountBO, paymentData);
         }
 
         new TestObjectPersistence().persist(accountBO);
@@ -402,9 +403,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (LoanScheduleEntity element : paymentsArray) {
             loanSchedule = element;
             Money amountPaid = loanSchedule.getTotalDueWithFees();
-            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                    .getActionDate());
-            accountBO.applyPayment(paymentData, true);
+            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+            IntegrationTestObjectMother.applyAccountPayment(accountBO, paymentData);
         }
 
         new TestObjectPersistence().persist(accountBO);
@@ -493,9 +493,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < paymentsArray.length; i++) {
             loanSchedule = paymentsArray[i];
             Money amountPaid = loanSchedule.getTotalDueWithFees();
-            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                    .getActionDate());
-            loan.applyPayment(paymentData, true);
+            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+            IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
             if (i == (paymentToReverse - 1)) {
                 break;
             }
@@ -528,9 +527,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < paymentsArray.length; i++) {
             loanSchedule = paymentsArray[i];
             Money amountPaid = loanSchedule.getTotalDueWithFees();
-            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                    .getActionDate());
-            loan.applyPayment(paymentData, true);
+            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+            IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
             if (i == (paymentToReverse - 1)) {
                 break;
             }
@@ -566,9 +564,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             for (int i = paymentToReverse - 1; i < paymentsArray.length; i++) {
                 loanSchedule = paymentsArray[i];
                 Money amountPaid = loanSchedule.getTotalDueWithFees();
-                paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                        .getActionDate());
-                loan.applyPayment(paymentData, true);
+                paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+                IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
                 new TestObjectPersistence().persist(loan);
             }
 
@@ -595,9 +592,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         // pay one payment
         loanSchedule = paymentsArray[0];
         Money amountPaid = loanSchedule.getPrincipal().add(loanSchedule.getInterest());
-        paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                .getActionDate());
-        accountBO.applyPayment(paymentData, true);
+        paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, paymentData);
 
         new TestObjectPersistence().persist(accountBO);
         actionDateEntities = accountBO.getAccountActionDates();
@@ -877,9 +873,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (LoanScheduleEntity element : paymentsArray) {
             loanSchedule = element;
             Money amountPaid = loanSchedule.getTotalDueWithFees();
-            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                    .getActionDate());
-            loan.applyPayment(paymentData, true);
+            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+            IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
         }
         boolean lastPayment = true;
         calculatedResults.setAccount999(((LoanBO) loan).calculate999Account(lastPayment));
@@ -942,9 +937,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (LoanScheduleEntity element : paymentsArray) {
             loanSchedule = element;
             Money amountPaid = loanSchedule.getTotalDueWithFees();
-            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule
-                    .getActionDate());
-            loan.applyPayment(paymentData, true);
+            paymentData = PaymentData.createPaymentData(amountPaid, personnelBO, paymentTypeId, loanSchedule.getActionDate());
+            IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
         }
         boolean lastPayment = true;
         calculatedResults.setAccount999(((LoanBO) loan).calculate999Account(lastPayment));

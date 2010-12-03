@@ -93,6 +93,7 @@ import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
@@ -1037,15 +1038,13 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         new TestObjectPersistence().persist(loan);
     }
 
-    private void applyPaymentForLoan(UserContext userContext, LoanBO loan, Date paymentDate, Money money)
-            throws AccountException {
+    private void applyPaymentForLoan(UserContext userContext, LoanBO loan, Date paymentDate, Money money) {
         loan.setUserContext(userContext);
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
 
-        PaymentData paymentData = loan.createPaymentData(userContext, money, paymentDate, null, null, Short
-                .valueOf("1"));
-        loan.applyPaymentWithPersist(paymentData);
+        PaymentData paymentData = loan.createPaymentData(userContext, money, paymentDate, null, null, Short.valueOf("1"));
+        IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
         new TestObjectPersistence().persist(loan);
     }
 

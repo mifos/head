@@ -36,6 +36,7 @@ import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -132,8 +133,8 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
                 TestUtils.createMoney(0), null, loan.getPersonnel(), "receiptNum", Short
                         .valueOf("1"), currentDate, currentDate);
-        loan.applyPaymentWithPersist(accountPaymentDataView);
-        TestObjectFactory.flushandCloseSession();
+        IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
+
         actionPerform();
         verifyForward("getTransactionHistory_success");
         TestObjectFactory.flushandCloseSession();

@@ -44,6 +44,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCase {
@@ -85,7 +86,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 startDate, loanOffering);
         StaticHibernateUtil.flushSession();
         account = accountPersistence.getAccount(account.getAccountId());
-       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+        Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
     }
 
     @Test
@@ -99,17 +100,17 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 startDate, loanOffering);
         StaticHibernateUtil.flushSession();
         account = accountPersistence.getAccount(account.getAccountId());
-       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+        Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(account.getAccountActionDates().iterator().next());
         Date currentDate = startDate;
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestUtils.createMoney("100.0"), null, account.getPersonnel(), "423423", Short
-                .valueOf("1"), currentDate, currentDate);
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
+                .createMoney("100.0"), null, account.getPersonnel(), "423423", Short.valueOf("1"), currentDate,
+                currentDate);
         try {
-            account.applyPaymentWithPersist(paymentData);
-           Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.createMoney("100.0"));
+            IntegrationTestObjectMother.applyAccountPayment(account, paymentData);
+            Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.createMoney("100.0"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,18 +130,17 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 startDate, loanOffering);
         StaticHibernateUtil.flushSession();
         account = accountPersistence.getAccount(account.getAccountId());
-       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+        Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.add(account.getAccountActionDates().iterator().next());
         Date currentDate = startDate;
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestUtils.createMoney("100.0"), null, account.getPersonnel(), "423423", Short
-                .valueOf("1"), currentDate, currentDate);
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
+                .createMoney("100.0"), null, account.getPersonnel(), "423423", Short.valueOf("1"), currentDate,
+                currentDate);
 
-        account.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.flushSession();
-       Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.createMoney("100.0"));
+        IntegrationTestObjectMother.applyAccountPayment(account, paymentData);
+        Assert.assertEquals(((LoanBO) account).getLoanSummary().getFeesPaid(), TestUtils.createMoney("100.0"));
     }
 
     @Test
@@ -154,7 +154,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
                 startDate, loanOffering);
         StaticHibernateUtil.flushSession();
         account = accountPersistence.getAccount(account.getAccountId());
-       Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
+        Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
         for (AccountActionDateEntity actionDate : account.getAccountActionDates()) {
             if (actionDate.getInstallmentId().equals(Short.valueOf("1"))) {
                 actionDate.setPaymentStatus(PaymentStatus.PAID);
@@ -162,17 +162,17 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         }
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(account.getAccountActionDates());
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
-                TestUtils.createMoney("3000.0"), null, account.getPersonnel(), "423423", Short
-                .valueOf("1"), startDate, startDate);
+        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
+                .createMoney("3000.0"), null, account.getPersonnel(), "423423", Short.valueOf("1"), startDate,
+                startDate);
 
         try {
-            account.applyPaymentWithPersist(paymentData);
-           Assert.assertTrue(false);
+            account.applyPayment(paymentData);
+            Assert.fail("should throw exception");
         } catch (AccountException be) {
             Assert.assertNotNull(be);
-           Assert.assertEquals(be.getKey(), "errors.makePayment");
-           Assert.assertTrue(true);
+            Assert.assertEquals(be.getKey(), "errors.makePayment");
+            Assert.assertTrue(true);
         }
 
     }

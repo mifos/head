@@ -521,30 +521,6 @@ public class AccountBO extends AbstractBusinessObject {
         // TODO adjust inst. schedule for PAWDEP
     }
 
-    /*
-     * Take raw PaymentData (usually from a web page) and enter it into Mifos.
-     */
-    /**
-     * {@link AccountPaymentEntity} and not {@link PaymentData} dto
-     */
-    public final void applyPayment(final PaymentData paymentData, final boolean persistChanges) throws AccountException {
-        applyPayment(paymentData);
-        if (persistChanges) {
-            try {
-                getAccountPersistence().createOrUpdate(this);
-            } catch (PersistenceException e) {
-                throw new AccountException(e);
-            }
-        }
-    }
-
-    /**
-     * {@link AccountPaymentEntity} and not {@link PaymentData} dto
-     */
-    public final void applyPaymentWithPersist(final PaymentData paymentData) throws AccountException {
-        applyPayment(paymentData, true);
-    }
-
     public PaymentData createPaymentData(final UserContext userContext, final Money amount, final Date trxnDate,
             final String receiptId, final Date receiptDate, final Short paymentTypeId) {
         return createPaymentData(userContext.getId(), amount, trxnDate, receiptId, receiptDate, paymentTypeId);

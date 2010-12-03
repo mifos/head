@@ -49,6 +49,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
@@ -115,7 +116,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         PaymentData firstPaymentData = TestObjectFactory
                 .getLoanAccountPaymentData(accntActionDates, TestUtils.createMoney(88), null, loan.getPersonnel(),
                         "receiptNum", Short.valueOf("1"), currentDate, currentDate);
-        loan.applyPaymentWithPersist(firstPaymentData);
+        IntegrationTestObjectMother.applyAccountPayment(loan, firstPaymentData);
 
         TestObjectFactory.updateObject(loan);
         StaticHibernateUtil.flushAndClearSession();
@@ -162,7 +163,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(700), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
-        loan.applyPaymentWithPersist(paymentData);
+        IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
 
         TestObjectFactory.updateObject(loan);
         TestObjectFactory.flushandCloseSession();
@@ -181,12 +182,14 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(216), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
-        loan.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
+
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(TestUtils.makeUser());
-        loan.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
+
+        IntegrationTestObjectMother.applyAccountPayment(loan, TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
                 null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate, currentDate));
+
         StaticHibernateUtil.flushAndClearSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(TestUtils.makeUser());
@@ -214,7 +217,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(712), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
-        loan.applyPaymentWithPersist(accountPaymentDataView);
+        IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
         loan.setAccountState(new AccountStateEntity(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
 
         TestObjectFactory.updateObject(loan);
@@ -234,8 +237,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         accntActionDates.addAll(loan.getAccountActionDates());
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(0), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate, currentDate);
+        IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
 
-        loan.applyPaymentWithPersist(accountPaymentDataView);
         TestObjectFactory.updateObject(loan);
         TestObjectFactory.flushandCloseSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
@@ -259,8 +262,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(100), null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
-        loan.applyPaymentWithPersist(accountPaymentDataView);
-        TestObjectFactory.flushandCloseSession();
+        IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
+
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         List<Integer> ids = new ArrayList<Integer>();
         for (AccountPaymentEntity accountPaymentEntity : loan.getAccountPayments()) {
@@ -295,8 +298,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(Short.valueOf("2"));
         PaymentData accountPaymentDataView = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(100), null, personnel, "receiptNum", Short.valueOf("1"), currentDate, currentDate);
-        loan.applyPaymentWithPersist(accountPaymentDataView);
-        TestObjectFactory.flushandCloseSession();
+        IntegrationTestObjectMother.applyAccountPayment(loan, accountPaymentDataView);
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(TestUtils.makeUser());
         List<TransactionHistoryDto> trxnHistlist = loan.getTransactionHistoryView();
@@ -416,14 +418,13 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(212), null, groupLoan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
-        groupLoan.applyPaymentWithPersist(paymentData);
+        IntegrationTestObjectMother.applyAccountPayment(groupLoan, paymentData);
 
-        StaticHibernateUtil.flushAndClearSession();
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
 
-        loan.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
+        IntegrationTestObjectMother.applyAccountPayment(loan, TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
                 null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate, currentDate));
-        StaticHibernateUtil.flushAndClearSession();
+
         groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
         groupLoan.setUserContext(TestUtils.makeUser());
         groupLoan.adjustPmnt("loan account has been adjusted by test code");

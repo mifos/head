@@ -122,8 +122,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         customerAccount = center.getCustomerAccount();
-        customerAccount.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(customerAccount, accountPaymentDataView);
 
         Assert.assertEquals(customerAccount.getCustomerActivitDetails().size(), 1);
         Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
@@ -159,12 +158,11 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.getCustomer(center.getCustomerId());
         customerAccount = center.getCustomerAccount();
 
-        customerAccount.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(customerAccount, accountPaymentDataView);
         Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
 
         try {
-            customerAccount.applyPaymentWithPersist(accountPaymentDataView);
+            customerAccount.applyPayment(accountPaymentDataView);
             Assert.fail("Payment is done even though they are no dues");
         } catch (AccountException ae) {
             Assert.assertTrue("Payment is not allowed when there are no dues", true);
@@ -531,8 +529,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccount = center.getCustomerAccount();
 
         // exercise test
-        customerAccount.applyPaymentWithPersist(accountPaymentDataView);
-        StaticHibernateUtil.flushAndClearSession();
+        customerAccount.applyPayment(accountPaymentDataView);
 
         // verification
         assertThat(customerAccount.getCustomerActivitDetails().size(), is(1));
@@ -680,8 +677,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = PaymentData.createPaymentData(new Money(getCurrency(), "300"), center.getPersonnel(), Short
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
-        customerAccount.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(customerAccount, paymentData);
 
         if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
             for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
@@ -743,8 +739,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = PaymentData.createPaymentData(twoHundredFortyAmount, center.getPersonnel(), Short
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
-        customerAccount.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(customerAccount, paymentData);
 
         if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
             for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {
@@ -808,8 +803,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = PaymentData.createPaymentData(new Money(getCurrency(), "428"), center.getPersonnel(), Short
                 .valueOf("1"), transactionDate);
         paymentData.setCustomer(center);
-        customerAccount.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(customerAccount, paymentData);
 
         if (customerAccount.getAccountPayments() != null && customerAccount.getAccountPayments().size() == 1) {
             for (AccountPaymentEntity accountPaymentEntity : customerAccount.getAccountPayments()) {

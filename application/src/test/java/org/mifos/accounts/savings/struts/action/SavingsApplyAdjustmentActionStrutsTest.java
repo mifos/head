@@ -42,6 +42,7 @@ import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -254,8 +255,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         paymentData.setReceiptNum("34244");
         AccountActionDateEntity accountActionDate = null;
         paymentData.addAccountPaymentData(new SavingsPaymentData(accountActionDate));
-        savings.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.flushSession();
+        IntegrationTestObjectMother.applyAccountPayment(savings, paymentData);
         return new SavingsPersistence().findById(savings.getAccountId());
     }
 

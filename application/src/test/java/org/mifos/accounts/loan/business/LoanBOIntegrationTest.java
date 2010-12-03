@@ -974,8 +974,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
                 TestUtils.createMoney(200), null, accountBO.getPersonnel(), "receiptNum", Short.valueOf("1"),
                 currentDate, currentDate);
-        loan.applyPaymentWithPersist(paymentData);
+
+        IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
         TestObjectFactory.updateObject(loan);
+
         for (AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()) {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
             if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
@@ -1032,8 +1034,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
                 TestUtils.createMoney(200), null, accountBO.getPersonnel(), "receiptNum", Short.valueOf("1"),
                 currentDate, currentDate);
-        loan.applyPaymentWithPersist(paymentData);
+
+        IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
         TestObjectFactory.updateObject(loan);
+
         for (AccountActionDateEntity accountActionDateEntity : loan.getAccountActionDates()) {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
             if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
@@ -1526,8 +1530,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
-                "160"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
+
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        "160"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1617,10 +1622,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
-                "160"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        "160"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
 
-        StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
         LoanBO loanBO = (LoanBO) accountBO;
@@ -1849,10 +1853,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        accountBO
-                .applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
-                        "180.1"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate,
-                        startDate));
+
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        "180.1"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate,
+        startDate));
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
@@ -1943,12 +1947,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        accountBO
-                .applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
-                        "180.1"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate,
-                        startDate));
 
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        "180.1"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate,
+        startDate));
+
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
         LoanBO loanBO = (LoanBO) accountBO;
@@ -2429,8 +2432,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accountActions, new Money(Configuration
                 .getInstance().getSystemConfig().getCurrency(), "1272.0"), null, accountBO.getPersonnel(), "5435345",
                 Short.valueOf("1"), startDate, startDate);
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, paymentData);
 
-        accountBO.applyPaymentWithPersist(paymentData);
         Assert.assertEquals("When Last installment is paid the status has been changed to closed", ((LoanBO) accountBO)
                 .getAccountState().getId().toString(), String.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
         accountBO.getAccountPayments().clear();
@@ -2703,7 +2706,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testGetRemainingPrincipalAmount() throws AccountException, SystemException {
+    public void testGetRemainingPrincipalAmount() throws SystemException {
         accountBO = getLoanAccount();
         Date currentDate = new Date(System.currentTimeMillis());
         LoanBO loan = (LoanBO) accountBO;
@@ -2712,10 +2715,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
                 TestUtils.createMoney(700), null, accountBO.getPersonnel(), "receiptNum", Short.valueOf("1"),
                 currentDate, currentDate);
-        loan.applyPaymentWithPersist(paymentData);
 
-        TestObjectFactory.updateObject(loan);
-        TestObjectFactory.flushandCloseSession();
+        IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
         Assert.assertEquals("The amount returned for the payment should have been 700", 700.0, loan.getLastPmntAmnt());
         accountBO = TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
         loan = (LoanBO) accountBO;
@@ -2771,8 +2772,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         paymentData.setReceiptDate(startDate);
         paymentData.setReceiptNum("5435345");
 
-        accountBO.applyPaymentWithPersist(paymentData);
-        TestObjectFactory.flushandCloseSession();
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, paymentData);
 
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
 
@@ -4421,9 +4421,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testApplyPaymentForFullPayment() throws Exception {
         accountBO = getLoanAccount();
         Assert.assertEquals(new Money(getCurrency(), "212.0"), ((LoanBO) accountBO).getTotalPaymentDue());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "212"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
+
         accountBO = saveAndFetch(accountBO);
         Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
     }
@@ -4432,9 +4434,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testApplyPaymentForPartialPayment() throws Exception {
         accountBO = getLoanAccount();
         Assert.assertEquals(new Money(getCurrency(), "212.0"), ((LoanBO) accountBO).getTotalPaymentDue());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "200"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
+
         accountBO = saveAndFetch(accountBO);
         Assert.assertEquals(new Money(getCurrency(), "12"), ((LoanBO) accountBO).getTotalPaymentDue());
         Assert.assertEquals(Integer.valueOf(0), ((LoanBO) accountBO).getPerformanceHistory().getNoOfPayments());
@@ -4449,9 +4452,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
                 .getApplicableIdsForFutureInstallments().get(0);
         Assert.assertEquals(new Money(getCurrency(), "212.0"), nextInstallment.getTotalDueWithFees());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "312"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
+
         accountBO = saveAndFetch(accountBO);
         Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
         nextInstallment = (LoanScheduleEntity) accountBO.getAccountActionDate(nextInstallment.getInstallmentId());
@@ -4467,7 +4472,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
                 .getApplicableIdsForFutureInstallments().get(0);
         Assert.assertEquals(new Money(getCurrency(), "212.0"), nextInstallment.getTotalDueWithFees());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "1272"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
         accountBO = saveAndFetch(accountBO);
@@ -4478,25 +4483,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testApplyPaymentForPaymentGretaterThanTotalDue() throws Exception {
-        accountBO = getLoanAccount();
-
-        accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(new Money(getCurrency(), "212.0"), ((LoanBO) accountBO).getTotalPaymentDue());
-        LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO)
-                .getApplicableIdsForFutureInstallments().get(0);
-        Assert.assertEquals(new Money(getCurrency(), "212.0"), nextInstallment.getTotalDueWithFees());
-        try {
-            accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(
-                    getCurrency(), "1300"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1,
-                    new Date(System.currentTimeMillis()), new Date(System.currentTimeMillis())));
-            Assert.assertFalse(true);
-        } catch (AccountException e) {
-            Assert.assertTrue(true);
-        }
-    }
-
-    @Test
     public void testFeeForMultiplePayments() throws Exception {
         accountBO = getLoanAccount();
 
@@ -4504,13 +4490,14 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(new Money(getCurrency(), "212.0"), ((LoanBO) accountBO).getTotalPaymentDue());
         LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
         Assert.assertEquals(new Money(getCurrency(), "100.0"), nextInstallment.getTotalFeeDue());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "10"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
+
         accountBO = saveAndFetch(accountBO);
         nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
         Assert.assertEquals(new Money(getCurrency(), "90"), nextInstallment.getTotalFeeDue());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "30"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
         accountBO = saveAndFetch(accountBO);
@@ -4545,16 +4532,20 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(new Money(getCurrency(), "212.0"), ((LoanBO) accountBO).getTotalPaymentDue());
         LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
         Assert.assertEquals(new Money(getCurrency(), "100.0"), nextInstallment.getTotalFeeDue());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "10"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
+
         accountBO = saveAndFetch(accountBO);
         nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
         Assert.assertEquals(new Money(getCurrency(), "90"), nextInstallment.getTotalFeeDue());
         Assert.assertEquals(new Money(getCurrency(), "202.0"), ((LoanBO) accountBO).getTotalPaymentDue());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "202"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
+
         accountBO = saveAndFetch(accountBO);
         nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
         Assert.assertEquals(new Money(getCurrency()), nextInstallment.getTotalFeeDue());
@@ -4590,9 +4581,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         StaticHibernateUtil.flushAndClearSession();
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
-                "60"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
-        StaticHibernateUtil.flushAndClearSession();
+
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        "60"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
 
         for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
             accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
@@ -4661,9 +4652,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         StaticHibernateUtil.flushAndClearSession();
 
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
-                "60"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        "60"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
 
         for (AccountFeesEntity accountFeesEntity : accountBO.getAccountFees()) {
             accountBO.removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(accountFeesEntity.getFees().getFeeId(), Short.valueOf("1"));
@@ -4762,9 +4752,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         ((LoanScheduleEntity) accountBO.getAccountActionDate((short) 1)).setPrincipal(new Money(getCurrency()));
         accountBO = saveAndFetch(accountBO);
         Assert.assertEquals(new Money(getCurrency(), "112.0"), ((LoanBO) accountBO).getTotalPaymentDue());
-        accountBO.applyPaymentWithPersist(TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "100"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
+
         accountBO = saveAndFetch(accountBO);
         Assert.assertEquals(new Money(getCurrency(), "12"), ((LoanBO) accountBO).getTotalPaymentDue());
         Assert.assertEquals(Integer.valueOf(0), ((LoanBO) accountBO).getPerformanceHistory().getNoOfPayments());
@@ -5765,8 +5756,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         paymentData.setReceiptDate(startDate);
         paymentData.setReceiptNum("5435345");
 
-        accountBO.applyPaymentWithPersist(paymentData);
-        StaticHibernateUtil.flushAndClearSession();
+        IntegrationTestObjectMother.applyAccountPayment(accountBO, paymentData);
         return TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
     }
 
