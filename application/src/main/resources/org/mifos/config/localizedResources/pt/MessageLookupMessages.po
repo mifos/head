@@ -1,11 +1,10 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/MessageLookupMessages.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:26+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-12-01 09:16-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -364,23 +363,23 @@ msgstr "Estado do Produto"
 
 #: RankOfDay.FIRST
 msgid "First"
-msgstr ""
+msgstr "Primeiro"
 
 #: RankOfDay.SECOND
 msgid "Second"
-msgstr ""
+msgstr "Segundo"
 
 #: RankOfDay.THIRD
 msgid "Third"
-msgstr ""
+msgstr "Terceiro"
 
 #: RankOfDay.FOURTH
 msgid "Fourth"
-msgstr ""
+msgstr "quarto"
 
 #: RankOfDay.LAST
 msgid "Last"
-msgstr ""
+msgstr "Último"
 
 #: RecommendedAmtUnit.Label
 msgid "REC AMNT UNIT"
@@ -470,3 +469,4 @@ msgstr "Não"
 #: YesNoFlag.YES
 msgid "Yes"
 msgstr "Sim"
+

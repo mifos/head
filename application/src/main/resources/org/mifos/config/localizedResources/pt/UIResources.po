@@ -1,11 +1,10 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/UIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:26+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-12-01 09:54-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,8 +15,7 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: CONVERSION_ERROR
 msgid "string conversion error."
-msgstr ""
-"Ocorreu uma excepção enquanto o texto era convertido para valores decimais."
+msgstr "Ocorreu uma excepção enquanto o texto era convertido para valores decimais."
 
 #: Clientid
 msgid "Client Id"
@@ -25,72 +23,54 @@ msgstr "Cliente Id"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST"
-msgid ""
-"the number of digits after the decimal separator exceeds the allowed number "
-"%s"
+msgid "the number of digits after the decimal separator exceeds the allowed number %s"
 msgstr "O número de dígitos depois da vírgula é maior que o permitido %s"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY"
-msgid ""
-"the number of digits after the decimal separator exceeds the allowed number "
-"%s"
+msgid "the number of digits after the decimal separator exceeds the allowed number %s"
 msgstr "O número de dígitos depois da vírgula é maior que o permitido %s"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST"
-msgid ""
-"the number of digits before the decimal separator exceeds the allowed number "
-"%s"
+msgid "the number of digits before the decimal separator exceeds the allowed number %s"
 msgstr "O número de dígitos antes da vírgula é maior que o permitido %s"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY"
-msgid ""
-"the number of digits before the decimal separator exceeds the allowed number "
-"%s"
+msgid "the number of digits before the decimal separator exceeds the allowed number %s"
 msgstr "O número de dígitos antes da vírgula é maior que o permitido %s"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
-#, fuzzy
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
-msgid ""
-"the number of digits before the decimal separator exceeds the allowed number "
-"%s"
-msgstr "O número de dígitos antes da vírgula é maior que o permitido %s"
+msgid "the number of digits before the decimal separator exceeds the allowed number %s"
+msgstr "O número de dígitos antes de separador decimal é maior que o permitido %s"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
-#, fuzzy
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
-msgid ""
-"the number of digits after the decimal separator exceeds the allowed number "
-"%s"
-msgstr "O número de dígitos depois da vírgula é maior que o permitido %s"
+msgid "the number of digits after the decimal separator exceeds the allowed number %s"
+msgstr "O número de dígitos depois de separador decimal é maior que o permitido %s"
 
 #: ID
 msgid "ID"
 msgstr "ID"
 
 #: INTEREST_OUT_OF_RANGE
-#, fuzzy
 msgctxt "INTEREST_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
 msgstr "não está entre %s1 e %s2."
 
 #: CASH_FLOW_THRESHOLD_OUT_OF_RANGE
-#, fuzzy
 msgctxt "CASH_FLOW_THRESHOLD_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
 msgstr "não está entre %s1 e %s2."
 
 #: INDEBTEDNESS_RATIO_OUT_OF_RANGE
-#, fuzzy
 msgctxt "INDEBTEDNESS_RATIO_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
 msgstr "não está entre %s1 e %s2."
 
 #: REPAYMENT_CAPACITY_OUT_OF_RANGE
-#, fuzzy
 msgctxt "REPAYMENT_CAPACITY_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
 msgstr "não está entre %s1 e %s2."
@@ -366,3 +346,4 @@ msgstr "abandonar"
 #: writeOff
 msgid "writeOff"
 msgstr "dar baixa"
+

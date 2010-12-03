@@ -1,11 +1,10 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/Resources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:26+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-12-01 09:46-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -57,12 +56,8 @@ msgid "type entered is wrong"
 msgstr "o tipo introduzido está errado"
 
 #: errors.unexpected
-msgid ""
-"An unexpected error has occured during the operation. Please try again "
-"later."
-msgstr ""
-"Um erro inesperado ocorreu durante a operação. Por favor tente novamente "
-"mais tarde."
+msgid "An unexpected error has occured during the operation. Please try again later."
+msgstr "Um erro inesperado ocorreu durante a operação. Por favor tente novamente mais tarde."
 
 #: group
 msgid "Group"
@@ -142,7 +137,7 @@ msgstr "Cancelar"
 #, fuzzy
 msgctxt "savings_stateid_16"
 msgid "Active"
-msgstr "Activo"
+msgstr "Ativo"
 
 #: savings_stateid_17
 msgctxt "savings_stateid_17"
@@ -227,3 +222,4 @@ msgstr "Pendente de Aprovação"
 msgctxt "value_9"
 msgid "Active"
 msgstr "Activo"
+

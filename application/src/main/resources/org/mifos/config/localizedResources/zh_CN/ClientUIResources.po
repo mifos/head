@@ -1710,7 +1710,7 @@ msgstr "附加信息"
 
 #: client.ViewQuestionGroupForClosedClientResponsesLink
 msgid "View Additional Information for Closed Client"
-msgstr ""
+msgstr "查看已关闭客户详情"
 
 #: client.QuestionGroupInstances
 msgid "Question Groups"

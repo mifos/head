@@ -1,11 +1,10 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/UIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:27+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-12-01 17:07+0100\n"
+"Last-Translator: lassaad <lbhadj@voila.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -17,39 +16,41 @@ msgstr ""
 #. #Thu Aug 21 11:40:50 CDT 2008
 #: CONVERSION_ERROR
 msgid "string conversion error."
-msgstr ""
+msgstr "erreur de conversion de chaine de caractères"
 
 #: Clientid
 msgid "Client Id"
-msgstr ""
+msgstr "Id Client"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST"
-msgid ""
-"the number of digits after the decimal separator exceeds the allowed number "
-"%s"
-msgstr ""
+msgid "the number of digits after the decimal separator exceeds the allowed number %s"
+msgstr "Le nombre de chiffres après le symbole décimal dépasse le nombre %s authorisé"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY"
-msgid ""
-"the number of digits after the decimal separator exceeds the allowed number "
-"%s"
-msgstr ""
+msgid "the number of digits after the decimal separator exceeds the allowed number %s"
+msgstr "Le nombre de chiffres après le symbole décimal dépasse le nombre %s authorisé"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST"
-msgid ""
-"the number of digits before the decimal separator exceeds the allowed number "
-"%s"
-msgstr ""
+msgid "the number of digits before the decimal separator exceeds the allowed number %s"
+msgstr "Le nombre de chiffres avant le symbole décimal dépasse le nombre %s authorisé"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY"
-msgid ""
-"the number of digits before the decimal separator exceeds the allowed number "
-"%s"
-msgstr ""
+msgid "the number of digits before the decimal separator exceeds the allowed number %s"
+msgstr "Le nombre de chiffres avant le symbole décimal dépasse le nombre %s authorisé"
+
+#: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
+msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
+msgid "the number of digits before the decimal separator exceeds the allowed number %s"
+msgstr "Le nombre de chiffres avant le symbole décimal dépasse le nombre %s authorisé"
+
+#: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
+msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
+msgid "the number of digits after the decimal separator exceeds the allowed number %s"
+msgstr "Le nombre de chiffres après le symbole décimal dépasse le nombre %s authorisé"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
@@ -67,31 +68,31 @@ msgstr ""
 
 #: ID
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #: INTEREST_OUT_OF_RANGE
 msgctxt "INTEREST_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
-msgstr ""
+msgstr "il n'est pas entre %s1 et %s2"
 
 #: CASH_FLOW_THRESHOLD_OUT_OF_RANGE
 msgctxt "CASH_FLOW_THRESHOLD_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
-msgstr ""
+msgstr "il n'est pas entre %s1 et %s2"
 
 #: INDEBTEDNESS_RATIO_OUT_OF_RANGE
 msgctxt "INDEBTEDNESS_RATIO_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
-msgstr ""
+msgstr "il n'est pas entre %s1 et %s2"
 
 #: REPAYMENT_CAPACITY_OUT_OF_RANGE
 msgctxt "REPAYMENT_CAPACITY_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
-msgstr ""
+msgstr "il n'est pas entre %s1 et %s2"
 
 #: NOT_ALL_NUMBER
 msgid "only numbers or decimal separator are allowed."
-msgstr ""
+msgstr "Uniquement les chiffres ou le symbole décimal est authorisé"
 
 #: button.create
 msgid "create"
@@ -360,3 +361,4 @@ msgstr "renoncer"
 #: writeOff
 msgid "writeOff"
 msgstr "writeOff"
+

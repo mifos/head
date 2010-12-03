@@ -3960,7 +3960,7 @@ create table ppi_likelihoods (
 create table question_choices (
   choice_id integer auto_increment not null,
   question_id integer not null,
-  choice_text varchar(200) not null,
+  choice_text varchar(500) not null,
   choice_order integer not null,
   ppi varchar(1) not null,
   ppi_points integer,
@@ -4425,7 +4425,7 @@ create table question_group_response(
     id integer auto_increment not null,
     question_group_instance_id integer not null,
     sections_questions_id integer not null,
-    response varchar(200) not null,
+    response varchar(500) not null,
     tag varchar(50),
     primary key (id),
     foreign key (sections_questions_id) references sections_questions(id),

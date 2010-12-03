@@ -1,11 +1,10 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ColumnMappingBundle.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:27+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-12-01 19:00+0100\n"
+"Last-Translator: lassaad <lbhadj@voila.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -897,7 +896,7 @@ msgstr "Date démarrage"
 
 #: customer.branch_membership
 msgid "Branch membership"
-msgstr ""
+msgstr "Appartenance à l'antenne"
 
 #: historicalData.interestPaid
 msgid "Paid"
@@ -930,3 +929,4 @@ msgstr "Montant total payé"
 #: historicalData.totalPaymentsCount
 msgid "Total number of payments"
 msgstr "Nombre total de paiements"
+

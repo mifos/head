@@ -1,11 +1,10 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SavingsUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:27+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-12-01 17:20+0100\n"
+"Last-Translator: lassaad <lbhadj@voila.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -206,12 +205,8 @@ msgid "Return to account details"
 msgstr "Retourner aux détails de compte"
 
 #: Savings.clickCancel
-msgid ""
-"Click Cancel to return to Clients &amp; Accounts without submitting "
-"information."
-msgstr ""
-"Cliquer sur Annuler pour retourner aux Clients et amp; Comptes sans Valider "
-"l'information."
+msgid "Click Cancel to return to Clients &amp; Accounts without submitting information."
+msgstr "Cliquer sur Annuler pour retourner aux Clients et amp; Comptes sans Valider l'information."
 
 #: Savings.clickCancelToReturn
 msgid "Click Cancel to return to"
@@ -223,12 +218,8 @@ msgid "Then click Continue."
 msgstr "Puis cliquer sur Continuer."
 
 #: Savings.clickContinueOrCancel
-msgid ""
-"Then click Continue. Click Cancel to return to Clients &amp; Accounts "
-"without submitting information."
-msgstr ""
-"Cliquer sur Annuler pour retourner aux Clients et amp; Comptes sans Valider "
-"l'information."
+msgid "Then click Continue. Click Cancel to return to Clients &amp; Accounts without submitting information."
+msgstr "Cliquer sur Annuler pour retourner aux Clients et amp; Comptes sans Valider l'information."
 
 #: Savings.clickPreview
 msgid "Then click Preview. "
@@ -236,19 +227,15 @@ msgstr "Puis cliquer sur Aperç."
 
 #: Savings.clickSubmit
 msgid "Click Submit if you are satisfied or click Edit to make changes."
-msgstr ""
-"Cliquer sur Valider si vous ête satisfait ou cliquer sur Editer pour faire "
-"des changements."
+msgstr "Cliquer sur Valider si vous ête satisfait ou cliquer sur Editer pour faire des changements."
 
 #: Savings.clickSubmitIfSatisfied
 msgid "If satisfied click Submit"
 msgstr "Si vous êtes satisfait cliquer sur Valider"
 
 #: Savings.clickSubmitIfSatisfied.return.closing
-msgid ""
-"If satisfied click Submit. Click Cancel to return to account details without "
-"closing the account."
-msgstr ""
+msgid "If satisfied click Submit. Click Cancel to return to account details without closing the account."
+msgstr "Si vous êtes  satisfait  cliquer sur valider. Cliquez sur Annuler pour revenir aux détails de compte sans le fermer."
 
 #: Savings.clickSubmitOnPreview
 msgid "Click Submit if you are satisfied or click '"
@@ -267,14 +254,8 @@ msgid "Complete the fields below. "
 msgstr "Compléter les champs ci-dessous."
 
 #: Savings.confirmationMsgOnReviewAdjustment
-msgid ""
-"Are you sure you want to adjust the last transaction? Click Submit to "
-"confirm. Click Cancel to return to details page without adjusting the "
-"transaction."
-msgstr ""
-"Êtes-vous sûr vous voulez-vous ajuster la dernière transaction ?Cliquer sur "
-"Valider pour confirmer. Cliquer sur Annuler pour retourner à la page de "
-"détails sans ajuster la transaction."
+msgid "Are you sure you want to adjust the last transaction? Click Submit to confirm. Click Cancel to return to details page without adjusting the transaction."
+msgstr "Êtes-vous sûr vous voulez-vous ajuster la dernière transaction ?Cliquer sur Valider pour confirmer. Cliquer sur Annuler pour retourner à la page de détails sans ajuster la transaction."
 
 #: Savings.dateAccountOpened
 msgid "Date account opened"
@@ -315,7 +296,7 @@ msgstr "Editer les champs ci-dessous."
 
 #: Savings.editFields.clickPreview.clickCancelToReturn
 msgid "Edit the fields below. Then click Preview. Click Cancel to return to"
-msgstr ""
+msgstr "Modifiez les champs ci-dessous. Ensuite, cliquez sur Aperçu. Cliquez sur Annuler pour revenir"
 
 #: Savings.editTransaction
 msgid "Edit Transaction"
@@ -392,14 +373,8 @@ msgid "More account and transaction details"
 msgstr "Plus de compte et détails de transaction"
 
 #: Savings.msgOnTopLastPaymentModifiedAdjustment
-msgid ""
-"Last transaction can be modified if required. If the adjustment is made, "
-"system will make a reverse transaction entry and the account balance will be "
-"updated."
-msgstr ""
-"La dernière transaction peut être modifiée s'il y a lieu. Si l'ajustement "
-"est fait, le système fera une entrée de transaction renversée et l'équilibre "
-"de compte sera mis à jour."
+msgid "Last transaction can be modified if required. If the adjustment is made, system will make a reverse transaction entry and the account balance will be updated."
+msgstr "La dernière transaction peut être modifiée s'il y a lieu. Si l'ajustement est fait, le système fera une entrée de transaction renversée et l'équilibre de compte sera mis à jour."
 
 #: Savings.nextdeposit
 msgid "Next deposit"
@@ -415,7 +390,7 @@ msgstr "Notes"
 
 #: Savings.on
 msgid "on "
-msgstr ""
+msgstr "sur"
 
 #: Savings.openANew
 msgid "Open a new"
@@ -527,12 +502,8 @@ msgid "savings"
 msgstr "épargnes"
 
 #: Savings.searchBoxMsg
-msgid ""
-"You can enter an account number into the search box to access account "
-"details."
-msgstr ""
-"Vous pouvez entrer un numéro de compte dans la boîte de recherche pour "
-"accéder aux détails de compte."
+msgid "You can enter an account number into the search box to access account details."
+msgstr "Vous pouvez entrer un numéro de compte dans la boîte de recherche pour accéder aux détails de compte."
 
 #: Savings.seeAllNotes
 msgid "See all notes"
@@ -575,7 +546,6 @@ msgid "Total amount due"
 msgstr "Total de montant prévu en"
 
 #: Savings.totalAmountDueOn
-#, fuzzy
 msgctxt "Savings.totalAmountDueOn"
 msgid "Total amount due on"
 msgstr "Montant total prévu en"
@@ -642,59 +612,40 @@ msgid "User"
 msgstr "Utilisateur"
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you the required permissions and try again."
-msgstr ""
-"Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre "
-"administrateur système pour t'accorder les permissions requises et essayer "
-"encore."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgstr "Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre administrateur système pour t'accorder les permissions requises et essayer encore."
 
 #: error.incompletechecklist
 msgid "Please select all the items in the checklist and click submit."
-msgstr ""
-"Veuiller sélectionner tous les articles dans checklist et cliquer sur "
-"Valider."
+msgstr "Veuiller sélectionner tous les articles dans checklist et cliquer sur Valider."
 
 #: error.stateinitializationexception
 msgid "Unknown exception occurred during state initialization."
-msgstr ""
-"Une exception inconnue s'est produite pendant l'initialisation du statut."
+msgstr "Une exception inconnue s'est produite pendant l'initialisation du statut."
 
 #: error.statuschangenotallowed
 msgid "The action is not permissible."
 msgstr "Cette action n'est pas autorisée."
 
 #: error.unknownexception
-msgid ""
-"Unknown exception occurred in the application. Please try again later or "
-"contact the system administrator."
-msgstr ""
-"Une exception inconnue s'est produite dans l'application. Veuiller essayer "
-"encore plus tard ou contacter l'administrateur système ."
+msgid "Unknown exception occurred in the application. Please try again later or contact the system administrator."
+msgstr "Une exception inconnue s'est produite dans l'application. Veuiller essayer encore plus tard ou contacter l'administrateur système ."
 
 #: error.versionnodonotmatch
-msgid ""
-"The record has already been modified by another user. Please navigate to the "
-"details page and start the activity again. "
-msgstr ""
-"L'enregistrement vient d'être modifié par un autre utilisateur. Veuiller "
-"retourner à la page des détails et recommencer de nouveau."
+msgid "The record has already been modified by another user. Please navigate to the details page and start the activity again. "
+msgstr "L'enregistrement vient d'être modifié par un autre utilisateur. Veuiller retourner à la page des détails et recommencer de nouveau."
 
 #: errors.Account.specifyCustomFieldValue
 msgid "Please specify required additional information for '{0}' field."
-msgstr ""
+msgstr "Prière de spécifier les besoin de renseignements supplémentaires pour '{0}'"
 
 #: errors.Account.customdatefield
 msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
-msgstr ""
+msgstr "Prière d'entrer une date valide (format jj / mm / aaaa) dans le \"{0}"
 
 #: errors.createfailed
-msgid ""
-"Create failed. Please try again later or contact the system administrator."
-msgstr ""
-"Creation n'a pas réussi. Veuiller essayer encore plus tard ou contacter  "
-"l'administrateur système."
+msgid "Create failed. Please try again later or contact the system administrator."
+msgstr "Creation n'a pas réussi. Veuiller essayer encore plus tard ou contacter  l'administrateur système."
 
 #: errors.decimalFormat
 msgid "The length of {0} is greater than the allowable size."
@@ -705,12 +656,8 @@ msgid "Please specify {0}. Use numbers only."
 msgstr "Veuiller indiquer {0}. Utiliser seulement les nombres."
 
 #: errors.exceedmaxwithdrawal
-msgid ""
-"Withdrawal can not be done. Specified amount is greater than the withdrawal "
-"limit."
-msgstr ""
-"Le retrait ne peut pas être fait. Le montant indiquée est plus grande que la "
-"limite de retrait."
+msgid "Withdrawal can not be done. Specified amount is greater than the withdrawal limit."
+msgstr "Le retrait ne peut pas être fait. Le montant indiquée est plus grande que la limite de retrait."
 
 #: errors.futuredate
 msgid "{0} can not be a future date."
@@ -718,46 +665,35 @@ msgstr "{0} ne peut pas être une date future."
 
 #: errors.generic
 msgid "The {0} is invalid because {1}"
-msgstr ""
+msgstr "Le {0} n'est pas valide car {1}"
 
 #: errors.insufficentbalance
-msgid ""
-"Withdrawal can not be done. There is insufficient balance in the account."
-msgstr ""
-"Le retrait ne peut pas être fait. Il y a balance insuffisant dans le compte."
+msgid "Withdrawal can not be done. There is insufficient balance in the account."
+msgstr "Le retrait ne peut pas être fait. Il y a balance insuffisant dans le compte."
 
 #: errors.invalidAdjustmentAmount
 msgid "Please specify Correct Deposit Amount."
-msgstr ""
+msgstr "Prière  spécifier un montant de dépôt correcte"
 
 #: errors.invalidInterestAmount
 msgid "Account can not be closed. Incorrect interest amount is passed."
-msgstr ""
-"Le compte ne peut pas être fermé. Un montant incorrect d'intérêt est passé."
+msgstr "Le compte ne peut pas être fermé. Un montant incorrect d'intérêt est passé."
 
 #: errors.invalidPersonnel
 msgid "Specified user does not exist."
 msgstr "L'utilisateur indiqué n'existe pas."
 
 #: errors.invalidTxndate
-msgid ""
-"Date of transaction is invalid. It can not be prior to the last meeting date "
-"of the customer or prior to activation date of the savings account."
-msgstr ""
-"Date de  transaction n'est pas valide.Il ne peut pas avoir lieu avant le "
-"dernier date de réunion du client."
+msgid "Date of transaction is invalid. It can not be prior to the last meeting date of the customer or prior to activation date of the savings account."
+msgstr "Date de  transaction n'est pas valide.Il ne peut pas avoir lieu avant le dernier date de réunion du client."
 
 #: errors.invaliddate
 msgid "{0} was invalid.  Please enter a valid date."
 msgstr "{0} était invalide.  Veuiller entrer une date valide."
 
 #: errors.invalidlastpayment
-msgid ""
-"This adjustment is not possible. Last payment record should exist and it "
-"must indicate either a deposit or a withdrawal."
-msgstr ""
-"Cet ajustement n'est pas possible. Le dernier enregistrement de paiement "
-"devrait exister et il doit indiquer un dépôt ou un retrait."
+msgid "This adjustment is not possible. Last payment record should exist and it must indicate either a deposit or a withdrawal."
+msgstr "Cet ajustement n'est pas possible. Le dernier enregistrement de paiement devrait exister et il doit indiquer un dépôt ou un retrait."
 
 #: errors.mandatory
 msgid "Please specify {0}."
@@ -777,7 +713,7 @@ msgstr "La longueur des notes ne peut pas être supérieure à {0} charactère(s
 
 #: errors.mustBeGreaterThanZero
 msgid "{0} must be greater than 0"
-msgstr ""
+msgstr "{0} doit être supérieure à 0."
 
 #: errors.prefix
 msgid "<LI>"
@@ -788,20 +724,12 @@ msgid "</LI>"
 msgstr "</LI>"
 
 #: errors.updatefailed
-msgid ""
-"Update failed. Please try again later or contact the system administrator."
-msgstr ""
-"Mise à jour n'a pas réussi. Veuiller essayer encore plus tard ou contacter  "
-"l'administrateur système."
+msgid "Update failed. Please try again later or contact the system administrator."
+msgstr "Mise à jour n'a pas réussi. Veuiller essayer encore plus tard ou contacter  l'administrateur système."
 
 #: exception.accounts.ApplicationException.CannotAdjust
-msgid ""
-"The amount cannot be adjusted. Either there is insufficient balance in the "
-"account, or amount is not modified, or is greater than the withdrawal limit."
-msgstr ""
-"Le montant ne peut pas être ajustée. Ou il y a balance insuffisant dans le "
-"compte, ou le montant n'est pas modifiée, ou il est plus grande que la "
-"limite de retrait."
+msgid "The amount cannot be adjusted. Either there is insufficient balance in the account, or amount is not modified, or is greater than the withdrawal limit."
+msgstr "Le montant ne peut pas être ajustée. Ou il y a balance insuffisant dans le compte, ou le montant n'est pas modifiée, ou il est plus grande que la limite de retrait."
 
 #: savings.Cancel
 msgid "Cancel"

@@ -4,7 +4,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:28+0530\n"
-"PO-Revision-Date: 2010-11-30 13:44-0800\n"
+"PO-Revision-Date: 2010-12-01 13:37-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -80,7 +80,7 @@ msgstr "Tareas de Cuentas y Clientes"
 
 #: framework.reports
 msgid "Reports"
-msgstr "Informes"
+msgstr "Reportes"
 
 #: framework.search
 msgid "Search"

@@ -1,11 +1,10 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LookupValueMessages.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:25+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-12-01 14:38+0800\n"
+"Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -616,7 +615,7 @@ msgstr "余额递减"
 
 #: InterestTypes-DecliningPrincipalBalance
 msgid "Declining Balance-Interest Recalculation"
-msgstr ""
+msgstr "重新计算余额递减"
 
 #: InterestTypes-DecliningBalance-EqualPrincipalInstallment
 msgid "Declining Balance-Equal Principal Installment"
@@ -843,7 +842,6 @@ msgid "Can manage question groups"
 msgstr "可以管理问题组"
 
 #: Permissions-CanActivateQuestionGroups
-#, fuzzy
 msgid "Can activate question groups"
 msgstr "可以管理问题组"
 
@@ -1152,9 +1150,7 @@ msgid "Can view Loan Accounts reports"
 msgstr "可以查看贷款账户报表"
 
 #: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
-msgid ""
-"Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, "
-"Sequency Wise"
+msgid "Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, Sequency Wise"
 msgstr "可以查看贷款产品分配－活动, 大小, 产品, 频率"
 
 #: Permissions-CanViewLoansPendingApprovalReport
@@ -1916,3 +1912,4 @@ msgstr "适用于现有及未来账户"
 #: feeUpdationType-AppliesToFutureAccounts
 msgid "Applies to future accounts"
 msgstr "适用于未来账户"
+

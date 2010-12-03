@@ -1,11 +1,10 @@
-#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LookupValueMessages.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2010-11-28 11:26+0530\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2010-12-01 10:17-0800\n"
+"Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -616,7 +615,7 @@ msgstr "Saldo Descendente"
 
 #: InterestTypes-DecliningPrincipalBalance
 msgid "Declining Balance-Interest Recalculation"
-msgstr ""
+msgstr "Saldo decrescente - Recálculo de Juros"
 
 #: InterestTypes-DecliningBalance-EqualPrincipalInstallment
 msgid "Declining Balance-Equal Principal Installment"
@@ -767,9 +766,7 @@ msgstr "Pode adicionar notas à Conta Poupança"
 
 #: Permissions-CanAdjustPaymentWhenAccountStatusIsClosedObligationMet
 msgid "Can adjust payment when account status is \"closed-obligation met\""
-msgstr ""
-"Pode ajustar pagamento quando o Estado da conta for \"Fechado-Obrigação "
-"Cumprida\""
+msgstr "Pode ajustar pagamento quando o Estado da conta for \"Fechado-Obrigação Cumprida\""
 
 #: Permissions-CanAdministerReports
 msgid "Can Administer Reports"
@@ -807,13 +804,11 @@ msgstr "Pode criar várias contas de empréstimo"
 
 #: Permissions-CanCreateNewLoanAccountInSaveForLaterState
 msgid "Can create new loan account in Save for later state"
-msgstr ""
-"Pode criar uma nova Conta de Empréstimo no Estado Salvar para mais tarde"
+msgstr "Pode criar uma nova Conta de Empréstimo no Estado Salvar para mais tarde"
 
 #: Permissions-CanCreateNewLoanAccountInSubmitForApprovalState
 msgid "Can create new loan account in Submit for approval state"
-msgstr ""
-"Pode criar uma nova Conta de Empréstimo no Estado Submeter para aprovação"
+msgstr "Pode criar uma nova Conta de Empréstimo no Estado Submeter para aprovação"
 
 #: Permissions-CanCreateNewOffice
 msgid "Can create new office"
@@ -845,7 +840,11 @@ msgstr "Pode definir campos personalizados"
 
 #: Permissions-CanManageQuestionGroups
 msgid "Can manage question groups"
-msgstr ""
+msgstr "Pode gerir grupos de questões"
+
+#: Permissions-CanActivateQuestionGroups
+msgid "Can activate question groups"
+msgstr "Pode activar grupos de questões"
 
 #: Permissions-CanActivateQuestionGroups
 msgid "Can activate question groups"
@@ -857,7 +856,7 @@ msgstr "Pode definir campos ocultos / obrigatórios"
 
 #: Permissions-CanDefineHoliday
 msgid "Can define holiday"
-msgstr ""
+msgstr "Pode definir férias"
 
 #: Permissions-CanDefineLabels
 msgid "Can define labels"
@@ -1017,19 +1016,19 @@ msgstr "Pode Reverter desembolsos de Empréstimos"
 
 #: Permissions-CanRunBatchJobsOnDemand
 msgid "Can run Batch Jobs on demand"
-msgstr ""
+msgstr "Pode executar Trabalhos por Lotes a pedido"
 
 #: Permissions-CanShutdownMifos
 msgid "Can open shutdown page"
-msgstr ""
+msgstr "Pode abrir página de desligamento"
 
 #: Permissions-CanViewActiveSessions
 msgid "Can view active sessions"
-msgstr ""
+msgstr "Pode ver sessões activas"
 
 #: Permissions-CanStartMifosShutDown
 msgid "Can shut down Mifos"
-msgstr ""
+msgstr "Pode desligar Mifos"
 
 #: Permissions-CanUnlockAUser
 msgid "Can unlock a user"
@@ -1037,7 +1036,7 @@ msgstr "Pode desbloquear um usuário"
 
 #: Permissions-CanUpdateBatchJobsConfiguration
 msgid "Can update Batch Jobs configuration"
-msgstr ""
+msgstr "Pode atualizar a configuração de trablhos por lotes"
 
 #: Permissions-CanUpdateSavingsAccount
 msgid "Can update Savings account"
@@ -1057,7 +1056,7 @@ msgstr "Pode carregar modelo de relatório"
 
 #: Permissions-CanViewActiveLoansByLoanOfficer
 msgid "Can view Active Loans By Loan Officer"
-msgstr "Pode ver Empréstimos Ativos por Agente de Empréstimo"
+msgstr "Pode ver Empréstimos Activos por Agente de Empréstimo"
 
 #: Permissions-CanViewAdminDocuments
 msgid "Can view admin documents"
@@ -1129,9 +1128,7 @@ msgstr "Pode ver o Relatório diário do Fluxo de caixa- Balcão"
 
 #: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
 msgid "Can view Daily Portfolio quality data report - Aging analysis"
-msgstr ""
-"Pode ver o Relatório Diário de Dados da Qualidade do Portfólio - Análises "
-"por Vencimento"
+msgstr "Pode ver o Relatório Diário de Dados da Qualidade do Portfólio - Análises por Vencimento"
 
 #: Permissions-CanViewDailyTransactionSummaryReport
 msgid "Can view Daily Transaction Summary report"
@@ -1158,12 +1155,8 @@ msgid "Can view Loan Accounts reports"
 msgstr "Pode ver Relatórios de Contas de Empréstimo"
 
 #: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
-msgid ""
-"Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, "
-"Sequency Wise"
-msgstr ""
-"Pode Ver Distribuição de Produtos de Empréstiimo - Em termos de atividade, "
-"Tamanho, Produto, Sequência"
+msgid "Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, Sequency Wise"
+msgstr "Pode Ver Distribuição de Produtos de Empréstiimo - Em termos de atividade, Tamanho, Produto, Sequência"
 
 #: Permissions-CanViewLoansPendingApprovalReport
 msgid "Can view Loans pending approval report"
@@ -1481,7 +1474,7 @@ msgstr "Pode criar novo grupo no Estado Submeter para aprovação"
 
 #: Permissions-Groups-CanEditCenterMembership
 msgid "Can edit Center Membership"
-msgstr ""
+msgstr "Pode editar composição do centro"
 
 #: Permissions-Groups-CanEditFeeAmountAttachedToTheAccount
 msgctxt "Permissions-Groups-CanEditFeeAmountAttachedToTheAccount"
@@ -1800,7 +1793,7 @@ msgstr "Próximo dia de trabalho"
 
 #: RepaymentRule-RepaymentMoratorium
 msgid "Moratorium"
-msgstr ""
+msgstr "Moratória"
 
 #: RepaymentRule-SameDay
 msgid "Same Day"
@@ -1927,3 +1920,4 @@ msgstr "Aplica-se a contas existentes e futuras"
 #: feeUpdationType-AppliesToFutureAccounts
 msgid "Applies to future accounts"
 msgstr "Aplica-se a contas futuras"
+
