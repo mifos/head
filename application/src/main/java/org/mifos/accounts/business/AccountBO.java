@@ -566,12 +566,12 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
-    public final void adjustLastPayment(final String adjustmentComment) throws AccountException {
+    public final void adjustLastPayment(final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
             logger.debug(
                     "Adjustment is possible hence attempting to adjust.");
 
-            adjustPayment(getLastPmntToBeAdjusted(), getLoggedInUser(), adjustmentComment);
+            adjustPayment(getLastPmntToBeAdjusted(), loggedInUser, adjustmentComment);
             try {
                 getAccountPersistence().createOrUpdate(this);
             } catch (PersistenceException e) {

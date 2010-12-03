@@ -46,6 +46,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -318,7 +319,8 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
     private void adjustLastLoanPayment(LoanBO loan, UserContext userContext) throws AccountException, PersistenceException {
         LoanBO tempLoan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
         tempLoan.setUserContext(userContext);
-        tempLoan.adjustLastPayment("Undo last payment");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        tempLoan.adjustLastPayment("Undo last payment", loggedInUser);
         StaticHibernateUtil.flushSession();
     }
 
