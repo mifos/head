@@ -403,7 +403,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = helper.createSavingsAccount("000X00000000013", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         savings.setUserContext(TestObjectFactory.getContext());
-        savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        savings.changeStatus(AccountState.SAVINGS_CANCELLED, null, "", loggedInUser);
 
         StaticHibernateUtil.getSessionTL().clear();
 
@@ -469,7 +470,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = helper.createSavingsAccount("000X00000000013", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         savings.setUserContext(TestObjectFactory.getContext());
-        savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        savings.changeStatus(AccountState.SAVINGS_CANCELLED, null, "", loggedInUser);
 
         savings.setUserContext(this.userContext);
         AccountStateEntity state = (AccountStateEntity) session.get(AccountStateEntity.class, (short) 15);
@@ -493,7 +495,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
         AccountStateMachines.getInstance().initialize(AccountTypes.SAVINGS_ACCOUNT, null);
-        savings.changeStatus(AccountState.SAVINGS_PENDING_APPROVAL.getValue(), null, "notes");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        savings.changeStatus(AccountState.SAVINGS_PENDING_APPROVAL, null, "notes", loggedInUser);
         Assert.assertEquals(AccountStates.SAVINGS_ACC_PENDINGAPPROVAL, savings.getAccountState().getId().shortValue());
 
     }
@@ -507,7 +510,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         AccountStateMachines.getInstance().initialize(AccountTypes.SAVINGS_ACCOUNT, null);
         // 6 is blacklisted
 
-        savings.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), Short.valueOf("6"), "notes");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        savings.changeStatus(AccountState.SAVINGS_CANCELLED, Short.valueOf("6"), "notes", loggedInUser);
         Assert.assertEquals(AccountStates.SAVINGS_ACC_CANCEL, savings.getAccountState().getId().shortValue());
 
     }

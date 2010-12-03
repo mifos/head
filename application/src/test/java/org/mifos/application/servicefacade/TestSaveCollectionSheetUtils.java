@@ -41,6 +41,7 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -132,7 +133,8 @@ public class TestSaveCollectionSheetUtils {
         SaveCollectionSheetDto saveCollectionSheet = assembleSaveCollectionSheetFromCreatedCenterHierarchy(transactionDate);
 
         if (loanAccountCancelled) {
-            loan.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_OTHER.getValue(), "Loan Cancelled");
+            PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+            loan.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_OTHER.getValue(), "Loan Cancelled", loggedInUser);
             loan.update();
             StaticHibernateUtil.flushSession();
         }
@@ -163,7 +165,7 @@ public class TestSaveCollectionSheetUtils {
         center = new CenterBuilder().withNumberOfExistingCustomersInOffice(3).with(weeklyMeeting).withName(
                 "Center").with(sampleBranchOffice()).withLoanOfficer(testUser()).build();
         IntegrationTestObjectMother.createCenter(center, weeklyMeeting);
-        
+
 
         group = new GroupBuilder().withMeeting(weeklyMeeting).withName("Group").withOffice(sampleBranchOffice())
                 .withLoanOfficer(testUser()).withParentCustomer(center).build();

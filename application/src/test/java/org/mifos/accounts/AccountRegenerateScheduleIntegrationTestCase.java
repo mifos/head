@@ -54,12 +54,14 @@ import org.mifos.customers.business.CustomerBOTestUtils;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import java.util.ArrayList;
@@ -405,8 +407,9 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
         center = TestObjectFactory.getCenter(center.getCustomerId());
         accountBO = TestObjectFactory.getObject(LoanBO.class, accountBO.getAccountId());
         if (useClosedAndCancelled) {
-            accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "");
-            savingsBO.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), null, "");
+            PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+            accountBO.changeStatus(AccountState.LOAN_CANCELLED, null, "", loggedInUser);
+            savingsBO.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), null, "", loggedInUser);
             CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.GROUP_CLOSED);
             CustomerBOTestUtils.setCustomerStatus(group, customerStatusEntity);
             StaticHibernateUtil.flushSession();

@@ -746,6 +746,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
 
         SavingsBO savingsAccount = this.savingsDao.findById(updateStatus.getSavingsId());
         savingsAccount.updateDetails(userContext);
@@ -755,7 +756,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             AccountState newStatus = AccountState.fromShort(updateStatus.getNewStatusId());
 
             // FIXME - keithw - refactor savings specific logic out of changeStatus and create savings statue machine wrapper.
-            savingsAccount.changeStatus(newStatus, updateStatus.getFlagId(), updateStatus.getComment());
+            savingsAccount.changeStatus(newStatus, updateStatus.getFlagId(), updateStatus.getComment(), loggedInUser);
             this.savingsDao.save(savingsAccount);
             this.transactionHelper.commitTransaction();
         } catch (BusinessRuleException e) {

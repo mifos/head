@@ -36,10 +36,12 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -199,13 +201,14 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void createAccounts() throws Exception {
         savings1 = getSavingsAccount(group, "fsaf6", "ads6");
-        savings1.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), AccountStateFlag.SAVINGS_BLACKLISTED
-                .getValue(), "status changed for savings");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        savings1.changeStatus(AccountState.SAVINGS_CANCELLED, AccountStateFlag.SAVINGS_BLACKLISTED
+                .getValue(), "status changed for savings", loggedInUser);
         savings1.update();
         loan1 = getLoanAccount(group, "fdsfsdf", "2cvs");
         loan1.update();
-        loan1.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_OTHER.getValue(),
-                "status changed for loan");
+        loan1.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_OTHER.getValue(),
+                "status changed for loan", loggedInUser);
         StaticHibernateUtil.flushSession();
         savings2 = getSavingsAccount(group, "fsaf65", "ads5");
         loan2 = getLoanAccount(client, "rtwetrtwert", "5rre");

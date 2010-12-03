@@ -905,7 +905,10 @@ public class TestObjectFactory {
                 AccountState.SAVINGS_PARTIAL_APPLICATION, new Money(currency, "300.0"), null);
         savings.save();
         savings.setUserContext(TestObjectFactory.getContext());
-        savings.changeStatus(accountStateId, null, "");
+
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        savings.changeStatus(AccountState.fromShort(accountStateId), null, "", loggedInUser);
+
         SavingBOTestUtils.setActivationDate(savings, new Date(System.currentTimeMillis()));
         List<Date> meetingDates = getMeetingDates(customer.getOfficeId(), meeting, 3);
         short installment = 0;

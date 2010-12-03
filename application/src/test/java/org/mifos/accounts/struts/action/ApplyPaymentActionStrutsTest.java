@@ -40,11 +40,13 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -155,7 +157,8 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = createLoanAccount();
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "", loggedInUser);
 
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
         accountApplyPaymentActionForm.setAmount("212");
@@ -190,7 +193,8 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = createLoanAccount();
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "", loggedInUser);
 
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
         accountApplyPaymentActionForm.setAmount("212");
@@ -223,7 +227,8 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(Constants.ACCOUNT_ID, accountBO.getAccountId(),request);
 
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "", loggedInUser);
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
         accountApplyPaymentActionForm.setAmount("212");
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);
@@ -259,7 +264,6 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
 
        Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, loan.getAccountState().getId().shortValue());
 
-        Short DEFAULT_LOCALE = (short) 1;
         Assert.assertNotNull(loan.getAccountState().getName());
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().load(AccountBO.class, accountBO.getAccountId());
@@ -275,7 +279,8 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(Constants.ACCOUNT_ID, accountBO.getAccountId(),request);
 
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "", loggedInUser);
         AccountApplyPaymentActionForm accountApplyPaymentActionForm = new AccountApplyPaymentActionForm();
         accountApplyPaymentActionForm.setAmount("212");
         request.getSession().setAttribute("applyPaymentActionForm", accountApplyPaymentActionForm);

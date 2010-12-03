@@ -77,6 +77,7 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -94,6 +95,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
@@ -221,7 +223,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .getPreferredLocale());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
         ((LoanBO) accountBO).setBusinessActivityId(1);
-        accountBO.changeStatus(AccountState.LOAN_APPROVED.getValue(), null, "status changed");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "status changed", loggedInUser);
         accountBO.update();
 
         StaticHibernateUtil.flushSession();
@@ -316,8 +319,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
-        accountBO.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
-                "status changed");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_WITHDRAW.getValue(), "status changed", loggedInUser);
         accountBO.update();
         StaticHibernateUtil.flushSession();
         LoanBO loan = (LoanBO) accountBO;

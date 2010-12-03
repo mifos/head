@@ -40,11 +40,14 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.SavingsAccountStatusDto;
 import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.framework.business.service.BusinessService;
@@ -188,7 +191,10 @@ public class EditStatusAction extends BaseAction {
 //            checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
             initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
             approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
-            accountBO.changeStatus(newStatusId, flagId, updateComment);
+            PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(userContext.getId());
+
+            AccountState newStatus = AccountState.fromShort(newStatusId);
+            accountBO.changeStatus(newStatus, flagId, updateComment, loggedInUser);
             accountBOInSession = null;
             accountBO.update();
             accountBO = null;

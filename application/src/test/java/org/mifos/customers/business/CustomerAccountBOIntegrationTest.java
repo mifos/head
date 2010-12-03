@@ -65,6 +65,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -201,7 +202,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccountBO.setUserContext(userContext);
         List<AccountTrxnEntity> reversedTrxns = AccountTestUtils.reversalAdjustment("payment adjustment done",
                 customerAccountBO.findMostRecentPaymentByPaymentDate());
-        customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns);
+
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        customerAccountBO.updateInstallmentAfterAdjustment(reversedTrxns, loggedInUser);
         for (AccountTrxnEntity accntTrxn : reversedTrxns) {
             CustomerTrxnDetailEntity custTrxn = (CustomerTrxnDetailEntity) accntTrxn;
             CustomerScheduleEntity accntActionDate = (CustomerScheduleEntity) customerAccountBO

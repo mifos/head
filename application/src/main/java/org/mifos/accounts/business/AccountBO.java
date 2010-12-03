@@ -77,7 +77,6 @@ import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.TransactionHistoryDto;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -121,23 +120,11 @@ public class AccountBO extends AbstractBusinessObject {
     private List<AccountPaymentEntity> accountPayments;
     private Set<AccountCustomFieldEntity> accountCustomFields;
 
-    /*
-     * Injected Persistence classes
-     *
-     * DO NOT ACCESS THESE MEMBERS DIRECTLY! ALWAYS USE THE GETTER!
-     *
-     * The Persistence classes below are used by this class and can be injected via a setter for testing purposes. In
-     * order for this mechanism to work correctly, the getter must be used to access them because the getter will
-     * initialize the Persistence class if it has not been injected.
-     *
-     * Long term these references to Persistence classes should probably be eliminated.
-     */
     private AccountPersistence accountPersistence = null;
     private ConfigurationPersistence configurationPersistence = null;
     private CustomerPersistence customerPersistence = null;
     private FeePersistence feePersistence = null;
     private MasterPersistence masterPersistence = null;
-    protected PersonnelPersistence personnelPersistence = null;
     private DateTimeService dateTimeService = null;
     private FinancialBusinessService financialBusinessService = null;
 
@@ -216,17 +203,6 @@ public class AccountBO extends AbstractBusinessObject {
 
     public void setMasterPersistence(final MasterPersistence masterPersistence) {
         this.masterPersistence = masterPersistence;
-    }
-
-    public PersonnelPersistence getPersonnelPersistence() {
-        if (null == personnelPersistence) {
-            personnelPersistence = new PersonnelPersistence();
-        }
-        return personnelPersistence;
-    }
-
-    public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
-        this.personnelPersistence = personnelPersistence;
     }
 
     /**
@@ -568,15 +544,8 @@ public class AccountBO extends AbstractBusinessObject {
 
     public final void adjustLastPayment(final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
-            logger.debug(
-                    "Adjustment is possible hence attempting to adjust.");
-
+            logger.debug("Adjustment is possible hence attempting to adjust.");
             adjustPayment(getLastPmntToBeAdjusted(), loggedInUser, adjustmentComment);
-            try {
-                getAccountPersistence().createOrUpdate(this);
-            } catch (PersistenceException e) {
-                throw new AccountException(AccountExceptionConstants.CANNOTADJUST, e);
-            }
         } else {
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
         }
@@ -586,7 +555,7 @@ public class AccountBO extends AbstractBusinessObject {
     protected final void adjustPayment(final AccountPaymentEntity accountPayment, final PersonnelBO personnel,
             final String adjustmentComment) throws AccountException {
         List<AccountTrxnEntity> reversedTrxns = accountPayment.reversalAdjustment(personnel, adjustmentComment);
-        updateInstallmentAfterAdjustment(reversedTrxns);
+        updateInstallmentAfterAdjustment(reversedTrxns, personnel);
         buildFinancialEntries(new LinkedHashSet<AccountTrxnEntity>(reversedTrxns));
     }
 
@@ -641,12 +610,11 @@ public class AccountBO extends AbstractBusinessObject {
         return installment;
     }
 
-    public void changeStatus(final AccountState newStatus, final Short flagId, final String comment)
-            throws AccountException {
-        changeStatus(newStatus.getValue(), flagId, comment);
+    public void changeStatus(final AccountState newStatus, final Short flagId, final String comment, PersonnelBO loggedInUser) throws AccountException {
+        changeStatus(newStatus.getValue(), flagId, comment, loggedInUser);
     }
 
-    public final void changeStatus(final Short newStatusId, final Short flagId, final String comment)
+    public final void changeStatus(final Short newStatusId, final Short flagId, final String comment, PersonnelBO loggedInUser)
             throws AccountException {
 
         Short oldStatusId = this.getState().getValue();
@@ -655,8 +623,8 @@ public class AccountBO extends AbstractBusinessObject {
         }
 
         try {
-            logger.debug(
-                    "In the change status method of AccountBO:: new StatusId= " + newStatusId);
+            logger.debug("In the change status method of AccountBO:: new StatusId= " + newStatusId);
+
             activationDateHelper(newStatusId);
             MasterPersistence masterPersistence = getMasterPersistence();
             AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence.getPersistentObject(
@@ -667,11 +635,11 @@ public class AccountBO extends AbstractBusinessObject {
                 accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence.getPersistentObject(
                         AccountStateFlagEntity.class, flagId);
             }
-            PersonnelBO personnel = getPersonnelPersistence().getPersonnel(getUserContext().getId());
+
             AccountStatusChangeHistoryEntity historyEntity = new AccountStatusChangeHistoryEntity(this
-                    .getAccountState(), accountStateEntity, personnel, this);
+                    .getAccountState(), accountStateEntity, loggedInUser, this);
             AccountNotesEntity accountNotesEntity = new AccountNotesEntity(new DateTimeService()
-                    .getCurrentJavaSqlDate(), comment, personnel, this);
+                    .getCurrentJavaSqlDate(), comment, loggedInUser, this);
             this.addAccountStatusChangeHistory(historyEntity);
             this.setAccountState(accountStateEntity);
             this.addAccountNotes(accountNotesEntity);
@@ -702,8 +670,7 @@ public class AccountBO extends AbstractBusinessObject {
                 ((SavingsBO) this).resetRecommendedAmountOnFutureInstallments();
             }
 
-            logger.debug(
-                    "Coming out successfully from the change status method of AccountBO");
+            logger.debug("Coming out successfully from the change status method of AccountBO");
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1511,7 +1478,7 @@ public class AccountBO extends AbstractBusinessObject {
         this.accountActionDates.clear();
     }
 
-    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns)
+    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns, PersonnelBO loggedInUser)
             throws AccountException {
     }
 
@@ -1665,14 +1632,6 @@ public class AccountBO extends AbstractBusinessObject {
             }
         }
         this.addAccountFlag(accountStateFlagEntity);
-    }
-
-    private PersonnelBO getLoggedInUser() throws AccountException {
-        try {
-            return getPersonnelPersistence().getPersonnel(getUserContext().getId());
-        } catch (PersistenceException pe) {
-            throw new AccountException(pe);
-        }
     }
 
     protected void updateCustomFields(final List<CustomFieldDto> customFields) throws InvalidDateException {

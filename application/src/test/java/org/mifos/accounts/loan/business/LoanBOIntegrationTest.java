@@ -2758,7 +2758,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGetNoOfBackDatedPayments() throws AccountException, SystemException {
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "", loggedInUser);
         changeInstallmentDate(accountBO, 14, Short.valueOf("1"));
         changeInstallmentDate(accountBO, 14, Short.valueOf("2"));
         TestObjectFactory.updateObject(accountBO);
@@ -2943,7 +2944,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void testMakePaymentForCustomerPerfHistory() throws AccountException, SystemException {
         accountBO = getLoanAccountWithPerformanceHistory();
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "", loggedInUser);
 
         TestObjectFactory.updateObject(accountBO);
         StaticHibernateUtil.flushAndClearSession();
@@ -3743,7 +3745,8 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         Date firstInstallmentDate = incrementCurrentDate(21);
         accountBO = getLoanAccount();
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "", loggedInUser);
 
         LoanBO loanBO = (LoanBO) accountBO;
         ((LoanBO) accountBO).updateLoan(loanBO.isInterestDeductedAtDisbursement(), loanBO.getLoanAmount(), loanBO
@@ -4513,7 +4516,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         AccountActionDateEntity accountActionDate1 = loan.getAccountActionDate((short) 1);
         AccountActionDateEntity accountActionDate2 = loan.getAccountActionDate((short) 2);
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "");
+
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_APPROVED, null, "", loggedInUser);
+
         ((LoanScheduleEntity) accountActionDate1).setActionDate(offSetCurrentDate(21));
         ((LoanScheduleEntity) accountActionDate2).setActionDate(offSetCurrentDate(14));
         loan.setDisbursementDate(disbursementDate);

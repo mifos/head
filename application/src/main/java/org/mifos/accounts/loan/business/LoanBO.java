@@ -1484,7 +1484,7 @@ public class LoanBO extends AccountBO {
     }
 
     public final void reverseLoanDisbursal(final PersonnelBO loggedInUser, final String note) throws AccountException {
-        changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_REVERSAL.getValue(), note);
+        changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_REVERSAL.getValue(), note, loggedInUser);
         if (getAccountPayments() != null && getAccountPayments().size() > 0) {
             for (AccountPaymentEntity accountPayment : getAccountPayments()) {
                 if (accountPayment.getAmount().isGreaterThanZero()) {
@@ -1648,7 +1648,7 @@ public class LoanBO extends AccountBO {
     }
 
     @Override
-    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns)
+    protected void updateInstallmentAfterAdjustment(final List<AccountTrxnEntity> reversedTrxns, PersonnelBO loggedInUser)
             throws AccountException {
 
         Money increaseInterest = new Money(this.getCurrency());
@@ -1772,19 +1772,19 @@ public class LoanBO extends AccountBO {
             if (statusChangeNeeded) {
                 Short daysInArrears = getDaysInArrears(accountReOpened);
                 if (currentAccountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
-                    Short newStatusId = AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue();
+                    AccountState newStatus = AccountState.LOAN_ACTIVE_IN_BAD_STANDING;
                     if (daysInArrears == 0) {
-                        newStatusId = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue();
+                        newStatus = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
                     }
-                    this.changeStatus(newStatusId, null, "Account Reopened");
+                    this.changeStatus(newStatus, null, "Account Reopened", loggedInUser);
                 } else {
                     if (daysInArrears == 0) {
                         if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
-                        this.changeStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue(), null, "Account Adjusted");
+                        this.changeStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, null, "Account Adjusted", loggedInUser);
                         }
                     } else {
                         if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
-                        this.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "Account Adjusted");
+                        this.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "Account Adjusted", loggedInUser);
                             handleArrearsAging();
                         }
                     }

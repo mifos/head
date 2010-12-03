@@ -50,6 +50,7 @@ import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAcc
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -124,7 +125,8 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         assertAllFutureSchedulesAreAsExpected(savings, recommendedAmount);
 
         //
-        savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive", loggedInUser);
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data
@@ -138,7 +140,8 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
     public void changingSavingsAccountFromInactiveToActiveResetsRecommendedAmountsFromFutureInstallments() throws Exception {
 
         //make inactive first
-        savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        savings.changeStatus(AccountState.SAVINGS_INACTIVE, null, "Make Inactive", loggedInUser);
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data
@@ -149,7 +152,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
 
 
         //make active again
-        savings.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Make Active Again");
+        savings.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Make Active Again", loggedInUser);
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data

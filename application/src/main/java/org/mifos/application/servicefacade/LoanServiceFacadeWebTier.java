@@ -766,9 +766,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         redoLoan.setCollateralNote(collateralNote);
         redoLoan.setCollateralTypeId(selectedCollateralType);
 
-        redoLoan.changeStatus(AccountState.LOAN_APPROVED, null, "Automatic Status Update (Redo Loan)");
 
         PersonnelBO user = personnelDao.findPersonnelById(userContext.getId());
+
+        redoLoan.changeStatus(AccountState.LOAN_APPROVED, null, "Automatic Status Update (Redo Loan)", user);
 
         // We're assuming cash disbursal for this situation right now
         try {

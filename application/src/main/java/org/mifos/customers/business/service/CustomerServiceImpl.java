@@ -689,6 +689,7 @@ public class CustomerServiceImpl implements CustomerService {
     public final void updateClientStatus(ClientBO client, CustomerStatus oldStatus, CustomerStatus newStatus,
             CustomerStatusFlag customerStatusFlag, CustomerNoteEntity customerNote) throws CustomerException {
 
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(client.getUserContext().getId());
         handeClientChangeOfStatus(client, newStatus);
 
         CustomerStatusFlagEntity customerStatusFlagEntity = populateCustomerStatusFlag(customerStatusFlag);
@@ -706,7 +707,7 @@ public class CustomerServiceImpl implements CustomerService {
                 client.addCustomerFlag(customerStatusFlagEntity);
             }
             client.addCustomerNotes(customerNote);
-            this.handleChangeOfClientStatusToClosedOrCancelled(client, customerStatusFlag, customerNote);
+            this.handleChangeOfClientStatusToClosedOrCancelled(client, customerStatusFlag, customerNote, loggedInUser);
 
             customerDao.save(client);
 
@@ -720,7 +721,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     private void handleChangeOfClientStatusToClosedOrCancelled(ClientBO client, CustomerStatusFlag customerStatusFlag,
-            CustomerNoteEntity customerNote) throws AccountException {
+            CustomerNoteEntity customerNote, PersonnelBO loggedInUser) throws AccountException {
         if (client.isClosedOrCancelled()) {
 
             if (client.isClientUnderGroup()) {
@@ -741,7 +742,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customerAccount.setUserContext(client.getUserContext());
 
                 customerAccount.changeStatus(AccountState.CUSTOMER_ACCOUNT_INACTIVE, customerStatusFlag.getValue(),
-                        customerNote.getComment());
+                        customerNote.getComment(), loggedInUser);
                 customerAccount.update();
             }
         }

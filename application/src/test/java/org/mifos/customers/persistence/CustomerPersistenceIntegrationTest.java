@@ -255,8 +255,10 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         Money amount = customerPersistence.getTotalAmountForAllClientsOfGroup(group.getOffice().getOfficeId(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, group.getSearchId() + ".%");
         Assert.assertEquals(new Money(getCurrency(), "600"), amount);
-        clientAccount1.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "none");
-        clientAccount2.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "none");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        clientAccount1.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "none", loggedInUser);
+        clientAccount2.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "none", loggedInUser);
+
         TestObjectFactory.updateObject(clientAccount1);
         TestObjectFactory.updateObject(clientAccount2);
         StaticHibernateUtil.flushSession();
@@ -648,11 +650,11 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testGetAllClosedAccounts() throws Exception {
         getCustomer();
-        groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
-                "WITHDRAW LOAN ACCOUNT");
-        clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF.getValue(), null, "WITHDRAW LOAN ACCOUNT");
-        clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED.getValue(), AccountStateFlag.SAVINGS_REJECTED
-                .getValue(), "WITHDRAW LOAN ACCOUNT");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        groupAccount.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_WITHDRAW.getValue(),"WITHDRAW LOAN ACCOUNT", loggedInUser);
+        clientAccount.changeStatus(AccountState.LOAN_CLOSED_WRITTEN_OFF, null, "WITHDRAW LOAN ACCOUNT", loggedInUser);
+        clientSavingsAccount.changeStatus(AccountState.SAVINGS_CANCELLED, AccountStateFlag.SAVINGS_REJECTED.getValue(), "WITHDRAW LOAN ACCOUNT", loggedInUser);
+
         TestObjectFactory.updateObject(groupAccount);
         TestObjectFactory.updateObject(clientAccount);
         TestObjectFactory.updateObject(clientSavingsAccount);
@@ -776,8 +778,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testSearchWithCancelLoanAccounts() throws Exception {
         groupAccount = getLoanAccount();
-        groupAccount.changeStatus(AccountState.LOAN_CANCELLED.getValue(), AccountStateFlag.LOAN_WITHDRAW.getValue(),
-                "WITHDRAW LOAN ACCOUNT");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        groupAccount.changeStatus(AccountState.LOAN_CANCELLED, AccountStateFlag.LOAN_WITHDRAW.getValue(),"WITHDRAW LOAN ACCOUNT", loggedInUser);
         TestObjectFactory.updateObject(groupAccount);
         StaticHibernateUtil.flushSession();
 
@@ -915,7 +917,8 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testSearchForActiveInBadStandingLoanAccount() throws Exception {
         groupAccount = getLoanAccount();
-        groupAccount.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue(), null, "Changing to badStanding");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        groupAccount.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "Changing to badStanding", loggedInUser);
         TestObjectFactory.updateObject(groupAccount);
 
         groupAccount = TestObjectFactory.getObject(LoanBO.class, groupAccount.getAccountId());

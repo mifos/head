@@ -78,7 +78,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         transactionDate = transactionDate.plusDays(10);
         java.util.Date trxnDate = transactionDate.toDate();
 
-        groupLoan.changeStatus(AccountState.LOAN_APPROVED.getValue(), null, "status changed");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        groupLoan.changeStatus(AccountState.LOAN_APPROVED, null, "status changed", loggedInUser);
         Assert.assertTrue(AccountingRules.isBackDatedTxnAllowed());
         Assert.assertTrue(groupLoan.isTrxnDateValid(trxnDate));
     }

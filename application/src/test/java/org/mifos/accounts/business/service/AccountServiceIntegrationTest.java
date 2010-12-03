@@ -64,11 +64,13 @@ import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerFeeScheduleEntity;
 import org.mifos.customers.business.CustomerScheduleEntity;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -172,7 +174,9 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
         accountBO = getLoanAccountWithAllTypesOfFees();
         incrementInstallmentDate(accountBO, 1, Short.valueOf("1"));
         accountBO.setUserContext(TestObjectFactory.getContext());
-        accountBO.changeStatus(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER.getValue(), null, "");
+
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        accountBO.changeStatus(AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER, null, "", loggedInUser);
         TestObjectFactory.updateObject(accountBO);
         TestObjectFactory.flushandCloseSession();
         center = TestObjectFactory.getCustomer(center.getCustomerId());

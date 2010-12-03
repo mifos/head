@@ -37,6 +37,8 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
@@ -131,12 +133,11 @@ public class AccountStatusAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse httpservletresponse) throws Exception {
+            @SuppressWarnings("unused") final HttpServletResponse httpservletresponse) throws Exception {
         AccountStatusActionForm accountStatusActionForm = (AccountStatusActionForm) form;
 
-        List accountList = updateAccountsStatus(accountStatusActionForm.getAccountRecords(), accountStatusActionForm
-                .getNewStatus(), accountStatusActionForm.getComments(), getUserContext(request),
-                new CustomerPersistence());
+        List<String> accountList = updateAccountsStatus(accountStatusActionForm.getAccountRecords(), accountStatusActionForm
+                .getNewStatus(), accountStatusActionForm.getComments(), getUserContext(request));
         request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountList);
 
         return mapping.findForward(ActionForwards.changeAccountStatusConfirmation_success.toString());
@@ -195,17 +196,18 @@ public class AccountStatusAction extends BaseAction {
         return loanService.getSearchResults(officeId, personnelId, currentStatus);
     }
 
-    private List updateAccountsStatus(final List<String> accountList, final String newStatus, final String comments,
-            final UserContext userContext, final CustomerPersistence customerPersistence) throws Exception {
-        List accountNumbers = new ArrayList();
-
+    private List<String> updateAccountsStatus(final List<String> accountList, final String newStatus, final String comments,
+            final UserContext userContext) throws Exception {
+        List<String> accountNumbers = new ArrayList<String>();
+        PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(userContext.getId());
         for (String accountId : accountList) {
             if (!accountId.equals("")) {
                 LoanBO loanBO = loanService.getAccount(Integer.parseInt(accountId));
 
                 accountNumbers.add(loanBO.getGlobalAccountNum());
                 loanBO.setUserContext(userContext);
-                loanBO.changeStatus(getShortValue(newStatus), null, comments);
+                AccountState newStatusState = AccountState.fromShort(getShortValue(newStatus));
+                loanBO.changeStatus(newStatusState, null, comments, loggedInUser);
                 loanBO.update();
             }
         }

@@ -28,6 +28,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.struts.actionforms.ApplyAdjustmentActionForm;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -35,6 +36,7 @@ import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -122,7 +124,10 @@ public class ApplyAdjustment extends BaseAction {
         }
         try {
             accnt.adjustLastPayment(appAdjustActionForm.getAdjustmentNote(), loggedInUser);
+            new AccountPersistence().createOrUpdate(accnt);
+            StaticHibernateUtil.commitTransaction();
         } catch (ApplicationException ae) {
+            StaticHibernateUtil.rollbackTransaction();
             request.setAttribute("method", "previewAdjustment");
             throw ae;
         }

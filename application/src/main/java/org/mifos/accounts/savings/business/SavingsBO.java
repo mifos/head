@@ -145,7 +145,6 @@ public class SavingsBO extends AccountBO {
     private PersonnelPersistence personnelPersistence = null;
 
     @Deprecated
-    @Override
     public PersonnelPersistence getPersonnelPersistence() {
         if (null == personnelPersistence) {
             personnelPersistence = new PersonnelPersistence();
@@ -154,7 +153,6 @@ public class SavingsBO extends AccountBO {
     }
 
     @Deprecated
-    @Override
     public void setPersonnelPersistence(final PersonnelPersistence personnelPersistence) {
         this.personnelPersistence = personnelPersistence;
     }
@@ -718,7 +716,7 @@ public class SavingsBO extends AccountBO {
 
         // make savings account active if inactive
         if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
-            this.changeStatus(AccountState.SAVINGS_ACTIVE.getValue(), null, "Account Made Active Due to Payment");
+            this.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Account Made Active Due to Payment", paymentData.getPersonnel());
         }
 
         if (totalAmount.isGreaterThanZero() && paymentData.getAccountPayments().size() <= 0) {
@@ -807,7 +805,7 @@ public class SavingsBO extends AccountBO {
 
         // make savings account active if inactive
         if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
-            this.changeStatus(AccountState.SAVINGS_ACTIVE.getValue(), null, "Account Made Active Due to Payment");
+            this.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Account Made Active Due to Payment", payment.getCreatedByUser());
         }
 
         final List<SavingsScheduleEntity> unpaidDepositsForPayingCustomer = findAllUnpaidInstallmentsForPayingCustomerUpTo(
@@ -842,7 +840,7 @@ public class SavingsBO extends AccountBO {
 
         // make savings account active if inactive
         if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
-            this.changeStatus(AccountState.SAVINGS_ACTIVE.getValue(), null, "Account Made Active Due to Payment");
+            this.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Account Made Active Due to Payment", payment.getCreatedByUser());
         }
         this.addAccountPayment(payment);
 
@@ -893,7 +891,7 @@ public class SavingsBO extends AccountBO {
 
         // make savings account active if inactive
         if (this.getState().getValue().equals(AccountState.SAVINGS_INACTIVE.getValue())) {
-            this.changeStatus(AccountState.SAVINGS_ACTIVE.getValue(), null, "Account Made Active Due to Payment");
+            this.changeStatus(AccountState.SAVINGS_ACTIVE, null, "Account Made Active Due to Payment", accountPayment.getCreatedByUser());
         }
 
         if (persist) {
