@@ -1040,10 +1040,13 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
 
     private void applyPaymentForLoan(UserContext userContext, LoanBO loan, Date paymentDate, Money money) {
         loan.setUserContext(userContext);
+
+        PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(userContext.getId());
+
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
 
-        PaymentData paymentData = loan.createPaymentData(userContext, money, paymentDate, null, null, Short.valueOf("1"));
+        PaymentData paymentData = loan.createPaymentData(money, paymentDate, null, null, Short.valueOf("1"), loggedInUser);
         IntegrationTestObjectMother.applyAccountPayment(loan, paymentData);
         new TestObjectPersistence().persist(loan);
     }

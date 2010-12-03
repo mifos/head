@@ -599,8 +599,8 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         }
     }
 
-    public void adjustPmnt(final String adjustmentComment) throws ApplicationException, SystemException {
-        getCustomerAccount().adjustPmnt(adjustmentComment);
+    public void adjustPmnt(final String adjustmentComment, final PersonnelBO loggedInUser) throws ApplicationException, SystemException {
+        getCustomerAccount().adjustPmnt(adjustmentComment, loggedInUser);
     }
 
     public abstract boolean isActive();

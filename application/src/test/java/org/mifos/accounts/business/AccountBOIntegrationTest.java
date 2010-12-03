@@ -193,7 +193,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
         loan = TestObjectFactory.getObject(LoanBO.class, loan.getAccountId());
         loan.setUserContext(TestUtils.makeUser());
-        loan.adjustPmnt("loan account has been adjusted by test code");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        loan.adjustPmnt("loan account has been adjusted by test code", loggedInUser);
         TestObjectFactory.updateObject(loan);
         Assert.assertEquals("The amount returned for the payment should have been 0", 0.0, loan.getLastPmntAmnt());
         LoanTrxnDetailEntity lastLoanTrxn = null;
@@ -222,7 +223,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
         TestObjectFactory.updateObject(loan);
         try {
-            loan.adjustPmnt("loan account has been adjusted by test code");
+            PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+            loan.adjustPmnt("loan account has been adjusted by test code", loggedInUser);
         } catch (AccountException e) {
             Assert.assertEquals("exception.accounts.ApplicationException.CannotAdjust", e.getKey());
         }
@@ -427,7 +429,8 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
 
         groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
         groupLoan.setUserContext(TestUtils.makeUser());
-        groupLoan.adjustPmnt("loan account has been adjusted by test code");
+        PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
+        groupLoan.adjustPmnt("loan account has been adjusted by test code", loggedInUser);
         StaticHibernateUtil.flushAndClearSession();
 
         groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());

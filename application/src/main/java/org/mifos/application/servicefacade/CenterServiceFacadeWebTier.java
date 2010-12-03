@@ -811,6 +811,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
         CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
         customerBO.updateDetails(userContext);
 
@@ -828,7 +829,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
                 }
 
                 this.transactionHelper.startTransaction();
-                customerBO.adjustPmnt(adjustmentNote);
+                customerBO.adjustPmnt(adjustmentNote, loggedInUser);
                 this.customerDao.save(customerBO);
                 this.transactionHelper.commitTransaction();
             } catch (SystemException e) {

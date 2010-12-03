@@ -521,27 +521,27 @@ public class AccountBO extends AbstractBusinessObject {
         // TODO adjust inst. schedule for PAWDEP
     }
 
-    public PaymentData createPaymentData(final UserContext userContext, final Money amount, final Date trxnDate,
-            final String receiptId, final Date receiptDate, final Short paymentTypeId) {
-        return createPaymentData(userContext.getId(), amount, trxnDate, receiptId, receiptDate, paymentTypeId);
-    }
+//    public PaymentData createPaymentData(final Money amount, final Date trxnDate,
+//            final String receiptId, final Date receiptDate, final Short paymentTypeId, PersonnelBO loggedInUser) {
+//        return createPaymentData(amount, trxnDate, receiptId, receiptDate, paymentTypeId, loggedInUser);
+//    }
 
-    public PaymentData createPaymentData(final Short personnelId, final Money amount, final Date trxnDate,
-            final String receiptId, final Date receiptDate, final Short paymentTypeId) {
-        PersonnelBO personnel;
-        try {
-            personnel = getPersonnelPersistence().getPersonnel(personnelId);
-        } catch (PersistenceException e) {
-            // Generally this is the UserContext id, which shouldn't ever
-            // be invalid
-            throw new IllegalStateException(AccountConstants.ERROR_INVALID_PERSONNEL);
-        }
-        if (personnel == null) {
+    public PaymentData createPaymentData(final Money amount, final Date trxnDate,
+            final String receiptId, final Date receiptDate, final Short paymentTypeId, PersonnelBO loggedInUser) {
+//        PersonnelBO personnel;
+//        try {
+//            personnel = getPersonnelPersistence().getPersonnel(personnelId);
+//        } catch (PersistenceException e) {
+//            // Generally this is the UserContext id, which shouldn't ever
+//            // be invalid
+//            throw new IllegalStateException(AccountConstants.ERROR_INVALID_PERSONNEL);
+//        }
+        if (loggedInUser == null) {
             // see above catch clause
             throw new IllegalStateException(AccountConstants.ERROR_INVALID_PERSONNEL);
         }
 
-        PaymentData paymentData = PaymentData.createPaymentData(amount, personnel, paymentTypeId, trxnDate);
+        PaymentData paymentData = PaymentData.createPaymentData(amount, loggedInUser, paymentTypeId, trxnDate);
         if (receiptDate != null) {
             paymentData.setReceiptDate(receiptDate);
         }
@@ -557,10 +557,10 @@ public class AccountBO extends AbstractBusinessObject {
         return paymentData;
     }
 
-    public final void adjustPmnt(final String adjustmentComment) throws AccountException {
+    public final void adjustPmnt(final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
             logger.debug("Adjustment is possible hence attempting to adjust.");
-            adjustPayment(findMostRecentNonzeroPaymentByPaymentDate(), getLoggedInUser(), adjustmentComment);
+            adjustPayment(findMostRecentNonzeroPaymentByPaymentDate(), loggedInUser, adjustmentComment);
         } else {
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
         }
