@@ -41,7 +41,6 @@ import org.joda.time.Days;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
@@ -70,12 +69,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.TransactionHistoryDto;
@@ -121,9 +118,6 @@ public class AccountBO extends AbstractBusinessObject {
     private Set<AccountCustomFieldEntity> accountCustomFields;
 
     private AccountPersistence accountPersistence = null;
-    private ConfigurationPersistence configurationPersistence = null;
-    private CustomerPersistence customerPersistence = null;
-    private FeePersistence feePersistence = null;
     private MasterPersistence masterPersistence = null;
     private DateTimeService dateTimeService = null;
     private FinancialBusinessService financialBusinessService = null;
@@ -159,39 +153,6 @@ public class AccountBO extends AbstractBusinessObject {
 
     public void setAccountPersistence(final AccountPersistence accountPersistence) {
         this.accountPersistence = accountPersistence;
-    }
-
-    public ConfigurationPersistence getConfigurationPersistence() {
-        if (null == configurationPersistence) {
-            configurationPersistence = new ConfigurationPersistence();
-        }
-        return configurationPersistence;
-    }
-
-    public void setConfigurationPersistence(final ConfigurationPersistence configurationPersistence) {
-        this.configurationPersistence = configurationPersistence;
-    }
-
-    public CustomerPersistence getCustomerPersistence() {
-        if (null == customerPersistence) {
-            customerPersistence = new CustomerPersistence();
-        }
-        return customerPersistence;
-    }
-
-    public void setCustomerPersistence(final CustomerPersistence customerPersistence) {
-        this.customerPersistence = customerPersistence;
-    }
-
-    public FeePersistence getFeePersistence() {
-        if (null == feePersistence) {
-            feePersistence = new FeePersistence();
-        }
-        return feePersistence;
-    }
-
-    public void setFeePersistence(final FeePersistence feePersistence) {
-        this.feePersistence = feePersistence;
     }
 
     public MasterPersistence getMasterPersistence() {
@@ -1009,11 +970,9 @@ public class AccountBO extends AbstractBusinessObject {
         return dueInstallments;
     }
 
-    public boolean isTrxnDateBeforePreviousMeetingDateAllowed(final Date trxnDate) {
-        try {
-            Date meetingDate = getCustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId());
+    private boolean isTrxnDateBeforePreviousMeetingDateAllowed(final Date trxnDate, Date meetingDate, boolean repaymentIndependentOfMeetingEnabled) {
 
-            if (getConfigurationPersistence().isRepaymentIndepOfMeetingEnabled()) {
+            if (repaymentIndependentOfMeetingEnabled) {
                 // payment date for loans must be >= disbursement date
                 if (this instanceof LoanBO) {
                     Date approvalDate = this.getAccountApprovalDate();
@@ -1025,18 +984,11 @@ public class AccountBO extends AbstractBusinessObject {
                     return trxnDate.compareTo(DateUtils.getDateWithoutTimeStamp(meetingDate)) >= 0;
             }
             return false;
-        } catch (PersistenceException e) {
-            // This should only occur if Customer is null which shouldn't
-            // happen.
-            // Or we had some configuration/binding error, so we'll throw a
-            // runtime exception here.
-            throw new IllegalStateException(e);
-        }
     }
 
-    public boolean isTrxnDateValid(final Date trxnDate) throws AccountException {
+    public boolean isTrxnDateValid(final Date trxnDate, Date lastCustomerMeetingDate, boolean repaymentIndependentOfMeetingEnabled) {
         if (AccountingRules.isBackDatedTxnAllowed()) {
-            return isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate);
+            return isTrxnDateBeforePreviousMeetingDateAllowed(trxnDate, lastCustomerMeetingDate, repaymentIndependentOfMeetingEnabled);
         }
         return trxnDate.equals(DateUtils.getCurrentDateWithoutTimeStamp());
     }

@@ -1009,7 +1009,7 @@ public class LoanBO extends AccountBO {
         // regenerate the installments
         if (!DateUtils.getDateWithoutTimeStamp(disbursementDate.getTime()).equals(
                 DateUtils.getDateWithoutTimeStamp(transactionDate.getTime()))) {
-            final boolean lsimEnabled = getConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+            final boolean lsimEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
             if (lsimEnabled) {
                 final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(
                         MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();

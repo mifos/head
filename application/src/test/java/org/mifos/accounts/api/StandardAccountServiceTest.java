@@ -113,8 +113,6 @@ public class StandardAccountServiceTest {
         Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setAccountPersistence(accountPersistence);
-        accountBO.setCustomerPersistence(customerPersistence);
-        accountBO.setConfigurationPersistence(configurationPersistence);
     }
 
     @Ignore

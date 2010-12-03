@@ -47,6 +47,7 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -200,7 +201,9 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
         Date trxnDate = getDateFromString(actionForm.getTrxnDate(), uc.getPreferredLocale());
 
-        if (!savings.isTrxnDateValid(trxnDate)) {
+        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(savings.getCustomer().getCustomerId());
+        boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        if (!savings.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled)) {
             throw new AccountException(AccountConstants.ERROR_INVALID_TRXN);
         }
 

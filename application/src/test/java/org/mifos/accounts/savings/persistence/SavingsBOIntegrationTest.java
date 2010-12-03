@@ -75,8 +75,10 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.Configuration;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.group.business.GroupBO;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -203,10 +205,12 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         savings = TestObjectFactory.getObject(SavingsBO.class, savings.getAccountId());
         java.util.Date trxnDate = offSetCurrentDate(-5);
+        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(savings.getCustomer().getCustomerId());
+        boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
         if (AccountingRules.isBackDatedTxnAllowed()) {
-            Assert.assertTrue(savings.isTrxnDateValid(trxnDate));
+            Assert.assertTrue(savings.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled));
         } else {
-            Assert.assertFalse(savings.isTrxnDateValid(trxnDate));
+            Assert.assertFalse(savings.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled));
         }
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }

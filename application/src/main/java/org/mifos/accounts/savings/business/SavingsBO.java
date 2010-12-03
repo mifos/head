@@ -74,6 +74,7 @@ import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
@@ -160,7 +161,6 @@ public class SavingsBO extends AccountBO {
     private CustomerPersistence customerPersistence;
 
     @Deprecated
-    @Override
     public CustomerPersistence getCustomerPersistence() {
         if (null == customerPersistence) {
             customerPersistence = new CustomerPersistence();
@@ -169,7 +169,6 @@ public class SavingsBO extends AccountBO {
     }
 
     @Deprecated
-    @Override
     public void setCustomerPersistence(final CustomerPersistence customerPersistence) {
         this.customerPersistence = customerPersistence;
     }
@@ -1620,34 +1619,29 @@ public class SavingsBO extends AccountBO {
     }
 
     @Override
-    public boolean isTrxnDateValid(Date trxnDate) throws AccountException {
+    public boolean isTrxnDateValid(Date trxnDate, Date lastMeetingDate, boolean repaymentIndependentOfMeetingEnabled) {
         LocalDate transactionLocalDate = new LocalDate(trxnDate);
         LocalDate today = new LocalDate();
 
         if (AccountingRules.isBackDatedTxnAllowed()) {
 
-            InterestScheduledEvent postingEvent = new SavingsInterestScheduledEventFactory().createScheduledEventFrom(this.getInterestPostingMeeting());
+            InterestScheduledEvent postingEvent = new SavingsInterestScheduledEventFactory()
+                    .createScheduledEventFrom(this.getInterestPostingMeeting());
             LocalDate nextPostingDate = new LocalDate(this.nextIntPostDate);
-            LocalDate currentPostingPeriodStartDate = postingEvent.findFirstDateOfPeriodForMatchingDate(nextPostingDate);
+            LocalDate currentPostingPeriodStartDate = postingEvent
+                    .findFirstDateOfPeriodForMatchingDate(nextPostingDate);
 
             if (transactionLocalDate.isBefore(currentPostingPeriodStartDate)) {
                 return false;
             }
-
-            try {
-                Date lastMeetingDate = getCustomerPersistence().getLastMeetingDateForCustomer(getCustomer().getCustomerId());
-                if (lastMeetingDate != null) {
-                    LocalDate meetingDate = new LocalDate(lastMeetingDate);
-                    return transactionLocalDate.isAfter(meetingDate) || transactionLocalDate.isEqual(meetingDate);
-                }
-
-                LocalDate activationDate = new LocalDate(this.activationDate);
-                return (transactionLocalDate.isAfter(activationDate) || transactionLocalDate.isEqual(activationDate)) &&
-                       (transactionLocalDate.isBefore(today) || transactionLocalDate.isEqual(today));
-
-            } catch (PersistenceException e) {
-                throw new AccountException(e);
+            if (lastMeetingDate != null) {
+                LocalDate meetingDate = new LocalDate(lastMeetingDate);
+                return transactionLocalDate.isAfter(meetingDate) || transactionLocalDate.isEqual(meetingDate);
             }
+
+            LocalDate activationDate = new LocalDate(this.activationDate);
+            return (transactionLocalDate.isAfter(activationDate) || transactionLocalDate.isEqual(activationDate))
+                    && (transactionLocalDate.isBefore(today) || transactionLocalDate.isEqual(today));
         }
         return transactionLocalDate.isEqual(today);
     }

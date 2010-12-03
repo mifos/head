@@ -42,6 +42,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.screen.TransactionHistoryDto;
@@ -81,7 +82,9 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         groupLoan.changeStatus(AccountState.LOAN_APPROVED, null, "status changed", loggedInUser);
         Assert.assertTrue(AccountingRules.isBackDatedTxnAllowed());
-        Assert.assertTrue(groupLoan.isTrxnDateValid(trxnDate));
+
+        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(groupLoan.getCustomer().getCustomerId());
+        Assert.assertTrue(groupLoan.isTrxnDateValid(trxnDate, meetingDate, false));
     }
 
 
@@ -334,14 +337,13 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         // Added by rajender on 24th July as test case was not passing
         calendar.add(Calendar.DAY_OF_MONTH, 10);
         java.util.Date trxnDate = new Date(calendar.getTimeInMillis());
+        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(groupLoan.getCustomer().getCustomerId());
         if (AccountingRules.isBackDatedTxnAllowed()) {
-            Assert.assertTrue(groupLoan.isTrxnDateValid(trxnDate));
+            Assert.assertTrue(groupLoan.isTrxnDateValid(trxnDate, meetingDate, false));
         } else {
-            Assert.assertFalse(groupLoan.isTrxnDateValid(trxnDate));
+            Assert.assertFalse(groupLoan.isTrxnDateValid(trxnDate, meetingDate, false));
         }
     }
-
-
 
     @Test
     public void testDeleteFutureInstallments() throws HibernateException, SystemException, AccountException {
@@ -351,7 +353,6 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         Assert.assertEquals(1, groupLoan.getAccountActionDates().size());
-
     }
 
     @Test

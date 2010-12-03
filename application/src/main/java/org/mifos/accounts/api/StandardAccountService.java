@@ -39,8 +39,10 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.ConfigurationManager;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -211,12 +213,16 @@ public class StandardAccountService implements AccountService {
     public List<InvalidPaymentReason> validateLoanDisbursement(AccountPaymentParametersDto payment) throws Exception {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
         LoanBO loanAccount = this.loanPersistence.getAccount(payment.getAccountId());
+
         if ((loanAccount.getState() != AccountState.LOAN_APPROVED)
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {
             errors.add(InvalidPaymentReason.INVALID_LOAN_STATE);
         }
         disbursalAmountMatchesFullLoanAmount(payment, errors, loanAccount);
-        if (!loanAccount.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
+
+        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(loanAccount.getCustomer().getCustomerId());
+        boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        if (!loanAccount.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate(), meetingDate, repaymentIndependentOfMeetingEnabled)) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
         if (!getLoanDisbursementTypes().contains(payment.getPaymentType())) {
@@ -241,7 +247,10 @@ public class StandardAccountService implements AccountService {
             AccountException {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
         AccountBO accountBo = this.accountPersistence.getAccount(payment.getAccountId());
-        if (!accountBo.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate())) {
+
+        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(accountBo.getCustomer().getCustomerId());
+        boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        if (!accountBo.isTrxnDateValid(payment.getPaymentDate().toDateMidnight().toDate(), meetingDate, repaymentIndependentOfMeetingEnabled)) {
             errors.add(InvalidPaymentReason.INVALID_DATE);
         }
         if (accountBo instanceof LoanBO) {

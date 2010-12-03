@@ -95,7 +95,6 @@ public class CustomerAccountBO extends AccountBO {
 
     private static int numberOfMeetingDatesToGenerate = 10;
 
-    @Override
     public FeePersistence getFeePersistence() {
         if (feePersistence == null) {
             feePersistence = new FeePersistence();
@@ -103,7 +102,6 @@ public class CustomerAccountBO extends AccountBO {
         return feePersistence;
     }
 
-    @Override
     public void setFeePersistence(final FeePersistence feePersistence) {
         this.feePersistence = feePersistence;
     }

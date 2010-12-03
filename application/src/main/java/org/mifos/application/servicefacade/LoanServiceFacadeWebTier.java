@@ -107,6 +107,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.surveys.helpers.SurveyType;
@@ -861,7 +862,9 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
         LoanBO loan = this.loanDao.findById(loanAccountId);
 
-        return loan.isTrxnDateValid(trxnDate);
+        Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(loan.getCustomer().getCustomerId());
+        boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+        return loan.isTrxnDateValid(trxnDate, meetingDate, repaymentIndependentOfMeetingEnabled);
     }
 
     @Override
