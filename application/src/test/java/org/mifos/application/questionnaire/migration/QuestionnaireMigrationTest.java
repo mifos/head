@@ -164,11 +164,11 @@ public class QuestionnaireMigrationTest {
         List<Survey> surveysSavings = asList(surveySavings1, surveySavings2, surveyAll5);
 
 
-        when(surveysPersistence.retrieveSurveysByTypeIterator(SurveyType.CLIENT)).thenReturn(surveys.iterator());
-        when(surveysPersistence.retrieveSurveysByTypeIterator(SurveyType.CENTER)).thenReturn(surveysCenter.iterator());
-        when(surveysPersistence.retrieveSurveysByTypeIterator(SurveyType.GROUP)).thenReturn(surveysGroup.iterator());
-        when(surveysPersistence.retrieveSurveysByTypeIterator(SurveyType.LOAN)).thenReturn(surveysLoan.iterator());
-        when(surveysPersistence.retrieveSurveysByTypeIterator(SurveyType.SAVINGS)).thenReturn(surveysSavings.iterator());
+        when(surveysPersistence.retrieveNonPPISurveysByTypeIterator(SurveyType.CLIENT)).thenReturn(surveys.iterator());
+        when(surveysPersistence.retrieveNonPPISurveysByTypeIterator(SurveyType.CENTER)).thenReturn(surveysCenter.iterator());
+        when(surveysPersistence.retrieveNonPPISurveysByTypeIterator(SurveyType.GROUP)).thenReturn(surveysGroup.iterator());
+        when(surveysPersistence.retrieveNonPPISurveysByTypeIterator(SurveyType.LOAN)).thenReturn(surveysLoan.iterator());
+        when(surveysPersistence.retrieveNonPPISurveysByTypeIterator(SurveyType.SAVINGS)).thenReturn(surveysSavings.iterator());
 
 
         QuestionGroupDto questionGroupDto1 = getQuestionGroupDto("Sur1", "Ques1", "View", "Client");
@@ -313,7 +313,7 @@ public class QuestionnaireMigrationTest {
         verify(questionnaireMigrationMapper, times(13)).map(any(SurveyInstance.class), anyInt(), anyInt());
         verify(questionnaireServiceFacade, times(15)).createQuestionGroup(any(QuestionGroupDto.class));
         verify(questionnaireServiceFacade, times(13)).saveQuestionGroupInstance(any(QuestionGroupInstanceDto.class));
-        verify(surveysPersistence, times(1)).retrieveSurveysByTypeIterator(SurveyType.CLIENT);
+        verify(surveysPersistence, times(1)).retrieveNonPPISurveysByTypeIterator(SurveyType.CLIENT);
         verify(surveysPersistence, times(15)).retrieveInstancesBySurveyIterator(any(Survey.class));
     }
 
