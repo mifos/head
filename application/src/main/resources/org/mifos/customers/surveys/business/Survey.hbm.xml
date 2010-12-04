@@ -44,6 +44,9 @@
 	<query name="surveys.retrieveSurveysByType">
 		<![CDATA[from Survey as survey where survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='all' order by survey.name]]>
 	</query>
+    <query name="surveys.retrieveNonPPISurveysByType">
+		<![CDATA[from Survey as survey where survey.class != PPISurvey and (survey.appliesTo=:SURVEY_TYPE or survey.appliesTo='all') order by survey.name]]>
+	</query>
 	<query name="surveys.retrieveSurveysByName">
 		<![CDATA[from Survey as survey where survey.name=:SURVEY_NAME order by survey.name]]>
 	</query>

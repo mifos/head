@@ -206,4 +206,10 @@ public class SurveysPersistence extends Persistence {
         query.setParameter("SURVEY_TYPE", type.getValue());
         return query.iterate();
     }
+
+    public Iterator<Survey> retrieveNonPPISurveysByTypeIterator(SurveyType type) throws PersistenceException {
+        Query query = getSession().getNamedQuery(NamedQueryConstants.SURVEYS_NON_PPI_RETRIEVE_BY_TYPE);
+        query.setParameter("SURVEY_TYPE", type.getValue());
+        return query.iterate();
+    }
 }
