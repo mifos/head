@@ -122,23 +122,23 @@
           </div>
           <div class="clear">&nbsp;</div>
           <p class="fontBold margin10topbottom">[@spring.message "manageProducts.defineSavingsProducts.targetedDepositsandWithdrawalRestrictions" /]</p>
-          <div class="prepend-4  span-21 last">
-          	<div class="span-21 "><span class="pull-2 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.typeofdeposits" /]:</span>
+          <div class="prepend-5  span-21 last">
+          	<div class="span-20 "><span class="pull-3 span-8 rightAlign"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.typeofdeposits" /]:</span>
           		<span class="span-4">
           		[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedDepositType", savingsProduct.depositTypeOptions, "--Select--", "onchange='fnCheckRecMand()'" /]
 				</span>
 			</div>
-            <div class="span-21 ">
-            	<span class="span-8 rightAlign" id="recamnt" style="margin-left: -80px;">[@spring.message "manageProducts.defineSavingsProducts.recommendedAmountforDeposit" /]:</span>
-            	<span class="pull-2 span-8 rightAlign" id="mandamnt" style="display: none"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.mandatoryAmountforDeposit" /]:</span>
+            <div class="span-20 ">
+            	<span class="span-8 rightAlign" id="recamnt" style="margin-left: -120px;">[@spring.message "manageProducts.defineSavingsProducts.recommendedAmountforDeposit" /]:</span>
+            	<span class="pull-3 span-8 rightAlign" id="mandamnt" style="display: none"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.mandatoryAmountforDeposit" /]:</span>
             	<span class="span-4">[@spring.formInput "savingsProduct.amountForDeposit" /]</span>
   			</div>
-            <div class="span-21 "><span class="pull-2 span-8 rightAlign" id="appliesto"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.amountAppliesto" /]:</span>
+            <div class="span-20 "><span class="pull-3 span-8 rightAlign" id="appliesto"><span class="red">* </span>[@spring.message "manageProducts.defineSavingsProducts.amountAppliesto" /]:</span>
             	<span class="span-4">
    				[@mifos.formSingleSelectWithPrompt "savingsProduct.selectedGroupSavingsApproach", savingsProduct.groupSavingsApproachOptions, "--Select--", "disabled=disabled" /]
 				</span>
 			</div>
-            <div class="span-21 "><span class="pull-2 span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.maxamountperwithdrawal" /]:</span>
+            <div class="span-20 "><span class="pull-3 span-8 rightAlign">[@spring.message "manageProducts.defineSavingsProducts.maxamountperwithdrawal" /]:</span>
             	<span class="span-4">[@spring.formInput "savingsProduct.maxWithdrawalAmount" /]</span>
   			</div>
           </div>
