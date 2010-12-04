@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/UIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:25+0530\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2010-11-30 14:11-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,32 +24,30 @@ msgstr "客户号"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST"
-msgid "the number of digits after the decimal separator exceeds the allowed number %s"
+msgid ""
+"the number of digits after the decimal separator exceeds the allowed number "
+"%s"
 msgstr "小数位数超过允许的%s位"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY"
-msgid "the number of digits after the decimal separator exceeds the allowed number %s"
+msgid ""
+"the number of digits after the decimal separator exceeds the allowed number "
+"%s"
 msgstr "小数位数超过允许的%s位"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST"
-msgid "the number of digits before the decimal separator exceeds the allowed number %s"
+msgid ""
+"the number of digits before the decimal separator exceeds the allowed number "
+"%s"
 msgstr "个数位数超过允许的%s位"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY"
-msgid "the number of digits before the decimal separator exceeds the allowed number %s"
-msgstr "小数位数超过允许的%s位"
-
-#: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
-msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
-msgid "the number of digits before the decimal separator exceeds the allowed number %s"
-msgstr "小数位数超过允许的%s位"
-
-#: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
-msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
-msgid "the number of digits after the decimal separator exceeds the allowed number %s"
+msgid ""
+"the number of digits before the decimal separator exceeds the allowed number "
+"%s"
 msgstr "小数位数超过允许的%s位"
 
 #: ID
@@ -56,22 +55,7 @@ msgid "ID"
 msgstr "ID"
 
 #: INTEREST_OUT_OF_RANGE
-msgctxt "INTEREST_OUT_OF_RANGE"
-msgid "it is not in between %s1 and %s2."
-msgstr "它未介于%s1和%s2之间。"
 
-#: CASH_FLOW_THRESHOLD_OUT_OF_RANGE
-msgctxt "CASH_FLOW_THRESHOLD_OUT_OF_RANGE"
-msgid "it is not in between %s1 and %s2."
-msgstr "它未介于%s1和%s2之间。"
-
-#: INDEBTEDNESS_RATIO_OUT_OF_RANGE
-msgctxt "INDEBTEDNESS_RATIO_OUT_OF_RANGE"
-msgid "it is not in between %s1 and %s2."
-msgstr "它未介于%s1和%s2之间。"
-
-#: REPAYMENT_CAPACITY_OUT_OF_RANGE
-msgctxt "REPAYMENT_CAPACITY_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
 msgstr "它未介于%s1和%s2之间。"
 

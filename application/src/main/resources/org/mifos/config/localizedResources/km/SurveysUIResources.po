@@ -1,10 +1,10 @@
 # extracted from SurveysUIResources.properties
-#. extracted from SurveysUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SurveysUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2009-09-29 02:05-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -235,7 +235,8 @@ msgid "Attach survey"
 msgstr "ភ្ជាប់និងការស្ទង់ស្ថិតិ"
 
 #: Surveys.attachasurvey
-msgid "Attach a survey"
+
+msgid "Attach a Survey"
 msgstr "ភ្ជាប់និងការស្ទង់ស្ថិតិ"
 
 #: Surveys.between
@@ -418,10 +419,8 @@ msgid "Loan accounts"
 msgstr "គណនីកំចី"
 
 #: Surveys.mainpage_instructions
-msgid "Click on a survey below to view details and make changes or"
+msgid "Click on a survey below to view details."
 msgstr ""
-"ចុចលើការស្រង់ស្ថិតិខាងក្រោមដើម្បីបើកមើលពត៍មានលំអិតខាងក្រោម "
-"ហើយធ្វើការផ្លាស់ប្តូឬ"
 
 #: Surveys.manageQuestions
 msgid "Manage questions"
@@ -514,8 +513,8 @@ msgid "Survey name"
 msgstr "ឈ្មោះនៃការស្រង់ស្ថិតិ"
 
 #: Surveys.viewQuestions_instructions
-msgid "Click on a question below to view details and make changes or "
-msgstr "ចុចលើសំនួរខាងក្រោមដើម្បីបើកមើលពត៍មានលំអិតនិងដើម្បីធ្វើការផ្លាស់ប្តូ"
+msgid "Click on a question below to view details. "
+msgstr ""
 
 #: Surveys.viewQuestions_ppi_note
 msgid "Note: questions flagged as PPI may not be attached to general surveys."
@@ -618,3 +617,16 @@ msgstr "</li>"
 #: erros.invalidnumberofchoices
 msgid "Please specify at least 2 choices for this type of answer."
 msgstr "សូមបញ្ជាក់យ៉ាងតិច២ជំរើសសំរាប់ប្រភេទនៃចំលើយ"
+
+#: Questionnaire.EditAdditonalInformation
+
+msgid "Edit Additional Information"
+msgstr "កែតំរូវពត៍មានសំនួ"
+
+#~ msgid "Click on a survey below to view details and make changes or"
+#~ msgstr ""
+#~ "ចុចលើការស្រង់ស្ថិតិខាងក្រោមដើម្បីបើកមើលពត៍មានលំអិតខាងក្រោម "
+#~ "ហើយធ្វើការផ្លាស់ប្តូឬ"
+
+#~ msgid "Click on a question below to view details and make changes or "
+#~ msgstr "ចុចលើសំនួរខាងក្រោមដើម្បីបើកមើលពត៍មានលំអិតនិងដើម្បីធ្វើការផ្លាស់ប្តូ"

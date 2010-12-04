@@ -1,9 +1,9 @@
-#. extracted from GroupUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/GroupUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2009-08-18 21:14-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1018,6 +1018,10 @@ msgstr "បានយល់ព្រម"
 #: button.cancel
 msgid "Cancel"
 msgstr "បោះបង់"
+
+#: button.continue
+msgid "Continue"
+msgstr ""
 
 #: button.editstatus
 msgid "Edit status"

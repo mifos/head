@@ -1,9 +1,10 @@
 # extracted from SurveysUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SurveysUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:28+0530\n"
+"POT-Creation-Date: 2010-12-03 20:29-0700\n"
 "PO-Revision-Date: 2010-11-30 15:54-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,12 +95,18 @@ msgid "Details"
 msgstr "Detalles"
 
 #: Surveys.EditInstructions
-msgid "Complete the fields below. Then click Submit. Click Cancel to return to View question page without submitting information."
-msgstr "Complete los campos de abajo. Entonces haga clic en Enviar. Haga clic en Cancelar para Ver la página de preguntas sin enviar ninguna información."
+msgid ""
+"Complete the fields below. Then click Submit. Click Cancel to return to View "
+"question page without submitting information."
+msgstr ""
+"Complete los campos de abajo. Entonces haga clic en Enviar. Haga clic en "
+"Cancelar para Ver la página de preguntas sin enviar ninguna información."
 
 #: Surveys.EditNote
 msgid "Note: Significant modifications of questions could affect reporting."
-msgstr "Nota\\: Modificaciones significativas de las preguntas pueden afectar el reporte."
+msgstr ""
+"Nota\\: Modificaciones significativas de las preguntas pueden afectar el "
+"reporte."
 
 #: Surveys.EditQuestion
 msgid "Edit Question"
@@ -292,8 +299,13 @@ msgid "Centers"
 msgstr "Centros"
 
 #: Surveys.choose_page_instructions
-msgid "Select a survey from the list below. Then click Continue. Click Cancel to return to client details without submitting information"
-msgstr "Seleccione una encuesta de la lista de abajo. Haga clic en Continuar. Haga clic en Cancelar para regresar al detalle del cliente sin enviar la información"
+msgid ""
+"Select a survey from the list below. Then click Continue. Click Cancel to "
+"return to client details without submitting information"
+msgstr ""
+"Seleccione una encuesta de la lista de abajo. Haga clic en Continuar. Haga "
+"clic en Cancelar para regresar al detalle del cliente sin enviar la "
+"información"
 
 #: Surveys.chooseofficer
 msgid "Choose loan officer"
@@ -309,8 +321,13 @@ msgid "Clients"
 msgstr "Clientes"
 
 #: Surveys.create_page_instructions
-msgid "Complete the fields below. To add questions click Add Questions. Click Cancel to return to Admin without submitting information."
-msgstr "Complete los campos abajo. Para agregar preguntas haga clic en Agregar preguntas. Haga clic en Cancelar para volver al administrador sin enviar la información."
+msgid ""
+"Complete the fields below. To add questions click Add Questions. Click "
+"Cancel to return to Admin without submitting information."
+msgstr ""
+"Complete los campos abajo. Para agregar preguntas haga clic en Agregar "
+"preguntas. Haga clic en Cancelar para volver al administrador sin enviar la "
+"información."
 
 #: Surveys.createsurveyheader
 msgid "You have successfully defined a new survey"
@@ -371,8 +388,13 @@ msgid "Enter survey data"
 msgstr "Introduzca la información de la encuesta"
 
 #: Surveys.instance.instructions
-msgid "Enter survey data and click Preview. Click Clear All to clear selections. Click Cancel to return to client details without submitting information."
-msgstr "Introduzca la información de la encuesta y haga clic en Vista Previa. Haga clic en Borrar Todo para borrar la selección. Haga clic en Cancelar para regresar al detalle del cliente sin enviar la información."
+msgid ""
+"Enter survey data and click Preview. Click Clear All to clear selections. "
+"Click Cancel to return to client details without submitting information."
+msgstr ""
+"Introduzca la información de la encuesta y haga clic en Vista Previa. Haga "
+"clic en Borrar Todo para borrar la selección. Haga clic en Cancelar para "
+"regresar al detalle del cliente sin enviar la información."
 
 #: Surveys.instance.surveyedby
 msgid "Surveyed by"
@@ -456,8 +478,14 @@ msgid "Review & submit"
 msgstr "Revise y envie"
 
 #: Surveys.reviewInstructions
-msgid "Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Admin page without submitting information."
-msgstr "Revise la información de abajo. Haga clic en Enviar si usted está satisfecho o haga clic en Editar para hacer cambios. Haga clic en Cancelar para regresar a la página de la Administración sin enviar la información."
+msgid ""
+"Review the information below. Click Submit if you are satisfied or click "
+"Edit to make changes. Click Cancel to return to Admin page without "
+"submitting information."
+msgstr ""
+"Revise la información de abajo. Haga clic en Enviar si usted está satisfecho "
+"o haga clic en Editar para hacer cambios. Haga clic en Cancelar para "
+"regresar a la página de la Administración sin enviar la información."
 
 #: Surveys.savings
 msgctxt "Surveys.savings"
@@ -494,7 +522,8 @@ msgstr "Pulse en una pregunta de abajo para ver detalles."
 
 #: Surveys.viewQuestions_ppi_note
 msgid "Note: questions flagged as PPI may not be attached to general surveys."
-msgstr "Nota\\: preguntas marcadas como PPI no pueden estar anexadas a las encuestas."
+msgstr ""
+"Nota\\: preguntas marcadas como PPI no pueden estar anexadas a las encuestas."
 
 #: Surveys.viewallsurveys
 msgid "View all surveys"
@@ -527,7 +556,9 @@ msgstr "Fecha no válida"
 
 #: errors.DateValidator.invalidpersonnel
 msgid "Specify a valid officer username or ID"
-msgstr "Especifique el nombre de usuario del oficial que sea válido o la identificación"
+msgstr ""
+"Especifique el nombre de usuario del oficial que sea válido o la "
+"identificación"
 
 #: errors.EnumValidator.INVALID_ENUM
 msgctxt "errors.EnumValidator.INVALID_ENUM"

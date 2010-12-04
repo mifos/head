@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CustomerSearchUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:24+0530\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2010-12-01 14:34+0800\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -160,7 +161,9 @@ msgid "account you can"
 msgstr "账户您可以"
 
 #: error.activity.not.allowed
-msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you the required permissions and try again."
 msgstr "您没有进行该操作的权限。请您在请求系统管理员授予您权限后重试。"
 
 #: errors.footer
@@ -176,7 +179,9 @@ msgid "Please select a Branch to proceed."
 msgstr "请选择一个部门以便继续。"
 
 #: errors.namemandatory
-msgid "Please specify the Name, System ID or Account Number to be searched for in the application."
+msgid ""
+"Please specify the Name, System ID or Account Number to be searched for in "
+"the application."
 msgstr "请输入要搜索的名称、系统序号或帐号。"
 
 #: errors.nosearchstring
@@ -193,7 +198,7 @@ msgstr "</LI>"
 
 #~ msgid "name, system ID or account number"
 #~ msgstr "名称、系统序号或帐号"
-#~ msgctxt "CustomerSearch.searchstring"
 
+#~ msgctxt "CustomerSearch.searchstring"
 #~ msgid "Search by name, system ID or account number"
 #~ msgstr "搜索名称、系统序号或帐号"

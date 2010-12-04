@@ -1,9 +1,10 @@
 # extracted from CustomerUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CustomerUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:28+0530\n"
+"POT-Creation-Date: 2010-12-03 20:29-0700\n"
 "PO-Revision-Date: 2010-11-30 15:09-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,8 +26,12 @@ msgid "Account statement as of"
 msgstr "Estado de Cuenta al"
 
 #: Customer.ActiveAccountsPresent
-msgid "Status of customer cannot be changed to Closed. Active Accounts exist for this customer."
-msgstr "No de puede cambiar el estatus del cliente a Cerrado. Todavía hay cuentas activas para este cliente."
+msgid ""
+"Status of customer cannot be changed to Closed. Active Accounts exist for "
+"this customer."
+msgstr ""
+"No de puede cambiar el estatus del cliente a Cerrado. Todavía hay cuentas "
+"activas para este cliente."
 
 #: Customer.AddNewNote
 msgid "Add new note"
@@ -38,8 +43,12 @@ msgid "Amount"
 msgstr "Importe"
 
 #: Customer.CenterStateChangeException
-msgid "Status of customer cannot be changed to Inactive. Active Accounts exist for this customer."
-msgstr "No de puede cambiar el estatus del cliente a Inactivo. Todavía hay cuentas activas para este cliente."
+msgid ""
+"Status of customer cannot be changed to Inactive. Active Accounts exist for "
+"this customer."
+msgstr ""
+"No de puede cambiar el estatus del cliente a Inactivo. Todavía hay cuentas "
+"activas para este cliente."
 
 #: Customer.ChecklistMsg
 msgid "Complete and check off the following tasks."
@@ -111,8 +120,14 @@ msgid "Last Name"
 msgstr "Apellidos"
 
 #: Customer.LoanOfficerInactive
-msgid "The selected Loan Officer has been made inactive/has been made a non loan officer/has been transferred. Please try again with a different Loan Officer."
-msgstr "El Oficiales de Crédito seleccionado se ha cambiado a inactivo/ya no se ocupa de préstamos/ha sido trasferido. Por favor inténtelo de nuevo con un Oficiales de Crédito diferente."
+msgid ""
+"The selected Loan Officer has been made inactive/has been made a non loan "
+"officer/has been transferred. Please try again with a different Loan "
+"Officer."
+msgstr ""
+"El Oficiales de Crédito seleccionado se ha cambiado a inactivo/ya no se "
+"ocupa de préstamos/ha sido trasferido. Por favor inténtelo de nuevo con un "
+"Oficiales de Crédito diferente."
 
 #: Customer.NewStatus
 msgid "New status"
@@ -204,8 +219,14 @@ msgid "Add note"
 msgstr "Añadir Nota"
 
 #: Customer.adjustment_detail
-msgid "Last payment can be reversed if required. If the adjustment is made, system will make a reverse transaction entry and the account balance will be updated."
-msgstr "El último pago se puede revertir si fuera necesario. Si se hace este ajuste, el sistema efectuará una entrada para una operación inversa y se actualizará el balance de la cuenta."
+msgid ""
+"Last payment can be reversed if required. If the adjustment is made, system "
+"will make a reverse transaction entry and the account balance will be "
+"updated."
+msgstr ""
+"El último pago se puede revertir si fuera necesario. Si se hace este ajuste, "
+"el sistema efectuará una entrada para una operación inversa y se "
+"actualizará el balance de la cuenta."
 
 #: Customer.adminFeeAmount
 msgid "Fee Amount For Admin fee(s)"
@@ -301,8 +322,14 @@ msgid "Review adjustment"
 msgstr "Revisar ajuste"
 
 #: Customer.reviewadjustment_detail
-msgid "Are you sure you want to adjust the last transaction? Click Submit to confirm. Click Cancel to to return to details page without adjusting the transaction."
-msgstr "¿Está seguro de querer ajustar la última operación? Pulse Enviar para confirmar. Pulse Cancelar para volver a la página de detalles sin ajustar la operación."
+msgid ""
+"Are you sure you want to adjust the last transaction? Click Submit to "
+"confirm. Click Cancel to to return to details page without adjusting the "
+"transaction."
+msgstr ""
+"¿Está seguro de querer ajustar la última operación? Pulse Enviar para "
+"confirmar. Pulse Cancelar para volver a la página de detalles sin ajustar la "
+"operación."
 
 #: Customer.status
 msgid "status"
@@ -327,7 +354,9 @@ msgstr "El estatus de {0} debería ser mayor que el de {1}"
 
 #: LoanOfficerNotAssignedException
 msgid "This status cannot be changed as Loan Officer is not assigned."
-msgstr "No se puede cambiar el estatus ya que no se ha asignado un Oficial de Crédito."
+msgstr ""
+"No se puede cambiar el estatus ya que no se ha asignado un Oficial de "
+"Crédito."
 
 #: Postedby
 msgid "Posted by"
@@ -353,12 +382,20 @@ msgid "Submit"
 msgstr "Enviar"
 
 #: error.activity.not.allowed
-msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
-msgstr "No tiene permiso para realizar esta actividad. Contacte con el Administrador del Sistema para obtener los permisos necesarios e inténtelo de nuevo."
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you the required permissions and try again."
+msgstr ""
+"No tiene permiso para realizar esta actividad. Contacte con el Administrador "
+"del Sistema para obtener los permisos necesarios e inténtelo de nuevo."
 
 #: error.customernotfound
-msgid "Customer with {0} ID is not found in the system. Please try again with a different ID."
-msgstr "No se ha encontrado un cliente con una ID {0} en el sistema. Por favor inténtelo de nuevo con una ID diferente."
+msgid ""
+"Customer with {0} ID is not found in the system. Please try again with a "
+"different ID."
+msgstr ""
+"No se ha encontrado un cliente con una ID {0} en el sistema. Por favor "
+"inténtelo de nuevo con una ID diferente."
 
 #: error.incompletechecklist
 msgid "Please select all the items in the checklist and click submit."
@@ -369,16 +406,25 @@ msgid "This action is not permissible"
 msgstr "Esta acción no está permitida"
 
 #: error.unknownexception
-msgid "Unknown exception occurred in the application. Please try again later or contact the system administrator."
-msgstr "Ha ocurrido una excepción desconocida en la aplicación. Por favor inténtelo de nuevo más tarde o contacte con el Administrador del Sistema."
+msgid ""
+"Unknown exception occurred in the application. Please try again later or "
+"contact the system administrator."
+msgstr ""
+"Ha ocurrido una excepción desconocida en la aplicación. Por favor inténtelo "
+"de nuevo más tarde o contacte con el Administrador del Sistema."
 
 #: error.versionnodonotmatch
-msgid "The record has already been modified by another user. Please navigate to the details page and start the activity again. "
-msgstr "Este registro ya ha sido modificado por otro usuario. Por favor vuelva a la página de detalles y comience la actividad de nuevo."
+msgid ""
+"The record has already been modified by another user. Please navigate to the "
+"details page and start the activity again. "
+msgstr ""
+"Este registro ya ha sido modificado por otro usuario. Por favor vuelva a la "
+"página de detalles y comience la actividad de nuevo."
 
 #: errors.Client.groupCancelled
 msgid "Status cannot be changed since {0} is in Cancelled state."
-msgstr "No se puede cambiar el estatus ya que {0} se encuentra en estado Cancelado."
+msgstr ""
+"No se puede cambiar el estatus ya que {0} se encuentra en estado Cancelado."
 
 #: errors.adjustmentNoteTooBig
 msgid "The adjustment note cannot be more than 300 characters."
@@ -403,7 +449,9 @@ msgstr "El {0} es invalido devido a {1}"
 
 #: errors.grouploanofficernotassigned
 msgid "Status cannot be changed to Active since Loan officer is not assigned."
-msgstr "No se puede cambiar el estatus a Activo ya que no se ha asignado un Oficial de Crédito."
+msgstr ""
+"No se puede cambiar el estatus a Activo ya que no se ha asignado un Oficial "
+"de Crédito."
 
 #: errors.invalidNumber
 msgctxt "errors.invalidNumber"
@@ -438,7 +486,9 @@ msgstr "La longitud máxima para el campo {0} es de {1}."
 
 #: errors.meetingnotassigned
 msgid "Status cannot be changed to Active since Meeting is not assigned."
-msgstr "No se puede cambiar el estatus a Activo ya que no se ha asignado una reunión."
+msgstr ""
+"No se puede cambiar el estatus a Activo ya que no se ha asignado una "
+"reunión."
 
 #: errors.mustNotBeNegative
 msgid "{0} must not be negative."
@@ -453,8 +503,12 @@ msgid "</LI>"
 msgstr "</LI>"
 
 #: exception.accounts.ApplicationException.CannotAdjust
-msgid "The amount cannot be adjusted either because the status is not yet active or because a payment was received at the time of disbursement."
-msgstr "No se puede ajustar el importe debido a que el estatus no es todavía activo o porque se recibió un pago en el momento del desembolso."
+msgid ""
+"The amount cannot be adjusted either because the status is not yet active or "
+"because a payment was received at the time of disbursement."
+msgstr ""
+"No se puede ajustar el importe debido a que el estatus no es todavía activo "
+"o porque se recibió un pago en el momento del desembolso."
 
 #: exception.accounts.ApplicationException.FindByGlobalAccntException
 msgid "This account number {0} does not exist."
@@ -473,8 +527,12 @@ msgid "MFI joining date:"
 msgstr "Fecha de afiliación a la IMF\\:"
 
 #: label.MsgOnAddNotePage
-msgid "Enter a note in the field below. Then click preview. Click Cancel to return to details page without submitting information."
-msgstr "Introduzca una nota en el campo de abajo. Pulse Cancelar para volver a la página de detalles sin enviar la información."
+msgid ""
+"Enter a note in the field below. Then click preview. Click Cancel to return "
+"to details page without submitting information."
+msgstr ""
+"Introduzca una nota en el campo de abajo. Pulse Cancelar para volver a la "
+"página de detalles sin enviar la información."
 
 #: label.add_edit_hd
 msgid "Add/Edit historical Data"
@@ -563,7 +621,8 @@ msgstr "Pulse Editar para realizar cambios."
 
 #: label.noteMsg4
 msgid "Click Cancel to return to details page without submitting information."
-msgstr "Pulse Enviar para volver a la página de detalles sin enviar la información."
+msgstr ""
+"Pulse Enviar para volver a la página de detalles sin enviar la información."
 
 #: label.notes
 msgctxt "label.notes"

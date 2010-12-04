@@ -799,7 +799,7 @@ msgid "Instance information"
 msgstr "Informação de Instância"
 
 #: accounts.instance_name
-#, fuzzy
+
 msgctxt "accounts.instance_name"
 msgid "Loan instance name"
 msgstr "Nome da Instância de Empréstimo"

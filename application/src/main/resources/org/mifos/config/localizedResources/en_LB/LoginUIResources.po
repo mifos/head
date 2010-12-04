@@ -1,10 +1,10 @@
 # extracted from LoginUIResources.properties
-#. extracted from LoginUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LoginUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:50+0800\n"
+"POT-Creation-Date: 2010-12-03 20:30-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,26 +30,9 @@ msgstr ""
 msgid "You have been logged out of the system because Mifos is shutting down."
 msgstr ""
 
-#: AbstractUserDetailsAuthenticationProvider.disabled
-msgid ""
-"The user account is currently inactive. Please try again later or contact "
-"the system administrator."
-msgstr ""
-
 #: errors.invalidoldpassword
 msgctxt "errors.invalidoldpassword"
 msgid "Please specify valid username/password to access the application."
-msgstr ""
-
-#: AbstractUserDetailsAuthenticationProvider.badCredentials
-msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
-msgid "Please specify valid username/password to access the application."
-msgstr ""
-
-#: AbstractUserDetailsAuthenticationProvider.locked
-msgid ""
-"The user account is currently locked. Please try again later or contact the "
-"system administrator."
 msgstr ""
 
 #: errors.logoutout
@@ -118,11 +101,11 @@ msgid "Confirm New Password"
 msgstr ""
 
 #: login.login
-msgid "Login"
+msgid "Log In"
 msgstr ""
 
 #: login.logout
-msgid "Logout"
+msgid "Log Out"
 msgstr ""
 
 #: login.newpassword
@@ -147,6 +130,19 @@ msgstr ""
 
 #: login.welcome
 msgid "Welcome to mifos"
+msgstr ""
+
+#. # Spring security specific messages overrides org.springframwork.security/message.properties
+#: AbstractUserDetailsAuthenticationProvider.locked
+msgid ""
+"The user account is currently locked. Please try again later or contact the "
+"system administrator."
+msgstr ""
+
+#: AbstractUserDetailsAuthenticationProvider.disabled
+msgid ""
+"The user account is currently inactive. Please try again later or contact "
+"the system administrator."
 msgstr ""
 
 #: AbstractUserDetailsAuthenticationProvider.badCredentials

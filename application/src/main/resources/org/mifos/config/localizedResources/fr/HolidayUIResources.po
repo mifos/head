@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/HolidayUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:27+0530\n"
+"POT-Creation-Date: 2010-12-03 20:27-0700\n"
 "PO-Revision-Date: 2010-12-01 18:47+0100\n"
 "Last-Translator: lassaad <lbhadj@voila.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,12 +28,23 @@ msgid "Custom field: "
 msgstr "Champ personnalisé\\:"
 
 #: error.activity.not.allowed
-msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you required permissions and try again.<br><br>"
-msgstr "Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre administrateur système pour t'accorder les permissions requises et essayer encore.<br><br>"
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you required permissions and try again.<br><br>"
+msgstr ""
+"Vous n'avez pas des permissions d'exécuter cette activité. Contacter votre "
+"administrateur système pour t'accorder les permissions requises et essayer "
+"encore.<br><br>"
 
 #: error.holiday.levelNotConfigured
-msgid "Cannot create this holiday as the configuration of this level has been modified by another user. Please try creating again or change the holiday type."
-msgstr "Ne peut pas créer ce jour férié car la configuration de ce niveau a été modifiée par un autre utilisateur. Essayer de créer encore ou veuiller changer le type de jour férié."
+msgid ""
+"Cannot create this holiday as the configuration of this level has been "
+"modified by another user. Please try creating again or change the holiday "
+"type."
+msgstr ""
+"Ne peut pas créer ce jour férié car la configuration de ce niveau a été "
+"modifiée par un autre utilisateur. Essayer de créer encore ou veuiller "
+"changer le type de jour férié."
 
 #: error.holiday.mandatory_field
 msgctxt "error.holiday.mandatory_field"
@@ -41,27 +53,44 @@ msgstr "Veuiller indiquer {0}."
 
 #: errors.fromdateexception
 msgid "Holiday can't be added for current date or dates in the past."
-msgstr "le jour férié ne peut pas être ajouté pour la date du jour ou les dates passées."
+msgstr ""
+"le jour férié ne peut pas être ajouté pour la date du jour ou les dates "
+"passées."
 
 #: errors.holiday.holidaylevelnotconfigured
-msgid "The holiday cannot be made active as this holiday level is not configured currently."
-msgstr "Le jour férié ne peut pas être activé car ce niveau de jour férié n'est pas configuré actuellement."
+msgid ""
+"The holiday cannot be made active as this holiday level is not configured "
+"currently."
+msgstr ""
+"Le jour férié ne peut pas être activé car ce niveau de jour férié n'est pas "
+"configuré actuellement."
 
 #: errors.holiday.parentinvalid
-msgid "The holiday cannot be activated as the parent holiday is not a valid parent now."
-msgstr "Le jour férié ne peut pas être activé car le parent de jour férié n' est pas un parent valide maintenant."
+msgid ""
+"The holiday cannot be activated as the parent holiday is not a valid parent "
+"now."
+msgstr ""
+"Le jour férié ne peut pas être activé car le parent de jour férié n' est pas "
+"un parent valide maintenant."
 
 #: errors.holiday.parentnotactive
 msgid "The holiday cannot be activated as the parent holiday is inactive."
-msgstr "Le jour férié ne peut pas être activé car le parent de jour férié n' est pas activé."
+msgstr ""
+"Le jour férié ne peut pas être activé car le parent de jour férié n' est pas "
+"activé."
 
 #: errors.holiday.shortname.minlength
 msgid "Minimum length for holiday short name is {2} characters."
 msgstr "La longueur minimum pour le acronyme de jour férié est {2} caractères."
 
 #: errors.holiday.updationhierarchyfailed
-msgid "An unexpected error has occurred during the holiday hierarchy change. Please try again later or contact the system administrator."
-msgstr "Une erreur inattendue s'est  produite au moment de changement  d 'hiérarchie de jour férié .Veuillez essayer encore plus tard ou contacter votre  administrateur système."
+msgid ""
+"An unexpected error has occurred during the holiday hierarchy change. Please "
+"try again later or contact the system administrator."
+msgstr ""
+"Une erreur inattendue s'est  produite au moment de changement  d 'hiérarchie "
+"de jour férié .Veuillez essayer encore plus tard ou contacter votre  "
+"administrateur système."
 
 #: errors.prefix
 msgid "<li>"
@@ -72,8 +101,12 @@ msgid "</li>"
 msgstr "</li>"
 
 #: errors.thrudateexception
-msgid "Holiday To Date can be either greater than or equal to From Date or left blank."
-msgstr "le jour férié jusqu'ici peut être supérieur ou égal à de date ou de blanc gauche."
+msgid ""
+"Holiday To Date can be either greater than or equal to From Date or left "
+"blank."
+msgstr ""
+"le jour férié jusqu'ici peut être supérieur ou égal à de date ou de blanc "
+"gauche."
 
 #: exception.framework.DoubleSubmitException
 msgid "This action is not permissible."
@@ -147,46 +180,91 @@ msgid "Edit Holiday"
 msgstr "Editer jour férié"
 
 #: holiday.error.creationFailed
-msgid "An unexpected error has occurred during holiday creation. Please try again later or contact the system administrator."
-msgstr "Une erreur inattendue s'est  produite au moment de la création de jour férié .Veuillez essayer encore plus tard ou contacter votre  administrateur système."
+msgid ""
+"An unexpected error has occurred during holiday creation. Please try again "
+"later or contact the system administrator."
+msgstr ""
+"Une erreur inattendue s'est  produite au moment de la création de jour férié "
+".Veuillez essayer encore plus tard ou contacter votre  administrateur "
+"système."
 
 #: holiday.error.errorInLoadingMasterData
-msgid "The application could not load the holiday hierarchy. Please try again later or contact the system administrator."
-msgstr "Cette application ne pourrait pas Ajouter l'hiérarchie de jour férié . Veuiller essayer encore plus tard ou contacter l'administrateur système ."
+msgid ""
+"The application could not load the holiday hierarchy. Please try again later "
+"or contact the system administrator."
+msgstr ""
+"Cette application ne pourrait pas Ajouter l'hiérarchie de jour férié . "
+"Veuiller essayer encore plus tard ou contacter l'administrateur système ."
 
 #: holiday.error.getFailed
 msgctxt "holiday.error.getFailed"
-msgid "An unexpected error has occurred while retrieving the holiday details. Please try again later or contact the system administrator."
-msgstr "Une erreur inattendue s'est  produite au moment de la récupération de détails de jour férié .Veuillez essayer encore plus tard ou contacter votre  administrateur système."
+msgid ""
+"An unexpected error has occurred while retrieving the holiday details. "
+"Please try again later or contact the system administrator."
+msgstr ""
+"Une erreur inattendue s'est  produite au moment de la récupération de "
+"détails de jour férié .Veuillez essayer encore plus tard ou contacter votre "
+" administrateur système."
 
 #: holiday.error.hasActiveChildern
-msgid "The holiday status cannot be updated as the holiday has active sub holiday(s) under it."
-msgstr "Le  statut de jour férié ne peut pas être mis à jour car le jour férié  a un autre qui lui est inférieur."
+msgid ""
+"The holiday status cannot be updated as the holiday has active sub "
+"holiday(s) under it."
+msgstr ""
+"Le  statut de jour férié ne peut pas être mis à jour car le jour férié  a un "
+"autre qui lui est inférieur."
 
 #: holiday.error.hasActiveHolidayWithThisLevel
-msgid "The application cannot change the holiday hierarchy as there are active holidays in the hierarchy."
-msgstr "Cette application ne peut pas changer l'hiérarchie de jour férié car il y a les jour fériés actifs dans la hiérarchie."
+msgid ""
+"The application cannot change the holiday hierarchy as there are active "
+"holidays in the hierarchy."
+msgstr ""
+"Cette application ne peut pas changer l'hiérarchie de jour férié car il y a "
+"les jour fériés actifs dans la hiérarchie."
 
 #: holiday.error.hasActivePersonnel
-msgid "The holiday status cannot be updated as the holiday has active personnel associated with it."
-msgstr "Le  statut de jour férié ne peut pas être mis à jour car le jour férié  a un personnel actif qui lui est associé."
+msgid ""
+"The holiday status cannot be updated as the holiday has active personnel "
+"associated with it."
+msgstr ""
+"Le  statut de jour férié ne peut pas être mis à jour car le jour férié  a un "
+"personnel actif qui lui est associé."
 
 #: holiday.error.loadFailed
 msgctxt "holiday.error.loadFailed"
-msgid "An unexpected error has occurred while retrieving the holiday details. Please try again later or contact the system administrator."
-msgstr "Une erreur inattendue s'est  produite au moment de la récupération de détails de jour férié .Veuillez essayer encore plus tard ou contacter votre  administrateur système."
+msgid ""
+"An unexpected error has occurred while retrieving the holiday details. "
+"Please try again later or contact the system administrator."
+msgstr ""
+"Une erreur inattendue s'est  produite au moment de la récupération de "
+"détails de jour férié .Veuillez essayer encore plus tard ou contacter votre "
+" administrateur système."
 
 #: holiday.error.updationFailed
-msgid "An unexpected error has occurred while changing the holiday details. Please try again later or contact the system administrator."
-msgstr "Une erreur inattendue s'est  produite au moment au changement de détails de jour férié .Veuillez essayer encore plus tard ou contacter votre  administrateur système."
+msgid ""
+"An unexpected error has occurred while changing the holiday details. Please "
+"try again later or contact the system administrator."
+msgstr ""
+"Une erreur inattendue s'est  produite au moment au changement de détails de "
+"jour férié .Veuillez essayer encore plus tard ou contacter votre  "
+"administrateur système."
 
 #: holiday.error.updationHierarchyFailed
-msgid "An unexpected error has occurred during the holiday hierarchy change. Please try again later or contact the system administrator. "
-msgstr "Une erreur inattendue s'est  produite au moment de changement  d 'hiérarchie de jour férié .Veuillez essayer encore plus tard ou contacter votre  administrateur système."
+msgid ""
+"An unexpected error has occurred during the holiday hierarchy change. Please "
+"try again later or contact the system administrator. "
+msgstr ""
+"Une erreur inattendue s'est  produite au moment de changement  d 'hiérarchie "
+"de jour férié .Veuillez essayer encore plus tard ou contacter votre  "
+"administrateur système."
 
 #: holiday.formHolidayType.nameExist
-msgid "This Holiday name already exists in the application. Please specify a different name."
-msgstr "Ce nom de jour férié existe déjà dans l'application. Veuillez indiquer un nom différent."
+msgid ""
+"This Holiday name already exists in the application. Please specify a "
+"different name."
+msgstr ""
+"Ce nom de jour férié existe déjà dans l'application. Veuillez indiquer un "
+"nom différent."
 
 #: holiday.formHolidayType.pleaseLelect
 msgctxt "holiday.formHolidayType.pleaseLelect"
@@ -199,8 +277,12 @@ msgid "Please specify an Holiday type."
 msgstr "Veuiller indiquer un type de jour férié."
 
 #: holiday.formHolidayType.shortNameExist
-msgid "This Holiday short name already exists in the application. Please specify a different name."
-msgstr "Ce acronyme de jour férié existe déjà dans l'application. Veuillez indiquer un nom différent."
+msgid ""
+"This Holiday short name already exists in the application. Please specify a "
+"different name."
+msgstr ""
+"Ce acronyme de jour férié existe déjà dans l'application. Veuillez indiquer "
+"un nom différent."
 
 #: holiday.formParentHoliday.requiredmsg
 msgid "Please specify a Parent holiday. "
@@ -279,8 +361,12 @@ msgid "City:"
 msgstr "Ville\\:"
 
 #: holiday.labelCompleteTheFields
-msgid "Complete the fields below. Then click Preview. Click Cancel to return to Admin without submitting information."
-msgstr "Compléter les champs ci-dessous. Puis cliquer sur Aperçu . Cliquer sur Annuler pour retourner à l'Admin sans Valider l'information."
+msgid ""
+"Complete the fields below. Then click Preview. Click Cancel to return to "
+"Admin without submitting information."
+msgstr ""
+"Compléter les champs ci-dessous. Puis cliquer sur Aperçu . Cliquer sur "
+"Annuler pour retourner à l'Admin sans Valider l'information."
 
 #: holiday.labelCountry
 msgid "Country:"
@@ -321,8 +407,13 @@ msgid "Holiday code:"
 msgstr "Code jour férié\\:"
 
 #: holiday.labelHolidayCreatedInstruction
-msgid "You can enter a system ID number into the search box to access center details which <br> also include a center's account and performance data."
-msgstr "Vous pouvez entrer un numéro d'ID système dans la boîte de rechrche pour accèder aux détails centraux qu' <br> incluent également le compte d'un centre et les données d'exécution."
+msgid ""
+"You can enter a system ID number into the search box to access center "
+"details which <br> also include a center's account and performance data."
+msgstr ""
+"Vous pouvez entrer un numéro d'ID système dans la boîte de rechrche pour "
+"accèder aux détails centraux qu' <br> incluent également le compte d'un "
+"centre et les données d'exécution."
 
 #: holiday.labelHolidayDetails
 msgid "Holiday details "
@@ -381,12 +472,19 @@ msgid "Organizational Wide Holidays"
 msgstr "Les jour fériés des grandes organisations"
 
 #: holiday.labelMandatoryInstructions
-msgid "Complete the fields below. Then click Preview. Click Cancel to return to Holiday Details Page without submitting information. "
-msgstr "Compléter les champs ci-dessous. Puis cliquer sur Aperçu. Cliquer sur Annuler pour retourner au  page des détais de jour férié sans Valider l' information."
+msgid ""
+"Complete the fields below. Then click Preview. Click Cancel to return to "
+"Holiday Details Page without submitting information. "
+msgstr ""
+"Compléter les champs ci-dessous. Puis cliquer sur Aperçu. Cliquer sur "
+"Annuler pour retourner au  page des détais de jour férié sans Valider l' "
+"information."
 
 #: holiday.labelMaxMinLevel
 msgid "The holiday hierarchy can have minimum two and maximum five levels"
-msgstr "L'hiérarchie de jour férié peut avoir au  minimum deux et au  maximum cinq niveaux"
+msgstr ""
+"L'hiérarchie de jour férié peut avoir au  minimum deux et au  maximum cinq "
+"niveaux"
 
 #: holiday.labelNo
 msgid "No"
@@ -397,8 +495,11 @@ msgid "Note:"
 msgstr "Note\\:"
 
 #: holiday.labelNoteInstruction
-msgid "The highest and lowest hierarchy levels cannot be removed from the system."
-msgstr "Le plus haut et le plus bas  niveaux de l'hiérarchie ne peut pas être supprimé du système ."
+msgid ""
+"The highest and lowest hierarchy levels cannot be removed from the system."
+msgstr ""
+"Le plus haut et le plus bas  niveaux de l'hiérarchie ne peut pas être "
+"supprimé du système ."
 
 #: holiday.labelParentHoliday
 msgid "Parent holiday:"
@@ -462,7 +563,9 @@ msgstr "Afficher l'hiérarchie de jour férié"
 
 #: holiday.labelViewHolidayInstruction
 msgid "Click on an office below to view and add holidays for the office"
-msgstr "Cliquer sur un bureau ci-dessous pour aficher et ajouter les jour fériés pour ce bureau"
+msgstr ""
+"Cliquer sur un bureau ci-dessous pour aficher et ajouter les jour fériés "
+"pour ce bureau"
 
 #: holiday.mandatory_selectbox
 msgid "Please select {0}."
@@ -492,4 +595,3 @@ msgstr "Veuiller indiquer un acronyme de jour férié."
 #: holiday.title
 msgid "Mifos"
 msgstr "Mifos"
-

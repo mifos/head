@@ -1,5 +1,4 @@
 # extracted from FrameworkUIResources.properties
-#. extracted from FrameworkUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -65,7 +64,7 @@ msgid "Home"
 msgstr ""
 
 #: framework.logout
-msgid "Logout"
+msgid "Log Out"
 msgstr ""
 
 #: framework.manageCollectionSheets
@@ -85,9 +84,10 @@ msgid "Search"
 msgstr ""
 
 #: framework.searchCriteria
-msgid "Search by name, system ID or account number "
+msgid "Search by name, system ID, phone number or account number "
 msgstr ""
 
 #: framework.yoursettings
 msgid "Your settings"
 msgstr ""
+

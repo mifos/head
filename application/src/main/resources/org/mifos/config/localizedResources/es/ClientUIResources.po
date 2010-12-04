@@ -1,9 +1,10 @@
 # extracted from ClientUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ClientUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-28 14:09+0200\n"
+"POT-Creation-Date: 2010-12-03 20:29-0700\n"
 "PO-Revision-Date: 2010-11-30 15:07-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,11 +23,17 @@ msgstr "Cantidad"
 
 #: Client.ActiveLoanPresent
 msgid "<li>Status cannot be changed to Closed, as Active accounts exist.</li>"
-msgstr "<li>No se puede cambiar el estatus a Cerrado, ya que todavía existen cuentas activas.</li>"
+msgstr ""
+"<li>No se puede cambiar el estatus a Cerrado, ya que todavía existen cuentas "
+"activas.</li>"
 
 #: Client.FlagException
-msgid "<li>A flag needs to be selected as status is being changed to Closed or Cancelled.</li>"
-msgstr "<li>Ha de seleccionar una bandera ya que el estado se está cambiando a Cerrado o Cancelado.</li>"
+msgid ""
+"<li>A flag needs to be selected as status is being changed to Closed or "
+"Cancelled.</li>"
+msgstr ""
+"<li>Ha de seleccionar una bandera ya que el estado se está cambiando a "
+"Cerrado o Cancelado.</li>"
 
 #: Client.FutureDOB
 msgid "<li>The date of birth specified is a future date.</li>"
@@ -34,7 +41,9 @@ msgstr "<li>La fecha de nacimiento especificada es una fecha futura.</li>"
 
 #: Client.HasActiveLoan
 msgid "<li>Group Membership cannot be changed, as Active accounts exist.</li>"
-msgstr "<li>No se puede cambiar la Pertenencia a un Grupo, ya que todavía existen cuentas activas.</li>"
+msgstr ""
+"<li>No se puede cambiar la Pertenencia a un Grupo, ya que todavía existen "
+"cuentas activas.</li>"
 
 #: Client.InvalidDOB
 msgid "<li>The date of birth specified was invalid.</li>"
@@ -42,11 +51,14 @@ msgstr "<li>La fecha de nacimiento especificada no es válida.</li>"
 
 #: Family.InvalidDOB
 msgid "<li>The date of birth specified was invalid in the row {0}.</li>"
-msgstr "<li>La fecha de nacimiento especificada en la fila {0} no es válida.</li>"
+msgstr ""
+"<li>La fecha de nacimiento especificada en la fila {0} no es válida.</li>"
 
 #: Client.InvalidAge
 msgid "<li>Given age is out of range. Age must be between {0} and {1}</li>"
-msgstr "<li>La edad esta fuera del rango permitido.  La edad debe de estar entre {0} y {1}</li>"
+msgstr ""
+"<li>La edad esta fuera del rango permitido.  La edad debe de estar entre {0} "
+"y {1}</li>"
 
 #: Family.InvalidNumberOfFamilyMembers
 msgid "<li>The number of family members can only be between {0} and {1}</li>"
@@ -65,8 +77,12 @@ msgid "<li> Bad Character ',' or '/' in input String </li>"
 msgstr "Caracter erróneo ',' ó '/' en el texto introducido."
 
 #: Family.InvalidRelationship
-msgid "<li>Please specify the relationship of every family member to the client</li>"
-msgstr "<li>Por favor especifica la relación que tiene cada familiar con el cliente</li>"
+msgid ""
+"<li>Please specify the relationship of every family member to the "
+"client</li>"
+msgstr ""
+"<li>Por favor especifica la relación que tiene cada familiar con el "
+"cliente</li>"
 
 #: Family.InvalidGender
 msgid "<li>Please specify the gender of every family member</li>"
@@ -74,11 +90,14 @@ msgstr "<li>Por favor especifica el sexo de cada miembro de la familia</li>"
 
 #: Family.InvalidLivingStatus
 msgid "<li>Please specify the living status of every family member</li>"
-msgstr "<li>Por favor especifica el estatus de vida de cada miembro de la familia</li>"
+msgstr ""
+"<li>Por favor especifica el estatus de vida de cada miembro de la "
+"familia</li>"
 
 #: Family.InvalidFamilyFirstName
 msgid "<li>Please specify the first name of every family member</li>"
-msgstr "<li>Por favor especifica el primer nombre de cada miembro de la familia</li>"
+msgstr ""
+"<li>Por favor especifica el primer nombre de cada miembro de la familia</li>"
 
 #: Family.InvalidFamilyLastName
 msgid "<li>Please specify the last name of every family member</li>"
@@ -90,11 +109,13 @@ msgstr "(No hay imágenes disponibles)"
 
 #: Client.PictureExtensionException
 msgid "<li>Picture files need to be either \".jpeg\" or \".jpg\" files.</li>"
-msgstr "<li>Los archivos de imágenes deben de ser del tipo \".jpeg\" o \".jpg\".</li>"
+msgstr ""
+"<li>Los archivos de imágenes deben de ser del tipo \".jpeg\" o \".jpg\".</li>"
 
 #: Client.PictureSizeException
 msgid "<li>Picture file size cannot be greater than 30KB.</li>"
-msgstr "<li>El tamaño de los archivos de imágenes no puede superar los 30KB.</li>"
+msgstr ""
+"<li>El tamaño de los archivos de imágenes no puede superar los 30KB.</li>"
 
 #: Client.TrainedCheckbox
 msgctxt "Client.TrainedCheckbox"
@@ -112,35 +133,64 @@ msgstr "Saldo\\:"
 
 #: Customer.ActiveAccountsPresent
 msgid "<li>Status cannot be changed to Closed, as active accounts exist.</li>"
-msgstr "<li>No se puede cambiar el estatus a Cerrado, ya que todavía existen cuentas activas.</li>"
+msgstr ""
+"<li>No se puede cambiar el estatus a Cerrado, ya que todavía existen cuentas "
+"activas.</li>"
 
 #: Customer.BranchInactive
-msgid "<li>The selected branch is inactive. Please try again with a different branch.</li>"
-msgstr "<li>La sucusal seleccionada se encuentra inactiva. Por favor inténtelo de nuevo con una sucursal diferente.</li>"
+msgid ""
+"<li>The selected branch is inactive. Please try again with a different "
+"branch.</li>"
+msgstr ""
+"<li>La sucusal seleccionada se encuentra inactiva. Por favor inténtelo de "
+"nuevo con una sucursal diferente.</li>"
 
 #: Customer.DuplicateCustomerName
-msgid "<li> The combination of the specified Date of Birth and name {0} already exists in the application. Please specify a different name.</li>"
-msgstr "<li> La combinación de la fecha de nacimiento especificada con el nombre {0} ya existen en esta solicitud. Por favor especifique un nombre diferente.</li>"
+msgid ""
+"<li> The combination of the specified Date of Birth and name {0} already "
+"exists in the application. Please specify a different name.</li>"
+msgstr ""
+"<li> La combinación de la fecha de nacimiento especificada con el nombre {0} "
+"ya existen en esta solicitud. Por favor especifique un nombre "
+"diferente.</li>"
 
 #: Customer.FeesInactive
-msgid "<li>The selected fee is inactive. Please try again with a different fee.</li>"
-msgstr "<li>La cuota seleccionada se encuentra inactiva. Por favor inténtelo de nuevo con una cuota diferente.</li>"
+msgid ""
+"<li>The selected fee is inactive. Please try again with a different "
+"fee.</li>"
+msgstr ""
+"<li>La cuota seleccionada se encuentra inactiva. Por favor inténtelo de "
+"nuevo con una cuota diferente.</li>"
 
 #: Customer.IncompleteChecklist
 msgid "<li>Please select all items in the checklist, and click submit.</li>"
-msgstr "<li>Por favor seleccione todos los objetos de la lista de control y pulse Enviar.</li>"
+msgstr ""
+"<li>Por favor seleccione todos los objetos de la lista de control y pulse "
+"Enviar.</li>"
 
 #: Customer.InvalidVersion
-msgid "<li>Client Information has been changed by another user. Please try again.</li>"
-msgstr "<li>La información de este cliente ha sido modificada por otro usuario. Por favor inténtelo de nuevo.</li>"
+msgid ""
+"<li>Client Information has been changed by another user. Please try "
+"again.</li>"
+msgstr ""
+"<li>La información de este cliente ha sido modificada por otro usuario. Por "
+"favor inténtelo de nuevo.</li>"
 
 #: Customer.LoanOfficerInactive
-msgid "<li>The selected loan officer has been made inactive/has been made a non loan officer/has been transferred to a new branch. Please try again with a different loan officer.</li>"
-msgstr "<li>El Oficial de Préstamos seleccionado se encuentra inactivo/ya no se ocupa de préstamos/se ha transferido a otra sucursal. Por favor inténtelo de nuevo con un Oficial de Préstamos diferente.</li>"
+msgid ""
+"<li>The selected loan officer has been made inactive/has been made a non "
+"loan officer/has been transferred to a new branch. Please try again with a "
+"different loan officer.</li>"
+msgstr ""
+"<li>El Oficial de Préstamos seleccionado se encuentra inactivo/ya no se "
+"ocupa de préstamos/se ha transferido a otra sucursal. Por favor inténtelo de "
+"nuevo con un Oficial de Préstamos diferente.</li>"
 
 #: Customer.MeetingRequired
 msgid "<li>Please select meeting schedule to apply a fee.</li>"
-msgstr "<li>Por favor seleccione un horario de reunión para poder aplicar una cuota.</li>"
+msgstr ""
+"<li>Por favor seleccione un horario de reunión para poder aplicar una "
+"cuota.</li>"
 
 #: Date
 msgctxt "Date"
@@ -155,15 +205,24 @@ msgstr "Descripción"
 #: DuplicateFeeException
 msgctxt "DuplicateFeeException"
 msgid "<li>Same periodic fee cannot be selected multiple times.</li>"
-msgstr "<li>No se puede seleccionar la misma cuota periódica más de una vez.</li>"
+msgstr ""
+"<li>No se puede seleccionar la misma cuota periódica más de una vez.</li>"
 
 #: DuplicateGovtIdException
-msgid "<li> The specified {1} {0}, already exists in the system. Please specify a different {1}.</li>"
-msgstr "<li> Los {1} {0} especificados ya existen en el sistema. Por favor especifique un {1} diferente.</li>"
+msgid ""
+"<li> The specified {1} {0}, already exists in the system. Please specify a "
+"different {1}.</li>"
+msgstr ""
+"<li> Los {1} {0} especificados ya existen en el sistema. Por favor "
+"especifique un {1} diferente.</li>"
 
 #: FatalErrorException
-msgid "<li>Unknown exception occurred in the application. Please try again later or contact the system administrator.</li>"
-msgstr "<li>Ha ocurrido un error desconocido en la solicitud. Por favor inténtelo de nuevo más tarde o contacte al Administrador del Sistema.</li>"
+msgid ""
+"<li>Unknown exception occurred in the application. Please try again later or "
+"contact the system administrator.</li>"
+msgstr ""
+"<li>Ha ocurrido un error desconocido en la solicitud. Por favor inténtelo de "
+"nuevo más tarde o contacte al Administrador del Sistema.</li>"
 
 #: FeeType
 msgid "Fee Type"
@@ -184,16 +243,26 @@ msgid "<li>{0} status should be higher than that of {1}</li>"
 msgstr "<li>El estatus de {0} debería ser mayor que el de {1}</li>"
 
 #: LoanAccountActiveException
-msgid "<li>You cannot transfer the client as its current group or center has active accounts.</li>"
-msgstr "<li>No se puede trasferir el cliente ya que su grupo o centro actuales todavía tienen cuentas activas.</li>"
+msgid ""
+"<li>You cannot transfer the client as its current group or center has active "
+"accounts.</li>"
+msgstr ""
+"<li>No se puede trasferir el cliente ya que su grupo o centro actuales "
+"todavía tienen cuentas activas.</li>"
 
 #: LoanOfficerBlankException
 msgid "<li>Loan Officer cannot be blank as the customer is active.</li>"
-msgstr "<li>El Oficial de Préstamos no puede estar en blanco ya que el cliente todavía está activo.</li>"
+msgstr ""
+"<li>El Oficial de Préstamos no puede estar en blanco ya que el cliente "
+"todavía está activo.</li>"
 
 #: LoanOfficerNotAssignedException
-msgid "<li>The client status cannot be changed as Loan officer is not assigned.</li>"
-msgstr "<li>No se puede cambiar el estatus del cliente ya que no se le ha asignado un Oficial de Préstamos.</li>"
+msgid ""
+"<li>The client status cannot be changed as Loan officer is not "
+"assigned.</li>"
+msgstr ""
+"<li>No se puede cambiar el estatus del cliente ya que no se le ha asignado "
+"un Oficial de Préstamos.</li>"
 
 #: LoanOfficerRequiredException
 msgid "<li>Please select Loan Officer.</li>"
@@ -214,21 +283,33 @@ msgid "Posted by"
 msgstr "Publicado por"
 
 #: SameGroupTransferException
-msgid "<li>Customer cannot be transferred to this parent. Please change parent and try again.</li>"
-msgstr "<li>El cliente no se puede trasferir a este cliente matriz. Por favor cambie de cliente matriz e inténtelo de nuevo.</li>"
+msgid ""
+"<li>Customer cannot be transferred to this parent. Please change parent and "
+"try again.</li>"
+msgstr ""
+"<li>El cliente no se puede trasferir a este cliente matriz. Por favor cambie "
+"de cliente matriz e inténtelo de nuevo.</li>"
 
 #: SameOfficeTransferException
 msgctxt "SameOfficeTransferException"
-msgid "<li>Customer cannot be transferred to the same office. Please change office and try again.</li>"
-msgstr "<li>El cliente no se puede trasferir a la misma oficina. Por favor cambie de oficina e inténtelo de nuevo.</li>"
+msgid ""
+"<li>Customer cannot be transferred to the same office. Please change office "
+"and try again.</li>"
+msgstr ""
+"<li>El cliente no se puede trasferir a la misma oficina. Por favor cambie de "
+"oficina e inténtelo de nuevo.</li>"
 
 #: StatusRequiredException
 msgid "<li>Please select status.</li>"
 msgstr "<li>Por favor seleccione estatus.</li>"
 
 #: UpdateFailedException
-msgid "<li>There was an exception in updating. Please try again later or contact the system administrator.</li>"
-msgstr "<li>Ha ocurrido un error al actualizar la informacion. Por favor inténtelo de nuevo más tarde o contacte con el Administrador del Sistema.</li>"
+msgid ""
+"<li>There was an exception in updating. Please try again later or contact "
+"the system administrator.</li>"
+msgstr ""
+"<li>Ha ocurrido un error al actualizar la informacion. Por favor inténtelo "
+"de nuevo más tarde o contacte con el Administrador del Sistema.</li>"
 
 #: User
 msgctxt "User"
@@ -420,7 +501,8 @@ msgstr "Cambiar estatus"
 
 #: client.ChangeStatusPageInstruction
 msgid "Select from the status options below. Then click Continue."
-msgstr "Seleccione de entre las opciones de estatus de abajo. Luego pulse Continuar."
+msgstr ""
+"Seleccione de entre las opciones de estatus de abajo. Luego pulse Continuar."
 
 #: client.ChargesApplied
 msgid "Charges applied:"
@@ -439,8 +521,12 @@ msgid "child(ren)"
 msgstr "hijo(s)"
 
 #: client.ChooseBranchInstructions
-msgid "Click on a {0} below to assign the {1} to that {2}. Click Cancel to return to {3} Details."
-msgstr "Pulse en un {0} abajo para asignar el {1} a ese {2}. Pulse Cancelar para volver a los detalles de {3}."
+msgid ""
+"Click on a {0} below to assign the {1} to that {2}. Click Cancel to return "
+"to {3} Details."
+msgstr ""
+"Pulse en un {0} abajo para asignar el {1} a ese {2}. Pulse Cancelar para "
+"volver a los detalles de {3}."
 
 #: client.ChooseBranchInstructions1
 msgid "Click on a"
@@ -519,16 +605,24 @@ msgid "CONFIDENTIAL"
 msgstr "CONFIDENCIAL"
 
 #: client.ConfirmBranchInstructions
-msgid "Click confirm to change the {0} or cancel to return to {1} details page."
-msgstr "Pulse confirmar para cambiar el {0} o cancelar para volver a la página de detalles de {1}."
+msgid ""
+"Click confirm to change the {0} or cancel to return to {1} details page."
+msgstr ""
+"Pulse confirmar para cambiar el {0} o cancelar para volver a la página de "
+"detalles de {1}."
 
 #: client.ConfirmStatusHeading
 msgid "Confirm status change"
 msgstr "Confirmar cambio de estatus"
 
 #: client.Confirmation.Information
-msgid "You can enter a system ID number into the search box to access {0} details which also include a {1}''s account and performance data."
-msgstr "Puede introducir un número de ID del sistema en la casilla de búsqueda para acceder a los detalles de {0}, que incluyen también la cuenta y los datos de comportamiento de {1}."
+msgid ""
+"You can enter a system ID number into the search box to access {0} details "
+"which also include a {1}''s account and performance data."
+msgstr ""
+"Puede introducir un número de ID del sistema en la casilla de búsqueda para "
+"acceder a los detalles de {0}, que incluyen también la cuenta y los datos de "
+"comportamiento de {1}."
 
 #: client.Confirmation.NameSystemID
 msgid "has been assigned the system ID number:"
@@ -571,8 +665,10 @@ msgid "Create a new"
 msgstr "Crear una nueva"
 
 #: client.CreatePageCancelInstruction1
-msgid "Click Cancel to return to Clients & Accounts without submitting information"
-msgstr "Pulse Cancelar para volver a Clientes y Cuentas sin enviar la información"
+msgid ""
+"Click Cancel to return to Clients & Accounts without submitting information"
+msgstr ""
+"Pulse Cancelar para volver a Clientes y Cuentas sin enviar la información"
 
 #: client.CreatePageCancelInstruction2
 msgid "& Accounts without submitting information."
@@ -591,8 +687,12 @@ msgid "-  Enter personal information"
 msgstr "- Introduzca la información personal"
 
 #: client.CreatePreviewPageInstruction
-msgid "Review the information below. Click Submit if you are satisfied or click Edit to make changes."
-msgstr "Revise la información de abajo. Pulse Enviar si está satisfecho o Editar para realizar cambios."
+msgid ""
+"Review the information below. Click Submit if you are satisfied or click "
+"Edit to make changes."
+msgstr ""
+"Revise la información de abajo. Pulse Enviar si está satisfecho o Editar "
+"para realizar cambios."
 
 #: client.CreatePreviewPageTitle
 msgctxt "client.CreatePreviewPageTitle"
@@ -638,8 +738,12 @@ msgid "Edit branch membership"
 msgstr "Editar pertenencia a la sucursal"
 
 #: client.EditBranchInstructions
-msgid "Click confirm to change the branch or cancel to return to client details page without changing the branch"
-msgstr "Pulse confirmar para cambiar la sucursal o cancelar para volver a la página de detalles del cliente sin cambiar de sucursal"
+msgid ""
+"Click confirm to change the branch or cancel to return to client details "
+"page without changing the branch"
+msgstr ""
+"Pulse confirmar para cambiar la sucursal o cancelar para volver a la página "
+"de detalles del cliente sin cambiar de sucursal"
 
 #: client.EditBranchMembershipLink
 msgctxt "client.EditBranchMembershipLink"
@@ -647,8 +751,12 @@ msgid "Edit branch membership"
 msgstr "Editar pertenencia a la sucursal"
 
 #: client.EditGroupInstructions
-msgid "Click Submit to change the {0} or Cancel to return to {1} details page without changing the {2}."
-msgstr "Pulse Enviar para cambiar el {0} o Cancelar para volver a la página de detalles de {1} sin cambiar el {2}."
+msgid ""
+"Click Submit to change the {0} or Cancel to return to {1} details page "
+"without changing the {2}."
+msgstr ""
+"Pulse Enviar para cambiar el {0} o Cancelar para volver a la página de "
+"detalles de {1} sin cambiar el {2}."
 
 #: client.EditGroupMembershipLink
 msgctxt "client.EditGroupMembershipLink"
@@ -675,7 +783,8 @@ msgstr "- Editar información de la IMF"
 
 #: client.EditPageCancelInstruction
 msgid "Click Cancel to return to {0} Details without submitting information."
-msgstr "Pulse Cancelar para volver a los detalles de {0} sin enviar la información."
+msgstr ""
+"Pulse Cancelar para volver a los detalles de {0} sin enviar la información."
 
 #: client.EditPersonalInformationLink
 msgctxt "client.EditPersonalInformationLink"
@@ -721,8 +830,12 @@ msgid "External ID:"
 msgstr "ID externa\\:"
 
 #: client.ExternalIdInfo
-msgid "Useful if necessary to cross-reference a client within a system used prior to Mifos"
-msgstr "Util si fuera necesario hacer una referencia cruzada a un cliente en un sistema utilizado antes de Mifos"
+msgid ""
+"Useful if necessary to cross-reference a client within a system used prior "
+"to Mifos"
+msgstr ""
+"Util si fuera necesario hacer una referencia cruzada a un cliente en un "
+"sistema utilizado antes de Mifos"
 
 #: client.FatherLabel
 msgid "Father name:"
@@ -978,7 +1091,9 @@ msgstr "Estatus de pobreza\\:"
 
 #: client.PreviewEditCancelInstruction
 msgid "Click Cancel to return to {0} Preview without submitting information."
-msgstr "Pulse Cancelar para volver a la Vista Previa de {0} sin enviar la información."
+msgstr ""
+"Pulse Cancelar para volver a la Vista Previa de {0} sin enviar la "
+"información."
 
 #: client.PreviewEditInfoInstruction
 msgid "Edit the fields below. Then click Preview."
@@ -1026,12 +1141,20 @@ msgid "Create a New Group -"
 msgstr "Crear un Nuevo Grupo - "
 
 #: client.SearchInstructions
-msgid "Enter a center name and click Search. Click Cancel to return to Clients Accounts without submitting information."
-msgstr "Introduzca el nombre de un centro y pulse Buscar. Pulse Cancelar para volver a las Cuentas de Clientes sin enviar la información."
+msgid ""
+"Enter a center name and click Search. Click Cancel to return to Clients "
+"Accounts without submitting information."
+msgstr ""
+"Introduzca el nombre de un centro y pulse Buscar. Pulse Cancelar para volver "
+"a las Cuentas de Clientes sin enviar la información."
 
 #: client.SearchResultPageInstructions
-msgid "To select, click on a resulting center from the list below. Click Cancel to return to Clients & Accounts without submitting information."
-msgstr "Para seleccionar, pulse en un centro de la lista de abajo. Pulse Cancelar para volver a las Clientes y Cuentas sin enviar la información."
+msgid ""
+"To select, click on a resulting center from the list below. Click Cancel to "
+"return to Clients & Accounts without submitting information."
+msgstr ""
+"Para seleccionar, pulse en un centro de la lista de abajo. Pulse Cancelar "
+"para volver a las Clientes y Cuentas sin enviar la información."
 
 #: client.SearchSelectCenterHeading
 msgid "Select a Center"
@@ -1115,8 +1238,12 @@ msgid "Family Details"
 msgstr "Detalles de la Familia"
 
 #: client.FamilyDetailsOptional
-msgid "Adding family members are optional. Click \"Add Row\" to add a new family member."
-msgstr "Añadiendo miembros de familia es opcional. Pulse \"Añadir Fila\"\ para añadir un nuevo miembro de familia."
+msgid ""
+"Adding family members are optional. Click \"Add Row\" to add a new family "
+"member."
+msgstr ""
+"Añadiendo miembros de familia es opcional. Pulse \"Añadir Fila\"\\ para añadir "
+"un nuevo miembro de familia."
 
 #: client.FamilyRelationship
 msgctxt "client.FamilyRelationship"
@@ -1445,19 +1572,28 @@ msgstr "Aplicar Cargos"
 
 #: error.Customer.ClientHaveOpenLoanAccount
 msgid "Client cannot be added to group, as Active accounts exist."
-msgstr "No se pueden añadir clientes a este grupo, ya que todavía hay cuentas activas."
+msgstr ""
+"No se pueden añadir clientes a este grupo, ya que todavía hay cuentas "
+"activas."
 
 #: error.Customer.ClientIsClosedOrCancelled
 msgid "The client status should not be either closed or cancelled."
 msgstr "El estatus del cliente no debería ser ni cerrado ni cancelado."
 
 #: error.activity.not.allowed
-msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
-msgstr "No tiene permiso para realizar esta actividad. Por favor contacte con el Administrador del Sistema para obtener los permisos necesarios e inténtelo de nuevo."
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you the required permissions and try again."
+msgstr ""
+"No tiene permiso para realizar esta actividad. Por favor contacte con el "
+"Administrador del Sistema para obtener los permisos necesarios e inténtelo "
+"de nuevo."
 
 #: error.applycharge.nocustomermeeting
 msgid "Please specify a valid meeting schedule before applying charge."
-msgstr "Por favor especifique una agenda de reunión válida antes de aplicar los cargos."
+msgstr ""
+"Por favor especifique una agenda de reunión válida antes de aplicar los "
+"cargos."
 
 #: error.customernotfound
 msgid "<li>Customer with System ID {0} does not exist.</li>"
@@ -1472,16 +1608,23 @@ msgid "<li>Unknown Exception occurred.</li>"
 msgstr "<li>Ha ocurrido una Excepción desconocida.</li>"
 
 #: error.versionnodonotmatch
-msgid "The record has already been modified by another user. Please navigate to the details page and start the activity again."
-msgstr "Este registro ya ha sido modificado por otro usuario. Por favor vaya a la página de detalles y comience la actividad de nuevo."
+msgid ""
+"The record has already been modified by another user. Please navigate to the "
+"details page and start the activity again."
+msgstr ""
+"Este registro ya ha sido modificado por otro usuario. Por favor vaya a la "
+"página de detalles y comience la actividad de nuevo."
 
 #: errors.Client.duplicateOfferingSelected
 msgid "<li>The same {0} product cannot be selected multiple times.</li>"
-msgstr "<li>El mismo producto de {0} no se puede seleccionar más de una vez.</li>"
+msgstr ""
+"<li>El mismo producto de {0} no se puede seleccionar más de una vez.</li>"
 
 #: errors.Client.hasActiveAccount
 msgid "<li>{0} Membership cannot be changed, as Active accounts exist.</li>"
-msgstr "<li>La pertenecia de {0} no se puede modificar, ya que todavía existen cuentas Activas.</li>"
+msgstr ""
+"<li>La pertenecia de {0} no se puede modificar, ya que todavía existen "
+"cuentas Activas.</li>"
 
 #: errors.Client.lowerGroupStatus
 msgctxt "errors.Client.lowerGroupStatus"
@@ -1491,11 +1634,16 @@ msgstr "<li>El estatus de {0} no debería ser mayor que el de {1}</li>"
 #: errors.Customer.duplicatePeriodicFee
 msgctxt "errors.Customer.duplicatePeriodicFee"
 msgid "<li>Same periodic fee cannot be selected multiple times.</li>"
-msgstr "<li>La misma cuota periódica no se puede seleccionar más de una vez.</li>"
+msgstr ""
+"<li>La misma cuota periódica no se puede seleccionar más de una vez.</li>"
 
 #: errors.Customer.feeFrequencyMismatch
-msgid "<li>Meeting frequency and fee recurrence do not match. Please select only valid fee types.</li>"
-msgstr "<li>La frecuencia de la reunión y la periodicidad de la cuota no coinciden. Por favor seleccione sólo tipos de cuotas válidas.</li>"
+msgid ""
+"<li>Meeting frequency and fee recurrence do not match. Please select only "
+"valid fee types.</li>"
+msgstr ""
+"<li>La frecuencia de la reunión y la periodicidad de la cuota no coinciden. "
+"Por favor seleccione sólo tipos de cuotas válidas.</li>"
 
 #: errors.Customer.invalidFormedBy
 msgid "<li>Please select recruited by personnel.</li>"
@@ -1518,33 +1666,57 @@ msgid "<li>Please specify a office.</li>"
 msgstr "<li>Por favor especifique una oficina.</li>"
 
 #: errors.Customer.meetingFrequencyMismatch
-msgid "<li>Customer cannot be transferred to parent with different meeting frequency.</li>"
-msgstr "<li>El cliente no se puede trasferir al cliente matriz con una frecuencia de reuniones diferente.</li>"
+msgid ""
+"<li>Customer cannot be transferred to parent with different meeting "
+"frequency.</li>"
+msgstr ""
+"<li>El cliente no se puede trasferir al cliente matriz con una frecuencia de "
+"reuniones diferente.</li>"
 
 #: errors.Customer.officeInactive
-msgid "<li>Customer cannot be transferred to the inactive office. Please change office and try again.</li>"
-msgstr "<li>El cliente no se puede trasferir a una oficina inactiva. Por favor cambie la oficina e inténtelo de nuevo.</li>"
+msgid ""
+"<li>Customer cannot be transferred to the inactive office. Please change "
+"office and try again.</li>"
+msgstr ""
+"<li>El cliente no se puede trasferir a una oficina inactiva. Por favor "
+"cambie la oficina e inténtelo de nuevo.</li>"
 
 #: errors.Customer.parentInactive
-msgid "<li>Customer cannot be transferred to cancelled/closed parent. Please change parent and try again.</li>"
-msgstr "<li>El cliente no se puede trasferir a un cliente matriz cancelado/cerrado. Por favor cambie el cliente matriz e inténtelo de nuevo.</li>"
+msgid ""
+"<li>Customer cannot be transferred to cancelled/closed parent. Please change "
+"parent and try again.</li>"
+msgstr ""
+"<li>El cliente no se puede trasferir a un cliente matriz cancelado/cerrado. "
+"Por favor cambie el cliente matriz e inténtelo de nuevo.</li>"
 
 #: errors.Customer.sameBranchTransfer
 msgctxt "errors.Customer.sameBranchTransfer"
-msgid "<li>Customer cannot be transferred to the same office. Please change office and try again.</li>"
-msgstr "<li>El cliente no se puede trasferir a la misma oficina. Por favor cambie la oficina e inténtelo de nuevo.</li>"
+msgid ""
+"<li>Customer cannot be transferred to the same office. Please change office "
+"and try again.</li>"
+msgstr ""
+"<li>El cliente no se puede trasferir a la misma oficina. Por favor cambie la "
+"oficina e inténtelo de nuevo.</li>"
 
 #: errors.Customer.sameParentTransferException
-msgid "<li>Customer cannot be transferred to same parent. Please change parent and try again.</li>"
-msgstr "<li>El cliente no se puede trasferir al mismo cliente matriz. Por favor cambie el cliente matriz e inténtelo de nuevo.</li>"
+msgid ""
+"<li>Customer cannot be transferred to same parent. Please change parent and "
+"try again.</li>"
+msgstr ""
+"<li>El cliente no se puede trasferir al mismo cliente matriz. Por favor "
+"cambie el cliente matriz e inténtelo de nuevo.</li>"
 
 #: errors.Customer.specifyCustomFieldValue
 msgid "<li>Please specify required additional information.</li>"
 msgstr "<li>Por favor especifique la información adicional requerida.</li>"
 
 #: errors.Customer.customdatefield
-msgid "<li>Please enter a valid date (format dd/mm/yyyy) in additional information field.</li>"
-msgstr "<li>Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo de informacion adicional.</li>"
+msgid ""
+"<li>Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field.</li>"
+msgstr ""
+"<li>Por favor ingrese una fecha valida (formato dd/mm/yyyy) en el campo de "
+"informacion adicional.</li>"
 
 #: errors.Customer.specifyFeeAmount
 msgid "<li>Please specify fee amount.</li>"
@@ -1586,16 +1758,23 @@ msgid "<li>Please specify {0}.</li>"
 msgstr "<li>Por favor especifique {0}.</li>"
 
 #: errors.maskmsg
-msgid "<li>Invalid entry. Please use only alphanumeric characters for this field.</li>"
-msgstr "<li>Entrada no válida. Por favor use sólo caracteres alfanuméricos para este campo.</li>"
+msgid ""
+"<li>Invalid entry. Please use only alphanumeric characters for this "
+"field.</li>"
+msgstr ""
+"<li>Entrada no válida. Por favor use sólo caracteres alfanuméricos para este "
+"campo.</li>"
 
 #: errors.maxlength
 msgid "<li> The maximum length for this field is {0} characters.</li>"
 msgstr "<li> La longitud máxima de este campo es de {0} caracteres.</li>"
 
 #: errors.meetingnotassigned
-msgid "<li>Meeting Schedule has to be selected for the customer to be Active.</li>"
-msgstr "<li>Se ha de seleccionar una agenda de reunión para que el cliente pueda estar activo.</li>"
+msgid ""
+"<li>Meeting Schedule has to be selected for the customer to be Active.</li>"
+msgstr ""
+"<li>Se ha de seleccionar una agenda de reunión para que el cliente pueda "
+"estar activo.</li>"
 
 #: errors.required
 msgctxt "errors.required"
@@ -1611,8 +1790,13 @@ msgid "<li>Please select the {0}.</li>"
 msgstr "<li>Por favor seleccione el {0}.</li>"
 
 #: exception.framework.ConcurrencyException
-msgid "<li>The record you were trying to update was updated by another transaction. Please search again to get the updated data.</li>"
-msgstr "<li>El registro que estaba tratando de actualizar ya se ha puesto al día en otra operación. Por favor busque de nuevo para obtener los datos más recientes.</li>"
+msgid ""
+"<li>The record you were trying to update was updated by another transaction. "
+"Please search again to get the updated data.</li>"
+msgstr ""
+"<li>El registro que estaba tratando de actualizar ya se ha puesto al día en "
+"otra operación. Por favor busque de nuevo para obtener los datos más "
+"recientes.</li>"
 
 #: exception.framework.DoubleSubmitException
 msgid "This action is not permissible."
@@ -1623,16 +1807,28 @@ msgid "<li>Please specify value for {0}.</li>"
 msgstr "<li>Por favor especifique el valor de {0}.</li>"
 
 #: warning.clientWithSameGovtIdExistInClosed
-msgid "A record matching this client was found in \"closed\" status with same Govt. ID.  Please review that client record before continuing."
-msgstr "Se encontró un registro similar al de este cliente con un estatus de cerrado. Por favor revise el registro de ese cliente antes de continuar."
+msgid ""
+"A record matching this client was found in \"closed\" status with same Govt. "
+"ID.  Please review that client record before continuing."
+msgstr ""
+"Se encontró un registro similar al de este cliente con un estatus de "
+"cerrado. Por favor revise el registro de ese cliente antes de continuar."
 
 #: warning.clientWithSameNameDOBExistInClosed
-msgid "A record matching this client was found in \"closed\" status with same name and date of birth.  Please review that client record before continuing."
-msgstr "Se encontró un registro similar al de este cliente con un estatus de cerrado. Por favor revise el registro de ese cliente antes de continuar."
+msgid ""
+"A record matching this client was found in \"closed\" status with same name "
+"and date of birth.  Please review that client record before continuing."
+msgstr ""
+"Se encontró un registro similar al de este cliente con un estatus de "
+"cerrado. Por favor revise el registro de ese cliente antes de continuar."
 
 #: warning.clientWithSameNameDOBExistInBlackListed
-msgid "A record matching this client was found in \"blacklisted\" status with same name and date of birth.  Please review that client record before continuing."
-msgstr "Se encontró un registro similar al de este cliente en la lista negra. Por favor revise el registro de ese cliente antes de continuar."
+msgid ""
+"A record matching this client was found in \"blacklisted\" status with same "
+"name and date of birth.  Please review that client record before continuing."
+msgstr ""
+"Se encontró un registro similar al de este cliente en la lista negra. Por "
+"favor revise el registro de ese cliente antes de continuar."
 
 #: client.ViewQuestionGroupResponsesLink
 msgid "View Additional Information"
@@ -1661,4 +1857,3 @@ msgstr "<li>Por favor especifique un número menos de {0} para {1}</li>"
 #: questionnaire.invalid.numeric.response
 msgid "<li>Please specify a number for {0}</li>"
 msgstr "<li>Por favor especifique el valor de {0}.</li>"
-

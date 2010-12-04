@@ -1,9 +1,10 @@
 # extracted from UIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/UIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:29+0530\n"
+"POT-Creation-Date: 2010-12-03 20:29-0700\n"
 "PO-Revision-Date: 2010-11-30 13:56-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,55 +26,46 @@ msgstr "ID del Cliente"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_INTEREST"
-msgid "the number of digits after the decimal separator exceeds the allowed number %s"
-msgstr "el número de dígitos después del separador decimal excede el número permitido de %s"
+msgid ""
+"the number of digits after the decimal separator exceeds the allowed number "
+"%s"
+msgstr ""
+"el número de dígitos después del separador decimal excede el número "
+"permitido de %s"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_MONEY"
-msgid "the number of digits after the decimal separator exceeds the allowed number %s"
-msgstr "el número de dígitos después del separador decimal excede el número permitido de %s "
+msgid ""
+"the number of digits after the decimal separator exceeds the allowed number "
+"%s"
+msgstr ""
+"el número de dígitos después del separador decimal excede el número "
+"permitido de %s "
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_INTEREST"
-msgid "the number of digits before the decimal separator exceeds the allowed number %s"
-msgstr "el número de dígitos antes del separador decimal excede el número permitido de %s"
+msgid ""
+"the number of digits before the decimal separator exceeds the allowed number "
+"%s"
+msgstr ""
+"el número de dígitos antes del separador decimal excede el número permitido "
+"de %s"
 
 #: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY
 msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_MONEY"
-msgid "the number of digits before the decimal separator exceeds the allowed number %s"
-msgstr "el número de dígitos antes del separador decimal excede el número permitido de %s "
-
-#: EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
-msgctxt "EXCEEDING_NUMBER_OF_DIGITS_BEFORE_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
-msgid "the number of digits before the decimal separator exceeds the allowed number %s"
-msgstr "el número de dígitos antes del separador decimal excede el número permitido de %s"
-
-#: EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD
-msgctxt "EXCEEDING_NUMBER_OF_DIGITS_AFTER_DECIMAL_SEPARATOR_FOR_CASHFLOW_THRESHOLD"
-msgid "the number of digits after the decimal separator exceeds the allowed number %s"
-msgstr "el número de dígitos después del separador decimal excede el número permitido de %s"
+msgid ""
+"the number of digits before the decimal separator exceeds the allowed number "
+"%s"
+msgstr ""
+"el número de dígitos antes del separador decimal excede el número permitido "
+"de %s "
 
 #: ID
 msgid "ID"
 msgstr "ID"
 
 #: INTEREST_OUT_OF_RANGE
-msgctxt "INTEREST_OUT_OF_RANGE"
-msgid "it is not in between %s1 and %s2."
-msgstr "no está entre %s1 y %s2."
 
-#: CASH_FLOW_THRESHOLD_OUT_OF_RANGE
-msgctxt "CASH_FLOW_THRESHOLD_OUT_OF_RANGE"
-msgid "it is not in between %s1 and %s2."
-msgstr "no está entre %s1 y %s2."
-
-#: INDEBTEDNESS_RATIO_OUT_OF_RANGE
-msgctxt "INDEBTEDNESS_RATIO_OUT_OF_RANGE"
-msgid "it is not in between %s1 and %s2."
-msgstr "no está entre %s1 y %s2."
-
-#: REPAYMENT_CAPACITY_OUT_OF_RANGE
-msgctxt "REPAYMENT_CAPACITY_OUT_OF_RANGE"
 msgid "it is not in between %s1 and %s2."
 msgstr "no está entre %s1 y %s2."
 

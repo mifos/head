@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/PPIUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:27+0530\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2010-12-01 17:26+0100\n"
 "Last-Translator: ismail\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,7 +68,10 @@ msgid "TOTAL"
 msgstr "TOTAL"
 
 #: PPI.configureInstructions
-msgid "Select the country and enter the information below. Then click Submit. Click Cancel to return to Select poverty measurement tool without submitting any information."
+msgid ""
+"Select the country and enter the information below. Then click Submit. Click "
+"Cancel to return to Select poverty measurement tool without submitting any "
+"information."
 msgstr "Indice de pauvreté"
 
 #: PPI.definePovertyMeasurementTool
@@ -79,8 +83,12 @@ msgid "Define poverty status"
 msgstr "Définir le statut de pauvreté"
 
 #: PPI.definePovertyStatusIntructions
-msgid "On completing the fields below, the client's poverty status will be automatically calculated by the survey score."
-msgstr "En remplissant les champs ci-dessous, l'état de pauvreté du client sera automatiquement calculé par le score de l'étude. "
+msgid ""
+"On completing the fields below, the client's poverty status will be "
+"automatically calculated by the survey score."
+msgstr ""
+"En remplissant les champs ci-dessous, l'état de pauvreté du client sera "
+"automatiquement calculé par le score de l'étude. "
 
 #: PPI.editPPIToolConfiguration
 msgid "Edit PPI Tool Configuration"
@@ -125,4 +133,3 @@ msgstr "<li>"
 #: errors.suffix
 msgid "</li>"
 msgstr "</li>"
-

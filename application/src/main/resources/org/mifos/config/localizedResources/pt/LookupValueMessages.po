@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LookupValueMessages.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:26+0530\n"
+"POT-Creation-Date: 2010-12-03 20:29-0700\n"
 "PO-Revision-Date: 2010-12-01 10:17-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -613,10 +614,6 @@ msgstr "Nunca Recalcular"
 msgid "Declining Balance"
 msgstr "Saldo Descendente"
 
-#: InterestTypes-DecliningPrincipalBalance
-msgid "Declining Balance-Interest Recalculation"
-msgstr "Saldo decrescente - Recálculo de Juros"
-
 #: InterestTypes-DecliningBalance-EqualPrincipalInstallment
 msgid "Declining Balance-Equal Principal Installment"
 msgstr "Saldo Descendente-Igual ao Capital da Parcela"
@@ -766,7 +763,9 @@ msgstr "Pode adicionar notas à Conta Poupança"
 
 #: Permissions-CanAdjustPaymentWhenAccountStatusIsClosedObligationMet
 msgid "Can adjust payment when account status is \"closed-obligation met\""
-msgstr "Pode ajustar pagamento quando o Estado da conta for \"Fechado-Obrigação Cumprida\""
+msgstr ""
+"Pode ajustar pagamento quando o Estado da conta for \"Fechado-Obrigação "
+"Cumprida\""
 
 #: Permissions-CanAdministerReports
 msgid "Can Administer Reports"
@@ -803,11 +802,13 @@ msgstr "Pode criar várias contas de empréstimo"
 
 #: Permissions-CanCreateNewLoanAccountInSaveForLaterState
 msgid "Can create new loan account in Save for later state"
-msgstr "Pode criar uma nova Conta de Empréstimo no Estado Salvar para mais tarde"
+msgstr ""
+"Pode criar uma nova Conta de Empréstimo no Estado Salvar para mais tarde"
 
 #: Permissions-CanCreateNewLoanAccountInSubmitForApprovalState
 msgid "Can create new loan account in Submit for approval state"
-msgstr "Pode criar uma nova Conta de Empréstimo no Estado Submeter para aprovação"
+msgstr ""
+"Pode criar uma nova Conta de Empréstimo no Estado Submeter para aprovação"
 
 #: Permissions-CanCreateNewOffice
 msgid "Can create new office"
@@ -1123,7 +1124,9 @@ msgstr "Pode ver o Relatório diário do Fluxo de caixa- Balcão"
 
 #: Permissions-CanViewDailyPortfolioQualityDataReportAgingAnalysis
 msgid "Can view Daily Portfolio quality data report - Aging analysis"
-msgstr "Pode ver o Relatório Diário de Dados da Qualidade do Portfólio - Análises por Vencimento"
+msgstr ""
+"Pode ver o Relatório Diário de Dados da Qualidade do Portfólio - Análises "
+"por Vencimento"
 
 #: Permissions-CanViewDailyTransactionSummaryReport
 msgid "Can view Daily Transaction Summary report"
@@ -1150,8 +1153,12 @@ msgid "Can view Loan Accounts reports"
 msgstr "Pode ver Relatórios de Contas de Empréstimo"
 
 #: Permissions-CanViewLoanProductDistributionActivityWiseSizeWizeProductWiseSequencyWise
-msgid "Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, Sequency Wise"
-msgstr "Pode Ver Distribuição de Produtos de Empréstiimo - Em termos de atividade, Tamanho, Produto, Sequência"
+msgid ""
+"Can view Loan Product Distribution - Activity Wise, Size Wize, Product Wise, "
+"Sequency Wise"
+msgstr ""
+"Pode Ver Distribuição de Produtos de Empréstiimo - Em termos de atividade, "
+"Tamanho, Produto, Sequência"
 
 #: Permissions-CanViewLoansPendingApprovalReport
 msgid "Can view Loans pending approval report"
@@ -1913,3 +1920,5 @@ msgstr "Aplica-se a contas existentes e futuras"
 msgid "Applies to future accounts"
 msgstr "Aplica-se a contas futuras"
 
+#~ msgid "Declining Balance-Interest Recalculation"
+#~ msgstr "Saldo decrescente - Recálculo de Juros"

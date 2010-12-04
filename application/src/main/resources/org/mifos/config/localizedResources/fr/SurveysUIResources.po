@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SurveysUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:27+0530\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2010-12-01 17:31+0100\n"
 "Last-Translator: lassaad <lbhadj@voila.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -92,12 +93,18 @@ msgid "Details"
 msgstr "Détails"
 
 #: Surveys.EditInstructions
-msgid "Complete the fields below. Then click Submit. Click Cancel to return to View question page without submitting information."
-msgstr "Compléter le champ ci-dessous. Ensuite cliquer Valider. Cliquer Annuler pour retourner à afficher la page de question sans valider les informations."
+msgid ""
+"Complete the fields below. Then click Submit. Click Cancel to return to View "
+"question page without submitting information."
+msgstr ""
+"Compléter le champ ci-dessous. Ensuite cliquer Valider. Cliquer Annuler pour "
+"retourner à afficher la page de question sans valider les informations."
 
 #: Surveys.EditNote
 msgid "Note: Significant modifications of questions could affect reporting."
-msgstr "Note\\: les modifications majeures des questions peuvent affecter les rapports."
+msgstr ""
+"Note\\: les modifications majeures des questions peuvent affecter les "
+"rapports."
 
 #: Surveys.EditQuestion
 msgid "Edit Question"
@@ -290,8 +297,13 @@ msgid "Centers"
 msgstr "Centres"
 
 #: Surveys.choose_page_instructions
-msgid "Select a survey from the list below. Then click Continue. Click Cancel to return to client details without submitting information"
-msgstr "Sélectionner une étude de la liste ci-dessous. Puis cliquer sur Continuer. Cliquer sur Annuler  pour retourner aux détails de clients sans Valider l'information."
+msgid ""
+"Select a survey from the list below. Then click Continue. Click Cancel to "
+"return to client details without submitting information"
+msgstr ""
+"Sélectionner une étude de la liste ci-dessous. Puis cliquer sur Continuer. "
+"Cliquer sur Annuler  pour retourner aux détails de clients sans Valider "
+"l'information."
 
 #: Surveys.chooseofficer
 msgid "Choose loan officer"
@@ -307,8 +319,13 @@ msgid "Clients"
 msgstr "Clients"
 
 #: Surveys.create_page_instructions
-msgid "Complete the fields below. To add questions click Add Questions. Click Cancel to return to Admin without submitting information."
-msgstr "Compléter les champs ci-dessous. Pour ajouter des questions cliquer sur Ajouter Questions. Cliquer sur Annuler pour retourner à Admin sans Valider l'information."
+msgid ""
+"Complete the fields below. To add questions click Add Questions. Click "
+"Cancel to return to Admin without submitting information."
+msgstr ""
+"Compléter les champs ci-dessous. Pour ajouter des questions cliquer sur "
+"Ajouter Questions. Cliquer sur Annuler pour retourner à Admin sans Valider "
+"l'information."
 
 #: Surveys.createsurveyheader
 msgid "You have successfully defined a new survey"
@@ -369,8 +386,13 @@ msgid "Enter survey data"
 msgstr "Entrer les données de l'étude"
 
 #: Surveys.instance.instructions
-msgid "Enter survey data and click Preview. Click Clear All to clear selections. Click Cancel to return to client details without submitting information."
-msgstr "Entrer les données de l'étude et cliquer sur Aperç . Cliquer sur supprimer tout pour supprimer les sélections. Cliquer sur annuler pour retourner au détails du client sans Valider l' information."
+msgid ""
+"Enter survey data and click Preview. Click Clear All to clear selections. "
+"Click Cancel to return to client details without submitting information."
+msgstr ""
+"Entrer les données de l'étude et cliquer sur Aperç . Cliquer sur supprimer "
+"tout pour supprimer les sélections. Cliquer sur annuler pour retourner au "
+"détails du client sans Valider l' information."
 
 #: Surveys.instance.surveyedby
 msgid "Surveyed by"
@@ -454,8 +476,14 @@ msgid "Review & submit"
 msgstr "Réafficher et Valider"
 
 #: Surveys.reviewInstructions
-msgid "Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Admin page without submitting information."
-msgstr "Réafficher l' information ci-dessous. Cliquer sur  Valider si vous êtes satisfait ou cliquer sur  Editer pour faire des changements. Cliquer sur  Annuler pour retourner à la page d' Admin  sans Valider l'information."
+msgid ""
+"Review the information below. Click Submit if you are satisfied or click "
+"Edit to make changes. Click Cancel to return to Admin page without "
+"submitting information."
+msgstr ""
+"Réafficher l' information ci-dessous. Cliquer sur  Valider si vous êtes "
+"satisfait ou cliquer sur  Editer pour faire des changements. Cliquer sur  "
+"Annuler pour retourner à la page d' Admin  sans Valider l'information."
 
 #: Surveys.savings
 msgctxt "Surveys.savings"
@@ -492,7 +520,9 @@ msgstr "Cliquez sur une question en dessous pour afficher les détails."
 
 #: Surveys.viewQuestions_ppi_note
 msgid "Note: questions flagged as PPI may not be attached to general surveys."
-msgstr "Note\\: questions marqués pour PPI ne peuvent pas être attachés aux études générales."
+msgstr ""
+"Note\\: questions marqués pour PPI ne peuvent pas être attachés aux études "
+"générales."
 
 #: Surveys.viewallsurveys
 msgid "View all surveys"

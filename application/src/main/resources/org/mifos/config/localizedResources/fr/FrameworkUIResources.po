@@ -84,7 +84,7 @@ msgid "Search"
 msgstr "Chercher"
 
 #: framework.searchCriteria
-#, fuzzy
+
 msgid "Search by name, system ID, phone number or account number "
 msgstr "Chercher par nom, ID système ou numéro de compte"
 

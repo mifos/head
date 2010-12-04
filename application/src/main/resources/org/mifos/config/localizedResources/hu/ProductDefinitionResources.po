@@ -1,9 +1,9 @@
-#. extracted from ProductDefinitionResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ProductDefinitionResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-12-03 20:30-0700\n"
 "PO-Revision-Date: 2009-11-12 14:05+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -984,6 +984,10 @@ msgstr "Szerepeljen a"
 msgid "Include in loan cycle counter"
 msgstr "Szerepeljen a hitelciklus számlálóban"
 
+#: product.include.interest.waiver
+msgid "Can waive interest on Prepay loan"
+msgstr ""
+
 #: product.inf
 msgid "information"
 msgstr "információk"
@@ -1758,6 +1762,25 @@ msgstr "Igen"
 msgctxt "produt.edit"
 msgid "Edit"
 msgstr "Szerkesztés"
+
+#: product.questiongroups
+msgid "Question Groups"
+msgstr ""
+
+#: product.assocquestiongroups
+msgid "Associate Question Groups"
+msgstr ""
+
+#: product.assocedquestiongroups
+msgid "Associated Question Groups"
+msgstr ""
+
+#: product.clickquestiongroups
+
+msgid "Click on a question group in the left box to select. Then click Add."
+msgstr ""
+"Kattintással válasszon ki egy alapot a bal oldali dobozban, majd kattintson "
+"a Hozzáadás gombra."
 
 #~ msgid "By last loan Amount"
 #~ msgstr "Utolsó hitel összeg szerint"

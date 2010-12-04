@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/GroupUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:24+0530\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2010-12-01 14:35+0800\n"
 "Last-Translator: \n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -42,7 +43,9 @@ msgid "Center"
 msgstr "中心"
 
 #: Group.EditGroupInstructions
-msgid "Click Submit to change the {0} or Cancel to return to {1} details page without changing the {0}"
+msgid ""
+"Click Submit to change the {0} or Cancel to return to {1} details page "
+"without changing the {0}"
 msgstr "点击提交键来修改{0}或点击取消键放弃{0}的修改并返回至{1}详情页面"
 
 #: Group.FormedBy
@@ -294,7 +297,9 @@ msgid "- Confirm"
 msgstr "－确认"
 
 #: Group.confirmcenterMsg1
-msgid "Click Submit to change the {0} or Cancel to return to {1} details page without changing the {0} "
+msgid ""
+"Click Submit to change the {0} or Cancel to return to {1} details page "
+"without changing the {0} "
 msgstr "点击“提交”按钮来修改{0}或点击“取消”按钮放弃{0}的修改并返回至{1}详情页面"
 
 #: Group.confirmstatuschange
@@ -335,7 +340,9 @@ msgid "Create a new Group"
 msgstr "新建组"
 
 #: Group.createconfirm
-msgid "You can enter a system ID number into the search box to access {0} details which also include a {0}'s account and performance data."
+msgid ""
+"You can enter a system ID number into the search box to access {0} details "
+"which also include a {0}'s account and performance data."
 msgstr "您可以在搜索框中输入系统ID号来访问{0}详情，以及该{0}包含的{0}账户、性能数据等。"
 
 #: Group.createconfirmhead1
@@ -380,7 +387,8 @@ msgid "Then click Preview."
 msgstr "然后点击“预览”按钮。"
 
 #: Group.createpagehead3
-msgid "Click Cancel to return to Clients & Accounts without submitting information."
+msgid ""
+"Click Cancel to return to Clients & Accounts without submitting information."
 msgstr "点击“取消”按钮放弃信息的提交并返回至客户及账户页面。"
 
 #: Group.createpagehead4
@@ -508,7 +516,9 @@ msgid "Enter group information"
 msgstr "输入组信息"
 
 #: Group.externalIdMsg
-msgid "Useful if necessary to cross-reference a client within a system used prior to Mifos"
+msgid ""
+"Useful if necessary to cross-reference a client within a system used prior "
+"to Mifos"
 msgstr "如有必要，在先于Mifos的系统内交叉引用客户会较为有效。"
 
 #: Group.externalid
@@ -927,7 +937,9 @@ msgid "To transfer {0} choose a {1} from the list below."
 msgstr "如要转移{0}，从下面的列表选择一个{1}。"
 
 #: Group.transferbranchMsg2
-msgid "Click Cancel to go back to the {0} details page without submitting information."
+msgid ""
+"Click Cancel to go back to the {0} details page without submitting "
+"information."
 msgstr "点击“取消”按钮返回至{0}详情页面并放弃信息的提交。"
 
 #: Group.transferbranchMsg3
@@ -1040,20 +1052,27 @@ msgid "cfdef.entityId"
 msgstr "cfdef.entityId"
 
 #: error.activity.not.allowed
-msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you the required permissions and try again."
 msgstr "您没有进行该操作的权限。请您在请求系统管理员授予您权限后重试。"
 
 #: error.versionnodonotmatch
-msgid "The record has already been modified by another user. Please navigate to the details page and start the activity again."
+msgid ""
+"The record has already been modified by another user. Please navigate to the "
+"details page and start the activity again."
 msgstr "该条记录已被另一个用户修改过。请转至详情页面并重试。"
 
 #: errors.Customer.clientHasActiveAccount
-msgid "The membership cannot be changed since its children has Active accounts."
+msgid ""
+"The membership cannot be changed since its children has Active accounts."
 msgstr "由于该成员下有活动账户，无法对其进行修改。"
 
 #: errors.Customer.duplicateCustomer
 msgctxt "errors.Customer.duplicateCustomer"
-msgid "The Name specified already exists in the system. Please specify a different Name."
+msgid ""
+"The Name specified already exists in the system. Please specify a different "
+"Name."
 msgstr "输入的名称{0}已存在。请输入其它名称。"
 
 #: errors.Customer.duplicatePeriodicFee
@@ -1062,12 +1081,15 @@ msgid "Same periodic fee cannot be selected multiple times."
 msgstr "无法多次选择同一定期费用。"
 
 #: errors.Customer.feeFrequencyMismatch
-msgid "Meeting frequency and fee recurrence do not match. Please select only valid fee types."
+msgid ""
+"Meeting frequency and fee recurrence do not match. Please select only valid "
+"fee types."
 msgstr "会议频率和循环费用不匹配。请选择有效的费用类型。"
 
 #: errors.Customer.hasActiveAccount
 msgctxt "errors.Customer.hasActiveAccount"
-msgid "The membership cannot be changed since there are Active accounts present."
+msgid ""
+"The membership cannot be changed since there are Active accounts present."
 msgstr "由于当前存在活动账户，因此无法修改成员。"
 
 #: errors.Customer.invalidLoanOfficer
@@ -1080,23 +1102,32 @@ msgid "Please select Meeting schedule."
 msgstr "请选择会议日程。"
 
 #: errors.Customer.meetingFrequencyMismatch
-msgid "Customer cannot be transferred to parent with different meeting frequency."
+msgid ""
+"Customer cannot be transferred to parent with different meeting frequency."
 msgstr "无法将客户转移至会议日程不同的上级级别。"
 
 #: errors.Customer.officeInactive
-msgid "Customer cannot be transferred to the inactive office. Please change office and try again."
+msgid ""
+"Customer cannot be transferred to the inactive office. Please change office "
+"and try again."
 msgstr "无法将客户转移至非活动机构。请修改机构并重试。"
 
 #: errors.Customer.parentInactive
-msgid "Customer cannot be transferred to inactive parent. Please change parent and try again."
+msgid ""
+"Customer cannot be transferred to inactive parent. Please change parent and "
+"try again."
 msgstr "无法将客户转移至非活动上级级别。请修改上级级别并重试。"
 
 #: errors.Customer.sameBranchTransfer
-msgid "Customer cannot be transferred to the same office. Please change office and try again."
+msgid ""
+"Customer cannot be transferred to the same office. Please change office and "
+"try again."
 msgstr "无法将客户转移至同一机构。请修改机构并重试。"
 
 #: errors.Customer.sameParentTransferException
-msgid "Customer cannot be transferred to this parent. Please change parent and try again."
+msgid ""
+"Customer cannot be transferred to this parent. Please change parent and try "
+"again."
 msgstr "无法将客户转移至这一上级级别。请修改上级级别并重试。"
 
 #: errors.Customer.specifyCustomFieldValue
@@ -1104,7 +1135,9 @@ msgid "Please specify required additional information."
 msgstr "请填写必要的附加信息。"
 
 #: errors.Customer.customdatefield
-msgid "Please enter a valid date (format dd/mm/yyyy) in additional information field."
+msgid ""
+"Please enter a valid date (format dd/mm/yyyy) in additional information "
+"field."
 msgstr "请在附加信息栏填写有效日期(日/月/年）"
 
 #: errors.Customer.specifyFeeAmount
@@ -1125,15 +1158,21 @@ msgid "Please specify Name."
 msgstr "请指定名称。"
 
 #: errors.Group.ClientActiveAccountsPresent
-msgid "Group membership couldn't be removed, since the client has an active loan account"
+msgid ""
+"Group membership couldn't be removed, since the client has an active loan "
+"account"
 msgstr "由于客户下有活动的贷款账户，因此无法删除该组成员。"
 
 #: errors.Group.ClientIsATitleHolder
-msgid "The member to remove is a title holder. The title position will be left empty"
+msgid ""
+"The member to remove is a title holder. The title position will be left "
+"empty"
 msgstr "将要删除的成员为头衔拥有者。该头衔将留空"
 
 #: errors.Group.GroupActiveAccountsPresent
-msgid "Group membership couldn't be removed, since the group has an active loan account."
+msgid ""
+"Group membership couldn't be removed, since the group has an active loan "
+"account."
 msgstr "由于该组含有活动的贷款账户，因此无法将该组成员删除。"
 
 #: errors.InvalidTrainedDate
@@ -1167,7 +1206,9 @@ msgstr "无法多次选择同一定期费用。"
 
 #: errors.duplicategroup
 msgctxt "errors.duplicategroup"
-msgid "The Name specified already exists in the system. Please specify a different Name."
+msgid ""
+"The Name specified already exists in the system. Please specify a different "
+"Name."
 msgstr "输入的名称{0}已存在。请输入其它名称。"
 
 #: errors.feeinactive
@@ -1192,7 +1233,9 @@ msgid "Status cannot be changed since the customer has Active accounts."
 msgstr "由于客户含有活动账户，因此无法修改其状态。"
 
 #: errors.groupcreate
-msgid "{0} create failed. Please try again later or contact the system administrator."
+msgid ""
+"{0} create failed. Please try again later or contact the system "
+"administrator."
 msgstr "{0}新建失败。请稍后重试或联系系统管理员。"
 
 #: errors.grouphasactiveaccounts
@@ -1209,15 +1252,21 @@ msgid "Status cannot be changed to Active since Loan officer is not assigned."
 msgstr "由于尚未指定信贷员，无法修改状态为活动。"
 
 #: errors.groupnotfound
-msgid "{1} with the system ID {0} is not found. Please try again with a different value."
+msgid ""
+"{1} with the system ID {0} is not found. Please try again with a different "
+"value."
 msgstr "未找到系统ID为{0}的{1}，请使用其它值重试。"
 
 #: errors.groupupdate
-msgid "{0} updation failed. Please try again later or contact the system administrator."
+msgid ""
+"{0} updation failed. Please try again later or contact the system "
+"administrator."
 msgstr "{0}更新失败。请稍后重试或联系系统管理员。"
 
 #: errors.impossibletocreategrouploan
-msgid "A group loan cannot be created since there are no active clients associated with the selected group."
+msgid ""
+"A group loan cannot be created since there are no active clients associated "
+"with the selected group."
 msgstr "由于没有为选择的组指定客户，所以无法创建该组贷款。"
 
 #: errors.incompletechecklist
@@ -1229,7 +1278,9 @@ msgid "Fee amount cannot be zero or blank."
 msgstr "费用金额不能为0或留空。"
 
 #: errors.loanofficerinactive
-msgid "Either the Loan officer assigned is in Inactive State or changed to Non-Loan Officer or might have been transferred to a different {0}."
+msgid ""
+"Either the Loan officer assigned is in Inactive State or changed to Non-Loan "
+"Officer or might have been transferred to a different {0}."
 msgstr "指定的信贷员为非活动状态，或不再是信贷员身份，或已被调动为其它{0}。"
 
 #: errors.loanofficerrequired
@@ -1237,7 +1288,8 @@ msgid "Please select a Loan Officer for saving in the Approved state."
 msgstr "请在已核准状态中为储蓄选择一个信贷员。"
 
 #: errors.loanofficerrequired_activegroup
-msgid "Specifying a Loan officer is mandatory, since group is in Active/Hold State."
+msgid ""
+"Specifying a Loan officer is mandatory, since group is in Active/Hold State."
 msgstr "由于组为活动/有效状态，所以必须指定一个信贷员。"
 
 #: errors.mandatory
@@ -1279,11 +1331,15 @@ msgid "Please specify Mandatory additional information."
 msgstr "请填写必要的附加信息。"
 
 #: errors.samebranch
-msgid "{0} cannot be transferred to the same office. Please select a different office and try again."
+msgid ""
+"{0} cannot be transferred to the same office. Please select a different "
+"office and try again."
 msgstr "无法将{0}转移至同一机构。请选择不同的机构后重试。"
 
 #: errors.sameparent
-msgid "Customer cannot be transferred to the same parent. Please select a different parent and try again."
+msgid ""
+"Customer cannot be transferred to the same parent. Please select a different "
+"parent and try again."
 msgstr "无法将客户转移至同一上级级别。请选择不同的上级级别后重试。"
 
 #: errors.suffix
@@ -1291,29 +1347,39 @@ msgid "</LI>"
 msgstr "</LI>"
 
 #: errors.traineddate
-msgid "Please make sure if training is selected, training date is specified; and vice-versa."
+msgid ""
+"Please make sure if training is selected, training date is specified; and "
+"vice-versa."
 msgstr "请确认已选择培训、已指定培训日期。"
 
 #: errors.transferex_activeloans
 msgctxt "errors.transferex_activeloans"
-msgid "The membership cannot be changed since there are Active accounts present."
+msgid ""
+"The membership cannot be changed since there are Active accounts present."
 msgstr "由于当前有活动账户，因此无法修改成员。"
 
 #: errors.transferex_clienthasactiveloan
 msgctxt "errors.transferex_clienthasactiveloan"
-msgid "The membership cannot be changed since there are Active accounts present."
+msgid ""
+"The membership cannot be changed since there are Active accounts present."
 msgstr "由于当前有活动账户，因此无法修改成员。"
 
 #: errors.transferex_clienttransferfailed
-msgid "System Exception occurred. One of the clients could not be transferred. Please try again."
+msgid ""
+"System Exception occurred. One of the clients could not be transferred. "
+"Please try again."
 msgstr "发生系统异常。客户之一无法被转移。请重试。"
 
 #: errors.unknownexception
-msgid "Unknown error occurred. Please try again later or contact the system administrator."
+msgid ""
+"Unknown error occurred. Please try again later or contact the system "
+"administrator."
 msgstr "发生未知错误。请稍后重试或联系系统管理员。"
 
 #: exception.framework.ConcurrencyException
-msgid "The record you were trying to update was updated by another transaction. Please search again to get the updated data."
+msgid ""
+"The record you were trying to update was updated by another transaction. "
+"Please search again to get the updated data."
 msgstr "您要更新的记录已被其它交易更新过。请重新搜索最新的数据。"
 
 #: exception.framework.DoubleSubmitException
@@ -1343,4 +1409,3 @@ msgstr "没有"
 #: warning.noclientsassigned3
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr "指定给它。点击“提交”按钮来批准这个空"
-

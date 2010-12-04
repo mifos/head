@@ -1,9 +1,9 @@
-#. extracted from ConfigurationUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ConfigurationUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-12-03 20:30-0700\n"
 "PO-Revision-Date: 2009-11-12 15:52+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -468,9 +468,10 @@ msgid "Second last name"
 msgstr "Második vezetéknév"
 
 #: configuration.select_category
+
 msgid ""
-"Click on a category below to view and edit the additional fields defined for "
-"that category or"
+"Click on a category below to view the additional fields defined for that "
+"category."
 msgstr ""
 "Kattintson az egyik alábbi kategóriára az adott kategóriára meghatározott "
 "kiegészítő mezők megtekintéséhez és szerkesztéséhez, vagy"

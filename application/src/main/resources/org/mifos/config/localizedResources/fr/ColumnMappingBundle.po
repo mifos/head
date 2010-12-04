@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/ColumnMappingBundle.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:27+0530\n"
+"POT-Creation-Date: 2010-12-03 20:27-0700\n"
 "PO-Revision-Date: 2010-12-01 19:00+0100\n"
 "Last-Translator: lassaad <lbhadj@voila.fr>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -929,4 +930,3 @@ msgstr "Montant total payé"
 #: historicalData.totalPaymentsCount
 msgid "Total number of payments"
 msgstr "Nombre total de paiements"
-

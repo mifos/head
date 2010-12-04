@@ -1,9 +1,9 @@
-#. extracted from LoginUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LoginUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-12-03 20:30-0700\n"
 "PO-Revision-Date: 2009-11-10 00:16+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,31 +31,10 @@ msgstr "Kiléptetésre került a rendszerből, mert kötegelt feldolgozás fut."
 msgid "You have been logged out of the system because Mifos is shutting down."
 msgstr ""
 
-#: AbstractUserDetailsAuthenticationProvider.disabled
-msgid ""
-"The user account is currently inactive. Please try again later or contact "
-"the system administrator."
-msgstr ""
-"A felhasználói fiók jelenleg inaktív. Próbálja újra később, vagy forduljon a "
-"rendszergazdához."
-
 #: errors.invalidoldpassword
 msgctxt "errors.invalidoldpassword"
 msgid "Please specify valid username/password to access the application."
 msgstr "Az alkalmazás eléréséhez érvényes felhasználónevet/jelszót adjon meg."
-
-#: AbstractUserDetailsAuthenticationProvider.badCredentials
-msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
-msgid "Please specify valid username/password to access the application."
-msgstr "Az alkalmazás eléréséhez érvényes felhasználónevet/jelszót adjon meg."
-
-#: AbstractUserDetailsAuthenticationProvider.locked
-msgid ""
-"The user account is currently locked. Please try again later or contact the "
-"system administrator."
-msgstr ""
-"A felhasználói fiók jelenleg le van zárva. Próbálja újra később, vagy "
-"forduljon a rendszergazdához."
 
 #: errors.logoutout
 msgid ""
@@ -129,12 +108,12 @@ msgid "Confirm New Password"
 msgstr "Új jelszó megerősítése"
 
 #: login.login
-msgid "Login"
-msgstr "Bejelentkezés"
+msgid "Log In"
+msgstr ""
 
 #: login.logout
-msgid "Logout"
-msgstr "Kijelentkezés"
+msgid "Log Out"
+msgstr ""
 
 #: login.newpassword
 msgid "New Password"
@@ -160,7 +139,31 @@ msgstr "Felhasználónév"
 msgid "Welcome to mifos"
 msgstr "Üdvözöljük a mifos rendszerben"
 
+#. # Spring security specific messages overrides org.springframwork.security/message.properties
+#: AbstractUserDetailsAuthenticationProvider.locked
+msgid ""
+"The user account is currently locked. Please try again later or contact the "
+"system administrator."
+msgstr ""
+"A felhasználói fiók jelenleg le van zárva. Próbálja újra később, vagy "
+"forduljon a rendszergazdához."
+
+#: AbstractUserDetailsAuthenticationProvider.disabled
+msgid ""
+"The user account is currently inactive. Please try again later or contact "
+"the system administrator."
+msgstr ""
+"A felhasználói fiók jelenleg inaktív. Próbálja újra később, vagy forduljon a "
+"rendszergazdához."
+
 #: AbstractUserDetailsAuthenticationProvider.badCredentials
+
 msgctxt "AbstractUserDetailsAuthenticationProvider.badCredentials"
 msgid "Please specify valid username/password to access the application."
 msgstr "Az alkalmazás eléréséhez érvényes felhasználónevet/jelszót adjon meg."
+
+#~ msgid "Login"
+#~ msgstr "Bejelentkezés"
+
+#~ msgid "Logout"
+#~ msgstr "Kijelentkezés"

@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/adminUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-01 13:19-0700\n"
+"POT-Creation-Date: 2010-12-03 20:29-0700\n"
 "PO-Revision-Date: 2010-12-01 10:11-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -431,7 +432,9 @@ msgstr "Em progresso (desligando em {0} horas, {1} minutos, {2} segundos)"
 
 #: admin.shutdown.status.imminent
 msgid "System shutdown is imminent. Please complete current work and log out."
-msgstr "Desligamento do sistema é iminente. Por favor complete trabalho atual y saia."
+msgstr ""
+"Desligamento do sistema é iminente. Por favor complete trabalho atual y "
+"saia."
 
 #: admin.shutdown.timeout
 msgid "Schedule in"
@@ -653,11 +656,18 @@ msgstr "Ver usuários do sistema"
 
 #: admin.welcometomifos
 msgid "Welcome to mifos administrative area. Click on a link below to begin."
-msgstr "Bem Vindo a área administrativa do Mifos. Clique num link abaixo para iniciar."
+msgstr ""
+"Bem Vindo a área administrativa do Mifos. Clique num link abaixo para "
+"iniciar."
 
 #: error.activity.not.allowed
-msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
-msgstr "Não tem permissões para efectuar esta actividade. Contacte o seu administrador de sistema para obter as permissões necessárias e tente novamente."
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you the required permissions and try again."
+msgstr ""
+"Não tem permissões para efectuar esta actividade. Contacte o seu "
+"administrador de sistema para obter as permissões necessárias e tente "
+"novamente."
 
 #: error.shutdown.timeout.invalid
 msgid "Please type valid shutdown timeout (in seconds)."
@@ -716,4 +726,3 @@ msgstr "Migrar Campos Adicionales"
 #: admin.migrate.questiongroups
 msgid "Migrate to Question Groups"
 msgstr "Migrar a Grupos de Questões"
-

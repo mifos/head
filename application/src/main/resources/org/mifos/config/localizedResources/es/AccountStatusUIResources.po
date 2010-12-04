@@ -1,9 +1,10 @@
 # extracted from AccountStatusUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/AccountStatusUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-12-03 20:29-0700\n"
 "PO-Revision-Date: 2010-11-24 11:14-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -135,7 +136,9 @@ msgstr "Tipo"
 
 #: accountStauts.searchheader
 msgid "7 results in All branches found for Loans in Pending approval"
-msgstr "Se encontraron 7 resultados en todas las sucursales con préstamos pendientes de aprobar"
+msgstr ""
+"Se encontraron 7 resultados en todas las sucursales con préstamos pendientes "
+"de aprobar"
 
 #~ msgid "results"
 #~ msgstr "resultados"

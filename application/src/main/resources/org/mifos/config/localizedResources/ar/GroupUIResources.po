@@ -1,5 +1,4 @@
 # extracted from GroupUIResources.properties
-#. extracted from GroupUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -45,9 +44,7 @@ msgid "Center"
 msgstr ""
 
 #: Group.EditGroupInstructions
-msgid ""
-"Click Submit to change the {0} or Cancel to return to {1} details page "
-"without changing the {0}"
+msgid "Click Submit to change the {0} or Cancel to return to {1} details page without changing the {0}"
 msgstr ""
 
 #: Group.FormedBy
@@ -299,9 +296,7 @@ msgid "- Confirm"
 msgstr ""
 
 #: Group.confirmcenterMsg1
-msgid ""
-"Click Submit to change the {0} or Cancel to return to {1} details page "
-"without changing the {0} "
+msgid "Click Submit to change the {0} or Cancel to return to {1} details page without changing the {0} "
 msgstr ""
 
 #: Group.confirmstatuschange
@@ -342,9 +337,7 @@ msgid "Create a new Group"
 msgstr ""
 
 #: Group.createconfirm
-msgid ""
-"You can enter a system ID number into the search box to access {0} details "
-"which also include a {0}'s account and performance data."
+msgid "You can enter a system ID number into the search box to access {0} details which also include a {0}'s account and performance data."
 msgstr ""
 
 #: Group.createconfirmhead1
@@ -389,8 +382,7 @@ msgid "Then click Preview."
 msgstr ""
 
 #: Group.createpagehead3
-msgid ""
-"Click Cancel to return to Clients & Accounts without submitting information."
+msgid "Click Cancel to return to Clients & Accounts without submitting information."
 msgstr ""
 
 #: Group.createpagehead4
@@ -518,9 +510,7 @@ msgid "Enter group information"
 msgstr ""
 
 #: Group.externalIdMsg
-msgid ""
-"Useful if necessary to cross-reference a client within a system used prior "
-"to Mifos"
+msgid "Useful if necessary to cross-reference a client within a system used prior to Mifos"
 msgstr ""
 
 #: Group.externalid
@@ -939,9 +929,7 @@ msgid "To transfer {0} choose a {1} from the list below."
 msgstr ""
 
 #: Group.transferbranchMsg2
-msgid ""
-"Click Cancel to go back to the {0} details page without submitting "
-"information."
+msgid "Click Cancel to go back to the {0} details page without submitting information."
 msgstr ""
 
 #: Group.transferbranchMsg3
@@ -1012,6 +1000,10 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: button.continue
+msgid "Continue"
+msgstr ""
+
 #: button.editstatus
 msgid "Edit status"
 msgstr ""
@@ -1050,27 +1042,20 @@ msgid "cfdef.entityId"
 msgstr ""
 
 #: error.activity.not.allowed
-msgid ""
-"You do not have permissions to perform this activity. Contact your system "
-"administrator to grant you the required permissions and try again."
+msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
 msgstr ""
 
 #: error.versionnodonotmatch
-msgid ""
-"The record has already been modified by another user. Please navigate to the "
-"details page and start the activity again."
+msgid "The record has already been modified by another user. Please navigate to the details page and start the activity again."
 msgstr ""
 
 #: errors.Customer.clientHasActiveAccount
-msgid ""
-"The membership cannot be changed since its children has Active accounts."
+msgid "The membership cannot be changed since its children has Active accounts."
 msgstr ""
 
 #: errors.Customer.duplicateCustomer
 msgctxt "errors.Customer.duplicateCustomer"
-msgid ""
-"The Name specified already exists in the system. Please specify a different "
-"Name."
+msgid "The Name specified already exists in the system. Please specify a different Name."
 msgstr ""
 
 #: errors.Customer.duplicatePeriodicFee
@@ -1079,15 +1064,12 @@ msgid "Same periodic fee cannot be selected multiple times."
 msgstr ""
 
 #: errors.Customer.feeFrequencyMismatch
-msgid ""
-"Meeting frequency and fee recurrence do not match. Please select only valid "
-"fee types."
+msgid "Meeting frequency and fee recurrence do not match. Please select only valid fee types."
 msgstr ""
 
 #: errors.Customer.hasActiveAccount
 msgctxt "errors.Customer.hasActiveAccount"
-msgid ""
-"The membership cannot be changed since there are Active accounts present."
+msgid "The membership cannot be changed since there are Active accounts present."
 msgstr ""
 
 #: errors.Customer.invalidLoanOfficer
@@ -1100,32 +1082,23 @@ msgid "Please select Meeting schedule."
 msgstr ""
 
 #: errors.Customer.meetingFrequencyMismatch
-msgid ""
-"Customer cannot be transferred to parent with different meeting frequency."
+msgid "Customer cannot be transferred to parent with different meeting frequency."
 msgstr ""
 
 #: errors.Customer.officeInactive
-msgid ""
-"Customer cannot be transferred to the inactive office. Please change office "
-"and try again."
+msgid "Customer cannot be transferred to the inactive office. Please change office and try again."
 msgstr ""
 
 #: errors.Customer.parentInactive
-msgid ""
-"Customer cannot be transferred to inactive parent. Please change parent and "
-"try again."
+msgid "Customer cannot be transferred to inactive parent. Please change parent and try again."
 msgstr ""
 
 #: errors.Customer.sameBranchTransfer
-msgid ""
-"Customer cannot be transferred to the same office. Please change office and "
-"try again."
+msgid "Customer cannot be transferred to the same office. Please change office and try again."
 msgstr ""
 
 #: errors.Customer.sameParentTransferException
-msgid ""
-"Customer cannot be transferred to this parent. Please change parent and try "
-"again."
+msgid "Customer cannot be transferred to this parent. Please change parent and try again."
 msgstr ""
 
 #: errors.Customer.specifyCustomFieldValue
@@ -1133,9 +1106,7 @@ msgid "Please specify required additional information."
 msgstr ""
 
 #: errors.Customer.customdatefield
-msgid ""
-"Please enter a valid date (format dd/mm/yyyy) in additional information "
-"field."
+msgid "Please enter a valid date (format dd/mm/yyyy) in additional information field."
 msgstr ""
 
 #: errors.Customer.specifyFeeAmount
@@ -1156,21 +1127,15 @@ msgid "Please specify Name."
 msgstr ""
 
 #: errors.Group.ClientActiveAccountsPresent
-msgid ""
-"Group membership couldn't be removed, since the client has an active loan "
-"account"
+msgid "Group membership couldn't be removed, since the client has an active loan account"
 msgstr ""
 
 #: errors.Group.ClientIsATitleHolder
-msgid ""
-"The member to remove is a title holder. The title position will be left "
-"empty"
+msgid "The member to remove is a title holder. The title position will be left empty"
 msgstr ""
 
 #: errors.Group.GroupActiveAccountsPresent
-msgid ""
-"Group membership couldn't be removed, since the group has an active loan "
-"account."
+msgid "Group membership couldn't be removed, since the group has an active loan account."
 msgstr ""
 
 #: errors.InvalidTrainedDate
@@ -1204,9 +1169,7 @@ msgstr ""
 
 #: errors.duplicategroup
 msgctxt "errors.duplicategroup"
-msgid ""
-"The Name specified already exists in the system. Please specify a different "
-"Name."
+msgid "The Name specified already exists in the system. Please specify a different Name."
 msgstr ""
 
 #: errors.feeinactive
@@ -1231,9 +1194,7 @@ msgid "Status cannot be changed since the customer has Active accounts."
 msgstr ""
 
 #: errors.groupcreate
-msgid ""
-"{0} create failed. Please try again later or contact the system "
-"administrator."
+msgid "{0} create failed. Please try again later or contact the system administrator."
 msgstr ""
 
 #: errors.grouphasactiveaccounts
@@ -1250,21 +1211,15 @@ msgid "Status cannot be changed to Active since Loan officer is not assigned."
 msgstr ""
 
 #: errors.groupnotfound
-msgid ""
-"{1} with the system ID {0} is not found. Please try again with a different "
-"value."
+msgid "{1} with the system ID {0} is not found. Please try again with a different value."
 msgstr ""
 
 #: errors.groupupdate
-msgid ""
-"{0} updation failed. Please try again later or contact the system "
-"administrator."
+msgid "{0} updation failed. Please try again later or contact the system administrator."
 msgstr ""
 
 #: errors.impossibletocreategrouploan
-msgid ""
-"A group loan cannot be created since there are no active clients associated "
-"with the selected group."
+msgid "A group loan cannot be created since there are no active clients associated with the selected group."
 msgstr ""
 
 #: errors.incompletechecklist
@@ -1276,9 +1231,7 @@ msgid "Fee amount cannot be zero or blank."
 msgstr ""
 
 #: errors.loanofficerinactive
-msgid ""
-"Either the Loan officer assigned is in Inactive State or changed to Non-Loan "
-"Officer or might have been transferred to a different {0}."
+msgid "Either the Loan officer assigned is in Inactive State or changed to Non-Loan Officer or might have been transferred to a different {0}."
 msgstr ""
 
 #: errors.loanofficerrequired
@@ -1286,8 +1239,7 @@ msgid "Please select a Loan Officer for saving in the Approved state."
 msgstr ""
 
 #: errors.loanofficerrequired_activegroup
-msgid ""
-"Specifying a Loan officer is mandatory, since group is in Active/Hold State."
+msgid "Specifying a Loan officer is mandatory, since group is in Active/Hold State."
 msgstr ""
 
 #: errors.mandatory
@@ -1329,15 +1281,11 @@ msgid "Please specify Mandatory additional information."
 msgstr ""
 
 #: errors.samebranch
-msgid ""
-"{0} cannot be transferred to the same office. Please select a different "
-"office and try again."
+msgid "{0} cannot be transferred to the same office. Please select a different office and try again."
 msgstr ""
 
 #: errors.sameparent
-msgid ""
-"Customer cannot be transferred to the same parent. Please select a different "
-"parent and try again."
+msgid "Customer cannot be transferred to the same parent. Please select a different parent and try again."
 msgstr ""
 
 #: errors.suffix
@@ -1345,39 +1293,29 @@ msgid "</LI>"
 msgstr ""
 
 #: errors.traineddate
-msgid ""
-"Please make sure if training is selected, training date is specified; and "
-"vice-versa."
+msgid "Please make sure if training is selected, training date is specified; and vice-versa."
 msgstr ""
 
 #: errors.transferex_activeloans
 msgctxt "errors.transferex_activeloans"
-msgid ""
-"The membership cannot be changed since there are Active accounts present."
+msgid "The membership cannot be changed since there are Active accounts present."
 msgstr ""
 
 #: errors.transferex_clienthasactiveloan
 msgctxt "errors.transferex_clienthasactiveloan"
-msgid ""
-"The membership cannot be changed since there are Active accounts present."
+msgid "The membership cannot be changed since there are Active accounts present."
 msgstr ""
 
 #: errors.transferex_clienttransferfailed
-msgid ""
-"System Exception occurred. One of the clients could not be transferred. "
-"Please try again."
+msgid "System Exception occurred. One of the clients could not be transferred. Please try again."
 msgstr ""
 
 #: errors.unknownexception
-msgid ""
-"Unknown error occurred. Please try again later or contact the system "
-"administrator."
+msgid "Unknown error occurred. Please try again later or contact the system administrator."
 msgstr ""
 
 #: exception.framework.ConcurrencyException
-msgid ""
-"The record you were trying to update was updated by another transaction. "
-"Please search again to get the updated data."
+msgid "The record you were trying to update was updated by another transaction. Please search again to get the updated data."
 msgstr ""
 
 #: exception.framework.DoubleSubmitException
@@ -1407,3 +1345,4 @@ msgstr ""
 #: warning.noclientsassigned3
 msgid "s assigned to it. Click Submit to approve the empty"
 msgstr ""
+

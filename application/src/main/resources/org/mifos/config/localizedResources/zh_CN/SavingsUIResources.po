@@ -1,8 +1,9 @@
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SavingsUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-11-28 11:25+0530\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2010-11-30 14:10-0800\n"
 "Last-Translator: Edward Cable <ecable@grameenfoundation.org>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -204,7 +205,9 @@ msgid "Return to account details"
 msgstr "返回至账户详情页面"
 
 #: Savings.clickCancel
-msgid "Click Cancel to return to Clients &amp; Accounts without submitting information."
+msgid ""
+"Click Cancel to return to Clients &amp; Accounts without submitting "
+"information."
 msgstr "点击“取消”按钮放弃信息的提交并返回至客户及账户详情页面。"
 
 #: Savings.clickCancelToReturn
@@ -217,7 +220,9 @@ msgid "Then click Continue."
 msgstr "然后点击“继续”按钮。"
 
 #: Savings.clickContinueOrCancel
-msgid "Then click Continue. Click Cancel to return to Clients &amp; Accounts without submitting information."
+msgid ""
+"Then click Continue. Click Cancel to return to Clients &amp; Accounts "
+"without submitting information."
 msgstr "点击“取消”按钮放弃信息的提交并返回至客户及账户详情页面。"
 
 #: Savings.clickPreview
@@ -233,7 +238,9 @@ msgid "If satisfied click Submit"
 msgstr "如果满意点击“提交”按钮"
 
 #: Savings.clickSubmitIfSatisfied.return.closing
-msgid "If satisfied click Submit. Click Cancel to return to account details without closing the account."
+msgid ""
+"If satisfied click Submit. Click Cancel to return to account details without "
+"closing the account."
 msgstr "如果满意点击“提交”按钮，或者点击“取消”按钮返回至账户详情页面。"
 
 #: Savings.clickSubmitOnPreview
@@ -253,7 +260,10 @@ msgid "Complete the fields below. "
 msgstr "完成下面的栏位。"
 
 #: Savings.confirmationMsgOnReviewAdjustment
-msgid "Are you sure you want to adjust the last transaction? Click Submit to confirm. Click Cancel to return to details page without adjusting the transaction."
+msgid ""
+"Are you sure you want to adjust the last transaction? Click Submit to "
+"confirm. Click Cancel to return to details page without adjusting the "
+"transaction."
 msgstr "您确定要调整交易吗？点击“提交”按钮确认。点击“取消”按钮放弃交易的调整并返回至详情页面。"
 
 #: Savings.dateAccountOpened
@@ -372,7 +382,10 @@ msgid "More account and transaction details"
 msgstr "更多账户及交易详情"
 
 #: Savings.msgOnTopLastPaymentModifiedAdjustment
-msgid "Last transaction can be modified if required. If the adjustment is made, system will make a reverse transaction entry and the account balance will be updated."
+msgid ""
+"Last transaction can be modified if required. If the adjustment is made, "
+"system will make a reverse transaction entry and the account balance will be "
+"updated."
 msgstr "必要时可以修改最后一次交易。一旦作出该调整，系统会生成撤销的交易项目，并更新账户余额。"
 
 #: Savings.nextdeposit
@@ -501,7 +514,9 @@ msgid "savings"
 msgstr "储蓄"
 
 #: Savings.searchBoxMsg
-msgid "You can enter an account number into the search box to access account details."
+msgid ""
+"You can enter an account number into the search box to access account "
+"details."
 msgstr "您可以在搜索框中输入帐号来进入账户详情页面。"
 
 #: Savings.seeAllNotes
@@ -611,7 +626,9 @@ msgid "User"
 msgstr "用户"
 
 #: error.activity.not.allowed
-msgid "You do not have permissions to perform this activity. Contact your system administrator to grant you the required permissions and try again."
+msgid ""
+"You do not have permissions to perform this activity. Contact your system "
+"administrator to grant you the required permissions and try again."
 msgstr "您没有进行该操作的权限。请您在请求系统管理员授予您权限后重试。"
 
 #: error.incompletechecklist
@@ -627,11 +644,15 @@ msgid "The action is not permissible."
 msgstr "无执行该操作的权限。"
 
 #: error.unknownexception
-msgid "Unknown exception occurred in the application. Please try again later or contact the system administrator."
+msgid ""
+"Unknown exception occurred in the application. Please try again later or "
+"contact the system administrator."
 msgstr "程序发生未知异常。请稍后重试或联系系统管理员。"
 
 #: error.versionnodonotmatch
-msgid "The record has already been modified by another user. Please navigate to the details page and start the activity again. "
+msgid ""
+"The record has already been modified by another user. Please navigate to the "
+"details page and start the activity again. "
 msgstr "该条记录已被另一个用户修改过。请转至详情页面并重试。"
 
 #: errors.Account.specifyCustomFieldValue
@@ -643,7 +664,8 @@ msgid "Please enter a valid date (format dd/mm/yyyy) in the '{0}' field."
 msgstr "请在{0}内填写有效日期（日/月/年)"
 
 #: errors.createfailed
-msgid "Create failed. Please try again later or contact the system administrator."
+msgid ""
+"Create failed. Please try again later or contact the system administrator."
 msgstr "新建失败。请稍后重试或联系系统管理员。"
 
 #: errors.decimalFormat
@@ -655,7 +677,9 @@ msgid "Please specify {0}. Use numbers only."
 msgstr "请指定{0}，仅限于数字。"
 
 #: errors.exceedmaxwithdrawal
-msgid "Withdrawal can not be done. Specified amount is greater than the withdrawal limit."
+msgid ""
+"Withdrawal can not be done. Specified amount is greater than the withdrawal "
+"limit."
 msgstr "无法完成取款。填写的金额超出提款限额。"
 
 #: errors.futuredate
@@ -667,7 +691,8 @@ msgid "The {0} is invalid because {1}"
 msgstr "这{0}是无效因为{1}"
 
 #: errors.insufficentbalance
-msgid "Withdrawal can not be done. There is insufficient balance in the account."
+msgid ""
+"Withdrawal can not be done. There is insufficient balance in the account."
 msgstr "无法完成取款。账户余额不足。"
 
 #: errors.invalidAdjustmentAmount
@@ -683,7 +708,9 @@ msgid "Specified user does not exist."
 msgstr "指定的用户不存在。"
 
 #: errors.invalidTxndate
-msgid "Date of transaction is invalid. It can not be prior to the last meeting date of the customer or prior to activation date of the savings account."
+msgid ""
+"Date of transaction is invalid. It can not be prior to the last meeting date "
+"of the customer or prior to activation date of the savings account."
 msgstr "交易日期无效。交易日期不能早于该客户的最后一次会议日期及储蓄账户激活日期。"
 
 #: errors.invaliddate
@@ -691,7 +718,9 @@ msgid "{0} was invalid.  Please enter a valid date."
 msgstr "{0}无效。请输入有效的日期。"
 
 #: errors.invalidlastpayment
-msgid "This adjustment is not possible. Last payment record should exist and it must indicate either a deposit or a withdrawal."
+msgid ""
+"This adjustment is not possible. Last payment record should exist and it "
+"must indicate either a deposit or a withdrawal."
 msgstr "本次调整不大可能。上次付款应存在并且需要标记为存款还是取款。"
 
 #: errors.mandatory
@@ -723,11 +752,14 @@ msgid "</LI>"
 msgstr "</LI>"
 
 #: errors.updatefailed
-msgid "Update failed. Please try again later or contact the system administrator."
+msgid ""
+"Update failed. Please try again later or contact the system administrator."
 msgstr "更新失败。请稍后重试或联系系统管理员。"
 
 #: exception.accounts.ApplicationException.CannotAdjust
-msgid "The amount cannot be adjusted. Either there is insufficient balance in the account, or amount is not modified, or is greater than the withdrawal limit."
+msgid ""
+"The amount cannot be adjusted. Either there is insufficient balance in the "
+"account, or amount is not modified, or is greater than the withdrawal limit."
 msgstr "无法调整金额。可能由于账户余额不足、金额未作修改或超出取款限制。"
 
 #: savings.Cancel
@@ -822,4 +854,3 @@ msgstr "注释："
 #: savings.status
 msgid "Status:"
 msgstr "状态："
-

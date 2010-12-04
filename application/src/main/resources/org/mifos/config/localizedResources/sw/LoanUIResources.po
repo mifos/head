@@ -1,10 +1,10 @@
 # extracted from LoanUIResources.properties
-#. extracted from LoanUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/LoanUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -287,8 +287,8 @@ msgstr ""
 
 #: errors.invalidTxndateLessThanLastTransactionMade
 msgid ""
-"Date of transaction is invalid. It can not be prior to the date of the last "
-"transaction made on the loan account. "
+"Date of transaction is invalid. It can not be prior to the date of the first "
+"transaction made on the loan account."
 msgstr ""
 
 #: errors.loan.duplicatePeriodicFee
@@ -1063,6 +1063,24 @@ msgstr ""
 
 #: loan.dateofpayment
 msgid "Actual Payment Date"
+msgstr ""
+
+#: loan.waiverInterest
+msgctxt "loan.waiverInterest"
+msgid "Waive Interest"
+msgstr ""
+
+#: loan.donotwaiverInterest
+msgid "Do Not Waive Interest"
+msgstr ""
+
+#: loan.waiverInterestWarning
+msgid "Note: Interest due will be waived off."
+msgstr ""
+
+#: loan.waiverInterestPreview
+msgctxt "loan.waiverInterestPreview"
+msgid "Waive Interest"
 msgstr ""
 
 #: loan.dateoftrxn
@@ -2113,4 +2131,14 @@ msgstr ""
 
 #: loan.yes
 msgid "Yes"
+msgstr ""
+
+#: loan.waiverInterestMessage
+msgid "Waive all interest due"
+msgstr ""
+
+#: loan.waiverInterest.not.configured
+msgid ""
+"This loan product has not been configured for waiving interest on prepaying "
+"loan"
 msgstr ""

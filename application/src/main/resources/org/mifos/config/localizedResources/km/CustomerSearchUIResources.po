@@ -1,10 +1,10 @@
 # extracted from CustomerSearchUIResources.properties
-#. extracted from CustomerSearchUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/CustomerSearchUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:48+0800\n"
+"POT-Creation-Date: 2010-12-03 20:28-0700\n"
 "PO-Revision-Date: 2009-06-16 22:13-0700\n"
 "Last-Translator: Sothyvorn Ok <t1@anakut.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -117,8 +117,9 @@ msgid "the search tool below"
 msgstr "ឧបករណ៍ស្វែងរកខាងក្រោម"
 
 #: CustomerSearch.searchby
+
 msgctxt "CustomerSearch.searchby"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr "ស្វែងរកតាមឈ្មោះ លេខសម្គាល់ប្រព័ន្ធ ឬលេខគណនេយ្យ"
 
 #: CustomerSearch.searchinstruction1
@@ -126,12 +127,13 @@ msgid "To search, enter a"
 msgstr "ដើម្បីស្វែងរក បញ្ចូល"
 
 #: CustomerSearch.searchnamesysid
-msgid "name, system ID or account number"
-msgstr "ឈ្មោះ លេខសម្គាល់ប្រព័ន្ធ ឬលេខគណនេយ្យ"
+msgid "name, system ID, phone number or account number"
+msgstr ""
 
 #: CustomerSearch.searchstring
+
 msgctxt "CustomerSearch.searchstring"
-msgid "Search by name, system ID or account number"
+msgid "Search by name, system ID, phone number or account number"
 msgstr "ស្វែងរកតាមឈ្មោះ លេខសម្គាល់ប្រព័ន្ធ ឬលេខគណនេយ្យ"
 
 #: CustomerSearch.select
@@ -200,3 +202,10 @@ msgstr "LI"
 #: errors.suffix
 msgid "</LI>"
 msgstr "LI"
+
+#~ msgid "name, system ID or account number"
+#~ msgstr "ឈ្មោះ លេខសម្គាល់ប្រព័ន្ធ ឬលេខគណនេយ្យ"
+
+#~ msgctxt "CustomerSearch.searchstring"
+#~ msgid "Search by name, system ID or account number"
+#~ msgstr "ស្វែងរកតាមឈ្មោះ លេខសម្គាល់ប្រព័ន្ធ ឬលេខគណនេយ្យ"

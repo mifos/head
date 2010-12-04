@@ -1,5 +1,4 @@
 # extracted from ConfigurationUIResources.properties
-#. extracted from ConfigurationUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -277,9 +276,7 @@ msgid "Inactive"
 msgstr ""
 
 #: configuration.instruction1
-msgid ""
-"Complete the fields below. Then click Preview. Click Cancel to return to "
-"Admin without submitting information. "
+msgid "Complete the fields below. Then click Preview. Click Cancel to return to Admin without submitting information. "
 msgstr ""
 
 #: configuration.instruction2
@@ -415,10 +412,7 @@ msgid "Preview additional field"
 msgstr ""
 
 #: configuration.preview_instruction
-msgid ""
-"Review the information below. Click Submit if you are satisfied or click "
-"Edit to make changes. Click Cancel to return to Admin page without "
-"submitting information."
+msgid "Review the information below. Click Submit if you are satisfied or click Edit to make changes. Click Cancel to return to Admin page without submitting information."
 msgstr ""
 
 #: configuration.pringrace
@@ -462,9 +456,7 @@ msgid "Second last name"
 msgstr ""
 
 #: configuration.select_category
-msgid ""
-"Click on a category below to view and edit the additional fields defined for "
-"that category or"
+msgid "Click on a category below to view the additional fields defined for that category."
 msgstr ""
 
 #: configuration.sequence_number
@@ -584,3 +576,4 @@ msgstr ""
 #: errors.toolong
 msgid "Please specify a value of {0} characters or less."
 msgstr ""
+

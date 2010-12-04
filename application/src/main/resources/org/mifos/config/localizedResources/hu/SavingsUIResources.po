@@ -1,9 +1,9 @@
-#. extracted from SavingsUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SavingsUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-12-03 20:30-0700\n"
 "PO-Revision-Date: 2009-11-12 15:08+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -571,8 +571,9 @@ msgstr "' módosítások elvégzéséhez."
 msgid "Total amount due"
 msgstr "Teljes esedékes összeg"
 
-#: Savings.totalAmountDue.on
-msgctxt "Savings.totalAmountDue.on"
+#: Savings.totalAmountDueOn
+
+msgctxt "Savings.totalAmountDueOn"
 msgid "Total amount due on"
 msgstr "Összes esedékes összeg"
 

@@ -1,9 +1,9 @@
-#. extracted from SurveysUIResources.properties
+#. extracted from application/src/main/resources/org/mifos/config/localizedResources/SurveysUIResources.properties
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2010-08-02 03:49+0800\n"
+"POT-Creation-Date: 2010-12-03 20:30-0700\n"
 "PO-Revision-Date: 2009-11-12 15:20+0100\n"
 "Last-Translator: Vaghy Laszlo <vaghy.laszlo@hungarnet.hu>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -235,7 +235,8 @@ msgid "Attach survey"
 msgstr "Felmérés csatolása"
 
 #: Surveys.attachasurvey
-msgid "Attach a survey"
+
+msgid "Attach a Survey"
 msgstr "Felmérés csatolása"
 
 #: Surveys.between
@@ -421,10 +422,8 @@ msgid "Loan accounts"
 msgstr "Hitelszámlák"
 
 #: Surveys.mainpage_instructions
-msgid "Click on a survey below to view details and make changes or"
+msgid "Click on a survey below to view details."
 msgstr ""
-"Kattintson egy alábbi felmérésre az adatok megtekintéséhez és módosítások "
-"végzéséhez, vagy"
 
 #: Surveys.manageQuestions
 msgid "Manage questions"
@@ -519,10 +518,8 @@ msgid "Survey name"
 msgstr "Felmérés megnevezése"
 
 #: Surveys.viewQuestions_instructions
-msgid "Click on a question below to view details and make changes or "
+msgid "Click on a question below to view details. "
 msgstr ""
-"Kattintson egy alábbi kérdésre az adatok megtekintéséhez és módosítások "
-"végzéséhez, vagy"
 
 #: Surveys.viewQuestions_ppi_note
 msgid "Note: questions flagged as PPI may not be attached to general surveys."
@@ -625,3 +622,18 @@ msgstr "</li>"
 #: erros.invalidnumberofchoices
 msgid "Please specify at least 2 choices for this type of answer."
 msgstr "Ennél a választípusnál legalább két lehetőséget adjon meg."
+
+#: Questionnaire.EditAdditonalInformation
+
+msgid "Edit Additional Information"
+msgstr "Kérdés információk szerkesztése"
+
+#~ msgid "Click on a survey below to view details and make changes or"
+#~ msgstr ""
+#~ "Kattintson egy alábbi felmérésre az adatok megtekintéséhez és módosítások "
+#~ "végzéséhez, vagy"
+
+#~ msgid "Click on a question below to view details and make changes or "
+#~ msgstr ""
+#~ "Kattintson egy alábbi kérdésre az adatok megtekintéséhez és módosítások "
+#~ "végzéséhez, vagy"
