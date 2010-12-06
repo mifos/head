@@ -2682,10 +2682,7 @@ public class LoanBO extends AccountBO {
 
     private Money getTotalRepayableAmount() {
         Money amount = new Money(getCurrency());
-        for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForNextInstallmentAndArrears()) {
-            amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getTotalDueWithFees());
-        }
-        for (AccountActionDateEntity accountActionDateEntity : getApplicableIdsForFutureInstallments()) {
+        for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
             amount = amount.add(((LoanScheduleEntity) accountActionDateEntity).getTotalDueWithFees());
         }
         return amount;

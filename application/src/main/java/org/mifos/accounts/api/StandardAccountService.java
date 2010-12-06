@@ -72,20 +72,22 @@ public class StandardAccountService implements AccountService {
     private AccountPersistence accountPersistence;
     private LoanPersistence loanPersistence;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
-    private final PersonnelDao personnelDao;
+    private PersonnelDao personnelDao;
     private CustomerDao customerDao;
     private LoanBusinessService loanBusinessService;
-    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+    private HibernateTransactionHelper transactionHelper;
 
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
                                   AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
-                                  CustomerDao customerDao, LoanBusinessService loanBusinessService) {
+                                  CustomerDao customerDao, LoanBusinessService loanBusinessService,
+                                  HibernateTransactionHelper transactionHelper) {
         this.accountPersistence = accountPersistence;
         this.loanPersistence = loanPersistence;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
         this.personnelDao = personnelDao;
         this.customerDao = customerDao;
         this.loanBusinessService = loanBusinessService;
+        this.transactionHelper = transactionHelper;
     }
 
     @Override

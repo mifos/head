@@ -31,6 +31,7 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Matchers;
@@ -38,7 +39,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -89,7 +89,7 @@ public class LoanBusinessServiceTest {
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(true);
         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
         loanBusinessService.
-                applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
+                applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                         loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
         verify(loanBO).copyInstallmentSchedule(installments);
@@ -112,7 +112,7 @@ public class LoanBusinessServiceTest {
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
         when(loanBO.toRepaymentScheduleDto(locale)).thenReturn(installments);
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
-        loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
+        loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
         verify(loanBO).copyInstallmentSchedule(installments);
@@ -126,7 +126,7 @@ public class LoanBusinessServiceTest {
         when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(false);
         InterestTypesEntity interestTypesEntity = new InterestTypesEntity(InterestType.DECLINING);
         when(loanBO.getInterestType()).thenReturn(interestTypesEntity);
-        loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(getDate(2010, 8, 22),
+        loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
         verify(loanBO, never()).copyInstallmentSchedule(any(List.class));
@@ -144,7 +144,7 @@ public class LoanBusinessServiceTest {
         RepaymentScheduleInstallment installment4 =
                 getRepaymentScheduleInstallment("25-Dec-2010", 4, "452.6", "8.9", "1", "462.5");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
-        Date disbursementDate = getDate(2010, 8, 25);
+        Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
         loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
 
@@ -166,7 +166,7 @@ public class LoanBusinessServiceTest {
         RepaymentScheduleInstallment installment4 =
                 getRepaymentScheduleInstallment("22-Sep-2010", 4, "414.1", "1.9", "1", "417.0");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4);
-        Date disbursementDate = getDate(2010, 8, 25);
+        Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
         loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
 
@@ -194,7 +194,7 @@ public class LoanBusinessServiceTest {
                 getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
                 installment4, installment5, installment6, installment7);
-        Date disbursementDate = getDate(2010, 8, 25);
+        Date disbursementDate = TestUtils.getDate(25, 8, 2010);
         final Money loanAmount = new Money(rupee, "1000");
         loanBusinessService.applyDailyInterestRates(new LoanScheduleGenerationDto(disbursementDate, loanAmount, 24d, installments));
 
@@ -225,11 +225,11 @@ public class LoanBusinessServiceTest {
                 getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
                 installment4, installment5, installment6, installment7);
-        Date initialDisbursementDate = getDate(2010, 8, 25);
-        Date disbursementDate = getDate(2010, 8, 30);
-        when(holidayService.getNextWorkingDay(Matchers.<Date>any(), eq(officeId))).thenReturn(getDate(2010, 9, 6),
-                getDate(2010, 9, 13), getDate(2010, 9, 20), getDate(2010, 10, 20), getDate(2010, 10, 30),
-                getDate(2010, 11, 6), getDate(2010, 11, 23));
+        Date initialDisbursementDate = TestUtils.getDate(25, 8, 2010);
+        Date disbursementDate = TestUtils.getDate(30, 8, 2010);
+        when(holidayService.getNextWorkingDay(Matchers.<Date>any(), eq(officeId))).thenReturn(TestUtils.getDate(6, 9, 2010),
+                TestUtils.getDate(13, 9, 2010), TestUtils.getDate(20, 9, 2010), TestUtils.getDate(20, 10, 2010), TestUtils.getDate(30, 10, 2010),
+                TestUtils.getDate(6, 11, 2010), TestUtils.getDate(23, 11, 2010));
         loanBusinessService.adjustInstallmentGapsPostDisbursal(installments, initialDisbursementDate, disbursementDate, officeId);
         assertInstallmentDueDate(installment1, "06-Sep-2010");
         assertInstallmentDueDate(installment2, "13-Sep-2010");
@@ -259,11 +259,11 @@ public class LoanBusinessServiceTest {
                 getRepaymentScheduleInstallment("18-Nov-2010", 7, "439.2", "4.9", "1", "445.1");
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3,
                 installment4, installment5, installment6, installment7);
-        Date initialDisbursementDate = getDate(2010, 8, 25);
-        Date disbursementDate = getDate(2010, 8, 20);
-        when(holidayService.getNextWorkingDay(Matchers.<Date>any(), eq(officeId))).thenReturn(getDate(2010, 8, 27),
-                getDate(2010, 9, 3), getDate(2010, 9, 10), getDate(2010, 10, 11), getDate(2010, 10, 21),
-                getDate(2010, 10, 28), getDate(2010, 11, 15));
+        Date initialDisbursementDate = TestUtils.getDate(25, 8, 2010);
+        Date disbursementDate = TestUtils.getDate(20, 8, 2010);
+        when(holidayService.getNextWorkingDay(Matchers.<Date>any(), eq(officeId))).thenReturn(TestUtils.getDate(27, 8, 2010),
+                TestUtils.getDate(3, 9, 2010), TestUtils.getDate(10, 9, 2010), TestUtils.getDate(11, 10, 2010), TestUtils.getDate(21, 10, 2010),
+                TestUtils.getDate(28, 10, 2010), TestUtils.getDate(15, 11, 2010));
         loanBusinessService.adjustInstallmentGapsPostDisbursal(installments, initialDisbursementDate, disbursementDate, officeId);
         assertInstallmentDueDate(installment1, "27-Aug-2010");
         assertInstallmentDueDate(installment2, "03-Sep-2010");
@@ -293,9 +293,4 @@ public class LoanBusinessServiceTest {
                 withFees(new Money(rupee, fees)).withTotalValue(total).build();
     }
 
-    private Date getDate(int year, int month, int day) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month - 1, day, 0, 0, 0);
-        return calendar.getTime();
-    }
 }

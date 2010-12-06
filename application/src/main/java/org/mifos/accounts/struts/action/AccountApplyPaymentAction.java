@@ -21,6 +21,7 @@
 package org.mifos.accounts.struts.action;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -87,7 +88,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         final AccountReferenceDto accountReferenceDto = new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId()));
         AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(
                 Integer.valueOf(accountReferenceDto.getAccountId()), request.getParameter(Constants.INPUT), userContext.getLocaleId(),
-                new UserReferenceDto(userContext.getId()));
+                new UserReferenceDto(userContext.getId()), DateUtils.getCurrentJavaDateTime());
 
         SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.getVersion(), request);
         SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, accountPaymentDto.getAccountType().name(), request);
@@ -121,7 +122,7 @@ public class AccountApplyPaymentAction extends BaseAction {
         String paymentType = request.getParameter(Constants.INPUT);
         UserReferenceDto userReferenceDto = new UserReferenceDto(userContext.getId());
         AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(accountId, paymentType,
-                userContext.getLocaleId(), userReferenceDto);
+                userContext.getLocaleId(), userReferenceDto, actionForm.getTrxnDate());
 
         validateAccountPayment(accountPaymentDto, accountId, request);
 

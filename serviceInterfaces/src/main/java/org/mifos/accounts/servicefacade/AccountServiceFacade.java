@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.dto.domain.AccountPaymentParametersDto;
@@ -44,7 +45,7 @@ public interface AccountServiceFacade {
     AccountTypeCustomerLevelDto getAccountTypeCustomerLevelDto(Integer accountId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto);
+    AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto, Date paymentDate);
 
     @PreAuthorize("isFullyAuthenticated()")
     boolean isPaymentPermitted(Integer accountId);

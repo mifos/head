@@ -455,26 +455,12 @@ public class AccountBO extends AbstractBusinessObject {
         AccountPaymentEntity accountPayment = makePayment(paymentData);
         addAccountPayment(accountPayment);
         buildFinancialEntries(accountPayment.getAccountTrxns());
-        // TODO adjust inst. schedule for PAWDEP
     }
 
-//    public PaymentData createPaymentData(final Money amount, final Date trxnDate,
-//            final String receiptId, final Date receiptDate, final Short paymentTypeId, PersonnelBO loggedInUser) {
-//        return createPaymentData(amount, trxnDate, receiptId, receiptDate, paymentTypeId, loggedInUser);
-//    }
 
     public PaymentData createPaymentData(final Money amount, final Date trxnDate,
             final String receiptId, final Date receiptDate, final Short paymentTypeId, PersonnelBO loggedInUser) {
-//        PersonnelBO personnel;
-//        try {
-//            personnel = getPersonnelPersistence().getPersonnel(personnelId);
-//        } catch (PersistenceException e) {
-//            // Generally this is the UserContext id, which shouldn't ever
-//            // be invalid
-//            throw new IllegalStateException(AccountConstants.ERROR_INVALID_PERSONNEL);
-//        }
         if (loggedInUser == null) {
-            // see above catch clause
             throw new IllegalStateException(AccountConstants.ERROR_INVALID_PERSONNEL);
         }
 

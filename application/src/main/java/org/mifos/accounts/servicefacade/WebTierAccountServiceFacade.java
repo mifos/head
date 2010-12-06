@@ -21,12 +21,15 @@
 package org.mifos.accounts.servicefacade;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
@@ -57,14 +60,31 @@ import org.springframework.security.core.context.SecurityContextHolder;
  *
  */
 public class WebTierAccountServiceFacade implements AccountServiceFacade {
+    private AccountService accountService;
+    private HibernateTransactionHelper transactionHelper;
+    private AccountBusinessService accountBusinessService;
+    private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
 
-    private AccountService accountService = DependencyInjectedServiceLocator.locateAccountService();
-    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+    public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
+                                       AccountBusinessService accountBusinessService,
+                                       ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
+                                       AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) {
+        this.accountService = accountService;
+        this.transactionHelper = transactionHelper;
+        this.accountBusinessService = accountBusinessService;
+        this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
+        this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
+    }
 
     @Override
-    public AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto) {
+    public AccountPaymentDto getAccountPaymentInformation(Integer accountId, String paymentType, Short localeId, UserReferenceDto userReferenceDto, Date paymentDate) {
         try {
-            AccountBO account = new AccountBusinessService().getAccount(accountId);
+            AccountBO account = accountBusinessService.getAccount(accountId);
+
+            if (isLoanPayment(paymentType)){
+                scheduleCalculatorAdaptor.computeExtraInterest((LoanBO) account, paymentDate);
+            }
 
             UserReferenceDto accountUser = userReferenceDto;
             if (account.getPersonnel() != null) {
@@ -79,17 +99,20 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         }
     }
 
+    private boolean isLoanPayment(String paymentType) {
+        return paymentType.equals(Constants.LOAN);
+    }
+
     private List<ListItem<Short>> constructPaymentTypeList(String paymentType, Short localeId) {
 
         try {
             List<PaymentTypeEntity> paymentTypeList = null;
             if (paymentType != null && paymentType.trim() != Constants.EMPTY_STRING) {
-                if (paymentType.equals(Constants.LOAN)) {
-
-                    paymentTypeList = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(
+                if (isLoanPayment(paymentType)) {
+                    paymentTypeList = acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(
                             localeId, TrxnTypes.loan_repayment.getValue());
                 } else {
-                    paymentTypeList = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(
+                    paymentTypeList = acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(
                             localeId, TrxnTypes.fee.getValue());
                 }
             }

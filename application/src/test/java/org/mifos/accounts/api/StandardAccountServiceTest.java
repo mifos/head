@@ -60,6 +60,7 @@ import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -106,10 +107,13 @@ public class StandardAccountServiceTest {
     @Mock
     private CustomerDao customerDao;
 
+    @Mock
+    private HibernateTransactionHelper transactionHelper;
+
     @Before
     public void setup() {
         standardAccountService = new StandardAccountService(accountPersistence, loanPersistence,
-                acceptedPaymentTypePersistence, personnelDao, customerDao, loanBusinessService);
+                acceptedPaymentTypePersistence, personnelDao, customerDao, loanBusinessService, transactionHelper);
         Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
         accountBO.setAccountPersistence(accountPersistence);

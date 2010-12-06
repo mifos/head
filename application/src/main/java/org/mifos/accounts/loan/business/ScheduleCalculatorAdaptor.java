@@ -35,11 +35,20 @@ import java.util.Map;
 
 public class ScheduleCalculatorAdaptor {
 
+    private ScheduleCalculator scheduleCalculator;
+
+    public ScheduleCalculatorAdaptor(ScheduleCalculator scheduleCalculator) {
+        this.scheduleCalculator = scheduleCalculator;
+    }
+
+    public void applyPayment(LoanBO loanBO, Money money, Date date) {
+
+    }
+
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {
         if (loan.isDecliningBalanceInterestRecalculation()) {
             Schedule schedule = mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
                     loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
-            ScheduleCalculator scheduleCalculator = new ScheduleCalculator();
             scheduleCalculator.computeExtraInterest(schedule, asOfDate);
             populateExtraInterestInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
         }

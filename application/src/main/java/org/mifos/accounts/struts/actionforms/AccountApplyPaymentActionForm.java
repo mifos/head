@@ -375,6 +375,10 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public LocalDate getTrxnDateAsLocalDate() throws InvalidDateException {
-        return new LocalDate(DateUtils.getDateAsSentFromBrowser(getTransactionDate()).getTime());
+        return new LocalDate(getTrxnDate().getTime());
+    }
+
+    public Date getTrxnDate() throws InvalidDateException {
+        return DateUtils.getDateAsSentFromBrowser(getTransactionDate());
     }
 }

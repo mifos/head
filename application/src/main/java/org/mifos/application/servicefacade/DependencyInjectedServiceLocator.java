@@ -51,6 +51,7 @@ import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.persistance.StandardClientAttendanceDao;
+import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
@@ -125,6 +126,7 @@ public class DependencyInjectedServiceLocator {
     private static PersonnelServiceFacade personnelServiceFacade;
     private static RolesPermissionServiceFacade rolesPermissionServiceFacade;
     private static CheckListServiceFacade checkListServiceFacade;
+    private static AccountServiceFacade accountServiceFacade;
     private static AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade;
 
     // services
@@ -135,6 +137,7 @@ public class DependencyInjectedServiceLocator {
     private static PersonnelService personnelService;
     private static AccountBusinessService accountBusinessService;
     private static ConfigurationBusinessService configurationBusinessService;
+    private static StandardAccountService accountService;
 
     // DAOs
     private static OfficePersistence officePersistence = new OfficePersistence();
@@ -145,8 +148,6 @@ public class DependencyInjectedServiceLocator {
     private static LoanPersistence loanPersistence = new LoanPersistence();
     private static AccountPersistence accountPersistence = new AccountPersistence();
     private static ClientAttendanceDao clientAttendanceDao = new StandardClientAttendanceDao(masterPersistence);
-    private static AcceptedPaymentTypePersistence acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
-
     private static GenericDao genericDao = new GenericDaoHibernate();
     private static FundDao fundDao = new FundDaoHibernate(genericDao);
     private static LoanDao loanDao = new LoanDaoHibernate(genericDao);
@@ -160,12 +161,15 @@ public class DependencyInjectedServiceLocator {
     private static SavingsProductDao savingsProductDao = new SavingsProductDaoHibernate(genericDao);
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
     private static GeneralLedgerDao generalLedgerDao = new GeneralLedgerDaoHibernate(genericDao);
+    private static AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
 
     // translators
     private static CollectionSheetDtoTranslator collectionSheetTranslator = new CollectionSheetDtoTranslatorImpl();
 
     // helpers
     private static HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+    private static ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+    private static ScheduleCalculator scheduleCalculator;
 
     // validators
     private static InstallmentFormatValidator installmentFormatValidator;
@@ -179,8 +183,6 @@ public class DependencyInjectedServiceLocator {
 
     // rules
     private static FiscalCalendarRules fiscalCalendarRules;
-    private static StandardAccountService accountService;
-    private static AccountServiceFacade accountServiceFacade;
 
     public static CollectionSheetService locateCollectionSheetService() {
 
@@ -214,6 +216,13 @@ public class DependencyInjectedServiceLocator {
             feeService = new FeeServiceImpl(feeDao, generalLedgerDao, hibernateTransactionHelper);
         }
         return feeService;
+    }
+
+    public static ScheduleCalculator locateScheduleCalculator() {
+        if (scheduleCalculator == null) {
+            scheduleCalculator = new ScheduleCalculator();
+        }
+        return scheduleCalculator;
     }
 
     public static CollectionSheetServiceFacade locateCollectionSheetServiceFacade() {
@@ -271,7 +280,8 @@ public class DependencyInjectedServiceLocator {
 
     public static AccountServiceFacade locateAccountServiceFacade() {
         if (accountServiceFacade == null) {
-            accountServiceFacade = new WebTierAccountServiceFacade();
+            accountServiceFacade = new WebTierAccountServiceFacade(locateAccountService(), hibernateTransactionHelper,
+                                            locateAccountBusinessService(), locateScheduleCalculatorAdaptor(), locateAcceptedPaymentTypePersistence());
         }
         return accountServiceFacade;
     }
@@ -279,7 +289,7 @@ public class DependencyInjectedServiceLocator {
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
             loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
-                    fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor(),
+                    fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor(locateScheduleCalculator()),
                     locateLoanBusinessService(), locateHolidayServiceFacade(), locateLoanPrdBusinessService());
         }
         return loanServiceFacade;
@@ -301,17 +311,31 @@ public class DependencyInjectedServiceLocator {
 
     public static AccountService locateAccountService() {
         if (accountService == null) {
-            accountService = new StandardAccountService(accountPersistence, loanPersistence, acceptedPaymentTypePersistence,
-                    locatePersonnelDao(), locateCustomerDao(), locateLoanBusinessService());
+            accountService = new StandardAccountService(accountPersistence, loanPersistence, locateAcceptedPaymentTypePersistence(),
+                    locatePersonnelDao(), locateCustomerDao(), locateLoanBusinessService(), hibernateTransactionHelper);
         }
         return accountService;
     }
 
-    private static AccountBusinessService locateAccountBusinessService() {
+    public static AcceptedPaymentTypePersistence locateAcceptedPaymentTypePersistence() {
+        if (acceptedPaymentTypePersistence == null) {
+            acceptedPaymentTypePersistence = new AcceptedPaymentTypePersistence();
+        }
+        return acceptedPaymentTypePersistence;
+    }
+
+    public static AccountBusinessService locateAccountBusinessService() {
         if (accountBusinessService == null) {
             accountBusinessService = new AccountBusinessService();
         }
         return accountBusinessService;
+    }
+
+    public static ScheduleCalculatorAdaptor locateScheduleCalculatorAdaptor() {
+        if (scheduleCalculatorAdaptor == null) {
+            scheduleCalculatorAdaptor = new ScheduleCalculatorAdaptor(locateScheduleCalculator());
+        }
+        return scheduleCalculatorAdaptor;
     }
 
     private static ConfigurationBusinessService locateConfigurationBusinessService() {

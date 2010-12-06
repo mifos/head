@@ -497,8 +497,12 @@ public class DateUtils {
     }
 
     public static String makeDateAsSentFromBrowser() {
-        Date date = new DateTimeService().getCurrentJavaDateTime();
-        return makeDateAsSentFromBrowser(date);
+        return makeDateAsSentFromBrowser(getCurrentJavaDateTime());
+    }
+
+    // TODO: Needs a unit test - buddy/johnvic
+    public static Date getCurrentJavaDateTime() {
+        return new DateTimeService().getCurrentJavaDateTime();
     }
 
     public static String makeDateAsSentFromBrowser(Date date) {

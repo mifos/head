@@ -20,6 +20,7 @@
 package org.mifos.accounts.loan.schedule.domain;
 
 import org.mifos.framework.util.helpers.NumberUtils;
+import sun.misc.FormattedFloatingDecimal;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -62,6 +63,10 @@ public class Installment implements Comparable<Installment> {
 
     public BigDecimal getPrincipal() {
         return principal;
+    }
+
+    public BigDecimal getInterest() {
+        return interest;
     }
 
     public BigDecimal getExtraInterest() {
