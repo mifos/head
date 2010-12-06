@@ -79,4 +79,6 @@ public interface CustomerService {
     void updateCustomerMeetingSchedule(MeetingUpdateRequest meetingUpdateRequest, UserContext userContext) throws ApplicationException;
 
     void removeGroupMembership(ClientBO client, PersonnelBO loanOfficer, CustomerNoteEntity accountNotesEntity, Short localeId);
+
+    void transferClientTo(ClientBO client, OfficeBO receivingBranch);
 }

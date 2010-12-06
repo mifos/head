@@ -741,8 +741,6 @@ public class ClientBO extends CustomerBO {
 
         makeCustomerMovementEntries(officeToTransfer);
         this.setPersonnel(null);
-        generateSearchId();
-        super.update();
         logger.debug("In ClientBO::transferToBranch(), successfully transfered, customerId :" + getCustomerId());
     }
 

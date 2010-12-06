@@ -27,17 +27,11 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.client.struts.actionforms.ClientTransferActionForm;
 import org.mifos.customers.client.util.helpers.ClientConstants;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerSearchInputDto;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -47,16 +41,6 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
 public class ClientTransferAction extends BaseAction {
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return getCustomerBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("clientTransferAction");
@@ -86,17 +70,11 @@ public class ClientTransferAction extends BaseAction {
     public ActionForward transferToBranch(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ClientTransferActionForm actionForm = (ClientTransferActionForm) form;
-        OfficeBO officeToTransfer = getOfficelBusinessService().getOffice(actionForm.getOfficeIdValue());
-
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        ClientBO client = (ClientBO) getCustomerBusinessService().getCustomer(clientInSession.getCustomerId());
-        checkVersionMismatch(clientInSession.getVersionNo(), client.getVersionNo());
-        client.setVersionNo(clientInSession.getVersionNo());
-        client.setUserContext(getUserContext(request));
-        setInitialObjectForAuditLogging(client);
-        client.transferToBranch(officeToTransfer);
-        clientInSession = null;
-        officeToTransfer = null;
+
+        String globalCustNum = this.clientServiceFacade.transferClientToBranch(clientInSession.getGlobalCustNum(), actionForm.getOfficeIdValue());
+
+        ClientBO client = this.customerDao.findClientBySystemId(globalCustNum);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -131,21 +109,10 @@ public class ClientTransferAction extends BaseAction {
         ClientTransferActionForm actionForm = (ClientTransferActionForm) form;
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        ClientBO client = this.customerServiceFacade.transferClientToGroup(actionForm.getParentGroupIdValue(), clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
+        String globalCustNum = this.clientServiceFacade.transferClientToGroup(actionForm.getParentGroupIdValue(), clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
 
+        ClientBO client = this.customerDao.findClientBySystemId(globalCustNum);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
         return mapping.findForward(ActionForwards.update_success.toString());
-    }
-
-    private CustomerBusinessService getCustomerBusinessService() {
-        return new CustomerBusinessService();
-    }
-
-    private ClientBusinessService getClientBusinessService() {
-        return new ClientBusinessService();
-    }
-
-    private OfficeBusinessService getOfficelBusinessService() {
-        return new OfficeBusinessService();
     }
 }

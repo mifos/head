@@ -121,7 +121,6 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         verifyActionErrors(new String[]{CustomerConstants.ERRORS_SAME_BRANCH_TRANSFER});
         verifyForward(ActionForwards.transferToBranch_failure.toString());
-        StaticHibernateUtil.flushSession();
         client = TestObjectFactory.getClient(client.getCustomerId());
     }
 
@@ -238,7 +237,7 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
                 matchValues(auditLogRecord, "TestBranchOffice", "customer_office");
             }
         }
-        
+
     }
 
     private void createObjectsForClientTransfer() throws Exception {

@@ -911,8 +911,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
         currentCustomerMovement.makeInactive(userContext.getId());
         this.setOffice(officeToTransfer);
-        CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new DateTimeService()
-                .getCurrentJavaDateTime());
+        CustomerMovementEntity newCustomerMovement = new CustomerMovementEntity(this, new DateTimeService().getCurrentJavaDateTime());
         this.addCustomerMovement(newCustomerMovement);
     }
 

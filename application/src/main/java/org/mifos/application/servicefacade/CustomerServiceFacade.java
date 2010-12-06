@@ -20,7 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -30,8 +29,6 @@ public interface CustomerServiceFacade {
     OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy();
 
     CustomerSearch search(String searchString) throws ApplicationException;
-
-    ClientBO transferClientToGroup(Integer parentGroupIdValue, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException;
 
     boolean isGroupHierarchyRequired();
 

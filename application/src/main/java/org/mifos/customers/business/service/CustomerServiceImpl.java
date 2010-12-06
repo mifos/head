@@ -588,10 +588,10 @@ public class CustomerServiceImpl implements CustomerService {
 
             hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            hibernateTransactionHelper.rollbackTransaction();
+            this.hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            hibernateTransactionHelper.closeSession();
+            this.hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -637,10 +637,10 @@ public class CustomerServiceImpl implements CustomerService {
             customerDao.save(group);
             hibernateTransactionHelper.commitTransaction();
         } catch (Exception e) {
-            hibernateTransactionHelper.rollbackTransaction();
+            this.hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            hibernateTransactionHelper.closeSession();
+            this.hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -715,11 +715,14 @@ public class CustomerServiceImpl implements CustomerService {
             customerDao.save(client);
 
             hibernateTransactionHelper.commitTransaction();
+        } catch (ApplicationException e) {
+            this.hibernateTransactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
         } catch (Exception e) {
-            hibernateTransactionHelper.rollbackTransaction();
+            this.hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            hibernateTransactionHelper.closeSession();
+            this.hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -922,11 +925,14 @@ public class CustomerServiceImpl implements CustomerService {
             }
             hibernateTransactionHelper.commitTransaction();
             return groupInitialised.getGlobalCustNum();
+        } catch (ApplicationException e) {
+            this.hibernateTransactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
         } catch (Exception e) {
-            hibernateTransactionHelper.rollbackTransaction();
+            this.hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            hibernateTransactionHelper.closeSession();
+            this.hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -978,11 +984,48 @@ public class CustomerServiceImpl implements CustomerService {
             }
             hibernateTransactionHelper.commitTransaction();
             return client;
+        } catch (ApplicationException e) {
+            this.hibernateTransactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
         } catch (Exception e) {
-            hibernateTransactionHelper.rollbackTransaction();
+            this.hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } finally {
-            hibernateTransactionHelper.closeSession();
+            this.hibernateTransactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void transferClientTo(ClientBO client, OfficeBO receivingBranch) {
+
+        try {
+            this.hibernateTransactionHelper.startTransaction();
+            this.hibernateTransactionHelper.beginAuditLoggingFor(client);
+            client.transferToBranch(receivingBranch);
+
+            if (client.getParentCustomer() != null) {
+                CustomerBO parent = client.getParentCustomer();
+                parent.incrementChildCount();
+                this.customerDao.save(parent);
+                this.hibernateTransactionHelper.flushSession();
+                client.setSearchId(client.getParentCustomer().getSearchId() + "." + client.getParentCustomer().getMaxChildCount());
+            } else {
+                int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(client.getOfficeId());
+
+                String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
+                client.setSearchId(searchId);
+            }
+
+            this.customerDao.save(client);
+            this.hibernateTransactionHelper.commitTransaction();
+        } catch (ApplicationException e) {
+            this.hibernateTransactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (Exception e) {
+            this.hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.hibernateTransactionHelper.closeSession();
         }
     }
 
@@ -1181,5 +1224,4 @@ public class CustomerServiceImpl implements CustomerService {
 
         return !activeLoanAccounts.isEmpty();
     }
-
 }

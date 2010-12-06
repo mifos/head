@@ -27,7 +27,6 @@ import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.util.helpers.CenterConstants;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
@@ -113,13 +112,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         QueryResult searchResult = customerDao.search(normalisedSearchString, loggedInUser);
 
         return new CustomerSearch(searchResult, searchString, officeId, officeName);
-    }
-
-    @Override
-    public ClientBO transferClientToGroup(Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo) throws ApplicationException {
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-        return this.customerService.transferClientTo(userContext, groupId, clientGlobalCustNum, previousClientVersionNo);
     }
 
     @Override

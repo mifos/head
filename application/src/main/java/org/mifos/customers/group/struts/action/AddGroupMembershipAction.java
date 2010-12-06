@@ -30,8 +30,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.struts.actionforms.AddGroupMembershipForm;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -42,11 +40,6 @@ import org.mifos.security.util.SecurityConstants;
 
 public class AddGroupMembershipAction extends BaseAction {
 
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return null;
-    }
-
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("addGroupMembershipAction");
         security.allow("loadSearch", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
@@ -54,11 +47,6 @@ public class AddGroupMembershipAction extends BaseAction {
         security.allow("updateParent", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
 
         return security;
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -84,8 +72,9 @@ public class AddGroupMembershipAction extends BaseAction {
         Integer parentGroupId = actionForm.getParentGroupIdValue();
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        ClientBO client = this.customerServiceFacade.transferClientToGroup(parentGroupId, clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
+        String globalCustNum = this.clientServiceFacade.transferClientToGroup(parentGroupId, clientInSession.getGlobalCustNum(), clientInSession.getVersionNo());
 
+        ClientBO client = this.customerDao.findClientBySystemId(globalCustNum);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
 
         return mapping.findForward(ActionForwards.view_client_details_page.toString());

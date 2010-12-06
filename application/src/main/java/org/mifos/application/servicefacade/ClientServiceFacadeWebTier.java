@@ -754,4 +754,34 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         customerService.removeGroupMembership(client, loanOfficer, accountNotesEntity, userContext.getLocaleId());
     }
+
+
+    @Override
+    public String transferClientToGroup(Integer groupId, String clientGlobalCustNum, Integer previousClientVersionNo) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        ClientBO client;
+        try {
+            client = this.customerService.transferClientTo(userContext, groupId, clientGlobalCustNum, previousClientVersionNo);
+            return client.getGlobalCustNum();
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public String transferClientToBranch(String globalCustNum, Short officeId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        OfficeBO receivingBranch = this.officeDao.findOfficeById(officeId);
+        ClientBO client = this.customerDao.findClientBySystemId(globalCustNum);
+        client.updateDetails(userContext);
+
+        this.customerService.transferClientTo(client, receivingBranch);
+
+        return client.getGlobalCustNum();
+    }
 }

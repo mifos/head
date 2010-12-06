@@ -84,4 +84,9 @@ public interface ClientServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_REMOVE_CLIENT_FROM_GROUP')")
     void removeGroupMembership(String globalCustNum, Short loanOfficerId, String comment);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_UPDATE_GROUP_MEMBERSHIP_OF_CLIENT')")
+    String transferClientToGroup(Integer parentGroupIdValue, String clientGlobalCustNum, Integer previousClientVersionNo);
+
+    String transferClientToBranch(String globalCustNum, Short officeId);
 }
