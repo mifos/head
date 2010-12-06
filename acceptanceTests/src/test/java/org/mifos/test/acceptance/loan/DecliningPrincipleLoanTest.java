@@ -76,7 +76,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         dataSetup.addDecliningPrincipalBalance();
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyDecliningPrincipleLoan() throws Exception {
 
