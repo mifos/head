@@ -76,12 +76,22 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
         return this;
     }
 
-    public DefineNewLoanProductPreviewPage verifyCashFlowInPreview(String warningThreshold) {
+    public DefineNewLoanProductPreviewPage verifyCashFlowInPreview(String warningThreshold, String indebtentValue, String repaymentValue) {
         Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: Yes"));
         if ("".equals(warningThreshold)) {
             Assert.assertTrue(selenium.isTextPresent("Warning Threshold: N/A"));
         } else {
             Assert.assertTrue(selenium.isTextPresent("Warning Threshold: " + warningThreshold + " %"));
+        }
+        if ("".equals(indebtentValue)) {
+            Assert.assertTrue(selenium.isTextPresent("Indebtedness Rate: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Indebtedness Rate: " + indebtentValue + " %"));
+        }
+        if ("".equals(repaymentValue)) {
+            Assert.assertTrue(selenium.isTextPresent("Repayment Capacity: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Repayment Capacity: " + repaymentValue + " %"));
         }
         return this;
     }
@@ -89,6 +99,8 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
     public DefineNewLoanProductPreviewPage verifyCashFlowUnCheckedInPreview() {
         Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: No"));
         Assert.assertTrue(!selenium.isTextPresent("Warning Threshold:"));
+        Assert.assertTrue(!selenium.isTextPresent("Indebtedness Rate:"));
+        Assert.assertTrue(!selenium.isTextPresent("Repayment Capacity:"));
         return this;
     }
 

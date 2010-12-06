@@ -102,7 +102,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
 
         createLoanProduct(maxGap, minGap, minInstalmentAmount, formParameters, warningThreshold);
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
-                enterValidData(cashFlowIncremental, 100).
+                enterValidData(cashFlowIncremental, 100, "100", "100").
                 clickContinue().
                 verifyCashFlowDefaultValues().
                 verifyInstallmentDatesOutOfCashFlowCapturedOnValidate().
@@ -133,7 +133,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
 
         createLoanProduct(maxGap, minGap, minInstalmentAmount, formParameters, warningThreshold);
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
-                enterValidData(cashFlowIncremental, cashFlowBase).
+                enterValidData(cashFlowIncremental, cashFlowBase, "100", "100").
                 clickContinue().
                 verifyRecalculationWhenDateAndTotalChange();
     }
@@ -154,7 +154,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption(String.valueOf(maxGap),String.valueOf(minGap), String.valueOf(minInstalmentAmount)).
-                fillCashFlow(String.valueOf(cashFlowIncremental)).
+                fillCashFlow(String.valueOf(cashFlowIncremental), null, null).
                 submitAndGotoNewLoanProductPreviewPage().
                 submit();
     }

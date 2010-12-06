@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.loanproduct;
 
 
 import org.joda.time.DateTime;
-import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
@@ -69,13 +68,13 @@ public class CashFlowTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
-        (new MifosPage(selenium)).logout();
+//        (new MifosPage(selenium)).logout();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowWithNullValue() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        createAndValidateLoanProductWithCashFlow("", formParameters);
+        createAndValidateLoanProductWithCashFlow("", formParameters, "", "");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
@@ -87,7 +86,7 @@ public class CashFlowTest extends UiTestCaseBase {
         String loanProductName = formParameters.getOfferingName();
         int frequency = formParameters.getFreqOfInstallments();
 
-        createAndValidateLoanProductWithCashFlow("89.99",formParameters);
+        createAndValidateLoanProductWithCashFlow("89.99",formParameters, "1.11", "150.22");
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,loanProductName).
@@ -96,7 +95,8 @@ public class CashFlowTest extends UiTestCaseBase {
                 clickContinueToNavigateToCashFlowPage().
 //                verifyPage().
                 validateCashFlowMonths(disbursalDate,installment,frequency).
-                enterValidData(cashFlowIncremental, 100).
+                verifyCashFlowFields().
+                enterValidData(cashFlowIncremental, 100, "100", "100").
                 clickContinue().
                 verifyCashFlow(cashFlowIncremental);
 
@@ -119,7 +119,7 @@ public class CashFlowTest extends UiTestCaseBase {
 //                verifyPage();
     }
 
-/*
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowFields() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getMonthlyLoanProductParameters();
@@ -127,14 +127,14 @@ public class CashFlowTest extends UiTestCaseBase {
                 verifyCashFlowFieldDefault().
                 verifyCashFlowFields();
     }
-*/
-    private void createAndValidateLoanProductWithCashFlow(String warningThreshold, DefineNewLoanProductPage.SubmitFormParameters formParameters) {
+
+    private void createAndValidateLoanProductWithCashFlow(String warningThreshold, DefineNewLoanProductPage.SubmitFormParameters formParameters, String indebtentValue,String repaymentValue) {
         loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
-                fillCashFlow(warningThreshold).
+                fillCashFlow(warningThreshold, indebtentValue,repaymentValue).
                 submitAndGotoNewLoanProductPreviewPage().
-                verifyCashFlowInPreview(warningThreshold).
+                verifyCashFlowInPreview(warningThreshold,indebtentValue,repaymentValue).
                 submit().navigateToViewLoanDetails().
-                verifyCashFlowInViewLoanProcutPage(warningThreshold);
+                verifyCashFlowInViewLoanProductPage(warningThreshold,indebtentValue,repaymentValue);
     }
 
     

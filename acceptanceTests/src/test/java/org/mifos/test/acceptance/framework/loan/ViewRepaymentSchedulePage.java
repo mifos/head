@@ -29,9 +29,9 @@ import com.thoughtworks.selenium.Selenium;
 
 public class ViewRepaymentSchedulePage extends AbstractPage {
 
-    private final String scheduleTable = "//td[@class='drawtablerow']/parent::tr/parent::tbody/parent::table";
-    private final String scheduleDate = "scheduleViewDate";
-    private final String viewScheduleButton = "viewScheduleButton";
+    String scheduleTable = "//td[@class='drawtablerow']/parent::tr/parent::tbody/parent::table";
+    String scheduleDate = "scheduleViewDate";
+    String viewScheduleButton = "viewScheduleButton";
 
     public ViewRepaymentSchedulePage(Selenium selenium) {
         super(selenium);
