@@ -598,6 +598,32 @@ explanation of the license and how it is applied.
                                               </c:otherwise>
                                           </c:choose>
                                     </span>
+                                    <br/>
+                                    <mifos:mifoslabel name="product.indebtednessRatio" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                          <span class="fontnormal">
+                                              <c:choose>
+                                                  <c:when test="${empty sessionScope.loanproductactionform.indebtednessRatio}">
+                                                      <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
+                                                  </c:when>
+                                                  <c:otherwise>
+                                                      <c:out value="${sessionScope.loanproductactionform.indebtednessRatio}" />
+                                                          <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
+                                                  </c:otherwise>
+                                              </c:choose>
+                                          </span>
+                                      <br/>
+                                      <mifos:mifoslabel name="product.repaymentCapacity" bundle="ProductDefUIResources" isColonRequired="yes" />
+                                          <span class="fontnormal">
+                                              <c:choose>
+                                                  <c:when test="${empty sessionScope.loanproductactionform.repaymentCapacity}">
+                                                      <mifos:mifoslabel name="product.notApplicable" bundle="ProductDefUIResources" />
+                                                  </c:when>
+                                                  <c:otherwise>
+                                                      <c:out value="${sessionScope.loanproductactionform.repaymentCapacity}" />
+                                                          <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources" />
+                                                  </c:otherwise>
+                                              </c:choose>
+                                          </span>
                                  </td>
                            </tr>
                        </c:if>
