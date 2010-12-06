@@ -44,11 +44,7 @@ import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
@@ -96,7 +92,6 @@ import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.dto.domain.CustomerPositionOtherDto;
-import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
@@ -197,39 +192,15 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             mfiJoiningDate = createCenterDetail.getMfiJoiningDate().toDateMidnight().toDateTime();
         }
 
-        try {
-            MeetingDetailsDto meetingDetailsDto = meetingDto.getMeetingDetailsDto();
-            MeetingBO meeting = new MeetingBO(RecurrenceType.fromInt(meetingDetailsDto.getRecurrenceTypeId().shortValue()),
-                                              meetingDetailsDto.getEvery().shortValue(),
-                                              meetingDto.getMeetingStartDate().toDateMidnight().toDate(),
-                                              MeetingType.CUSTOMER_MEETING);
+        MeetingBO meeting = new MeetingFactory().create(meetingDto);
+        meeting.setUserContext(userContext);
 
-            RankOfDay rank = null;
-            Integer weekOfMonth = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-            if (weekOfMonth != null && weekOfMonth > 0) {
-                rank = RankOfDay.getRankOfDay(meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth()+1);
-            }
+        CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
+                centerOffice, numberOfCustomersInOfficeAlready, centerAddress, externalId, new DateMidnight().toDateTime());
 
-            WeekDay weekDay = null;
-            Integer weekDayNum = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-            if (weekDayNum != null && weekDayNum > 0) {
-                weekDay = WeekDay.getWeekDay(meetingDetailsDto.getRecurrenceDetails().getDayOfWeek());
-            }
+        this.customerService.createCenter(center, meeting, feesForCustomerAccount);
 
-            if (rank != null && weekDay != null) {
-                meeting = new MeetingBO(weekDay, rank, meetingDetailsDto.getEvery().shortValue(), meetingDto.getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-            }
-            meeting.setUserContext(userContext);
-
-            CenterBO center = CenterBO.createNew(userContext, centerName, mfiJoiningDate, meeting, loanOfficer,
-                    centerOffice, numberOfCustomersInOfficeAlready, centerAddress, externalId, new DateMidnight().toDateTime());
-
-            this.customerService.createCenter(center, meeting, feesForCustomerAccount);
-
-            return new CustomerDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
-        } catch (MeetingException e) {
-            throw new BusinessRuleException(e.getKey(), e);
-        }
+        return new CustomerDetailsDto(center.getCustomerId(), center.getGlobalCustNum());
     }
 
     private List<AccountFeesEntity> createAccountFeeEntities(List<CreateAccountFeeDto> feesToApply) {

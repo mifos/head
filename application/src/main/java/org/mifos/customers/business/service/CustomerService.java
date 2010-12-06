@@ -26,7 +26,6 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
-import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -40,6 +39,7 @@ import org.mifos.dto.domain.ClientFamilyInfoUpdate;
 import org.mifos.dto.domain.ClientMfiInfoUpdate;
 import org.mifos.dto.domain.ClientPersonalInfoUpdate;
 import org.mifos.dto.domain.GroupUpdate;
+import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
 

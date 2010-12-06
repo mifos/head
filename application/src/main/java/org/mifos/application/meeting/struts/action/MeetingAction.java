@@ -25,6 +25,7 @@ import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -35,16 +36,12 @@ import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.FiscalCalendarRules;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
@@ -55,16 +52,6 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
 public class MeetingAction extends BaseAction {
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return null;
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("meetingAction");
@@ -80,8 +67,15 @@ public class MeetingAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        populateActionForm(request, (MeetingActionForm) form);
-        loadMasterData(request);
+        MeetingActionForm form1 = (MeetingActionForm) form;
+        MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
+        clearActionForm(form1);
+        if (meeting != null) {
+            setValuesInActionForm(form1, meeting);
+        }
+
+        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules().getWorkingDays(), request);
+        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST, RankOfDay.getRankOfDayList(), request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -100,18 +94,18 @@ public class MeetingAction extends BaseAction {
         MeetingActionForm actionForm = (MeetingActionForm) form;
         clearActionForm(actionForm);
         CustomerBO customerInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        CustomerBO customer = getCustomerBusinessService().getCustomer(customerInSession.getCustomerId());
-        customer.setVersionNo(customerInSession.getVersionNo());
+        CustomerBO customer = this.customerDao.findCustomerById(customerInSession.getCustomerId());
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customer, request);
-        customerInSession = null;
+        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules().getWorkingDays(), request);
+        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST, RankOfDay.getRankOfDayList(), request);
+
         ActionForward forward = null;
-        loadMasterData(request);
         if (customer.getCustomerMeeting() != null) {
-            loadMasterData(request);
 
             MeetingBO meeting = customer.getCustomerMeeting().getMeeting();
-
             setValuesInActionForm(actionForm, meeting);
+
             forward = mapping.findForward(ActionForwards.edit_success.toString());
             actionForm.setInput(MeetingConstants.INPUT_EDIT);
         } else {
@@ -130,7 +124,7 @@ public class MeetingAction extends BaseAction {
         CustomerBO customerInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
         MeetingUpdateRequest meetingUpdateRequest = createMeetingUupdateRequest(customerInSession, actionForm);
-        meetingServiceFacade.updateCustomerMeeting(meetingUpdateRequest, getUserContext(request));
+        meetingServiceFacade.updateCustomerMeeting(meetingUpdateRequest);
 
         ActionForwards forward = forwardForUpdate(actionForm.getCustomerLevelValue());
         return mapping.findForward(forward.toString());
@@ -162,14 +156,6 @@ public class MeetingAction extends BaseAction {
         return mapping.findForward(ActionForwards.createMeeting_failure.toString());
     }
 
-    private void populateActionForm(HttpServletRequest request, MeetingActionForm form) throws PageExpiredException {
-        MeetingBO meeting = (MeetingBO) SessionUtils.getAttribute(CustomerConstants.CUSTOMER_MEETING, request);
-        clearActionForm(form);
-        if (meeting != null) {
-            setValuesInActionForm(form, meeting);
-        }
-    }
-
     private void setValuesInActionForm(MeetingActionForm form, MeetingBO meeting) {
         if (meeting.isWeekly()) {
             form.setFrequency(RecurrenceType.WEEKLY.getValue().toString());
@@ -195,18 +181,35 @@ public class MeetingAction extends BaseAction {
 
         MeetingUpdateRequest meetingUpdateRequest;
 
+        Short weekDay = null;
+        if (StringUtils.isNotBlank(actionForm.getWeekDay())) {
+            weekDay = Short.valueOf(actionForm.getWeekDay());
+        }
+
+        Short monthDay = null;
+        if (StringUtils.isNotBlank(actionForm.getMonthDay())) {
+            monthDay = Short.valueOf(actionForm.getMonthDay());
+        }
+
+        Short dayOfWeekOfMonth = null;
+        if (StringUtils.isNotBlank(actionForm.getMonthWeek())) {
+            dayOfWeekOfMonth = Short.valueOf(actionForm.getMonthWeek());
+        }
+
+        Short weekRankOfMonth = null;
+        if (StringUtils.isNotBlank(actionForm.getMonthRank())) {
+            weekRankOfMonth = Short.valueOf(actionForm.getMonthRank());
+        }
+
+
         switch (actionForm.getRecurrenceType()) {
         case DAILY:
             throw new UnsupportedOperationException("Daily recurrence is not supported for customer meetings.");
         case WEEKLY:
-            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getRecurWeekValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
+            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType().getValue(), actionForm.getMeetingPlace(), actionForm.getRecurWeekValue(), weekDay, monthDay, dayOfWeekOfMonth, weekRankOfMonth);
             break;
         case MONTHLY:
-            if (actionForm.isMonthlyOnDate()) {
-                meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getDayRecurMonthValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
-            } else {
-                meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType(), actionForm.getMeetingPlace(), actionForm.getRecurMonthValue(), actionForm.getWeekDayValue(), actionForm.getMonthDayValue(), actionForm.getMonthWeekValue(), actionForm.getMonthRankValue());
-            }
+            meetingUpdateRequest = new MeetingUpdateRequest(customerInSession.getCustomerId(), customerInSession.getVersionNo(), actionForm.getRecurrenceType().getValue(), actionForm.getMeetingPlace(), actionForm.getRecurWeekValue(), weekDay, monthDay, dayOfWeekOfMonth, weekRankOfMonth);
             break;
             default:
                 throw new UnsupportedOperationException("Unknown recurrence for customer meetings.");
@@ -251,12 +254,6 @@ public class MeetingAction extends BaseAction {
         }
     }
 
-    private void loadMasterData(HttpServletRequest request) throws Exception {
-        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules().getWorkingDays(),
-                request);
-        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST, RankOfDay.getRankOfDayList(), request);
-    }
-
     private void clearActionForm(MeetingActionForm form) {
         form.setFrequency(RecurrenceType.WEEKLY.getValue().toString());
         form.setMonthType(null);
@@ -269,9 +266,5 @@ public class MeetingAction extends BaseAction {
         form.setRecurMonth(null);
         form.setMeetingPlace(null);
         form.setInput(null);
-    }
-
-    private CustomerBusinessService getCustomerBusinessService() {
-        return new CustomerBusinessService();
     }
 }

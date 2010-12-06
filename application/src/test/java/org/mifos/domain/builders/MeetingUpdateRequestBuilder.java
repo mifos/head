@@ -20,22 +20,21 @@
 
 package org.mifos.domain.builders;
 
-import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.MeetingUpdateRequest;
+import org.mifos.dto.domain.MeetingUpdateRequest;
 
 public class MeetingUpdateRequestBuilder {
 
     private Integer customerId = Integer.valueOf(1);
     private Integer customerVersionNo = Integer.valueOf(1);
-    private RecurrenceType recurrenceType = RecurrenceType.WEEKLY;
+    private Short recurrenceType = RecurrenceType.WEEKLY.getValue();
     private String meetingPlace = "builderSomewhere";
     private Short recursEvery = Short.valueOf("1");
-    private WeekDay dayOfWeek = WeekDay.MONDAY;
+    private Short dayOfWeek = WeekDay.MONDAY.getValue();
     private Short dayOfMonth;
-    private WeekDay dayOfWeekForWeekOfMonth;
-    private RankOfDay weekOfMonth;
+    private Short dayOfWeekForWeekOfMonth;
+    private Short weekOfMonth;
 
     public MeetingUpdateRequest build() {
         return new MeetingUpdateRequest(customerId, customerVersionNo, recurrenceType, meetingPlace, recursEvery, dayOfWeek, dayOfMonth, dayOfWeekForWeekOfMonth, weekOfMonth);
@@ -47,12 +46,22 @@ public class MeetingUpdateRequestBuilder {
     }
 
     public MeetingUpdateRequestBuilder with(WeekDay withDayOfWeek) {
-        this.dayOfWeek = withDayOfWeek;
+        this.dayOfWeek = withDayOfWeek.getValue();
         return this;
     }
 
     public MeetingUpdateRequestBuilder withMeetingPlace(String withMeetingPlace) {
         this.meetingPlace = withMeetingPlace;
+        return this;
+    }
+
+    public MeetingUpdateRequestBuilder withVersionNum(Integer versionNo) {
+        this.customerVersionNo = versionNo;
+        return this;
+    }
+
+    public MeetingUpdateRequestBuilder withRecurrence(RecurrenceType withRercurrenceType) {
+        this.recurrenceType = withRercurrenceType.getValue();
         return this;
     }
 }

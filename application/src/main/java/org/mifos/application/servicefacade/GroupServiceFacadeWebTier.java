@@ -35,10 +35,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.ClientRules;
 import org.mifos.core.CurrencyMismatchException;
@@ -82,7 +79,6 @@ import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
 import org.mifos.dto.domain.GroupUpdate;
 import org.mifos.dto.domain.LoanDetailDto;
-import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
@@ -218,28 +214,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
             MeetingBO groupMeeting = null;
             if (meetingDto != null) {
-                // FIXME - pull out assembly code from dto to domain object for meeting (also in center service facade)
-                MeetingDetailsDto meetingDetailsDto = meetingDto.getMeetingDetailsDto();
-                groupMeeting = new MeetingBO(RecurrenceType.fromInt(meetingDetailsDto.getRecurrenceTypeId().shortValue()),
-                                                  meetingDetailsDto.getEvery().shortValue(),
-                                                  meetingDto.getMeetingStartDate().toDateMidnight().toDate(),
-                                                  MeetingType.CUSTOMER_MEETING);
-
-                RankOfDay rank = null;
-                Integer weekOfMonth = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-                if (weekOfMonth != null && weekOfMonth > 0) {
-                    rank = RankOfDay.getRankOfDay(meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth()+1);
-                }
-
-                WeekDay weekDay = null;
-                Integer weekDayNum = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-                if (weekDayNum != null && weekDayNum > 0) {
-                    weekDay = WeekDay.getWeekDay(meetingDetailsDto.getRecurrenceDetails().getDayOfWeek());
-                }
-
-                if (rank != null && weekDay != null) {
-                    groupMeeting = new MeetingBO(weekDay, rank, meetingDetailsDto.getEvery().shortValue(), meetingDto.getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-                }
+                groupMeeting = new MeetingFactory().create(meetingDto);
                 groupMeeting.setUserContext(userContext);
             }
 

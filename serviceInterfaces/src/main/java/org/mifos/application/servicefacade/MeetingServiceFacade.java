@@ -20,11 +20,12 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.security.util.UserContext;
+import org.mifos.dto.domain.MeetingUpdateRequest;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface MeetingServiceFacade {
 
-    void updateCustomerMeeting(MeetingUpdateRequest meetingUpdateRequest, UserContext userContext) throws ApplicationException;
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateCustomerMeeting(MeetingUpdateRequest meetingUpdateRequest);
 
 }

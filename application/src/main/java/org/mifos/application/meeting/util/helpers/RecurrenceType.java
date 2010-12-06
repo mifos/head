@@ -21,7 +21,7 @@
 package org.mifos.application.meeting.util.helpers;
 
 public enum RecurrenceType {
-    WEEKLY((short) 1), MONTHLY((short) 2), DAILY((short) 3);
+    WEEKLY(Short.valueOf("1")), MONTHLY(Short.valueOf("2")), DAILY(Short.valueOf("3"));
 
     private Short value;
 

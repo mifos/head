@@ -18,26 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
-
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
+package org.mifos.dto.domain;
 
 public class MeetingUpdateRequest {
 
     private final Integer customerId;
     private final Integer customerVersionNo;
-    private final RecurrenceType recurrenceType;
+    private final Short recurrenceType;
     private final String meetingPlace;
     private final Short recursEvery;
-    private final WeekDay weekDay;
+    private final Short weekDay;
     private final Short dayOfMonth;
-    private final WeekDay monthWeek;
-    private final RankOfDay rankOfDay;
+    private final Short monthWeek;
+    private final Short rankOfDay;
 
-    public MeetingUpdateRequest(Integer customerId, Integer customerVersionNo, RecurrenceType recurrenceType,
-            String meetingPlace, Short recursEvery, WeekDay weekDay, Short dayOfMonth, WeekDay monthWeek, RankOfDay rankOfDay) {
+    public MeetingUpdateRequest(Integer customerId, Integer customerVersionNo, Short recurrenceType,
+            String meetingPlace, Short recursEvery, Short weekDay, Short dayOfMonth, Short monthWeek, Short rankOfDay) {
         this.customerId = customerId;
         this.customerVersionNo = customerVersionNo;
         this.recurrenceType = recurrenceType;
@@ -57,7 +53,7 @@ public class MeetingUpdateRequest {
         return this.customerVersionNo;
     }
 
-    public RecurrenceType getRecurrenceType() {
+    public Short getRecurrenceType() {
         return this.recurrenceType;
     }
 
@@ -69,7 +65,7 @@ public class MeetingUpdateRequest {
         return this.recursEvery;
     }
 
-    public WeekDay getWeekDay() {
+    public Short getWeekDay() {
         return this.weekDay;
     }
 
@@ -77,11 +73,11 @@ public class MeetingUpdateRequest {
         return this.dayOfMonth;
     }
 
-    public WeekDay getMonthWeek() {
+    public Short getMonthWeek() {
         return this.monthWeek;
     }
 
-    public RankOfDay getRankOfDay() {
+    public Short getRankOfDay() {
         return this.rankOfDay;
     }
 }

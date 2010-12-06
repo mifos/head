@@ -20,9 +20,14 @@
 
 package org.mifos.application.servicefacade;
 
+import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.customers.business.service.CustomerService;
+import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class MeetingServiceFacadeWebTier implements MeetingServiceFacade {
 
@@ -33,8 +38,15 @@ public class MeetingServiceFacadeWebTier implements MeetingServiceFacade {
     }
 
     @Override
-    public void updateCustomerMeeting(MeetingUpdateRequest meetingUpdateRequest, UserContext userContext) throws ApplicationException {
+    public void updateCustomerMeeting(MeetingUpdateRequest meetingUpdateRequest) {
 
-        customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+        try {
+            customerService.updateCustomerMeetingSchedule(meetingUpdateRequest, userContext);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 }

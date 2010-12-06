@@ -45,8 +45,9 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
-import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
@@ -87,6 +88,7 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerPositionDto;
 import org.mifos.dto.domain.GroupUpdate;
+import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -1087,14 +1089,18 @@ public class CustomerServiceImpl implements CustomerService {
         try {
             if (oldMeeting.isWeekly()) {
 
-                isRegenerationOfSchedulesRequired = oldMeeting.isDayOfWeekDifferent(updatedDetails.getWeekDay());
+                WeekDay dayOfWeek = WeekDay.getWeekDay(updatedDetails.getWeekDay());
+                isRegenerationOfSchedulesRequired = oldMeeting.isDayOfWeekDifferent(dayOfWeek);
                 oldMeeting.update(updatedDetails.getWeekDay(), updatedDetails.getMeetingPlace());
+                oldMeeting.update(dayOfWeek, updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthlyOnDate()) {
                 isRegenerationOfSchedulesRequired = oldMeeting.isDayOfMonthDifferent(updatedDetails.getDayOfMonth());
                 oldMeeting.update(updatedDetails.getDayOfMonth(), updatedDetails.getMeetingPlace());
             } else if (oldMeeting.isMonthly()) {
-                isRegenerationOfSchedulesRequired = oldMeeting.isWeekOfMonthDifferent(updatedDetails.getRankOfDay(), updatedDetails.getMonthWeek());
-                oldMeeting.update(updatedDetails.getMonthWeek(), updatedDetails.getRankOfDay(), updatedDetails.getMeetingPlace());
+                RankOfDay rankOfday = RankOfDay.getRankOfDay(updatedDetails.getRankOfDay());
+                WeekDay weekOfMonth = WeekDay.getWeekDay(updatedDetails.getMonthWeek());
+                isRegenerationOfSchedulesRequired = oldMeeting.isWeekOfMonthDifferent(rankOfday, weekOfMonth);
+                oldMeeting.update(weekOfMonth, rankOfday, updatedDetails.getMeetingPlace());
             }
 
         } catch (MeetingException me) {

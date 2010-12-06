@@ -35,12 +35,12 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.MeetingUpdateRequest;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.MeetingTypeDto;
+import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -471,11 +471,14 @@ public class MeetingBO extends AbstractBusinessObject {
     public static MeetingBO fromDto(MeetingUpdateRequest meetingDto) throws MeetingException {
         MeetingBO meeting = null;
         Date startDate = new DateTimeService().getCurrentJavaDateTime();
-        if (meetingDto.getRecurrenceType().equals(RecurrenceType.WEEKLY)) {
+
+        RecurrenceType recurringType = RecurrenceType.fromInt(meetingDto.getRecurrenceType());
+        switch (recurringType) {
+        case WEEKLY:
             meeting = new MeetingBO(meetingDto.getWeekDay(), meetingDto.getRecursEvery(), startDate,
                     MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-        } else if (meetingDto.getRecurrenceType().equals(RecurrenceType.MONTHLY)) {
-
+            break;
+        case MONTHLY:
             if (meetingDto.getDayOfMonth() != null) {
                 meeting = new MeetingBO(meetingDto.getDayOfMonth(), meetingDto.getRecursEvery(), startDate,
                         MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
@@ -483,7 +486,11 @@ public class MeetingBO extends AbstractBusinessObject {
                 meeting = new MeetingBO(meetingDto.getMonthWeek(), meetingDto.getRankOfDay(), meetingDto
                         .getRecursEvery(), startDate, MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
             }
+            break;
+        default:
+            break;
         }
+
         return meeting;
     }
 

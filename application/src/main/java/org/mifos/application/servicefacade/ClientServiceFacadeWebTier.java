@@ -40,6 +40,7 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -423,28 +424,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
                 MeetingBO clientMeeting = null;
                 if (meetingDto != null) {
-                    // FIXME - pull out assembly code from dto to domain object for meeting (also in center service facade)
-                    MeetingDetailsDto meetingDetailsDto = meetingDto.getMeetingDetailsDto();
-                    clientMeeting = new MeetingBO(RecurrenceType.fromInt(meetingDetailsDto.getRecurrenceTypeId().shortValue()),
-                                                      meetingDetailsDto.getEvery().shortValue(),
-                                                      meetingDto.getMeetingStartDate().toDateMidnight().toDate(),
-                                                      MeetingType.CUSTOMER_MEETING);
-
-                    RankOfDay rank = null;
-                    Integer weekOfMonth = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-                    if (weekOfMonth != null && weekOfMonth > 0) {
-                        rank = RankOfDay.getRankOfDay(meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth()+1);
-                    }
-
-                    WeekDay weekDay = null;
-                    Integer weekDayNum = meetingDetailsDto.getRecurrenceDetails().getWeekOfMonth();
-                    if (weekDayNum != null && weekDayNum > 0) {
-                        weekDay = WeekDay.getWeekDay(meetingDetailsDto.getRecurrenceDetails().getDayOfWeek());
-                    }
-
-                    if (rank != null && weekDay != null) {
-                        clientMeeting = new MeetingBO(weekDay, rank, meetingDetailsDto.getEvery().shortValue(), meetingDto.getMeetingStartDate().toDateMidnight().toDate(), MeetingType.CUSTOMER_MEETING, meetingDto.getMeetingPlace());
-                    }
+                    clientMeeting = new MeetingFactory().create(meetingDto);
                     clientMeeting.setUserContext(userContext);
                 }
 
