@@ -173,9 +173,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
     private LoanDaoLegacyImpl loanDao;
     private AccountPersistence accountPersistence = null;
+    private Money zeroMoney;
 
     @Before
     public void setUp() throws Exception {
+        zeroMoney = new Money(getCurrency());
         enableCustomWorkingDays();
         userContext = TestObjectFactory.getContext();
         accountPersistence = new AccountPersistence();
@@ -752,7 +754,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
                 Assert.assertEquals(expectedDates.get(i++), loanScheduleEntity.getActionDate());
-                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFees());
+                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
             }
 
             Assert.assertEquals(intialTotalFeeAmount.add(new Money(getCurrency(), "750.0")), loanBO.getLoanSummary()
@@ -841,7 +843,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
                 Assert.assertEquals(expectedDates.get(i++), loanScheduleEntity.getActionDate());
-                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFees());
+                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
             }
 
             Assert.assertEquals(intialTotalFeeAmount.add(new Money(getCurrency(), "750.0")), loanBO.getLoanSummary()
@@ -915,7 +917,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
                 Assert.assertEquals(expectedDates.get(i++), loanScheduleEntity.getActionDate());
-                Assert.assertEquals(new Money(getCurrency(), "100"), loanScheduleEntity.getTotalFees());
+                Assert.assertEquals(new Money(getCurrency(), "100"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
             }
 
             Assert.assertEquals(intialTotalFeeAmount.add(new Money(getCurrency(), "600.0")), loanBO.getLoanSummary()
@@ -963,11 +965,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
             if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 Assert.assertEquals(loanScheduleEntity.getMiscFee(), new Money(getCurrency(), "200"));
-                Assert.assertEquals(loanScheduleEntity.getMiscFeePaid(), new Money(getCurrency()));
+                Assert.assertEquals(loanScheduleEntity.getMiscFeePaid(), zeroMoney);
             }
         }
         Assert.assertEquals(loan.getLoanSummary().getOriginalFees(), new Money(getCurrency(), "200"));
-        Assert.assertEquals(loan.getLoanSummary().getFeesPaid(), new Money(getCurrency()));
+        Assert.assertEquals(loan.getLoanSummary().getFeesPaid(), zeroMoney);
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
         Date currentDate = new Date(System.currentTimeMillis());
@@ -1024,11 +1026,11 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
             if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 Assert.assertEquals(loanScheduleEntity.getMiscPenalty(), new Money(getCurrency(), "200"));
-                Assert.assertEquals(loanScheduleEntity.getMiscPenaltyPaid(), new Money(getCurrency()));
+                Assert.assertEquals(loanScheduleEntity.getMiscPenaltyPaid(), zeroMoney);
             }
         }
         Assert.assertEquals(loan.getLoanSummary().getOriginalPenalty(), new Money(getCurrency(), "200"));
-        Assert.assertEquals(loan.getLoanSummary().getPenaltyPaid(), new Money(getCurrency()));
+        Assert.assertEquals(loan.getLoanSummary().getPenaltyPaid(), zeroMoney);
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
         accntActionDates.addAll(loan.getAccountActionDates());
         PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates,
@@ -1222,7 +1224,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         changeFirstInstallmentDateToNextDate(accountBO);
-        Money totalRepaymentAmount = new Money(getCurrency());
+        Money totalRepaymentAmount = zeroMoney;
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
@@ -1239,7 +1241,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = getLoanAccount();
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        Money totalRepaymentAmount = new Money(getCurrency());
+        Money totalRepaymentAmount = zeroMoney;
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
@@ -1257,7 +1259,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
         changeFirstInstallmentDate(accountBO);
-        Money totalRepaymentAmount = new Money(getCurrency());
+        Money totalRepaymentAmount = zeroMoney;
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))
@@ -1303,9 +1305,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), loanTrxnDetailEntity.getPrincipalAmount());
                     Assert.assertEquals(new Money(getCurrency(), "12.0"), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(6, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(1, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                     for (FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity.getFeesTrxnDetails()) {
@@ -1314,10 +1316,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 } else {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), accountTrxnEntity.getAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                 }
@@ -1357,9 +1359,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), loanTrxnDetailEntity.getPrincipalAmount());
                     Assert.assertEquals(new Money(getCurrency(), "12.0"), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(6, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(1, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                     for (FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity.getFeesTrxnDetails()) {
@@ -1370,9 +1372,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), loanTrxnDetailEntity.getPrincipalAmount());
                     Assert.assertEquals(new Money(getCurrency(), "0.0"), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(4, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(1, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                     for (FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity.getFeesTrxnDetails()) {
@@ -1381,10 +1383,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 } else {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), accountTrxnEntity.getAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                 }
@@ -1423,9 +1425,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), loanTrxnDetailEntity.getPrincipalAmount());
                     Assert.assertEquals(new Money(getCurrency(), "12.0"), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(6, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(1, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                     for (FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity.getFeesTrxnDetails()) {
@@ -1434,10 +1436,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 } else {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), accountTrxnEntity.getAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                 }
@@ -1476,9 +1478,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), loanTrxnDetailEntity.getPrincipalAmount());
                     Assert.assertEquals(new Money(getCurrency(), "0.0"), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(4, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(1, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                     for (FeesTrxnDetailEntity feesTrxnDetailEntity : loanTrxnDetailEntity.getFeesTrxnDetails()) {
@@ -1487,10 +1489,10 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 } else {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                     Assert.assertEquals(new Money(getCurrency(), "100.0"), accountTrxnEntity.getAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                    Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                    Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                     Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                     Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
                 }
@@ -1536,7 +1538,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
+        Assert.assertEquals(zeroMoney, ((LoanBO) accountBO).getTotalPaymentDue());
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
@@ -1548,7 +1550,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
         LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
-        Assert.assertEquals(new Money(getCurrency()), loanSummaryEntity.getPrincipalDue().add(
+        Assert.assertEquals(zeroMoney, loanSummaryEntity.getPrincipalDue().add(
                 loanSummaryEntity.getFeesDue()).add(loanSummaryEntity.getInterestDue()).add(
                 loanSummaryEntity.getPenaltyDue()));
         Assert.assertEquals(2, accountBO.getAccountPayments().size());
@@ -1562,28 +1564,28 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "46.0"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             } else if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "51.0"), accountTrxnEntity.getAmount());
                 Assert.assertEquals(new Money(getCurrency(), "0.2"), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(4, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             } else {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "50.8"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             }
@@ -1626,7 +1628,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         "160"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, startDate, startDate));
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
+        Assert.assertEquals(zeroMoney, ((LoanBO) accountBO).getTotalPaymentDue());
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount());
@@ -1638,7 +1640,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
         LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
-        Assert.assertEquals(new Money(getCurrency()), loanSummaryEntity.getPrincipalDue().add(
+        Assert.assertEquals(zeroMoney, loanSummaryEntity.getPrincipalDue().add(
                 loanSummaryEntity.getFeesDue()).add(loanSummaryEntity.getInterestDue()).add(
                 loanSummaryEntity.getPenaltyDue()));
         Assert.assertEquals(2, accountBO.getAccountPayments().size());
@@ -1652,28 +1654,28 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "46.0"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             } else if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "50.8"), accountTrxnEntity.getAmount());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             } else {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "50.8"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             }
@@ -1860,7 +1862,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
+        Assert.assertEquals(zeroMoney, ((LoanBO) accountBO).getTotalPaymentDue());
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
@@ -1872,7 +1874,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
         LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
-        Assert.assertEquals(new Money(getCurrency()), loanSummaryEntity.getPrincipalDue().add(
+        Assert.assertEquals(zeroMoney, loanSummaryEntity.getPrincipalDue().add(
                 loanSummaryEntity.getFeesDue()).add(loanSummaryEntity.getInterestDue()).add(
                 loanSummaryEntity.getPenaltyDue()));
         Assert.assertEquals(2, accountBO.getAccountPayments().size());
@@ -1887,28 +1889,28 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "46.0"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             } else if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "30.9"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             } else {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "50.8"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             }
@@ -1953,7 +1955,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         startDate));
 
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
+        Assert.assertEquals(zeroMoney, ((LoanBO) accountBO).getTotalPaymentDue());
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
@@ -1965,7 +1967,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         Assert.assertEquals(accountBO.getAccountState().getId(), Short.valueOf(AccountStates.LOANACC_OBLIGATIONSMET));
         LoanSummaryEntity loanSummaryEntity = loanBO.getLoanSummary();
-        Assert.assertEquals(new Money(getCurrency()), loanSummaryEntity.getPrincipalDue().add(
+        Assert.assertEquals(zeroMoney, loanSummaryEntity.getPrincipalDue().add(
                 loanSummaryEntity.getFeesDue()).add(loanSummaryEntity.getInterestDue()).add(
                 loanSummaryEntity.getPenaltyDue()));
         Assert.assertEquals(2, accountBO.getAccountPayments().size());
@@ -1980,28 +1982,28 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("6"))) {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "46.0"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             } else if (accountTrxnEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "30.9"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             } else {
                 LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxnEntity;
                 Assert.assertEquals(new Money(getCurrency(), "50.8"), accountTrxnEntity.getAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getInterestAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscFeeAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getMiscPenaltyAmount());
-                Assert.assertEquals(new Money(getCurrency()), loanTrxnDetailEntity.getPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getInterestAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscFeeAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getMiscPenaltyAmount());
+                Assert.assertEquals(zeroMoney, loanTrxnDetailEntity.getPenaltyAmount());
                 Assert.assertEquals(2, accountTrxnEntity.getFinancialTransactions().size());
                 Assert.assertEquals(0, loanTrxnDetailEntity.getFeesTrxnDetails().size());
             }
@@ -2532,7 +2534,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         for (AccountActionDateEntity accountAction : loanBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
             if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                Assert.assertEquals(new Money(getCurrency()), accountActionDateEntity.getMiscPenalty());
+                Assert.assertEquals(zeroMoney, accountActionDateEntity.getMiscPenalty());
             }
         }
 
@@ -2591,7 +2593,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         loanBO = TestObjectFactory.getObject(LoanBO.class, loanBO.getAccountId());
         for (AccountActionDateEntity accountAction : loanBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
-            Assert.assertEquals(new Money(getCurrency()), accountActionDateEntity.getMiscPenalty());
+            Assert.assertEquals(zeroMoney, accountActionDateEntity.getMiscPenalty());
         }
 
         List<LoanActivityEntity> loanActivityDetailsSet = loanBO.getLoanActivityDetails();
@@ -2623,7 +2625,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     .getAccountFeesActionDetails()) {
 
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))) {
-                    Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(zeroMoney, accountFeesActionDetailEntity.getFeeAmount());
                 } else {
                     Assert.assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
                 }
@@ -2681,7 +2683,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                     .getAccountFeesActionDetails()) {
                 if (accountActionDateEntity.getInstallmentId().equals(Short.valueOf("1"))
                         || accountActionDateEntity.getInstallmentId().equals(Short.valueOf("2"))) {
-                    Assert.assertEquals(new Money(getCurrency()), accountFeesActionDetailEntity.getFeeAmount());
+                    Assert.assertEquals(zeroMoney, accountFeesActionDetailEntity.getFeeAmount());
                 } else {
                     Assert.assertEquals(new Money(getCurrency(), "100"), accountFeesActionDetailEntity.getFeeAmount());
                 }
@@ -3698,7 +3700,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         StaticHibernateUtil.flushAndClearSession();
         accountBO = TestObjectFactory.getObject(AccountBO.class, accountBO.getAccountId());
         Date lastAppliedDate = null;
-        Money feeAmountApplied = new Money(getCurrency());
+        Money feeAmountApplied = zeroMoney;
         Map<String, String> fees2 = new HashMap<String, String>();
         fees2.put("Upfront Fee", "60.0");
         fees2.put("Mainatnence Fee", "100.0");
@@ -4430,7 +4432,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
 
         accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
+        Assert.assertEquals(zeroMoney, ((LoanBO) accountBO).getTotalPaymentDue());
     }
 
     @Test
@@ -4461,7 +4463,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
 
         accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
+        Assert.assertEquals(zeroMoney, ((LoanBO) accountBO).getTotalPaymentDue());
         nextInstallment = (LoanScheduleEntity) accountBO.getAccountActionDate(nextInstallment.getInstallmentId());
         Assert.assertEquals(new Money(getCurrency(), "112.0"), nextInstallment.getTotalDueWithFees());
     }
@@ -4479,9 +4481,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 "1272"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
         accountBO = saveAndFetch(accountBO);
-        Assert.assertEquals(new Money(getCurrency()), ((LoanBO) accountBO).getTotalPaymentDue());
+        Assert.assertEquals(zeroMoney, ((LoanBO) accountBO).getTotalPaymentDue());
         nextInstallment = (LoanScheduleEntity) accountBO.getAccountActionDate(nextInstallment.getInstallmentId());
-        Assert.assertEquals(new Money(getCurrency()), nextInstallment.getTotalDueWithFees());
+        Assert.assertEquals(zeroMoney, nextInstallment.getTotalDueWithFees());
         Assert.assertEquals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET, accountBO.getState());
     }
 
@@ -4554,7 +4556,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = saveAndFetch(accountBO);
         nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
-        Assert.assertEquals(new Money(getCurrency()), nextInstallment.getTotalFeeDue());
+        Assert.assertEquals(zeroMoney, nextInstallment.getTotalFeeDue());
 
     }
 
@@ -4619,7 +4621,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
         Assert.assertEquals(new Money(getCurrency(), "60"), loanSummaryEntity.getFeesPaid());
         Assert.assertEquals(new Money(getCurrency(), "60"), loanSummaryEntity.getOriginalFees());
-        Assert.assertEquals(new Money(getCurrency()), loanSummaryEntity.getFeesDue());
+        Assert.assertEquals(zeroMoney, loanSummaryEntity.getFeesDue());
         for (LoanActivityEntity loanActivityEntity : ((LoanBO) accountBO).getLoanActivityDetails()) {
             if (loanActivityEntity.getComments().equalsIgnoreCase("Periodic Fee removed")) {
                 Assert.assertEquals(loanSummaryEntity.getFeesDue(), loanActivityEntity.getFeeOutstanding());
@@ -4690,7 +4692,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         LoanSummaryEntity loanSummaryEntity = ((LoanBO) accountBO).getLoanSummary();
         Assert.assertEquals(new Money(getCurrency(), "60"), loanSummaryEntity.getFeesPaid());
         Assert.assertEquals(new Money(getCurrency(), "60"), loanSummaryEntity.getOriginalFees());
-        Assert.assertEquals(new Money(getCurrency()), loanSummaryEntity.getFeesDue());
+        Assert.assertEquals(zeroMoney, loanSummaryEntity.getFeesDue());
         for (LoanActivityEntity loanActivityEntity : ((LoanBO) accountBO).getLoanActivityDetails()) {
             if (loanActivityEntity.getComments().equalsIgnoreCase("Periodic Fee removed")) {
                 Assert.assertEquals(loanSummaryEntity.getFeesDue(), loanActivityEntity.getFeeOutstanding());
@@ -4755,7 +4757,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testPartialPaymentForPrincipalGrace() throws Exception {
         accountBO = getLoanAccount();
-        ((LoanScheduleEntity) accountBO.getAccountActionDate((short) 1)).setPrincipal(new Money(getCurrency()));
+        ((LoanScheduleEntity) accountBO.getAccountActionDate((short) 1)).setPrincipal(zeroMoney);
         accountBO = saveAndFetch(accountBO);
         Assert.assertEquals(new Money(getCurrency(), "112.0"), ((LoanBO) accountBO).getTotalPaymentDue());
         IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
@@ -4823,7 +4825,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         java.sql.Date lastWeekDate = setDate(new GregorianCalendar().WEEK_OF_MONTH, -1);
         java.sql.Date twoWeeksBeforeDate = setDate(new GregorianCalendar().WEEK_OF_MONTH, -2);
         accountBO = getLoanAccount();
-        Money interest = new Money(getCurrency());
+        Money interest = zeroMoney;
         for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
             if (installment.getInstallmentId().intValue() == 1) {
                 ((LoanScheduleEntity) installment).setActionDate(lastWeekDate);
@@ -4845,7 +4847,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         java.sql.Date lastWeekDate = setDate(new GregorianCalendar().WEEK_OF_MONTH, -1);
         java.sql.Date twoWeeksBeforeDate = setDate(new GregorianCalendar().WEEK_OF_MONTH, -2);
         accountBO = getLoanAccount();
-        Money interest = new Money(getCurrency());
+        Money interest = zeroMoney;
         for (AccountActionDateEntity installment : accountBO.getAccountActionDates()) {
             if (installment.getInstallmentId().intValue() == 1) {
                 ((LoanScheduleEntity) installment).setActionDate(lastWeekDate);

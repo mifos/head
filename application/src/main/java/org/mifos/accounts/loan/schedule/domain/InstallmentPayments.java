@@ -33,6 +33,30 @@ public class InstallmentPayments {
         installmentPayments = new ArrayList<InstallmentPayment>();
     }
 
+    public BigDecimal getMiscPenaltyPaid() {
+        BigDecimal miscPenaltyPaid = BigDecimal.ZERO;
+        for (InstallmentPayment installmentPayment : installmentPayments) {
+            miscPenaltyPaid = miscPenaltyPaid.add(installmentPayment.getMiscPenaltyPaid());
+        }
+        return miscPenaltyPaid;
+    }
+
+    public BigDecimal getPenaltyPaid() {
+        BigDecimal penaltyPaid = BigDecimal.ZERO;
+        for (InstallmentPayment installmentPayment : installmentPayments) {
+            penaltyPaid = penaltyPaid.add(installmentPayment.getPenaltyPaid());
+        }
+        return penaltyPaid;
+    }
+
+    public BigDecimal getMiscFeesPaid() {
+        BigDecimal miscFeesPaid = BigDecimal.ZERO;
+        for (InstallmentPayment installmentPayment : installmentPayments) {
+            miscFeesPaid = miscFeesPaid.add(installmentPayment.getMiscFeesPaid());
+        }
+        return miscFeesPaid;
+    }
+
     public BigDecimal getFeesPaid() {
         BigDecimal feesPaid = BigDecimal.ZERO;
         for (InstallmentPayment installmentPayment : installmentPayments) {

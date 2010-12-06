@@ -28,8 +28,11 @@ public class InstallmentPayment {
     private Date paidDate;
     private BigDecimal principalPaid;
     private BigDecimal interestPaid;
-    private BigDecimal feesPaid;
     private BigDecimal extraInterestPaid;
+    private BigDecimal feesPaid;
+    private BigDecimal miscFeesPaid;
+    private BigDecimal penaltyPaid;
+    private BigDecimal miscPenaltyPaid;
 
     public Date getPaidDate() {
         return paidDate;
@@ -55,20 +58,44 @@ public class InstallmentPayment {
         this.interestPaid = interestPaid;
     }
 
-    public BigDecimal getFeesPaid() {
-        return feesPaid == null ? BigDecimal.ZERO : feesPaid;
-    }
-
-    public void setFeesPaid(BigDecimal feesPaid) {
-        this.feesPaid = feesPaid;
-    }
-
     public BigDecimal getExtraInterestPaid() {
         return extraInterestPaid == null ? BigDecimal.ZERO : extraInterestPaid;
     }
 
     public void setExtraInterestPaid(BigDecimal extraInterestPaid) {
         this.extraInterestPaid = extraInterestPaid;
+    }
+
+    public BigDecimal getMiscPenaltyPaid() {
+        return miscPenaltyPaid == null ? BigDecimal.ZERO : miscPenaltyPaid;
+    }
+
+    public BigDecimal getPenaltyPaid() {
+        return penaltyPaid == null ? BigDecimal.ZERO : penaltyPaid;
+    }
+
+    public void setPenaltyPaid(BigDecimal penaltyPaid) {
+        this.penaltyPaid = penaltyPaid;
+    }
+
+    public void setMiscPenaltyPaid(BigDecimal miscPenaltyPaid) {
+        this.miscPenaltyPaid = miscPenaltyPaid;
+    }
+
+    public BigDecimal getMiscFeesPaid() {
+        return miscFeesPaid == null ? BigDecimal.ZERO : miscFeesPaid;
+    }
+
+    public void setMiscFeesPaid(BigDecimal miscFeesPaid) {
+        this.miscFeesPaid = miscFeesPaid;
+    }
+
+    public BigDecimal getFeesPaid() {
+        return feesPaid == null ? BigDecimal.ZERO : feesPaid;
+    }
+
+    public void setFeesPaid(BigDecimal feesPaid) {
+        this.feesPaid = feesPaid;
     }
 
     public boolean isPartialPayment() {

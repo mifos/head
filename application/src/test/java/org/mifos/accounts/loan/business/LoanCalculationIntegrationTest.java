@@ -281,7 +281,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 Assert.assertEquals(schedules[i].getPaymentDate(), null);
                 Assert.assertEquals(schedules[i].isPaid(), false);
             } else {
-                Assert.assertEquals(schedules[i].isPaid(), true);
+                Assert.assertEquals(i + "th installment is still not paid", schedules[i].isPaid(), true);
             }
             verifyScheduleAndPaymentDetail(schedules[i], list.get(i));
         }
@@ -1637,16 +1637,16 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (LoanScheduleEntity loanEntry : paymentsArray) {
             PaymentDetail payment = new PaymentDetail();
             Money calculatedPayment = new Money(getCurrency(), loanEntry.getPrincipal().getAmount().add(
-                    loanEntry.getInterest().getAmount().add(loanEntry.getTotalFees().getAmount())));
+                    loanEntry.getInterest().getAmount().add(loanEntry.getTotalFeesDueWithMiscFee().getAmount())));
             payment.setPayment(calculatedPayment);
             payment.setInterest(loanEntry.getInterest());
             payment.setPrincipal(loanEntry.getPrincipal());
-            payment.setFee(loanEntry.getTotalFees());
+            payment.setFee(loanEntry.getTotalFeesDueWithMiscFee());
 
             totalPrincipal = totalPrincipal.add(loanEntry.getPrincipal().getAmount());
             totalInterest = totalInterest.add(loanEntry.getInterest().getAmount());
             totalPayments = totalPayments.add(calculatedPayment);
-            totalFees = totalFees.add(loanEntry.getTotalFees().getAmount());
+            totalFees = totalFees.add(loanEntry.getTotalFeesDueWithMiscFee().getAmount());
 
             payments.add(payment);
         }

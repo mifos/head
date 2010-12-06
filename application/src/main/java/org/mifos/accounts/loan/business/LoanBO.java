@@ -79,14 +79,12 @@ import org.mifos.accounts.productdefinition.util.helpers.InterestType;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.accounts.util.helpers.AccountPaymentData;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.FeeInstallment;
 import org.mifos.accounts.util.helpers.InstallmentDate;
-import org.mifos.accounts.util.helpers.LoanPaymentData;
 import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
@@ -1515,14 +1513,29 @@ public class LoanBO extends AccountBO {
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
         validationForMakePayment(paymentData);
-        pay(paymentData);
         AccountPaymentEntity accountPaymentEntity = getAccountPaymentEntity(paymentData);
-        LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
-        applyPaymentsToInstallments(paymentData, loanPaymentType, accountPaymentEntity);
-        handleLoanArrearsAging(loanPaymentType);
+        pay(paymentData, accountPaymentEntity);
+
+        if (getLastInstallmentAccountAction().isPaid()) {
+            closeLoan(paymentData);
+        }
+        updateLoanStatus(paymentData, getLoanPaymentType(paymentData.getTotalAmount()));
+
+        handleLoanArrearsAging(getLoanPaymentType(paymentData.getTotalAmount()));
         addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), paymentData.getPersonnel(),
                 AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
         return accountPaymentEntity;
+    }
+
+    private void pay(PaymentData paymentData, AccountPaymentEntity accountPaymentEntity) {
+        Money balance = paymentData.getTotalAmount();
+        for (AccountActionDateEntity accountActionDate : getAccountActionDatesSortedByInstallmentId()) {
+            if (isInstallmentUnpaid(accountActionDate) && balance.isGreaterThanZero()) {
+                LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+                balance = loanScheduleEntity.payComponents(balance);
+                updateLoanSummaryAndPerformanceHistory(paymentData, accountPaymentEntity, loanScheduleEntity);
+            }
+        }
     }
 
     private void handleLoanArrearsAging(LoanPaymentTypes loanPaymentTypes) throws AccountException {
@@ -1531,46 +1544,24 @@ public class LoanBO extends AccountBO {
         }
     }
 
-    private void applyPaymentsToInstallments(PaymentData paymentData, LoanPaymentTypes loanPaymentTypes, AccountPaymentEntity accountPayment) throws AccountException {
-        for (AccountPaymentData accountPaymentData : paymentData.getAccountPayments()) {
-            applyPayment(paymentData, loanPaymentTypes, accountPayment, accountPaymentData);
-        }
-    }
-
-    private void applyPayment(PaymentData paymentData, LoanPaymentTypes loanPaymentTypes, AccountPaymentEntity accountPayment, AccountPaymentData accountPaymentData) throws AccountException {
-        LoanScheduleEntity currentInstallment = (LoanScheduleEntity) getAccountActionDate(accountPaymentData.getInstallmentId());
-        validateInstallment(currentInstallment);
-        closeLoanIfRequired(paymentData, accountPaymentData, currentInstallment);
-        changeLoanToGoodStandingIfRequired(paymentData, loanPaymentTypes);
-        updateLoanSummaryAndPerfHistory(paymentData, accountPayment, currentInstallment, (LoanPaymentData) accountPaymentData);
-    }
-
-    private void updateLoanSummaryAndPerfHistory(PaymentData paymentData, AccountPaymentEntity accountPayment, LoanScheduleEntity currentInstallment, LoanPaymentData loanPaymentData) {
-        currentInstallment.setPaymentDetails(loanPaymentData, paymentData.getTransactionDateAsSQLDate());
-        loanPaymentData.setAccountActionDate(currentInstallment);
-        accountPayment.addAccountTrxn(paymentData, loanPaymentData, getLoanPersistence());
-        loanPaymentData.updateLoanSummary(loanSummary);
-        if (loanPaymentData.isPaid()) {
+    private void updateLoanSummaryAndPerformanceHistory(PaymentData paymentData, AccountPaymentEntity accountPayment,
+                                                 LoanScheduleEntity loanScheduleEntity) {
+        loanScheduleEntity.setPaymentDetails(paymentData.getTransactionDateAsSQLDate());
+        accountPayment.addAccountTrxn(new LoanTrxnDetailEntity(accountPayment, loanScheduleEntity,
+                paymentData.getPersonnel(), paymentData.getTransactionDate(), AccountActionTypes.LOAN_REPAYMENT,
+                AccountConstants.PAYMENT_RCVD, getLoanPersistence()));
+        PaymentAllocation paymentAllocation = loanScheduleEntity.getPaymentAllocation();
+        loanSummary.updatePaymentDetails(paymentAllocation.getPrincipalPaid(), paymentAllocation.getInterestPaid(),
+                paymentAllocation.getPenaltyPaid().add(paymentAllocation.getMiscPenaltyPaid()),
+                paymentAllocation.getTotalFeesPaid().add(paymentAllocation.getMiscFeePaid()));
+        if (loanScheduleEntity.isPaid()) {
             performanceHistory.incrementPayments();
         }
     }
 
-    private void changeLoanToGoodStandingIfRequired(PaymentData paymentData, LoanPaymentTypes loanPaymentTypes) throws AccountException {
+    private void updateLoanStatus(PaymentData paymentData, LoanPaymentTypes loanPaymentTypes) throws AccountException {
         if (isLoanInBadStanding() && loanPaymentTypes.isFullOrFuturePayment()) {
             changeLoanToGoodStanding(paymentData);
-        }
-    }
-
-    private void closeLoanIfRequired(PaymentData paymentData, AccountPaymentData accountPaymentData, LoanScheduleEntity currentInstallment) throws AccountException {
-        AccountActionDateEntity lastInstallment = getLastInstallmentAccountAction();
-        if (currentInstallment.isSameAs(lastInstallment) && accountPaymentData.isPaid()) {
-            closeLoan(paymentData);
-        }
-    }
-
-    private void validateInstallment(LoanScheduleEntity loanScheduleEntity) throws AccountException {
-        if (loanScheduleEntity.isPaid()) {
-            throw new AccountException("errors.update", new String[] { getGlobalAccountNum() });
         }
     }
 
@@ -2386,7 +2377,7 @@ public class LoanBO extends AccountBO {
             for (AccountActionDateEntity accountActionDate : actionDates) {
                 LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
                 interest = interest.add(loanSchedule.getInterest());
-                fees = fees.add(loanSchedule.getTotalFees());
+                fees = fees.add(loanSchedule.getTotalFeesDueWithMiscFee());
             }
         }
         fees = fees.add(getDisbursementFeeAmount());
@@ -2402,7 +2393,7 @@ public class LoanBO extends AccountBO {
             for (AccountActionDateEntity accountActionDate : actionDates) {
                 LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
                 interest = interest.add(loanSchedule.getInterest());
-                fees = fees.add(loanSchedule.getTotalFees());
+                fees = fees.add(loanSchedule.getTotalFeesDueWithMiscFee());
             }
         }
         fees = fees.add(getDisbursementFeeAmount());
@@ -2542,7 +2533,7 @@ public class LoanBO extends AccountBO {
                 LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
                 principal = principal.add(loanSchedule.getPrincipal());
                 interest = interest.add(loanSchedule.getInterest());
-                fees = fees.add(loanSchedule.getTotalFees());
+                fees = fees.add(loanSchedule.getTotalFeesDueWithMiscFee());
                 penalty = penalty.add(loanSchedule.getTotalPenalty());
             }
         }
@@ -2672,18 +2663,6 @@ public class LoanBO extends AccountBO {
         return null;
     }
 
-    private Money pay(final PaymentData paymentData) {
-        Money balanceAmount = paymentData.getTotalAmount();
-        for (AccountActionDateEntity accountActionDate : getAccountActionDatesSortedByInstallmentId()) {
-            if (isInstallmentUnpaid(accountActionDate) && balanceAmount.isGreaterThanZero()) {
-                LoanPaymentData loanPayment = new LoanPaymentData(accountActionDate, balanceAmount);
-                paymentData.addAccountPaymentData(loanPayment);
-                balanceAmount = balanceAmount.subtract(loanPayment.getAmountPaidWithFeeForInstallment());
-            }
-        }
-        return balanceAmount;
-    }
-
     private boolean isInstallmentUnpaid(AccountActionDateEntity installment) {
         return installment != null && installment.isNotPaid();
     }
@@ -2733,14 +2712,6 @@ public class LoanBO extends AccountBO {
         List<AccountActionDateEntity> applicableArrears = getApplicableIdsForArrears();
         for (AccountActionDateEntity applicableArrear : applicableArrears) {
             repayInstallment(applicableArrear, accountPaymentEntity, accountActionTypes, currentUser, comments);
-        }
-    }
-
-    private void makeEarlyRepaymentForNextInstallment(final AccountPaymentEntity accountPaymentEntity,
-                                                      final String comments, final AccountActionTypes accountActionTypes, final PersonnelBO currentUser) {
-        AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-        if (isInstallmentUnpaid(nextInstallment)) {
-            repayInstallment(nextInstallment, accountPaymentEntity, accountActionTypes, currentUser, comments);
         }
     }
 

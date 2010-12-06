@@ -20,14 +20,18 @@
 
 package org.mifos.accounts.business;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.NumberUtils;
+
+import static org.mifos.framework.util.helpers.NumberUtils.min;
 
 public class AccountFeesActionDetailEntity extends AbstractEntity implements Comparable<AccountFeesActionDetailEntity> {
 
-    private final Integer accountFeesActionDetailId;
+    private Integer accountFeesActionDetailId;
 
     private final AccountActionDateEntity accountActionDate;
 
@@ -41,9 +45,10 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
 
     private Money feeAmountPaid;
 
+    private Money feeAllocated;
+
     protected AccountFeesActionDetailEntity(AccountActionDateEntity accountActionDate, FeeBO fee,
             AccountFeesEntity accountFee, Money feeAmount) {
-        this.accountFeesActionDetailId = null;
         this.accountActionDate = accountActionDate;
         if (accountActionDate != null) {
             this.installmentId = accountActionDate.getInstallmentId();
@@ -82,7 +87,7 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
     }
 
     public Money getFeeAmountPaid() {
-        return feeAmountPaid;
+        return feeAmountPaid == null ? new Money(accountFee.getAccount().getCurrency()) : feeAmountPaid;
     }
 
     protected void setFeeAmountPaid(Money feeAmountPaid) {
@@ -94,14 +99,10 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
     }
 
     protected void makePayment(Money feePaid) {
-        if (getFeeAmountPaid() == null) {
-            setFeeAmountPaid(new Money(accountFee.getAccount().getCurrency()));
-        }
         this.feeAmountPaid = getFeeAmountPaid().add(feePaid);
     }
 
     public Money getFeeDue() {
-
         return getFeeAmount().subtract(getFeeAmountPaid());
     }
 
@@ -137,5 +138,19 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
 
     public int compareTo(final AccountFeesActionDetailEntity obj) {
         return this.getFee().getFeeId().compareTo(obj.getFee().getFeeId());
+    }
+
+    public Money payFee(Money amount) {
+        feeAllocated = min(amount, getFeeDue());
+        feeAmountPaid = feeAmountPaid.add(feeAllocated);
+        return amount.subtract(feeAllocated);
+    }
+
+    public Money getFeeAllocated() {
+        return feeAllocated;
+    }
+
+    public void setAccountFeesActionDetailId(Integer accountFeesActionDetailId) {
+        this.accountFeesActionDetailId = accountFeesActionDetailId;
     }
 }

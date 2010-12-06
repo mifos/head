@@ -187,7 +187,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
             for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
                 Assert.assertEquals(expectedDates.get(i++), loanScheduleEntity.getActionDate());
-                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFees());
+                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
             }
 
             Assert.assertEquals(intialTotalFeeAmount.add(new Money(getCurrency(), "750.0")), loanBO.getLoanSummary()
@@ -271,7 +271,7 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
             for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
                 Assert.assertEquals(expectedDates.get(i++), loanScheduleEntity.getActionDate());
-                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFees());
+                Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
             }
 
             Assert.assertEquals(intialTotalFeeAmount.add(new Money(getCurrency(), "750.0")), loanBO.getLoanSummary()
@@ -348,9 +348,9 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
                 Assert.assertEquals(expectedDates.get(i++), loanScheduleEntity.getActionDate());
                 if (i <= 3) {
-                Assert.assertEquals(new Money(getCurrency(), "100"), loanScheduleEntity.getTotalFees());
+                Assert.assertEquals(new Money(getCurrency(), "100"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
                 } else {
-                    Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFees());
+                    Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
                 }
             }
     }
@@ -442,9 +442,9 @@ public class LoanApplyFeeSchedulingIntegrationTest extends MifosIntegrationTestC
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
                 Assert.assertEquals(expectedDates.get(i++), loanScheduleEntity.getActionDate());
                 if (i <= 2) {
-                Assert.assertEquals(new Money(getCurrency(), "100"), loanScheduleEntity.getTotalFees());
+                Assert.assertEquals(new Money(getCurrency(), "100"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
                 } else {
-                    Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFees());
+                    Assert.assertEquals(new Money(getCurrency(), "125"), loanScheduleEntity.getTotalFeesDueWithMiscFee());
                 }
             }
     }

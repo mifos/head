@@ -185,7 +185,7 @@ public class ScheduleCalculatorAdaptorTest {
     }
 
     private Installment getInstallment(int id, Date dueDate, double principal, double interest, double extraInterest) {
-        Installment installment = new Installment(id, dueDate, BigDecimal.valueOf(principal), BigDecimal.valueOf(interest), BigDecimal.ZERO);
+        Installment installment = new Installment(id, dueDate, BigDecimal.valueOf(principal), BigDecimal.valueOf(interest), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
         installment.setExtraInterest(BigDecimal.valueOf(extraInterest));
         return installment;
     }

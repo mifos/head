@@ -226,10 +226,4 @@ public class AccountPaymentEntity extends AbstractEntity {
         }
         return savingsWithdrawal;
     }
-
-    public void addAccountTrxn(PaymentData paymentData, LoanPaymentData loanPaymentData, LoanPersistence loanPersistence) {
-        addAccountTrxn(new LoanTrxnDetailEntity(this, loanPaymentData,
-                paymentData.getPersonnel(), paymentData.getTransactionDate(), AccountActionTypes.LOAN_REPAYMENT,
-                loanPaymentData.getAmountPaidWithFeeForInstallment(), AccountConstants.PAYMENT_RCVD, loanPersistence));
-    }
 }

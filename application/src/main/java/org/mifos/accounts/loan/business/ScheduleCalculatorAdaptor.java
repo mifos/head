@@ -21,6 +21,7 @@ package org.mifos.accounts.loan.business;
 
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Installment;
+import org.mifos.accounts.loan.schedule.domain.InstallmentPayment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
@@ -61,9 +62,27 @@ public class ScheduleCalculatorAdaptor {
     }
 
     private Installment mapToInstallment(LoanScheduleEntity loanScheduleEntity) {
-        return new Installment(loanScheduleEntity.getInstallmentId().intValue(),
+        Installment installment = new Installment(loanScheduleEntity.getInstallmentId().intValue(),
                 loanScheduleEntity.getActionDate(), loanScheduleEntity.getPrincipal().getAmount(),
-                loanScheduleEntity.getInterest().getAmount(), loanScheduleEntity.getTotalFees().getAmount());
+                loanScheduleEntity.getInterest().getAmount(), loanScheduleEntity.getExtraInterest().getAmount(),
+                loanScheduleEntity.getTotalFees().getAmount(), loanScheduleEntity.getMiscFee().getAmount(),
+                loanScheduleEntity.getPenalty().getAmount(), loanScheduleEntity.getMiscPenalty().getAmount());
+        installment.addPayment(getInstallmentPayment(loanScheduleEntity));
+        return installment;
+    }
+
+    private InstallmentPayment getInstallmentPayment(LoanScheduleEntity loanScheduleEntity) {
+        InstallmentPayment installmentPayment = new InstallmentPayment();
+        Date paymentDate = loanScheduleEntity.getPaymentDate() == null ? new Date(0) : loanScheduleEntity.getPaymentDate();
+        installmentPayment.setPaidDate(paymentDate);
+        installmentPayment.setPrincipalPaid(loanScheduleEntity.getPrincipalPaid().getAmount());
+        installmentPayment.setInterestPaid(loanScheduleEntity.getInterestPaid().getAmount());
+        installmentPayment.setExtraInterestPaid(loanScheduleEntity.getExtraInterestPaid().getAmount());
+        installmentPayment.setFeesPaid(loanScheduleEntity.getTotalFeesPaid().getAmount());
+        installmentPayment.setMiscFeesPaid(loanScheduleEntity.getMiscFeePaid().getAmount());
+        installmentPayment.setPenaltyPaid(loanScheduleEntity.getPenaltyPaid().getAmount());
+        installmentPayment.setMiscPenaltyPaid(loanScheduleEntity.getMiscPenaltyPaid().getAmount());
+        return installmentPayment;
     }
 
     void populateExtraInterestInLoanScheduleEntities(Schedule schedule, Map<Integer, LoanScheduleEntity> loanScheduleEntities) {

@@ -20,6 +20,8 @@
 
 package org.mifos.framework.util.helpers;
 
+import org.apache.commons.lang.ObjectUtils;
+
 import java.math.BigDecimal;
 
 public class NumberUtils {
@@ -69,5 +71,9 @@ public class NumberUtils {
 
     public static Integer nullSafeValue(Integer value) {
         return nullSafeValue(value, org.apache.commons.lang.math.NumberUtils.INTEGER_ZERO);
+    }
+
+    public static <T extends Comparable> T min(T comparable1, T comparable2) {
+        return (T) ObjectUtils.min(comparable1, comparable2);
     }
 }
