@@ -80,4 +80,6 @@ public interface OfficeDao {
     Iterator<OfficeCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForOffice();
+
+    List<OfficeDetailsDto> findActiveBranches(Short branchId);
 }

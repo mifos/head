@@ -38,6 +38,7 @@ import org.mifos.dto.screen.ClientFormCreationDto;
 import org.mifos.dto.screen.ClientInformationDto;
 import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
+import org.mifos.dto.screen.ClientRemovalFromGroupDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface ClientServiceFacade {
@@ -77,4 +78,10 @@ public interface ClientServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_EDIT_CLIENT_MFI_INFO')")
     void updateClientMfiInfo(ClientMfiInfoUpdate clientMfiInfoUpdate);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_REMOVE_CLIENT_FROM_GROUP')")
+    ClientRemovalFromGroupDto retreiveClientDetailsForRemovalFromGroup(String globalCustNum);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_REMOVE_CLIENT_FROM_GROUP')")
+    void removeGroupMembership(String globalCustNum, Short loanOfficerId, String comment);
 }

@@ -41,10 +41,6 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
@@ -54,6 +50,7 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
@@ -90,8 +87,8 @@ import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.FamilyDetailDto;
 import org.mifos.dto.domain.LoanDetailDto;
-import org.mifos.dto.domain.MeetingDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.ProcessRulesDto;
 import org.mifos.dto.domain.SavingsDetailDto;
@@ -108,10 +105,12 @@ import org.mifos.dto.screen.ClientMfiInfoDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPerformanceHistoryDto;
 import org.mifos.dto.screen.ClientPersonalInfoDto;
+import org.mifos.dto.screen.ClientRemovalFromGroupDto;
 import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
@@ -708,5 +707,51 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
+    }
+
+    @Override
+    public ClientRemovalFromGroupDto retreiveClientDetailsForRemovalFromGroup(String globalCustNum) {
+
+        try {
+            MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserContext userContext = toUserContext(user);
+
+            ClientBO client = this.customerDao.findClientBySystemId(globalCustNum);
+            client.updateDetails(userContext);
+            client.checkIfClientIsATitleHolder();
+
+            List<OfficeDetailsDto> activeBranches = this.officeDao.findActiveBranches(userContext.getBranchId());
+            boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
+            boolean isActive = client.isActive();
+            Short loanOfficerId = client.getPersonnel().getPersonnelId();
+
+            CenterCreation clientDetails = new CenterCreation(client.getOfficeId(), userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
+            List<PersonnelDto> loanOfficers = this.personnelDao.findActiveLoanOfficersForOffice(clientDetails);
+
+            return new ClientRemovalFromGroupDto(client.getGlobalCustNum(), isActive, isCenterHierarchyExists, loanOfficerId, loanOfficers, activeBranches);
+        } catch (CustomerException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public void removeGroupMembership(String globalCustNum, Short loanOfficerId, String comment) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(mifosUser);
+
+        ClientBO client = this.customerDao.findClientBySystemId(globalCustNum);
+        client.updateDetails(userContext);
+
+        PersonnelBO loanOfficer = null;
+        if (loanOfficerId != null) {
+            loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId);
+        }
+
+        PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+        java.sql.Date commentDate = new DateTimeService().getCurrentJavaSqlDate();
+        CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(comment, commentDate, loggedInUser, client);
+
+        customerService.removeGroupMembership(client, loanOfficer, accountNotesEntity, userContext.getLocaleId());
     }
 }

@@ -64,6 +64,9 @@ public class PersonnelPersistence extends Persistence {
     // TODO : Move to PersonnelRoleEntity
     private final RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 
+    /**
+     * @deprecated - {@link PersonnelDao#findActiveLoanOfficersForOffice}
+     */
     @SuppressWarnings("unchecked")
     @Deprecated
     public List<PersonnelDto> getActiveLoanOfficersInBranch(Short levelId, Short officeId, Short userId,

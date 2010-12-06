@@ -93,6 +93,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.LocalizationConverter;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
@@ -497,6 +498,59 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         UserContext userContext = toUserContext(user);
         try {
             customerService.updateGroup(userContext, groupUpdate);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    @Override
+    public CustomerDetailDto transferGroupToCenter(String groupSystemId, String centerSystemId, Integer previousGroupVersionNo) {
+
+        try {
+            MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserContext userContext = toUserContext(user);
+
+            CenterBO transferToCenter = this.customerDao.findCenterBySystemId(centerSystemId);
+            transferToCenter.updateDetails(userContext);
+
+            GroupBO group = this.customerDao.findGroupBySystemId(groupSystemId);
+            group.updateDetails(userContext);
+
+            checkVersionMismatch(previousGroupVersionNo, group.getVersionNo());
+
+            String groupGlobalCustNum = this.customerService.transferGroupTo(group, transferToCenter);
+            GroupBO transferedGroup = this.customerDao.findGroupBySystemId(groupGlobalCustNum);
+            return transferedGroup.toCustomerDetailDto();
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    private void checkVersionMismatch(Integer oldVersionNum, Integer newVersionNum) throws ApplicationException {
+        if (!oldVersionNum.equals(newVersionNum)) {
+            throw new ApplicationException(Constants.ERROR_VERSION_MISMATCH);
+        }
+    }
+
+
+    @Override
+    public CustomerDetailDto transferGroupToBranch(String globalCustNum, Short officeId, Integer previousGroupVersionNo) {
+
+        try {
+            MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            UserContext userContext = toUserContext(user);
+
+            GroupBO group = this.customerDao.findGroupBySystemId(globalCustNum);
+            group.updateDetails(userContext);
+
+            checkVersionMismatch(previousGroupVersionNo, group.getVersionNo());
+
+            OfficeBO transferToOffice = this.officeDao.findOfficeById(officeId);
+            transferToOffice.setUserContext(userContext);
+
+            String groupGlobalCustNum = this.customerService.transferGroupTo(group, transferToOffice);
+            GroupBO transferedGroup = this.customerDao.findGroupBySystemId(groupGlobalCustNum);
+            return transferedGroup.toCustomerDetailDto();
         } catch (ApplicationException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }

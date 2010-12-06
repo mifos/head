@@ -26,6 +26,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -71,6 +72,10 @@ public class MasterDataService implements BusinessService {
         return null;
     }
 
+    /**
+     * @deprecated -
+     */
+    @Deprecated
     public List<PersonnelDto> getListOfActiveLoanOfficers(Short levelId, Short officeId, Short userId,
             Short userLevelId) throws ServiceException {
         try {
@@ -80,6 +85,11 @@ public class MasterDataService implements BusinessService {
         }
     }
 
+
+    /**
+     * @deprecated see {@link OfficeDao}.
+     */
+    @Deprecated
     public List<OfficeDetailsDto> getActiveBranches(Short branchId) throws ServiceException {
         try {
             return officePersistence.getActiveOffices(branchId);

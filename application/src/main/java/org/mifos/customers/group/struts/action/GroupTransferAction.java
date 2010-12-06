@@ -20,8 +20,6 @@
 
 package org.mifos.customers.group.struts.action;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,61 +27,30 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
-import org.mifos.application.master.business.service.MasterDataService;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.config.ClientRules;
-import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerNoteEntity;
-import org.mifos.customers.business.PositionEntity;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
-import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.group.struts.actionforms.GroupTransferActionForm;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
-import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.dto.domain.OfficeDetailsDto;
-import org.mifos.dto.domain.PersonnelDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.screen.CenterSearchInput;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.dto.screen.ClientRemovalFromGroupDto;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 
 public class GroupTransferAction extends BaseAction {
 
-    private MasterDataService masterService;
-
     public GroupTransferAction() {
-        masterService = new MasterDataService();
-    }
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return getGroupBusinessService();
     }
 
     public static ActionSecurity getSecurity() {
@@ -97,11 +64,6 @@ public class GroupTransferAction extends BaseAction {
         security.allow("loadGrpMemberShip", SecurityConstants.GROUP_TRANSFER_THE_GROUP);
         security.allow("removeGroupMemberShip", SecurityConstants.CAN_REMOVE_CLIENTS_FROM_GROUPS);
         return security;
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -124,8 +86,9 @@ public class GroupTransferAction extends BaseAction {
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
         GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        GroupBO group = this.customerServiceFacade.transferGroupToBranch(groupInSession.getGlobalCustNum(), actionForm.getOfficeIdValue(), groupInSession.getVersionNo());
+        CustomerDetailDto groupDetail = this.groupServiceFacade.transferGroupToBranch(groupInSession.getGlobalCustNum(), actionForm.getOfficeIdValue(), groupInSession.getVersionNo());
 
+        GroupBO group = this.customerDao.findGroupBySystemId(groupDetail.getGlobalCustNum());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -160,47 +123,34 @@ public class GroupTransferAction extends BaseAction {
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
         GroupBO groupInSession = (GroupBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        GroupBO group = this.customerServiceFacade.transferGroupToCenter(groupInSession.getGlobalCustNum(), actionForm.getCenterSystemId(), groupInSession.getVersionNo());
+        CustomerDetailDto groupDetail = this.groupServiceFacade.transferGroupToCenter(groupInSession.getGlobalCustNum(), actionForm.getCenterSystemId(), groupInSession.getVersionNo());
 
+        GroupBO group = this.customerDao.findGroupBySystemId(groupDetail.getGlobalCustNum());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
         return mapping.findForward(ActionForwards.update_success.toString());
-    }
-
-    protected CustomerBusinessService getCustomerBusinessService() {
-        return new CustomerBusinessService();
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadGrpMemberShip(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        doCleanUp(form);
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
 
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
+        actionForm.setComment(null);
+
         ClientBO clientInSession = (ClientBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
-        CustomerBO customerBO = getCustomerBusinessService().getCustomer(Integer.valueOf(clientInSession.getCustomerId()));
+        ClientRemovalFromGroupDto clientRemovalFromGroupDetail = this.clientServiceFacade.retreiveClientDetailsForRemovalFromGroup(clientInSession.getGlobalCustNum());
 
+        actionForm.setAssignedLoanOfficerId(clientRemovalFromGroupDetail.getLoanOfficerId().toString());
+        actionForm.setIsActive(clientRemovalFromGroupDetail.isActive() ? Constants.YES: Constants.NO);
+
+        ClientBO client = this.customerDao.findClientBySystemId(clientInSession.getGlobalCustNum());
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, clientRemovalFromGroupDetail.getActiveBranches(), request);
+        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, clientRemovalFromGroupDetail.isCenterHierarchyExists() ? Constants.YES : Constants.NO, request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientRemovalFromGroupDetail.getLoanOfficers(), request);
 
-        List<OfficeDetailsDto> activeBranches = masterService.getActiveBranches(userContext.getBranchId());
-        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESBRANCHOFFICESLIST, activeBranches, request);
-
-        boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
-        SessionUtils.setAttribute(CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS,
-                isCenterHierarchyExists ? Constants.YES : Constants.NO, request);
-
-        actionForm.setAssignedLoanOfficerId(customerBO.getPersonnel().getPersonnelId().toString());
-
-        List<PersonnelDto> loanOfficers = loadLoanOfficersForBranch(userContext, customerBO.getOffice().getOfficeId());
-        SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, loanOfficers, request);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, clientInSession, request);
-
-        customerBO.checkIfClientIsATitleHolder();
-        actionForm
-                .setIsActive(getClientBusinessService().getClient(customerBO.getCustomerId()).isActive() ? Constants.YES
-                        : Constants.NO);
         return mapping.findForward(ActionForwards.loadGrpMemberShip_success.toString());
     }
 
@@ -211,114 +161,18 @@ public class GroupTransferAction extends BaseAction {
 
         GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
         CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        CustomerBO customerBO = getCustomerBusinessService().getCustomer(customerBOInSession.getCustomerId());
-        checkVersionMismatch(customerBOInSession.getVersionNo(), customerBO.getVersionNo());
-        customerBO.setUserContext(getUserContext(request));
-        customerBO.getCustomerStatus().setLocaleId(getUserContext(request).getLocaleId());
+        ClientBO client = this.customerDao.findClientBySystemId(customerBOInSession.getGlobalCustNum());
 
-        checkBeforeRemoving(customerBO, actionForm, request);
+        checkVersionMismatch(customerBOInSession.getVersionNo(), client.getVersionNo());
 
-        ClientBO client = getClientBusinessService().getClient(customerBO.getCustomerId());
-
-        setInitialObjectForAuditLogging(client);
-        PersonnelBO personnel = null;
+        Short loanOfficerId = null;
         if (StringUtils.isNotBlank(actionForm.getAssignedLoanOfficerId())) {
-            personnel = getPersonnelBusinessService()
-                    .getPersonnel(Short.valueOf(actionForm.getAssignedLoanOfficerId()));
+            loanOfficerId = Short.valueOf(actionForm.getAssignedLoanOfficerId());
         }
-        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
-        int numberOfCustomersInOfficeAlready = customerDao
-                .retrieveLastSearchIdValueForNonParentCustomersInOffice(client.getOffice().getOfficeId());
 
-        String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
-        client.setSearchId(searchId);
-
-        PersonnelBO user = client.getPersonnelPersistence().getPersonnel(client.getUserContext().getId());
-        CustomerNoteEntity accountNotesEntity = new CustomerNoteEntity(actionForm.getComment(), new DateTimeService().getCurrentJavaSqlDate(), user, client);
-        client.addCustomerNotes(accountNotesEntity);
-
-        client.resetPositions(client.getParentCustomer());
-        client.getParentCustomer().updateDetails(client.getUserContext());
-        client.getParentCustomer().update();
-
-        client.setPersonnel(personnel);
-        client.setParentCustomer(null);
-        client.removeGroupMembership();
-        client.update();
+        this.clientServiceFacade.removeGroupMembership(customerBOInSession.getGlobalCustNum(), loanOfficerId, actionForm.getComment());
 
         return mapping.findForward(ActionForwards.view_client_details_page.toString());
-
-    }
-
-    private void checkBeforeRemoving(CustomerBO customerBO,
-            @SuppressWarnings("unused") GroupTransferActionForm actionForm,
-            @SuppressWarnings("unused") HttpServletRequest request) throws CustomerException {
-
-        if (customerBO.hasActiveLoanAccounts()) {
-            throw new CustomerException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-        }
-
-        if (customerBO.getParentCustomer() != null) {
-
-            boolean glimEnabled = new ConfigurationPersistence().isGlimEnabled();
-
-            if (glimEnabled) {
-                if (customerIsMemberOfAnyExistingGlimLoanAccount(customerBO, customerBO.getParentCustomer())) {
-                    throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-                }
-            } else if (customerBO.getParentCustomer().hasActiveLoanAccounts()) {
-                // not glim - then disallow removing client from group with active account
-                throw new CustomerException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
-            }
-        }
-    }
-
-    private boolean customerIsMemberOfAnyExistingGlimLoanAccount(CustomerBO customerToRemoveFromGroup, CustomerBO customerWithActiveAccounts) {
-
-        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
-        List<AccountBO> activeLoanAccounts = customerDao.findGLIMLoanAccountsApplicableTo(customerToRemoveFromGroup.getCustomerId(), customerWithActiveAccounts.getCustomerId());
-
-        return !activeLoanAccounts.isEmpty();
-    }
-
-    public CustomerBO getCustomer(Integer customerId) throws ServiceException {
-        try {
-            return new CustomerPersistence().getCustomer(customerId);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-        }
-    }
-
-    private void doCleanUp(ActionForm form) {
-        GroupTransferActionForm actionForm = (GroupTransferActionForm) form;
-        actionForm.setComment(null);
-
-    }
-
-    private ClientBusinessService getClientBusinessService() {
-        return new ClientBusinessService();
-    }
-
-    private PersonnelBusinessService getPersonnelBusinessService() {
-        return new PersonnelBusinessService();
-    }
-
-    private List<PersonnelDto> loadLoanOfficersForBranch(UserContext userContext, Short branchId) throws Exception {
-        return masterService.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER, branchId,
-                userContext.getId(), userContext.getLevelId());
-    }
-
-    protected void loadPositions(HttpServletRequest request) throws ApplicationException {
-        SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, getMasterEntities(PositionEntity.class,
-                getUserContext(request).getLocaleId()), request);
-    }
-
-    private OfficeBusinessService getOfficeBusinessService() throws ServiceException {
-        return new OfficeBusinessService();
-    }
-
-    private GroupBusinessService getGroupBusinessService() {
-        return new GroupBusinessService();
     }
 
     public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,

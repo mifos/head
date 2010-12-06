@@ -21,6 +21,7 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.dto.domain.CenterDto;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.GroupCreation;
 import org.mifos.dto.domain.GroupCreationDetail;
@@ -50,4 +51,10 @@ public interface GroupServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_EDIT_GROUP')")
     void updateGroup(GroupUpdate groupUpdate);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CHANGE_CENTER_MEMBERSHIP_OF_GROUP')")
+    CustomerDetailDto transferGroupToCenter(String globalCustNum, String centerSystemId, Integer previousGroupVersionNo);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CHANGE_CENTER_MEMBERSHIP_OF_GROUP')")
+    CustomerDetailDto transferGroupToBranch(String globalCustNum, Short officeIdValue, Integer previousGroupVersionNo);
 }

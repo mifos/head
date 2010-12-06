@@ -65,6 +65,10 @@ public class OfficePersistence extends Persistence {
         return officeBO;
     }
 
+    /**
+     * @deprecated see {@link OfficeDao}.
+     */
+    @Deprecated
     public List<OfficeDetailsDto> getActiveOffices(Short officeId) throws PersistenceException {
         String searchId = HierarchyManager.getInstance().getSearchId(officeId);
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
@@ -75,7 +79,6 @@ public class OfficePersistence extends Persistence {
         List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.MASTERDATA_ACTIVE_BRANCHES,
                 queryParameters);
         return queryResult;
-
     }
 
     public List<OfficeCacheDto> getAllOffices() throws PersistenceException {

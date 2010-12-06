@@ -51,6 +51,7 @@ import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
@@ -876,7 +877,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public final GroupBO transferGroupTo(GroupBO group, CenterBO receivingCenter) throws CustomerException {
+    public final String transferGroupTo(GroupBO group, CenterBO receivingCenter) throws CustomerException {
 
         group.validateReceivingCenter(receivingCenter);
         group.validateNoActiveAccountsExist();
@@ -920,7 +921,7 @@ public class CustomerServiceImpl implements CustomerService {
                 handleChangeInMeetingSchedule(groupInitialised, calendarEvents.getWorkingDays(), calendarEvents.getHolidays());
             }
             hibernateTransactionHelper.commitTransaction();
-            return groupInitialised;
+            return groupInitialised.getGlobalCustNum();
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
@@ -986,7 +987,7 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public final GroupBO transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException {
+    public final String transferGroupTo(GroupBO group, OfficeBO transferToOffice) throws CustomerException {
 
         group.validateNewOffice(transferToOffice);
         group.validateNoActiveAccountsExist();
@@ -1035,7 +1036,7 @@ public class CustomerServiceImpl implements CustomerService {
 
             hibernateTransactionHelper.commitTransaction();
 
-            return group;
+            return group.getGlobalCustNum();
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
@@ -1122,4 +1123,63 @@ public class CustomerServiceImpl implements CustomerService {
             handleChangeInMeetingSchedule(child, workingDays, orderedUpcomingHolidays);
         }
     }
+
+    @Override
+    public void removeGroupMembership(ClientBO client, PersonnelBO loanOfficer, CustomerNoteEntity accountNotesEntity, Short localeId) {
+
+        client.getCustomerStatus().setLocaleId(localeId);
+
+        if (client.hasActiveLoanAccounts()) {
+            throw new BusinessRuleException(CustomerConstants.CLIENT_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+        }
+
+        if (client.getParentCustomer() != null) {
+
+            boolean glimEnabled = new ConfigurationPersistence().isGlimEnabled();
+
+            if (glimEnabled) {
+                if (customerIsMemberOfAnyExistingGlimLoanAccount(client, client.getParentCustomer())) {
+                    throw new BusinessRuleException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+                }
+            } else if (client.getParentCustomer().hasActiveLoanAccounts()) {
+                // not glim - then disallow removing client from group with active account
+                throw new BusinessRuleException(CustomerConstants.GROUP_HAS_ACTIVE_ACCOUNTS_EXCEPTION);
+            }
+        }
+
+        try {
+            this.hibernateTransactionHelper.startTransaction();
+            this.hibernateTransactionHelper.beginAuditLoggingFor(client);
+            int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(client.getOffice().getOfficeId());
+
+            String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;
+            client.setSearchId(searchId);
+
+            client.addCustomerNotes(accountNotesEntity);
+
+            client.resetPositions(client.getParentCustomer());
+            client.getParentCustomer().updateDetails(client.getUserContext());
+            this.customerDao.save(client.getParentCustomer());
+
+            this.hibernateTransactionHelper.flushSession();
+
+            client.setPersonnel(loanOfficer);
+            client.setParentCustomer(null);
+            client.removeGroupMembership();
+            this.customerDao.save(client);
+            this.hibernateTransactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.hibernateTransactionHelper.rollbackTransaction();
+        } finally {
+            this.hibernateTransactionHelper.closeSession();
+        }
+    }
+
+    private boolean customerIsMemberOfAnyExistingGlimLoanAccount(CustomerBO customerToRemoveFromGroup, CustomerBO customerWithActiveAccounts) {
+
+        List<AccountBO> activeLoanAccounts = customerDao.findGLIMLoanAccountsApplicableTo(customerToRemoveFromGroup.getCustomerId(), customerWithActiveAccounts.getCustomerId());
+
+        return !activeLoanAccounts.isEmpty();
+    }
+
 }

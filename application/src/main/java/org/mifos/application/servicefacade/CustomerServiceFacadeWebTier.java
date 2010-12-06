@@ -26,11 +26,9 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.service.CustomerService;
-import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.util.helpers.CenterConstants;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.group.struts.action.GroupSearchResultsDto;
 import org.mifos.customers.office.business.OfficeBO;
@@ -115,44 +113,6 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         QueryResult searchResult = customerDao.search(normalisedSearchString, loggedInUser);
 
         return new CustomerSearch(searchResult, searchString, officeId, officeName);
-    }
-
-    @Override
-    public GroupBO transferGroupToCenter(String groupSystemId, String centerSystemId, Integer previousGroupVersionNo) throws ApplicationException {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        CenterBO transferToCenter = this.customerDao.findCenterBySystemId(centerSystemId);
-        transferToCenter.setUserContext(userContext);
-
-        GroupBO group = this.customerDao.findGroupBySystemId(groupSystemId);
-
-        checkVersionMismatch(previousGroupVersionNo, group.getVersionNo());
-        group.setUserContext(userContext);
-
-        GroupBO transferedGroup = this.customerService.transferGroupTo(group, transferToCenter);
-
-        return transferedGroup;
-    }
-
-    @Override
-    public GroupBO transferGroupToBranch(String globalCustNum, Short officeId, Integer previousGroupVersionNo) throws ApplicationException {
-
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
-        OfficeBO transferToOffice = this.officeDao.findOfficeById(officeId);
-        transferToOffice.setUserContext(userContext);
-
-        GroupBO group = this.customerDao.findGroupBySystemId(globalCustNum);
-
-        checkVersionMismatch(previousGroupVersionNo, group.getVersionNo());
-        group.setUserContext(userContext);
-
-        GroupBO transferedGroup = this.customerService.transferGroupTo(group, transferToOffice);
-
-        return transferedGroup;
     }
 
     @Override
