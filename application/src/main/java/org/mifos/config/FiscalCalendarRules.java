@@ -163,7 +163,12 @@ public class FiscalCalendarRules {
         else if (configMgr.containsKey(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday)) {
             /* Conditional check is for backward compatibility only and should be removed after 1.7 release */
             scheduleType = configMgr.getString(FiscalCalendarRulesScheduleTypeForMeetingOnHoliday);
-            logger.warn("FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday is deprecated and will not be supported in a future release. Use FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay instead.");
+            logger.error("NOT SEVERE: ONLY WARNING: FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday is deprecated and will not be supported in a future release. " +
+                         "Use FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay instead.");
+            System.out.println("NOT SEVERE: ONLY WARNING: FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday is deprecated and will not be supported in a future release. " +
+                               "Use FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay instead.");
+            System.err.println("NOT SEVERE: ONLY WARNING: FiscalCalendarRules.ScheduleTypeForMeetingOnHoliday is deprecated and will not be supported in a future release. " +
+                               "Use FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay instead.");
             }
             else {
             throw new RuntimeException("The schedule type for meeting if non working day is not defined in the config file.");
