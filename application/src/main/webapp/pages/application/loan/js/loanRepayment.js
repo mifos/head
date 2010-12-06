@@ -26,6 +26,15 @@ $(document).ready(function() {
 
     $('.date-pick').keyfilter(/[0-9,\/]/);
 
+    $(document).ready(function() {
+        $("form").bind("keypress", function(e) {
+            if (e.keyCode == 13) {
+                return false;
+           }
+        });
+    }); 
+
+    
     $("#scheduleViewDate").bind("change keyup click blur", function(){
         var dateValue = $(this).val();
         if(LoanRepayment.validDate(dateValue)) {
