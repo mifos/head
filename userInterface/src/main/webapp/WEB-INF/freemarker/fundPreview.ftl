@@ -27,11 +27,11 @@
         <form method="POST" action="fundPreview.ftl" name="fundPreview">
 
             <div class="span-24">
-            [@spring.bind "formBean.name"/]
+            [@spring.bind "formBean.oldName"/]
                 [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl",spring.status.value?default(""):""}/]
             [@mifos.crumbpairs breadcrumb/]
                 <div class="margin20lefttop">
-                    <p class="font15">[@spring.bind "formBean.name"/]<span class="fontBold" name="${spring.status.expression}">
+                    <p class="font15">[@spring.bind "formBean.oldName"/]<span class="fontBold" name="name">
                             ${spring.status.value?default("")}[@spring.showErrors "<br />"/]</span>&nbsp;-&nbsp;<span
                             class="orangeheading">[@spring.message "organizationPreferences.fundpreview.previewfundinformation"/]</span>
                     </p>
@@ -56,6 +56,8 @@
                     </div>
                     <div class="clear">&nbsp;</div>
                 [@spring.bind "formBean.name"/]<input type="hidden" name="${spring.status.expression}"
+                                                      value="${spring.status.value?default("")}"/>
+                [@spring.bind "formBean.oldName"/]<input type="hidden" name="${spring.status.expression}"
                                                       value="${spring.status.value?default("")}"/>
                 [@spring.bind "formBean.codeId"/]<input type="hidden" name="${spring.status.expression}"
                                                         value="${spring.status.value?default("")}"/>
