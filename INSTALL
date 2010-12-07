@@ -130,13 +130,13 @@ This file describes how to install Mifos for use in a production environment.
 
     7.5. Ubuntu Quick Install Guide -
          http://mifosforge.jira.com/wiki/display/MIFOS/Ubuntu+WAR+Install
-         This is an installation guide describing how to install Mifos from the
-         WAR file, similar to this INSTALL file.
+         This is an installation guide for Ubuntu describing how to install
+         Mifos from the WAR file, similar to this INSTALL file.
 
     7.6. Windows Install Guide -
          http://mifos.org/documentation/installation/windows-installation-guide
-         This is an installation guide describing how to install Mifos by
-         building it from the source code.
+         This is an installation guide for Windows describing how to install
+         Mifos from the WAR file, similar to this INSTALL file.
 
 8. Third Party Licenses
    All software libraries used by Mifos are compatible with the Apache License
