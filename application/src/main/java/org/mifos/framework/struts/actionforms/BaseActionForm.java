@@ -95,28 +95,6 @@ public class BaseActionForm extends ValidatorActionForm {
         return error.toLocalizedMessage(locale, null);
     }
 
-    protected DoubleConversionResult parseDoubleForInterest(String doubleString) {
-        return new LocalizationConverter().parseDoubleForInterest(doubleString);
-    }
-
-    protected DoubleConversionResult parseDoubleForCashFlowThreshold(String doubleString){
-        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
-                ConversionError.CASH_FLOW_THRESHOLD_OUT_OF_RANGE,
-                AccountingRules.getMinCashFlowThreshold(), AccountingRules.getMaxCashFlowThreshold());
-    }
-
-    protected DoubleConversionResult parseDoubleForIndebtednessRatio(String doubleString){
-        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
-                ConversionError.INDEBTEDNESS_RATIO_OUT_OF_RANGE,
-                AccountingRules.getMinIndebtednessRatio(), AccountingRules.getMaxIndebtednessRatio());
-    }
-
-    protected DoubleConversionResult parseDoubleForRepaymentCapacity(String doubleString){
-        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
-                ConversionError.REPAYMENT_CAPACITY_OUT_OF_RANGE,
-                AccountingRules.getMinRepaymentCapacity(), AccountingRules.getMaxRepaymentCapacity());
-    }
-
 
     protected Short getShortValue(String str) {
         return StringUtils.isNotBlank(str) ? Short.valueOf(str) : null;
@@ -232,6 +210,10 @@ public class BaseActionForm extends ValidatorActionForm {
         ResourceBundle resources = ResourceBundle.getBundle(propertyFile, locale);
         String errorText = resources.getString(key);
         return errorText;
+    }
+
+    protected DoubleConversionResult parseDoubleForInterest(String doubleString) {
+        return new LocalizationConverter().parseDoubleForInterest(doubleString);
     }
 
 }

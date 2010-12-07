@@ -51,6 +51,7 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -2528,13 +2529,59 @@ public class LoanPrdActionForm extends BaseActionForm {
                 }
             }
             if(cashFlowThreshold != null) {
-                if(cashFlowThreshold >= AccountingRules.getMaxCashFlowThreshold()) {
-                    addError(actionErrors,"cashFlowThreshold",ProductDefinitionConstants.CASHFLOW_THRESHOLD_INVALID, String.valueOf(AccountingRules.getMaxCashFlowThreshold()));
+                if(cashFlowThreshold >= getMaxCashFlowThreshold()) {
+                    addError(actionErrors,"cashFlowThreshold",ProductDefinitionConstants.CASHFLOW_THRESHOLD_INVALID, String.valueOf(getMaxCashFlowThreshold()));
                 }
                 cashFlowThresholdValue = cashFlowThreshold;
             }
         }
     }
+
+    DoubleConversionResult parseDoubleForCashFlowThreshold(String doubleString){
+        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
+                ConversionError.CASH_FLOW_THRESHOLD_OUT_OF_RANGE,
+                getMinCashFlowThreshold(), getMaxCashFlowThreshold());
+    }
+
+
+    DoubleConversionResult parseDoubleForIndebtednessRatio(String doubleString){
+        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
+                ConversionError.INDEBTEDNESS_RATIO_OUT_OF_RANGE,
+                getMinIndebtednessRatio(), getMaxIndebtednessRatio());
+    }
+
+
+    DoubleConversionResult parseDoubleForRepaymentCapacity(String doubleString){
+        return new LocalizationConverter().parseDoubleForCashFlowValidations(doubleString,
+                ConversionError.REPAYMENT_CAPACITY_OUT_OF_RANGE,
+                getMinRepaymentCapacity(), getMaxRepaymentCapacity());
+    }
+
+    public Double getMaxCashFlowThreshold() {
+        return AccountingRules.getMaxCashFlowThreshold();
+    }
+
+    public Double getMinCashFlowThreshold() {
+        return AccountingRules.getMinCashFlowThreshold();
+    }
+
+    public Double getMaxIndebtednessRatio() {
+        return AccountingRules.getMaxIndebtednessRatio();
+    }
+
+    public Double getMinIndebtednessRatio() {
+        return AccountingRules.getMinIndebtednessRatio();
+    }
+
+    public Double getMaxRepaymentCapacity() {
+        return AccountingRules.getMaxRepaymentCapacity();
+    }
+
+    public Double getMinRepaymentCapacity() {
+        return AccountingRules.getMinRepaymentCapacity();
+    }
+
+
 
     private void validateIndebtednessRatio(ActionErrors actionErrors, Locale locale) {
         Double indebtednessRatio = null;
@@ -2552,8 +2599,8 @@ public class LoanPrdActionForm extends BaseActionForm {
                 }
             }
             if(indebtednessRatio != null) {
-                if(indebtednessRatio >= AccountingRules.getMaxIndebtednessRatio()) {
-                    addError(actionErrors,"indebtednessRatio",ProductDefinitionConstants.INDEBTEDNESS_RATIO_INVALID, String.valueOf(AccountingRules.getMaxIndebtednessRatio()));
+                if(indebtednessRatio >= getMaxIndebtednessRatio()) {
+                    addError(actionErrors,"indebtednessRatio",ProductDefinitionConstants.INDEBTEDNESS_RATIO_INVALID, String.valueOf(getMaxIndebtednessRatio()));
                 }
                 indebtednessRatioValue = indebtednessRatio;
             }
@@ -2576,8 +2623,8 @@ public class LoanPrdActionForm extends BaseActionForm {
                 }
             }
             if(repaymentCapacity != null) {
-                if(repaymentCapacity >= AccountingRules.getMaxRepaymentCapacity()) {
-                    addError(actionErrors,"repaymentCapacity",ProductDefinitionConstants.REPAYMENT_CAPACITY_INVALID, String.valueOf(AccountingRules.getMaxRepaymentCapacity()));
+                if(repaymentCapacity >= getMaxRepaymentCapacity()) {
+                    addError(actionErrors,"repaymentCapacity",ProductDefinitionConstants.REPAYMENT_CAPACITY_INVALID, String.valueOf(getMaxRepaymentCapacity()));
                 }
                 repaymentCapacityValue = repaymentCapacity;
             }
