@@ -782,7 +782,8 @@ public class QuestionnaireMigration {
     private Iterator<Survey> getSurveys(SurveyType surveyType) {
         Iterator<Survey> surveys = null;
         try {
-            surveys = surveysPersistence.retrieveSurveysByTypeIterator(surveyType);
+            // todo - we migrate only non PPI surveys in release E
+            surveys = surveysPersistence.retrieveNonPPISurveysByTypeIterator(surveyType);
         } catch (PersistenceException e) {
             logger.error(String.format("Unable to retrieve surveys of type %s", surveyType), e);
         }
