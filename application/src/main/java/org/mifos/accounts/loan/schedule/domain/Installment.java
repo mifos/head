@@ -19,13 +19,12 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
-import org.mifos.framework.util.helpers.NumberUtils;
-import sun.misc.FormattedFloatingDecimal;
+import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
-import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
+import org.mifos.framework.util.helpers.NumberUtils;
 
 public class Installment implements Comparable<Installment> {
     private Integer id;
