@@ -34,6 +34,9 @@ public class FundFormBean {
     @NotEmpty
     private String name;
 
+    @NotEmpty
+    private String oldName;
+
     public String getId() {
         return this.id;
     }
@@ -48,6 +51,14 @@ public class FundFormBean {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getOldName() {
+        return oldName;
+    }
+
+    public void setOldName(String oldName) {
+        this.oldName = oldName;
     }
 
     public String getCodeId() {

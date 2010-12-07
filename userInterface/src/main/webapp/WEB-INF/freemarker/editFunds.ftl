@@ -23,13 +23,13 @@
 <div class=" content">
     <form method="POST" action="editFunds.ftl" name="editFunds">
         <div class="span-24">
-        [@spring.bind "formBean.name"/]
+        [@spring.bind "formBean.oldName"/]
             [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "organizationPreferences.viewfunds":"viewFunds.ftl",spring.status.value?default(""):""}/]
         [@mifos.crumbpairs breadcrumb/]
             <div class="margin20lefttop">
 
-                <p class="font15 margin10bottom"><span name="${spring.status.expression}"
-                                        class="fontBold">[@spring.bind "formBean.name"/]${spring.status.value?default("")}</span>&nbsp;-&nbsp;<span
+                <p class="font15 margin10bottom"><span name="name"
+                                        class="fontBold">[@spring.bind "formBean.oldName"/]${spring.status.value?default("")}</span>&nbsp;-&nbsp;<span
                         class="orangeheading">[@spring.message "organizationPreferences.viewFunds.edit.editfundinformation"/]</span>
                 </p>
 
@@ -45,6 +45,8 @@
                 <div class="prepend-3 span-22 last">
                     <input type="hidden" name="PREVIEWVIEW" id="previewview" value="${previewView}"/>
                 [@spring.bind "formBean.id"/]
+                    <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
+                [@spring.bind "formBean.oldName"/]
                     <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
                 [@spring.bind "formBean.codeId"/]
                     <input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>

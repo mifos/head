@@ -70,6 +70,7 @@ public class EditFundsController {
         formBean.setCodeId(fundDto.getCode().getId());
         formBean.setId(fundDto.getId());
         formBean.setName(fundDto.getName());
+        formBean.setOldName(fundDto.getName());
 
         modelAndView.addObject("formBean", formBean);
         modelAndView.addObject("previewView", "fundPreview");
