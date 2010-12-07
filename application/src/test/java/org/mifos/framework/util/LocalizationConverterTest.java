@@ -57,22 +57,24 @@ public class LocalizationConverterTest extends TestCase {
         converter.setCurrentLocale(locale);
     }
 
-    public void testGetDoubleStringForMoney() {
-
-        String doubleValueString = "2.5";
-        Double dValue = 2.5000000000;
-        Locale locale = Localization.getInstance().getMainLocale();
-        LocalizationConverter converter = new LocalizationConverter();
-        String dString = converter.getDoubleStringForMoney(dValue);
-        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
-            Assert.assertEquals(doubleValueString, dString);
-        }
-        converter.setCurrentLocale(new Locale("IS", "is"));
-        doubleValueString = "2,5";
-        dString = converter.getDoubleStringForMoney(dValue);
-        Assert.assertEquals(doubleValueString, dString);
-        converter.setCurrentLocale(locale);
-    }
+//    @Test(enabled=false)
+//    @Ignore
+//    public void testGetDoubleStringForMoney() {
+//
+//        String doubleValueString = "2.5";
+//        Double dValue = 2.5000000000;
+//        Locale locale = Localization.getInstance().getMainLocale();
+//        LocalizationConverter converter = new LocalizationConverter();
+//        String dString = converter.getDoubleStringForMoney(dValue);
+//        if (locale.getCountry().equalsIgnoreCase("GB") && locale.getLanguage().equalsIgnoreCase("EN")) {
+//            Assert.assertEquals(doubleValueString, dString);
+//        }
+//        converter.setCurrentLocale(new Locale("IS", "is"));
+//        doubleValueString = "2,5";
+//        dString = converter.getDoubleStringForMoney(dValue);
+//        Assert.assertEquals(doubleValueString, dString);
+//        converter.setCurrentLocale(locale);
+//    }
 
     public void testGetDoubleStringForInterest() {
 

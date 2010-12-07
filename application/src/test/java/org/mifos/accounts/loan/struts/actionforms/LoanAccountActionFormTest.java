@@ -47,6 +47,7 @@ import junit.framework.TestCase;
 
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
+import org.junit.Ignore;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -308,14 +309,16 @@ public class LoanAccountActionFormTest extends TestCase {
        Assert.assertEquals(Arrays.asList("1", "2", "3", ""), form.getClients());
     }
 
-    public void testValidateLoanAmount()  {
+    @Ignore
+    public void ignore_testValidateLoanAmount()  {
         form.setLoanAmount("5000.0");
         ActionErrors errors = new ActionErrors();
         form.validateLoanAmount(errors, Locale.ENGLISH, TestUtils.RUPEE);
         Assert.assertEquals("No Error was expected",0, errors.size());
     }
 
-    public void testValidateDefaultFees()  {
+    @Ignore
+    public void ignore_testValidateDefaultFees()  {
         Short saveDigitsAfterDecimal = AccountingRules.getDigitsAfterDecimal();
         AccountingRules.setDigitsAfterDecimal(Short.valueOf("0"));
         form.setDefaultFees(createDefaultFees());
