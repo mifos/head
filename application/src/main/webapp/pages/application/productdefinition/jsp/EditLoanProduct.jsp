@@ -691,6 +691,7 @@ explanation of the license and how it is applied.
 							<td valign="top">
 							    <div id="cashFlowThresholdInputDiv" style="display: none;">
 							        <mifos:decimalinput styleId="editLoanProduct.input.cashFlowThreshold" property="cashFlowThreshold"/>
+							        <c:out value="( ${sessionScope.loanproductactionform.minCashFlowThreshold} - ${sessionScope.loanproductactionform.maxCashFlowThreshold} )" />  
 							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>
@@ -703,6 +704,7 @@ explanation of the license and how it is applied.
 							<td valign="top">
 							    <div id="cashFlowIndebtednessRatioInputDiv" style="display: none;">
 							        <mifos:decimalinput styleId="editLoanProduct.input.indebtednessRatio" property="indebtednessRatio"/>
+							        <c:out value="( ${sessionScope.loanproductactionform.minIndebtednessRatio} - ${sessionScope.loanproductactionform.maxIndebtednessRatio} )" />
 							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>
@@ -715,6 +717,7 @@ explanation of the license and how it is applied.
 							<td valign="top">
 							    <div id="cashFlowRepaymentCapacityInputDiv" style="display: none;">
 							        <mifos:decimalinput styleId="editLoanProduct.input.repaymentCapacity" property="repaymentCapacity"/>
+							        <c:out value="( ${sessionScope.loanproductactionform.minRepaymentCapacity} - ${sessionScope.loanproductactionform.maxRepaymentCapacity} )" />
 							        <mifos:mifoslabel name="product.perc" bundle="ProductDefUIResources"/></div>
 							</td>
 						</tr>
