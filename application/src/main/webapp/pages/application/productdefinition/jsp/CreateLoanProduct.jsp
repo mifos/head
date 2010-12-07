@@ -516,8 +516,7 @@ explanation of the license and how it is applied.
 													bundle="ProductDefUIResources" />
 											</fmt:param>
 										</fmt:message>:</td>
-										<td width="70%" valign="top"><mifos:select
-											property="interestTypes">
+										<td width="70%" valign="top"><mifos:select property="interestTypes">
 											<c:forEach
 												items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'InterestTypesList')}"
 												var="intType">
