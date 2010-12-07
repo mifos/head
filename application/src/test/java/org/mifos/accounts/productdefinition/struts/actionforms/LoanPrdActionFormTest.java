@@ -355,6 +355,21 @@ public class LoanPrdActionFormTest {
         Assert.assertNotNull(loanPrdActionForm.getMinRepaymentCapacity());
     }
 
+
+    @Test
+    public void shouldReturnConsistentValuesForPropertiesWhichHaveBothValuesAndStringRepresentationFunctions() {
+        String cashflowValue = "100";
+        loanPrdActionForm.setCashFlowThreshold(cashflowValue);
+        Assert.assertEquals(cashflowValue, loanPrdActionForm.getCashFlowThreshold());
+        Assert.assertEquals(100d,loanPrdActionForm.getCashFlowThresholdValue());
+
+        String emptyValue = " ";
+        loanPrdActionForm.setCashFlowThreshold(emptyValue);
+        Assert.assertEquals(emptyValue, loanPrdActionForm.getCashFlowThreshold());
+        Assert.assertEquals(null,loanPrdActionForm.getCashFlowThresholdValue());
+    }
+
+
     private class ActionMessageMatcher extends TypeSafeMatcher<ActionMessage> {
         private String errorCode;
 

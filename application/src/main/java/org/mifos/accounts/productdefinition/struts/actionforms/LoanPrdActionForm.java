@@ -1746,7 +1746,18 @@ public class LoanPrdActionForm extends BaseActionForm {
             recurAfter = "1";
             minNoInstallments = "1";
             minimumGapBetweenInstallments = 1;
+
         }
+        if((method != null) && method.equals(Methods.manage.toString())) {
+            cashFlowValidation = null;
+            cashFlowThreshold = null;
+            cashFlowThresholdValue = null;
+            repaymentCapacity = null;
+            repaymentCapacityValue = null;
+            indebtednessRatio = null;
+            indebtednessRatioValue = null;
+        }
+
         if (method != null
                 && (method.equals(Methods.preview.toString()) || method.equals(Methods.editPreview.toString()))) {
             intDedDisbursementFlag = null;
@@ -1760,6 +1771,13 @@ public class LoanPrdActionForm extends BaseActionForm {
             loanOfferingQGs = null;
             canConfigureVariableInstallments = null;
             cashFlowValidation = null;
+            cashFlowThreshold = null;
+            cashFlowThresholdValue = null;
+            repaymentCapacity = null;
+            repaymentCapacityValue = null;
+            indebtednessRatio = null;
+            indebtednessRatioValue = null;
+
         }
         logger.debug("reset method of Savings Product Action form method called ");
     }
@@ -2708,7 +2726,6 @@ public class LoanPrdActionForm extends BaseActionForm {
 
             }
         }
-
     }
 
     private void validateLoanInstallments(ActionErrors errors, String sameForAllLoans, String forByLastLoanAtRow,
@@ -2974,9 +2991,6 @@ public class LoanPrdActionForm extends BaseActionForm {
         return getDoubleValueForMoney(minimumInstallmentAmount);
     }
 
-
-
-
     private void validateVariableInstallmentPeriods(ActionErrors actionErrors, Locale locale) {
         if (canConfigureVariableInstallments()) {
             validateMinimumGapForVariableInstallments(actionErrors);
@@ -2985,12 +2999,10 @@ public class LoanPrdActionForm extends BaseActionForm {
             validateMinimumInstallmentAmountForValriableInstallments(actionErrors, locale);
         }
     }
+
     public String[] getLoanOfferingQGs() {
         return loanOfferingQGs;
     }
-
-
-
 
     private void validateMinimumInstallmentAmountForValriableInstallments(ActionErrors actionErrors, Locale locale) {
         if (StringUtils.isNotEmpty(minimumInstallmentAmount)) {
@@ -3073,7 +3085,6 @@ public class LoanPrdActionForm extends BaseActionForm {
         return getBooleanValue(cashFlowValidation);
     }
 
-
     public void setCashFlowValidation(boolean cashFlowValidation) {
         this.setCashFlowValidation(getStringValue(cashFlowValidation));
     }
@@ -3083,23 +3094,12 @@ public class LoanPrdActionForm extends BaseActionForm {
 
     }
 
-
-    public void setCashFlowThreshold(String cashFlowThreshold) {
-        this.cashFlowThreshold = cashFlowThreshold;
-    }
-
     public void setLoanOfferingQGs(String[] loanOfferingQGs) {
         this.loanOfferingQGs = loanOfferingQGs;
     }
+
     public String getCashFlowThreshold() {
         return cashFlowThreshold;
-    }
-
-    public Double getCashFlowThresholdValue() {
-        if (StringUtils.isEmpty(cashFlowThreshold)) {
-            return cashFlowThresholdValue;
-        }
-        return getDoubleValue(cashFlowThreshold);
     }
 
     public String getIndebtednessRatio() {
@@ -3114,8 +3114,19 @@ public class LoanPrdActionForm extends BaseActionForm {
         this.repaymentCapacity = repaymentCapacity;
     }
 
+    public void setCashFlowThreshold(String cashFlowThreshold) {
+        this.cashFlowThreshold = cashFlowThreshold;
+    }
+
     public void setIndebtednessRatio(String indebtednessRatio) {
         this.indebtednessRatio = indebtednessRatio;
+    }
+
+    public Double getCashFlowThresholdValue() {
+        if (StringUtils.isEmpty(cashFlowThreshold)) {
+            return cashFlowThresholdValue;
+        }
+        return getDoubleValue(cashFlowThreshold);
     }
 
     public Double getIndebtednessRatioValue() {

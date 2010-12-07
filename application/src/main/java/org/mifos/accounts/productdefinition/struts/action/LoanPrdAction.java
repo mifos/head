@@ -419,7 +419,9 @@ public class LoanPrdAction extends BaseAction {
             for (QuestionGroupReference questionGroupReference : questionGroupReferences) {
                 Integer questionGroupId = questionGroupReference.getQuestionGroupId();
                 QuestionGroupDetail questionGroupDetail = questionnaireServiceFacade.getQuestionGroupDetail(questionGroupId);
-                if (questionGroupDetail != null && questionGroupDetail.isActive()) questionGroupDetails.add(questionGroupDetail);
+                if (questionGroupDetail != null && questionGroupDetail.isActive()) {
+                    questionGroupDetails.add(questionGroupDetail);
+                }
             }
             SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SELECTEDQGLIST, questionGroupDetails, request);
         }
@@ -632,11 +634,18 @@ public class LoanPrdAction extends BaseAction {
         loanPrdActionForm.setCashFlowValidation(loanProduct.isCashFlowCheckEnabled());
         CashFlowDetail cashFlowDetail = loanProduct.getCashFlowDetail();
         if(cashFlowDetail != null) {
-            loanPrdActionForm.setCashFlowThreshold(cashFlowDetail.getCashFlowThreshold().toString());
+            Double cashFlowThreshold = cashFlowDetail.getCashFlowThreshold();
+            if(cashFlowThreshold != null) {
+                loanPrdActionForm.setCashFlowThreshold(String.valueOf(cashFlowThreshold));
+            }
             Double indebtednessRatio = cashFlowDetail.getIndebtednessRatio();
-            if (indebtednessRatio != null) loanPrdActionForm.setIndebtednessRatio(indebtednessRatio.toString());
+            if (indebtednessRatio != null) {
+                loanPrdActionForm.setIndebtednessRatio(String.valueOf(indebtednessRatio));
+            }
             Double repaymentCapacity = cashFlowDetail.getRepaymentCapacity();
-            if (repaymentCapacity != null) loanPrdActionForm.setRepaymentCapacity(repaymentCapacity.toString());
+            if (repaymentCapacity != null) {
+                loanPrdActionForm.setRepaymentCapacity(String.valueOf(repaymentCapacity));
+            }
         }
 
         if (loanProduct.isLoanAmountTypeSameForAllLoan()) {
