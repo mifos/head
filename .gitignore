@@ -8,3 +8,4 @@ application/src/main/sql/latest-schema_last.sql
 *.iml
 *.xmind
 docs/
+.resources
