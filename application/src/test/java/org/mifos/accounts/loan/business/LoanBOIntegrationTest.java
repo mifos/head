@@ -1743,38 +1743,38 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipal());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "93.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "93.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))) {
                 // periodic fee applies every 2nd week so no payments in even
                 // weeks
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("3"))) {
                 // pay periodic fee in 1st, 3rd, and 5th week
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("4"))) {
                 // pay periodic fee in 1st, 3rd, and 5th week
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("5"))) {
                 // pay periodic fee in 1st, 3rd, and 5th week
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("6"))) {
                 // pay periodic fee in 1st, 3rd, and 5th week
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             }
         }
@@ -1787,7 +1787,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("1"))) {
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipal());
                 Assert.assertEquals(new Money(getCurrency(), "10.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "93.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "93.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
                 Assert.assertEquals(new Money(getCurrency(), "2.0"), loanScheduleEntity.getMiscPenaltyDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("2"))) {
@@ -1795,28 +1795,28 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 // due
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("3"))) {
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("4"))) {
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("5"))) {
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             } else if (loanScheduleEntity.getInstallmentId().equals(Short.valueOf("6"))) {
                 // pay periodic fee in 1st, 3rd, and 5th week
                 Assert.assertEquals(new Money(getCurrency(), "50.0"), loanScheduleEntity.getPrincipalDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getMiscFeeDue());
-                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeeDue());
+                Assert.assertEquals(new Money(getCurrency(), "66.0"), loanScheduleEntity.getTotalFeesDue());
                 Assert.assertEquals(new Money(getCurrency(), "0.0"), loanScheduleEntity.getInterestDue());
             }
         }
@@ -4494,20 +4494,20 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = saveAndFetch(accountBO);
         Assert.assertEquals(new Money(getCurrency(), "212.0"), ((LoanBO) accountBO).getTotalPaymentDue());
         LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
-        Assert.assertEquals(new Money(getCurrency(), "100.0"), nextInstallment.getTotalFeeDue());
+        Assert.assertEquals(new Money(getCurrency(), "100.0"), nextInstallment.getTotalFeesDue());
         IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "10"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
 
         accountBO = saveAndFetch(accountBO);
         nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
-        Assert.assertEquals(new Money(getCurrency(), "90"), nextInstallment.getTotalFeeDue());
+        Assert.assertEquals(new Money(getCurrency(), "90"), nextInstallment.getTotalFeesDue());
         IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "30"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
                 .currentTimeMillis()), new Date(System.currentTimeMillis())));
         accountBO = saveAndFetch(accountBO);
         nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
-        Assert.assertEquals(new Money(getCurrency(), "60"), nextInstallment.getTotalFeeDue());
+        Assert.assertEquals(new Money(getCurrency(), "60"), nextInstallment.getTotalFeesDue());
     }
 
     @Test
@@ -4539,7 +4539,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = saveAndFetch(accountBO);
         Assert.assertEquals(new Money(getCurrency(), "212.0"), ((LoanBO) accountBO).getTotalPaymentDue());
         LoanScheduleEntity nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
-        Assert.assertEquals(new Money(getCurrency(), "100.0"), nextInstallment.getTotalFeeDue());
+        Assert.assertEquals(new Money(getCurrency(), "100.0"), nextInstallment.getTotalFeesDue());
 
         IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
                 "10"), accountBO.getCustomer(), accountBO.getPersonnel(), "432423", (short) 1, new Date(System
@@ -4547,7 +4547,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = saveAndFetch(accountBO);
         nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
-        Assert.assertEquals(new Money(getCurrency(), "90"), nextInstallment.getTotalFeeDue());
+        Assert.assertEquals(new Money(getCurrency(), "90"), nextInstallment.getTotalFeesDue());
         Assert.assertEquals(new Money(getCurrency(), "202.0"), ((LoanBO) accountBO).getTotalPaymentDue());
 
         IntegrationTestObjectMother.applyAccountPayment(accountBO, TestObjectFactory.getLoanAccountPaymentData(null, new Money(getCurrency(),
@@ -4556,7 +4556,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
         accountBO = saveAndFetch(accountBO);
         nextInstallment = (LoanScheduleEntity) ((LoanBO) accountBO).getDetailsOfNextInstallment();
-        Assert.assertEquals(zeroMoney, nextInstallment.getTotalFeeDue());
+        Assert.assertEquals(zeroMoney, nextInstallment.getTotalFeesDue());
 
     }
 
@@ -5983,7 +5983,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void checkTotalDue(final String totalFeeDue, final LoanScheduleEntity entity) {
-        Assert.assertEquals(new Money(entity.getTotalFeeDue().getCurrency(), totalFeeDue), entity.getTotalFeeDue());
+        Assert.assertEquals(new Money(entity.getTotalFeesDue().getCurrency(), totalFeeDue), entity.getTotalFeesDue());
     }
 
     private void checkLoanScheduleEntity(final Date date, final String principal, final String interest,
@@ -6006,7 +6006,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private void checkFees(final Map<String, String> expectedFess, final String totalFeeDue,
             final LoanScheduleEntity entity) {
         checkFees(expectedFess, entity, false);
-        Assert.assertEquals(new Money(entity.getTotalFeeDue().getCurrency(), totalFeeDue), entity.getTotalFeeDue());
+        Assert.assertEquals(new Money(entity.getTotalFeesDue().getCurrency(), totalFeeDue), entity.getTotalFeesDue());
     }
 
     private void checkPrincipalAndInterest(final String principal, final String interest,

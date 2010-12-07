@@ -86,7 +86,7 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
     /**
      * Most callers will want to call {@link #isPaid()} instead.
      */
-    Short getPaymentStatus() {
+    public Short getPaymentStatus() {
         return paymentStatus;
     }
 
@@ -114,7 +114,7 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
         return this.getInstallmentId().compareTo(obj.getInstallmentId());
     }
 
-    protected MifosCurrency getCurrency() {
+    public MifosCurrency getCurrency() {
         return getAccount().getCurrency();
     }
 

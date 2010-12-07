@@ -1532,7 +1532,7 @@ public class LoanBO extends AccountBO {
         for (AccountActionDateEntity accountActionDate : getAccountActionDatesSortedByInstallmentId()) {
             if (isInstallmentUnpaid(accountActionDate) && balance.isGreaterThanZero()) {
                 LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-                balance = loanScheduleEntity.payComponents(balance);
+                balance = loanScheduleEntity.payComponents(balance, paymentData.getTransactionDate());
                 updateLoanSummaryAndPerformanceHistory(paymentData, accountPaymentEntity, loanScheduleEntity);
             }
         }
@@ -1546,7 +1546,6 @@ public class LoanBO extends AccountBO {
 
     private void updateLoanSummaryAndPerformanceHistory(PaymentData paymentData, AccountPaymentEntity accountPayment,
                                                  LoanScheduleEntity loanScheduleEntity) {
-        loanScheduleEntity.setPaymentDetails(paymentData.getTransactionDateAsSQLDate());
         accountPayment.addAccountTrxn(new LoanTrxnDetailEntity(accountPayment, loanScheduleEntity,
                 paymentData.getPersonnel(), paymentData.getTransactionDate(), AccountActionTypes.LOAN_REPAYMENT,
                 AccountConstants.PAYMENT_RCVD, getLoanPersistence()));
@@ -3708,7 +3707,7 @@ public class LoanBO extends AccountBO {
         totals.runningPayments = totals.runningPayments.add(currentInstallment.getTotalPaymentDue());
 
         totals.runningPrincipal = totals.runningPrincipal.add(currentInstallment.getPrincipalDue());
-        totals.runningAccountFees = totals.runningAccountFees.add(currentInstallment.getTotalFeeDue());
+        totals.runningAccountFees = totals.runningAccountFees.add(currentInstallment.getTotalFeesDue());
         totals.runningMiscFees = totals.runningMiscFees.add(currentInstallment.getMiscFeeDue());
         totals.runningPenalties = totals.runningPenalties.add(currentInstallment.getPenaltyDue());
     }
@@ -3825,7 +3824,7 @@ public class LoanBO extends AccountBO {
         for (Object element : installmentsToBeRounded) {
             LoanScheduleEntity currentInstallment = (LoanScheduleEntity) element;
             exactTotalInterestDue = exactTotalInterestDue.add(currentInstallment.getInterestDue());
-            exactTotalAccountFeesDue = exactTotalAccountFeesDue.add(currentInstallment.getTotalFeeDue());
+            exactTotalAccountFeesDue = exactTotalAccountFeesDue.add(currentInstallment.getTotalFeesDue());
             exactTotalMiscFeesDue = exactTotalMiscFeesDue.add(currentInstallment.getMiscFeeDue());
             exactTotalMiscPenaltiesDue = exactTotalMiscPenaltiesDue.add(currentInstallment.getMiscPenaltyDue());
         }
@@ -3859,7 +3858,7 @@ public class LoanBO extends AccountBO {
         Money totalFees = new Money(getCurrency(), "0");
         for (Object element : installments) {
             LoanScheduleEntity currentInstallment = (LoanScheduleEntity) element;
-            totalFees = totalFees.add(currentInstallment.getTotalFeeDue());
+            totalFees = totalFees.add(currentInstallment.getTotalFeesDue());
         }
         return totalFees;
     }

@@ -372,7 +372,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private void verifyScheduleAndPaymentDetail(LoanScheduleEntity schedule, PaymentDetail payment) {
         Assert.assertEquals(schedule.getPrincipal(), payment.getPrincipal());
         Assert.assertEquals(schedule.getInterest(), payment.getInterest());
-        Assert.assertEquals(schedule.getTotalFeeDue(), payment.getFee());
+        Assert.assertEquals(schedule.getTotalFeesDue(), payment.getFee());
     }
 
     private void verifyReversedLoanSchedules(LoanScheduleEntity[] schedules, Results expectedResults) {

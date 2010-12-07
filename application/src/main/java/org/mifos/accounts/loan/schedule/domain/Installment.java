@@ -39,7 +39,8 @@ public class Installment implements Comparable<Installment> {
     private BigDecimal effectiveInterest;
     private InstallmentPayments payments;
 
-    public Installment(Integer id, Date dueDate, BigDecimal principal, BigDecimal interest, BigDecimal extraInterest, BigDecimal fees, BigDecimal miscFees, BigDecimal penalty, BigDecimal miscPenalty) {
+    public Installment(Integer id, Date dueDate, BigDecimal principal, BigDecimal interest, BigDecimal extraInterest,
+                       BigDecimal fees, BigDecimal miscFees, BigDecimal penalty, BigDecimal miscPenalty) {
         this.id = id;
         this.dueDate = dueDate;
         this.miscPenalty = miscPenalty;

@@ -37,6 +37,7 @@ import org.mifos.accounts.fund.persistence.FundDaoHibernate;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.fund.servicefacade.WebTierFundServiceFacade;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.ScheduleMapper;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidator;
 import org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl;
@@ -183,6 +184,7 @@ public class DependencyInjectedServiceLocator {
 
     // rules
     private static FiscalCalendarRules fiscalCalendarRules;
+    private static ScheduleMapper scheduleMapper;
 
     public static CollectionSheetService locateCollectionSheetService() {
 
@@ -223,6 +225,13 @@ public class DependencyInjectedServiceLocator {
             scheduleCalculator = new ScheduleCalculator();
         }
         return scheduleCalculator;
+    }
+
+    public static ScheduleMapper locateScheduleMapper() {
+        if (scheduleMapper == null) {
+            scheduleMapper = new ScheduleMapper();
+        }
+        return scheduleMapper;
     }
 
     public static CollectionSheetServiceFacade locateCollectionSheetServiceFacade() {
@@ -289,7 +298,7 @@ public class DependencyInjectedServiceLocator {
     public static LoanServiceFacade locateLoanServiceFacade() {
         if (loanServiceFacade == null) {
             loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
-                    fundDao, loanDao, locateInstallmentsValidator(), new ScheduleCalculatorAdaptor(locateScheduleCalculator()),
+                    fundDao, loanDao, locateInstallmentsValidator(), locateScheduleCalculatorAdaptor(),
                     locateLoanBusinessService(), locateHolidayServiceFacade(), locateLoanPrdBusinessService());
         }
         return loanServiceFacade;
@@ -333,7 +342,7 @@ public class DependencyInjectedServiceLocator {
 
     public static ScheduleCalculatorAdaptor locateScheduleCalculatorAdaptor() {
         if (scheduleCalculatorAdaptor == null) {
-            scheduleCalculatorAdaptor = new ScheduleCalculatorAdaptor(locateScheduleCalculator());
+            scheduleCalculatorAdaptor = new ScheduleCalculatorAdaptor(locateScheduleCalculator(), locateScheduleMapper());
         }
         return scheduleCalculatorAdaptor;
     }

@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.util.helpers;
 
+import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -131,7 +132,4 @@ public class PaymentData {
         this.comment = comment;
     }
 
-    public java.sql.Date getTransactionDateAsSQLDate() {
-        return new java.sql.Date(getTransactionDate().getTime());
-    }
 }

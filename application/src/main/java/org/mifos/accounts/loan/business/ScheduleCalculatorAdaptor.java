@@ -23,34 +23,35 @@ import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentPayment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.framework.util.helpers.Money;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ScheduleCalculatorAdaptor {
 
     private ScheduleCalculator scheduleCalculator;
+    private ScheduleMapper scheduleMapper;
 
-    public ScheduleCalculatorAdaptor(ScheduleCalculator scheduleCalculator) {
+    public ScheduleCalculatorAdaptor(ScheduleCalculator scheduleCalculator, ScheduleMapper scheduleMapper) {
         this.scheduleCalculator = scheduleCalculator;
+        this.scheduleMapper = scheduleMapper;
     }
 
-    public void applyPayment(LoanBO loanBO, Money money, Date date) {
-
+    public void applyPayment(LoanBO loanBO, Money amount, Date paymentDate) {
+        Schedule schedule = scheduleMapper.mapToSchedule(loanBO.getLoanScheduleEntities(), loanBO.getDisbursementDate(),
+                getDailyInterest(loanBO.getInterestRate()), loanBO.getLoanAmount().getAmount());
+        scheduleCalculator.applyPayment(schedule, amount.getAmount(), paymentDate);
+        scheduleMapper.populatePaymentDetails(schedule, loanBO);
     }
 
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {
         if (loan.isDecliningBalanceInterestRecalculation()) {
-            Schedule schedule = mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
+            Schedule schedule = scheduleMapper.mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
                     loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
             scheduleCalculator.computeExtraInterest(schedule, asOfDate);
-            populateExtraInterestInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
+            scheduleMapper.populateExtraInterestInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
         }
     }
 
@@ -58,47 +59,7 @@ public class ScheduleCalculatorAdaptor {
         return annualInterest / (AccountingRules.getNumberOfInterestDays() * 100d);
     }
 
-    Schedule mapToSchedule(List<LoanScheduleEntity> loanScheduleEntities, Date disbursementDate, Double dailyInterestRate, BigDecimal loanAmount) {
-        return new Schedule(disbursementDate, dailyInterestRate, loanAmount, mapToInstallments(loanScheduleEntities));
-    }
-
-    private List<Installment> mapToInstallments(List<LoanScheduleEntity> loanScheduleEntities) {
-        List<Installment> installments = new ArrayList<Installment>();
-        for (LoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
-            installments.add(mapToInstallment(loanScheduleEntity));
-        }
-        return installments;
-    }
-
-    private Installment mapToInstallment(LoanScheduleEntity loanScheduleEntity) {
-        Installment installment = new Installment(loanScheduleEntity.getInstallmentId().intValue(),
-                loanScheduleEntity.getActionDate(), loanScheduleEntity.getPrincipal().getAmount(),
-                loanScheduleEntity.getInterest().getAmount(), loanScheduleEntity.getExtraInterest().getAmount(),
-                loanScheduleEntity.getTotalFees().getAmount(), loanScheduleEntity.getMiscFee().getAmount(),
-                loanScheduleEntity.getPenalty().getAmount(), loanScheduleEntity.getMiscPenalty().getAmount());
-        installment.addPayment(getInstallmentPayment(loanScheduleEntity));
-        return installment;
-    }
-
-    private InstallmentPayment getInstallmentPayment(LoanScheduleEntity loanScheduleEntity) {
-        InstallmentPayment installmentPayment = new InstallmentPayment();
-        Date paymentDate = loanScheduleEntity.getPaymentDate() == null ? new Date(0) : loanScheduleEntity.getPaymentDate();
-        installmentPayment.setPaidDate(paymentDate);
-        installmentPayment.setPrincipalPaid(loanScheduleEntity.getPrincipalPaid().getAmount());
-        installmentPayment.setInterestPaid(loanScheduleEntity.getInterestPaid().getAmount());
-        installmentPayment.setExtraInterestPaid(loanScheduleEntity.getExtraInterestPaid().getAmount());
-        installmentPayment.setFeesPaid(loanScheduleEntity.getTotalFeesPaid().getAmount());
-        installmentPayment.setMiscFeesPaid(loanScheduleEntity.getMiscFeePaid().getAmount());
-        installmentPayment.setPenaltyPaid(loanScheduleEntity.getPenaltyPaid().getAmount());
-        installmentPayment.setMiscPenaltyPaid(loanScheduleEntity.getMiscPenaltyPaid().getAmount());
-        return installmentPayment;
-    }
-
     void populateExtraInterestInLoanScheduleEntities(Schedule schedule, Map<Integer, LoanScheduleEntity> loanScheduleEntities) {
-        for (Installment installment : schedule.getInstallments().values()) {
-            LoanScheduleEntity loanScheduleEntity = loanScheduleEntities.get(installment.getId());
-            MifosCurrency mifosCurrency = loanScheduleEntity.getPrincipal().getCurrency();
-            loanScheduleEntity.setExtraInterest(new Money(mifosCurrency, installment.getExtraInterest()));
-        }
+        scheduleMapper.populateExtraInterestInLoanScheduleEntities(schedule, loanScheduleEntities);
     }
 }

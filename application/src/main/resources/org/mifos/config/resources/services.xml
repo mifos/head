@@ -178,6 +178,7 @@
 
     <bean name="scheduleCalculatorAdaptor" class="org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor">
         <constructor-arg ref="scheduleCalculator"/>
+        <constructor-arg ref="scheduleMapper"/>
     </bean>
 
     <bean name="accountService" class="org.mifos.accounts.api.StandardAccountService">
@@ -193,6 +194,8 @@
     <bean name="transactionHelper" class="org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil"/>
 
     <bean name="scheduleCalculator" class="org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator"/>
+
+    <bean name="scheduleMapper" class="org.mifos.accounts.loan.business.ScheduleMapper"/>
 
     <bean name="accountPersistence" class="org.mifos.accounts.persistence.AccountPersistence"/>
 

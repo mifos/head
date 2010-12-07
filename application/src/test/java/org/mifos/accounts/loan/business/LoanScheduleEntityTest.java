@@ -24,21 +24,23 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanScheduleEntityTest {
     private LoanScheduleEntity loanScheduleEntity;
     private MifosCurrency rupeeCurrency;
+    private Date paymentDate;
 
     @Mock
     private AccountBO accountBO;
@@ -47,6 +49,7 @@ public class LoanScheduleEntityTest {
     public void setUp() {
         loanScheduleEntity = new LoanScheduleEntity();
         rupeeCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        paymentDate = TestUtils.getDate(12, 1, 2010);
     }
 
     @Test
@@ -73,7 +76,7 @@ public class LoanScheduleEntityTest {
         when(accountBO.getCurrency()).thenReturn(rupeeCurrency);
 
         Money paymentAmount = makeMoney(1000d);
-        Money balance = loanScheduleEntity.payComponents(paymentAmount);
+        Money balance = loanScheduleEntity.payComponents(paymentAmount, paymentDate);
         PaymentAllocation paymentAllocation = loanScheduleEntity.getPaymentAllocation();
 
         assertThat(paymentAllocation.getPenaltyPaid().getAmount().doubleValue(), is(0d));
@@ -88,7 +91,7 @@ public class LoanScheduleEntityTest {
         assertThat(paymentAllocation.getFeePaid(fee5.getAccountFeesActionDetailId()).getAmount().doubleValue(), is(1d));
         assertThat(paymentAllocation.getFeePaid(fee6.getAccountFeesActionDetailId()).getAmount().doubleValue(), is(1d));
         assertThat(balance.getAmount().doubleValue(), is(819d));
-        verify(accountBO).getCurrency();
+        verify(accountBO, atLeastOnce()).getCurrency();
     }
 
     @Test
@@ -103,20 +106,29 @@ public class LoanScheduleEntityTest {
         loanScheduleEntity.setMiscFeePaid(makeMoney(0));
         loanScheduleEntity.setMiscPenalty(makeMoney(0));
         loanScheduleEntity.setMiscPenaltyPaid(makeMoney(0));
-
-
         loanScheduleEntity.setAccount(accountBO);
         when(accountBO.getCurrency()).thenReturn(rupeeCurrency);
 
         Money paymentAmount = makeMoney(15d);
-        Money balance = loanScheduleEntity.payComponents(paymentAmount);
+        Money balance = loanScheduleEntity.payComponents(paymentAmount, paymentDate);
         PaymentAllocation paymentAllocation = loanScheduleEntity.getPaymentAllocation();
 
         assertThat(paymentAllocation.getPenaltyPaid().getAmount().doubleValue(), is(10d));
         assertThat(paymentAllocation.getInterestPaid().getAmount().doubleValue(), is(5d));
         assertThat(paymentAllocation.getPrincipalPaid().getAmount().doubleValue(), is(0d));
         assertThat(balance.getAmount().doubleValue(), is(0d));
-        verify(accountBO).getCurrency();
+        verify(accountBO, atLeastOnce()).getCurrency();
+    }
+
+    @Test
+    public void shouldDetermineWhetherPaymentApplied() {
+        loanScheduleEntity.setPrincipalPaid(makeMoney(0));
+        loanScheduleEntity.setInterestPaid(makeMoney(0));
+        loanScheduleEntity.setPenaltyPaid(makeMoney(0));
+        loanScheduleEntity.setMiscFeePaid(makeMoney(0));
+        loanScheduleEntity.setMiscPenaltyPaid(makeMoney(0));
+        loanScheduleEntity.setExtraInterestPaid(makeMoney(10));
+        assertThat(loanScheduleEntity.isPaymentApplied(), is(true));
     }
 
     private LoanFeeScheduleEntity getFee(int id, double amount, double amountPaid) {

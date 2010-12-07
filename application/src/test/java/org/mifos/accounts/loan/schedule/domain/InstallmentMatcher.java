@@ -21,7 +21,6 @@ package org.mifos.accounts.loan.schedule.domain;
 
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
-import org.mifos.accounts.loan.schedule.domain.Installment;
 
 import static org.junit.Assert.assertEquals;
 

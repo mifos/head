@@ -50,7 +50,9 @@ import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
+import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -355,5 +357,9 @@ public class TestUtils {
 
     public static Date getDate(int date, int month, int year) {
         return new DateMidnight(year,month,date).toDate();
+    }
+
+    public static java.sql.Date getSqlDate(int date, int month, int year) {
+        return new java.sql.Date(getDate(date, month, year).getTime());
     }
 }
