@@ -62,6 +62,7 @@ public class DataSetUpgradeUtil {
     private static final String DATA_DIRECTORY_OPTION_NAME = "a";
     private static final String USER_OPTION_NAME = "u";
     private static final String PASSWORD_OPTION_NAME = "p";
+    private static final String PORT_OPTION_NAME = "P";
     private static final String HELP_OPTION_NAME = "h";
     private static final String DATABASE_OPTION_NAME = "d";
     private static final String SCHEMA_FILE_OPTION_NAME = "s";
@@ -75,6 +76,7 @@ public class DataSetUpgradeUtil {
     private Option databaseOption;
     private Option allFilesInDirecoryOption;
     private Option schemaFileOption;
+    private Option portOption;
 
     // Variables for data from command line
     String dataSetName;
@@ -83,6 +85,7 @@ public class DataSetUpgradeUtil {
     String password;
     String dataSetDirectoryName;
     String schemaFileName = "latest-schema_last.sql";
+    String port = "3306";
 
     DbUnitUtilities dbUnitUtilities;
 
@@ -168,8 +171,7 @@ public class DataSetUpgradeUtil {
 
         try {
             // TODO use same db cxn info that Mifos uses! (local.properties)
-            jdbcConnection = DriverManager.getConnection(
-                    "jdbc:mysql://localhost/" + databaseName + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);
+            jdbcConnection = DriverManager.getConnection(getUrl(databaseName, port, params), user, password);
             jdbcConnection.setAutoCommit(false);
             resetDatabase(databaseName, jdbcConnection);
             SqlExecutor.execute(SqlResource.getInstance().getAsStream(schemaFileName), jdbcConnection);
@@ -200,12 +202,17 @@ public class DataSetUpgradeUtil {
                                     "classpath:/org/mifos/config/resources/dataSourceContext.xml");
     }
 
+    private static final String params = "?sessionVariables=FOREIGN_KEY_CHECKS=0";
+
+    private String getUrl(String databaseName, String port, String params) {
+        return String.format("jdbc:mysql://localhost:%s/%s%s", port, databaseName, params);
+    }
+
     @SuppressWarnings("PMD.CloseResource")
     // Rationale: jdbcConnection is closed.
     private void dump(String fileName) throws ClassNotFoundException, SQLException, DatabaseUnitException, IOException {
         System.out.println("Dumping :" + fileName);
-        Connection jdbcConnection = DriverManager.getConnection("jdbc:mysql://localhost/" + databaseName
-                + "?sessionVariables=FOREIGN_KEY_CHECKS=0", user, password);
+        Connection jdbcConnection = DriverManager.getConnection(getUrl(databaseName, port, params), user, password);
 
         String fileEnding = fileName.substring(fileName.length()-3, fileName.length());
 
@@ -261,6 +268,12 @@ public class DataSetUpgradeUtil {
         .withDescription( "schema file to upgrade from (default=" + schemaFileName + ")")
         .create( SCHEMA_FILE_OPTION_NAME );
 
+        portOption = OptionBuilder.withArgName( "port" )
+        .withLongOpt("port")
+        .hasArg()
+        .withDescription( "mysql server port (default=" + port + ")")
+        .create( PORT_OPTION_NAME );
+
         helpOption = OptionBuilder
         .withLongOpt("help")
         .withDescription( "display help" )
@@ -274,6 +287,7 @@ public class DataSetUpgradeUtil {
         options.addOption(databaseOption);
         options.addOption(allFilesInDirecoryOption);
         options.addOption(schemaFileOption);
+        options.addOption(portOption);
     }
 
     public void parseOptions(String[] args) throws URISyntaxException {
@@ -316,6 +330,9 @@ public class DataSetUpgradeUtil {
                 if (SqlResource.getInstance().getURI(schemaFileName) == null) {
                     fail("Unable to find schema file: " + schemaFileName);
                 }
+            }
+            if( line.hasOption( PORT_OPTION_NAME ) ) {
+                port = line.getOptionValue(PORT_OPTION_NAME);
             }
         } catch( ParseException exp ) {
             fail( "Parsing failed.  Reason: " + exp.getMessage() );
