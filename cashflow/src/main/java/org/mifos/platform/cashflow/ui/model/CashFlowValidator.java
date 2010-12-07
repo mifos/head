@@ -27,6 +27,7 @@ import org.springframework.binding.message.MessageResolver;
 import org.springframework.binding.validation.ValidationContext;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import static java.text.MessageFormat.format;
 
@@ -70,7 +71,7 @@ public class CashFlowValidator {
             BigDecimal totalCapital = cashFlowForm.getTotalCapital();
             BigDecimal totalLiability = cashFlowForm.getTotalLiability();
             Double calculatedIndebtednessRatio = totalLiability.add(loanAmount).multiply(CashFlowConstants.HUNDRED).
-                    divide(totalCapital).doubleValue();
+                    divide(totalCapital,2,RoundingMode.HALF_EVEN).doubleValue();
             if (calculatedIndebtednessRatio >= indebtednessRatio) {
                 String message = format("Indebtedness rate of the client is {0} which is greater than the allowable value of {1}",
                         calculatedIndebtednessRatio, indebtednessRatio);

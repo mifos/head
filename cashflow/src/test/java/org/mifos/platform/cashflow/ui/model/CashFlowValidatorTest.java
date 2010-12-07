@@ -114,7 +114,20 @@ public class CashFlowValidatorTest {
         verify(validationContext).getMessageContext();
         verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.INDEBTEDNESS_RATIO_MORE_THAN_ALLOWED)));
     }
-    
+
+
+    @Test
+    public void indebtednessRateCalicualtionShouldNotThrowAnyExceptionsOnUnterminatedDecimalPlaceCaliculation() {
+        when(validationContext.getMessageContext()).thenReturn(messageContext);
+        CashFlowDetail cashFlowDetail = new CashFlowDetail(EMPTY_LIST);
+        cashFlowDetail.setTotalCapital(new BigDecimal(33d));
+        cashFlowDetail.setTotalLiability(new BigDecimal(5d));
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(1000d), 1000d);
+        cashFlowValidator.validateCaptureCashFlow(cashFlowForm, validationContext);
+        verify(validationContext).getMessageContext();
+        verify(messageContext).addMessage(argThat(new MessageMatcher(CashFlowConstants.INDEBTEDNESS_RATIO_MORE_THAN_ALLOWED)));
+    }
+
     @Test
     public void shouldNotValidateForCalculatedIndebtednessRateLessThanIndebtednessRate() {
         when(validationContext.getMessageContext()).thenReturn(messageContext);
