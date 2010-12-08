@@ -63,17 +63,13 @@ public final class MifosCurrency extends AbstractEntity {
     private Short currencyId;
 
     /** English multiple-word descriptive name. */
-    @Access(AccessType.FIELD)
     @Column(name = "CURRENCY_NAME")
     private String currencyName;
 
-    @Access(AccessType.FIELD)
     @Column(name = "ROUNDING_AMOUNT")
     private BigDecimal roundingAmount;
 
     /** ISO 4217 currency code. */
-
-    @Access(AccessType.FIELD)
     @Column(name = "CURRENCY_CODE")
     private String currencyCode;
 
