@@ -95,6 +95,27 @@ public class LoanBusinessServiceTest {
         verify(loanBO).copyInstallmentSchedule(installments);
         verify(loanBO).toRepaymentScheduleDto(locale);
     }
+    
+    @Test
+    public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabledAndInstallmentsArePassed() {
+        RepaymentScheduleInstallment installment1 =
+                getRepaymentScheduleInstallment("01-Sep-2010", 1, "94.4", "4.6", "1", "75");
+        RepaymentScheduleInstallment installment2 =
+                getRepaymentScheduleInstallment("08-Sep-2010", 2, "94.8", "4.2", "1", "100");
+        RepaymentScheduleInstallment installment3 =
+                getRepaymentScheduleInstallment("15-Sep-2010", 3, "95.3", "3.7", "1", "100");
+        LoanAccountActionForm loanAccountActionForm = mock(LoanAccountActionForm.class);
+        List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
+        when(loanAccountActionForm.getLoanAmount()).thenReturn("1000");
+        when(loanAccountActionForm.getLoanAmountValue()).thenReturn(new Money(rupee, "1000"));
+        when(loanAccountActionForm.getInterestRate()).thenReturn("24");
+        when(loanAccountActionForm.isVariableInstallmentsAllowed()).thenReturn(true);
+        loanBusinessService.
+                applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
+                        loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
+                loanAccountActionForm.getInterestDoubleValue()), installments);
+        verify(loanBO).copyInstallmentSchedule(installments);
+    }
 
     @Test
     public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfInterestTypeIsDecliningPrincipalBalance() {

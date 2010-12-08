@@ -182,7 +182,7 @@ public class StandardAccountService implements AccountService {
             loanBusinessService.adjustDatesForVariableInstallments(variableInstallmentsAllowed, originalInstallments,
                     oldDisbursementDate, newDisbursementDate, loan.getOfficeId());
             loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(newDisbursementDate,
-                    loan, variableInstallmentsAllowed, amount, interestRate), locale);
+                    loan, variableInstallmentsAllowed, amount, interestRate), originalInstallments);
         }
         StaticHibernateUtil.commitTransaction();
     }

@@ -254,12 +254,7 @@ public class LoanBusinessService implements BusinessService {
     public List<RepaymentScheduleInstallment> applyDailyInterestRatesWhereApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, Locale locale) {
         LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
         List<RepaymentScheduleInstallment> installments = loanBO.toRepaymentScheduleDto(locale);
-        if (dailyInterestRatesApplicable(loanScheduleGenerationDto, loanBO)) {
-            loanScheduleGenerationDto.setInstallments(installments);
-            applyDailyInterestRates(loanScheduleGenerationDto);
-            loanBO.copyInstallmentSchedule(installments);
-        }
-        return installments;
+        return applyDailyInterestRatesWhereApplicable(loanScheduleGenerationDto, installments);
     }
 
     private boolean dailyInterestRatesApplicable(LoanScheduleGenerationDto loanScheduleGenerationDto, LoanBO loanBO) {
@@ -320,5 +315,17 @@ public class LoanBusinessService implements BusinessService {
         if (variableInstallmentsAllowed) {
             adjustInstallmentGapsPostDisbursal(originalInstallments, oldDisbursementDate, newDisbursementDate, officeId);
         }
+    }
+
+
+    public List<RepaymentScheduleInstallment> applyDailyInterestRatesWhereApplicable(
+            LoanScheduleGenerationDto loanScheduleGenerationDto, List<RepaymentScheduleInstallment> installments) {
+        LoanBO loanBO = loanScheduleGenerationDto.getLoanBO();
+        if (dailyInterestRatesApplicable(loanScheduleGenerationDto, loanBO)) {
+            loanScheduleGenerationDto.setInstallments(installments);
+            applyDailyInterestRates(loanScheduleGenerationDto);
+            loanBO.copyInstallmentSchedule(installments);
+        }
+        return installments;
     }
 }
