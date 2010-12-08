@@ -23,6 +23,7 @@ package org.mifos.accounts.loan.business;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -470,25 +471,42 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return getInterestDue().add(getExtraInterestDue());
     }
 
-    private Money payMiscPenalty(final Money amount) {
+    private Money payMiscPenalty(final Money amount, boolean updateMiscPenaltyPaid) {
         Money payable = min(amount, getMiscPenaltyDue());
+        allocateMiscPenalty(payable, updateMiscPenaltyPaid);
+        return amount.subtract(payable);
+    }
+
+    private void allocateMiscPenalty(Money payable, boolean updateMiscPenaltyPaid) {
         paymentAllocation.allocateForMiscPenalty(payable);
-        miscPenaltyPaid = miscPenaltyPaid.add(payable);
-        return amount.subtract(payable);
+        miscPenaltyPaid = updateMiscPenaltyPaid ? miscPenaltyPaid.add(payable) : payable;
     }
 
-    private Money payPenalty(final Money amount) {
+    private Money payPenalty(final Money amount, boolean updatePenaltyPaid) {
         Money payable = min(amount, (getPenalty().subtract(getPenaltyPaid())));
-        paymentAllocation.allocateForPenalty(payable);
-        penaltyPaid = penaltyPaid.add(payable);
+        allocatePenalty(payable, updatePenaltyPaid);
         return amount.subtract(payable);
     }
 
-    private Money payMiscFees(final Money amount) {
+    private void allocatePenalty(Money payable, boolean updatePenaltyPaid) {
+        paymentAllocation.allocateForPenalty(payable);
+        penaltyPaid = updatePenaltyPaid ? penaltyPaid.add(payable) : payable;
+    }
+
+    private Money payMiscFees(final Money amount, boolean updateMiscFeePaid) {
         Money payable = min(amount, getMiscFeeDue());
-        paymentAllocation.allocateForMiscFees(payable);
-        miscFeePaid = miscFeePaid.add(payable);
+        allocateMiscFees(payable, updateMiscFeePaid);
         return amount.subtract(payable);
+    }
+
+    private void allocateMiscFees(Money payable, boolean updateMiscFeePaid) {
+        paymentAllocation.allocateForMiscFees(payable);
+        miscFeePaid = updateMiscFeePaid ? miscFeePaid.add(payable) : payable;
+    }
+
+    private void allocateExtraInterest(Money payable) {
+        paymentAllocation.allocateForExtraInterest(payable);
+        extraInterestPaid = payable;
     }
 
     private Money payFees(final Money amount) {
@@ -502,31 +520,55 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return balance;
     }
 
-    private Money payInterest(final Money amount) {
+    private Money payInterest(final Money amount, boolean updateInterestPaid) {
         Money payable = min(amount, getInterestDue());
-        paymentAllocation.allocateForInterest(payable);
-        interestPaid = interestPaid.add(payable);
+        allocateInterest(payable, updateInterestPaid);
         return amount.subtract(payable);
     }
 
-    private Money payPrincipal(final Money amount) {
+    private void allocateInterest(Money payable, boolean updateInterestPaid) {
+        paymentAllocation.allocateForInterest(payable);
+        interestPaid = updateInterestPaid ? interestPaid.add(payable) : payable;
+    }
+
+    private Money payPrincipal(final Money amount, boolean updatePrincipalPaid) {
         Money payable = min(amount, getPrincipalDue());
-        paymentAllocation.allocateForPrincipal(payable);
-        principalPaid = principalPaid.add(payable);
+        allocatePrincipal(payable, updatePrincipalPaid);
         return amount.subtract(payable);
+    }
+
+    private void allocatePrincipal(Money payable, boolean updatePrincipalPaid) {
+        paymentAllocation.allocateForPrincipal(payable);
+        principalPaid = updatePrincipalPaid ? principalPaid.add(payable) : payable;
     }
 
     public Money payComponents(Money paymentAmount, Date paymentDate) {
-        paymentAllocation = new PaymentAllocation(paymentAmount.getCurrency());
+        initPaymentAllocation(paymentAmount.getCurrency());
         Money balanceAmount = paymentAmount;
-        balanceAmount = payMiscPenalty(balanceAmount);
-        balanceAmount = payPenalty(balanceAmount);
-        balanceAmount = payMiscFees(balanceAmount);
+        balanceAmount = payMiscPenalty(balanceAmount, true);
+        balanceAmount = payPenalty(balanceAmount, true);
+        balanceAmount = payMiscFees(balanceAmount, true);
         balanceAmount = payFees(balanceAmount);
-        balanceAmount = payInterest(balanceAmount);
-        balanceAmount = payPrincipal(balanceAmount);
+        balanceAmount = payInterest(balanceAmount, true);
+        balanceAmount = payPrincipal(balanceAmount, true);
         recordPayment(paymentDate);
         return balanceAmount;
+    }
+
+    public void payComponents(Installment installment, MifosCurrency currency, Date paymentDate) {
+        initPaymentAllocation(currency);
+        allocatePrincipal(new Money(currency, installment.getPrincipalPaid()), false);
+        allocateInterest(new Money(currency, installment.getInterestPaid()), false);
+        allocateExtraInterest(new Money(currency, installment.getExtraInterestPaid()));
+        payFees(new Money(currency, installment.getFeesPaid()));
+        allocateMiscFees(new Money(currency, installment.getMiscFeesPaid()), false);
+        allocatePenalty(new Money(currency, installment.getPenaltyPaid()), false);
+        allocateMiscPenalty(new Money(currency, installment.getMiscPenaltyPaid()), false);
+        recordPayment(paymentDate);
+    }
+
+    private void initPaymentAllocation(MifosCurrency currency) {
+        paymentAllocation = new PaymentAllocation(currency);
     }
 
     public PaymentAllocation getPaymentAllocation() {

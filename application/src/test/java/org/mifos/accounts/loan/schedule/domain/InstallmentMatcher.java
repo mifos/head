@@ -67,6 +67,6 @@ public class InstallmentMatcher extends TypeSafeMatcher<Installment> {
 
     @Override
     public void describeTo(Description description) {
-        description.appendText("Installment did not match");
+        description.appendText("Installment " + installment.getId() + "did not match");
     }
 }

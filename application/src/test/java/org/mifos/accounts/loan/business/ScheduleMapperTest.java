@@ -23,53 +23,63 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.loan.business.matchers.LoanScheduleEntityMatcher;
 import org.mifos.accounts.loan.schedule.domain.Installment;
+import org.mifos.accounts.loan.schedule.domain.InstallmentBuilder;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
+import org.mifos.accounts.loan.schedule.domain.ScheduleMatcher;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.CollectionUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
+import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
 import static org.mifos.framework.TestUtils.getDate;
+import static org.mockito.Mockito.when;
 
+// TODO: Test data instantiation inside this class needs improvement - johnvic/buddy
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleMapperTest {
     private MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
     private static final Double DAILY_INTEREST_RATE = 0.000658;
-    private static final Double ANNUAL_INTEREST_RATE = 24.0;
     private static BigDecimal LOAN_AMOUNT = new BigDecimal(1000);
     private static final Date DISBURSEMENT_DATE = getDate(23, 9, 2010);
+    private ScheduleMapper scheduleMapper;
 
-    ScheduleMapper scheduleMapper;
+    @Mock
+    private LoanBO loanBO;
 
     @Before
     public void setUp() {
         scheduleMapper = new ScheduleMapper();
+        when(loanBO.getCurrency()).thenReturn(rupee);
     }
 
     @Test
     public void shouldMapLoanScheduleEntityToSchedule() {
-        ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
-        Date disbursementDate = getDate(20, 10, 2010);
-        Schedule schedule = scheduleMapper.mapToSchedule(loanScheduleEntities, disbursementDate, DAILY_INTEREST_RATE, LOAN_AMOUNT);
-        assertEquals(schedule.getDailyInterestRate(), DAILY_INTEREST_RATE);
-        assertEquals(schedule.getDisbursementDate(), disbursementDate);
-        assertEquals(schedule.getLoanAmount(), LOAN_AMOUNT);
-        Map<Integer, Installment> installments = schedule.getInstallments();
-        for (LoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
-            assertInstallment(installments.get(new Integer(loanScheduleEntity.getInstallmentId())), loanScheduleEntity);
-        }
+        Collection<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities(getDate(24, 11, 2010));
+        Schedule schedule = scheduleMapper.mapToSchedule(loanScheduleEntities, DISBURSEMENT_DATE, DAILY_INTEREST_RATE, LOAN_AMOUNT);
+        Assert.assertThat(schedule, new ScheduleMatcher(getSchedule()));
+    }
+
+    @Test
+    public void shouldMapScheduleToLoanScheduleEntity() {
+        LoanScheduleEntity scheduleEntityForPopulateTestInput = getLoanScheduleEntityForPopulateTestInput();
+        Collection<LoanScheduleEntity> loanScheduleEntities = Arrays.asList(scheduleEntityForPopulateTestInput);
+        when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
+        Date paymentDate = getDate(24, 11, 2010);
+        scheduleMapper.populatePaymentDetails(getScheduleWithSingleInstallment(), loanBO, paymentDate);
+        Assert.assertThat(getLoanScheduleEntity(paymentDate), new LoanScheduleEntityMatcher(scheduleEntityForPopulateTestInput));
     }
 
     @Test
@@ -79,7 +89,7 @@ public class ScheduleMapperTest {
         for (int i = 0; i < installments.size(); i++) {
             installments.get(i).setExtraInterest(new BigDecimal(i));
         }
-        ArrayList<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        Collection<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities(getDate(24, 11, 2010));
         Map<Integer, LoanScheduleEntity> loanScheduleEntityMap = getLoanScheduleEntityMap(loanScheduleEntities);
         scheduleMapper.populateExtraInterestInLoanScheduleEntities(schedule, loanScheduleEntityMap);
         assertExtraInterest(loanScheduleEntityMap.get(1), 0d);
@@ -87,51 +97,131 @@ public class ScheduleMapperTest {
         assertExtraInterest(loanScheduleEntityMap.get(3), 2d);
     }
 
-    private void assertInstallment(Installment installment, LoanScheduleEntity loanScheduleEntity) {
-        assertEquals(installment.getDueDate(), loanScheduleEntity.getActionDate());
-        assertEquals(installment.getPrincipal(), loanScheduleEntity.getPrincipal().getAmount());
-        assertEquals(installment.getInterestDue(), loanScheduleEntity.getInterest().getAmount());
+    private Collection<LoanScheduleEntity> getLoanScheduleEntities(Date paymentDate) {
+        LoanScheduleEntity loanScheduleEntity1 = new LoanScheduleBuilder("1", loanBO).
+                withDueDate(getDate(23, 10, 2010)).withPaymentStatus(PaymentStatus.PAID).
+                withPaymentDate(paymentDate).
+                withPrincipal(100).withPrincipalPaid(100).
+                withInterest(10).withInterestPaid(10).
+                withExtraInterest(9).withExtraInterestPaid(9).
+                withMiscFees(8).withMiscFeesPaid(8).
+                withPenalty(7).withPenaltyPaid(7).
+                withMiscPenalty(6).withMiscPenaltyPaid(6).
+                addFees(1, 5, 5).build();
+        LoanScheduleEntity loanScheduleEntity2 = new LoanScheduleBuilder("2", loanBO).
+                withDueDate(getDate(23, 11, 2010)).withPaymentStatus(PaymentStatus.UNPAID).
+                withPaymentDate(paymentDate).
+                withPrincipal(1000).withPrincipalPaid(100).
+                withInterest(100).withInterestPaid(10).
+                withExtraInterest(90).withExtraInterestPaid(9).
+                withMiscFees(80).withMiscFeesPaid(8).
+                withPenalty(70).withPenaltyPaid(7).
+                withMiscPenalty(60).withMiscPenaltyPaid(6).
+                addFees(1, 50, 5).build();
+        LoanScheduleEntity loanScheduleEntity3 = new LoanScheduleBuilder("3", loanBO).
+                withDueDate(getDate(23, 12, 2010)).withPaymentStatus(PaymentStatus.UNPAID).
+                withPrincipal(1000).withPrincipalPaid(0).
+                withInterest(100).withInterestPaid(0).
+                withExtraInterest(90).withExtraInterestPaid(0).
+                withMiscFees(80).withMiscFeesPaid(0).
+                withPenalty(70).withPenaltyPaid(0).
+                withMiscPenalty(60).withMiscPenaltyPaid(0).
+                addFees(1, 50, 0).build();
+        return Arrays.asList(loanScheduleEntity1, loanScheduleEntity2, loanScheduleEntity3);
     }
 
-    private ArrayList<LoanScheduleEntity> getLoanScheduleEntities() {
-        ArrayList<LoanScheduleEntity> loanScheduleEntities = new ArrayList<LoanScheduleEntity>();
-        loanScheduleEntities.add(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "1"));
-        loanScheduleEntities.add(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "2"));
-        loanScheduleEntities.add(getLoanScheduleEntity(rupee, getDate(23, 12, 2010), "100", "10", "3"));
-        return loanScheduleEntities;
+    private LoanScheduleEntity getLoanScheduleEntity(Date paymentDate) {
+        return new LoanScheduleBuilder("1", loanBO).
+                withDueDate(getDate(23, 10, 2010)).withPaymentStatus(PaymentStatus.PAID).
+                withPaymentDate(paymentDate).
+                withPrincipal(100).withPrincipalPaid(100).
+                withInterest(10).withInterestPaid(10).
+                withExtraInterest(9).withExtraInterestPaid(9).
+                withMiscFees(8).withMiscFeesPaid(8).
+                withPenalty(7).withPenaltyPaid(7).
+                withMiscPenalty(6).withMiscPenaltyPaid(6).
+                addFees(1, 5, 5).build();
+    }
+
+    private LoanScheduleEntity getLoanScheduleEntityForPopulateTestInput() {
+        return new LoanScheduleBuilder("1", loanBO).
+                withDueDate(getDate(23, 10, 2010)).
+                withPaymentDate(getDate(10, 11, 2010)).
+                withPaymentStatus(PaymentStatus.UNPAID).
+                withPrincipal(100).withPrincipalPaid(50).
+                withInterest(10).withInterestPaid(5).
+                withExtraInterest(9).withExtraInterestPaid(4.5).
+                withMiscFees(8).withMiscFeesPaid(4).
+                withPenalty(7).withPenaltyPaid(3.5).
+                withMiscPenalty(6).withMiscPenaltyPaid(3).
+                addFees(1, 5, 4).build();
+    }
+
+    public Schedule getSchedule() {
+        Installment installment1 = new InstallmentBuilder("1").
+                withDueDate(getDate(23, 10, 2010)).
+                withPrincipal(100).withPrincipalPaid(100).
+                withInterest(10).withInterestPaid(10).
+                withExtraInterest(9).withExtraInterestPaid(9).
+                withMiscFees(8).withMiscFeesPaid(8).
+                withPenalty(7).withPenaltyPaid(7).
+                withMiscPenalty(6).withMiscPenaltyPaid(6).
+                withFees(5).withFeesPaid(5).
+                build();
+        Installment installment2 = new InstallmentBuilder("2").
+                withDueDate(getDate(23, 11, 2010)).
+                withPrincipal(1000).withPrincipalPaid(100).
+                withInterest(100).withInterestPaid(10).
+                withExtraInterest(90).withExtraInterestPaid(9).
+                withMiscFees(80).withMiscFeesPaid(8).
+                withPenalty(70).withPenaltyPaid(7).
+                withMiscPenalty(60).withMiscPenaltyPaid(6).
+                withFees(50).withFeesPaid(5).
+                build();
+        Installment installment3 = new InstallmentBuilder("3").
+                withDueDate(getDate(23, 12, 2010)).
+                withPrincipal(1000).withPrincipalPaid(0).
+                withInterest(100).withInterestPaid(0).
+                withExtraInterest(90).withExtraInterestPaid(0).
+                withMiscFees(80).withMiscFeesPaid(0).
+                withPenalty(70).withPenaltyPaid(0).
+                withMiscPenalty(60).withMiscPenaltyPaid(0).
+                withFees(50).withFeesPaid(0).
+                build();
+        List<Installment> installments = Arrays.asList(installment1, installment2, installment3);
+        return new Schedule(DISBURSEMENT_DATE, DAILY_INTEREST_RATE, LOAN_AMOUNT, installments);
+    }
+
+    public Schedule getScheduleWithSingleInstallment() {
+        Installment installment1 = new InstallmentBuilder("1").
+                withDueDate(getDate(23, 10, 2010)).
+                withPrincipal(100).withPrincipalPaid(100).
+                withInterest(10).withInterestPaid(10).
+                withExtraInterest(9).withExtraInterestPaid(9).
+                withMiscFees(8).withMiscFeesPaid(8).
+                withPenalty(7).withPenaltyPaid(7).
+                withMiscPenalty(6).withMiscPenaltyPaid(6).
+                withFees(5).withFeesPaid(5).
+                build();
+        return new Schedule(DISBURSEMENT_DATE, DAILY_INTEREST_RATE, LOAN_AMOUNT, Arrays.asList(installment1));
     }
 
     private void assertExtraInterest(LoanScheduleEntity loanScheduleEntity, double extraInterest) {
         Assert.assertThat(loanScheduleEntity.getExtraInterest().getAmount().doubleValue(), is(extraInterest));
     }
 
-    private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest, String installmentId) {
-        LoanBO loan = new LoanBO() {
-            public MifosCurrency getCurrency() {
-                return rupee;
-            }
-        };
-        return new LoanScheduleEntity(loan, null, Short
-                .valueOf(installmentId), new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, new Money(currency, principal),
-                new Money(currency, interest));
-
-    }
-
     private List<Installment> getInstallments(double... extraInterest) {
-        Installment installment1 = getInstallment(1, getDate(23, 10, 2010), 100, 10, extraInterest[0]);
-        Installment installment2 = getInstallment(2, getDate(23, 11, 2010), 100, 10, extraInterest[1]);
-        Installment installment3 = getInstallment(3, getDate(23, 12, 2010), 100, 10, extraInterest[2]);
+        Installment installment1 = new InstallmentBuilder("1").withDueDate(getDate(23, 10, 2010)).withPrincipal(100)
+                .withInterest(10).withExtraInterest(extraInterest[0]).build();
+        Installment installment2 = new InstallmentBuilder("2").withDueDate(getDate(23, 10, 2010)).withPrincipal(100)
+                .withInterest(10).withExtraInterest(extraInterest[1]).build();
+        Installment installment3 = new InstallmentBuilder("3").withDueDate(getDate(23, 12, 2010)).withPrincipal(100)
+                .withInterest(10).withExtraInterest(extraInterest[2]).build();
         return asList(installment1, installment2, installment3);
     }
 
-    private Installment getInstallment(int id, Date dueDate, double principal, double interest, double extraInterest) {
-        Installment installment = new Installment(id, dueDate, BigDecimal.valueOf(principal), BigDecimal.valueOf(interest), BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO, BigDecimal.ZERO);
-        installment.setExtraInterest(BigDecimal.valueOf(extraInterest));
-        return installment;
-    }
 
-
-    private Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(List<LoanScheduleEntity> loanScheduleEntities) {
+    private Map<Integer, LoanScheduleEntity> getLoanScheduleEntityMap(Collection<LoanScheduleEntity> loanScheduleEntities) {
         return CollectionUtils.asValueMap(loanScheduleEntities, new Transformer<LoanScheduleEntity, Integer>() {
             @Override
             public Integer transform(LoanScheduleEntity input) {
@@ -139,7 +229,6 @@ public class ScheduleMapperTest {
             }
         });
     }
-
 }
 
 

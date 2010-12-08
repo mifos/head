@@ -7,7 +7,11 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 public class ScheduleMapper {
 
@@ -55,7 +59,12 @@ public class ScheduleMapper {
         return installmentPayment;
     }
 
-    public void populatePaymentDetails(Schedule schedule, LoanBO loanBO) {
-        
+    public void populatePaymentDetails(Schedule schedule, LoanBO loanBO, Date paymentDate) {
+        Map<Integer, Installment> installments = schedule.getInstallments();
+        MifosCurrency currency = loanBO.getCurrency();
+        for (LoanScheduleEntity loanScheduleEntity : loanBO.getLoanScheduleEntities()) {
+            Installment installment = installments.get(Integer.valueOf(loanScheduleEntity.getInstallmentId()));
+            loanScheduleEntity.payComponents(installment, currency, paymentDate);
+        }
     }
 }

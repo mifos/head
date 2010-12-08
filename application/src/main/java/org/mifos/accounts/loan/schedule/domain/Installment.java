@@ -19,38 +19,55 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
-import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
+import org.mifos.framework.util.helpers.NumberUtils;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-import org.mifos.framework.util.helpers.NumberUtils;
+import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
 
 public class Installment implements Comparable<Installment> {
     private Integer id;
     private Date dueDate;
-    private BigDecimal miscPenalty;
-    private BigDecimal penalty;
-    private BigDecimal miscFees;
-    private BigDecimal fees;
-    private BigDecimal extraInterest;
-    private BigDecimal interest;
-    private BigDecimal principal;
-    private BigDecimal effectiveInterest;
     private InstallmentPayments payments;
+    private Map<InstallmentComponent, BigDecimal> actualAmounts;
+
+    /**
+     * @deprecated This constructor is intended to be used from unit test builders. It does only partial initialization
+     * of the new instance.
+     */
+    @Deprecated
+    Installment() {
+        actualAmounts = new LinkedHashMap<InstallmentComponent, BigDecimal>();
+        payments = new InstallmentPayments();
+        resetPaymentComponents();
+    }
 
     public Installment(Integer id, Date dueDate, BigDecimal principal, BigDecimal interest, BigDecimal extraInterest,
                        BigDecimal fees, BigDecimal miscFees, BigDecimal penalty, BigDecimal miscPenalty) {
+        this();
         this.id = id;
         this.dueDate = dueDate;
-        this.miscPenalty = miscPenalty;
-        this.penalty = penalty;
-        this.miscFees = miscFees;
-        this.fees = fees;
-        this.extraInterest = extraInterest;
-        this.interest = interest;
-        this.principal = principal;
-        this.payments = new InstallmentPayments();
+        actualAmounts.put(InstallmentComponent.PRINCIPAL, principal);
+        actualAmounts.put(InstallmentComponent.INTEREST, interest);
+        actualAmounts.put(InstallmentComponent.EXTRA_INTEREST, extraInterest);
+        actualAmounts.put(InstallmentComponent.FEES, fees);
+        actualAmounts.put(InstallmentComponent.MISC_FEES, miscFees);
+        actualAmounts.put(InstallmentComponent.PENALTY, penalty);
+        actualAmounts.put(InstallmentComponent.MISC_PENALTY, miscPenalty);
+    }
+
+    private void resetPaymentComponents() {
+        actualAmounts.put(InstallmentComponent.PRINCIPAL, BigDecimal.ZERO);
+        actualAmounts.put(InstallmentComponent.INTEREST, BigDecimal.ZERO);
+        actualAmounts.put(InstallmentComponent.EXTRA_INTEREST, BigDecimal.ZERO);
+        actualAmounts.put(InstallmentComponent.EFFECTIVE_INTEREST, BigDecimal.ZERO);
+        actualAmounts.put(InstallmentComponent.FEES, BigDecimal.ZERO);
+        actualAmounts.put(InstallmentComponent.MISC_FEES, BigDecimal.ZERO);
+        actualAmounts.put(InstallmentComponent.PENALTY, BigDecimal.ZERO);
+        actualAmounts.put(InstallmentComponent.MISC_PENALTY, BigDecimal.ZERO);
     }
 
     public Integer getId() {
@@ -62,35 +79,35 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal getPrincipal() {
-        return principal;
+        return actualAmounts.get(InstallmentComponent.PRINCIPAL);
     }
 
     public BigDecimal getInterest() {
-        return interest;
+        return actualAmounts.get(InstallmentComponent.INTEREST);
     }
 
     public BigDecimal getExtraInterest() {
-        return extraInterest == null ? BigDecimal.ZERO : extraInterest;
+        return actualAmounts.get(InstallmentComponent.EXTRA_INTEREST);
     }
 
     public void setExtraInterest(BigDecimal extraInterest) {
-        this.extraInterest = extraInterest;
+        actualAmounts.put(InstallmentComponent.EXTRA_INTEREST, extraInterest);
     }
 
     public BigDecimal getMiscPenalty() {
-        return miscPenalty;
+        return actualAmounts.get(InstallmentComponent.MISC_PENALTY);
     }
 
     public BigDecimal getPenalty() {
-        return penalty;
+        return actualAmounts.get(InstallmentComponent.PENALTY);
     }
 
     public BigDecimal getMiscFees() {
-        return miscFees;
+        return actualAmounts.get(InstallmentComponent.MISC_FEES);
     }
 
     public BigDecimal getFees() {
-        return fees;
+        return actualAmounts.get(InstallmentComponent.FEES);
     }
 
     public boolean isDue() {
@@ -105,31 +122,31 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal getMiscPenaltyDue() {
-        return miscPenalty.subtract(getMiscPenaltyPaid());
+        return getMiscPenalty().subtract(getMiscPenaltyPaid());
     }
 
     public BigDecimal getPenaltyDue() {
-        return penalty.subtract(getPenaltyPaid());
+        return getPenalty().subtract(getPenaltyPaid());
     }
 
     public BigDecimal getMiscFeesDue() {
-        return miscFees.subtract(getMiscFeesPaid());
+        return getMiscFees().subtract(getMiscFeesPaid());
     }
 
     public BigDecimal getFeesDue() {
-        return fees.subtract(getFeesPaid());
+        return getFees().subtract(getFeesPaid());
     }
 
     public BigDecimal getInterestDue() {
-        return hasEffectiveInterest() ? effectiveInterest : interest.subtract(getInterestPaid());
+        return hasEffectiveInterest() ? getEffectiveInterest() : getInterest().subtract(getInterestPaid());
     }
 
     public BigDecimal getPrincipalDue() {
-        return principal.subtract(getPrincipalPaid());
+        return getPrincipal().subtract(getPrincipalPaid());
     }
 
     public BigDecimal getExtraInterestDue() {
-        return extraInterest.subtract(getExtraInterestPaid());
+        return getExtraInterest().subtract(getExtraInterestPaid());
     }
 
     public boolean isMiscPenaltyDue() {
@@ -297,22 +314,38 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal getEffectiveInterest() {
-        return effectiveInterest;
+        return actualAmounts.get(InstallmentComponent.EFFECTIVE_INTEREST);
     }
 
     public void setEffectiveInterest(BigDecimal effectiveInterest) {
-        this.effectiveInterest = effectiveInterest;
+        actualAmounts.put(InstallmentComponent.EFFECTIVE_INTEREST, effectiveInterest);
     }
 
     public boolean hasEffectiveInterest() {
-        return effectiveInterest != null && isGreaterThanZero(effectiveInterest);
+        return isGreaterThanZero(getEffectiveInterest());
     }
 
     public BigDecimal getApplicableInterest() {
-        return hasEffectiveInterest() ? effectiveInterest : interest;
+        return hasEffectiveInterest() ? getEffectiveInterest() : getInterest();
     }
 
     public void addPayment(InstallmentPayment installmentPayment){
         payments.addPayment(installmentPayment);
+    }
+
+    void setId(Integer id) {
+        this.id = id;
+    }
+
+    void setDueDate(Date dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    /**
+        * @deprecated Use the corresponding setters for assigning installment components
+        */
+    @Deprecated
+    void setAmount(InstallmentComponent installmentComponent, BigDecimal amount){
+        actualAmounts.put(installmentComponent, amount);
     }
 }

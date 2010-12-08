@@ -29,7 +29,6 @@ import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.accounts.loan.schedule.domain.ScheduleMatcher;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
@@ -39,7 +38,12 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import static java.math.BigDecimal.valueOf;
 import static java.util.Arrays.asList;
@@ -47,7 +51,9 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.getDate;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleCalculatorAdaptorTest {
@@ -56,7 +62,7 @@ public class ScheduleCalculatorAdaptorTest {
     private ScheduleMapper scheduleMapper;
 
     @Mock
-    LoanBO loanBO;
+    private LoanBO loanBO;
 
     private ScheduleCalculator scheduleCalculator;
     private MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", valueOf(1), "INR");
@@ -72,21 +78,23 @@ public class ScheduleCalculatorAdaptorTest {
         scheduleMapper = Mockito.spy(new ScheduleMapper());
         scheduleCalculatorAdaptor = new ScheduleCalculatorAdaptor(scheduleCalculator, scheduleMapper);
         LOAN_AMOUNT = LOAN_AMOUNT.setScale(13, RoundingMode.HALF_UP);
+        when(loanBO.getCurrency()).thenReturn(rupee);
     }
 
     @Test
     public void shouldApplyPayment() {
         List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities(new double[]{100, 10, 5, 4, 3, 2, 1}, new double[]{1, 1, 1, 1, 1, 1, 1});
-        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
         when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
         when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
-        when(loanBO.getLoanScheduleEntityMap()).thenReturn(getLoanScheduleEntityMap(loanScheduleEntities));
         scheduleCalculatorAdaptor.applyPayment(loanBO, Money.zero(rupee), getDate(30, 10, 2010));
         verify(scheduleMapper, times(1)).mapToSchedule(Mockito.<Collection<LoanScheduleEntity>>any(), Mockito.<Date>any(), Mockito.<Double>any(), Mockito.<BigDecimal>any());
         verify(scheduleCalculator).applyPayment(Mockito.<Schedule>any(), Mockito.<BigDecimal>any(), Mockito.<Date>any());
-        verify(scheduleMapper).populatePaymentDetails(Mockito.<Schedule>any(), Mockito.<LoanBO>any());
+        verify(scheduleMapper).populatePaymentDetails(Mockito.<Schedule>any(), Mockito.<LoanBO>any(), Mockito.<Date>any());
+        verify(loanBO, times(2)).getLoanScheduleEntities();
+        verify(loanBO, times(1)).getDisbursementDate();
+        verify(loanBO, times(1)).getInterestRate();
     }
 
     @Test
@@ -183,6 +191,7 @@ public class ScheduleCalculatorAdaptorTest {
     }
 
     private Installment getInstallment(int id, Date dueDate, Date paidDate, double[] actualAmounts, double[] paidAmounts) {
+        
         Installment installment = new Installment(id, dueDate, valueOf(actualAmounts[0]), valueOf(actualAmounts[1]),
                 valueOf(actualAmounts[2]), valueOf(actualAmounts[3]), valueOf(actualAmounts[4]),
                 valueOf(actualAmounts[5]), valueOf(actualAmounts[6]));
@@ -200,41 +209,13 @@ public class ScheduleCalculatorAdaptorTest {
     }
 
     private List<LoanScheduleEntity> getLoanScheduleEntities(double[] actualAmounts, double[] paidAmounts) {
-        ArrayList<LoanScheduleEntity> loanScheduleEntities = new ArrayList<LoanScheduleEntity>();
-        loanScheduleEntities.add(getLoanScheduleEntity("1", getDate(23, 10, 2010), PaymentStatus.UNPAID, actualAmounts, paidAmounts));
-        loanScheduleEntities.add(getLoanScheduleEntity("2", getDate(23, 11, 2010), PaymentStatus.UNPAID, actualAmounts, paidAmounts));
-        loanScheduleEntities.add(getLoanScheduleEntity("3", getDate(23, 12, 2010), PaymentStatus.UNPAID, actualAmounts, paidAmounts));
-        return loanScheduleEntities;
+        LoanScheduleEntity loanScheduleEntity1 = new LoanScheduleBuilder("1", loanBO).withDueDate(getDate(23, 10, 2010)).
+                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build();
+        LoanScheduleEntity loanScheduleEntity2 = new LoanScheduleBuilder("2", loanBO).withDueDate(getDate(23, 11, 2010)).
+                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build();
+        LoanScheduleEntity loanScheduleEntity3 = new LoanScheduleBuilder("3", loanBO).withDueDate(getDate(23, 12, 2010)).
+                withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build();
+        return Arrays.asList(loanScheduleEntity1, loanScheduleEntity2, loanScheduleEntity3);
     }
 
-    private LoanScheduleEntity getLoanScheduleEntity(String installmentId, Date dueDate, PaymentStatus status,
-                                                     double[] actualAmounts, double[] paidAmounts) {
-        LoanBO loan = new LoanBO() {
-            public MifosCurrency getCurrency() {
-                return rupee;
-            }
-        };
-        LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(loan, null, Short.valueOf(installmentId), new java.sql.Date(dueDate.getTime()),
-                status, new Money(rupee, actualAmounts[0]), new Money(rupee, actualAmounts[1]));
-
-        loanScheduleEntity.setExtraInterest(new Money(rupee, actualAmounts[2]));
-        loanScheduleEntity.setMiscFee(new Money(rupee, actualAmounts[3]));
-        loanScheduleEntity.setPenalty(new Money(rupee, actualAmounts[4]));
-        loanScheduleEntity.setMiscPenalty(new Money(rupee, actualAmounts[5]));
-
-        loanScheduleEntity.setPrincipalPaid(new Money(rupee, paidAmounts[0]));
-        loanScheduleEntity.setInterestPaid(new Money(rupee, paidAmounts[1]));
-        loanScheduleEntity.setExtraInterestPaid(new Money(rupee, paidAmounts[2]));
-        loanScheduleEntity.setMiscFeePaid(new Money(rupee, paidAmounts[3]));
-        loanScheduleEntity.setPenaltyPaid(new Money(rupee, paidAmounts[4]));
-        loanScheduleEntity.setMiscPenaltyPaid(new Money(rupee, paidAmounts[5]));
-
-        LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity();
-        loanFeeScheduleEntity.setFeeAmount(new Money(rupee, actualAmounts[6]));
-        loanFeeScheduleEntity.setFeeAmountPaid(new Money(rupee, paidAmounts[6]));
-        loanScheduleEntity.addAccountFeesAction(loanFeeScheduleEntity);
-
-        loanScheduleEntity.setPaymentDate(TestUtils.getSqlDate(12, 1, 2010));
-        return loanScheduleEntity;
-    }
 }

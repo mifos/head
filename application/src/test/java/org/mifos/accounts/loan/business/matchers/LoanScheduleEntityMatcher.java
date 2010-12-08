@@ -24,11 +24,11 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 
-import static org.junit.Assert.assertEquals;
+import static junitx.framework.Assert.assertEquals;
 
 public class LoanScheduleEntityMatcher extends TypeSafeMatcher<LoanScheduleEntity> {
-    private static final double DELTA = .0001;
     private LoanScheduleEntity loanScheduleEntity;
+    public static final double DELTA = .0001;
 
     public LoanScheduleEntityMatcher(LoanScheduleEntity loanScheduleEntity) {
         this.loanScheduleEntity = loanScheduleEntity;
@@ -36,37 +36,31 @@ public class LoanScheduleEntityMatcher extends TypeSafeMatcher<LoanScheduleEntit
 
     @Override
     public boolean matchesSafely(LoanScheduleEntity loanScheduleEntity) {
-        assertEquals(this.loanScheduleEntity.getPrincipalAsDouble(), loanScheduleEntity.getPrincipalAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getPrincipalPaidAsDouble(), loanScheduleEntity.getPrincipalPaidAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getPrincipalDueAsDouble(), loanScheduleEntity.getPrincipalDueAsDouble(), DELTA);
-
-        assertEquals(this.loanScheduleEntity.getInterestAsDouble(), loanScheduleEntity.getInterestAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getInterestPaidAsDouble(), loanScheduleEntity.getInterestPaidAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getInterestDueAsDouble(), loanScheduleEntity.getInterestDueAsDouble(), DELTA);
-
-        assertEquals(this.loanScheduleEntity.getTotalFeesAsDouble(), loanScheduleEntity.getTotalFeesAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getTotalFeesPaidAsDouble(), loanScheduleEntity.getTotalFeesPaidAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getTotalFeesDueAsDouble(), loanScheduleEntity.getTotalFeesDueAsDouble(), DELTA);
-
-        assertEquals(this.loanScheduleEntity.getMiscFeeAsDouble(), loanScheduleEntity.getMiscFeeAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getMiscFeePaidAsDouble(), loanScheduleEntity.getMiscFeePaidAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getMiscFeesDueAsDouble(), loanScheduleEntity.getMiscFeesDueAsDouble(), DELTA);
-
-        assertEquals(this.loanScheduleEntity.getPenaltyAsDouble(), loanScheduleEntity.getPenaltyAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getPenaltyPaidAsDouble(), loanScheduleEntity.getPenaltyPaidAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getPenaltyDueAsDouble(), loanScheduleEntity.getPenaltyDueAsDouble(), DELTA);
-
-        assertEquals(this.loanScheduleEntity.getMiscPenaltyAsDouble(), loanScheduleEntity.getMiscPenaltyAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getMiscPenaltyPaidAsDouble(), loanScheduleEntity.getMiscPenaltyPaidAsDouble(), DELTA);
-        assertEquals(this.loanScheduleEntity.getMiscPenaltyDueAsDouble(), loanScheduleEntity.getMiscPenaltyDueAsDouble(), DELTA);
-
-        return
-                ObjectUtils.equals(this.loanScheduleEntity.getPaymentDate(), loanScheduleEntity.getPaymentDate())
-                && this.loanScheduleEntity.getPaymentStatus().equals(loanScheduleEntity.getPaymentStatus());
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getPrincipalAsDouble(), loanScheduleEntity.getPrincipalAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getPrincipalPaidAsDouble(), loanScheduleEntity.getPrincipalPaidAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getPrincipalDueAsDouble(), loanScheduleEntity.getPrincipalDueAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getInterestAsDouble(), loanScheduleEntity.getInterestAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getInterestPaidAsDouble(), loanScheduleEntity.getInterestPaidAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getInterestDueAsDouble(), loanScheduleEntity.getInterestDueAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getTotalFeesAsDouble(), loanScheduleEntity.getTotalFeesAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getTotalFeesPaidAsDouble(), loanScheduleEntity.getTotalFeesPaidAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getTotalFeesDueAsDouble(), loanScheduleEntity.getTotalFeesDueAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getMiscFeeAsDouble(), loanScheduleEntity.getMiscFeeAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getMiscFeePaidAsDouble(), loanScheduleEntity.getMiscFeePaidAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getMiscFeesDueAsDouble(), loanScheduleEntity.getMiscFeesDueAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getPenaltyAsDouble(), loanScheduleEntity.getPenaltyAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getPenaltyPaidAsDouble(), loanScheduleEntity.getPenaltyPaidAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getPenaltyDueAsDouble(), loanScheduleEntity.getPenaltyDueAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getMiscPenaltyAsDouble(), loanScheduleEntity.getMiscPenaltyAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getMiscPenaltyPaidAsDouble(), loanScheduleEntity.getMiscPenaltyPaidAsDouble(), DELTA);
+        assertEquals(loanScheduleEntity.getInstallmentId() + " is failing", this.loanScheduleEntity.getMiscPenaltyDueAsDouble(), loanScheduleEntity.getMiscPenaltyDueAsDouble(), DELTA);
+        return ObjectUtils.equals(this.loanScheduleEntity.getPaymentDate(), loanScheduleEntity.getPaymentDate()) &&
+                this.loanScheduleEntity.getPaymentStatus().equals(loanScheduleEntity.getPaymentStatus());
     }
 
     @Override
     public void describeTo(Description description) {
         description.appendText("LoanScheduleEntity did not match");
     }
+
 }

@@ -22,24 +22,32 @@ package org.mifos.accounts.loan.business.matchers;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.framework.util.CollectionUtils;
+import org.mifos.framework.util.helpers.Transformer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
+import java.util.Map;
 
 import static org.junit.Assert.assertThat;
 
-public class LoanScheduleEntitiesMatcher extends TypeSafeMatcher<ArrayList<LoanScheduleEntity>> {
-    private List<LoanScheduleEntity> loanScheduleEntities;
+public class LoanScheduleEntitiesMatcher extends TypeSafeMatcher<Collection<LoanScheduleEntity>> {
+    private Map<Short, LoanScheduleEntity> loanScheduleEntityMap;
 
-    public LoanScheduleEntitiesMatcher(List<LoanScheduleEntity> loanScheduleEntities) {
-        this.loanScheduleEntities = loanScheduleEntities;
+    public LoanScheduleEntitiesMatcher(Collection<LoanScheduleEntity> loanScheduleEntityMap) {
+        this.loanScheduleEntityMap = CollectionUtils.asValueMap(loanScheduleEntityMap, new Transformer<LoanScheduleEntity, Short>() {
+            @Override
+            public Short transform(LoanScheduleEntity input) {
+                return input.getInstallmentId();
+            }
+        });
     }
 
     @Override
-    public boolean matchesSafely(ArrayList<LoanScheduleEntity> loanScheduleEntities) {
-        if (this.loanScheduleEntities.size() == loanScheduleEntities.size()) {
-            for (LoanScheduleEntity loanScheduleEntity : this.loanScheduleEntities) {
-                assertThat(loanScheduleEntities, org.hamcrest.Matchers.hasItem(new LoanScheduleEntityMatcher(loanScheduleEntity)));
+    public boolean matchesSafely(Collection<LoanScheduleEntity> loanScheduleEntities) {
+        if (this.loanScheduleEntityMap.size() == loanScheduleEntities.size()) {
+            for (LoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
+                assertThat(loanScheduleEntity,
+                        new LoanScheduleEntityMatcher(loanScheduleEntityMap.get(loanScheduleEntity.getInstallmentId())));
             }
             return true;
         }

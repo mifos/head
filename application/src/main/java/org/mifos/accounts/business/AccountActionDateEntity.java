@@ -34,7 +34,7 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
     protected final Integer actionDateId;
     protected AccountBO account;
     protected final CustomerBO customer;
-    protected final Short installmentId;
+    protected Short installmentId;
     protected Date actionDate;
     protected Short paymentStatus;
     protected Date paymentDate;
@@ -133,5 +133,9 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
 
     public boolean isNotPaid() {
         return !isPaid();
+    }
+
+    public void setInstallmentId(Short installmentId) {
+        this.installmentId = installmentId;
     }
 }

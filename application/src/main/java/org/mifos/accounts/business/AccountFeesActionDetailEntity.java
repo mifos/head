@@ -20,12 +20,10 @@
 
 package org.mifos.accounts.business;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.NumberUtils;
 
 import static org.mifos.framework.util.helpers.NumberUtils.min;
 
@@ -35,7 +33,7 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
 
     private final AccountActionDateEntity accountActionDate;
 
-    private final Short installmentId;
+    private Short installmentId;
 
     private final FeeBO fee;
 
@@ -152,5 +150,9 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
 
     public void setAccountFeesActionDetailId(Integer accountFeesActionDetailId) {
         this.accountFeesActionDetailId = accountFeesActionDetailId;
+    }
+
+    public void setInstallmentId(Short installmentId) {
+        this.installmentId = installmentId;
     }
 }

@@ -65,6 +65,10 @@ public class PaymentAllocation {
         this.miscFeePaid = payable;
     }
 
+    public void allocateForExtraInterest(Money payable) {
+        this.extraInterestPaid = payable;
+    }
+
     public void allocateForInterest(Money payable) {
         this.interestPaid = payable;
     }

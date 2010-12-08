@@ -20,14 +20,15 @@
 
 package org.mifos.accounts.loan.business;
 
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
+
+import java.util.Date;
+import java.util.Set;
 
 public class LoanTestUtils {
 
@@ -92,4 +93,16 @@ public class LoanTestUtils {
         return sortedList;
     }
 
+    public static LoanScheduleEntity getLoanScheduleEntity(LoanBO loan, String installmentId, Date dueDate, PaymentStatus status,
+                                                           double[] actualAmounts, double[] paidAmounts
+    ) {
+
+        return new LoanScheduleBuilder(installmentId, loan).withInstallmentId(installmentId).withDueDate(dueDate).
+                withPaymentStatus(status).withPrincipal(actualAmounts[0]).withInterest(actualAmounts[1]).
+                withExtraInterest(actualAmounts[2]).withMiscFees(actualAmounts[3]).withPenalty(actualAmounts[4]).
+                withMiscPenalty(actualAmounts[5]).withPrincipalPaid(paidAmounts[0]).withInterestPaid(paidAmounts[1]).
+                withExtraInterestPaid(paidAmounts[2]).withMiscFeesPaid(paidAmounts[3]).withPenaltyPaid(paidAmounts[4]).
+                withMiscPenaltyPaid(paidAmounts[5]).addFees(1, actualAmounts[6], paidAmounts[6]).
+                withPaymentDate(TestUtils.getSqlDate(12, 1, 2010)).build();
+    }
 }
