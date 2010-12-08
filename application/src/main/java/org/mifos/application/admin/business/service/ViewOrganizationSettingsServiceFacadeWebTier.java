@@ -66,7 +66,7 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         fiscalRules.setProperty("workingDays", getWorkingDays());
         fiscalRules.setProperty("startOfWeek", WeekDay.getWeekDay(new FiscalCalendarRules().getStartOfWeek()).getName());
         fiscalRules.setProperty("offDays", getOffDays());
-        fiscalRules.setProperty("holidayMeeting", new FiscalCalendarRules().getScheduleTypeForMeetingIfNonWorkingDay());
+        fiscalRules.setProperty("holidayMeeting", new FiscalCalendarRules().getScheduleMeetingIfNonWorkingDay());
 
         return fiscalRules;
     }
