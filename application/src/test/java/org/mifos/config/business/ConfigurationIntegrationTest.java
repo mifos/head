@@ -100,7 +100,7 @@ public class ConfigurationIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testFiscalCalendarRules() {
        Assert.assertEquals(Short.valueOf("2"), new FiscalCalendarRules().getStartOfWeek());
-       Assert.assertEquals("same_day", new FiscalCalendarRules().getScheduleTypeForMeetingIfNonWorkingDay());
+       Assert.assertEquals("same_day", new FiscalCalendarRules().getScheduleMeetingIfNonWorkingDay());
        List<Short> weekOffs = new FiscalCalendarRules().getWeekDayOffList();
        Assert.assertEquals(weekOffs.size(), 0);
     }
