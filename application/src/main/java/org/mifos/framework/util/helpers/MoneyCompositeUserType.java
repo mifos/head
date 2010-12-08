@@ -27,9 +27,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import org.hibernate.Hibernate;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.SessionImplementor;
+import org.hibernate.type.StandardBasicTypes;
 import org.hibernate.type.Type;
 import org.hibernate.usertype.CompositeUserType;
 import org.mifos.application.master.business.MifosCurrency;
@@ -66,31 +66,36 @@ public class MoneyCompositeUserType implements CompositeUserType {
      * Properties that the Money class is composed off. These are the properties
      * that will be persisted
      */
+    @Override
     public String[] getPropertyNames() {
         return new String[] { "currency", "amount" };
     }
 
+    @Override
     public Type[] getPropertyTypes() {
-        return new Type[] { Hibernate.SHORT, Hibernate.BIG_DECIMAL };
+        return new Type[] { StandardBasicTypes.SHORT, StandardBasicTypes.BIG_DECIMAL };
     }
 
+    @Override
     public Object getPropertyValue(Object component, int property) throws HibernateException {
         Money money = (Money) component;
         if (property == 0) {
             return money.getCurrency();
-        } else {
-            return money.getAmount();
         }
+        return money.getAmount();
     }
 
+    @Override
     public void setPropertyValue(Object component, int property, Object value) throws HibernateException {
 
     }
 
-    public Class returnedClass() {
+    @Override
+    public Class<Money> returnedClass() {
         return Money.class;
     }
 
+    @Override
     public boolean equals(Object money1, Object money2) throws HibernateException {
         if (money1 == money2) {
             return true;
@@ -101,10 +106,12 @@ public class MoneyCompositeUserType implements CompositeUserType {
         return money1.equals(money2);
     }
 
+    @Override
     public int hashCode(Object arg0) throws HibernateException {
         return 0;
     }
 
+    @Override
     public Object nullSafeGet(ResultSet resultSet, String[] names, SessionImplementor session, Object owner)
             throws HibernateException, SQLException {
         MifosCurrency currency = null;
@@ -126,6 +133,7 @@ public class MoneyCompositeUserType implements CompositeUserType {
         return value == null ? new Money(currency, BigDecimal.valueOf(0)) : new Money(currency, value);
     }
 
+    @Override
     public void nullSafeSet(PreparedStatement statement, Object value, int index, SessionImplementor session)
             throws HibernateException, SQLException {
         if (value == null) {
@@ -139,24 +147,29 @@ public class MoneyCompositeUserType implements CompositeUserType {
         }
     }
 
+    @Override
     public Object deepCopy(Object value) throws HibernateException {
         return value;
     }
 
+    @Override
     public boolean isMutable() {
         return false;
     }
 
+    @Override
     public Serializable disassemble(Object value, SessionImplementor session) throws HibernateException {
 
         return (Serializable) value;
     }
 
+    @Override
     public Object assemble(Serializable cached, SessionImplementor session, Object owner) throws HibernateException {
 
         return cached;
     }
 
+    @Override
     public Object replace(Object value, Object arg1, SessionImplementor session, Object arg3) throws HibernateException {
 
         return null;
