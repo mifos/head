@@ -240,7 +240,6 @@ public class AccountingRulesTest {
         assertEquals(new BigDecimal(multiple), AccountingRules.getDigitsAfterDecimalMultiple(TestUtils.RUPEE));
     }
 
-    @Ignore
     @Test
     public void testGetDigitsAfterDecimalMultiple() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();
@@ -277,7 +276,6 @@ public class AccountingRulesTest {
         AccountingRules.getDigitsAfterDecimal(TestUtils.EURO);
     }
 
-    @Ignore
     @Test
     public void digitsAfterDecimalFallsBackToDefault() {
         ConfigurationManager configMgr = ConfigurationManager.getInstance();

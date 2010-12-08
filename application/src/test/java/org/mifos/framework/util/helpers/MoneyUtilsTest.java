@@ -24,7 +24,6 @@ import java.math.RoundingMode;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
@@ -68,7 +67,6 @@ public class MoneyUtilsTest {
         Assert.assertEquals(m.getCurrency(), TestUtils.EURO);
     }
 
-    @Ignore
     @Test
     public void testCurrencyRound() {
         Money m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.545);
@@ -79,7 +77,6 @@ public class MoneyUtilsTest {
         Assert.assertEquals(MoneyUtils.currencyRound(m), new Money(TestUtils.RUPEE, "454.6"));
     }
 
-    @Ignore
     @Test
     public void testInitialRound() {
         Money m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.49);
@@ -90,7 +87,6 @@ public class MoneyUtilsTest {
         Assert.assertEquals(MoneyUtils.initialRound(m), new Money(TestUtils.RUPEE, "455.0"));
     }
 
-    @Ignore
     @Test
     public void testFinalRound() {
         Money m = MoneyUtils.createMoney(TestUtils.RUPEE, 454.49);

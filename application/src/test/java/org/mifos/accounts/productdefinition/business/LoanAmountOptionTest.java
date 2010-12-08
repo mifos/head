@@ -23,7 +23,6 @@ package org.mifos.accounts.productdefinition.business;
 import static org.mockito.Mockito.when;
 import junit.framework.Assert;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.framework.TestUtils;
@@ -36,7 +35,6 @@ public class LoanAmountOptionTest {
     @Mock
     private LoanOfferingBO loanProduct;
 
-    @Ignore
     @Test
     public void testLoanAmountOption() {
         when(loanProduct.getCurrency()).thenReturn(TestUtils.RUPEE);
