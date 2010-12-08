@@ -50,7 +50,7 @@ import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
@@ -81,7 +81,7 @@ public class OfficeDaoHibernateIntegrationTest extends MifosIntegrationTestCase 
     public static void initialiseHibernateUtil() {
 
         Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfigurtion.init(locale);
+        AuditConfiguration.init(locale);
 
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);

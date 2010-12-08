@@ -32,7 +32,7 @@ import org.mifos.config.business.Configuration;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.exceptions.AppNotConfiguredException;
@@ -354,7 +354,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
     }
 
     private void configureAuditLogValues(Locale locale) throws SystemException {
-        AuditConfigurtion.init(locale);
+        AuditConfiguration.init(locale);
     }
 
     @Override

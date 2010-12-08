@@ -25,7 +25,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.persistence.ConfigurationPersistence;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.authorization.HierarchyManager;
@@ -62,7 +62,7 @@ public class TestCaseInitializer {
         HierarchyManager.getInstance().init();
 
         MifosConfiguration.getInstance().init();
-        AuditConfigurtion.init(Localization.getInstance().getMainLocale());
+        AuditConfiguration.init(Localization.getInstance().getMainLocale());
         AccountingRules.init();
         StaticHibernateUtil.commitTransaction();
     }

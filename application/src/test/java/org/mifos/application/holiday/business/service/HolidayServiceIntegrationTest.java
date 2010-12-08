@@ -34,7 +34,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -69,7 +69,7 @@ public class HolidayServiceIntegrationTest extends MifosIntegrationTestCase {
     public static void initialiseHibernateUtil() {
 
         Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfigurtion.init(locale);
+        AuditConfiguration.init(locale);
 
         oldDefaultCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);

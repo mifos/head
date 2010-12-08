@@ -52,7 +52,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
@@ -115,7 +115,7 @@ public class CenterStatusChangeIntegrationTest extends MifosIntegrationTestCase 
         databaseCleaner.clean();
 
         Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfigurtion.init(locale);
+        AuditConfiguration.init(locale);
 
         existingUser = IntegrationTestObjectMother.testUser();
         existingLoanOfficer = IntegrationTestObjectMother.testUser();

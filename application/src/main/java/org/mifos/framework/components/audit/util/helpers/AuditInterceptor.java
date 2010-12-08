@@ -56,7 +56,7 @@ public class AuditInterceptor extends EmptyInterceptor {
     }
 
     public void createChangeValueMap(Object object) {
-        if (interceptHelper.getEntityName().equals(AuditConfigurtion.getEntityToClassPath(object.getClass().getName()))) {
+        if (interceptHelper.getEntityName().equals(AuditConfiguration.getEntityToClassPath(object.getClass().getName()))) {
             interceptHelper.hibernateMeta(object, AuditConstants.TRANSACTIONEND);
         }
     }

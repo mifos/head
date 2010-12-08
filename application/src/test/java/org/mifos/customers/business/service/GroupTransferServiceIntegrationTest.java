@@ -53,7 +53,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.util.StandardTestingService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
@@ -102,7 +102,7 @@ public class GroupTransferServiceIntegrationTest extends MifosIntegrationTestCas
         databaseCleaner.clean();
 
         Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfigurtion.init(locale);
+        AuditConfiguration.init(locale);
     }
 
     @Ignore

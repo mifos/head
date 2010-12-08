@@ -2,7 +2,7 @@
 <columnPropertyMapping>
 
 	<!-- Commas in displayKey attribues lead to concatenated strings in the
-	changelog. See AuditConfigurtion.getKeys(String). -->
+	changelog. See AuditConfiguration.getKeys(String). -->
 	<entityType name="Loan" classPath="org.mifos.accounts.loan.business.LoanBO">
 		<entitiesToLog>
 			<entity name="accountState"/>

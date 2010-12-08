@@ -30,7 +30,7 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.persistence.AuditPersistence;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -58,7 +58,7 @@ public class AuditBusinessService implements BusinessService {
                     PersonnelBO personnel = personnelService.getPersonnel(userId);
                     auditLogView.setUser(personnel.getUserName());
                     auditLogView.setField(auditLogRecord.getFieldName());
-                    String encryptedPasswordAuditFieldName = AuditConfigurtion.getColumnNameForPropertyName(
+                    String encryptedPasswordAuditFieldName = AuditConfiguration.getColumnNameForPropertyName(
                             AuditConstants.PERSONNEL, AuditConstants.Audit_PASSWORD);
                     if ((null != encryptedPasswordAuditFieldName)
                             && (auditLogRecord.getFieldName().equals(encryptedPasswordAuditFieldName.trim()))) {

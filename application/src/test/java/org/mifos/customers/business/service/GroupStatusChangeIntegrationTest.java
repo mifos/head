@@ -45,7 +45,7 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
-import org.mifos.framework.components.audit.util.helpers.AuditConfigurtion;
+import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.StandardTestingService;
@@ -106,7 +106,7 @@ public class GroupStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 
         // For audit log interceptor
         Locale locale = Localization.getInstance().getMainLocale();
-        AuditConfigurtion.init(locale);
+        AuditConfiguration.init(locale);
 
         existingUser = IntegrationTestObjectMother.testUser();
         existingLoanOfficer = IntegrationTestObjectMother.testUser();

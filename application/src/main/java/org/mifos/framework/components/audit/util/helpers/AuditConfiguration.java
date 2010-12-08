@@ -39,7 +39,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
 
-public class AuditConfigurtion {
+public class AuditConfiguration {
 
     private final static Map<String, String> entityToClassPath = new HashMap<String, String>();
 
@@ -61,9 +61,9 @@ public class AuditConfigurtion {
     private ApplicationConfigurationPersistence configurationPersistence;
     private MasterPersistence masterPersistence;
 
-    public static AuditConfigurtion auditConfigurtion = new AuditConfigurtion();
+    public static AuditConfiguration auditConfigurtion = new AuditConfiguration();
 
-    private AuditConfigurtion() {
+    private AuditConfiguration() {
         masterPersistence = new MasterPersistence();
         configurationPersistence = new ApplicationConfigurationPersistence();
 
