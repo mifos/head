@@ -34,6 +34,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
@@ -41,7 +42,13 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -196,6 +203,13 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     public void testUpdateHistoricalDataWhenCustHistoricalDataIsNull() throws Exception {
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, group, request);
@@ -229,6 +243,12 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     public void testUpdateHistoricalDataWhenCustHistoricalDataIsNotNull() throws Exception {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
         CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(group);
