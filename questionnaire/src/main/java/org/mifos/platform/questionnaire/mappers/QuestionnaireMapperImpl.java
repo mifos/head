@@ -20,6 +20,7 @@
 
 package org.mifos.platform.questionnaire.mappers;
 
+import java.util.HashMap;
 import org.mifos.platform.questionnaire.domain.AnswerType;
 import org.mifos.platform.questionnaire.domain.ChoiceTagEntity;
 import org.mifos.platform.questionnaire.domain.EventSourceEntity;
@@ -450,11 +451,21 @@ public class QuestionnaireMapperImpl implements QuestionnaireMapper {
         return questionGroupResponses;
     }
 
+    private Map<Integer, SectionQuestion> sectionQuestionMap = new HashMap<Integer, SectionQuestion>();
+
     private QuestionGroupResponse mapToQuestionGroupResponse(QuestionGroupInstance questionGroupInstance, QuestionGroupResponseDto questionGroupResponseDto) {
         QuestionGroupResponse questionGroupResponse = new QuestionGroupResponse();
         questionGroupResponse.setResponse(questionGroupResponseDto.getResponse());
         questionGroupResponse.setQuestionGroupInstance(questionGroupInstance);
-        questionGroupResponse.setSectionQuestion(sectionQuestionDao.getDetails(questionGroupResponseDto.getSectionQuestionId()));
+
+        SectionQuestion sq;
+        if (sectionQuestionMap.containsKey(questionGroupResponseDto.getSectionQuestionId())) {
+            sq = sectionQuestionMap.get(questionGroupResponseDto.getSectionQuestionId());
+        } else {
+            sq = sectionQuestionDao.getDetails(questionGroupResponseDto.getSectionQuestionId());
+            sectionQuestionMap.put(questionGroupResponseDto.getSectionQuestionId(), sq);
+        }
+        questionGroupResponse.setSectionQuestion(sq);
         return questionGroupResponse;
     }
 

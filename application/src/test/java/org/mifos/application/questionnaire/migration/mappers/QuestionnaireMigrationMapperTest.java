@@ -24,12 +24,15 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.surveys.business.CustomFieldUtils;
@@ -219,7 +222,7 @@ public class QuestionnaireMigrationMapperTest {
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 11, questionGroupId)).thenReturn(111);
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 22, questionGroupId)).thenReturn(222);
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 33, questionGroupId)).thenReturn(333);
-        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.mapForCustomers(questionGroupId, 1, asList(customField1, customField2, customField3), customFieldQuestionIdMap);
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(questionGroupId, 1, asList(customerFieldEntityToMigrationDto(customField1), customerFieldEntityToMigrationDto(customField2), customerFieldEntityToMigrationDto(customField3)), customFieldQuestionIdMap);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
         assertThat(questionGroupInstanceDto.getCreatorId(), is(Integer.valueOf(clientBO.getCreatedBy())));
         assertThat(questionGroupInstanceDto.getEventSourceId(), is(1));
@@ -242,6 +245,12 @@ public class QuestionnaireMigrationMapperTest {
         verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 33, questionGroupId);
     }
 
+    private CustomFieldForMigrationDto customerFieldEntityToMigrationDto(CustomerCustomFieldEntity customFieldEntity) {
+        CustomerBO customer = customFieldEntity.getCustomer();
+        return new CustomFieldForMigrationDto(new Object[] {-1, customFieldEntity.getFieldId(), customFieldEntity.getFieldValue(),
+                customer.getCreatedDate(), customer.getUpdatedDate(), customer.getCreatedBy(), customer.getUpdatedBy(), customer.getCustomerId()});
+    }
+
     @Test
     public void shouldMapAccountCustomFieldEntityToQuestionGroupInstanceDto() throws ApplicationException {
         Integer questionGroupId = 1234, customerId = 11;
@@ -256,7 +265,7 @@ public class QuestionnaireMigrationMapperTest {
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 11, questionGroupId)).thenReturn(111);
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 22, questionGroupId)).thenReturn(222);
         when(questionnaireServiceFacade.getSectionQuestionId("Misc", 33, questionGroupId)).thenReturn(333);
-        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.mapForAccounts(questionGroupId, 2, asList(customField1, customField2, customField3), customFieldQuestionIdMap);
+        QuestionGroupInstanceDto questionGroupInstanceDto = mapper.map(questionGroupId, 2, asList(accountFieldEntityToMigrationDto(customField1), accountFieldEntityToMigrationDto(customField2), accountFieldEntityToMigrationDto(customField3)), customFieldQuestionIdMap);
         assertThat(questionGroupInstanceDto, is(notNullValue()));
         assertThat(questionGroupInstanceDto.getCreatorId(), is(Integer.valueOf(clientBO.getCreatedBy())));
         assertThat(questionGroupInstanceDto.getEventSourceId(), is(2));
@@ -277,6 +286,12 @@ public class QuestionnaireMigrationMapperTest {
         verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 11, questionGroupId);
         verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 22, questionGroupId);
         verify(questionnaireServiceFacade).getSectionQuestionId("Misc", 33, questionGroupId);
+    }
+
+    private CustomFieldForMigrationDto accountFieldEntityToMigrationDto(AccountCustomFieldEntity customFieldEntity) {
+        AccountBO account = customFieldEntity.getAccount();
+        return new CustomFieldForMigrationDto(new Object[] {-1, customFieldEntity.getFieldId(), customFieldEntity.getFieldValue(),
+                account.getCreatedDate(), account.getUpdatedDate(), account.getCreatedBy(), account.getUpdatedBy(), account.getAccountId()});
     }
 
     private void assertSection(SectionDto sectionDto) {

@@ -62,8 +62,8 @@ public class Upgrade1290720085 extends Upgrade {
     }
 
     // Intended to be invoked from MigrateAction for manual migration of additional fields
-    public List<Integer> migrateAdditionalFields() {
-        return questionnaireMigration.migrateAdditionalFields();
+    public void migrateAdditionalFields() {
+        questionnaireMigration.migrateAdditionalFields();
     }
 
     private void initializeDependencies() {

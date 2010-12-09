@@ -31,6 +31,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 
 /**
  *
@@ -58,7 +59,7 @@ public interface SavingsDao {
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings();
 
-    Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
 
     List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId);
 

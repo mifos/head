@@ -33,6 +33,7 @@ import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -203,10 +204,20 @@ public class SavingsDaoHibernate implements SavingsDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+    public List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (Iterator<AccountCustomFieldEntity>) baseDao.executeNamedQueryIterator("AccountCustomFieldEntity.getResponses", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) baseDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
+
+        if (queryResult.size() == 0) {
+            return null;
+        }
+
+        List<CustomFieldForMigrationDto> customFields = new ArrayList<CustomFieldForMigrationDto>();
+        for (Object[] customFieldsFromQuery : queryResult) {
+            customFields.add(new CustomFieldForMigrationDto(customFieldsFromQuery));
+        }
+        return customFields;
     }
 
     @Override

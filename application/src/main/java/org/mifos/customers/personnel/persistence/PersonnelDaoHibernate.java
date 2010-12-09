@@ -39,6 +39,7 @@ import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.servicefacade.CenterCreation;
@@ -176,10 +177,20 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<PersonnelCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+    public List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (Iterator<PersonnelCustomFieldEntity>) genericDao.executeNamedQueryIterator("PersonnelCustomFieldEntity.getResponses", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("PersonnelCustomFieldEntity.getResponses", queryParameters);
+
+        if (queryResult.size() == 0) {
+            return null;
+        }
+
+        List<CustomFieldForMigrationDto> customFields = new ArrayList<CustomFieldForMigrationDto>();
+        for (Object[] customFieldsFromQuery : queryResult) {
+            customFields.add(new CustomFieldForMigrationDto(customFieldsFromQuery));
+        }
+        return customFields;
     }
 
     @SuppressWarnings("unchecked")

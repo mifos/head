@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeCustomFieldEntity;
@@ -77,7 +78,7 @@ public interface OfficeDao {
 
     void validateNoOfficesExistGivenOfficeLevel(OfficeLevel regionaloffice);
 
-    Iterator<OfficeCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForOffice();
 }
