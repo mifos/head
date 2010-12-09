@@ -313,14 +313,19 @@ public class Installment implements Comparable<Installment> {
         return payments.getFeesPaid();
     }
 
-    public BigDecimal getEffectiveInterest() {
+    private BigDecimal getEffectiveInterest() {
         return actualAmounts.get(InstallmentComponent.EFFECTIVE_INTEREST);
     }
 
-    public void setEffectiveInterest(BigDecimal effectiveInterest) {
+    void setEffectiveInterest(BigDecimal effectiveInterest) {
         actualAmounts.put(InstallmentComponent.EFFECTIVE_INTEREST, effectiveInterest);
     }
 
+    /**
+    * Assumption: Make payment should not payoff all outstanding principal as repay does
+     * When assumption is wrong, effective interest can be zero, which in turn corrupts
+     * applicable interest 
+    */
     public boolean hasEffectiveInterest() {
         return isGreaterThanZero(getEffectiveInterest());
     }
