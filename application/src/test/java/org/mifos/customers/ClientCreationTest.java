@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -140,6 +141,12 @@ public class ClientCreationTest {
         verify(customerDao).validateClientForDuplicateNameOrGovtId(mockedClient);
     }
 
+    /**
+     * FIXME - for Elsie-F additional field functionality is handled by question qroups and as such
+     * when creating clients, we no longer check if all mandatory fields are filled in - remove
+     * ignored test if http://mifosforge.jira.com/browse/MIFOS-4268 is resolved
+     */
+    @Ignore
     @Test(expected = CustomerException.class)
     public void throwsCheckedExceptionWhenValidationForMandatoryAdditionalFieldsNotPopulated() throws Exception {
 

@@ -173,8 +173,8 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerDao.validateClientForDuplicateNameOrGovtId(client);
 
-        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForClient();
-        client.validateMandatoryCustomFields(allCustomFieldsForGroup);
+//        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForClient();
+//        client.validateMandatoryCustomFields(allCustomFieldsForGroup);
 
         // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
         // List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
