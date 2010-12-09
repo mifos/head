@@ -73,7 +73,7 @@ public class CashFlowValidator {
             Double calculatedIndebtednessRatio = totalLiability.add(loanAmount).multiply(CashFlowConstants.HUNDRED).
                     divide(totalCapital,2,RoundingMode.HALF_EVEN).doubleValue();
             if (calculatedIndebtednessRatio >= indebtednessRatio) {
-                String message = format("Indebtedness rate of the client is {0} which is greater than the allowable value of {1}",
+                String message = format("Indebtedness rate of the client is {0} which should be lesser than the allowable value of {1}",
                         calculatedIndebtednessRatio, indebtednessRatio);
                 constructErrorMessage(CashFlowConstants.INDEBTEDNESS_RATIO_MORE_THAN_ALLOWED, message, messageContext, calculatedIndebtednessRatio, indebtednessRatio);
             }

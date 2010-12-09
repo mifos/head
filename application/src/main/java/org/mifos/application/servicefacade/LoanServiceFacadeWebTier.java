@@ -1145,14 +1145,14 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         String monthYearAsString = cashflowDataHtmlBean.getMonthYearAsString();
         String cumulativeCashFlow = cashflowDataHtmlBean.getCumulativeCashFlow();
         if (StringUtils.isNotEmpty(cashFlowAndInstallmentDiffPercent) && Double.valueOf(cashFlowAndInstallmentDiffPercent) > cashFlowThreshold) {
-            errors.addError(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, monthYearAsString, cashFlowThreshold.toString());
+            errors.addError(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new String[]{monthYearAsString, cashFlowThreshold.toString()});
         }
         if (StringUtils.isNotEmpty(cumulativeCashFlow)) {
             Double cumulativeCashFlowValue = Double.valueOf(cumulativeCashFlow);
             if (cumulativeCashFlowValue < 0) {
-                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, monthYearAsString);
+                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_NEGATIVE, new String[]{monthYearAsString});
             } else if (cumulativeCashFlowValue == 0) {
-                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, monthYearAsString);
+                errors.addError(AccountConstants.CUMULATIVE_CASHFLOW_ZERO, new String[]{monthYearAsString});
             }
         }
     }
@@ -1194,7 +1194,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
         Double calculatedRepaymentCapacity = cashFlowForm.computeRepaymentCapacity(totalInstallmentAmount).doubleValue();
         if (calculatedRepaymentCapacity < repaymentCapacity) {
-            errors.addError(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED, calculatedRepaymentCapacity.toString(), repaymentCapacity.toString());
+            errors.addError(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED, new String[]{calculatedRepaymentCapacity.toString(), repaymentCapacity.toString()});
         }
     }
 

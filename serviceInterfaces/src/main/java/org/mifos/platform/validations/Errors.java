@@ -35,7 +35,7 @@ public class Errors {
         errorEntries.add(new ErrorEntry(errorCode, fieldName));
     }
 
-    public void addError(String errorCode, String... args) {
+    public void addError(String errorCode, String[] args) {
         ErrorEntry errorEntry = new ErrorEntry(errorCode, "");
         errorEntry.setArgs(Arrays.asList(args));
         errorEntries.add(errorEntry);

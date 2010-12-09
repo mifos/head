@@ -169,7 +169,7 @@ public class LoanAccountActionTest {
         Short localeId = new Short("1");
         CashFlowForm cashFlowForm = mock(CashFlowForm.class);
         Errors errors = new Errors();
-        errors.addError("preview is failing");
+        errors.addError("preview is failing",new String[]{});
         when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
         when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
         when(userContext.getLocaleId()).thenReturn(localeId);
