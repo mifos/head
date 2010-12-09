@@ -203,11 +203,16 @@ public class LoanSummaryEntity extends AbstractEntity {
         return totalAmount;
     }
 
-    public void updatePaymentDetails(Money principal, Money interest, Money penalty, Money fees) {
-        principalPaid = principalPaid.add(principal);
-        interestPaid = interestPaid.add(interest);
-        penaltyPaid = penaltyPaid.add(penalty);
-        feesPaid = feesPaid.add(fees);
+    public void updatePaymentDetails(PaymentAllocation paymentAllocation) {
+        updatePaymentDetails(paymentAllocation.getPrincipalPaid(), paymentAllocation.getInterestPaid(),
+                paymentAllocation.getTotalPenaltyPaid(), paymentAllocation.getTotalAndMiscFeesPaid());
+    }
+
+    public void updatePaymentDetails(Money principalPaid, Money interestPaid, Money totalPenaltyPaid, Money totalAndMiscFeesPaid) {
+        this.principalPaid = this.principalPaid.add(principalPaid);
+        this.interestPaid = this.interestPaid.add(interestPaid);
+        penaltyPaid = penaltyPaid.add(totalPenaltyPaid);
+        feesPaid = feesPaid.add(totalAndMiscFeesPaid);
     }
 
     // John W -  to contra the decreaseBy (used when making early repayment) when adjusting the fully paid loan

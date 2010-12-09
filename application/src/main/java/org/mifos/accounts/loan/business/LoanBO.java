@@ -64,6 +64,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -1161,7 +1162,7 @@ public class LoanBO extends AccountBO {
 
     private void makeEarlyRepaymentForNextInstallment(PersonnelBO currentUser, AccountPaymentEntity accountPaymentEntity, boolean waiveInterest) {
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
-        if (isInstallmentUnpaid(nextInstallment)) {
+        if (nextInstallment != null && nextInstallment.isNotPaid()) {
             if(waiveInterest){
                 repayInstallmentWithInterestWaiver(nextInstallment,accountPaymentEntity, AccountConstants.PAYMENT_RCVD,
                         AccountActionTypes.LOAN_REPAYMENT, currentUser);
@@ -1515,7 +1516,6 @@ public class LoanBO extends AccountBO {
         validationForMakePayment(paymentData);
         AccountPaymentEntity accountPaymentEntity = getAccountPaymentEntity(paymentData);
         pay(paymentData, accountPaymentEntity);
-
         if (getLastInstallmentAccountAction().isPaid()) {
             closeLoan(paymentData);
         }
@@ -1529,11 +1529,19 @@ public class LoanBO extends AccountBO {
 
     private void pay(PaymentData paymentData, AccountPaymentEntity accountPaymentEntity) {
         Money balance = paymentData.getTotalAmount();
-        for (AccountActionDateEntity accountActionDate : getAccountActionDatesSortedByInstallmentId()) {
-            if (isInstallmentUnpaid(accountActionDate) && balance.isGreaterThanZero()) {
-                LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-                balance = loanScheduleEntity.payComponents(balance, paymentData.getTransactionDate());
-                updateLoanSummaryAndPerformanceHistory(paymentData, accountPaymentEntity, loanScheduleEntity);
+        PersonnelBO personnel = paymentData.getPersonnel();
+        Date transactionDate = paymentData.getTransactionDate();
+
+        if (this.isDecliningBalanceInterestRecalculation()) {
+            ScheduleCalculatorAdaptor scheduleCalculatorAdaptor = new ScheduleCalculatorAdaptor(new ScheduleCalculator(), new ScheduleMapper());
+            scheduleCalculatorAdaptor.applyPayment(this, balance, transactionDate, personnel, accountPaymentEntity);
+        } else {
+            for (AccountActionDateEntity accountActionDate : this.getAccountActionDatesSortedByInstallmentId()) {
+                if (accountActionDate.isNotPaid() && balance.isGreaterThanZero()) {
+                    LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
+                    balance = loanScheduleEntity.payComponents(balance, transactionDate);
+                    loanScheduleEntity.updateLoanSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
+                }
             }
         }
     }
@@ -1541,20 +1549,6 @@ public class LoanBO extends AccountBO {
     private void handleLoanArrearsAging(LoanPaymentTypes loanPaymentTypes) throws AccountException {
         if (isLoanInBadStanding() && loanPaymentTypes.equals(LoanPaymentTypes.PARTIAL_PAYMENT)) {
             handleArrearsAging();
-        }
-    }
-
-    private void updateLoanSummaryAndPerformanceHistory(PaymentData paymentData, AccountPaymentEntity accountPayment,
-                                                 LoanScheduleEntity loanScheduleEntity) {
-        accountPayment.addAccountTrxn(new LoanTrxnDetailEntity(accountPayment, loanScheduleEntity,
-                paymentData.getPersonnel(), paymentData.getTransactionDate(), AccountActionTypes.LOAN_REPAYMENT,
-                AccountConstants.PAYMENT_RCVD, getLoanPersistence()));
-        PaymentAllocation paymentAllocation = loanScheduleEntity.getPaymentAllocation();
-        loanSummary.updatePaymentDetails(paymentAllocation.getPrincipalPaid(), paymentAllocation.getInterestPaid(),
-                paymentAllocation.getPenaltyPaid().add(paymentAllocation.getMiscPenaltyPaid()),
-                paymentAllocation.getTotalFeesPaid().add(paymentAllocation.getMiscFeePaid()));
-        if (loanScheduleEntity.isPaid()) {
-            performanceHistory.incrementPayments();
         }
     }
 
@@ -2660,10 +2654,6 @@ public class LoanBO extends AccountBO {
             return LoanPaymentTypes.FUTURE_PAYMENT;
         }
         return null;
-    }
-
-    private boolean isInstallmentUnpaid(AccountActionDateEntity installment) {
-        return installment != null && installment.isNotPaid();
     }
 
     private void changeLoanStatus(final AccountState newAccountState, final PersonnelBO personnel)

@@ -23,18 +23,25 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountActionEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.matchers.LoanScheduleEntityMatcher;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentBuilder;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.accounts.loan.schedule.domain.ScheduleMatcher;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Transformer;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -45,6 +52,9 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.mifos.framework.TestUtils.getDate;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 // TODO: Test data instantiation inside this class needs improvement - johnvic/buddy
@@ -58,6 +68,18 @@ public class ScheduleMapperTest {
 
     @Mock
     private LoanBO loanBO;
+    @Mock
+    private PersonnelBO personnelBO;
+    @Mock
+    private AccountPaymentEntity accountPaymentEntity;
+    @Mock
+    private LoanPersistence loanPersistence;
+    @Mock
+    private AccountActionEntity accountActionEntity;
+    @Mock
+    private LoanSummaryEntity loanSummary;
+    @Mock
+    private LoanPerformanceHistoryEntity performanceHistory;
 
     @Before
     public void setUp() {
@@ -73,13 +95,26 @@ public class ScheduleMapperTest {
     }
 
     @Test
-    public void shouldMapScheduleToLoanScheduleEntity() {
+    public void shouldMapScheduleToLoanScheduleEntity() throws PersistenceException {
         LoanScheduleEntity scheduleEntityForPopulateTestInput = getLoanScheduleEntityForPopulateTestInput();
         Collection<LoanScheduleEntity> loanScheduleEntities = Arrays.asList(scheduleEntityForPopulateTestInput);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
+        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getLoanSummary()).thenReturn(loanSummary);
+        when(loanBO.getPerformanceHistory()).thenReturn(performanceHistory);
+        when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
+        when(loanPersistence.getPersistentObject(Mockito.eq(AccountActionEntity.class), Mockito.<Serializable>any())).thenReturn(accountActionEntity);
         Date paymentDate = getDate(24, 11, 2010);
-        scheduleMapper.populatePaymentDetails(getScheduleWithSingleInstallment(), loanBO, paymentDate);
+        scheduleMapper.populatePaymentDetails(getScheduleWithSingleInstallment(), loanBO, paymentDate, personnelBO, accountPaymentEntity);
         Assert.assertThat(getLoanScheduleEntity(paymentDate), new LoanScheduleEntityMatcher(scheduleEntityForPopulateTestInput));
+        verify(loanBO, times(1)).getLoanScheduleEntities();
+        verify(loanBO, times(1)).getLoanPersistence();
+        verify(loanBO, times(1)).getLoanSummary();
+        verify(loanBO, times(1)).getPerformanceHistory();
+        verify(accountPaymentEntity, times(1)).getAccount();
+        verify(loanPersistence, times(1)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
+        verify(loanSummary, times(1)).updatePaymentDetails(Mockito.<PaymentAllocation>any());
+        verify(performanceHistory, times(1)).incrementPayments();
     }
 
     @Test

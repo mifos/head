@@ -22,6 +22,9 @@ package org.mifos.accounts.loan.business;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountActionEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentPayment;
@@ -29,6 +32,8 @@ import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.accounts.loan.schedule.domain.ScheduleMatcher;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
@@ -36,6 +41,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -51,6 +57,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.getDate;
 import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -63,6 +70,24 @@ public class ScheduleCalculatorAdaptorTest {
 
     @Mock
     private LoanBO loanBO;
+
+    @Mock
+    private PersonnelBO personnel;
+
+    @Mock
+    private AccountPaymentEntity accountPaymentEntity;
+
+    @Mock
+    private LoanPersistence loanPersistence;
+
+    @Mock
+    private AccountActionEntity accountActionEntity;
+
+    @Mock
+    private LoanSummaryEntity loanSummary;
+
+    @Mock
+    private LoanPerformanceHistoryEntity performanceHistory;
 
     private ScheduleCalculator scheduleCalculator;
     private MifosCurrency rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", valueOf(1), "INR");
@@ -82,24 +107,62 @@ public class ScheduleCalculatorAdaptorTest {
     }
 
     @Test
-    public void shouldApplyPayment() {
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities(new double[]{100, 10, 5, 4, 3, 2, 1}, new double[]{1, 1, 1, 1, 1, 1, 1});
+    public void shouldApplyPaymentZeroPayment() throws PersistenceException {
+        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
         when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
         when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
-        scheduleCalculatorAdaptor.applyPayment(loanBO, Money.zero(rupee), getDate(30, 10, 2010));
+        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getLoanSummary()).thenReturn(loanSummary);
+        when(loanBO.getPerformanceHistory()).thenReturn(performanceHistory);
+        when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
+        scheduleCalculatorAdaptor.applyPayment(loanBO, Money.zero(rupee), getDate(30, 10, 2010), personnel, accountPaymentEntity);
         verify(scheduleMapper, times(1)).mapToSchedule(Mockito.<Collection<LoanScheduleEntity>>any(), Mockito.<Date>any(), Mockito.<Double>any(), Mockito.<BigDecimal>any());
         verify(scheduleCalculator).applyPayment(Mockito.<Schedule>any(), Mockito.<BigDecimal>any(), Mockito.<Date>any());
-        verify(scheduleMapper).populatePaymentDetails(Mockito.<Schedule>any(), Mockito.<LoanBO>any(), Mockito.<Date>any());
+        verify(scheduleMapper).populatePaymentDetails(Mockito.<Schedule>any(), Mockito.<LoanBO>any(), Mockito.<Date>any(), Mockito.<PersonnelBO>any(), Mockito.<AccountPaymentEntity>any());
         verify(loanBO, times(2)).getLoanScheduleEntities();
         verify(loanBO, times(1)).getDisbursementDate();
         verify(loanBO, times(1)).getInterestRate();
+        verify(loanBO, times(0)).getLoanPersistence();
+        verify(loanBO, times(0)).getLoanSummary();
+        verify(loanBO, times(0)).getPerformanceHistory();
+        verify(accountPaymentEntity, times(0)).getAccount();
+        verify(loanPersistence, times(0)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
+        verify(loanSummary, times(0)).updatePaymentDetails(Mockito.<PaymentAllocation>any());
+        verify(performanceHistory, times(0)).incrementPayments();
+    }
+
+    @Test
+    public void shouldApplyPayment() throws PersistenceException {
+        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
+        when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
+        when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
+        when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
+        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getLoanSummary()).thenReturn(loanSummary);
+        when(loanBO.getPerformanceHistory()).thenReturn(performanceHistory);
+        when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
+        scheduleCalculatorAdaptor.applyPayment(loanBO, new Money(rupee, 112.00), getDate(30, 10, 2010), personnel, accountPaymentEntity);
+        verify(scheduleMapper, times(1)).mapToSchedule(Mockito.<Collection<LoanScheduleEntity>>any(), Mockito.<Date>any(), Mockito.<Double>any(), Mockito.<BigDecimal>any());
+        verify(scheduleCalculator).applyPayment(Mockito.<Schedule>any(), Mockito.<BigDecimal>any(), Mockito.<Date>any());
+        verify(scheduleMapper).populatePaymentDetails(Mockito.<Schedule>any(), Mockito.<LoanBO>any(), Mockito.<Date>any(), Mockito.<PersonnelBO>any(), Mockito.<AccountPaymentEntity>any());
+        verify(loanBO, times(2)).getLoanScheduleEntities();
+        verify(loanBO, times(1)).getDisbursementDate();
+        verify(loanBO, times(1)).getInterestRate();
+        verify(loanBO, times(2)).getLoanPersistence();
+        verify(loanBO, times(2)).getLoanSummary();
+        verify(loanBO, times(1)).getPerformanceHistory();
+        verify(accountPaymentEntity, times(2)).getAccount();
+        verify(loanPersistence, times(2)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
+        verify(loanSummary, times(2)).updatePaymentDetails(Mockito.<PaymentAllocation>any());
+        verify(performanceHistory, times(1)).incrementPayments();
     }
 
     @Test
     public void shouldComputeExtraInterestForDecliningPrincipalBalance() {
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities(new double[]{100, 10, 0.0, 0.0, 0.0, 0.0, 0.0}, new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
+        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
@@ -126,7 +189,7 @@ public class ScheduleCalculatorAdaptorTest {
 
     @Test
     public void shouldNotComputeExtraInterestForNonPrincipalBalanceInterestTypes() {
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities(new double[]{100, 10, 0.0, 0.0, 0.0, 0.0, 0.0}, new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
+        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
@@ -155,7 +218,7 @@ public class ScheduleCalculatorAdaptorTest {
         List<Installment> installments = getInstallments(0, 0, 0);
         Schedule schedule = new Schedule(DISBURSEMENT_DATE, DAILY_INTEREST_RATE, LOAN_AMOUNT, installments);
         new ScheduleCalculator().computeExtraInterest(schedule, getDate(30, 10, 2010));
-        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities(new double[]{100, 10, 0.0, 0.0, 0.0, 0.0, 0.0}, new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0});
+        List<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
         Map<Integer, LoanScheduleEntity> loanScheduleEntityMap = getLoanScheduleEntityMap(loanScheduleEntities);
         assertThat(schedule.getInstallments().get(2).getExtraInterest().doubleValue(), is(0.46));
         scheduleCalculatorAdaptor.populateExtraInterestInLoanScheduleEntities(schedule, loanScheduleEntityMap);
@@ -208,7 +271,7 @@ public class ScheduleCalculatorAdaptorTest {
         return installment;
     }
 
-    private List<LoanScheduleEntity> getLoanScheduleEntities(double[] actualAmounts, double[] paidAmounts) {
+    private List<LoanScheduleEntity> getLoanScheduleEntities() {
         LoanScheduleEntity loanScheduleEntity1 = new LoanScheduleBuilder("1", loanBO).withDueDate(getDate(23, 10, 2010)).
                 withPaymentStatus(PaymentStatus.UNPAID).withPrincipal(100).withInterest(10).build();
         LoanScheduleEntity loanScheduleEntity2 = new LoanScheduleBuilder("2", loanBO).withDueDate(getDate(23, 11, 2010)).

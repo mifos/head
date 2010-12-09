@@ -23,14 +23,15 @@ package org.mifos.accounts.loan.business;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.accounts.util.helpers.OverDueAmounts;
-import org.mifos.accounts.util.helpers.PaymentStatus;
+import org.mifos.accounts.util.helpers.*;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
@@ -651,4 +652,17 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     public double getTotalFeesDueAsDouble() {
         return getTotalFeesDue().getAmount().doubleValue();
     }
+
+    public void updateLoanSummaryAndPerformanceHistory(AccountPaymentEntity accountPayment, PersonnelBO personnel, Date transactionDate) {
+
+        accountPayment.addAccountTrxn(new LoanTrxnDetailEntity(accountPayment, this, personnel, transactionDate,
+                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, ((LoanBO)account).getLoanPersistence()));
+
+        ((LoanBO)account).getLoanSummary().updatePaymentDetails(getPaymentAllocation());
+
+        if (isPaid()) {
+            ((LoanBO)account).getPerformanceHistory().incrementPayments();
+        }
+    }
+
 }

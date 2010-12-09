@@ -19,9 +19,11 @@
  */
 package org.mifos.accounts.loan.business;
 
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.config.AccountingRules;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
 
 import java.util.ArrayList;
@@ -38,11 +40,11 @@ public class ScheduleCalculatorAdaptor {
         this.scheduleMapper = scheduleMapper;
     }
 
-    public void applyPayment(LoanBO loanBO, Money amount, Date paymentDate) {
+    public void applyPayment(LoanBO loanBO, Money amount, Date paymentDate, PersonnelBO personnel, AccountPaymentEntity accountPaymentEntity) {
         Schedule schedule = scheduleMapper.mapToSchedule(loanBO.getLoanScheduleEntities(), loanBO.getDisbursementDate(),
                 getDailyInterest(loanBO.getInterestRate()), loanBO.getLoanAmount().getAmount());
         scheduleCalculator.applyPayment(schedule, amount.getAmount(), paymentDate);
-        scheduleMapper.populatePaymentDetails(schedule, loanBO, paymentDate);
+        scheduleMapper.populatePaymentDetails(schedule, loanBO, paymentDate, personnel, accountPaymentEntity);
     }
 
     public void computeExtraInterest(LoanBO loan, Date asOfDate) {
