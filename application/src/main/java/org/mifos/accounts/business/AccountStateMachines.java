@@ -38,12 +38,13 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
-import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.components.stateMachineFactory.StateXMLParser;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.slf4j.Logger;
@@ -395,8 +396,8 @@ public class AccountStateMachines {
             throws StatesInitializationException {
         logger.debug("In AccountStateMachines::retrieveAllCustomerStatusList()");
         try {
-            return new CustomerBusinessService().retrieveAllCustomerStatusList(customerLevel.getValue());
-        } catch (ServiceException pe) {
+            return new CustomerPersistence().retrieveAllCustomerStatusList(customerLevel.getValue());
+        } catch (PersistenceException pe) {
             throw new StatesInitializationException(SavingsConstants.STATEINITIALIZATION_EXCEPTION, pe);
         }
     }

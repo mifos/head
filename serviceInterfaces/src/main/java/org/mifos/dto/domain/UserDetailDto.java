@@ -31,13 +31,15 @@ public class UserDetailDto implements Serializable {
     private final Integer id;
     private final String firstName;
     private final String lastName;
+    private final boolean loanOfficer;
 
-    public UserDetailDto(String officeName, Integer id, String systemId, String firstName, String lastName) {
+    public UserDetailDto(String officeName, Integer id, String systemId, String firstName, String lastName, boolean loanOfficer) {
         this.officeName = officeName;
         this.id = id;
         this.systemId = systemId;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.loanOfficer = loanOfficer;
     }
 
     public String getOfficeName() {
@@ -58,5 +60,9 @@ public class UserDetailDto implements Serializable {
 
     public String getLastName() {
         return this.lastName;
+    }
+
+    public boolean isLoanOfficer() {
+        return this.loanOfficer;
     }
 }

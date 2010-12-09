@@ -28,8 +28,10 @@ import org.mifos.dto.domain.CenterCreationDetail;
 import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CenterInformationDto;
 import org.mifos.dto.domain.CenterUpdate;
+import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
 import org.mifos.dto.screen.ClosedAccountDto;
 import org.mifos.dto.screen.CustomerNoteFormDto;
@@ -104,4 +106,13 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void revertLastChargesPayment(String globalCustNum, String adjustmentNote);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CustomerDetailDto> retrieveCustomersUnderUser(Short loanOfficerId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    String retrieveOfficeName(Short officeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    UserDetailDto retrieveUsersDetails(Short userId);
 }

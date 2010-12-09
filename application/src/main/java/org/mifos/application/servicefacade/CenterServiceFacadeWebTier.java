@@ -96,6 +96,7 @@ import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
 import org.mifos.dto.screen.ClosedAccountDto;
 import org.mifos.dto.screen.CustomerNoteFormDto;
@@ -830,5 +831,31 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public List<CustomerDetailDto> retrieveCustomersUnderUser(Short loanOfficerId) {
+
+        PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId);
+
+        List<CustomerDetailDto> customerList = new ArrayList<CustomerDetailDto>();
+
+        if (ClientRules.getCenterHierarchyExists()) {
+            customerList = this.customerDao.findActiveCentersUnderUser(loanOfficer);
+        } else {
+            customerList = this.customerDao.findGroupsUnderUser(loanOfficer);
+        }
+
+        return customerList;
+    }
+
+    @Override
+    public String retrieveOfficeName(Short officeId) {
+        return this.officeDao.findOfficeById(officeId).getOfficeName();
+    }
+
+    @Override
+    public UserDetailDto retrieveUsersDetails(Short userId) {
+        return this.personnelDao.findPersonnelById(userId).toDto();
     }
 }

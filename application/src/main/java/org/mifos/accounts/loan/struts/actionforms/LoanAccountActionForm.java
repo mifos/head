@@ -74,12 +74,13 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
@@ -887,7 +888,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private void performGlimSpecificValidations(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
-            throws PageExpiredException, ServiceException {
+            throws PageExpiredException, PersistenceException {
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
             Locale locale = getUserContext(request).getPreferredLocale();
             removeClientsNotCheckedInForm(request);
@@ -1364,7 +1365,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         } catch (PageExpiredException e) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
                     ExceptionConstants.PAGEEXPIREDEXCEPTION));
-        } catch (ServiceException e) {
+        } catch (PersistenceException e) {
             errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, new ActionMessage(
                     ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
         }
@@ -1398,15 +1399,15 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         }
     }
 
-    private CustomerBO getCustomer(Integer customerId) throws ServiceException {
-        return new CustomerBusinessService().getCustomer(customerId);
+    private CustomerBO getCustomer(Integer customerId) throws PersistenceException {
+        return new CustomerPersistence().getCustomer(customerId);
     }
 
     /**
      * FIXME - keithw - loan refactoring - try to remove this usage from validation stages
      */
     @Deprecated
-    private CustomerBO getCustomer(HttpServletRequest request) throws PageExpiredException, ServiceException {
+    private CustomerBO getCustomer(HttpServletRequest request) throws PageExpiredException, PersistenceException {
         CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
         Integer oldCustomerId;
         if (oldCustomer == null) {
