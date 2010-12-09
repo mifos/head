@@ -20,10 +20,10 @@
 
 package org.mifos.accounts.loan.persistance;
 
-import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.dto.domain.SurveyDto;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 
 import java.util.Iterator;
 import java.util.List;
@@ -36,7 +36,7 @@ public interface LoanDao {
 
     List<SurveyDto> getAccountSurveyDto(Integer accountId);
 
-    Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
 }

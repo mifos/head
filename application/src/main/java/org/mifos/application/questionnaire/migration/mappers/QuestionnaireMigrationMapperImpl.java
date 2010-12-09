@@ -24,17 +24,10 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeCustomFieldEntity;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.business.QuestionChoice;
 import org.mifos.customers.surveys.business.Survey;
@@ -165,62 +158,17 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
     }
 
     @Override
-    public QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, Integer eventSourceId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+    public QuestionGroupInstanceDto map(Integer questionGroupId, Integer eventSourceId, List<CustomFieldForMigrationDto> responses, Map<Short, Integer> customFieldQuestionIdMap) {
         QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
-        CustomerBO customer = customerResponses.get(0).getCustomer();
-        questionGroupInstanceDto.setDateConducted(mapToDateConducted(customer.getCreatedDate(), customer.getUpdatedDate()));
+        CustomFieldForMigrationDto customField = responses.get(0);
+        questionGroupInstanceDto.setDateConducted(mapToDateConducted(customField.getCreatedDate(), customField.getUpdatedDate()));
         questionGroupInstanceDto.setCompleted(true);
-        questionGroupInstanceDto.setCreatorId(mapToCreatorId(customer.getCreatedBy(), customer.getUpdatedBy()));
+        questionGroupInstanceDto.setCreatorId(mapToCreatorId(customField.getCreatedBy(), customField.getUpdatedBy()));
         questionGroupInstanceDto.setEventSourceId(eventSourceId);
-        questionGroupInstanceDto.setEntityId(customer.getCustomerId());
+        questionGroupInstanceDto.setEntityId(customField.getEntityId());
         questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
         questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
-        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtosForCustomer(questionGroupId, customerResponses, customFieldQuestionIdMap));
-        return questionGroupInstanceDto;
-    }
-
-    @Override
-    public QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, Integer eventSourceId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap) {
-        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
-        AccountBO account = accountResponses.get(0).getAccount();
-        questionGroupInstanceDto.setDateConducted(mapToDateConducted(account.getCreatedDate(), account.getUpdatedDate()));
-        questionGroupInstanceDto.setCompleted(true);
-        questionGroupInstanceDto.setCreatorId(mapToCreatorId(account.getCreatedBy(), account.getUpdatedBy()));
-        questionGroupInstanceDto.setEventSourceId(eventSourceId);
-        questionGroupInstanceDto.setEntityId(account.getAccountId());
-        questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
-        questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
-        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtosForAccount(questionGroupId, accountResponses, customFieldQuestionIdMap));
-        return questionGroupInstanceDto;
-    }
-
-    @Override
-    public QuestionGroupInstanceDto mapForOffice(Integer questionGroupId, Integer eventSourceId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap) {
-        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
-        OfficeBO office = officeResponses.get(0).getOffice();
-        questionGroupInstanceDto.setDateConducted(mapToDateConducted(office.getCreatedDate(), office.getUpdatedDate()));
-        questionGroupInstanceDto.setCompleted(true);
-        questionGroupInstanceDto.setCreatorId(mapToCreatorId(office.getCreatedBy(), office.getUpdatedBy()));
-        questionGroupInstanceDto.setEventSourceId(eventSourceId);
-        questionGroupInstanceDto.setEntityId(office.getOfficeId().intValue());
-        questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
-        questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
-        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtosForOffice(questionGroupId, officeResponses, customFieldQuestionIdMap));
-        return questionGroupInstanceDto;
-    }
-
-    @Override
-    public QuestionGroupInstanceDto mapForPersonnel(Integer questionGroupId, Integer eventSourceId, List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap) {
-        QuestionGroupInstanceDto questionGroupInstanceDto = new QuestionGroupInstanceDto();
-        PersonnelBO personnel = personnelResponses.get(0).getPersonnel();
-        questionGroupInstanceDto.setDateConducted(mapToDateConducted(personnel.getCreatedDate(), personnel.getUpdatedDate()));
-        questionGroupInstanceDto.setCompleted(true);
-        questionGroupInstanceDto.setCreatorId(mapToCreatorId(personnel.getCreatedBy(), personnel.getUpdatedBy()));
-        questionGroupInstanceDto.setEventSourceId(eventSourceId);
-        questionGroupInstanceDto.setEntityId(personnel.getPersonnelId().intValue());
-        questionGroupInstanceDto.setQuestionGroupId(questionGroupId);
-        questionGroupInstanceDto.setVersion(DEFAULT_VERSION);
-        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtosForPersonnel(questionGroupId, personnelResponses, customFieldQuestionIdMap));
+        questionGroupInstanceDto.setQuestionGroupResponseDtos(mapToQuestionGroupResponseDtos(questionGroupId, responses, customFieldQuestionIdMap));
         return questionGroupInstanceDto;
     }
 
@@ -243,50 +191,11 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
         }
     }
 
-    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForCustomer(Integer questionGroupId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap) {
+    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtos(Integer questionGroupId, List<CustomFieldForMigrationDto> responses, Map<Short, Integer> customFieldQuestionIdMap) {
         List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
-        for (CustomerCustomFieldEntity customerResponse : customerResponses) {
-            Short fieldId = customerResponse.getFieldId();
-            String fieldValue = customerResponse.getFieldValue();
-            QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
-            if (questionGroupResponseDto != null) {
-                questionGroupResponseDtos.add(questionGroupResponseDto);
-            }
-        }
-        return questionGroupResponseDtos;
-    }
-
-    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForAccount(Integer questionGroupId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap) {
-        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
-        for (AccountCustomFieldEntity accountResponse : accountResponses) {
-            Short fieldId = accountResponse.getFieldId();
-            String fieldValue = accountResponse.getFieldValue();
-            QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
-            if (questionGroupResponseDto != null) {
-                questionGroupResponseDtos.add(questionGroupResponseDto);
-            }
-        }
-        return questionGroupResponseDtos;
-    }
-
-    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForOffice(Integer questionGroupId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap) {
-        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
-        for (OfficeCustomFieldEntity officeResponse : officeResponses) {
-            Short fieldId = officeResponse.getFieldId();
-            String fieldValue = officeResponse.getFieldValue();
-            QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
-            if (questionGroupResponseDto != null) {
-                questionGroupResponseDtos.add(questionGroupResponseDto);
-            }
-        }
-        return questionGroupResponseDtos;
-    }
-
-    private List<QuestionGroupResponseDto> mapToQuestionGroupResponseDtosForPersonnel(Integer questionGroupId, List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap) {
-        List<QuestionGroupResponseDto> questionGroupResponseDtos = new ArrayList<QuestionGroupResponseDto>();
-        for (PersonnelCustomFieldEntity personnelResponse : personnelResponses) {
-            Short fieldId = personnelResponse.getFieldId();
-            String fieldValue = personnelResponse.getFieldValue();
+        for (CustomFieldForMigrationDto response : responses) {
+            Short fieldId = response.getFieldId();
+            String fieldValue = response.getFieldValue();
             QuestionGroupResponseDto questionGroupResponseDto = mapToQuestionGroupResponseDto(questionGroupId, customFieldQuestionIdMap, fieldId, fieldValue);
             if (questionGroupResponseDto != null) {
                 questionGroupResponseDtos.add(questionGroupResponseDto);

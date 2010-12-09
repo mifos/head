@@ -26,8 +26,9 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
@@ -234,7 +235,7 @@ public interface CustomerDao {
 
     List<PersonnelLevelEntity> retrievePersonnelLevels();
 
-    Iterator<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator();
 

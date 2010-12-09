@@ -35,6 +35,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -49,7 +50,7 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
@@ -1720,10 +1721,21 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+    public List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (Iterator<CustomerCustomFieldEntity>) genericDao.executeNamedQueryIterator("CustomerCustomFieldEntity.getResponses", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
+                "CustomerCustomFieldEntity.getResponses", queryParameters);
+
+        if (queryResult.size() == 0) {
+            return null;
+        }
+
+        List<CustomFieldForMigrationDto> customFields = new ArrayList<CustomFieldForMigrationDto>();
+        for (Object[] customFieldsFromQuery : queryResult) {
+            customFields.add(new CustomFieldForMigrationDto(customFieldsFromQuery));
+        }
+        return customFields;
     }
 
     @SuppressWarnings("unchecked")
@@ -1731,7 +1743,8 @@ public class CustomerDaoHibernate implements CustomerDao {
     public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CLIENT.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return (Iterator<CustomFieldDefinitionEntity>) genericDao
+                .executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters).iterator();
     }
 
     @SuppressWarnings("unchecked")

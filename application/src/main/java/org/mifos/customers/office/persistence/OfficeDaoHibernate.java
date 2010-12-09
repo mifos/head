@@ -35,12 +35,12 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeCustomFieldEntity;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
@@ -333,10 +333,20 @@ public class OfficeDaoHibernate implements OfficeDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<OfficeCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+    public List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (Iterator<OfficeCustomFieldEntity>) genericDao.executeNamedQueryIterator("OfficeCustomFieldEntity.getResponses", queryParameters);
+        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("OfficeCustomFieldEntity.getResponses", queryParameters);
+
+        if (queryResult.size() == 0) {
+            return null;
+        }
+
+        List<CustomFieldForMigrationDto> customFields = new ArrayList<CustomFieldForMigrationDto>();
+        for (Object[] customFieldsFromQuery : queryResult) {
+            customFields.add(new CustomFieldForMigrationDto(customFieldsFromQuery));
+        }
+        return customFields;
     }
 
 

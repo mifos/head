@@ -954,4 +954,18 @@ select coll.*,
 					*/
 					]]>
 	</sql-query>
+
+    <sql-query name="AccountCustomFieldEntity.getResponses">
+        <return-scalar column="account_custom_field_id" type="integer" />
+		<return-scalar column="field_id" type="short" />
+		<return-scalar column="field_value" type="string" />
+        <return-scalar column="created_date" type="date" />
+        <return-scalar column="updated_date" type="date" />
+        <return-scalar column="created_by" type="short" />
+        <return-scalar column="updated_by" type="short" />
+        <return-scalar column="account_id" type="integer" />
+	    <![CDATA[SELECT a.account_custom_field_id, a.field_id, a.field_value, b.created_date, b.updated_date, b.created_by, b.updated_by, b.account_id
+	    FROM account_custom_field a join account b on a.account_id = b.account_id
+	    where a.field_id = :CUSTOM_FIELD_ID]]>
+	</sql-query>
 </hibernate-mapping>

@@ -24,8 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.UserSearchDto;
@@ -48,7 +48,7 @@ public interface PersonnelDao {
 
     Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel();
 
-    Iterator<PersonnelCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
+    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
 
     SystemUserSearchResultsDto search(UserSearchDto searchDto, MifosUser user);
 }
