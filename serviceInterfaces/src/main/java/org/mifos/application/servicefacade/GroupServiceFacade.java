@@ -23,14 +23,12 @@ package org.mifos.application.servicefacade;
 import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
-import org.mifos.dto.domain.CustomerHistoricalDataUpdateRequest;
 import org.mifos.dto.domain.GroupCreation;
 import org.mifos.dto.domain.GroupCreationDetail;
 import org.mifos.dto.domain.GroupFormCreationDto;
 import org.mifos.dto.domain.GroupUpdate;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
-import org.mifos.dto.screen.CustomerHistoricalDataDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -59,10 +57,4 @@ public interface GroupServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_CHANGE_CENTER_MEMBERSHIP_OF_GROUP')")
     CustomerDetailDto transferGroupToBranch(String globalCustNum, Short officeIdValue, Integer previousGroupVersionNo);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    CustomerHistoricalDataDto retrieveCustomerHistoricalData(String globalCustNum);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    void updateCustomerHistoricalData(String globalCustNum, CustomerHistoricalDataUpdateRequest historicalData);
 }
