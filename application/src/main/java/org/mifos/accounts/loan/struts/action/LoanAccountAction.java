@@ -167,10 +167,10 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 /**
  * Creation and management of loan accounts.
- * <p>
+ * <p/>
  * The "repayment day" form fields provided by the frontend and manipulated in the form by this class are somewhat
  * confusing. Here's an attempt to add some clarity.
- * <p>
+ * <p/>
  * <h3>required for both weekly and monthly recurrence</h3>
  * <ul>
  * <li>frequency
@@ -179,7 +179,7 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
  * </ul>
  * </li>
  * </ul>
- *
+ * <p/>
  * <h3>required for monthly recurrence</h3>
  * <ul>
  * <li>monthType=1 : "12th day of every 1 month"
@@ -216,7 +216,7 @@ import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
  * </ul>
  * </li>
  * </ul>
- *
+ * <p/>
  * <h3>required for weekly recurrence</h3>
  * <ul>
  * <li>(only one kind of weekly schedule)
@@ -244,7 +244,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private final ConfigurationPersistence configurationPersistence;
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
-    private final LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
+    private final LoanServiceFacade loanServiceFacade = getLoanServiceFacade();
+
+    protected LoanServiceFacade getLoanServiceFacade() {
+        return DependencyInjectedServiceLocator.locateLoanServiceFacade();
+    }
 
     public static final String CUSTOMER_ID = "customerId";
     public static final String ACCOUNT_ID = "accountId";
@@ -266,10 +270,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     public LoanAccountAction(final ConfigurationBusinessService configService,
-            final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater,
-            final LoanPrdBusinessService loanPrdBusinessService, final ClientBusinessService clientBusinessService,
-            final MasterDataService masterDataService, final ConfigurationPersistence configurationPersistence,
-            final AccountBusinessService accountBusinessService) {
+                             final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater,
+                             final LoanPrdBusinessService loanPrdBusinessService, final ClientBusinessService clientBusinessService,
+                             final MasterDataService masterDataService, final ConfigurationPersistence configurationPersistence,
+                             final AccountBusinessService accountBusinessService) {
         super(accountBusinessService);
 
         this.configService = configService;
@@ -290,7 +294,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
      */
     @Deprecated
     LoanAccountAction(final LoanBusinessService loanBusinessService, final ConfigurationBusinessService configService,
-            final GlimLoanUpdater glimLoanUpdater) {
+                      final GlimLoanUpdater glimLoanUpdater) {
         this(configService, loanBusinessService, glimLoanUpdater);
     }
 
@@ -299,7 +303,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
      */
     @Deprecated
     private LoanAccountAction(final ConfigurationBusinessService configService,
-            final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
+                              final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
         this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(),
                 new ClientBusinessService(), new MasterDataService(), new ConfigurationPersistence(),
                 new AccountBusinessService());
@@ -344,7 +348,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward getPrdOfferings(final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+                                         final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
 
         final LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
@@ -387,7 +391,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                              @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         loanActionForm.clearDetailsForLoan();
@@ -457,7 +461,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward validateInstallments(final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+                                              final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
@@ -466,13 +470,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         boolean cashflowBounded = bindCashflowIfPresent(request, loanActionForm);
 
-        if(validateInstallmentsPassed && cashflowBounded) {
+        if (validateInstallmentsPassed && cashflowBounded) {
             updateCashflowAndValidate(request, loanActionForm);
         }
 
         ActionForwards forward = validateInstallmentsPassed ?
                 ActionForwards.validateInstallments_success :
-                    ActionForwards.validateInstallments_failure;
+                ActionForwards.validateInstallments_failure;
 
         return mapping.findForward(forward.name());
     }
@@ -481,8 +485,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private boolean updateCashflowAndValidate(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
         boolean result = true;
         ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request, loanActionForm);
-        if(!validateCashflowForInstallments.isEmpty()) {
-            addErrors(request,validateCashflowForInstallments);
+        if (!validateCashflowForInstallments.isEmpty()) {
+            addErrors(request, validateCashflowForInstallments);
         }
         return result;
     }
@@ -527,7 +531,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception{
+                                     final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "showPreview");
 
         ActionForward forwardAfterCashflowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
@@ -541,12 +545,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private boolean bindCashflowIfPresent(final HttpServletRequest request, final ActionForm form) throws Exception {
         boolean cashflowBound = false;
         UserContext userContext = getUserContext(request);
-        LoanAccountActionForm loanForm = (LoanAccountActionForm)form;
+        LoanAccountActionForm loanForm = (LoanAccountActionForm) form;
         LoanOfferingBO loanOffering = getLoanOffering(loanForm.getPrdOfferingIdValue(), userContext.getLocaleId());
 
-        if(loanOffering!= null && loanOffering.isCashFlowCheckEnabled()) {
+        if (loanOffering != null && loanOffering.isCashFlowCheckEnabled()) {
             InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
-                    loanForm.getInstallments(),loanForm.getCashFlowForm().getMonthlyCashFlows());
+                    loanForm.getInstallments(), loanForm.getCashFlowForm().getMonthlyCashFlows());
 
             loanForm.setCashflowDataHtmlBeans(cashflowUtility.mapToCashflowDataHtmlBeans());
             cashflowBound = true;
@@ -557,7 +561,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward schedulePreview(final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+                                         final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
@@ -585,6 +589,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     // Intentionally made 'public' to aid testing
     // CashFlowAdaptor passed to aid testing 
+
     public ActionForward getPageAfterQuestionnaire(ActionMapping mapping, HttpServletRequest request,
                                                    LoanOfferingBO loanOffering,
                                                    LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto,
@@ -618,7 +623,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private LoanCreationLoanScheduleDetailsDto retrieveLoanSchedule(HttpServletRequest request, LoanAccountActionForm loanActionForm,
-                                 UserContext userContext, DateTime disbursementDate) throws ApplicationException {
+                                                                    UserContext userContext, DateTime disbursementDate) throws ApplicationException {
         CustomerDetailDto oldCustomer = getCustomer(request);
         FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
         LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto;
@@ -674,21 +679,32 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in createloanpreview.jsp
         setInstallmentsOnSession(request, loanAccountForm);
+        ActionForwards forward = validateInstallmentsAndCashFlow(form, request, loanAccountForm);
+        return mapping.findForward(forward.name());
+    }
+
+    private ActionForwards validateInstallmentsAndCashFlow(ActionForm form, HttpServletRequest request, LoanAccountActionForm loanAccountForm) throws Exception {
         ActionForwards forward = validateInstallments(request, loanAccountForm) ?
-                                                    ActionForwards.preview_success :
-                                                    ActionForwards.preview_failure;
+                ActionForwards.preview_success :
+                ActionForwards.preview_failure;
 
         boolean cashFlowBounded = bindCashflowIfPresent(request, loanAccountForm);
         //----to display errors on second page
-        if (forward.equals(ActionForwards.preview_success)) {
-            if (cashFlowBounded) {
-                ActionErrors actionErrors = validateCashFlowForInstallments(request, (LoanAccountActionForm) form);
-                if (!actionErrors.isEmpty()) {
-                    addErrors(request, actionErrors);
-                }
-            }
+        if (forward.equals(ActionForwards.preview_success) && cashFlowBounded) {
+            forward = validateCashFlowAndChangeForward(form, request) ?
+                    ActionForwards.preview_success :
+                    ActionForwards.preview_failure;
         }
-        return mapping.findForward(forward.name());
+        return forward;
+    }
+
+    private boolean validateCashFlowAndChangeForward(ActionForm form, HttpServletRequest request) throws Exception {
+        ActionErrors actionErrors = validateCashFlowForInstallments(request, (LoanAccountActionForm) form);
+        boolean isEmpty = actionErrors.isEmpty();
+        if (!isEmpty) {
+            addErrors(request, actionErrors);
+        }
+        return isEmpty;
     }
 
     private void setRedoLoanAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm,
@@ -697,7 +713,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             UserContext userContext = getUserContext(request);
             DateTime disbursementDate = getDisbursementDate(loanAccountForm, userContext.getPreferredLocale());
             LoanBO loan = loanServiceFacade.previewLoanRedoDetails(customerId, loanAccountForm,
-                                            disbursementDate, userContext);
+                    disbursementDate, userContext);
 
             String loanDisbursementDate = DateUtils.getUserLocaleDate(null, disbursementDate.toDate());
             SessionUtils.setAttribute("loanDisbursementDate", loanDisbursementDate, request);
@@ -706,7 +722,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void setGLIMAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm,
-                                                            Integer customerId) throws PageExpiredException {
+                                            Integer customerId) throws PageExpiredException {
         LoanCreationPreviewDto loanPreviewDto = getloanPreviewDto(request, loanAccountForm, customerId);
         if (loanPreviewDto.isGlimEnabled()) {
             SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, 1, request);
@@ -726,8 +742,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         List<BusinessActivityEntity> businessActEntity = retrieveLoanPurposesFromSession(request);
 
         return loanServiceFacade.previewLoanCreationDetails(customerId,
-                                        accountDetails, selectedClientIds, businessActEntity);
+                accountDetails, selectedClientIds, businessActEntity);
     }
+
     private void setInstallmentsOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm) throws PageExpiredException {
         SessionUtils.setCollectionAttribute(LoanConstants.INSTALLMENTS, loanAccountForm.getInstallments(), request);
     }
@@ -740,8 +757,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getInstallmentDetails(final ActionMapping mapping,
-            @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                               @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
+                                               @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         Integer accountId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
 
@@ -760,7 +777,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getAllActivity(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
-            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+                                        final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
 
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
@@ -774,15 +791,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward forwardWaiveCharge(final ActionMapping mapping,
-            @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                            @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
+                                            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         return mapping.findForward("waive" + request.getParameter("type") + "Charges_Success");
     }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
-        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm)form;
+                             final HttpServletResponse response) throws Exception {
+        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
         loanAccountActionForm.clearDetailsForLoan();
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         UserContext userContext = getUserContext(request);
@@ -798,7 +815,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 loanInformationDto.getInterestTypeName(), userContext);
         SessionUtils.removeThenSetAttribute("interestTypeNameLocalised", interestTypeNameLocalised, request);
         final Set<String> accountFlagStateEntityNamesLocalised = new HashSet<String>();
-        for(String name: loanInformationDto.getAccountFlagNames()) {
+        for (String name : loanInformationDto.getAccountFlagNames()) {
             accountFlagStateEntityNamesLocalised.add(MessageLookup.getInstance().lookup(name, userContext));
         }
         SessionUtils.setCollectionAttribute("accountFlagNamesLocalised", accountFlagStateEntityNamesLocalised, request);
@@ -819,10 +836,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 && loanInformationDto.isGroup()) {
 
             List<BusinessActivityEntity> businessActEntity = (List<BusinessActivityEntity>) SessionUtils
-                            .getAttribute("BusinessActivities", request);
+                    .getAttribute("BusinessActivities", request);
             SessionUtils.setCollectionAttribute("loanAccountDetailsView",
                     loanServiceFacade.getLoanAccountDetailsViewList(loanInformationDto,
-                    businessActEntity, clientBusinessService), request);
+                            businessActEntity, clientBusinessService), request);
         }
         loadCustomFieldDefinitions(request);
         loadMasterData(request);
@@ -866,6 +883,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     // Intentionally made public to aid testing !
+
     public void setQuestionGroupInstances(QuestionnaireServiceFacade questionnaireServiceFacade, HttpServletRequest request, Integer loanAccountId) throws PageExpiredException {
         List<QuestionGroupInstanceDetail> instanceDetails = questionnaireServiceFacade.getQuestionGroupInstances(loanAccountId, "View", "Loan");
         SessionUtils.setCollectionAttribute("questionGroupInstances", instanceDetails, request);
@@ -886,10 +904,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getLoanRepaymentSchedule(final ActionMapping mapping,
-            @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                                  @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
+                                                  @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
-        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm)form;
+        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
         Date viewDate = loanAccountActionForm.getScheduleViewDateValue(userContext.getPreferredLocale());
@@ -903,8 +921,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward viewStatusHistory(final ActionMapping mapping,
-            @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                           @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
+                                           @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         UserContext userContext = getUserContext(request);
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
@@ -918,7 +936,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward validate(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                  @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
@@ -941,7 +959,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void setMonthlySchedule(final LoanAccountActionForm loanActionForm,
-            final MeetingDetailsEntity meetingDetails) {
+                                    final MeetingDetailsEntity meetingDetails) {
         // 2 is signaled as the schedule is monthly on jsp page (Monthradio
         // button is clicked)
         loanActionForm.setFrequency("2");
@@ -971,14 +989,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     public ActionForward redoLoanBegin(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
-            @SuppressWarnings("unused") final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                       @SuppressWarnings("unused") final HttpServletRequest request,
+                                       @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.beginRedoLoanDisbursal_success.toString());
     }
 
     /**
      * Resolve repayment start date according to given disbursement date
-     *
+     * <p/>
      * The resulting date equates to the disbursement date plus MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY: e.g.
      * If disbursement date is 18 June 2008, and MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY is 1 then the
      * repayment start date would be 19 June 2008
@@ -998,14 +1016,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previous(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
-            @SuppressWarnings("unused") final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                  @SuppressWarnings("unused") final HttpServletRequest request,
+                                  @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         String perspective = loanActionForm.getPerspective();
@@ -1029,7 +1047,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                     loanActionForm);
             createLoanQuestionnaire.saveResponses(request, loanActionForm, loanCreationResultDto.getAccountId());
         }
-        cashFlowAdaptor.save((CashFlowCaptor)form,request);
+        cashFlowAdaptor.save((CashFlowCaptor) form, request);
 
         if (loanCreationResultDto.isGlimApplicable()) {
             boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
@@ -1065,9 +1083,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     // This is because the LoanAccountActionForm.java is implemented such that
     // client id becomes globalcustnum
     // somewhere during the Create Account flow
+
     private void createIndividualLoanAccount(final LoanAccountActionForm loanActionForm, final LoanBO loan,
-            final boolean isRepaymentIndepOfMeetingEnabled, final LoanAccountDetailsDto loanAccountDetail,
-            final boolean isRedoOperation) throws AccountException, ServiceException {
+                                             final boolean isRepaymentIndepOfMeetingEnabled, final LoanAccountDetailsDto loanAccountDetail,
+                                             final boolean isRedoOperation) throws AccountException, ServiceException {
         LoanBO individualLoan;
         if (isRedoOperation) {
             individualLoan = LoanBO.redoIndividualLoan(loan.getUserContext(), loan.getLoanOffering(),
@@ -1097,7 +1116,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward manage(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
         CustomerBO customer = getCustomerFromRequest(request);
@@ -1172,14 +1191,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void populateGlimAttributes(final HttpServletRequest request, final LoanAccountActionForm loanActionForm,
-            final String globalAccountNum, final CustomerBO customer) throws PageExpiredException, ServiceException {
+                                        final String globalAccountNum, final CustomerBO customer) throws PageExpiredException, ServiceException {
         GlimSessionAttributes glimSessionAttributes = getGlimSpecificPropertiesToSet(loanActionForm, globalAccountNum,
                 customer, getBusinessActivitiesFromDatabase(request));
         glimSessionAttributes.putIntoSession(request);
     }
 
     GlimSessionAttributes getGlimSpecificPropertiesToSet(final LoanAccountActionForm loanActionForm,
-            final String globalAccountNum, final CustomerBO customer, final List<ValueListElement> businessActivities)
+                                                         final String globalAccountNum, final CustomerBO customer, final List<ValueListElement> businessActivities)
             throws ServiceException {
         if (configService.isGlimEnabled() && customer.isGroup()) {
             List<LoanBO> individualLoans = loanBusinessService
@@ -1198,7 +1217,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private List<String> fetchClientIdsWithMatchingLoans(final List<LoanBO> individualLoans,
-            final List<LoanAccountDetailsDto> clientDetails) {
+                                                         final List<LoanAccountDetailsDto> clientDetails) {
         List<String> clientIds = new ArrayList<String>();
         for (final LoanAccountDetailsDto clientDetail : clientDetails) {
             LoanBO loanMatchingClientDetail = (LoanBO) CollectionUtils.find(individualLoans, new Predicate() {
@@ -1217,7 +1236,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     List<LoanAccountDetailsDto> populateClientDetailsFromLoan(final List<ClientBO> activeClientsUnderGroup,
-            final List<LoanBO> individualLoans, final List<ValueListElement> businessActivities) {
+                                                              final List<LoanBO> individualLoans, final List<ValueListElement> businessActivities) {
         List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
         for (final ClientBO client : activeClientsUnderGroup) {
             LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
@@ -1257,7 +1276,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward managePrevious(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
-            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+                                        final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
         setRequestAttributesForEditPage(request, getLoanBO(request));
         return mapping.findForward(ActionForwards.manageprevious_success.toString());
@@ -1265,7 +1284,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward managePreview(final ActionMapping mapping, final ActionForm form,
-            final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
+                                       final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
             throws Exception {
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
         Short localeId = getUserContext(request).getLocaleId();
@@ -1292,7 +1311,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void performGlimSpecificOnManagePreview(final HttpServletRequest request,
-            final LoanAccountActionForm loanAccountForm, final Short localeId) throws ServiceException,
+                                                    final LoanAccountActionForm loanAccountForm, final Short localeId) throws ServiceException,
             PageExpiredException {
         CustomerBO customer = getCustomer(loanAccountForm.getCustomerIdValue());
         setGlimEnabledSessionAttributes(request, customer.isGroup());
@@ -1304,7 +1323,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private List<LoanAccountDetailsDto> populateDetailsForSelectedClients(final Short localeId,
-            final List<LoanAccountDetailsDto> clientDetails, final List<String> selectedClients)
+                                                                          final List<LoanAccountDetailsDto> clientDetails, final List<String> selectedClients)
             throws ServiceException {
         List<LoanAccountDetailsDto> loanAccountDetailsView = new ArrayList<LoanAccountDetailsDto>();
         for (final String clientId : selectedClients) {
@@ -1332,7 +1351,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void resetBusinessActivity(final HttpServletRequest request, final Short localeId,
-            final LoanAccountActionForm loanAccountActionForm) throws PageExpiredException, Exception {
+                                       final LoanAccountActionForm loanAccountActionForm) throws PageExpiredException, Exception {
         SessionUtils.removeAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME, request);
         if (loanAccountActionForm.getBusinessActivityIdValue() != null) {
             SessionUtils.setAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME, getNameForBusinessActivityEntity(
@@ -1361,14 +1380,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
-            @SuppressWarnings("unused") final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                @SuppressWarnings("unused") final HttpServletRequest request,
+                                @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.loan_detail_page.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+                                @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanBO loanBOInSession = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         LoanBO loanBO = loanBusinessService.findBySystemId(loanBOInSession.getGlobalAccountNum());
@@ -1414,8 +1433,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     void handleIndividualLoans(final LoanBO loanBO, final LoanAccountActionForm loanAccountActionForm,
-            final boolean isRepaymentIndepOfMeetingEnabled, final List<LoanAccountDetailsDto> loanAccountDetailsList,
-            final List<LoanBO> individualLoans) throws AccountException, ServiceException {
+                               final boolean isRepaymentIndepOfMeetingEnabled, final List<LoanAccountDetailsDto> loanAccountDetailsList,
+                               final List<LoanBO> individualLoans) throws AccountException, ServiceException {
         List<Integer> foundLoans = new ArrayList<Integer>();
         for (final LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
             Predicate predicate = new Predicate() {
@@ -1444,14 +1463,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     /**
      * Create new meeting for the repayment day.
-     *
+     * <p/>
      * Depending on the recurrence id (WEEKLY or MONTHLY) a MeetingBO will be created and returned
      *
      * @throws InvalidDateException
-     *
      */
     private MeetingBO createNewMeetingForRepaymentDay(final HttpServletRequest request,
-            final LoanAccountActionForm loanAccountActionForm, final CustomerBO customer) throws MeetingException,
+                                                      final LoanAccountActionForm loanAccountActionForm, final CustomerBO customer) throws MeetingException,
             InvalidDateException {
         MeetingBO newMeetingForRepaymentDay = null;
         Short recurrenceId = Short.valueOf(loanAccountActionForm.getRecurrenceId());
@@ -1550,7 +1568,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @SuppressWarnings("unchecked")
     private List<CustomFieldDto> createCustomFieldViews(final Set<AccountCustomFieldEntity> customFieldEntities,
-            final HttpServletRequest request) throws ApplicationException {
+                                                        final HttpServletRequest request) throws ApplicationException {
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
@@ -1585,7 +1603,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         private final String loanAccountOwnerIsGroup;
 
         GlimSessionAttributes(final int isGlimEnabled, final List<ClientBO> clients,
-                final String loanAccountOwnerIsGroup) {
+                              final String loanAccountOwnerIsGroup) {
             this.isGlimEnabled = isGlimEnabled;
             this.clients = clients;
             this.loanAccountOwnerIsGroup = loanAccountOwnerIsGroup;
@@ -1657,12 +1675,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void storeObjectOnSessionForUseInJspPage(final HttpServletRequest request, final String objectKey,
-            final Serializable value) throws PageExpiredException {
+                                                     final Serializable value) throws PageExpiredException {
         SessionUtils.setAttribute(objectKey, value, request);
     }
 
     private void storeCollectionOnSessionForUseInJspPage(final HttpServletRequest request, final String collectionKey,
-            final Collection<? extends Serializable> collectionValue) throws PageExpiredException {
+                                                         final Collection<? extends Serializable> collectionValue) throws PageExpiredException {
         SessionUtils.setCollectionAttribute(collectionKey, collectionValue, request);
     }
 
@@ -1688,7 +1706,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private void handleRepaymentsIndependentOfMeetingIfConfigured(final HttpServletRequest request,
-            final LoanAccountActionForm loanActionForm, final String recurMonth) throws PageExpiredException, Exception {
+                                                                  final LoanAccountActionForm loanActionForm, final String recurMonth) throws PageExpiredException, Exception {
 
         if (configService.isRepaymentIndepOfMeetingEnabled()) {
 
