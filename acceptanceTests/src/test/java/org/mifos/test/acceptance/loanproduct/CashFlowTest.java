@@ -86,7 +86,7 @@ public class CashFlowTest extends UiTestCaseBase {
         String loanProductName = formParameters.getOfferingName();
         int frequency = formParameters.getFreqOfInstallments();
 
-        createAndValidateLoanProductWithCashFlow("89.99",formParameters, "1.11", "150.22");
+        createAndValidateLoanProductWithCashFlow("89.99",formParameters, "49.99", "999.99");
         new NavigationHelper(selenium).navigateToHomePage();
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,loanProductName).
@@ -96,7 +96,8 @@ public class CashFlowTest extends UiTestCaseBase {
 //                verifyPage().
                 validateCashFlowMonths(disbursalDate,installment,frequency).
                 verifyCashFlowFields().
-                enterValidData(cashFlowIncremental, 100, "100", "100").
+                verifyInvalidIndebentRate("49.99", "7001", "1000").
+                enterValidData(cashFlowIncremental, 100, "7003", "1000").
                 clickContinue().
                 verifyCashFlow(cashFlowIncremental);
 

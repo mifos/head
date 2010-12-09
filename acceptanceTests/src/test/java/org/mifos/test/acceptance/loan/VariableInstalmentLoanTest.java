@@ -82,7 +82,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
         int loanAmount = 1000;

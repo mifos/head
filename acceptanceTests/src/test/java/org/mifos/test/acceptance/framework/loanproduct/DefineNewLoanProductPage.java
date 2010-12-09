@@ -410,6 +410,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     private void verifyDecimalsForCashFlow() {
         fillCashFlow("99.999", "45.000", "200.000");
+        submit();
         isTextPresentInPage("The Warning Threshold is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
         isTextPresentInPage("The Indebtedness Ratio is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
         isTextPresentInPage("The Repayment Capacity is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
