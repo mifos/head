@@ -20,14 +20,12 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
@@ -164,42 +162,75 @@ public class LoanAccountActionTest {
     }
 
     @Test
-    public void shouldValidateForCashFlowInPreviewIfCashFlowIsEnabled() throws Exception {
+    public void previewShouldBeFailureIfErrorMessagesArePresent() throws Exception {
         ActionForward previewFailure = new ActionForward("preview_failure");
         Short localeId = new Short("1");
         CashFlowForm cashFlowForm = mock(CashFlowForm.class);
         Errors errors = new Errors();
         errors.addError("preview is failing",new String[]{});
+        double repaymentCapacity = 123d;
         when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
-        when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
+        when(loanOffering.getRepaymentCapacity()).thenReturn(repaymentCapacity);
+        List installments = Collections.EMPTY_LIST;
+        when(form.getInstallments()).thenReturn(installments);
         when(userContext.getLocaleId()).thenReturn(localeId);
         when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
-        when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
         when(form.getCashFlowForm()).thenReturn(cashFlowForm);
         when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
-        when(loanServiceFacade.validateCashFlowForInstallments(form, localeId)).thenReturn(errors);
+        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(errors);
+        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(errors);
         when(mapping.findForward("preview_failure")).thenReturn(previewFailure);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
         assertThat(forward, is(previewFailure));
+        verify(mapping,never()).findForward("preview_success");
+    }
+    @Test
+    public void previewShouldBeSuccessIfOnlyWarningMessagesArePresentAndNoErrorMessagesArePresent() throws Exception {
+        ActionForward previewSuccess = new ActionForward("preview_success");
+        Short localeId = new Short("1");
+        CashFlowForm cashFlowForm = mock(CashFlowForm.class);
+        Errors warning = new Errors();
+        Errors error = new Errors();
+        warning.addError("this is warning message",new String[]{});
+        double repaymentCapacity = 123d;
+        when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
+        when(loanOffering.getRepaymentCapacity()).thenReturn(repaymentCapacity);
+        List installments = Collections.EMPTY_LIST;
+        when(form.getInstallments()).thenReturn(installments);
+        when(userContext.getLocaleId()).thenReturn(localeId);
+        when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
+        when(form.getCashFlowForm()).thenReturn(cashFlowForm);
+        when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
+        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(warning);
+        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(error);
+        when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
+        ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
+        assertThat(forward, is(previewSuccess));
+        verify(mapping,never()).findForward("preview_failure");
     }
     
     @Test
-    public void shouldReturnPreviewSuccessIfValidateForCashFlowInPreviewIsPassed() throws Exception {
+    public void previewShouldBeSuccessIfNoErrorMessagesArePresent() throws Exception {
         ActionForward previewSuccess = new ActionForward("preview_success");
         Short localeId = new Short("1");
         CashFlowForm cashFlowForm = mock(CashFlowForm.class);
         Errors errors = new Errors();
+        List installments = Collections.EMPTY_LIST;
+        double repaymentCapacity = 123d;
+        when(loanOffering.getRepaymentCapacity()).thenReturn(repaymentCapacity);
         when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
-        when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
+        when(form.getInstallments()).thenReturn(installments);
         when(userContext.getLocaleId()).thenReturn(localeId);
         when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
-        when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
         when(form.getCashFlowForm()).thenReturn(cashFlowForm);
         when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
-        when(loanServiceFacade.validateCashFlowForInstallments(form, localeId)).thenReturn(errors);
+        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(errors);
+        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(errors);
+
         when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
         assertThat(forward, is(previewSuccess));
+        verify(mapping,never()).findForward("preview_failure");
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {

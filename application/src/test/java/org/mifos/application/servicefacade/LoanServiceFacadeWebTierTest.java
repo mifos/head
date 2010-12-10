@@ -20,6 +20,7 @@
 package org.mifos.application.servicefacade;
 
 import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,6 +63,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
@@ -327,5 +329,38 @@ public class LoanServiceFacadeWebTierTest {
 
         errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1700d);
         assertThat(errors.hasErrorEntryWithCode(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED), is(true));
+    }
+
+    @Test
+    public void shouldValidateForInstallmentDateBeyondCashFlowData() {
+        ArrayList<MonthlyCashFlowDetail> monthlyCashFlows = new ArrayList<MonthlyCashFlowDetail>();
+        DateTime dateTime = new DateTime().withDate(2010, 10, 30);
+        monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime,new BigDecimal(123), new BigDecimal(234),""));
+        monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime.plusMonths(1),new BigDecimal(123), new BigDecimal(234),""));
+        monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime.plusMonths(2),new BigDecimal(123), new BigDecimal(234),""));
+        CashFlowDetail cashFlowDetail = new CashFlowDetail(monthlyCashFlows);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
+        cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
+        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
+
+        RepaymentScheduleInstallment installment = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).
+                                                        withTotalValue("10").withDueDateValue("30-Nov-2010").build();
+        RepaymentScheduleInstallment installmentBeforeCashFlowDate = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).
+                                                        withTotalValue("10").withDueDateValue("30-Nov-2010").build();
+        List<RepaymentScheduleInstallment> installments = asList(installment);
+
+        Errors errors;
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1600d);
+        assertThat(errors.hasErrorEntryWithCode(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE), is(false));
+
+        RepaymentScheduleInstallment installmentBeyondCashFlowDate = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).
+                                                        withTotalValue("10").withDueDateValue("30-Jan-2011").build();
+
+        installments = asList(installmentBeyondCashFlowDate);
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1600d);
+        assertThat(errors.hasErrorEntryWithCode(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE), is(true));
+
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1700d);
+        assertThat(errors.hasErrorEntryWithCode(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE), is(true));
     }
 }

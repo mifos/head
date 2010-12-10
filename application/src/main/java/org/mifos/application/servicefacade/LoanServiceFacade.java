@@ -110,7 +110,7 @@ public interface LoanServiceFacade {
 
     Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
 
-    Errors validateCashFlowForInstallments(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException;
+    Errors validateCashFlowForInstallmentsForWarnings(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException;
 
     Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity);
 }

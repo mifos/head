@@ -1124,7 +1124,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public Errors validateCashFlowForInstallments(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException {
+    public Errors validateCashFlowForInstallmentsForWarnings(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException {
         Errors errors = new Errors();
         LoanOfferingBO loanOfferingBO = loanPrdBusinessService.getLoanOffering(loanActionForm.getPrdOfferingIdValue(), localeId);
         if (loanOfferingBO.shouldValidateCashFlowForInstallments()) {
@@ -1134,7 +1134,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 for (CashFlowDataHtmlBean cashflowDataHtmlBean : cashFlowDataHtmlBeans) {
                     validateCashFlow(errors, cashFlowDetail.getCashFlowThreshold(), cashflowDataHtmlBean);
                 }
-                errors.addErrors(validateCashFlowForInstallments(loanActionForm.getInstallments(), loanActionForm.getCashFlowForm(), cashFlowDetail.getRepaymentCapacity()));
             }
         }
         return errors;
@@ -1172,11 +1171,11 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             SimpleDateFormat df = new SimpleDateFormat("MMMM yyyy", installments.get(0).getLocale());
 
             if (!lowerBound) {
-                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, df.format(installments.get(0).getDueDateValue()));
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(installments.get(0).getDueDateValue())});
             }
 
             if (!upperBound) {
-                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, df.format(installments.get(installments.size() - 1).getDueDateValue()));
+                errors.addError(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE, new String[]{df.format(installments.get(installments.size() - 1).getDueDateValue())});
             }
 
         }

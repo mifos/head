@@ -470,29 +470,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         boolean cashflowBounded = bindCashflowIfPresent(request, loanActionForm);
 
+        ActionForwards forward = ActionForwards.validateInstallments_failure;
         if (validateInstallmentsPassed && cashflowBounded) {
-            updateCashflowAndValidate(request, loanActionForm);
+            forward = validateCashFlowForWarningAndErrors(loanActionForm, request, loanActionForm, ActionForwards.validateInstallments_success, ActionForwards.validateInstallments_failure);
+
         }
-
-        ActionForwards forward = validateInstallmentsPassed ?
-                ActionForwards.validateInstallments_success :
-                ActionForwards.validateInstallments_failure;
-
         return mapping.findForward(forward.name());
     }
 
 
-    private boolean updateCashflowAndValidate(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
-        boolean result = true;
-        ActionErrors validateCashflowForInstallments = validateCashFlowForInstallments(request, loanActionForm);
-        if (!validateCashflowForInstallments.isEmpty()) {
-            addErrors(request, validateCashflowForInstallments);
-        }
-        return result;
-    }
-
-    private ActionErrors validateCashFlowForInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
-        return getActionErrors(loanServiceFacade.validateCashFlowForInstallments(loanActionForm, getUserContext(request).getLocaleId()));
+    private ActionErrors validateCashFlowForInstallmentsForWarnings(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
+        return getActionErrors(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(loanActionForm, getUserContext(request).getLocaleId()));
     }
 
     private ActionErrors validateCashflowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
@@ -683,7 +671,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return mapping.findForward(forward.name());
     }
 
-    private ActionForwards validateInstallmentsAndCashFlow(ActionForm form, HttpServletRequest request, LoanAccountActionForm loanAccountForm) throws Exception {
+    private ActionForwards validateInstallmentsAndCashFlow(ActionForm form, HttpServletRequest request,
+                                                           LoanAccountActionForm loanAccountForm) throws Exception {
         ActionForwards forward = validateInstallments(request, loanAccountForm) ?
                 ActionForwards.preview_success :
                 ActionForwards.preview_failure;
@@ -691,15 +680,31 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         boolean cashFlowBounded = bindCashflowIfPresent(request, loanAccountForm);
         //----to display errors on second page
         if (forward.equals(ActionForwards.preview_success) && cashFlowBounded) {
-            forward = validateCashFlowAndChangeForward(form, request) ?
-                    ActionForwards.preview_success :
-                    ActionForwards.preview_failure;
+            forward = validateCashFlowForWarningAndErrors(form, request, loanAccountForm, ActionForwards.preview_success, ActionForwards.preview_failure);
         }
         return forward;
     }
 
-    private boolean validateCashFlowAndChangeForward(ActionForm form, HttpServletRequest request) throws Exception {
-        ActionErrors actionErrors = validateCashFlowForInstallments(request, (LoanAccountActionForm) form);
+    private ActionForwards validateCashFlowForWarningAndErrors(ActionForm form, HttpServletRequest request, LoanAccountActionForm loanAccountForm, ActionForwards preview_success, ActionForwards failure) throws Exception {
+        validateCashFlowForWarning(form, request);
+        ActionForwards forward = validateCashFlowAndInstallmentDatesForErrors(loanAccountForm, request) ?
+                preview_success :
+                failure;
+        return forward;
+    }
+
+    private boolean validateCashFlowAndInstallmentDatesForErrors(LoanAccountActionForm loanAccountForm,  HttpServletRequest request) throws Exception {
+        UserContext userContext = getUserContext(request);
+        LoanOfferingBO loanOffering = getLoanOffering(loanAccountForm.getPrdOfferingIdValue(), userContext.getLocaleId());
+        return addErrorAndReturnResult(request, validateCashflowAndInstallmentDates(loanAccountForm.getInstallments(),
+                loanAccountForm.getCashFlowForm(), loanOffering.getRepaymentCapacity()));
+    }
+
+    private boolean validateCashFlowForWarning(ActionForm form, HttpServletRequest request) throws Exception {
+        return addErrorAndReturnResult(request, validateCashFlowForInstallmentsForWarnings(request, (LoanAccountActionForm) form));
+    }
+
+    private boolean addErrorAndReturnResult(HttpServletRequest request, ActionErrors actionErrors) {
         boolean isEmpty = actionErrors.isEmpty();
         if (!isEmpty) {
             addErrors(request, actionErrors);
