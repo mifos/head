@@ -324,27 +324,17 @@ public class OfficeDaoHibernate implements OfficeDao {
     }
 
     @Override
-    public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForOffice() {
+    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForOffice() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.OFFICE.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return (List<CustomFieldDefinitionEntity>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
     @Override
-    public List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId) {
+    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        List<Object[]> queryResult = (List<Object[]>) genericDao.executeNamedQuery("OfficeCustomFieldEntity.getResponses", queryParameters);
-
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
-        List<CustomFieldForMigrationDto> customFields = new ArrayList<CustomFieldForMigrationDto>();
-        for (Object[] customFieldsFromQuery : queryResult) {
-            customFields.add(new CustomFieldForMigrationDto(customFieldsFromQuery));
-        }
-        return customFields;
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
+        return (List<Object[]>) genericDao.executeNamedQuery("OfficeCustomFieldEntity.getResponses", queryParameters);
     }
 
 

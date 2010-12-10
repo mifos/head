@@ -37,7 +37,7 @@ public interface LoanDao {
 
     List<SurveyDto> getAccountSurveyDto(Integer accountId);
 
-    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
+    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
 
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
 }

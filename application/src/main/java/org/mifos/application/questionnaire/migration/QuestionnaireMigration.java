@@ -100,21 +100,13 @@ public class QuestionnaireMigration {
     }
 
     public void migrateAdditionalFields() {
-        System.out.println("migrating Additional Fields for Client");
-        migrateAdditionalFieldsForClient();
-        System.out.println("migrating Additional Fields for Group");
-        migrateAdditionalFieldsForGroup();
-        System.out.println("migrating Additional Fields for Center");
-        migrateAdditionalFieldsForCenter();
-        System.out.println("migrating Additional Fields for Loan");
-        migrateAdditionalFieldsForLoan();
-        System.out.println("migrating Additional Fields for Savings");
-        migrateAdditionalFieldsForSavings();
-        System.out.println("migrating Additional Fields for Office");
-        migrateAdditionalFieldsForOffice();
-        System.out.println("migrating Additional Fields for Personnel");
-        migrateAdditionalFieldsForPersonnel();
-
+        migrateAdditionalFields(EntityType.CLIENT);
+        migrateAdditionalFields(EntityType.GROUP);
+        migrateAdditionalFields(EntityType.CENTER);
+        migrateAdditionalFields(EntityType.LOAN);
+        migrateAdditionalFields(EntityType.SAVINGS);
+        migrateAdditionalFields(EntityType.OFFICE);
+        migrateAdditionalFields(EntityType.PERSONNEL);
     }
 
     public List<Integer> migrateSurveys() {
@@ -127,131 +119,55 @@ public class QuestionnaireMigration {
         return questionGroupIds;
     }
 
-    // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForGroup() {
-        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForGroup();
-        Integer questionGroupId = null;
-        if (customFields != null) {
-            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.GROUP);
-            customFields = getCustomFieldsForGroup();
-            Integer eventSourceId = getEventSourceId("Create", "Group");
-            if (migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForGroup());
+    private void removeCustomFields(EntityType entityType, boolean fullyMigrated, List<CustomFieldDefinitionEntity> customFields, List<Integer> responses) {
+        System.out.printf("%d removing Additional Fields for %s\n", System.currentTimeMillis(), entityType);
+        SQLQuery update = null;
+        switch (entityType) {
+            case CLIENT:
+            case GROUP:
+            case CENTER: update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from customer_custom_field where customer_customfield_id = :customFieldId"); break;
+            case LOAN:
+            case SAVINGS: update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from account_custom_field where account_custom_field_id = :customFieldId"); break;
+            case OFFICE: update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from office_custom_field where office_custom_field_id = :customFieldId"); break;
+            case PERSONNEL: update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from personnel_custom_field where personnel_custom_field_id = :customFieldId"); break;
+        }
+
+        StaticHibernateUtil.startTransaction();
+        for (Integer responseId : responses) {
+            try {
+                update.setInteger("customFieldId", responseId);
+                update.executeUpdate();
+            } catch (HibernateException e) {
+                logger.error(format("Unable to remove response given for %s with ID %d for custom fields", entityType, responseId), e);
+                StaticHibernateUtil.rollbackTransaction();
+                return;
             }
         }
-        return questionGroupId;
-    }
-
-    private void removeCustomFields(Iterator<CustomFieldDefinitionEntity> customFields) {
-        boolean result = false;
-        if (customFields != null) {
-            result = true;
-            while (customFields.hasNext()) {
-                CustomFieldDefinitionEntity customField = customFields.next();
+        if (fullyMigrated && customFields != null) {
+            for (CustomFieldDefinitionEntity customField : customFields) {
                 try {
                     surveysPersistence.delete(customField);
                 } catch (PersistenceException e) {
                     logger.error(format("Unable to remove custom field with ID %d", customField.getFieldId()), e);
-                    result = false;
                     surveysPersistence.rollbackTransaction();
-                    break;
+                    return;
                 }
             }
         }
-        if (result) {
-            surveysPersistence.commitTransaction();
-        }
+        StaticHibernateUtil.commitTransaction();
     }
 
     // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForClient() {
-        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForClient();
+    public Integer migrateAdditionalFields(EntityType entityType) {
+        System.out.printf("%d migrating Additional Fields for %s\n", System.currentTimeMillis(), entityType);
+        List<CustomFieldDefinitionEntity> customFields = getCustomFields(entityType);
         Integer questionGroupId = null;
         if (customFields != null) {
             Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.CLIENT);
-            customFields = getCustomFieldsForClient();
-            Integer eventSourceId = getEventSourceId("Create", "Client");
-            if (migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForClient());
-            }
-        }
-        return questionGroupId;
-    }
-
-    // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForLoan() {
-        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForLoan();
-        Integer questionGroupId = null;
-        if (customFields != null) {
-            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.LOAN);
-            customFields = getCustomFieldsForLoan();
-            if (migrateAdditionalFieldsResponsesForLoan(customFields, questionGroupId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForLoan());
-            }
-        }
-        return questionGroupId;
-    }
-
-    // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForPersonnel() {
-        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForPersonnel();
-        Integer questionGroupId = null;
-        if (customFields != null) {
-            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.PERSONNEL);
-            customFields = getCustomFieldsForPersonnel();
-            if (migrateAdditionalFieldsResponsesForPersonnel(customFields, questionGroupId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForPersonnel());
-            }
-        }
-        return questionGroupId;
-    }
-
-    // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForOffice() {
-        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForOffice();
-        Integer questionGroupId = null;
-        if (customFields != null) {
-            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.OFFICE);
-            customFields = getCustomFieldsForOffice();
-            if (migrateAdditionalFieldsResponsesForOffice(customFields, questionGroupId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForOffice());
-            }
-        }
-        return questionGroupId;
-    }
-
-    // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForCenter() {
-        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForCenter();
-        Integer questionGroupId = null;
-        if (customFields != null) {
-            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.CENTER);
-            customFields = getCustomFieldsForCenter();
-            Integer eventSourceId = getEventSourceId("Create", "Center");
-            if (migrateAdditionalFieldsResponsesForCustomer(customFields, questionGroupId, eventSourceId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForCenter());
-            }
-        }
-        return questionGroupId;
-    }
-
-    // Made 'public' to aid unit testing
-    public Integer migrateAdditionalFieldsForSavings() {
-        Iterator<CustomFieldDefinitionEntity> customFields = getCustomFieldsForSavings();
-        Integer questionGroupId = null;
-        if (customFields != null) {
-            Map<Short, Integer> customFieldQuestionIdMap = new HashMap<Short, Integer>();
-            questionGroupId = getQuestionGroup(customFields, customFieldQuestionIdMap, EntityType.SAVINGS);
-            customFields = getCustomFieldsForSavings();
-            if (migrateAdditionalFieldsResponsesForSavings(customFields, questionGroupId, customFieldQuestionIdMap)) {
-                removeCustomFields(getCustomFieldsForSavings());
-            }
+            questionGroupId = getQuestionGroup(customFields.iterator(), customFieldQuestionIdMap, entityType);
+            List<Integer> responses = new ArrayList<Integer>();
+            boolean fullyMigrated = migrateAdditionalFieldsResponses(entityType, customFields, questionGroupId, customFieldQuestionIdMap, responses);
+            removeCustomFields(entityType, fullyMigrated, customFields, responses);
         }
         return questionGroupId;
     }
@@ -290,317 +206,68 @@ public class QuestionnaireMigration {
         return questionGroupDto;
     }
 
-    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForGroup() {
-        Iterator<CustomFieldDefinitionEntity> customFields = null;
+    private List<CustomFieldDefinitionEntity> getCustomFields(EntityType entityType) {
+        List<CustomFieldDefinitionEntity> customFields = null;
         try {
-            customFields = customerDao.retrieveCustomFieldEntitiesForGroupIterator();
+            switch (entityType) {
+                case CLIENT: customFields = customerDao.retrieveCustomFieldEntitiesForClient(); break;
+                case GROUP: customFields = customerDao.retrieveCustomFieldEntitiesForGroup(); break;
+                case CENTER: customFields = customerDao.retrieveCustomFieldEntitiesForCenter(); break;
+                case LOAN: customFields = loanDao.retrieveCustomFieldEntitiesForLoan(); break;
+                case SAVINGS: customFields = savingsDao.retrieveCustomFieldEntitiesForSavings(); break;
+                case OFFICE: customFields = officeDao.retrieveCustomFieldEntitiesForOffice(); break;
+                case PERSONNEL: customFields = personnelDao.retrieveCustomFieldEntitiesForPersonnel(); break;
+            }
         } catch (Exception e) {
-            logger.error("Unable to retrieve custom fields for Create Group", e);
+            logger.error("Unable to retrieve custom fields for " + entityType, e);
         }
         return customFields;
     }
 
-    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForClient() {
-        Iterator<CustomFieldDefinitionEntity> customFields = null;
-        try {
-            customFields = customerDao.retrieveCustomFieldEntitiesForClientIterator();
-        } catch (Exception e) {
-            logger.error("Unable to retrieve custom fields for Create Client", e);
-        }
-        return customFields;
-    }
-
-    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForLoan() {
-        Iterator<CustomFieldDefinitionEntity> customFields = null;
-        try {
-            customFields = loanDao.retrieveCustomFieldEntitiesForLoan();
-        } catch (Exception e) {
-            logger.error("Unable to retrieve custom fields for Create Loan", e);
-        }
-        return customFields;
-    }
-
-    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForPersonnel() {
-        Iterator<CustomFieldDefinitionEntity> customFields = null;
-        try {
-            customFields = personnelDao.retrieveCustomFieldEntitiesForPersonnel();
-        } catch (Exception e) {
-            logger.error("Unable to retrieve custom fields for Create Personnel", e);
-        }
-        return customFields;
-    }
-
-    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForOffice() {
-        Iterator<CustomFieldDefinitionEntity> customFields = null;
-        try {
-            customFields = officeDao.retrieveCustomFieldEntitiesForOffice();
-        } catch (Exception e) {
-            logger.error("Unable to retrieve custom fields for Create Office", e);
-        }
-        return customFields;
-    }
-
-    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForCenter() {
-        Iterator<CustomFieldDefinitionEntity> customFields = null;
-        try {
-            customFields = customerDao.retrieveCustomFieldEntitiesForCenterIterator();
-        } catch (Exception e) {
-            logger.error("Unable to retrieve custom fields for Create Center", e);
-        }
-        return customFields;
-    }
-
-    private Iterator<CustomFieldDefinitionEntity> getCustomFieldsForSavings() {
-        Iterator<CustomFieldDefinitionEntity> customFields = null;
-        try {
-            customFields = savingsDao.retrieveCustomFieldEntitiesForSavings();
-        } catch (Exception e) {
-            logger.error("Unable to retrieve custom fields for Create Savings", e);
-        }
-        return customFields;
-    }
-
-    private boolean migrateAdditionalFieldsResponsesForCustomer(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
-                                                             Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap) {
+    private boolean migrateAdditionalFieldsResponses(EntityType entityType, List<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
+                                                     Map<Short, Integer> customFieldQuestionIdMap, List<Integer> responsesIds) {
         boolean result = false;
+        Integer eventSourceId = getEventSourceId(entityType);
         if (questionGroupId != null && eventSourceId != null) {
             result = true;
-            Map<Integer, List<CustomFieldForMigrationDto>> customFieldResponses = getCustomFieldResponsesForCustomer(customFields);
-            for (Integer entityId : customFieldResponses.keySet()) {
-                List<CustomFieldForMigrationDto> customerResponses = customFieldResponses.get(entityId);
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstance("customer", questionGroupId, eventSourceId, customFieldQuestionIdMap, customerResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    SQLQuery update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from customer_custom_field where customer_customfield_id = :customFieldId");
-                    StaticHibernateUtil.startTransaction();
-                    for (CustomFieldForMigrationDto response : customerResponses) {
-                        try {
-                            update.setInteger("customFieldId", response.getCustomFieldId());
-                            update.executeUpdate();
-                        } catch (HibernateException e) {
-                            logger.error(format("Unable to remove responses given for account with ID %d for custom fields", response.getEntityId()), e);
-                            result = false;
-                            StaticHibernateUtil.rollbackTransaction();
-                            break;
-                        }
+            List<Object[]> customFieldResponses = getCustomFieldResponses(entityType, customFields);
+            if (customFieldResponses != null) {
+                Integer previousCustomer = null;
+                List<CustomFieldForMigrationDto> migrationDtos = null;
+                for (Object[] customFieldResponse : customFieldResponses) {
+                    CustomFieldForMigrationDto customField = new CustomFieldForMigrationDto(customFieldResponse);
+                    if (customField.getEntityId().equals(previousCustomer)) {
+                        //noinspection ConstantConditions
+                        migrationDtos.add(customField);
+                        continue;
                     }
+                    result = saveQuestionGroupInstance(entityType, questionGroupId, customFieldQuestionIdMap, responsesIds, result, eventSourceId, migrationDtos);
+                    migrationDtos = new ArrayList<CustomFieldForMigrationDto>();
+                    migrationDtos.add(customField);
+                    previousCustomer = customField.getEntityId();
                 }
-                else {
-                    result = false;
-                }
+                result = saveQuestionGroupInstance(entityType, questionGroupId, customFieldQuestionIdMap, responsesIds, result, eventSourceId, migrationDtos);
             }
         }
         return result;
     }
 
-    private boolean migrateAdditionalFieldsResponsesForLoan(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
-                                                             Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
-        if (questionGroupId != null) {
-            result = true;
-            Map<Integer, List<CustomFieldForMigrationDto>> customFieldResponses = getCustomFieldResponsesForLoan(customFields);
-            for (Integer entityId : customFieldResponses.keySet()) {
-                List<CustomFieldForMigrationDto> accountResponses = customFieldResponses.get(entityId);
-                Integer eventSourceId = getEventSourceId("Create", "Loan");
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstance("loan", questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    SQLQuery update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from account_custom_field where account_custom_field_id = :customFieldId");
-                    StaticHibernateUtil.startTransaction();
-                    for (CustomFieldForMigrationDto response : accountResponses) {
-                        try {
-                            update.setInteger("customFieldId", response.getCustomFieldId());
-                            update.executeUpdate();
-                        } catch (HibernateException e) {
-                            logger.error(format("Unable to remove responses given for loan with ID %d for custom fields", response.getEntityId()), e);
-                            result = false;
-                            StaticHibernateUtil.rollbackTransaction();
-                            break;
-                        }
-                    }
+    private boolean saveQuestionGroupInstance(EntityType entityType, Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap, List<Integer> responsesIds, boolean result, Integer eventSourceId, List<CustomFieldForMigrationDto> customerResponses) {
+        if (customerResponses != null) {
+            QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstance(entityType, questionGroupId, eventSourceId, customFieldQuestionIdMap, customerResponses);
+            if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
+                for (CustomFieldForMigrationDto response : customerResponses) {
+                    responsesIds.add(response.getCustomFieldId());
                 }
-                else {
-                    result = false;
-                }
+            }
+            else {
+                result = false;
             }
         }
         return result;
     }
 
-    private boolean migrateAdditionalFieldsResponsesForPersonnel(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
-            Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
-        if (questionGroupId != null) {
-            result = true;
-            Map<Integer, List<CustomFieldForMigrationDto>> customFieldResponses = getCustomFieldResponsesForPersonnel(customFields);
-            for (Integer entityId : customFieldResponses.keySet()) {
-                List<CustomFieldForMigrationDto> accountResponses = customFieldResponses.get(entityId);
-                Integer eventSourceId = getEventSourceId("Create", "Personnel");
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstance("personnel", questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    SQLQuery update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from personnel_custom_field where personnel_custom_field_id = :customFieldId");
-                    StaticHibernateUtil.startTransaction();
-                    for (CustomFieldForMigrationDto response : accountResponses) {
-                        try {
-                            update.setInteger("customFieldId", response.getCustomFieldId());
-                            update.executeUpdate();
-                        } catch (HibernateException e) {
-                            logger.error(format("Unable to remove responses given for personnel with ID %d for custom fields", response.getEntityId()), e);
-                            result = false;
-                            StaticHibernateUtil.rollbackTransaction();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = false;
-                }
-            }
-        }
-        return result;
-    }
-
-    private boolean migrateAdditionalFieldsResponsesForOffice(Iterator<CustomFieldDefinitionEntity> customFields, Integer questionGroupId,
-            Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
-        if (questionGroupId != null) {
-            result = true;
-            Map<Integer, List<CustomFieldForMigrationDto>> customFieldResponses = getCustomFieldResponsesForOffice(customFields);
-            for (Integer entityId : customFieldResponses.keySet()) {
-                List<CustomFieldForMigrationDto> accountResponses = customFieldResponses.get(entityId);
-                Integer eventSourceId = getEventSourceId("Create", "Office");
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstance("office", questionGroupId, eventSourceId, customFieldQuestionIdMap, accountResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    SQLQuery update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from office_custom_field where office_custom_field_id = :customFieldId");
-                    StaticHibernateUtil.startTransaction();
-                    for (CustomFieldForMigrationDto response : accountResponses) {
-                        try {
-                            update.setInteger("customFieldId", response.getCustomFieldId());
-                            update.executeUpdate();
-                        } catch (HibernateException e) {
-                            logger.error(format("Unable to remove responses given for office with ID %d for custom fields", response.getEntityId()), e);
-                            result = false;
-                            surveysPersistence.rollbackTransaction();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = false;
-                }
-            }
-        }
-        return result;
-    }
-
-    private boolean migrateAdditionalFieldsResponsesForSavings(Iterator<CustomFieldDefinitionEntity> customFields,
-            Integer questionGroupId, Map<Short, Integer> customFieldQuestionIdMap) {
-        boolean result = false;
-        if (questionGroupId != null) {
-            result = true;
-            Map<Integer, List<CustomFieldForMigrationDto>> customFieldResponses = getCustomFieldResponsesForSavings(customFields);
-            for (Integer entityId : customFieldResponses.keySet()) {
-                List<CustomFieldForMigrationDto> accountResponses = customFieldResponses.get(entityId);
-                Integer eventSourceId = getEventSourceId("Create", "Savings");
-                QuestionGroupInstanceDto questionGroupInstanceDto = mapToQuestionGroupInstance("savings", questionGroupId,
-                        eventSourceId, customFieldQuestionIdMap, accountResponses);
-                if (saveQuestionGroupInstance(questionGroupInstanceDto)) {
-                    SQLQuery update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from account_custom_field where account_custom_field_id = :customFieldId");
-                    StaticHibernateUtil.startTransaction();
-                    for (CustomFieldForMigrationDto response : accountResponses) {
-                        try {
-                            update.setInteger("customFieldId", response.getCustomFieldId());
-                            update.executeUpdate();
-                        } catch (HibernateException e) {
-                            logger.error(format("Unable to remove responses given for savings with ID %d for custom fields", response.getEntityId()), e);
-                            result = false;
-                            StaticHibernateUtil.rollbackTransaction();
-                            break;
-                        }
-                    }
-                }
-                else {
-                    result = false;
-                }
-            }
-        }
-        return result;
-    }
-
-    private Map<Integer, List<CustomFieldForMigrationDto>> getCustomFieldResponsesForSavings(Iterator<CustomFieldDefinitionEntity> customFields) {
-        Map<Integer, List<CustomFieldForMigrationDto>> entityResponsesMap = new HashMap<Integer, List<CustomFieldForMigrationDto>>();
-        if (customFields != null) {
-            while (customFields.hasNext()) {
-                List<CustomFieldForMigrationDto> customFieldResponses = getCustomFieldResponsesForSavings(customFields.next());
-                if (customFieldResponses != null) {
-                    for (CustomFieldForMigrationDto customFieldDto : customFieldResponses) {
-                        addOrUpdate(entityResponsesMap, customFieldDto);
-                    }
-                }
-            }
-        }
-        return entityResponsesMap;
-    }
-
-    private List<CustomFieldForMigrationDto> getCustomFieldResponsesForSavings(CustomFieldDefinitionEntity customField) {
-        List<CustomFieldForMigrationDto> customFieldResponses = null;
-        try {
-            customFieldResponses = savingsDao.getCustomFieldResponses(customField.getFieldId());
-        } catch (Exception e) {
-            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
-        }
-        return customFieldResponses;
-    }
-
-    private Map<Integer, List<CustomFieldForMigrationDto>> getCustomFieldResponsesForOffice(Iterator<CustomFieldDefinitionEntity> customFields) {
-        Map<Integer, List<CustomFieldForMigrationDto>> entityResponsesMap = new HashMap<Integer, List<CustomFieldForMigrationDto>>();
-        if (customFields != null) {
-            while (customFields.hasNext()) {
-                List<CustomFieldForMigrationDto> customFieldResponses = getCustomFieldResponsesForOffice(customFields.next());
-                if (customFieldResponses != null) {
-                    for (CustomFieldForMigrationDto customFieldDto : customFieldResponses) {
-                        addOrUpdate(entityResponsesMap, customFieldDto);
-                    }
-                }
-            }
-        }
-        return entityResponsesMap;
-    }
-
-    private List<CustomFieldForMigrationDto> getCustomFieldResponsesForOffice(CustomFieldDefinitionEntity customField) {
-        List<CustomFieldForMigrationDto> customFieldResponses = null;
-        try {
-            customFieldResponses = officeDao.getCustomFieldResponses(customField.getFieldId());
-        } catch (Exception e) {
-            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
-        }
-        return customFieldResponses;
-    }
-
-    private Map<Integer, List<CustomFieldForMigrationDto>> getCustomFieldResponsesForPersonnel(Iterator<CustomFieldDefinitionEntity> customFields) {
-        Map<Integer, List<CustomFieldForMigrationDto>> entityResponsesMap = new HashMap<Integer, List<CustomFieldForMigrationDto>>();
-        if (customFields != null) {
-            while (customFields.hasNext()) {
-                List<CustomFieldForMigrationDto> customFieldResponses = getCustomFieldResponsesForPersonnel(customFields.next());
-                if (customFieldResponses != null) {
-                    for (CustomFieldForMigrationDto customFieldDto : customFieldResponses) {
-                        addOrUpdate(entityResponsesMap, customFieldDto);
-                    }
-                }
-            }
-        }
-        return entityResponsesMap;
-    }
-
-    private List<CustomFieldForMigrationDto> getCustomFieldResponsesForPersonnel(CustomFieldDefinitionEntity customField) {
-        List<CustomFieldForMigrationDto> customFieldResponses = null;
-        try {
-            customFieldResponses = personnelDao.getCustomFieldResponses(customField.getFieldId());
-        } catch (Exception e) {
-            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
-        }
-        return customFieldResponses;
-    }
-
-    private QuestionGroupInstanceDto mapToQuestionGroupInstance(String type, Integer questionGroupId,
+    private QuestionGroupInstanceDto mapToQuestionGroupInstance(EntityType type, Integer questionGroupId,
                                                                             Integer eventSourceId, Map<Short, Integer> customFieldQuestionIdMap, List<CustomFieldForMigrationDto> responses) {
         QuestionGroupInstanceDto questionGroupInstanceDto = null;
         try {
@@ -609,31 +276,6 @@ public class QuestionnaireMigration {
             logger.error(format("Unable to convert responses given for %s with ID, %d for custom fields, to Question Group responses", type, responses.get(0).getEntityId()), e);
         }
         return questionGroupInstanceDto;
-    }
-
-    private Map<Integer, List<CustomFieldForMigrationDto>> getCustomFieldResponsesForLoan(Iterator<CustomFieldDefinitionEntity> customFields) {
-        Map<Integer, List<CustomFieldForMigrationDto>> entityResponsesMap = new HashMap<Integer, List<CustomFieldForMigrationDto>>();
-        if (customFields != null) {
-            while (customFields.hasNext()) {
-                List<CustomFieldForMigrationDto> customFieldResponses = getCustomFieldResponsesForLoan(customFields.next());
-                if (customFieldResponses != null) {
-                    for (CustomFieldForMigrationDto customFieldDto : customFieldResponses) {
-                        addOrUpdate(entityResponsesMap, customFieldDto);
-                    }
-                }
-            }
-        }
-        return entityResponsesMap;
-    }
-
-    private List<CustomFieldForMigrationDto> getCustomFieldResponsesForLoan(CustomFieldDefinitionEntity customField) {
-        List<CustomFieldForMigrationDto> customFieldResponses = null;
-        try {
-            customFieldResponses = loanDao.getCustomFieldResponses(customField.getFieldId());
-        } catch (Exception e) {
-            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
-        }
-        return customFieldResponses;
     }
 
     private static int migratedQgInstances = 0;
@@ -656,39 +298,35 @@ public class QuestionnaireMigration {
         return false;
     }
 
-    private Map<Integer, List<CustomFieldForMigrationDto>> getCustomFieldResponsesForCustomer(Iterator<CustomFieldDefinitionEntity> customFields) {
-        Map<Integer, List<CustomFieldForMigrationDto>> entityResponsesMap = new HashMap<Integer, List<CustomFieldForMigrationDto>>();
+    private List<Object[]> getCustomFieldResponses(EntityType entityType, List<CustomFieldDefinitionEntity> customFields) {
         if (customFields != null) {
-            while (customFields.hasNext()) {
-                List<CustomFieldForMigrationDto> customFieldResponses = getCustomFieldResponsesForCustomer(customFields.next());
-                if (customFieldResponses != null) {
-                    for (CustomFieldForMigrationDto customFieldDto : customFieldResponses) {
-                        addOrUpdate(entityResponsesMap, customFieldDto);
-                    }
-                }
+            List<Short> ids = new ArrayList<Short>();
+            for (CustomFieldDefinitionEntity customField : customFields) {
+                ids.add(customField.getFieldId());
+            }
+            if (ids.size() > 0) {
+                return getCustomFieldResponsesList(entityType, ids);
             }
         }
-        return entityResponsesMap;
+        return null;
     }
 
-    private List<CustomFieldForMigrationDto> getCustomFieldResponsesForCustomer(CustomFieldDefinitionEntity customField) {
-        List<CustomFieldForMigrationDto> customFieldResponses = null;
+    private List<Object[]> getCustomFieldResponsesList(EntityType entityType, List<Short> customFields) {
+        List<Object[]> customFieldResponses = null;
         try {
-            customFieldResponses = customerDao.getCustomFieldResponses(customField.getFieldId());
+            switch (entityType) {
+                case CLIENT:
+                case GROUP:
+                case CENTER: customFieldResponses = customerDao.getCustomFieldResponses(customFields); break;
+                case LOAN: customFieldResponses = loanDao.getCustomFieldResponses(customFields); break;
+                case SAVINGS: customFieldResponses = savingsDao.getCustomFieldResponses(customFields); break;
+                case OFFICE: customFieldResponses = officeDao.getCustomFieldResponses(customFields); break;
+                case PERSONNEL: customFieldResponses = personnelDao.getCustomFieldResponses(customFields); break;
+            }
         } catch (Exception e) {
-            logger.error(format("Unable to retrieve responses for custom field with ID, %s", customField.getFieldId()), e);
+            logger.error(format("Unable to retrieve responses for custom field with IDs, %s", customFields), e);
         }
         return customFieldResponses;
-    }
-
-    private void addOrUpdate(Map<Integer, List<CustomFieldForMigrationDto>> entityResponsesMap, CustomFieldForMigrationDto customFieldResponse) {
-        Integer entityId = customFieldResponse.getEntityId();
-        if (entityResponsesMap.containsKey(entityId)) {
-            entityResponsesMap.get(entityId).add(customFieldResponse);
-        } else {
-            entityResponsesMap.put(entityId, new ArrayList<CustomFieldForMigrationDto>());
-            entityResponsesMap.get(entityId).add(customFieldResponse);
-        }
     }
 
     private List<Integer> migrateSurveys(SurveyType surveyType) {
@@ -748,6 +386,27 @@ public class QuestionnaireMigration {
 
     private Integer getEventSourceId(String event, String source) {
         Integer eventSourceId = null;
+        try {
+            eventSourceId = questionnaireServiceFacade.getEventSourceId(event, source);
+        } catch (Exception e) {
+            logger.error(format("Unable to obtain the event source ID for event %s and source %s'", event, source), e);
+        }
+        return eventSourceId;
+    }
+
+    private Integer getEventSourceId(EntityType entityType) {
+        Integer eventSourceId = null;
+        String event = "Create";
+        String source = null;
+        switch (entityType) {
+                case CLIENT: source = "Client"; break;
+                case GROUP: source = "Group"; break;
+                case CENTER: source = "Center"; break;
+                case LOAN: source = "Loan"; break;
+                case SAVINGS: source = "Savings"; break;
+                case OFFICE: source = "Office"; break;
+                case PERSONNEL: source = "Personnel"; break;
+            }
         try {
             eventSourceId = questionnaireServiceFacade.getEventSourceId(event, source);
         } catch (Exception e) {

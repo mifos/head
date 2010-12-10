@@ -24,6 +24,6 @@
         <return-scalar column="personnel_id" type="integer" />
 	    <![CDATA[SELECT a.personnel_custom_field_id, a.field_id, a.field_value, b.created_date, b.updated_date, b.created_by, b.updated_by, b.personnel_id
 	    FROM personnel_custom_field a join personnel b on a.personnel_id = b.personnel_id
-	    where a.field_id = :CUSTOM_FIELD_ID]]>
+	    where a.field_id in (:CUSTOM_FIELD_ID) order by b.personnel_id]]>
 	</sql-query>
 </hibernate-mapping>

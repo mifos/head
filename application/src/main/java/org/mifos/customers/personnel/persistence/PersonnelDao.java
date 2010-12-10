@@ -47,9 +47,9 @@ public interface PersonnelDao {
 
     List<PersonnelDto> findActiveLoanOfficersForOffice(CenterCreation centerCreationDto);
 
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel();
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForPersonnel();
 
-    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
+    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
 
     SystemUserSearchResultsDto search(UserSearchDto searchDto, MifosUser user);
 }
