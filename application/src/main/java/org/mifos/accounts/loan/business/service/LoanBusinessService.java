@@ -20,19 +20,22 @@
 
 package org.mifos.accounts.loan.business.service;
 
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.LoanActivityDto;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.*;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
+import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.service.HolidayService;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -53,6 +56,8 @@ public class LoanBusinessService implements BusinessService {
     private ConfigurationBusinessService configService;
     private AccountBusinessService accountBusinessService;
     private HolidayService holidayService;
+    private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+
 
     public LoanPersistence getLoanPersistence() {
         if (loanPersistence == null) {
@@ -75,18 +80,23 @@ public class LoanBusinessService implements BusinessService {
         return accountBusinessService;
     }
 
-    // Use {@link org.mifos.application.servicefacade.DependencyInjectedServiceLocator} to create instances of this service
+    /**
+     * Use {@link org.mifos.application.servicefacade.DependencyInjectedServiceLocator} to create instances of this service.
+     * Does not instantiate HolidayService & ScheduleCalculatorAdaptor.
+     */
     @Deprecated
     public LoanBusinessService() {
-        this(new LoanPersistence(), new ConfigurationBusinessService(), new AccountBusinessService(), null);
+        this(new LoanPersistence(), new ConfigurationBusinessService(), new AccountBusinessService(), null, null);
     }
 
     public LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService,
-                               AccountBusinessService accountBusinessService, HolidayService holidayService) {
+                               AccountBusinessService accountBusinessService, HolidayService holidayService,
+                               ScheduleCalculatorAdaptor scheduleCalculatorAdaptor) {
         this.loanPersistence = loanPersistence;
         this.configService = configService;
         this.accountBusinessService = accountBusinessService;
         this.holidayService = holidayService;
+        this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
     }
 
     @Override
@@ -327,5 +337,18 @@ public class LoanBusinessService implements BusinessService {
             loanBO.copyInstallmentSchedule(installments);
         }
         return installments;
+    }
+
+    public void applyPayment(PaymentData paymentData, LoanBO loanBO, AccountPaymentEntity accountPaymentEntity) {
+        Money balance = paymentData.getTotalAmount();
+        PersonnelBO personnel = paymentData.getPersonnel();
+        Date transactionDate = paymentData.getTransactionDate();
+        if (loanBO.isDecliningBalanceInterestRecalculation()) {
+            scheduleCalculatorAdaptor.applyPayment(loanBO, balance, transactionDate, personnel, accountPaymentEntity);
+        } else {
+            for (AccountActionDateEntity accountActionDate : loanBO.getAccountActionDatesSortedByInstallmentId()) {
+                balance = ((LoanScheduleEntity) accountActionDate).applyPayment(accountPaymentEntity, balance, personnel, transactionDate);
+            }
+        }
     }
 }

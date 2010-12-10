@@ -23,22 +23,30 @@ package org.mifos.accounts.loan.business.service;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -62,15 +70,73 @@ public class LoanBusinessServiceTest {
     @Mock
     private HolidayService holidayService;
 
+    @Mock
+    private AccountPaymentEntity accountPaymentEntity;
+
+    @Mock
+    ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+
+    @Mock
+    private PaymentData paymentData;
+
+    @Mock
+    private PersonnelBO personnel;
+
     private Short officeId;
+
 
     @Before
     public void setupAndInjectDependencies() {
-        loanBusinessService = new LoanBusinessService(null, null, null, holidayService);
+        loanBusinessService = new LoanBusinessService(null, null, null, holidayService, scheduleCalculatorAdaptor);
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         officeId = Short.valueOf("1");
+    }
+
+    @Test
+    public void shouldApplyPaymentForInterestRecalculationLoanInterestType() {
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        Date transactionDate = new Date();
+        Money totalAmount = new Money(rupee, 10.0);
+        when(paymentData.getTransactionDate()).thenReturn(transactionDate);
+        when(paymentData.getTotalAmount()).thenReturn(totalAmount);
+        when(paymentData.getPersonnel()).thenReturn(personnel);
+        loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
+        verify(scheduleCalculatorAdaptor, times(1)).applyPayment(loanBO, totalAmount,
+                transactionDate, personnel, accountPaymentEntity);
+        verify(loanBO, times(1)).isDecliningBalanceInterestRecalculation();
+        verify(paymentData).getTransactionDate();
+        verify(paymentData).getTotalAmount();
+        verify(paymentData).getPersonnel();
+    }
+
+    @Test
+    public void shouldApplyPaymentForNonInterestRecalculationLoanInterestType() {
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
+        List<AccountActionDateEntity> installments = new ArrayList<AccountActionDateEntity>();
+        LoanScheduleEntity installment1 = mock(LoanScheduleEntity.class);
+        LoanScheduleEntity installment2 = mock(LoanScheduleEntity.class);
+        when(installment1.applyPayment(Mockito.<AccountPaymentEntity>any(), Mockito.<Money>any(), Mockito.eq(personnel), Mockito.<Date>any())).thenReturn(new Money(rupee, 100d));
+        when(installment2.applyPayment(Mockito.<AccountPaymentEntity>any(), Mockito.<Money>any(), Mockito.eq(personnel), Mockito.<Date>any())).thenReturn(new Money(rupee, 0d));
+        installments.add(installment1);
+        installments.add(installment2);
+        when(loanBO.getAccountActionDatesSortedByInstallmentId()).thenReturn(installments);
+        Date transactionDate = new Date();
+        Money totalAmount = new Money(rupee, 10.0);
+        when(paymentData.getTransactionDate()).thenReturn(transactionDate);
+        when(paymentData.getTotalAmount()).thenReturn(totalAmount);
+        when(paymentData.getPersonnel()).thenReturn(personnel);
+        loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
+        verify(scheduleCalculatorAdaptor, times(0)).applyPayment(loanBO, totalAmount,
+                transactionDate, personnel, accountPaymentEntity);
+        verify(loanBO, times(1)).getAccountActionDatesSortedByInstallmentId();
+        verify(loanBO, times(1)).isDecliningBalanceInterestRecalculation();
+        verify(paymentData).getTransactionDate();
+        verify(paymentData).getTotalAmount();
+        verify(paymentData).getPersonnel();
+        verify(installment1).applyPayment(Matchers.<AccountPaymentEntity>any(), Matchers.<Money>any(), Matchers.eq(personnel), Matchers.<Date>any());
+        verify(installment2).applyPayment(Matchers.<AccountPaymentEntity>any(), Matchers.<Money>any(), Matchers.eq(personnel), Matchers.<Date>any());
     }
 
     @Test

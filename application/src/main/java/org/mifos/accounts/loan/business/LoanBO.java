@@ -63,8 +63,8 @@ import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.EMIInstallment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -102,6 +102,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -1513,37 +1514,33 @@ public class LoanBO extends AccountBO {
      */
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
-        validationForMakePayment(paymentData);
-        AccountPaymentEntity accountPaymentEntity = getAccountPaymentEntity(paymentData);
-        pay(paymentData, accountPaymentEntity);
-        if (getLastInstallmentAccountAction().isPaid()) {
-            closeLoan(paymentData);
-        }
-        updateLoanStatus(paymentData, getLoanPaymentType(paymentData.getTotalAmount()));
-
-        handleLoanArrearsAging(getLoanPaymentType(paymentData.getTotalAmount()));
-        addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), paymentData.getPersonnel(),
-                AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
+        AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
+        DependencyInjectedServiceLocator.locateLoanBusinessService().applyPayment(paymentData, this, accountPaymentEntity);
+        postPayment(paymentData, accountPaymentEntity);
         return accountPaymentEntity;
     }
 
-    private void pay(PaymentData paymentData, AccountPaymentEntity accountPaymentEntity) {
-        Money balance = paymentData.getTotalAmount();
-        PersonnelBO personnel = paymentData.getPersonnel();
-        Date transactionDate = paymentData.getTransactionDate();
+    private void postPayment(PaymentData paymentData, AccountPaymentEntity accountPaymentEntity) throws AccountException {
+        closeLoanIfRequired(paymentData);
+        updateLoanStatus(paymentData, getLoanPaymentType(paymentData.getTotalAmount()));
+        handleLoanArrearsAging(getLoanPaymentType(paymentData.getTotalAmount()));
+        addLoanActivity(buildLoanActivity(accountPaymentEntity.getAccountTrxns(), paymentData.getPersonnel(),
+                AccountConstants.PAYMENT_RCVD, paymentData.getTransactionDate()));
+    }
 
-        if (this.isDecliningBalanceInterestRecalculation()) {
-            ScheduleCalculatorAdaptor scheduleCalculatorAdaptor = new ScheduleCalculatorAdaptor(new ScheduleCalculator(), new ScheduleMapper());
-            scheduleCalculatorAdaptor.applyPayment(this, balance, transactionDate, personnel, accountPaymentEntity);
-        } else {
-            for (AccountActionDateEntity accountActionDate : this.getAccountActionDatesSortedByInstallmentId()) {
-                if (accountActionDate.isNotPaid() && balance.isGreaterThanZero()) {
-                    LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDate;
-                    balance = loanScheduleEntity.payComponents(balance, transactionDate);
-                    loanScheduleEntity.updateLoanSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
-                }
-            }
+    private void closeLoanIfRequired(PaymentData paymentData) throws AccountException {
+        if (getLastInstallmentAccountAction().isPaid()) {
+            closeLoan(paymentData);
         }
+    }
+
+    private AccountPaymentEntity prePayment(PaymentData paymentData) throws AccountException {
+        validationForMakePayment(paymentData);
+        return getAccountPaymentEntity(paymentData);
+    }
+
+    private void pay(PaymentData paymentData, AccountPaymentEntity accountPaymentEntity) {
+        new LoanBusinessService().applyPayment(paymentData, this, accountPaymentEntity);
     }
 
     private void handleLoanArrearsAging(LoanPaymentTypes loanPaymentTypes) throws AccountException {

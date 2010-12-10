@@ -313,7 +313,8 @@ public class DependencyInjectedServiceLocator {
 
     public static LoanBusinessService locateLoanBusinessService() {
         if (loanBusinessService == null) {
-            loanBusinessService = new LoanBusinessService(loanPersistence, locateConfigurationBusinessService(), locateAccountBusinessService(), locateHolidayService());
+            loanBusinessService = new LoanBusinessService(loanPersistence, locateConfigurationBusinessService(), locateAccountBusinessService(),
+                    locateHolidayService(), locateScheduleCalculatorAdaptor());
         }
         return loanBusinessService;
     }

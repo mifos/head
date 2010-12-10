@@ -26,10 +26,7 @@ import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.schedule.calculation.ScheduleCalculator;
-import org.mifos.accounts.loan.schedule.domain.Installment;
-import org.mifos.accounts.loan.schedule.domain.InstallmentPayment;
-import org.mifos.accounts.loan.schedule.domain.Schedule;
-import org.mifos.accounts.loan.schedule.domain.ScheduleMatcher;
+import org.mifos.accounts.loan.schedule.domain.*;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -44,12 +41,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.math.BigDecimal.valueOf;
 import static java.util.Arrays.asList;
@@ -58,9 +50,7 @@ import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.getDate;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ScheduleCalculatorAdaptorTest {
@@ -254,21 +244,17 @@ public class ScheduleCalculatorAdaptorTest {
     }
 
     private Installment getInstallment(int id, Date dueDate, Date paidDate, double[] actualAmounts, double[] paidAmounts) {
-        
-        Installment installment = new Installment(id, dueDate, valueOf(actualAmounts[0]), valueOf(actualAmounts[1]),
-                valueOf(actualAmounts[2]), valueOf(actualAmounts[3]), valueOf(actualAmounts[4]),
-                valueOf(actualAmounts[5]), valueOf(actualAmounts[6]));
-        InstallmentPayment installmentPayment = new InstallmentPayment();
-        installmentPayment.setPrincipalPaid(valueOf(paidAmounts[0]));
-        installmentPayment.setInterestPaid(valueOf(paidAmounts[1]));
-        installmentPayment.setExtraInterestPaid(valueOf(paidAmounts[2]));
-        installmentPayment.setFeesPaid(valueOf(paidAmounts[3]));
-        installmentPayment.setMiscFeesPaid(valueOf(paidAmounts[4]));
-        installmentPayment.setPenaltyPaid(valueOf(paidAmounts[5]));
-        installmentPayment.setMiscPenaltyPaid(valueOf(paidAmounts[6]));
-        installmentPayment.setPaidDate(paidDate);
-        installment.addPayment(installmentPayment);
-        return installment;
+        return new InstallmentBuilder(String.valueOf(id)).
+                withDueDate(dueDate).
+                withPaymentDate(paidDate).
+                withPrincipal(actualAmounts[0]).withPrincipalPaid(paidAmounts[0]).
+                withInterest(actualAmounts[1]).withInterestPaid(paidAmounts[1]).
+                withExtraInterest(actualAmounts[2]).withExtraInterestPaid(paidAmounts[2]).
+                withFees(actualAmounts[3]).withFeesPaid(paidAmounts[3]).
+                withMiscFees(actualAmounts[4]).withMiscFeesPaid(paidAmounts[4]).
+                withPenalty(actualAmounts[5]).withPenaltyPaid(paidAmounts[5]).
+                withMiscPenalty(actualAmounts[6]).withMiscPenaltyPaid(paidAmounts[6]).
+                build();
     }
 
     private List<LoanScheduleEntity> getLoanScheduleEntities() {

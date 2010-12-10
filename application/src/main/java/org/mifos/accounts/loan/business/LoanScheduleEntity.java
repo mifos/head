@@ -577,7 +577,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return paymentAllocation;
     }
 
-    private void recordPayment(Date paymentDate) {
+    void recordPayment(Date paymentDate) {
         setPaymentDate(new java.sql.Date(paymentDate.getTime()));
         setPaymentStatus(getTotalDueWithFees().isGreaterThanZero() ? PaymentStatus.UNPAID : PaymentStatus.PAID);
     }
@@ -666,4 +666,11 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         }
     }
 
+    public Money applyPayment(AccountPaymentEntity accountPaymentEntity, Money balance, PersonnelBO personnel, Date transactionDate) {
+        if (isNotPaid() && balance.isGreaterThanZero()) {
+            balance = payComponents(balance, transactionDate);
+            updateLoanSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
+        }
+        return balance;
+    }
 }

@@ -470,7 +470,6 @@ public class ScheduleCalculatorTest {
     }
 
     @Test
-    @Ignore("Uncomment and verify the algorithm during payment")
     public void shouldComputeExtraInterestAfterMultiplePaymentsOnSameDay() {
         Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
         Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
@@ -480,13 +479,17 @@ public class ScheduleCalculatorTest {
         scheduleCalculator.applyPayment(schedule, new BigDecimal(100), getDate(27, 9, 2010));
         assertThat(installment2.getExtraInterestPaid().doubleValue(), is(0.0));
         assertThat(installment1.getExtraInterest().doubleValue(), is(0.0));
-        assertThat(installment2.getExtraInterest().doubleValue(), is(0.43));
+        assertThat(installment1.getInterest().doubleValue(), is(20.40));
+        assertThat(installment1.getApplicableInterest().doubleValue(), is(20.40));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.32));
 
         scheduleCalculator.applyPayment(schedule, new BigDecimal(200), getDate(27, 9, 2010));
-        // overdue computed on at time of payment remains same
-        // irrespective of paying off the installment through multiple payments
-        assertThat(installment2.getExtraInterestPaid().doubleValue(), is(0.43));
-        assertThat(installment2.getExtraInterest().doubleValue(), is(0.43));
+        assertThat(installment2.getExtraInterestPaid().doubleValue(), is(0.32));
+        assertThat(installment2.getExtraInterest().doubleValue(), is(0.32));
+        assertThat(installment2.getInterestPaid().doubleValue(), is(1.00));
+        assertThat(installment2.getPrincipalDue().doubleValue(), is(211.63));
+        assertThat(installment2.getInterest().doubleValue(), is(14.96));
+        assertThat(installment2.getApplicableInterest().doubleValue(), is(13.30));
     }
 
     @Test
