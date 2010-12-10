@@ -20,7 +20,10 @@
 
 package org.mifos.customers.business;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
@@ -301,6 +304,16 @@ public class CustomerAccountBO extends AccountBO {
         customerActivitDetails.add(customerActivityEntity);
     }
 
+    private BigDecimal dueAmountForCustomerSchedule(CustomerScheduleEntity customerSchedule) {
+         BigDecimal totalAllUnpaidInstallments = customerSchedule.getMiscFeeDue().getAmount();
+         totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(customerSchedule.getMiscPenaltyDue().getAmount());
+         for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule.getAccountFeesActionDetails()) {
+             CustomerFeeScheduleEntity customerFeeSchedule = (CustomerFeeScheduleEntity) accountFeesActionDetail;
+             totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(customerFeeSchedule.getFeeDue().getAmount());
+         }
+         return totalAllUnpaidInstallments;
+    }
+
     @Override
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
 
@@ -312,58 +325,76 @@ public class CustomerAccountBO extends AccountBO {
                             + paymentData.getCustomer().getGlobalCustNum() });
         }
 
-        final List<CustomerScheduleEntity> customerAccountPayments = findAllUnpaidInstallmentsUpTo(paymentData
+        final List<CustomerScheduleEntity> customerAccountPayments = findAllUnpaidInstallmentsUpToDatePlusNextMeeting(paymentData
                 .getTransactionDate());
 
         if (customerAccountPayments.isEmpty()) {
             throw new AccountException(AccountConstants.NO_TRANSACTION_POSSIBLE, new String[] {"Trying to pay account charges before the due date."});
         }
 
+        /////////////////////////////////////////////
         Money totalAllUnpaidInstallments = new Money(totalPaid.getCurrency(), "0.0");
         for (CustomerScheduleEntity customerSchedule : customerAccountPayments) {
-            totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(customerSchedule.getMiscFee());
-            totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(customerSchedule.getMiscPenalty());
-            for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule.getAccountFeesActionDetails()) {
-                CustomerFeeScheduleEntity customerFeeSchedule = (CustomerFeeScheduleEntity) accountFeesActionDetail;
-                totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(customerFeeSchedule.getFeeAmount());
-            }
+           totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(new Money(totalPaid.getCurrency(), dueAmountForCustomerSchedule(customerSchedule)));
         }
-        if (!totalPaid.equals(totalAllUnpaidInstallments)) {
-            throw new AccountException(
-                    "errors.paymentmismatch",
-                    new String[] { totalPaid.toString(), totalAllUnpaidInstallments.toString() });
+        System.out.printf("Should be %f is %f\n", totalAllUnpaidInstallments.getAmountDoubleValue(), totalPaid.getAmountDoubleValue());
+        /////////////////////////////////////////////////
+
+        if (totalAllUnpaidInstallments.compareTo(totalPaid) < 0) {
+            throw new AccountException(AccountConstants.NO_TRANSACTION_POSSIBLE, new String[] {"Overpayments are not supported"});
         }
 
         final AccountPaymentEntity accountPayment = new AccountPaymentEntity(this, paymentData.getTotalAmount(),
                 paymentData.getReceiptNum(), paymentData.getReceiptDate(), getPaymentTypeEntity(paymentData
                         .getPaymentTypeId()), paymentData.getTransactionDate());
 
+        BigDecimal leftFromPaidIn = totalPaid.getAmount();
         for (CustomerScheduleEntity customerSchedule : customerAccountPayments) {
-
-            customerSchedule.setPaymentStatus(PaymentStatus.PAID);
-            customerSchedule.setPaymentDate(new java.sql.Date(paymentData.getTransactionDate().getTime()));
-            customerSchedule.setMiscFeePaid(customerSchedule.getMiscFee());
-            customerSchedule.setMiscPenaltyPaid(customerSchedule.getMiscPenalty());
+            if (leftFromPaidIn.compareTo(BigDecimal.ZERO) == 0) {
+                break;
+            }
+            
+            BigDecimal miscPenaltyToPay = leftFromPaidIn.min(customerSchedule.getMiscPenaltyDue().getAmount());
+            if (miscPenaltyToPay.compareTo(BigDecimal.ZERO) > 0) {
+                customerSchedule.setMiscPenaltyPaid(new Money(totalPaid.getCurrency(), miscPenaltyToPay));
+                customerSchedule.setPaymentDate(new java.sql.Date(paymentData.getTransactionDate().getTime()));
+                leftFromPaidIn = leftFromPaidIn.subtract(miscPenaltyToPay);
+            }
 
             final List<FeesTrxnDetailEntity> feeTrxns = new ArrayList<FeesTrxnDetailEntity>();
             for (AccountFeesActionDetailEntity accountFeesActionDetail : customerSchedule.getAccountFeesActionDetails()) {
-                CustomerFeeScheduleEntity customerFeeSchedule = (CustomerFeeScheduleEntity) accountFeesActionDetail;
-
-                customerFeeSchedule.makePayment(customerFeeSchedule.getFeeDue());
-                final FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(null, customerFeeSchedule
-                        .getAccountFee(), customerFeeSchedule.getFeeAmountPaid());
-                feeTrxns.add(feesTrxnDetailBO);
+                if (leftFromPaidIn.compareTo(BigDecimal.ZERO) > 0) {
+                    CustomerFeeScheduleEntity customerFeeSchedule = (CustomerFeeScheduleEntity) accountFeesActionDetail;
+                    BigDecimal feeFromScheduleToPay = leftFromPaidIn.min(customerFeeSchedule.getFeeDue().getAmount());
+                    customerFeeSchedule.makePayment(new Money(totalPaid.getCurrency(), feeFromScheduleToPay));
+                    final FeesTrxnDetailEntity feesTrxnDetailBO = new FeesTrxnDetailEntity(null, customerFeeSchedule
+                            .getAccountFee(), new Money(totalPaid.getCurrency(), feeFromScheduleToPay));
+                    feeTrxns.add(feesTrxnDetailBO);
+                    leftFromPaidIn = leftFromPaidIn.subtract(feeFromScheduleToPay);
+                }
             }
 
-            Money customerScheduleAmountPaid = new Money(totalPaid.getCurrency(), "0.0");
-            customerScheduleAmountPaid = customerScheduleAmountPaid.add(customerSchedule.getMiscFeePaid());
-            customerScheduleAmountPaid = customerScheduleAmountPaid.add(customerSchedule.getMiscPenaltyPaid());
+            BigDecimal miscFeeToPay = BigDecimal.ZERO;
+            if (leftFromPaidIn.compareTo(BigDecimal.ZERO) > 0) {
+                miscFeeToPay = leftFromPaidIn.min(customerSchedule.getMiscFeeDue().getAmount());
+                if (miscFeeToPay.compareTo(BigDecimal.ZERO) > 0) {
+                    customerSchedule.setMiscFeePaid(new Money(totalPaid.getCurrency(), miscFeeToPay));
+                    customerSchedule.setPaymentDate(new java.sql.Date(paymentData.getTransactionDate().getTime()));
+                    leftFromPaidIn = leftFromPaidIn.subtract(miscFeeToPay);
+                }
+            }
+
+            if (dueAmountForCustomerSchedule(customerSchedule).compareTo(BigDecimal.ZERO) == 0) {
+                customerSchedule.setPaymentStatus(PaymentStatus.PAID);
+            }
+
+            Money customerScheduleAmountPaid = new Money(totalPaid.getCurrency(), miscFeeToPay.add(miscPenaltyToPay));
 
             final CustomerTrxnDetailEntity accountTrxn = new CustomerTrxnDetailEntity(accountPayment,
                     AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT, customerSchedule.getInstallmentId(),
                     customerSchedule.getActionDate(), paymentData.getPersonnel(), paymentData.getTransactionDate(),
-                    customerScheduleAmountPaid, AccountConstants.PAYMENT_RCVD, null, customerSchedule
-                            .getMiscFeePaid(), customerSchedule.getMiscPenaltyPaid(), getFeePersistence());
+                    customerScheduleAmountPaid, AccountConstants.PAYMENT_RCVD, null, new Money(totalPaid.getCurrency(), miscFeeToPay),
+                    new Money(totalPaid.getCurrency(), miscPenaltyToPay), getFeePersistence());
 
             for (FeesTrxnDetailEntity feesTrxnDetailEntity : feeTrxns) {
                 accountTrxn.addFeesTrxnDetail(feesTrxnDetailEntity);
@@ -563,16 +594,42 @@ public class CustomerAccountBO extends AccountBO {
             updateSchedule(nextInstallment.getInstallmentId(), meetingDates);
     }
 
-    private List<CustomerScheduleEntity> findAllUnpaidInstallmentsUpTo(final Date transactionDate) {
+    private List<CustomerScheduleEntity> findAllUnpaidInstallmentsUpToDatePlusNextMeeting(final Date transactionDate) {
+
+        List<AccountActionDateEntity> unpaidDates = new ArrayList<AccountActionDateEntity>();
+        for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+            if (accountActionDateEntity != null && !accountActionDateEntity.isPaid()) {
+                unpaidDates.add(accountActionDateEntity);
+            }
+        }
 
         final List<CustomerScheduleEntity> customerSchedulePayments = new ArrayList<CustomerScheduleEntity>();
-        for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
-            if (accountActionDateEntity != null && !accountActionDateEntity.isPaid()
-                    && !accountActionDateEntity.getActionDate().after(transactionDate)) {
 
+        for (AccountActionDateEntity accountActionDateEntity : unpaidDates) {
+            if (!accountActionDateEntity.getActionDate().after(transactionDate)) {
                 customerSchedulePayments.add((CustomerScheduleEntity) accountActionDateEntity);
             }
         }
+
+        AccountActionDateEntity nextMeeting = null;
+        for (AccountActionDateEntity accountActionDateEntity : unpaidDates) {
+            if (accountActionDateEntity.getActionDate().after(transactionDate)) {
+                if (nextMeeting == null || nextMeeting.getActionDate().after(accountActionDateEntity.getActionDate())) {
+                    nextMeeting = accountActionDateEntity;
+                }
+            }
+        }
+
+        if (nextMeeting != null) {
+            customerSchedulePayments.add((CustomerScheduleEntity)nextMeeting);
+        }
+
+        Collections.sort(customerSchedulePayments, new Comparator<CustomerScheduleEntity> () {
+            @Override
+            public int compare(CustomerScheduleEntity o1, CustomerScheduleEntity o2) {
+                return o1.getActionDate().compareTo(o2.getActionDate());
+            }
+        });
 
         return customerSchedulePayments;
     }
