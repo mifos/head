@@ -235,18 +235,12 @@ public interface CustomerDao {
 
     List<PersonnelLevelEntity> retrievePersonnelLevels();
 
-    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
-
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator();
-
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator();
+    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
 
     /**
      * <code>phoneNumber</code> is stripped to contain numeric characters only
      */
     List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber);
-
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator();
 
     List<AccountBO> retrieveAllClosedLoanAndSavingsAccounts(Integer customerId);
 }

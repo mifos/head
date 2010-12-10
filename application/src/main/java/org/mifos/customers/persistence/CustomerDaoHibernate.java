@@ -35,7 +35,6 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -1721,38 +1720,10 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId) {
+    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery(
-                "CustomerCustomFieldEntity.getResponses", queryParameters);
-
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
-        List<CustomFieldForMigrationDto> customFields = new ArrayList<CustomFieldForMigrationDto>();
-        for (Object[] customFieldsFromQuery : queryResult) {
-            customFields.add(new CustomFieldForMigrationDto(customFieldsFromQuery));
-        }
-        return customFields;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CLIENT.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao
-                .executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters).iterator();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.GROUP.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
+        return (List<Object[]>) this.genericDao.executeNamedQuery("CustomerCustomFieldEntity.getResponses", queryParameters);
     }
 
     @SuppressWarnings("unchecked")

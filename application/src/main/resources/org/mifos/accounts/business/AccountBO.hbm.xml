@@ -966,6 +966,6 @@ select coll.*,
         <return-scalar column="account_id" type="integer" />
 	    <![CDATA[SELECT a.account_custom_field_id, a.field_id, a.field_value, b.created_date, b.updated_date, b.created_by, b.updated_by, b.account_id
 	    FROM account_custom_field a join account b on a.account_id = b.account_id
-	    where a.field_id = :CUSTOM_FIELD_ID]]>
+	    where a.field_id in (:CUSTOM_FIELD_ID) order by b.account_id]]>
 	</sql-query>
 </hibernate-mapping>

@@ -206,28 +206,18 @@ public class SavingsDaoHibernate implements SavingsDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings() {
+    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.SAVINGS.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) baseDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return (List<CustomFieldDefinitionEntity>) baseDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId) {
+    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        List<Object[]> queryResult = (List<Object[]>) baseDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
-
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
-        List<CustomFieldForMigrationDto> customFields = new ArrayList<CustomFieldForMigrationDto>();
-        for (Object[] customFieldsFromQuery : queryResult) {
-            customFields.add(new CustomFieldForMigrationDto(customFieldsFromQuery));
-        }
-        return customFields;
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
+        return (List<Object[]>) baseDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
     }
 
 

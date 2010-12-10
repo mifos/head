@@ -58,9 +58,9 @@ public interface SavingsDao {
     List<CollectionSheetCustomerSavingsAccountDto> findAllSavingAccountsForCustomerHierarchy(
             CustomerHierarchyParams customerHierarchyParams);
 
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings();
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings();
 
-    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
+    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
 
     List<EndOfDayDetail> retrieveAllEndOfDayDetailsFor(MifosCurrency currency, Long savingsId);
 

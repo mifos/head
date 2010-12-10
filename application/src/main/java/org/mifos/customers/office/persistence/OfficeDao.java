@@ -78,9 +78,9 @@ public interface OfficeDao {
 
     void validateNoOfficesExistGivenOfficeLevel(OfficeLevel regionaloffice);
 
-    List<CustomFieldForMigrationDto> getCustomFieldResponses(Short customFieldId);
+    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
 
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForOffice();
+    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForOffice();
 
     List<OfficeDetailsDto> findActiveBranches(Short branchId);
 }
