@@ -67,7 +67,9 @@ public class TestDataSetup {
                 submit().navigateToClientViewDetailsPage().
                 navigateToCustomerChangeStatusPage().
                 submitAndGotoCustomerChangeStatusPreviewDataPage(setApprovalStatus()).
-                submitAndGotoClientViewDetailsPage();
+                submitAndGotoClientViewDetailsPage().
+                navigateToEditMeetingSchedule().
+                editClientMeeting(setMeetingScheduleParameters());
     }
 
     public void createFee(FeesCreatePage.SubmitFormParameters feeParameters) throws SQLException {

@@ -23,7 +23,6 @@ package org.mifos.test.acceptance.framework.client;
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.MifosPage;
-import org.mifos.test.acceptance.framework.center.CreateMeetingPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
 import org.mifos.test.acceptance.framework.loan.AttachSurveyPage;
 import org.mifos.test.acceptance.framework.loan.ClosedAccountsPage;
@@ -198,10 +197,10 @@ public class ClientViewDetailsPage extends MifosPage {
         return new ViewClientChargesDetail(selenium);
     }
 
-    public CreateMeetingPage navigateToEditMeetingSchedule() {
+    public EditMeetingPage navigateToEditMeetingSchedule() {
         selenium.click("viewClientDetails.link.editMeetingScheduleAddGroup");
         waitForPageToLoad();
-        return new CreateMeetingPage(selenium);
+        return new EditMeetingPage(selenium);
     }
 }
 
