@@ -132,11 +132,24 @@ public class QuestionnaireMigration {
             case PERSONNEL: update = StaticHibernateUtil.getSessionTL().createSQLQuery("delete from personnel_custom_field where personnel_custom_field_id = :customFieldId"); break;
         }
 
+        final int COMMIT_EVERY = 1000;
+        final int PRINT_EVERY = 10000;
+
         StaticHibernateUtil.startTransaction();
+        int modifyCount = 0;
         for (Integer responseId : responses) {
+            ++modifyCount;
             try {
                 update.setInteger("customFieldId", responseId);
                 update.executeUpdate();
+                if (modifyCount % COMMIT_EVERY == 0) {
+					StaticHibernateUtil.commitTransaction();
+                    StaticHibernateUtil.startTransaction();
+				}
+                if (modifyCount % PRINT_EVERY == 0) {
+                    System.out.print(".");
+                    System.out.flush();
+                }
             } catch (HibernateException e) {
                 logger.error(format("Unable to remove response given for %s with ID %d for custom fields", entityType, responseId), e);
                 StaticHibernateUtil.rollbackTransaction();
