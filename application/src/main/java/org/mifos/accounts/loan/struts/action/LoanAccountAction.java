@@ -537,9 +537,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanAccountActionForm loanForm = (LoanAccountActionForm) form;
         LoanOfferingBO loanOffering = getLoanOffering(loanForm.getPrdOfferingIdValue(), userContext.getLocaleId());
 
+        Locale preferredLocale = userContext.getPreferredLocale();
+
         if (loanOffering != null && loanOffering.isCashFlowCheckEnabled()) {
             InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
-                    loanForm.getInstallments(), loanForm.getCashFlowForm().getMonthlyCashFlows());
+                    loanForm.getInstallments(), loanForm.getCashFlowForm().getMonthlyCashFlows(), preferredLocale);
 
             loanForm.setCashflowDataHtmlBeans(cashflowUtility.mapToCashflowDataHtmlBeans());
             cashflowBound = true;
@@ -577,8 +579,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     // Intentionally made 'public' to aid testing
-    // CashFlowAdaptor passed to aid testing 
-
+    // CashFlowAdaptor passed to aid testing
     public ActionForward getPageAfterQuestionnaire(ActionMapping mapping, HttpServletRequest request,
                                                    LoanOfferingBO loanOffering,
                                                    LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto,
