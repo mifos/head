@@ -77,6 +77,7 @@ public class CashFlowTest extends UiTestCaseBase {
         createAndValidateLoanProductWithCashFlow("", formParameters, "", "", false);
     }
 
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowForNonVariableInstallmentLoan() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -85,6 +86,7 @@ public class CashFlowTest extends UiTestCaseBase {
         validateCashFlowForLoanAccount(formParameters, minRc, "999.68");
     }
 
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowForVariableInstallmentLoan() throws Exception {
         String minRC = "999.99";
