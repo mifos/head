@@ -1,6 +1,5 @@
 #!/bin/bash
-set -x
-set -o errexit
+set -ex
 
 # JOB_NAME environment variable must be set. We count on Hudson for this.
 
@@ -25,8 +24,8 @@ fi
 can_hit_test_server=1
 while [ $can_hit_test_server -ne 0 ]
 do
-    # Use of short circuit || operator here allows us to still use errexit
-    # (-e) so the rest of this script will fail fast.
-    curl --fail http://sdemo.mifos.org/mifos/ || can_hit_test_server=$?
+    set +e # or a failure would stop the script prematurely
+    curl --fail http://sdemo.mifos.org/mifos/
+    can_hit_test_server=$?
     sleep 1
 done
