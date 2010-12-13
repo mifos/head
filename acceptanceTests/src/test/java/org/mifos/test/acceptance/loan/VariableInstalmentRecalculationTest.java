@@ -85,7 +85,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
     // Installment amount for Pazdziernik 2010 as...
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    public void verifyCashFlowRecalculation() throws Exception {
+    public void verifyCashFlowRecalculationAndWarnings() throws Exception {
         int noOfInstallments = 3;
         int loanAmount = 1000;
         int interestRate = 20;
@@ -102,7 +102,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
 
         createLoanProduct(maxGap, minGap, minInstalmentAmount, formParameters, warningThreshold);
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
-                enterValidData(cashFlowIncremental, 100, "100", "100").
+                enterValidData(cashFlowIncremental, 100, null, null).
                 clickContinue().
                 verifyCashFlowDefaultValues().
                 verifyInstallmentDatesOutOfCashFlowCapturedOnValidate().
@@ -133,12 +133,10 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
 
         createLoanProduct(maxGap, minGap, minInstalmentAmount, formParameters, warningThreshold);
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
-                enterValidData(cashFlowIncremental, cashFlowBase, "100", "100").
+                enterValidData(cashFlowIncremental, cashFlowBase, null, null).
                 clickContinue().
                 verifyRecalculationWhenDateAndTotalChange();
     }
-
-
 
     private DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate) {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -154,7 +152,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
         loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 fillVariableInstalmentOption(String.valueOf(maxGap),String.valueOf(minGap), String.valueOf(minInstalmentAmount)).
-                fillCashFlow(String.valueOf(cashFlowIncremental), null, null).
+                fillCashFlow(String.valueOf(cashFlowIncremental), "", "").
                 submitAndGotoNewLoanProductPreviewPage().
                 submit();
     }

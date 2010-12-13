@@ -54,8 +54,12 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
             selenium.type("//tr[" + rowIndex + "]/td[3]/input", String.valueOf(cashFlowBase + incremental));
             selenium.type("//tr[" + rowIndex + "]/td[4]/input","notes" + rowIndex);
         }
-        selenium.type(this.totalCapital, totalCapital);
-        selenium.type(this.totalLiability, totalLiability);
+        if (totalCapital != null) {
+            selenium.type(this.totalCapital, totalCapital);
+        }
+        if (totalLiability != null) {
+            selenium.type(this.totalLiability, totalLiability);
+        }
         return this;
     }
 
