@@ -156,7 +156,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Date transactionDate = new Date(System.currentTimeMillis());
         List<AccountActionDateEntity> dueActionDates = TestObjectFactory.getDueActionDatesForAccount(customerAccount
                 .getAccountId(), transactionDate);
-        Assert.assertEquals("The size of the due insallments is ", dueActionDates.size(), 1);
+        Assert.assertEquals("The size of the due insallments  is ", dueActionDates.size(), 1);
         PaymentData accountPaymentDataView = TestObjectFactory.getCustomerAccountPaymentDataView(dueActionDates,
                 TestUtils.createMoney("100.0"), null, center.getPersonnel(), "3424324", Short
                         .valueOf("1"), transactionDate, transactionDate);
@@ -167,6 +167,9 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals("The size of the payments done is", customerAccount.getAccountPayments().size(), 1);
 
         try {
+            // one more for the next meeting
+            customerAccount.applyPayment(accountPaymentDataView);
+            // and the error one
             customerAccount.applyPayment(accountPaymentDataView);
             Assert.fail("Payment is done even though they are no dues");
         } catch (AccountException ae) {
@@ -785,17 +788,18 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testAccountExceptionThrownForAPaymentNotEqualToTheTotalOutstandingCustomerAccountAmount()
+    public void testAccountExceptionNotThrownForAPaymentNotEqualToTheTotalOutstandingCustomerAccountAmount()
             throws Exception {
         createCenter();
-        verifyExpectedDetailMessageThrown(center, new Money(getCurrency(), "299.99"), 14, "errors.paymentmismatch");
+        verifyExpectedDetailMessageThrown(center, new Money(getCurrency(), "299.99"), 14, "No Error Message");
     }
 
+    // Works since implementation of ERF
     @Test
-    public void testAccountExceptionThrownForAPaymentWithNoOutstandingCustomerAccountInstallments() throws Exception {
+    public void testPaymentBeforeMeeting() throws Exception {
         createCenter();
         verifyExpectedMessageThrown(center, new Money(getCurrency(), "8.54"), -2,
-                "Trying to pay account charges before the due date.");
+                "No Error Message");
     }
 
     private void verifyExpectedDetailMessageThrown(final CustomerBO customer, final Money paymentAmount,

@@ -612,15 +612,15 @@ public class CustomerAccountBO extends AccountBO {
         }
 
         AccountActionDateEntity nextMeeting = null;
-        for (AccountActionDateEntity accountActionDateEntity : unpaidDates) {
-            if (accountActionDateEntity.getActionDate().after(transactionDate)) {
+        for (AccountActionDateEntity accountActionDateEntity : getAccountActionDates()) {
+            if (accountActionDateEntity != null && accountActionDateEntity.getActionDate().after(transactionDate)) {
                 if (nextMeeting == null || nextMeeting.getActionDate().after(accountActionDateEntity.getActionDate())) {
                     nextMeeting = accountActionDateEntity;
                 }
             }
         }
 
-        if (nextMeeting != null) {
+        if (nextMeeting != null && !nextMeeting.isPaid()) {
             customerSchedulePayments.add((CustomerScheduleEntity)nextMeeting);
         }
 
