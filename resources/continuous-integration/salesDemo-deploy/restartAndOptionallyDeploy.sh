@@ -21,3 +21,12 @@ then
 else
     $controlScript restart
 fi
+
+can_hit_test_server=1
+while [ $can_hit_test_server -ne 0 ]
+do
+    # Use of short circuit || operator here allows us to still use errexit
+    # (-e) so the rest of this script will fail fast.
+    curl --fail http://sdemo.mifos.org/mifos/ || can_hit_test_server=$?
+    sleep 1
+done

@@ -29,3 +29,12 @@ cat $WORKSPACE/application/src/main/sql/init_mifos_password.sql | \
     mysql -u hudson -phudson hudson_mifos_public_demo
 echo 'update personnel set locked=0, no_of_tries=0 where personnel_id=1' | \
     mysql -u hudson -phudson hudson_mifos_public_demo
+
+can_hit_test_server=1
+while [ $can_hit_test_server -ne 0 ]
+do
+    # Use of short circuit || operator here allows us to still use errexit
+    # (-e) so the rest of this script will fail fast.
+    curl --fail http://demo.mifos.org/mifos/ || can_hit_test_server=$?
+    sleep 1
+done
