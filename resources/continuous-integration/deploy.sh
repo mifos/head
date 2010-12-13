@@ -22,9 +22,13 @@ if [ -n "$TEST_SERVER_PORT" ]; then
     can_hit_test_server=1
     while [ $can_hit_test_server -ne 0 ]
     do
+        # The purpose of this sleep is twofold:
+        # 1) on the first iteration, give tomcat a second to start up.
+        # 2) thereafter, pause between loop iterations so we don't exhaust
+        # resources on birch if some unforseen problem occurs.
+        sleep 1
         set +e # or a failure would stop the script prematurely
         curl --fail http://ci.mifos.org:$TEST_SERVER_PORT/mifos/
         can_hit_test_server=$?
-        sleep 1
     done
 fi
