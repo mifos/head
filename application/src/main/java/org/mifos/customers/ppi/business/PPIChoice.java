@@ -24,7 +24,7 @@ import org.mifos.customers.surveys.business.QuestionChoice;
 
 public class PPIChoice extends QuestionChoice {
 
-    private int points;
+    private Integer points;
 
     public PPIChoice() {
         super();
@@ -34,11 +34,11 @@ public class PPIChoice extends QuestionChoice {
         super(text);
     }
 
-    public void setPoints(int points) {
+    public void setPoints(Integer points) {
         this.points = points;
     }
 
-    public int getPoints() {
+    public Integer getPoints() {
         return points;
     }
 
