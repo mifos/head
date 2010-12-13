@@ -30,6 +30,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
@@ -358,4 +359,20 @@ public class MoneyTest extends TestCase {
         } catch (RuntimeException e) {
         }
     }
+
+    public void testDetermineWhetherTinyAmount() {
+        Short digitsAfterDecimal = AccountingRules.getDigitsAfterDecimal();
+        AccountingRules.setDigitsAfterDecimal(Short.valueOf("2"));
+        Money money;
+        money = new Money(RUPEE, "10.5");
+        assertFalse(money.isTinyAmount());
+        money = new Money(RUPEE, "0.5");
+        assertFalse(money.isTinyAmount());
+        money = new Money(RUPEE, "0.05");
+        assertFalse(money.isTinyAmount());
+        money = new Money(RUPEE, "0.005");
+        assertTrue(money.isTinyAmount());
+        AccountingRules.setDigitsAfterDecimal(Short.valueOf(digitsAfterDecimal));
+    }
+
 }

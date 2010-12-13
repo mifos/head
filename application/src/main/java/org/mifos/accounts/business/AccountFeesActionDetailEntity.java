@@ -155,4 +155,8 @@ public class AccountFeesActionDetailEntity extends AbstractEntity implements Com
     public void setInstallmentId(Short installmentId) {
         this.installmentId = installmentId;
     }
+
+    public Integer getAccountFeeId() {
+        return accountFee.getAccountFeeId();
+    }
 }

@@ -128,7 +128,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
                 .getActionDate(), personnel, null, transactionDate, loanScheduleEntity.getPaymentAllocation().getTotalPaid(), comments,
                 null, persistence);
         PaymentAllocation paymentAllocation = loanScheduleEntity.getPaymentAllocation();
-        interestAmount = paymentAllocation.getInterestPaid();
+        interestAmount = paymentAllocation.getTotalInterestPaid();
         penaltyAmount = paymentAllocation.getPenaltyPaid();
         principalAmount = paymentAllocation.getPrincipalPaid();
         miscFeeAmount = paymentAllocation.getMiscFeePaid();
@@ -222,4 +222,24 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
             return AccountActionTypes.LOAN_ADJUSTMENT;
         }
     }
+
+    Money totalPenaltyPaid() {
+        return getPenaltyAmount().add(getMiscPenaltyAmount());
+    }
+
+    Money totalAndMiscFeesPaid() {
+        return getFeeAmount().add(getMiscFeeAmount());
+    }
+
+    public boolean isNotEmptyTransaction() {
+        return getInstallmentId() != null && !getInstallmentId().equals(Short.valueOf("0"));
+    }
+
+    void adjustFees(AccountFeesActionDetailEntity accntFeesAction) {
+        FeesTrxnDetailEntity feesTrxnDetailEntity = getFeesTrxn(accntFeesAction.getAccountFeeId());
+        if (feesTrxnDetailEntity != null) {
+            ((LoanFeeScheduleEntity) accntFeesAction).adjustFees(feesTrxnDetailEntity);
+        }
+    }
+
 }

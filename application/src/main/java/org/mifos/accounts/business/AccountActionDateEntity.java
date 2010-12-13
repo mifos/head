@@ -115,7 +115,7 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
     }
 
     public MifosCurrency getCurrency() {
-        return getAccount().getCurrency();
+        return account.getCurrency();
     }
 
     public boolean isDueToday() {

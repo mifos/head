@@ -30,10 +30,6 @@ public class Utilities {
         return balance.compareTo(BigDecimal.ZERO) > 0;
     }
 
-    public static boolean isLesserThanOrEqualToZero(BigDecimal balance) {
-        return !isGreaterThanZero(balance);
-    }
-
     // (first - second) gap in days
     public static long getDaysInBetween(Date first, Date second) {
         long firstInMillis = first.getTime();

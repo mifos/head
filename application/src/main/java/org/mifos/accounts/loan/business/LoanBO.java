@@ -21,6 +21,7 @@
 package org.mifos.accounts.loan.business;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -685,10 +686,8 @@ public class LoanBO extends AccountBO {
         // 3. Closed - Obligation Met : Check permisssion first ; Can adjust
         // payment when account status is "closed-obligation met"
 
-        if (!(getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())
-                || getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()) || getAccountState()
-                .getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue()))) {
-
+        if (!(getAccountState().isLoanActiveInGoodStanding()
+                || getAccountState().isLoanActiveInBadStanding() || getAccountState().isLoanClosedObligationsMet())) {
             logger.debug(
                     "State is not active hence adjustment is not possible");
             return false;
@@ -1641,26 +1640,20 @@ public class LoanBO extends AccountBO {
         int numberOfFullPayments = 0;
         List<AccountActionDateEntity> allInstallments = this.getAllInstallments();
 
-        if (null != reversedTrxns && reversedTrxns.size() > 0) {
-            for (AccountTrxnEntity accntTrxn : reversedTrxns) {
+        if (isNotEmpty(reversedTrxns)) {
+            for (AccountTrxnEntity reversedTrxn : reversedTrxns) {
                 Short prevInstallmentId = null;
-                Short currentInstallmentId = accntTrxn.getInstallmentId();
+                Short currentInstallmentId = reversedTrxn.getInstallmentId();
                 numberOfFullPayments = getIncrementedNumberOfFullPaymentsIfPaid(numberOfFullPayments, allInstallments,
                         prevInstallmentId, currentInstallmentId);
 
-                if (!accntTrxn.getAccountActionEntity().getId().equals(
-                        AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue())) {
-                    LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) accntTrxn;
+                if (!reversedTrxn.isTrxnForReversalOfLoanDisbursal()) {
+                    LoanTrxnDetailEntity loanReverseTrxn = (LoanTrxnDetailEntity) reversedTrxn;
 
-                    loanSummary.updatePaymentDetails(loanTrxn.getPrincipalAmount(), loanTrxn.getInterestAmount(),
-                            loanTrxn.getPenaltyAmount().add(loanTrxn.getMiscPenaltyAmount()), loanTrxn.getFeeAmount()
-                                    .add(loanTrxn.getMiscFeeAmount()));
-                    if (loanTrxn.getInstallmentId() != null && !loanTrxn.getInstallmentId().equals(Short.valueOf("0"))) {
-                        LoanScheduleEntity accntActionDate = (LoanScheduleEntity) getAccountActionDate(loanTrxn
-                                .getInstallmentId());
-                        accntActionDate.updatePaymentDetails(loanTrxn.getPrincipalAmount(), loanTrxn
-                                .getInterestAmount(), loanTrxn.getPenaltyAmount(), loanTrxn.getMiscPenaltyAmount(),
-                                loanTrxn.getMiscFeeAmount());
+                    loanSummary.updatePaymentDetails(loanReverseTrxn);
+                    if (loanReverseTrxn.isNotEmptyTransaction()) {
+                        LoanScheduleEntity installment = (LoanScheduleEntity) getAccountActionDate(loanReverseTrxn.getInstallmentId());
+                        installment.updatePaymentDetails(loanReverseTrxn);
 
                         /*
                          * John W - mifos-1986 - when adjusting a loan that is LOAN_CLOSED_OBLIGATIONS_MET and was
@@ -1670,70 +1663,36 @@ public class LoanBO extends AccountBO {
                          * This means... for paid installments add up the amount due (for interest, fees and penalties).
                          * The amount due is not necessarily zero for this case.
                          */
-                        if (accntActionDate.isPaid()) {
-                            increaseInterest = increaseInterest.add(accntActionDate.getInterestDue());
-                            increaseFees = increaseFees.add(accntActionDate.getTotalFeeDueWithMiscFeeDue());
-                            increasePenalty = increasePenalty.add(accntActionDate.getPenaltyDue());
+                        if (installment.isPaid()) {
+                            increaseInterest = increaseInterest.add(installment.getInterestDue());
+                            increaseFees = increaseFees.add(installment.getTotalFeeDueWithMiscFeeDue());
+                            increasePenalty = increasePenalty.add(installment.getPenaltyDue());
                         }
 
-                        accntActionDate.setPaymentStatus(PaymentStatus.UNPAID);
+                        installment.recordForAdjustment();
 
-                        accntActionDate.setPaymentDate(null);
-                        if (null != accntActionDate.getAccountFeesActionDetails()
-                                && accntActionDate.getAccountFeesActionDetails().size() > 0) {
-                            for (AccountFeesActionDetailEntity accntFeesAction : accntActionDate
-                                    .getAccountFeesActionDetails()) {
-                                FeesTrxnDetailEntity feesTrxnDetailEntity = loanTrxn.getFeesTrxn(accntFeesAction
-                                        .getAccountFee().getAccountFeeId());
-                                if (feesTrxnDetailEntity != null) {
-                                    Money feeAmntAdjusted = feesTrxnDetailEntity.getFeeAmount();
-                                    ((LoanFeeScheduleEntity) accntFeesAction).setFeeAmountPaid(accntFeesAction
-                                            .getFeeAmountPaid().add(feeAmntAdjusted));
-                                }
+                        if (installment.hasFees()) {
+                            for (AccountFeesActionDetailEntity accntFeesAction : installment.getAccountFeesActionDetails()) {
+                                loanReverseTrxn.adjustFees(accntFeesAction);
                             }
                         }
                     }
                 }
             }
-            boolean accountReOpened = false;
             AccountStateEntity currentAccountState = this.getAccountState();
             AccountStateEntity newAccountState = currentAccountState;
             boolean statusChangeNeeded = false;
-            if (getAccountStatusChangeHistory() != null && getAccountStatusChangeHistory().size() > 0
-                    && !getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue())) {
-                List<Object> objectList = Arrays.asList(getAccountStatusChangeHistory().toArray());
-                AccountStatusChangeHistoryEntity accountStatusChangeHistoryEntity = (AccountStatusChangeHistoryEntity) objectList
-                        .get(objectList.size() - 1);
-                if (accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
-                        AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())
-                        || accountStatusChangeHistoryEntity.getOldStatus().getId().equals(
-                                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
+            if (isLoanActiveWithStatusChangeHistory()) {
+                AccountStatusChangeHistoryEntity lastAccountStatusChange = getLastAccountStatusChange();
+                if (lastAccountStatusChange.isLoanActive()) {
                     statusChangeNeeded = true;
-                } else if (currentAccountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
+                } else if (currentAccountState.isLoanClosedObligationsMet()) {
                     statusChangeNeeded = true;
-                    newAccountState = accountStatusChangeHistoryEntity.getOldStatus();
+                    newAccountState = lastAccountStatusChange.getOldStatus();
                 }
             }
-            accountReOpened = isAccountReOpened(currentAccountState, newAccountState);
-
-            if (accountReOpened && this.getCustomer().isClient()) {
-                final ClientPerformanceHistoryEntity clientHistory = (ClientPerformanceHistoryEntity) this
-                        .getCustomer().getPerformanceHistory();
-                clientHistory.incrementNoOfActiveLoans();
-                Money newLastLoanAmount = getLoanPersistence()
-                        .findClientPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
-                                this.getCustomer().getCustomerId(), this.getAccountId());
-                clientHistory.setLastLoanAmount(newLastLoanAmount);
-            }
-
-            if (accountReOpened && this.getCustomer().isGroup()) {
-                final GroupPerformanceHistoryEntity groupHistory = (GroupPerformanceHistoryEntity) this.getCustomer()
-                        .getPerformanceHistory();
-                Money newLastGroupLoanAmount = getLoanPersistence()
-                        .findGroupPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
-                                this.getCustomer().getCustomerId(), this.getAccountId());
-                groupHistory.setLastGroupLoanAmount(newLastGroupLoanAmount);
-            }
+            boolean accountReOpened = isAccountReOpened(currentAccountState, newAccountState);
+            updatePerformanceHistory(accountReOpened);
 
             /*
              * John W - mifos-1986 - see related comment above
@@ -1754,36 +1713,63 @@ public class LoanBO extends AccountBO {
 
             if (statusChangeNeeded) {
                 Short daysInArrears = getDaysInArrears(accountReOpened);
-                if (currentAccountState.getId().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET.getValue())) {
+                if (currentAccountState.isLoanClosedObligationsMet()) {
                     AccountState newStatus = AccountState.LOAN_ACTIVE_IN_BAD_STANDING;
                     if (daysInArrears == 0) {
                         newStatus = AccountState.LOAN_ACTIVE_IN_GOOD_STANDING;
                     }
-                    this.changeStatus(newStatus, null, "Account Reopened", loggedInUser);
+                    changeStatus(newStatus, null, "Account Reopened", loggedInUser);
                 } else {
                     if (daysInArrears == 0) {
-                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue())) {
-                        this.changeStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, null, "Account Adjusted", loggedInUser);
+                        if (!currentAccountState.isLoanActiveInGoodStanding()) {
+                            changeStatus(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, null, "Account Adjusted", loggedInUser);
                         }
                     } else {
-                        if (!currentAccountState.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())) {
-                        this.changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "Account Adjusted", loggedInUser);
+                        if (!currentAccountState.isLoanActiveInBadStanding()) {
+                            changeStatus(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, null, "Account Adjusted", loggedInUser);
                             handleArrearsAging();
                         }
                     }
                 }
             }
 
-            PersonnelBO personnel;
             try {
-                personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
-
-                addLoanActivity(buildLoanActivity(reversedTrxns, personnel, AccountConstants.LOAN_ADJUSTED, DateUtils
-                        .getCurrentDateWithoutTimeStamp()));
+                PersonnelBO personnel = new PersonnelPersistence().getPersonnel(getUserContext().getId());
+                addLoanActivity(buildLoanActivity(reversedTrxns, personnel, AccountConstants.LOAN_ADJUSTED, DateUtils.getCurrentDateWithoutTimeStamp()));
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
         }
+    }
+
+    private void updatePerformanceHistory(boolean accountReOpened) {
+        if (accountReOpened && this.getCustomer().isClient()) {
+            ClientPerformanceHistoryEntity clientHistory = (ClientPerformanceHistoryEntity) this.getCustomer().getPerformanceHistory();
+            clientHistory.incrementNoOfActiveLoans();
+            Money newLastLoanAmount = getLoanPersistence().findClientPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
+                    this.getCustomer().getCustomerId(), this.getAccountId());
+            clientHistory.setLastLoanAmount(newLastLoanAmount);
+        }
+
+        if (accountReOpened && this.getCustomer().isGroup()) {
+            final GroupPerformanceHistoryEntity groupHistory = (GroupPerformanceHistoryEntity) this.getCustomer().getPerformanceHistory();
+            Money newLastGroupLoanAmount = getLoanPersistence()
+                    .findGroupPerformanceHistoryLastLoanAmountWhenRepaidLoanAdjusted(
+                            this.getCustomer().getCustomerId(), this.getAccountId());
+            groupHistory.setLastGroupLoanAmount(newLastGroupLoanAmount);
+        }
+    }
+
+    private boolean isLoanActiveWithStatusChangeHistory() {
+        return hasAccountStatusChangeHistory() && !isLoanCancelled();
+    }
+
+    private boolean isLoanCancelled() {
+        return getAccountState().getId().equals(AccountState.LOAN_CANCELLED.getValue());
+    }
+
+    private boolean hasAccountStatusChangeHistory() {
+        return org.mifos.platform.util.CollectionUtils.isNotEmpty(getAccountStatusChangeHistory());
     }
 
     private int getIncrementedNumberOfFullPaymentsIfPaid(Integer numberOfFullPayments,
@@ -1793,7 +1779,6 @@ public class LoanBO extends AccountBO {
             if (isInstallmentPaid(currentInstallmentId, allInstallments)) {
                 numberOfFullPayments++;
             }
-            prevInstallmentId = currentInstallmentId;
         }
         return numberOfFullPayments;
     }
@@ -1945,8 +1930,7 @@ public class LoanBO extends AccountBO {
         Money fees = new Money(getCurrency());
 
         for (AccountTrxnEntity accountTrxn : accountTrxnDetails) {
-            if (!accountTrxn.getAccountActionEntity().getId().equals(
-                    AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue())) {
+            if (!accountTrxn.isTrxnForReversalOfLoanDisbursal()) {
                 LoanTrxnDetailEntity loanTrxn = (LoanTrxnDetailEntity) accountTrxn;
                 principal = principal.add(removeSign(loanTrxn.getPrincipalAmount()));
                 interest = interest.add(removeSign(loanTrxn.getInterestAmount()));
@@ -1958,8 +1942,7 @@ public class LoanBO extends AccountBO {
                 }
             }
 
-            if (accountTrxn.getAccountActionEntity().getId().equals(
-                    AccountActionTypes.LOAN_DISBURSAL_AMOUNT_REVERSAL.getValue())
+            if (accountTrxn.isTrxnForReversalOfLoanDisbursal()
                     || accountTrxn.getAccountActionEntity().getId().equals(AccountActionTypes.LOAN_REVERSAL.getValue())) {
                 comments = "Loan Reversal";
             }
@@ -2559,7 +2542,7 @@ public class LoanBO extends AccountBO {
     private AccountActionDateEntity getLastInstallmentAccountAction() {
         Set<AccountActionDateEntity> accountActionDateEntitySet = getAccountActionDates();
         AccountActionDateEntity nextAccountAction = null;
-        if (org.mifos.platform.util.CollectionUtils.isNotEmpty(accountActionDateEntitySet)) {
+        if (isNotEmpty(accountActionDateEntitySet)) {
             nextAccountAction = Collections.max(accountActionDateEntitySet);
         }
         return nextAccountAction;

@@ -57,6 +57,10 @@
 			<column name="penalty_paid_currency_id" />
 			<column name="penalty_paid" />
 		</property>
+        <property name="extraInterestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" insert="false" update="false">
+			<column name="interest_currency_id" />
+			<column name="extra_interest_paid" />
+		</property>
 
 		<many-to-one name="account" column="account_id" class="org.mifos.accounts.business.AccountBO" unique="true" cascade="none" insert="true" update="true" access="field"/>
 		<many-to-one name="customer" column="customer_id" class="org.mifos.customers.business.CustomerBO" access="field"/>

@@ -24,7 +24,6 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -34,6 +33,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.platform.util.CollectionUtils;
 
 import java.util.*;
 
@@ -261,12 +261,18 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         }
     }
 
-    void updatePaymentDetails(Money principal, Money interest, Money penalty, Money miscPenalty, Money miscFee) {
+    private void updatePaymentDetails(Money principal, Money interest, Money penalty, Money miscPenalty, Money miscFee) {
         principalPaid = principalPaid.add(principal);
         interestPaid = interestPaid.add(interest);
         penaltyPaid = penaltyPaid.add(penalty);
         miscPenaltyPaid = miscPenaltyPaid.add(miscPenalty);
         miscFeePaid = miscFeePaid.add(miscFee);
+    }
+
+    public void updatePaymentDetails(LoanTrxnDetailEntity loanReverseTrxn) {
+        updatePaymentDetails(loanReverseTrxn.getPrincipalAmount(), loanReverseTrxn.getInterestAmount(),
+                loanReverseTrxn.getPenaltyAmount(), loanReverseTrxn.getMiscPenaltyAmount(),
+                loanReverseTrxn.getMiscFeeAmount());
     }
 
     Money waiveFeeCharges() {
@@ -577,9 +583,14 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return paymentAllocation;
     }
 
+    void recordForAdjustment() {
+        setPaymentStatus(PaymentStatus.UNPAID);
+        setPaymentDate(null);
+    }
+
     void recordPayment(Date paymentDate) {
         setPaymentDate(new java.sql.Date(paymentDate.getTime()));
-        setPaymentStatus(getTotalDueWithFees().isGreaterThanZero() ? PaymentStatus.UNPAID : PaymentStatus.PAID);
+        setPaymentStatus(getTotalDueWithFees().isTinyAmount() ? PaymentStatus.PAID : PaymentStatus.UNPAID);
     }
 
     public double getPrincipalAsDouble() {
@@ -672,5 +683,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
             updateLoanSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
         }
         return balance;
+    }
+
+    boolean hasFees() {
+        return CollectionUtils.isNotEmpty(accountFeesActionDetails);
     }
 }

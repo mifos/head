@@ -102,6 +102,7 @@ public class LoanScheduleEntityTest {
         assertEquals(loanScheduleEntity.getPaymentStatus(), PaymentStatus.UNPAID.getValue());
     }
 
+    // TODO: Use a AccountTrxnEntityMatcher to verify the allocation totals
     @Test
     public void shouldUpdateLoanSummaryAndPerformanceHistoryOnPayOff() {
         loanScheduleEntity = new LoanScheduleEntity() {
