@@ -243,6 +243,13 @@ public class QuestionnaireMigration {
         Integer eventSourceId = getEventSourceId(entityType);
         if (questionGroupId != null && eventSourceId != null) {
             result = true;
+            Iterator<CustomFieldDefinitionEntity> cfIter = customFields.iterator();
+            while (cfIter.hasNext()) {
+                CustomFieldDefinitionEntity cfDefinition = cfIter.next();
+                if (customFieldQuestionIdMap.get(cfDefinition.getFieldId()) == null) { // this field hasn't been migrated
+                    cfIter.remove();
+                }
+            }
             List<Object[]> customFieldResponses = getCustomFieldResponses(entityType, customFields);
             if (customFieldResponses != null) {
                 Integer previousCustomer = null;
