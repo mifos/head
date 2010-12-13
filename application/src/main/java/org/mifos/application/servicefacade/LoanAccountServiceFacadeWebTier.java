@@ -92,7 +92,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public void updateSavingsAccountStatus(AccountUpdateStatus updateStatus) {
+    public void updateLoanAccountStatus(AccountUpdateStatus updateStatus) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
         PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());

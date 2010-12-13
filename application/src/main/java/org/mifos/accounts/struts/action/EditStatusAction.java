@@ -188,7 +188,7 @@ public class EditStatusAction extends BaseAction {
             approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
 
             AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
-            this.loanAccountServiceFacade.updateSavingsAccountStatus(updateStatus);
+            this.loanAccountServiceFacade.updateLoanAccountStatus(updateStatus);
 
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {

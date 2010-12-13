@@ -30,5 +30,5 @@ public interface LoanAccountServiceFacade {
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void updateSavingsAccountStatus(AccountUpdateStatus updateStatus);
+    void updateLoanAccountStatus(AccountUpdateStatus updateStatus);
 }
