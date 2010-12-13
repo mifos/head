@@ -1,21 +1,18 @@
 package org.mifos.accounts.loan.persistance;
 
-import org.mifos.accounts.business.AccountCustomFieldEntity;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.dto.domain.SurveyDto;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 public class LoanDaoHibernate implements LoanDao {
 
@@ -67,6 +64,7 @@ public class LoanDaoHibernate implements LoanDao {
         return accountSurveys;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -74,6 +72,7 @@ public class LoanDaoHibernate implements LoanDao {
         return (List<CustomFieldDefinitionEntity>) genericDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -81,4 +80,8 @@ public class LoanDaoHibernate implements LoanDao {
         return (List<Object[]>) genericDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
     }
 
+    @Override
+    public void save(LoanBO loanAccount) {
+        this.genericDao.createOrUpdate(loanAccount);
+    }
 }

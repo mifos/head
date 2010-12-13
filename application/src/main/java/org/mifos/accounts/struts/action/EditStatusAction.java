@@ -26,7 +26,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
@@ -40,17 +39,14 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.EditStatusActionForm;
-import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.dto.domain.SavingsAccountStatusDto;
-import org.mifos.dto.domain.SavingsAccountUpdateStatus;
-import org.mifos.framework.business.service.BusinessService;
+import org.mifos.dto.domain.AccountStatusDto;
+import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -63,11 +59,6 @@ import org.mifos.security.util.UserContext;
 public class EditStatusAction extends BaseAction {
 
     private QuestionnaireFlowAdapter approveLoanQuestionnaire;
-
-    @Override
-    protected BusinessService getService() {
-        return getAccountBusinessService();
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("editStatusAction");
@@ -84,34 +75,45 @@ public class EditStatusAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        doCleanUp(request.getSession(), form);
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
+        EditStatusActionForm editStatusActionForm1 = (EditStatusActionForm) form;
+        editStatusActionForm1.setSelectedItems(null);
+        editStatusActionForm1.setNotes(null);
+        editStatusActionForm1.setNewStatusId(null);
+        editStatusActionForm1.setFlagId(null);
+        editStatusActionForm1.setQuestionGroups(null);
+        request.getSession().removeAttribute(Constants.BUSINESS_KEY);
+        UserContext userContext = getUserContext(request);
         EditStatusActionForm actionForm = (EditStatusActionForm) form;
         Integer accountId = Integer.valueOf(actionForm.getAccountId());
-        AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
+        AccountBO accountBO = new AccountBusinessService().getAccount(accountId);
 
         if (accountBO.isLoanAccount()) {
-            getAccountBusinessService().initializeStateMachine(accountBO.getType(), null);
-            accountBO.setUserContext(userContext);
-            accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
+            // NOTE - not using dto values at present but available when ui is refactored away from jsp
+            AccountStatusDto accountStatuses = this.loanAccountServiceFacade.retrieveAccountStatuses(accountId.longValue());
 
-            setFormAttributes(form, accountBO);
+            LoanBO loanAccount = this.loanDao.findById(accountId);
+
+            EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
+            editStatusActionForm.setAccountTypeId(AccountTypes.LOAN_ACCOUNT.getValue().toString());
+            editStatusActionForm.setCurrentStatusId(loanAccount.getAccountState().getId().toString());
+            editStatusActionForm.setGlobalAccountNum(loanAccount.getGlobalAccountNum());
+            editStatusActionForm.setAccountName(loanAccount.getLoanOffering().getPrdOfferingName());
+            editStatusActionForm.setInput("loan");
         } if (accountBO.isSavingsAccount()) {
 
             // NOTE - not using dto values at present but available when ui is refactored away from jsp
-            SavingsAccountStatusDto accountStatuses = this.savingsServiceFacade.retrieveAccountStatuses(accountId.longValue());
+            AccountStatusDto accountStatuses = this.savingsServiceFacade.retrieveAccountStatuses(accountId.longValue());
 
             SavingsBO savingsAccount = this.savingsDao.findById(accountId.longValue());
 
-            setFormAttributes(form, savingsAccount);
             EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
-            editStatusActionForm.setAccountTypeId(accountBO.getType().getValue().toString());
-            editStatusActionForm.setCurrentStatusId(accountBO.getAccountState().getId().toString());
-            editStatusActionForm.setGlobalAccountNum(accountBO.getGlobalAccountNum());
-            editStatusActionForm.setAccountName(((SavingsBO) accountBO).getSavingsOffering().getPrdOfferingName());
+            editStatusActionForm.setAccountTypeId(AccountTypes.SAVINGS_ACCOUNT.getValue().toString());
+            editStatusActionForm.setCurrentStatusId(savingsAccount.getAccountState().getId().toString());
+            editStatusActionForm.setGlobalAccountNum(savingsAccount.getGlobalAccountNum());
+            editStatusActionForm.setAccountName(savingsAccount.getSavingsOffering().getPrdOfferingName());
             editStatusActionForm.setInput("savings");
         }
-        List<AccountStateEntity> accountStatuses = getAccountBusinessService().getStatusList(accountBO.getAccountState(), accountBO.getType(), userContext.getLocaleId());
+        List<AccountStateEntity> accountStatuses = new AccountBusinessService().getStatusList(accountBO.getAccountState(), accountBO.getType(), userContext.getLocaleId());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_LIST, accountStatuses, request);
@@ -124,8 +126,8 @@ public class EditStatusAction extends BaseAction {
         AccountBO accountBO = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
 
-        // FIXME - KEITHW - is checklist functionality being removed from application?
-        List<AccountCheckListBO> checklist = getAccountBusinessService().getStatusChecklist(
+        // FIXME - ElsieF - KEITHW - is checklist functionality being removed from application?
+        List<AccountCheckListBO> checklist = new AccountBusinessService().getStatusChecklist(
                 getShortValue(editStatusActionForm.getNewStatusId()),
                 getShortValue(editStatusActionForm.getAccountTypeId()));
         SessionUtils.setCollectionAttribute(SavingsConstants.STATUS_CHECK_LIST, checklist, request);
@@ -165,11 +167,9 @@ public class EditStatusAction extends BaseAction {
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
-        AccountBO accountBOInSession = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
 
         Integer accountId = Integer.valueOf(editStatusActionForm.getAccountId());
-        AccountBO accountBO = getAccountBusinessService().getAccount(accountId);
+        AccountBO accountBO = new AccountBusinessService().getAccount(accountId);
 
         Short flagId = null;
         Short newStatusId = null;
@@ -184,28 +184,20 @@ public class EditStatusAction extends BaseAction {
         checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
 
         if (accountBO.isLoanAccount()) {
-            checkVersionMismatch(accountBOInSession.getVersionNo(), accountBO.getVersionNo());
-            accountBO.setUserContext(userContext);
-            accountBO.getAccountState().setLocaleId(userContext.getLocaleId());
-            setInitialObjectForAuditLogging(accountBO);
-//            checkPermission(accountBO, getUserContext(request), newStatusId, flagId);
             initializeLoanQuestionnaire(accountBO.getGlobalAccountNum());
             approveLoanQuestionnaire.saveResponses(request, editStatusActionForm, accountId);
-            PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(userContext.getId());
 
-            AccountState newStatus = AccountState.fromShort(newStatusId);
-            accountBO.changeStatus(newStatus, flagId, updateComment, loggedInUser);
-            accountBOInSession = null;
-            accountBO.update();
-            accountBO = null;
+            AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
+            this.loanAccountServiceFacade.updateSavingsAccountStatus(updateStatus);
+
             return mapping.findForward(ActionForwards.loan_detail_page.toString());
         } if (accountBO.isSavingsAccount()) {
-            SavingsAccountUpdateStatus updateStatus = new SavingsAccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
+            AccountUpdateStatus updateStatus = new AccountUpdateStatus(accountId.longValue(), newStatusId, flagId, updateComment);
             this.savingsServiceFacade.updateSavingsAccountStatus(updateStatus);
             return mapping.findForward(ActionForwards.savings_details_page.toString());
         }
 
-        // nothing but loan of savings account should be detected. customer account status change goes through seperate action.
+        // nothing but loan of savings account should be detected. customer account status change goes through separate action.
         return null;
     }
 
@@ -247,20 +239,6 @@ public class EditStatusAction extends BaseAction {
         return approveLoanQuestionnaire.editResponses(mapping, request, (EditStatusActionForm) form);
     }
 
-    private AccountBusinessService getAccountBusinessService() {
-        return new AccountBusinessService();
-    }
-
-    private void doCleanUp(HttpSession session, ActionForm form) {
-        EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
-        editStatusActionForm.setSelectedItems(null);
-        editStatusActionForm.setNotes(null);
-        editStatusActionForm.setNewStatusId(null);
-        editStatusActionForm.setFlagId(null);
-        editStatusActionForm.setQuestionGroups(null);
-        session.removeAttribute(Constants.BUSINESS_KEY);
-    }
-
     private String getDetailAccountPage(ActionForm form) {
         EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
         String input = editStatusActionForm.getInput();
@@ -273,27 +251,13 @@ public class EditStatusAction extends BaseAction {
         return forward;
     }
 
-    private void setFormAttributes(ActionForm form, AccountBO accountBO) throws Exception {
-        EditStatusActionForm editStatusActionForm = (EditStatusActionForm) form;
-        editStatusActionForm.setAccountTypeId(accountBO.getType().getValue().toString());
-        editStatusActionForm.setCurrentStatusId(accountBO.getAccountState().getId().toString());
-        editStatusActionForm.setGlobalAccountNum(accountBO.getGlobalAccountNum());
-        if (accountBO instanceof LoanBO) {
-            editStatusActionForm.setAccountName(((LoanBO) accountBO).getLoanOffering().getPrdOfferingName());
-            editStatusActionForm.setInput("loan");
-        } else if (accountBO instanceof SavingsBO) {
-            editStatusActionForm.setAccountName(((SavingsBO) accountBO).getSavingsOffering().getPrdOfferingName());
-            editStatusActionForm.setInput("savings");
-        }
-    }
-
     private void checkPermission(AccountBO accountBO, UserContext userContext, Short newStatusId, Short flagId)
             throws Exception {
         if (null != accountBO.getPersonnel()) {
-            getAccountBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
+            new AccountBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
                     accountBO.getOffice().getOfficeId(), accountBO.getPersonnel().getPersonnelId());
         } else {
-            getAccountBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
+            new AccountBusinessService().checkPermissionForStatusChange(newStatusId, userContext, flagId,
                     accountBO.getOffice().getOfficeId(), userContext.getId());
         }
     }

@@ -98,6 +98,20 @@ public class AccountStateMachines {
 
     private static final Logger logger = LoggerFactory.getLogger(AccountStateMachines.class);
 
+    public void initializeLoanStates() throws StatesInitializationException {
+        AccountTypes accountType = AccountTypes.LOAN_ACCOUNT;
+        CustomerLevel level = null;
+        String configName = getConfigurationName(accountType, level);
+        try {
+            statesMapForLoan = loadMap(AccountStates.TRANSITION_CONFIG_FILE_PATH_LOAN, configName);
+            accountStateEntityListForLoan = retrieveAllAccountStateList(accountType);
+            removeLoanReversalFlagForCancelState();
+            populateLoanStatesViewMap();
+        } catch (Exception e) {
+            throw new StatesInitializationException(SavingsConstants.STATEINITIALIZATION_EXCEPTION, e);
+        }
+    }
+
     public void initializeSavingsStates() throws StatesInitializationException {
         AccountTypes accountType = AccountTypes.SAVINGS_ACCOUNT;
         CustomerLevel level = null;
@@ -286,6 +300,10 @@ public class AccountStateMachines {
             }
         }
         return "";
+    }
+
+    public List<AccountStateEntity> getLoanStatusList(AccountStateEntity accountStateEntity) {
+        return statesViewMapForLoan.get(accountStateEntity.getId());
     }
 
     public List<AccountStateEntity> getSavingsStatusList(AccountStateEntity accountStateEntity) {

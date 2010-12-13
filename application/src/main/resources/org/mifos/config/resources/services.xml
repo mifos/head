@@ -67,6 +67,19 @@
     	<constructor-arg ref="loanPrdBusinessService" />
     </bean>
     
+    <bean id="loanAccountServiceFacade" class="org.mifos.application.servicefacade.LoanAccountServiceFacadeWebTier" >
+    	<constructor-arg ref="customerDao" />
+    	<constructor-arg ref="loanProductDao" />
+    	<constructor-arg ref="personnelDao" />
+    	<constructor-arg ref="fundDao" />
+    	<constructor-arg ref="loanDao" />
+    	<constructor-arg ref="installmentsValidator" />
+    	<constructor-arg ref="scheduleCalculatorAdaptor" />
+    	<constructor-arg ref="loanBusinessService" />
+    	<constructor-arg ref="holidayServiceFacade" />
+    	<constructor-arg ref="loanPrdBusinessService" />
+    </bean>
+    
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" >
         <constructor-arg ref="savingsDao" />
         <constructor-arg ref="savingsProductDao" />

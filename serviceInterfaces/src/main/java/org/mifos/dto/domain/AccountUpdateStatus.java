@@ -18,27 +18,36 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.loan.persistance;
+package org.mifos.dto.domain;
 
-import java.util.List;
+public class AccountUpdateStatus {
 
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.dto.domain.SurveyDto;
+    private final Long savingsId;
+    private final Short newStatusId;
+    private final Short flagId;
+    private final String comment;
 
-public interface LoanDao {
+    public AccountUpdateStatus(Long savingsId, Short newStatusId, Short flagId, String comment) {
+        this.savingsId = savingsId;
+        this.newStatusId = newStatusId;
+        this.flagId = flagId;
+        this.comment = comment;
+    }
 
-    LoanBO findById(Integer accountId);
+    public Long getSavingsId() {
+        return this.savingsId;
+    }
 
-    LoanBO findByGlobalAccountNum(String globalAccountNum);
+    public Short getNewStatusId() {
+        return this.newStatusId;
+    }
 
-    void save(LoanBO loanAccount);
+    public Short getFlagId() {
+        return this.flagId;
+    }
 
-    List<SurveyDto> getAccountSurveyDto(Integer accountId);
-
-    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
-
-    List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForLoan();
-
+    public String getComment() {
+        return this.comment;
+    }
 
 }

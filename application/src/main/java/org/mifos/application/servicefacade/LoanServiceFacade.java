@@ -20,6 +20,9 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
@@ -45,9 +48,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
-
-import java.util.Date;
-import java.util.List;
 
 
 public interface LoanServiceFacade {

@@ -18,36 +18,17 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.dto.domain;
+package org.mifos.application.servicefacade;
 
-public class SavingsAccountUpdateStatus {
+import org.mifos.dto.domain.AccountStatusDto;
+import org.mifos.dto.domain.AccountUpdateStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-    private final Long savingsId;
-    private final Short newStatusId;
-    private final Short flagId;
-    private final String comment;
+public interface LoanAccountServiceFacade {
 
-    public SavingsAccountUpdateStatus(Long savingsId, Short newStatusId, Short flagId, String comment) {
-        this.savingsId = savingsId;
-        this.newStatusId = newStatusId;
-        this.flagId = flagId;
-        this.comment = comment;
-    }
+    @PreAuthorize("isFullyAuthenticated()")
+    AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
 
-    public Long getSavingsId() {
-        return this.savingsId;
-    }
-
-    public Short getNewStatusId() {
-        return this.newStatusId;
-    }
-
-    public Short getFlagId() {
-        return this.flagId;
-    }
-
-    public String getComment() {
-        return this.comment;
-    }
-
+    @PreAuthorize("isFullyAuthenticated()")
+    void updateSavingsAccountStatus(AccountUpdateStatus updateStatus);
 }

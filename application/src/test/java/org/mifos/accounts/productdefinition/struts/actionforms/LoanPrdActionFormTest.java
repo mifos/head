@@ -255,6 +255,7 @@ public class LoanPrdActionFormTest {
 
         final FeeDto feeDto = Mockito.mock(FeeDto.class);
         loanPrdActionForm = new LoanPrdActionForm() {
+            @Override
             FeeDto getFeeDto(HttpServletRequest request, FeeBO fee) {
                 return feeDto;
             }

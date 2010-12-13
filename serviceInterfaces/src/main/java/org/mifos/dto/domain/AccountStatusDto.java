@@ -24,16 +24,16 @@ import java.util.List;
 
 import org.mifos.dto.screen.ListElement;
 
-public class SavingsAccountStatusDto {
+public class AccountStatusDto {
 
-    private final List<ListElement> savingsStates;
+    private final List<ListElement> accountStates;
 
-    public SavingsAccountStatusDto(List<ListElement> savingsStates) {
-        this.savingsStates = savingsStates;
+    public AccountStatusDto(List<ListElement> savingsStates) {
+        this.accountStates = savingsStates;
     }
 
-    public List<ListElement> getSavingsStates() {
-        return this.savingsStates;
+    public List<ListElement> getAccountStates() {
+        return this.accountStates;
     }
 
 }

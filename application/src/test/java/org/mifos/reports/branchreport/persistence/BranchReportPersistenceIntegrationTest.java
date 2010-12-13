@@ -344,6 +344,7 @@ public class BranchReportPersistenceIntegrationTest extends BranchReportIntegrat
     }
 
 
+    @Override
     @Before
     public void setUp() throws Exception {
         super.setUp();
