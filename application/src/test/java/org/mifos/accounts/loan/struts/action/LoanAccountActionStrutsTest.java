@@ -20,7 +20,35 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+
 import junit.framework.Assert;
+
 import org.joda.time.DateMidnight;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -38,7 +66,6 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -80,6 +107,7 @@ import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -102,33 +130,6 @@ import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 @SuppressWarnings("unchecked")
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
@@ -1493,27 +1494,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     private void initPrdOfferingPageParams(LoanOfferingBO loanOffering) {
         prdOfferingPageParams.put("prdOfferingId", loanOffering.getPrdOfferingId().toString());
-    }
-
-    public void testShouldGetGlimSpecificAttributes() throws Exception {
-        customerMock = createMock(CustomerBO.class);
-        expect(customerMock.isGroup()).andReturn(true);
-        expect(customerMock.getCustomerId()).andReturn(1);
-        LoanBusinessService loanBusinessServiceMock = createMock(LoanBusinessService.class);
-        expect(loanBusinessServiceMock.getAllChildrenForParentGlobalAccountNum("1")).andReturn(Collections.EMPTY_LIST);
-        ConfigurationBusinessService configurationBusinessServiceMock = createMock(ConfigurationBusinessService.class);
-        expect(configurationBusinessServiceMock.isGlimEnabled()).andReturn(true);
-        LoanAccountAction loanAccountAction = new LoanAccountAction(loanBusinessServiceMock,
-                configurationBusinessServiceMock, new GlimLoanUpdater());
-        HttpServletRequest requestMock = createMock(HttpServletRequest.class);
-
-        LoanAccountAction.GlimSessionAttributes glimSessionAttributes = new LoanAccountAction.GlimSessionAttributes(
-                LoanConstants.GLIM_ENABLED_VALUE, Collections.EMPTY_LIST, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
-        replay(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
-
-        Assert.assertEquals(glimSessionAttributes, loanAccountAction.getGlimSpecificPropertiesToSet(
-                new LoanAccountActionForm(), "1", customerMock, new ArrayList<ValueListElement>()));
-        verify(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
     }
 
     public void testShouldNotSetAnyGlimSpecificAttributesIfGlimDisabled() throws Exception {

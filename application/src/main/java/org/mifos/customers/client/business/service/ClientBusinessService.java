@@ -22,10 +22,8 @@ package org.mifos.customers.client.business.service;
 
 import java.util.List;
 
-import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.persistence.ClientPersistence;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -58,21 +56,4 @@ public class ClientBusinessService implements BusinessService {
             throw new ServiceException(pe);
         }
     }
-
-    /**
-     * @deprecated use
-     *             {@link LoanServiceFacade#retrieveGlimSpecificDataForGroup(org.mifos.customers.business.CustomerBO)}
-     *             or specifically use
-     *             {@link CustomerDao#findActiveClientsUnderGroup}
-     */
-    @Deprecated
-    public List<ClientBO> getActiveClientsUnderGroup(final Integer groupId) throws ServiceException {
-        try {
-            return getClientPersistence().getActiveClientsUnderGroup(groupId);
-        } catch (PersistenceException pe) {
-            throw new ServiceException(pe);
-
-        }
-    }
-
 }

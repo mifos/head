@@ -50,13 +50,11 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentValidation
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -114,9 +112,11 @@ import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.LoanCreationGlimDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -180,78 +180,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         this.loanBusinessService = loanBusinessService;
         this.holidayServiceFacade = holidayServiceFacade;
         this.loanPrdBusinessService = loanPrdBusinessService;
-    }
-
-    @Override
-    public List<PrdOfferingDto> retrieveActiveLoanProductsApplicableForCustomer(final CustomerBO customer) {
-
-        final List<LoanOfferingBO> applicableLoanProducts = new ArrayList<LoanOfferingBO>();
-
-        final List<LoanOfferingBO> loanOfferings = loanProductDao
-                .findActiveLoanProductsApplicableToCustomerLevel(customer.getCustomerLevel());
-
-        final MeetingBO customerMeeting = customer.getCustomerMeetingValue();
-        for (LoanOfferingBO loanProduct : loanOfferings) {
-            if (MeetingBO.isMeetingMatched(customerMeeting, loanProduct.getLoanOfferingMeetingValue())) {
-                applicableLoanProducts.add(loanProduct);
-            }
-        }
-
-        List<PrdOfferingDto> applicationLoanProductDtos = new ArrayList<PrdOfferingDto>();
-        for (LoanOfferingBO loanProduct : applicableLoanProducts) {
-            applicationLoanProductDtos.add(loanProduct.toDto());
-        }
-
-        return applicationLoanProductDtos;
-    }
-
-    @Override
-    public LoanCreationGlimDto retrieveGlimSpecificDataForGroup(final CustomerBO customer) {
-
-        final List<ValueListElement> loanPurposes = loanProductDao.findAllLoanPurposes();
-
-        final List<ClientBO> activeClientsOfGroup = customerDao.findActiveClientsUnderGroup(customer);
-
-        return new LoanCreationGlimDto(loanPurposes, activeClientsOfGroup);
-    }
-
-    @Override
-    public LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(final Integer customerId)
-            throws ApplicationException {
-
-        final CustomerBO customer = loadCustomer(customerId);
-
-        final CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
-        final Date nextMeetingDate = customer.getCustomerAccount().getNextMeetingDate();
-        final String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter()
-                .toString();
-        final boolean isGroup = customer.isGroup();
-        final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
-
-        final List<PrdOfferingDto> loanProductDtos = retrieveActiveLoanProductsApplicableForCustomer(customer);
-
-        LoanCreationGlimDto loanCreationGlimDto = null;
-        List<LoanAccountDetailsDto> clientDetails = new ArrayList<LoanAccountDetailsDto>();
-
-        if (isGroup && isGlimEnabled) {
-            loanCreationGlimDto = retrieveGlimSpecificDataForGroup(customer);
-
-            final List<ClientBO> activeClientsOfGroup = loanCreationGlimDto.getActiveClientsOfGroup();
-
-            if (activeClientsOfGroup == null || activeClientsOfGroup.isEmpty()) {
-                throw new ApplicationException(GroupConstants.IMPOSSIBLE_TO_CREATE_GROUP_LOAN);
-            }
-
-            for (ClientBO client : activeClientsOfGroup) {
-                LoanAccountDetailsDto clientDetail = new LoanAccountDetailsDto();
-                clientDetail.setClientId(client.getCustomerId().toString());
-                clientDetail.setClientName(client.getDisplayName());
-                clientDetails.add(clientDetail);
-            }
-        }
-
-        return new LoanCreationProductDetailsDto(loanProductDtos, customerDetailDto, nextMeetingDate, recurMonth,
-                isGroup, isGlimEnabled, loanCreationGlimDto, clientDetails);
     }
 
     private CustomerBO loadCustomer(Integer customerId) {

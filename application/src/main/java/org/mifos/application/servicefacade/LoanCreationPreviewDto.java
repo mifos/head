@@ -22,7 +22,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.List;
 
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 
 public class LoanCreationPreviewDto {
 

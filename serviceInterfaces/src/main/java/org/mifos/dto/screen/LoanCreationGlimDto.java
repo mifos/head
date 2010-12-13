@@ -17,11 +17,11 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.loan.struts.action;
+
+package org.mifos.dto.screen;
 
 import java.util.List;
 
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.dto.domain.ValueListElement;
 
 /**
@@ -30,18 +30,12 @@ import org.mifos.dto.domain.ValueListElement;
 public class LoanCreationGlimDto {
 
     private final List<ValueListElement> loanPurposes;
-    private final List<ClientBO> activeClientsOfGroup;
 
-    public LoanCreationGlimDto(final List<ValueListElement> loanPurposes, final List<ClientBO> activeClientsOfGroup) {
+    public LoanCreationGlimDto(final List<ValueListElement> loanPurposes) {
         this.loanPurposes = loanPurposes;
-        this.activeClientsOfGroup = activeClientsOfGroup;
     }
 
     public List<ValueListElement> getLoanPurposes() {
         return this.loanPurposes;
-    }
-
-    public List<ClientBO> getActiveClientsOfGroup() {
-        return this.activeClientsOfGroup;
     }
 }

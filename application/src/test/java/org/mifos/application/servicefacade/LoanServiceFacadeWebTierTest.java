@@ -19,6 +19,27 @@
  */
 package org.mifos.application.servicefacade;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -34,30 +55,20 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.dto.domain.PrdOfferingDto;
-import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
@@ -70,28 +81,6 @@ import org.mifos.security.util.UserContext;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.anyObject;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanServiceFacadeWebTierTest {
@@ -126,12 +115,6 @@ public class LoanServiceFacadeWebTierTest {
     private CustomerBO customer;
 
     @Mock
-    private ClientBO client;
-
-    @Mock
-    private LoanOfferingBO activeLoanProduct;
-
-    @Mock
     private LoanBO loanBO;
 
     @Mock
@@ -156,50 +139,6 @@ public class LoanServiceFacadeWebTierTest {
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
                 fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
-    }
-
-    @Test
-    public void shouldFindAllActiveLoanProductsWithMeetingThatMatchCustomerMeeting() {
-
-        // setup
-        MeetingBO meeting = new MeetingBuilder().build();
-        CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.GROUP);
-
-        List<LoanOfferingBO> activeLoanProducts = asList(activeLoanProduct);
-
-        // stubbing
-        when(customer.getCustomerLevel()).thenReturn(customerLevelEntity);
-        when(loanProductDao.findActiveLoanProductsApplicableToCustomerLevel(customerLevelEntity)).thenReturn(
-                activeLoanProducts);
-        when(customer.getCustomerMeetingValue()).thenReturn(meeting);
-        when(activeLoanProduct.getLoanOfferingMeetingValue()).thenReturn(meeting);
-
-        // exercise test
-        List<PrdOfferingDto> activeLoanProductsForCustomer = loanServiceFacade.retrieveActiveLoanProductsApplicableForCustomer(customer);
-
-        // verification
-        assertThat(activeLoanProductsForCustomer, hasItem(activeLoanProduct.toDto()));
-    }
-
-    @Test
-    public void shouldFindGlimDataForGroupCustomer() {
-
-        // setup
-        ValueListElement valueListElement = new BusinessActivityEntity(1, "", "");
-        List<ValueListElement> loanPurposes = asList(valueListElement);
-
-        List<ClientBO> clients = asList(client);
-
-        // stubbing
-        when(loanProductDao.findAllLoanPurposes()).thenReturn(loanPurposes);
-        when(customerDao.findActiveClientsUnderGroup(customer)).thenReturn(clients);
-
-        // exercise test
-        LoanCreationGlimDto glimData = loanServiceFacade.retrieveGlimSpecificDataForGroup(customer);
-
-        // verification
-        assertThat(glimData.getLoanPurposes(), hasItem(valueListElement));
-        assertThat(glimData.getActiveClientsOfGroup(), hasItem(client));
     }
 
     @Test

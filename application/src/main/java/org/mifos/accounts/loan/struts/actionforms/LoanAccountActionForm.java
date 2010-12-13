@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -49,7 +50,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -77,6 +77,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -1203,6 +1204,12 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         }
     }
 
+    public boolean isAmountZeroOrNull(String loanAmount) {
+        return StringUtils.isBlank(loanAmount)
+                || (Double.compare(new LocalizationConverter().getDoubleValueForCurrentLocale(loanAmount),
+                        NumberUtils.DOUBLE_ZERO) == 0);
+    }
+
     void validateSumOfTheAmountsSpecified(ActionErrors errors) {
         List<String> ids_clients_selected = getClients();
         double totalAmount = new Double(0);
@@ -1210,7 +1217,8 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         for (LoanAccountDetailsDto loanDetail : getClientDetails()) {
             if (!foundInvalidAmount) {
                 if (ids_clients_selected.contains(loanDetail.getClientId())) {
-                    if (loanDetail.isAmountZeroOrNull()) {
+
+                    if (isAmountZeroOrNull(loanDetail.getLoanAmount())) {
                         addError(errors, LoanExceptionConstants.CUSTOMER_LOAN_AMOUNT_FIELD);
                         foundInvalidAmount = true;
                     } else {

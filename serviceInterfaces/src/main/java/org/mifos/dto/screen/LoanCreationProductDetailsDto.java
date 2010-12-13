@@ -18,16 +18,17 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
 import java.util.Date;
 import java.util.List;
 
-import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="")
 public class LoanCreationProductDetailsDto {
 
     private final List<PrdOfferingDto> loanProductDtos;

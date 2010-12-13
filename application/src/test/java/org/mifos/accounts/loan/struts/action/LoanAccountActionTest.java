@@ -112,15 +112,12 @@ public class LoanAccountActionTest {
     public void setUp() throws PageExpiredException {
         loanAccountAction = new LoanAccountAction(null, null, null, loanPrdBusinessService, null, null, null, null) {
             @Override
-            protected UserContext getUserContext(HttpServletRequest request) {
+            protected UserContext getUserContext(@SuppressWarnings("unused") HttpServletRequest request) {
                 return userContext;
             }
-
-            @Override
-            protected LoanServiceFacade getLoanServiceFacade() {
-                return loanServiceFacade;
-            }
         };
+        loanAccountAction.setLoanServiceFacade(loanServiceFacade);
+
         when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(Constants.FLOWMANAGER)).thenReturn(flowManager);
@@ -208,7 +205,7 @@ public class LoanAccountActionTest {
         assertThat(forward, is(previewSuccess));
         verify(mapping,never()).findForward("preview_failure");
     }
-    
+
     @Test
     public void previewShouldBeSuccessIfNoErrorMessagesArePresent() throws Exception {
         ActionForward previewSuccess = new ActionForward("preview_success");

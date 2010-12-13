@@ -20,26 +20,18 @@
 
 package org.mifos.accounts.loan.util.helpers;
 
+import org.mifos.dto.domain.LoanAccountDetailsDto;
+
 public class LoanAccountActionFormTestConstants {
 
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_NULL = new LoanAccountDetailsDto(
-            "1", null, null);
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_NULL = LoanAccountDetailsDto.createInstanceForTest("1", null, null, null);
 
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_ZERO = new LoanAccountDetailsDto(
-            "1", null, "0.0");
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_100 = new LoanAccountDetailsDto(
-            "1", null, "100.0");
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL = new LoanAccountDetailsDto(
-            "1", null, null);
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE = new LoanAccountDetailsDto(
-            "1", "Valid loan purpose", null);
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY = new LoanAccountDetailsDto(
-            "1", "", null);
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL = new LoanAccountDetailsDto(
-            "2", null, null);
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL2 = new LoanAccountDetailsDto(
-            "3", null, null);
-
-    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_200 = new LoanAccountDetailsDto(
-            "2", "1", "200.0", "1");
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_ZERO = new LoanAccountDetailsDto("1", null, "0.0");
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_100 = new LoanAccountDetailsDto("1", null, "100.0");
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL = new LoanAccountDetailsDto("1", null, null);
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE = new LoanAccountDetailsDto("1", "Valid loan purpose", null);
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY = new LoanAccountDetailsDto("1", "", null);
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL = new LoanAccountDetailsDto("2", null, null);
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_AND_PURPOSE_NULL2 = new LoanAccountDetailsDto("3", null, null);
+    public static final LoanAccountDetailsDto LOAN_ACCOUNT_DETAILS_WITH_LOAN_AMOUNT_200 = new LoanAccountDetailsDto("2", "1", "200.0", "1");
 }

@@ -496,5 +496,11 @@ public abstract class BaseAction extends DispatchAction {
         return currency;
     }
 
+    public void setLoanServiceFacade(LoanServiceFacade loanServiceFacade) {
+        this.loanServiceFacade = loanServiceFacade;
+    }
 
+    public void setLoanAccountServiceFacade(LoanAccountServiceFacade loanAccountServiceFacade) {
+        this.loanAccountServiceFacade = loanAccountServiceFacade;
+    }
 }

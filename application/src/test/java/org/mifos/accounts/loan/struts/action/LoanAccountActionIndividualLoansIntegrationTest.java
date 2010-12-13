@@ -33,9 +33,9 @@ import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.client.business.ClientBO;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 
 public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegrationTestCase {
