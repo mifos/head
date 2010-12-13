@@ -3,6 +3,7 @@ package org.mifos.application.servicefacade;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.fund.persistence.FundDao;
@@ -13,7 +14,6 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
@@ -23,7 +23,9 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
@@ -110,6 +112,42 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (BusinessRuleException e) {
             this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public LoanAccountDetailDto retrieveLoanAccountNotes(Long loanAccountId) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        LoanBO loanAccount = this.loanDao.findById(loanAccountId.intValue());
+        loanAccount.updateDetails(userContext);
+        return loanAccount.toDto();
+    }
+
+    @Override
+    public void addNote(CreateAccountNote accountNote) {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        PersonnelBO createdBy = this.personnelDao.findPersonnelById(accountNote.getCreatedById().shortValue());
+        LoanBO loanAccount = this.loanDao.findById(accountNote.getAccountId());
+
+        AccountNotesEntity accountNotes = new AccountNotesEntity(new java.sql.Date(accountNote.getCommentDate().toDateMidnight().toDate().getTime()),
+                accountNote.getComment(), createdBy, loanAccount);
+
+        try {
+            this.transactionHelper.startTransaction();
+
+            loanAccount.updateDetails(userContext);
+            loanAccount.addAccountNotes(accountNotes);
+            this.loanDao.save(loanAccount);
+            this.transactionHelper.commitTransaction();
         } catch (Exception e) {
             this.transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);

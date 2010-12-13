@@ -19,20 +19,18 @@
  */
 package org.mifos.accounts.savings.persistence;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerSavingsAccountDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.screen.NotesSearchResultsDto;
-import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 
 /**
  *

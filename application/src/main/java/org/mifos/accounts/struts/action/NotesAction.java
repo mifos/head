@@ -28,26 +28,21 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.NotesActionForm;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
+import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.NotesSearchResultsDto;
-import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.CloseSession;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
@@ -55,11 +50,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class NotesAction extends SearchAction {
-
-    @Override
-    protected BusinessService getService() {
-        return new AccountBusinessService();
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("notesAction");
@@ -80,13 +70,15 @@ public class NotesAction extends SearchAction {
         AccountBO account = new AccountBusinessService().getAccount(accountId);
 
         if (account.isLoanAccount()) {
-            notesActionForm.setAccountTypeId(account.getType().getValue().toString());
-            notesActionForm.setGlobalAccountNum(account.getGlobalAccountNum());
-            notesActionForm.setPrdOfferingName(((LoanBO) account).getLoanOffering().getPrdOfferingName());
+            LoanAccountDetailDto loanAccountDto = this.loanAccountServiceFacade.retrieveLoanAccountNotes(accountId.longValue());
+
+            notesActionForm.setAccountTypeId(AccountTypes.LOAN_ACCOUNT.getValue().toString());
+            notesActionForm.setGlobalAccountNum(loanAccountDto.getGlobalAccountNum());
+            notesActionForm.setPrdOfferingName(loanAccountDto.getProductDetails().getPrdOfferingName());
         } else if (account.isSavingsAccount()) {
             SavingsAccountDetailDto savingsAccountDto = this.savingsServiceFacade.retrieveSavingsAccountNotes(accountId.longValue());
             notesActionForm.setPrdOfferingName(savingsAccountDto.getProductDetails().getProductDetails().getName());
-            notesActionForm.setAccountTypeId(account.getType().getValue().toString());
+            notesActionForm.setAccountTypeId(AccountTypes.SAVINGS_ACCOUNT.getValue().toString());
             notesActionForm.setGlobalAccountNum(savingsAccountDto.getGlobalAccountNum());
         }
 
@@ -97,12 +89,7 @@ public class NotesAction extends SearchAction {
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         NotesActionForm notesActionForm = (NotesActionForm) form;
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-//        PersonnelBO personnel = new PersonnelPersistence().getPersonnel(uc.getId());
-//        AccountBO account = new AccountBusinessService().getAccount(Integer.valueOf(notesActionForm.getAccountId()));
-//        AccountNotesEntity accountNotes = new AccountNotesEntity(new DateTimeService().getCurrentJavaSqlDate(),
-//                notesActionForm.getComment(), personnel, account);
-//        SessionUtils.setAttribute(AccountConstants.ACCOUNT_NOTES, accountNotes, request);
+        UserContext uc = getUserContext(request);
 
         LocalDate commentDate = new LocalDate();
         String comment = notesActionForm.getComment();
@@ -130,7 +117,7 @@ public class NotesAction extends SearchAction {
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         NotesActionForm notesActionForm = (NotesActionForm) form;
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        UserContext uc = getUserContext(request);
 
         CreateAccountNote accountNote = (CreateAccountNote) SessionUtils.getAttribute("model.accountNote", request);
 
@@ -144,14 +131,7 @@ public class NotesAction extends SearchAction {
         if (accountBO.isSavingsAccount()) {
             this.savingsServiceFacade.addNote(accountNote);
         } else {
-            PersonnelBO createdBy = new PersonnelPersistence().getPersonnel(accountNote.getCreatedById().shortValue());
-            AccountBO account = new AccountBusinessService().getAccount(Integer.valueOf(notesActionForm.getAccountId()));
-            AccountNotesEntity accountNotes = new AccountNotesEntity(new java.sql.Date(accountNote.getCommentDate().toDateMidnight().toDate().getTime()),
-                    notesActionForm.getComment(), createdBy, account);
-
-            accountBO.addAccountNotes(accountNotes);
-            accountBO.setUserContext(uc);
-            accountBO.update();
+            this.loanAccountServiceFacade.addNote(accountNote);
         }
 
         return mapping.findForward(chooseForward(Short.valueOf(notesActionForm.getAccountTypeId())));

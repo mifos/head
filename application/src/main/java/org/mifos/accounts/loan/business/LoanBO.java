@@ -113,6 +113,8 @@ import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -4164,5 +4166,10 @@ public class LoanBO extends AccountBO {
 
     public boolean isDecliningBalanceInterestRecalculation() {
         return loanOffering.getInterestType() == InterestType.DECLINING_PB;
+    }
+
+    public LoanAccountDetailDto toDto() {
+        PrdOfferingDto productDetails = this.loanOffering.toDto();
+        return new LoanAccountDetailDto(productDetails, this.globalAccountNum);
     }
 }
