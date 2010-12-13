@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
@@ -18,7 +17,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,7 +46,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -69,7 +67,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -90,7 +88,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -111,7 +109,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -138,7 +136,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -159,7 +157,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -180,7 +178,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -203,7 +201,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -224,7 +222,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());
@@ -251,7 +249,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, Locale.ENGLISH);
+        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows);
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
         Assert.assertNotNull(cashflowDataHtmlBeans);
         Assert.assertEquals(1,cashflowDataHtmlBeans.size());

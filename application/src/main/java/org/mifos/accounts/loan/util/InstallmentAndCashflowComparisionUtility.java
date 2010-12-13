@@ -1,37 +1,35 @@
 package org.mifos.accounts.loan.util;
 
+import org.joda.time.DateTime;
+import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Locale;
-
-import org.joda.time.DateTime;
-import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 
 // TODO: Move this mapping logic to an appropriate layer - buddy/srikanth
 public class InstallmentAndCashflowComparisionUtility {
 
     private List<MonthlyCashFlowForm> monthlyCashFlows;
     private List<RepaymentScheduleInstallment> installments;
-    private Locale locale;
+
 
     public InstallmentAndCashflowComparisionUtility(List<RepaymentScheduleInstallment> installments,
-                                                    List<MonthlyCashFlowForm> monthlyCashFlows, Locale locale) {
+                                                    List<MonthlyCashFlowForm> monthlyCashFlows) {
         this.installments = installments;
         this.monthlyCashFlows = monthlyCashFlows;
-        this.locale = locale;
     }
+
 
     public List<CashFlowDataHtmlBean> mapToCashflowDataHtmlBeans() {
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = null;
         if (monthlyCashFlows != null && monthlyCashFlows.size() > 0) {
             cashflowDataHtmlBeans = new ArrayList<CashFlowDataHtmlBean>();
             for (MonthlyCashFlowForm monthlyCashflowform : monthlyCashFlows) {
-                monthlyCashflowform.setLocale(locale);
                 CashFlowDataHtmlBean cashflowDataHtmlBean = mapCashFlowDataHtmlBean(monthlyCashflowform);
                 cashflowDataHtmlBeans.add(cashflowDataHtmlBean);
             }
@@ -41,7 +39,7 @@ public class InstallmentAndCashflowComparisionUtility {
 
     private CashFlowDataHtmlBean mapCashFlowDataHtmlBean(MonthlyCashFlowForm monthlyCashflowform) {
         CashFlowDataHtmlBean cashflowDataHtmlBean = new CashFlowDataHtmlBean();
-        cashflowDataHtmlBean.setMonth(monthlyCashflowform.getMonthInLocale());
+        cashflowDataHtmlBean.setMonth(monthlyCashflowform.getMonth());
         cashflowDataHtmlBean.setYear(String.valueOf(monthlyCashflowform.getYear()));
         cashflowDataHtmlBean.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow()));
         String cumulativeCashflowAndInstallment = computeDiffBetweenCumulativeAndInstallment(monthlyCashflowform.getDateTime(), monthlyCashflowform.getCumulativeCashFlow());

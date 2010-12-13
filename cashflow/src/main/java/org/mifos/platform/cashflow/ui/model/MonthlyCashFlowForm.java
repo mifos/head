@@ -19,18 +19,17 @@
  */
 package org.mifos.platform.cashflow.ui.model;
 
+import org.joda.time.DateTime;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Locale;
 
-import org.joda.time.DateTime;
-import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
-
 public class MonthlyCashFlowForm implements Serializable {
     private static final long serialVersionUID = 6876855921528555322L;
     private MonthlyCashFlowDetail monthlyCashFlowDetail;
-    private Locale locale = Locale.ENGLISH;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public MonthlyCashFlowForm() {
@@ -44,8 +43,8 @@ public class MonthlyCashFlowForm implements Serializable {
         return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText();
     }
 
-    public String getMonthInLocale() {
-        return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText(locale);
+    public String getMonthInEnglish() {
+        return monthlyCashFlowDetail.getDateTime().monthOfYear().getAsText(Locale.ENGLISH);
     }
 
     public int getYear() {
@@ -97,13 +96,5 @@ public class MonthlyCashFlowForm implements Serializable {
 
     public Date getDate() {
         return getDateTime().toDate();
-    }
-
-    public void setLocale(Locale locale) {
-        this.locale = locale;
-    }
-
-    public Locale getLocale() {
-        return locale;
     }
 }
