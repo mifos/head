@@ -18,7 +18,7 @@ $controlScript start
 # If TEST_SERVER_PORT is set by Hudson, we can test if the deployed test server
 # is online. Using parameterized builds the the preferred means for setting
 # TEST_SERVER_PORT.
-if [ -z "$TEST_SERVER_PORT" ]; then
+if [ -n "$TEST_SERVER_PORT" ]; then
     can_hit_test_server=1
     while [ $can_hit_test_server -ne 0 ]
     do
