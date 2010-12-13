@@ -36,6 +36,9 @@ public class CustomFieldForMigrationDto {
         customFieldId = (Integer) customFieldResponse[0];
         fieldId = (Short) customFieldResponse[1];
         fieldValue = (String) customFieldResponse[2];
+        if (fieldValue == null) { // special handling for null responses
+            fieldValue = "";
+        }
         createdDate = (Date) customFieldResponse[3];
         updatedDate = (Date) customFieldResponse[4];
         createdBy = (Short) customFieldResponse[5];
