@@ -198,6 +198,7 @@
             <forward name="waiveLoanAccountCharges_Success" path="/loanAccountAction.do?method=getInstallmentDetails"/>
             <forward name="get_success" path="/pages/application/loan/jsp/loanaccountdetail.jsp"/>
             <forward name="getLoanRepaymentSchedule" path="/pages/application/loan/jsp/loanRepayment.jsp"/>
+            <forward name="viewOriginalSchedule" path="/pages/application/loan/jsp/viewOriginalSchedule.jsp"/>
             <forward name="viewStatusHistory" path="/pages/application/loan/jsp/viewLoanStatusHistory.jsp"/>
             <forward name="getPrdOfferigs_success"
                      path="/pages/application/loan/jsp/loancreationprdofferingselect.jsp"/>

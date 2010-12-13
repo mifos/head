@@ -319,6 +319,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         security.allow("getAllActivity", SecurityConstants.VIEW);
         security.allow("get", SecurityConstants.VIEW);
         security.allow("getLoanRepaymentSchedule", SecurityConstants.VIEW);
+        security.allow("viewOriginalSchedule", SecurityConstants.VIEW);
         security.allow("viewStatusHistory", SecurityConstants.VIEW);
         security.allow("manage", SecurityConstants.LOAN_UPDATE_LOAN);
         security.allow("managePreview", SecurityConstants.VIEW);
@@ -922,6 +923,25 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(Constants.VIEW_DATE, viewDate, request);
 
         return mapping.findForward(ActionForwards.getLoanRepaymentSchedule.toString());
+    }
+
+    @TransactionDemarcate(joinToken = true)
+    public ActionForward viewOriginalSchedule(final ActionMapping mapping,
+                                                  @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
+                                                  @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+
+        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
+        UserContext userContext = getUserContext(request);
+        Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
+        java.sql.Date disbursementDate = loanAccountActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
+        LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId, disbursementDate);
+
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+
+        SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, loan.getDisbursementDate(), request);
+        SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loan.getLoanAmount(), request);
+        SessionUtils.setCollectionAttribute(LoanConstants.INSTALLMENTS, loanAccountActionForm.getInstallments(), request);
+        return mapping.findForward(ActionForwards.viewOriginalSchedule.name());
     }
 
     @TransactionDemarcate(joinToken = true)
