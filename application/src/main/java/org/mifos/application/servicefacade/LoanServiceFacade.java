@@ -50,9 +50,6 @@ import org.mifos.security.util.UserContext;
 
 public interface LoanServiceFacade {
 
-    LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(UserContext userContext, Integer customerId,
-            Short productId) throws ApplicationException;
-
     LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext,
                                                                               Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm)
             throws ApplicationException;

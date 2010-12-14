@@ -655,7 +655,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.load_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANFUNDS, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
+//        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
     }
 
     public void testLoadForMasterData() throws Exception {

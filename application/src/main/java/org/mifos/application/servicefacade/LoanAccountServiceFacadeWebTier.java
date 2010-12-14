@@ -7,19 +7,33 @@ import java.util.List;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateMachines;
+import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
+import org.mifos.application.master.business.CustomValueDto;
+import org.mifos.application.master.business.CustomValueListElementDto;
+import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.meeting.business.MeetingDetailsEntity;
+import org.mifos.config.AccountingRules;
+import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
@@ -33,13 +47,19 @@ import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanCreationGlimDto;
+import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.security.MifosUser;
@@ -172,9 +192,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     @Override
     public LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(final Integer customerId) {
 
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
         final CustomerBO customer = this.customerDao.findCustomerById(customerId);
 
         final CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
@@ -229,5 +246,93 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         return applicationLoanProductDtos;
+    }
+
+    @Override
+    public LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(Integer customerId, Short productId) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            List<FeeDto> additionalFees = new ArrayList<FeeDto>();
+            List<FeeDto> defaultFees = new ArrayList<FeeDto>();
+
+            new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext, defaultFees, additionalFees);
+
+            LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
+
+            if (AccountingRules.isMultiCurrencyEnabled()) {
+                defaultFees = getFilteredFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
+                additionalFees = getFilteredFeesByCurrency(additionalFees, loanOffering.getCurrency().getCurrencyId());
+            }
+
+            // setDateIntoForm
+            CustomerBO customer = this.customerDao.findCustomerById(customerId);
+            LoanAmountOption eligibleLoanAmount = loanOffering.eligibleLoanAmount(customer.getMaxLoanAmount(loanOffering),
+                    customer.getMaxLoanCycleForProduct(loanOffering));
+            LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer.getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
+
+            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES, userContext.getLocaleId());
+            List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
+
+            // Business activities got in getPrdOfferings also but only for glim.
+            List<ValueListElement> loanPurposes = new MasterDataService().retrieveMasterEntities(
+                    MasterConstants.LOAN_PURPOSES, userContext.getLocaleId());
+
+//            List<CustomFieldDefinitionEntity> customFieldDefs = new AccountBusinessService().retrieveCustomFieldsDefinition(EntityType.LOAN);
+//
+//            List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+//            for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
+//                if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
+//                        && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+//                    customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(userContext
+//                            .getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
+//                } else {
+//                    customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
+//                            .getFieldType()));
+//                }
+//            }
+
+            MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails();
+
+            MeetingDto loanOfferingMeetingDto = loanOffering.getLoanOfferingMeetingValue().toDto();
+
+            List<FundBO> funds = getFunds(loanOffering);
+
+            boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
+
+            return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled,
+                    loanOfferingMeetingDto, customer.getCustomerMeetingValue().toDto(), loanPurposes);
+
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (SystemException e) {
+            throw new MifosRuntimeException(e);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    private List<FundBO> getFunds(final LoanOfferingBO loanOffering) {
+        List<FundBO> funds = new ArrayList<FundBO>();
+        if (loanOffering.getLoanOfferingFunds() != null && loanOffering.getLoanOfferingFunds().size() > 0) {
+            for (LoanOfferingFundEntity loanOfferingFund : loanOffering.getLoanOfferingFunds()) {
+                funds.add(loanOfferingFund.getFund());
+            }
+        }
+        return funds;
+    }
+
+    private List<FeeDto> getFilteredFeesByCurrency(List<FeeDto> defaultFees, Short currencyId) {
+        List<FeeDto> filteredFees = new ArrayList<FeeDto>();
+        for (FeeDto feeDto : defaultFees) {
+            if (feeDto.isValidForCurrency(currencyId)) {
+                filteredFees.add(feeDto);
+            }
+        }
+        return filteredFees;
     }
 }

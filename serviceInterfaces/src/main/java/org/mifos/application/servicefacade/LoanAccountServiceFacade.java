@@ -24,6 +24,7 @@ import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.screen.LoanAccountDetailDto;
+import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -43,4 +44,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(Integer customerId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(Integer customerId, Short productId);
 }
