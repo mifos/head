@@ -215,7 +215,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                 accountState = AccountState.LOAN_PARTIAL_APPLICATION;
             }
 
-            FundBO fund = this.fundDao.findById(fundId);
+            FundBO fund = null;
+            if (fundId != null) {
+                fund = this.fundDao.findById(fundId);
+            }
             LoanBO loan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
                     numOfInstallments, disbursementDate.toDate(), isInterestDeductedAtDisbursement, interest,
                     gracePeriod, fund, fees, customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
