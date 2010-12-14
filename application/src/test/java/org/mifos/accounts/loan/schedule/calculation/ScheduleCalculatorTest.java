@@ -143,7 +143,7 @@ public class ScheduleCalculatorTest {
 
         assertInstallmentInterests(installment1, 20.40, 0, 20.40);
         assertInstallmentInterests(installment2, 9.29, 9.29, 0);
-        assertInstallmentInterests(installment3, 18.88, 18.88, 0);
+        assertInstallmentInterests(installment3, 9.6, 9.6, 0);
         assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
 
@@ -164,7 +164,7 @@ public class ScheduleCalculatorTest {
 
         assertInstallmentInterests(installment1, 20.40, 0, 20.40);
         assertInstallmentInterests(installment2, 7.79, 7.79, 2.49);
-        assertInstallmentInterests(installment3, 17.45, 17.45, 0);
+        assertInstallmentInterests(installment3, 9.66, 9.66, 0);
         assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
 
@@ -185,7 +185,7 @@ public class ScheduleCalculatorTest {
 
         assertInstallmentInterests(installment1, 20.40, 0, 20.40);
         assertInstallmentInterests(installment2, 7.79, 7.79, 2.49);
-        assertInstallmentInterests(installment3, 17.45, 17.45, 0);
+        assertInstallmentInterests(installment3, 9.66, 9.66, 0);
         assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
 
@@ -352,7 +352,7 @@ public class ScheduleCalculatorTest {
         assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
 
         assertInstallmentInterests(installment1, 0.97, 0.97, 19.08);
-        assertInstallmentInterests(installment2, 15.56, 15.56, 0);
+        assertInstallmentInterests(installment2, 14.59, 14.59, 0);
         assertInstallmentInterests(installment3, 10.40, 10.40, 0);
         assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
@@ -373,7 +373,7 @@ public class ScheduleCalculatorTest {
         assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
 
         assertInstallmentInterests(installment1, 1, 1, 19.08);
-        assertInstallmentInterests(installment2, 15.96, 15.96, 0);
+        assertInstallmentInterests(installment2, 14.96, 14.96, 0);
         assertInstallmentInterests(installment3, 10.40, 10.40, 0);
         assertInstallmentInterests(installment4, 5.09, 5.09, 0);
     }
@@ -394,9 +394,36 @@ public class ScheduleCalculatorTest {
         assertInstallmentPrincipals(installment4, 257.87, 257.87, 0);
 
         assertInstallmentInterests(installment1, 1, 1, 19.08);
-        assertInstallmentInterests(installment2, 15.93, 15.93, 0);
+        assertInstallmentInterests(installment2, 14.93, 14.93, 0);
         assertInstallmentInterests(installment3, 10.40, 10.40, 0);
         assertInstallmentInterests(installment4, 5.09, 5.09, 0);
+    }
+
+    @Test
+    public void multiplePaymentsOnDisbursementDate() {
+        Installment installment1 = getInstallment(1, getDate(18, 10, 2010), 332.2, 3.8, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 333.4, 2.6, 0);
+        Installment installment3 = getInstallment(3, getDate(1, 11, 2010), 334.4, 1.3, 0);
+        schedule = new Schedule(getDate(11, 10, 2010), 0.000548, BigDecimal.valueOf(1000d),
+                asList(installment1, installment2, installment3));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(337d), getDate(11, 10, 2010));
+
+        assertInstallmentPrincipals(installment1, 332.2, 0, 332.2);
+        assertInstallmentPrincipals(installment2, 333.4, 328.6, 4.8);
+        assertInstallmentPrincipals(installment3, 334.4, 334.4, 0);
+
+        assertInstallmentInterests(installment1, 2.54, 2.54, 0);
+        assertInstallmentInterests(installment2, 2.54, 2.54, 0);
+        assertInstallmentInterests(installment3, 1.28, 1.28, 0);
+
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(10d), getDate(11, 10, 2010));
+        assertInstallmentPrincipals(installment1, 332.2, 0, 332.2);
+        assertInstallmentPrincipals(installment2, 333.4, 318.6, 14.8);
+        assertInstallmentPrincipals(installment3, 334.4, 334.4, 0);
+
+        assertInstallmentInterests(installment1, 2.5, 2.5, 0);
+        assertInstallmentInterests(installment2, 2.5, 2.5, 0);
+        assertInstallmentInterests(installment3, 1.28, 1.28, 0);
     }
 
     @Test

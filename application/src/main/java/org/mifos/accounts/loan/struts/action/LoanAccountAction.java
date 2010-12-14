@@ -85,6 +85,7 @@ import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
+import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
@@ -933,7 +934,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         setQuestionGroupInstances(request, loan);
         List<RepaymentScheduleInstallment> installments = loan.toRepaymentScheduleDto(userContext.getPreferredLocale());
         loanAccountActionForm.initializeInstallments(installments);
-        setInstallmentsOnSession(request, loanAccountActionForm);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
@@ -973,10 +973,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
-        Date viewDate = loanAccountActionForm.getScheduleViewDateValue(userContext.getPreferredLocale());
+        Locale locale = userContext.getPreferredLocale();
+        Date viewDate = loanAccountActionForm.getScheduleViewDateValue(locale);
         LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId, viewDate);
 
+        OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId, locale);
+
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
+        SessionUtils.setAttribute(Constants.ORIGINAL_SCHEDULE_AVAILABLE, !originalSchedule.getOriginalLoanScheduleInstallment().isEmpty(), request);
         SessionUtils.setAttribute(Constants.VIEW_DATE, viewDate, request);
 
         return mapping.findForward(ActionForwards.getLoanRepaymentSchedule.toString());
@@ -987,18 +991,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                                   @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
                                                   @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
-        LoanAccountActionForm loanAccountActionForm = (LoanAccountActionForm) form;
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
-        java.sql.Date disbursementDate = loanAccountActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
 
-        LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId, disbursementDate);
-
-
-        SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, loan.getDisbursementDate(), request);
-        SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loan.getLoanAmount(), request);
+        OriginalScheduleInfoDto dto = loanServiceFacade.retrieveOriginalLoanSchedule(loanId, userContext.getPreferredLocale());
+        SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, dto.getDisbursementDate(), request);
+        SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, dto.getLoanAmount(), request);
         SessionUtils.setCollectionAttribute(LoanConstants.ORIGINAL_INSTALLMENTS,
-                loanServiceFacade.retrieveOriginalLoanSchedule(loanId, userContext.getPreferredLocale()), request);
+                dto.getOriginalLoanScheduleInstallment(), request);
         return mapping.findForward(ActionForwards.viewOriginalSchedule.name());
     }
 

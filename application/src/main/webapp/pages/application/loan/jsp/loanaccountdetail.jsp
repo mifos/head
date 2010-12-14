@@ -265,17 +265,6 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 							<td colspan="4">&nbsp;</td>
 						</tr>
 					</table>
-                    <table width="96%" border="0" cellpadding="3" cellspacing="0">
-                        <tr>
-                            <td width="33%" class="headingorange">
-                                <mifos:mifoslabel name="loan.installment_details" />
-                            </td>
-                        </tr>
-                    </table>
-                    <mifoscustom:mifostabletag source="installments" scope="session"
-                                           xmlFileName="ProposedRepaymentSchedule.xml"
-                                           moduleName="org/mifos/accounts/loan/util/resources" passLocale="true"/>
-                    <br>
 					<table width="96%" border="0" cellpadding="3" cellspacing="0">
 						<tr>
 							<td width="35%" class="headingorange"><c:if
@@ -625,7 +614,8 @@ boolean isDisplay = (new ConfigurationPersistence().getConfigurationValueInteger
 									</html-el:link><br>
 									</span>
 								</c:when>
-							</c:choose> <c:choose>
+							</c:choose>
+							<c:choose>
 								<c:when
 									test="${loanInformationDto.accountStateId==3 || loanInformationDto.accountStateId==4}">
 									<tr>

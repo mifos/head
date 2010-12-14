@@ -52,7 +52,9 @@ import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.matchers.OriginalScheduleInfoDtoMatcher;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
@@ -267,11 +269,15 @@ public class LoanServiceFacadeWebTierTest {
         List<RepaymentScheduleInstallment> expected = new ArrayList<RepaymentScheduleInstallment>();
         expected.add(installment1);
         expected.add(installment2);
+        Date date = new Date();
+        when(loanBO.getDisbursementDate()).thenReturn(date);
+        Money money = new Money(rupee, "4.9");
+        when(loanBO.getLoanAmount()).thenReturn(money);
         when(loanBusinessService.retrieveOriginalLoanSchedule(accountId)).thenReturn(loanScheduleEntities);
-        List<RepaymentScheduleInstallment> installments = loanServiceFacade.retrieveOriginalLoanSchedule(accountId,locale);
-        assertThat(installments.size(), is(expected.size()));
-        assertThat(installments.get(0), is(expected.get(0)));
-        assertThat(installments.get(1), is(expected.get(1)));
+        when(loanDao.findById(accountId)).thenReturn(loanBO);
+        OriginalScheduleInfoDto expectedOriginalScheduleInfoDto = new OriginalScheduleInfoDto(money.toString(), date,expected);
+        OriginalScheduleInfoDto originalScheduleInfoDto = loanServiceFacade.retrieveOriginalLoanSchedule(accountId, locale);
+        assertThat(originalScheduleInfoDto, is(new OriginalScheduleInfoDtoMatcher(expectedOriginalScheduleInfoDto)));
     }
 
     @Test

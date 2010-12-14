@@ -265,7 +265,7 @@ public class Installment implements Comparable<Installment> {
     }
 
     private Date getTotalPrincipalPaymentDate() {
-        return isPrincipalDue() ? this.dueDate : getRecentPartialPaymentDate();
+        return isDue() ? this.dueDate : getRecentPartialPaymentDate();
     }
 
     public Date getRecentPartialPaymentDate() {
@@ -282,11 +282,6 @@ public class Installment implements Comparable<Installment> {
 
     public void addExtraInterest(BigDecimal extraInterest) {
         setExtraInterest(getExtraInterest().add(extraInterest));
-    }
-
-    public BigDecimal getRecentPrincipalPayment() {
-        InstallmentPayment installmentPayment = payments.getRecentPrincipalPayment();
-        return installmentPayment == null ? BigDecimal.ZERO : installmentPayment.getPrincipalPaid();
     }
 
     public BigDecimal getInterestPaid() {

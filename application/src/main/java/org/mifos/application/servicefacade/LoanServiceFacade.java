@@ -32,6 +32,7 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
+import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
@@ -102,5 +103,5 @@ public interface LoanServiceFacade {
 
     Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity);
 
-    List<RepaymentScheduleInstallment> retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException;
+    OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException;
 }

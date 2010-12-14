@@ -103,8 +103,11 @@ public class Schedule {
             balance = installment.payExtraInterest(balance, transactionDate);
             balance = installment.payInterestDueTillDate(balance, transactionDate,
                     computeInterestTillDueDate(transactionDate, principalOutstanding, installment));
+            BigDecimal earlierBalance = balance;
             balance = installment.payPrincipal(balance, transactionDate);
-            principalOutstanding = principalOutstanding.subtract(installment.getRecentPrincipalPayment());
+            if (earlierBalance.compareTo(balance) > 0) {
+                principalOutstanding = principalOutstanding.subtract(earlierBalance.subtract(balance));
+            }
         }
         return principalOutstanding;
     }
