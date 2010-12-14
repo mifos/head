@@ -1,3 +1,5 @@
+truncate table original_loan_fee_schedule;
+truncate table original_loan_schedule;
 truncate table  prd_offering_mix;
 truncate table  customer_family_detail;
 truncate table  ppi_likelihoods;

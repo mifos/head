@@ -34,11 +34,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.LoanActivityDto;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.*;
 import org.mifos.accounts.loan.business.service.AccountFeesDto;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
@@ -103,7 +99,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -111,12 +106,9 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
-import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.LoanCreationGlimDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -137,11 +129,7 @@ import org.mifos.security.util.UserContext;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
@@ -1109,6 +1097,17 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
         validateForRepaymentCapacity(installments, cashFlowForm, repaymentCapacity, errors);
         return errors;
+    }
+
+    @Override
+    public List<RepaymentScheduleInstallment> retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException {
+        List<OriginalLoanScheduleEntity> loanScheduleEntities = loanBusinessService.retrieveOriginalLoanSchedule(accountId);
+        ArrayList<RepaymentScheduleInstallment> repaymentScheduleInstallments = new ArrayList<RepaymentScheduleInstallment>();
+        for (OriginalLoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
+              repaymentScheduleInstallments.add(loanScheduleEntity.toDto(locale));
+        }
+
+        return repaymentScheduleInstallments;
     }
 
     private void validateForRepaymentCapacity(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity, Errors errors) {

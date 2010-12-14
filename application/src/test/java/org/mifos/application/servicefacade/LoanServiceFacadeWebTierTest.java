@@ -50,11 +50,13 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePer
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
@@ -247,6 +249,29 @@ public class LoanServiceFacadeWebTierTest {
             verify(loanBO,never()).getCurrency();
             assertThat(e.getKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));
         }
+    }
+
+    @Test
+    public void retrieveOriginalLoanSchedule() throws PersistenceException {
+        Integer accountId = new Integer(1);
+        List<OriginalLoanScheduleEntity> loanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
+        OriginalLoanScheduleEntity originalLoanScheduleEntity1 = mock(OriginalLoanScheduleEntity.class);
+        OriginalLoanScheduleEntity originalLoanScheduleEntity2 = mock(OriginalLoanScheduleEntity.class);
+        loanScheduleEntities.add(originalLoanScheduleEntity1);
+        loanScheduleEntities.add(originalLoanScheduleEntity2);
+        RepaymentScheduleInstallment installment1 = new RepaymentScheduleInstallment(locale);
+        RepaymentScheduleInstallment installment2 = new RepaymentScheduleInstallment(locale);
+        when(originalLoanScheduleEntity1.toDto(locale)).thenReturn(installment1);
+        when(originalLoanScheduleEntity2.toDto(locale)).thenReturn(installment2);
+
+        List<RepaymentScheduleInstallment> expected = new ArrayList<RepaymentScheduleInstallment>();
+        expected.add(installment1);
+        expected.add(installment2);
+        when(loanBusinessService.retrieveOriginalLoanSchedule(accountId)).thenReturn(loanScheduleEntities);
+        List<RepaymentScheduleInstallment> installments = loanServiceFacade.retrieveOriginalLoanSchedule(accountId,locale);
+        assertThat(installments.size(), is(expected.size()));
+        assertThat(installments.get(0), is(expected.get(0)));
+        assertThat(installments.get(1), is(expected.get(1)));
     }
 
     @Test

@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
@@ -103,4 +104,6 @@ public interface LoanServiceFacade {
     Errors validateCashFlowForInstallmentsForWarnings(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException;
 
     Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity);
+
+    List<RepaymentScheduleInstallment> retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException;
 }

@@ -494,4 +494,7 @@ public interface NamedQueryConstants {
 
     // Insert CustomerCustomFieldEntity entries
     String INSERT_CUSTOMER_CUSTOM_FIELD_ENTITY = "CustomerCustomFieldEntity.insertEntries";
+
+    
+    String GET_ORIGINAL_SCHEDULE_BY_ACCOUNT_ID = "originalLoanScheduleEntity.getScheduleForLoan";
 }

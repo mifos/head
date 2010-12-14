@@ -73,11 +73,10 @@ explanation of the license and how it is applied.
                                 </c:choose>
 							</td>
 							<td>
-							<!--
 							    <html-el:link styleId="loanRepayment.link.original_schedule"
 							    href="loanAccountAction.do?method=viewOriginalSchedule&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
 									<mifos:mifoslabel name="loan.view_original_schedule" />
-								</html-el:link> -->
+								</html-el:link>
 							 </td>
 						</tr>
                         <tr>

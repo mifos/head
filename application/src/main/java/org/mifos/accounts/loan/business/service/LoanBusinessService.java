@@ -351,4 +351,17 @@ public class LoanBusinessService implements BusinessService {
             }
         }
     }
+
+    public void persistOriginalSchedule(LoanBO loan) throws PersistenceException {
+        Collection<LoanScheduleEntity> loanScheduleEntities = loan.getLoanScheduleEntities();
+        Collection<OriginalLoanScheduleEntity> originalLoanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
+        for (LoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
+                   originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
+        }
+        loanPersistence.saveOriginalSchedule(originalLoanScheduleEntities);
+    }
+
+    public List<OriginalLoanScheduleEntity> retrieveOriginalLoanSchedule(Integer accountId) throws PersistenceException {
+        return loanPersistence.getOriginalLoanScheduleEntity(accountId);
+    }
 }

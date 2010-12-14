@@ -189,10 +189,12 @@
 
 
 		<mapping resource="org/mifos/accounts/loan/business/LoanScheduleEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/loan/business/OriginalLoanScheduleEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/savings/business/SavingsScheduleEntity.hbm.xml" />
 		<mapping resource="org/mifos/customers/business/CustomerScheduleEntity.hbm.xml" />
 
 		<mapping resource="org/mifos/accounts/loan/business/LoanFeeScheduleEntity.hbm.xml" />
+		<mapping resource="org/mifos/accounts/loan/business/OriginalLoanFeeScheduleEntity.hbm.xml" />
 		<mapping resource="org/mifos/accounts/loan/business/LoanArrearsAgingEntity.hbm.xml" />
 		<mapping resource="org/mifos/customers/business/CustomerFeeScheduleEntity.hbm.xml" />
 		<mapping resource="org/mifos/customers/client/business/CustomerPictureEntity.hbm.xml" />

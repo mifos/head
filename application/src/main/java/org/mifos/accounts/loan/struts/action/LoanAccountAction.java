@@ -469,6 +469,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return getActionErrors(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(loanActionForm, getUserContext(request).getLocaleId()));
     }
 
+
     private ActionErrors validateCashflowAndInstallmentDates(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
         return getActionErrors(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity));
     }
@@ -919,13 +920,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         UserContext userContext = getUserContext(request);
         Integer loanId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
         java.sql.Date disbursementDate = loanAccountActionForm.getDisbursementDateValue(userContext.getPreferredLocale());
+
         LoanBO loan = this.loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId, disbursementDate);
 
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
 
         SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, loan.getDisbursementDate(), request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loan.getLoanAmount(), request);
-        SessionUtils.setCollectionAttribute(LoanConstants.INSTALLMENTS, loanAccountActionForm.getInstallments(), request);
+        SessionUtils.setCollectionAttribute(LoanConstants.ORIGINAL_INSTALLMENTS,
+                loanServiceFacade.retrieveOriginalLoanSchedule(loanId, userContext.getPreferredLocale()), request);
         return mapping.findForward(ActionForwards.viewOriginalSchedule.name());
     }
 

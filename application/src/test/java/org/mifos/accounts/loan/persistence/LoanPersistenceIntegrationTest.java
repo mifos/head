@@ -28,6 +28,8 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
+import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
+import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -37,6 +39,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
@@ -44,14 +47,15 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
+import java.util.*;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
 import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
@@ -330,6 +334,17 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         List<LoanBO> badLoanList = loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(branchId,
                 loanOfficerId, badLoanProductId);
         Assert.assertEquals(1, badLoanList.size());
+    }
+
+    @Test
+    public void testSaveAndGetOriginalLoanScheduleEntity() throws PersistenceException {
+        ArrayList<OriginalLoanScheduleEntity> originalLoanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
+        originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(goodAccount,group,new Short("1"), new Date(new java.util.Date().getTime()), PaymentStatus.UNPAID, Money.zero(), Money.zero()));
+        loanPersistence.saveOriginalSchedule(originalLoanScheduleEntities);
+        List<OriginalLoanScheduleEntity> actual = loanPersistence.getOriginalLoanScheduleEntity(goodAccount.getAccountId());
+        Assert.assertEquals(1, actual.size());
+        Assert.assertNotNull(actual.get(0));
+        assertThat(actual, is(new OriginalLoanScheduleEntitiesMatcher(originalLoanScheduleEntities)));
     }
 
     @Test

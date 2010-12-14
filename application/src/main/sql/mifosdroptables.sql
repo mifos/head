@@ -1,3 +1,6 @@
+drop table if exists original_loan_fee_schedule;
+drop table if exists original_loan_schedule;
+
 drop table if exists prd_offering_mix;
 
 drop table if exists customer_family_detail;
