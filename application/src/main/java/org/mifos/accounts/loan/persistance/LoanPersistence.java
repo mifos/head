@@ -410,9 +410,8 @@ public class LoanPersistence extends Persistence {
     }
 
     public List<OriginalLoanScheduleEntity> getOriginalLoanScheduleEntity(Integer accountId) throws PersistenceException {
-
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-            queryParameters.put("id", accountId);
+        queryParameters.put("id", accountId);
         return executeNamedQuery(NamedQueryConstants.GET_ORIGINAL_SCHEDULE_BY_ACCOUNT_ID, queryParameters);
     }
 }

@@ -27,6 +27,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -243,27 +244,26 @@ public class LoanAccountActionTest {
     public void shouldViewOriginalSchedule() throws Exception {
         ActionForward viewOriginalScheduleForward = new ActionForward("viewOriginalSchedule");
         int loanId = 1;
-        Money loanAmount = new Money( new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR"),"123");
+        String loanAmount = "123";
         List installments = Collections.EMPTY_LIST;
         java.sql.Date disbursementDate = new java.sql.Date(new DateTime().toDate().getTime());
 
+        OriginalScheduleInfoDto dto = mock(OriginalScheduleInfoDto.class);
+        when(dto.getOriginalLoanScheduleInstallment()).thenReturn(installments);
+        when(dto.getLoanAmount()).thenReturn(loanAmount);
+        when(dto.getDisbursementDate()).thenReturn(disbursementDate);
         when(request.getParameter(LoanAccountAction.ACCOUNT_ID)).thenReturn(String.valueOf(loanId));
-        when(loanServiceFacade.retrieveLoanRepaymentSchedule(userContext, loanId, disbursementDate)).thenReturn(loanBO);
-        when(loanServiceFacade.retrieveOriginalLoanSchedule(loanId, Locale.US)).thenReturn(installments);
-        when(loanBO.getLoanAmount()).thenReturn(loanAmount);
-        when(form.getDisbursementDateValue(Locale.US)).thenReturn(disbursementDate);
-        when(loanBO.getDisbursementDate()).thenReturn(disbursementDate);
+        when(loanServiceFacade.retrieveOriginalLoanSchedule(loanId, Locale.US)).thenReturn(dto);
         when(mapping.findForward("viewOriginalSchedule")).thenReturn(viewOriginalScheduleForward);
 
         ActionForward forward = loanAccountAction.viewOriginalSchedule(mapping, form, request, response);
 
         assertThat(forward, is(viewOriginalScheduleForward));
         verify(request).getParameter(LoanAccountAction.ACCOUNT_ID);
-        verify(loanServiceFacade).retrieveLoanRepaymentSchedule(userContext, loanId, disbursementDate);
         verify(loanServiceFacade).retrieveOriginalLoanSchedule(loanId, Locale.US);
-        verify(loanBO).getLoanAmount();
-        verify(form).getDisbursementDateValue(Locale.US);
-        verify(loanBO).getDisbursementDate();
+        verify(dto).getOriginalLoanScheduleInstallment();
+        verify(dto).getLoanAmount();
+        verify(dto).getDisbursementDate();
         verify(mapping).findForward("viewOriginalSchedule");
     }
 

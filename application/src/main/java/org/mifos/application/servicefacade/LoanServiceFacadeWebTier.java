@@ -35,13 +35,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.*;
-import org.mifos.accounts.loan.business.service.AccountFeesDto;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.LoanInformationDto;
-import org.mifos.accounts.loan.business.service.LoanPerformanceHistoryDto;
-import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
-import org.mifos.accounts.loan.business.service.LoanService;
-import org.mifos.accounts.loan.business.service.LoanSummaryDto;
+import org.mifos.accounts.loan.business.service.*;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
@@ -1100,14 +1094,15 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public List<RepaymentScheduleInstallment> retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException {
+    public OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException {
         List<OriginalLoanScheduleEntity> loanScheduleEntities = loanBusinessService.retrieveOriginalLoanSchedule(accountId);
         ArrayList<RepaymentScheduleInstallment> repaymentScheduleInstallments = new ArrayList<RepaymentScheduleInstallment>();
         for (OriginalLoanScheduleEntity loanScheduleEntity : loanScheduleEntities) {
               repaymentScheduleInstallments.add(loanScheduleEntity.toDto(locale));
         }
 
-        return repaymentScheduleInstallments;
+        LoanBO loan = this.loanDao.findById(accountId);
+        return new OriginalScheduleInfoDto(loan.getLoanAmount().toString(),loan.getDisbursementDate(),repaymentScheduleInstallments);
     }
 
     private void validateForRepaymentCapacity(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity, Errors errors) {
