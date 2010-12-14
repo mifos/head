@@ -265,7 +265,7 @@ public class Installment implements Comparable<Installment> {
     }
 
     private Date getTotalPrincipalPaymentDate() {
-        return isPrincipalDue() ? this.dueDate : getRecentPartialPaymentDate();
+        return isDue() ? this.dueDate : getRecentPartialPaymentDate();
     }
 
     public Date getRecentPartialPaymentDate() {
