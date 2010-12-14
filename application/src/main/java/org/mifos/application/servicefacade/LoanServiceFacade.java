@@ -69,9 +69,6 @@ public interface LoanServiceFacade {
     @Deprecated
     LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
 
-    LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails,
-            List<String> selectedClientIds, List<BusinessActivityEntity> businessActEntity);
-
     LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
             FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
 

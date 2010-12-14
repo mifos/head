@@ -1,9 +1,12 @@
 package org.mifos.application.servicefacade;
 
+import static org.apache.commons.lang.StringUtils.EMPTY;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateMachines;
@@ -54,6 +57,7 @@ import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanCreationGlimDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
+import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -343,5 +347,48 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             }
         }
         return filteredFees;
+    }
+
+    @Override
+    public LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds) {
+
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        final boolean isGroup = customer.isGroup();
+        final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
+
+        List<LoanAccountDetailsDto> loanAccountDetailsView = new ArrayList<LoanAccountDetailsDto>();
+
+        for (String clientIdAsString : selectedClientIds) {
+            if (StringUtils.isNotEmpty(clientIdAsString)) {
+
+                LoanAccountDetailsDto tempLoanAccount = new LoanAccountDetailsDto();
+                ClientBO client = (ClientBO) this.customerDao.findCustomerById(Integer.valueOf(clientIdAsString));
+
+                LoanAccountDetailsDto account = null;
+                for (LoanAccountDetailsDto tempAccount : accountDetails) {
+                    if (tempAccount.getClientId().equals(clientIdAsString)) {
+                        account = tempAccount;
+                    }
+                }
+                tempLoanAccount.setClientId(client.getGlobalCustNum().toString());
+                tempLoanAccount.setClientName(client.getDisplayName());
+                tempLoanAccount.setLoanAmount((null != account.getLoanAmount()
+                        && !EMPTY.equals(account.getLoanAmount().toString()) ? account.getLoanAmount() : "0.0"));
+
+//                String businessActName = null;
+//                for (ValueListElement busact : businessActEntity) {
+//                    if (busact.getId().toString().equals(account.getBusinessActivity())) {
+//                        businessActName = busact.getName();
+//                    }
+//                }
+                tempLoanAccount.setBusinessActivity(account.getBusinessActivity());
+//                tempLoanAccount.setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName : "-").toString());
+                tempLoanAccount.setGovermentId((StringUtils.isNotBlank(client.getGovernmentId()) ? client.getGovernmentId() : "-").toString());
+
+                loanAccountDetailsView.add(tempLoanAccount);
+            }
+        }
+
+        return new LoanCreationPreviewDto(isGlimEnabled, isGroup, loanAccountDetailsView);
     }
 }

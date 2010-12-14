@@ -128,7 +128,6 @@ import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
-import org.mifos.application.servicefacade.LoanCreationPreviewDto;
 import org.mifos.application.servicefacade.LoanCreationResultDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -149,6 +148,7 @@ import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.LoanCreationGlimDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
+import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -723,7 +723,30 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
             }
 
-            setGLIMAttributesOnSession(request, loanAccountForm, customerId);
+            List<LoanAccountDetailsDto> accountDetails = loanAccountForm.getClientDetails();
+            List<String> selectedClientIds = loanAccountForm.getClients();
+
+            LoanCreationPreviewDto loanPreviewDto = loanAccountServiceFacade.previewLoanCreationDetails(customerId, accountDetails, selectedClientIds);
+
+            List<BusinessActivityEntity> businessActEntity = retrieveLoanPurposesFromSession(request);
+            for (LoanAccountDetailsDto loanAccountDetailsView : loanPreviewDto.getLoanAccountDetailsView()) {
+                String businessActName = null;
+                for (ValueListElement busact : businessActEntity) {
+                    if (busact.getId().toString().equals(loanAccountDetailsView.getBusinessActivity())) {
+                        businessActName = busact.getName();
+                    }
+                }
+                loanAccountDetailsView.setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName : "-").toString());
+            }
+
+            if (loanPreviewDto.isGlimEnabled()) {
+                SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, 1, request);
+
+                if (loanPreviewDto.isGroup()) {
+                    SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
+                    SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanPreviewDto.getLoanAccountDetailsView(), request);
+                }
+            }
             request.setAttribute(PERSPECTIVE, perspective);
         }
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in createloanpreview.jsp
@@ -771,30 +794,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             addErrors(request, actionErrors);
         }
         return isEmpty;
-    }
-
-    private void setGLIMAttributesOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm,
-                                            Integer customerId) throws PageExpiredException {
-        LoanCreationPreviewDto loanPreviewDto = getloanPreviewDto(request, loanAccountForm, customerId);
-        if (loanPreviewDto.isGlimEnabled()) {
-            SessionUtils.setAttribute(LOAN_INDIVIDUAL_MONITORING_IS_ENABLED, 1, request);
-
-            if (loanPreviewDto.isGroup()) {
-                SessionUtils.setAttribute(LOAN_ACCOUNT_OWNER_IS_A_GROUP,
-                        LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES, request);
-                SessionUtils.setCollectionAttribute("loanAccountDetailsView", loanPreviewDto
-                        .getLoanAccountDetailsView(), request);
-            }
-        }
-    }
-
-    private LoanCreationPreviewDto getloanPreviewDto(HttpServletRequest request, LoanAccountActionForm loanAccountForm, Integer customerId) throws PageExpiredException {
-        List<LoanAccountDetailsDto> accountDetails = loanAccountForm.getClientDetails();
-        List<String> selectedClientIds = loanAccountForm.getClients();
-        List<BusinessActivityEntity> businessActEntity = retrieveLoanPurposesFromSession(request);
-
-        return loanServiceFacade.previewLoanCreationDetails(customerId,
-                accountDetails, selectedClientIds, businessActEntity);
     }
 
     private void setInstallmentsOnSession(HttpServletRequest request, LoanAccountActionForm loanAccountForm) throws PageExpiredException {

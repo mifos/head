@@ -105,7 +105,6 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -408,53 +407,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             }
         }
         return newMeetingForRepaymentDay;
-    }
-
-    @Override
-    public LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId,
-            List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds,
-            List<BusinessActivityEntity> businessActEntity) {
-
-        CustomerBO customer = loadCustomer(customerId);
-        final boolean isGroup = customer.isGroup();
-        final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
-
-        List<LoanAccountDetailsDto> loanAccountDetailsView = new ArrayList<LoanAccountDetailsDto>();
-
-        for (String clientIdAsString : selectedClientIds) {
-            if (StringUtils.isNotEmpty(clientIdAsString)) {
-
-                LoanAccountDetailsDto tempLoanAccount = new LoanAccountDetailsDto();
-                ClientBO client = (ClientBO) loadCustomer(Integer.valueOf(clientIdAsString));
-
-                LoanAccountDetailsDto account = null;
-                for (LoanAccountDetailsDto tempAccount : accountDetails) {
-                    if (tempAccount.getClientId().equals(clientIdAsString)) {
-                        account = tempAccount;
-                    }
-                }
-                tempLoanAccount.setClientId(client.getGlobalCustNum().toString());
-                tempLoanAccount.setClientName(client.getDisplayName());
-                tempLoanAccount.setLoanAmount((null != account.getLoanAmount()
-                        && !EMPTY.equals(account.getLoanAmount().toString()) ? account.getLoanAmount() : "0.0"));
-
-                String businessActName = null;
-                for (ValueListElement busact : businessActEntity) {
-                    if (busact.getId().toString().equals(account.getBusinessActivity())) {
-                        businessActName = busact.getName();
-                    }
-                }
-                tempLoanAccount.setBusinessActivity(account.getBusinessActivity());
-                tempLoanAccount.setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName
-                        : "-").toString());
-                tempLoanAccount.setGovermentId((StringUtils.isNotBlank(client.getGovernmentId()) ? client
-                        .getGovernmentId() : "-").toString());
-
-                loanAccountDetailsView.add(tempLoanAccount);
-            }
-        }
-
-        return new LoanCreationPreviewDto(isGlimEnabled, isGroup, loanAccountDetailsView);
     }
 
     @Override
