@@ -20,6 +20,12 @@
 
 package org.mifos.accounts.api;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountBO;
@@ -52,16 +58,9 @@ import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
-import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose

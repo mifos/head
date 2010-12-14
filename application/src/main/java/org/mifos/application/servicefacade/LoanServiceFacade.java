@@ -51,15 +51,23 @@ import org.mifos.security.util.UserContext;
 
 public interface LoanServiceFacade {
 
-    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext,
-                                                                              Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm)
-            throws ApplicationException;
+    /**
+     * @deprecated - unable at present to decouple Dto and ActionForm
+     */
+    @Deprecated
+    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForRedoLoan(Integer customerId, DateTime disbursementDate, Short fundId, LoanAccountActionForm loanActionForm);
 
-    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForRedoLoan(UserContext userContext, Integer customerId,
-            DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
+    /**
+     * @deprecated - unable at present to decouple Dto and ActionForm
+     */
+    @Deprecated
+    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(Integer customerId, DateTime disbursementDate, Short fundId, LoanAccountActionForm loanActionForm);
 
-    LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm,
-            DateTime disbursementDate, UserContext userContext) throws ApplicationException;
+    /**
+     * @deprecated - unable at present to decouple LoanBO and ActionForm for redo functionality
+     */
+    @Deprecated
+    LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
 
     LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails,
             List<String> selectedClientIds, List<BusinessActivityEntity> businessActEntity);

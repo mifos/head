@@ -82,10 +82,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     public LoanAccountServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
-                                    PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao,
-                                    InstallmentsValidator installmentsValidator,
-                                    ScheduleCalculatorAdaptor scheduleCalculatorAdaptor, LoanBusinessService loanBusinessService,
-                                    HolidayServiceFacade holidayServiceFacade, LoanPrdBusinessService loanPrdBusinessService) {
+            PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao,
+            InstallmentsValidator installmentsValidator, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
+            LoanBusinessService loanBusinessService, HolidayServiceFacade holidayServiceFacade,
+            LoanPrdBusinessService loanPrdBusinessService) {
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
@@ -110,7 +110,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<ListElement> loanStatesList = new ArrayList<ListElement>();
             AccountStateMachines.getInstance().initializeLoanStates();
 
-            List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getLoanStatusList(loanAccount.getAccountState());
+            List<AccountStateEntity> statusList = AccountStateMachines.getInstance().getLoanStatusList(
+                    loanAccount.getAccountState());
             for (AccountStateEntity accountState : statusList) {
                 accountState.setLocaleId(userContext.getLocaleId());
                 loanStatesList.add(new ListElement(accountState.getId().intValue(), accountState.getName()));
@@ -171,8 +172,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(accountNote.getCreatedById().shortValue());
         LoanBO loanAccount = this.loanDao.findById(accountNote.getAccountId());
 
-        AccountNotesEntity accountNotes = new AccountNotesEntity(new java.sql.Date(accountNote.getCommentDate().toDateMidnight().toDate().getTime()),
-                accountNote.getComment(), createdBy, loanAccount);
+        AccountNotesEntity accountNotes = new AccountNotesEntity(new java.sql.Date(accountNote.getCommentDate()
+                .toDateMidnight().toDate().getTime()), accountNote.getComment(), createdBy, loanAccount);
 
         try {
             this.transactionHelper.startTransaction();
@@ -196,7 +197,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         final CustomerDetailDto customerDetailDto = customer.toCustomerDetailDto();
         final Date nextMeetingDate = customer.getCustomerAccount().getNextMeetingDate();
-        final String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter().toString();
+        final String recurMonth = customer.getCustomerMeeting().getMeeting().getMeetingDetails().getRecurAfter()
+                .toString();
         final boolean isGroup = customer.isGroup();
         final boolean isGlimEnabled = new ConfigurationPersistence().isGlimEnabled();
 
@@ -258,9 +260,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<FeeDto> additionalFees = new ArrayList<FeeDto>();
             List<FeeDto> defaultFees = new ArrayList<FeeDto>();
 
-            new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext, defaultFees, additionalFees);
+            new LoanProductService(new LoanPrdBusinessService()).getDefaultAndAdditionalFees(productId, userContext,
+                    defaultFees, additionalFees);
 
-            LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
+            LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext
+                    .getLocaleId());
 
             if (AccountingRules.isMultiCurrencyEnabled()) {
                 defaultFees = getFilteredFeesByCurrency(defaultFees, loanOffering.getCurrency().getCurrencyId());
@@ -269,41 +273,46 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             // setDateIntoForm
             CustomerBO customer = this.customerDao.findCustomerById(customerId);
-            LoanAmountOption eligibleLoanAmount = loanOffering.eligibleLoanAmount(customer.getMaxLoanAmount(loanOffering),
-                    customer.getMaxLoanCycleForProduct(loanOffering));
-            LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer.getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
+            LoanAmountOption eligibleLoanAmount = loanOffering.eligibleLoanAmount(customer
+                    .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
+            LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
+                    .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
 
-            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES, userContext.getLocaleId());
+            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES,
+                    userContext.getLocaleId());
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
             // Business activities got in getPrdOfferings also but only for glim.
             List<ValueListElement> loanPurposes = new MasterDataService().retrieveMasterEntities(
                     MasterConstants.LOAN_PURPOSES, userContext.getLocaleId());
 
-//            List<CustomFieldDefinitionEntity> customFieldDefs = new AccountBusinessService().retrieveCustomFieldsDefinition(EntityType.LOAN);
-//
-//            List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-//            for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-//                if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
-//                        && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-//                    customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(userContext
-//                            .getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
-//                } else {
-//                    customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
-//                            .getFieldType()));
-//                }
-//            }
+            // List<CustomFieldDefinitionEntity> customFieldDefs = new
+            // AccountBusinessService().retrieveCustomFieldsDefinition(EntityType.LOAN);
+            //
+            // List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+            // for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
+            // if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
+            // && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+            // customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(userContext
+            // .getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
+            // } else {
+            // customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
+            // .getFieldType()));
+            // }
+            // }
 
-            MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting().getMeetingDetails();
+            MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
+                    .getMeetingDetails();
 
             MeetingDto loanOfferingMeetingDto = loanOffering.getLoanOfferingMeetingValue().toDto();
 
             List<FundBO> funds = getFunds(loanOffering);
 
-            boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
+            boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationBusinessService()
+                    .isRepaymentIndepOfMeetingEnabled();
 
-            return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled,
-                    loanOfferingMeetingDto, customer.getCustomerMeetingValue().toDto(), loanPurposes);
+            return new LoanCreationLoanDetailsDto(isRepaymentIndependentOfMeetingEnabled, loanOfferingMeetingDto,
+                    customer.getCustomerMeetingValue().toDto(), loanPurposes);
 
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
