@@ -23,21 +23,27 @@ package org.mifos.platform.questionnaire.parsers;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.converters.ConversionException;
 import com.thoughtworks.xstream.io.StreamException;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
-import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
-import static org.mifos.platform.questionnaire.QuestionnaireConstants.*; //NOPMD
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_CONVERSION_ERROR;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_FILE_NOT_FOUND;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_PARSE_ERROR;
+import static org.mifos.platform.questionnaire.QuestionnaireConstants.PPI_SURVEY_UPLOAD_FAILED;
 
 public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDefinitionParser {
     private final XStream xstream;
@@ -60,13 +66,15 @@ public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDef
     private QuestionGroupDto parseSafely(String questionGroupDefXmlFilePath) {
         BufferedReader bufferedReader = null;
         try {
-            bufferedReader = new BufferedReader(new FileReader(questionGroupDefXmlFilePath));
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(questionGroupDefXmlFilePath), "UTF-8"));
             return (QuestionGroupDto) xstream.fromXML(bufferedReader);
         } catch (FileNotFoundException e) {
             throw new SystemException(PPI_SURVEY_FILE_NOT_FOUND, e);
         } catch (StreamException e) {
             throw new SystemException(PPI_SURVEY_PARSE_ERROR, e);
         } catch (ConversionException e) {
+            throw new SystemException(PPI_SURVEY_CONVERSION_ERROR, e);
+        } catch (UnsupportedEncodingException e) {
             throw new SystemException(PPI_SURVEY_CONVERSION_ERROR, e);
         } finally {
             if (bufferedReader != null) {
@@ -88,7 +96,7 @@ public final class QuestionGroupDefinitionParserImpl implements QuestionGroupDef
     }
 
     private XStream initializeXStream() {
-        XStream xstream = new XStream();
+        XStream xstream = new XStream(new DomDriver("UTF-8"));
         processAnnotations(xstream);
         return xstream;
     }
