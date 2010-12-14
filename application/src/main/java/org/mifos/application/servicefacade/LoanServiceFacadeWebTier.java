@@ -284,7 +284,10 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
                         .createNewMeetingForRepaymentDay(disbursementDate, loanActionForm, customer);
             }
 
-            FundBO fund = this.fundDao.findById(fundId);
+            FundBO fund = null;
+            if (fundId != null) {
+                fund = this.fundDao.findById(fundId);
+            }
             LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
                     isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
             List<RepaymentScheduleInstallment> installments = loanBusinessService.applyDailyInterestRatesWhereApplicable(
