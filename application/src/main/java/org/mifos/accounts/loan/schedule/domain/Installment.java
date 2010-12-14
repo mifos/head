@@ -284,11 +284,6 @@ public class Installment implements Comparable<Installment> {
         setExtraInterest(getExtraInterest().add(extraInterest));
     }
 
-    public BigDecimal getRecentPrincipalPayment() {
-        InstallmentPayment installmentPayment = payments.getRecentPrincipalPayment();
-        return installmentPayment == null ? BigDecimal.ZERO : installmentPayment.getPrincipalPaid();
-    }
-
     public BigDecimal getInterestPaid() {
         return payments.getInterestPaid();
     }
