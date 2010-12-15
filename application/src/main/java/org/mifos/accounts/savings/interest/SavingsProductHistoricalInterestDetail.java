@@ -21,23 +21,33 @@
 package org.mifos.accounts.savings.interest;
 
 import org.joda.time.LocalDate;
+import org.mifos.framework.util.helpers.Money;
 
-public class InterestCalculationIntervalBuilder {
+public class SavingsProductHistoricalInterestDetail {
 
-    private LocalDate startDate = new LocalDate();
-    private LocalDate endDate = new LocalDate();
+    private final Double interestRate;
+    private final Money minAmntForInt;
+    private final CalendarPeriod calculationPeriod;
 
-    public InterestCalculationInterval build() {
-        return new InterestCalculationInterval(startDate, endDate);
+    public SavingsProductHistoricalInterestDetail(CalendarPeriod calculationPeriod, Double interestRate, Money minAmntForInt) {
+        this.calculationPeriod = calculationPeriod;
+        this.interestRate = interestRate;
+        this.minAmntForInt = minAmntForInt;
     }
 
-    public InterestCalculationIntervalBuilder from(LocalDate intervalStartDate) {
-        this.startDate = intervalStartDate;
-        return this;
+    public Double getInterestRate() {
+        return this.interestRate;
     }
 
-    public InterestCalculationIntervalBuilder to(LocalDate intervalEndDate) {
-        this.endDate = intervalEndDate;
-        return this;
+    public Money getMinAmntForInt() {
+        return this.minAmntForInt;
+    }
+
+    public LocalDate getStartDate() {
+        return this.calculationPeriod.getStartDate();
+    }
+
+    public LocalDate getEndDate() {
+        return this.calculationPeriod.getEndDate();
     }
 }

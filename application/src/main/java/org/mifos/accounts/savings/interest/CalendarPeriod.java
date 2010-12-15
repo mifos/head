@@ -22,18 +22,21 @@ package org.mifos.accounts.savings.interest;
 
 import org.joda.time.LocalDate;
 
-public class InterestCalculationInterval {
+public class CalendarPeriod {
 
     private final LocalDate startDate;
     private final LocalDate endDate;
 
-    public InterestCalculationInterval(LocalDate startDate, LocalDate endDate) {
+    public CalendarPeriod(LocalDate startDate, LocalDate endDate) {
         this.startDate = startDate;
         this.endDate = endDate;
+        if (startDate.isAfter(endDate)) {
+            throw new IllegalArgumentException("startDate cannot be after endDate of period. startDate:" + startDate + " endDate:" + endDate);
+        }
     }
 
     /**
-     * checks that <code>date</code> occurs within the {@link InterestCalculationInterval} with startDate and endDate inclusive.
+     * checks that <code>date</code> occurs within the {@link CalendarPeriod} with startDate and endDate inclusive.
      */
     public boolean contains(LocalDate date) {
         return (date.isEqual(this.startDate) || date.isAfter(this.startDate)) && (date.isEqual(this.endDate) || date.isBefore(endDate));

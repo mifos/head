@@ -39,11 +39,11 @@ public interface SavingsServiceFacade {
     void adjustTransaction(SavingsAdjustmentDto savingsAdjustment);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void batchRecalculateInterestToBePostedForSavingsAccount(LocalDate dateBatchJobIsScheduled);
-
-    @PreAuthorize("isFullyAuthenticated()")
     SavingsAccountClosureDto retrieveClosingDetails(Long savingsId, LocalDate closureDate);
 
     @PreAuthorize("isFullyAuthenticated()")
     void closeSavingsAccount(Long savingsId, String notes, SavingsWithdrawalDto closeAccount);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void postInterestForLastPostingPeriod(LocalDate dateOfBatchJob);
 }

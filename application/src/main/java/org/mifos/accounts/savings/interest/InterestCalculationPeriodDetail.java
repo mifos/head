@@ -33,7 +33,7 @@ import org.mifos.framework.util.helpers.Money;
  */
 public class InterestCalculationPeriodDetail {
 
-    private final InterestCalculationInterval interval;
+    private final CalendarPeriod interval;
     private final List<EndOfDayDetail> dailyDetails;
     private final Money balanceBeforeInterval;
     private final boolean isFirstActivityBeforeInterval;
@@ -44,13 +44,13 @@ public class InterestCalculationPeriodDetail {
      * period.
      */
     public static InterestCalculationPeriodDetail populatePeriodDetailBasedOnInterestCalculationInterval(
-            InterestCalculationInterval interval, List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money balanceBeforeInterval) {
+            CalendarPeriod calculationPeriod, List<EndOfDayDetail> allEndOfDayDetailsForAccount, Money balanceBeforeInterval) {
 
         Money balance = balanceBeforeInterval;
         boolean isFirstActivityBeforeInterval = true;
 
         if(!allEndOfDayDetailsForAccount.isEmpty()) {
-            if(!allEndOfDayDetailsForAccount.get(0).getDate().isBefore(interval.getStartDate())) {
+            if(!allEndOfDayDetailsForAccount.get(0).getDate().isBefore(calculationPeriod.getStartDate())) {
                 isFirstActivityBeforeInterval = false;
             }
         }
@@ -58,22 +58,22 @@ public class InterestCalculationPeriodDetail {
         List<EndOfDayDetail> applicableDailyDetailsForPeriod = new ArrayList<EndOfDayDetail>();
 
         for (EndOfDayDetail endOfDayDetail : allEndOfDayDetailsForAccount) {
-            if (interval.contains(endOfDayDetail.getDate())) {
+            if (calculationPeriod.contains(endOfDayDetail.getDate())) {
                 applicableDailyDetailsForPeriod.add(endOfDayDetail);
             }
         }
 
-        return new InterestCalculationPeriodDetail(interval, applicableDailyDetailsForPeriod, balance, isFirstActivityBeforeInterval);
+        return new InterestCalculationPeriodDetail(calculationPeriod, applicableDailyDetailsForPeriod, balance, isFirstActivityBeforeInterval);
     }
 
-    public InterestCalculationPeriodDetail(InterestCalculationInterval interval, List<EndOfDayDetail> dailyDetails, Money balanceBeforeInterval, boolean isFirstActivityBeforeInterval) {
+    public InterestCalculationPeriodDetail(CalendarPeriod interval, List<EndOfDayDetail> dailyDetails, Money balanceBeforeInterval, boolean isFirstActivityBeforeInterval) {
         this.dailyDetails = dailyDetails;
         this.balanceBeforeInterval = balanceBeforeInterval;
         this.interval = interval;
         this.isFirstActivityBeforeInterval = isFirstActivityBeforeInterval;
     }
 
-    public InterestCalculationInterval getInterval() {
+    public CalendarPeriod getInterval() {
         return this.interval;
     }
 

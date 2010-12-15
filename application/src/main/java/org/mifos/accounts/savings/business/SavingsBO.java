@@ -52,7 +52,9 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.savings.interest.CalendarPeriod;
 import org.mifos.accounts.savings.interest.InterestPostingPeriodResult;
+import org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetail;
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
@@ -72,9 +74,6 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
@@ -473,15 +472,18 @@ public class SavingsBO extends AccountBO {
     public void postInterest(InterestScheduledEvent postingSchedule, InterestPostingPeriodResult interestPostingPeriodResult, PersonnelBO createdBy) {
 
         Money actualInterestToBePosted = interestPostingPeriodResult.getDifferenceInInterest();
-        if (actualInterestToBePosted.isGreaterThanZero()) {
-            LocalDate currentPostingDate = interestPostingPeriodResult.getPostingPeriod().getEndDate();
-            LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(currentPostingDate);
 
-            doPostInterest(currentPostingDate, nextPostingDate, actualInterestToBePosted, createdBy);
-        }
+        LocalDate currentPostingDate = interestPostingPeriodResult.getPostingPeriod().getEndDate();
+        LocalDate nextPostingDate = postingSchedule.nextMatchingDateFromAlreadyMatchingDate(currentPostingDate);
+
+        // NOTE - keithw - I am putting back in enforcement of zero'd interest postings to ensure
+        // that adjustments cannot be done to transactions after a posting period has expired
+        // there are others ways of enforcing this but using this approach as previously existed in release 1.6.x and below.
+        doPostInterest(currentPostingDate, actualInterestToBePosted, createdBy);
+        updatePostingDetails(nextPostingDate);
     }
 
-    private void doPostInterest(LocalDate currentPostingDate, LocalDate nextPostingDate, Money actualInterestToBePosted, PersonnelBO loggedInUser) {
+    private void doPostInterest(LocalDate currentPostingDate, Money actualInterestToBePosted, PersonnelBO loggedInUser) {
         this.savingsBalance = this.savingsBalance.add(actualInterestToBePosted);
         this.savingsPerformance.setTotalInterestDetails(actualInterestToBePosted);
 
@@ -495,8 +497,6 @@ public class SavingsBO extends AccountBO {
 
         interestPayment.addAccountTrxn(interestPostingTransaction);
         this.addAccountPayment(interestPayment);
-
-        updatePostingDetails(nextPostingDate);
 
         // NOTE: financial Transaction Processing should be decoupled from application domain model.
         try {
@@ -528,7 +528,8 @@ public class SavingsBO extends AccountBO {
         if (interestOutstanding.isGreaterThanZero()) {
             LocalDate currentPostingDate = new LocalDate(payment.getPaymentDate());
             LocalDate nextPostingDate = new LocalDate();
-            doPostInterest(currentPostingDate, nextPostingDate, interestOutstanding, loggedInUser);
+            doPostInterest(currentPostingDate, interestOutstanding, loggedInUser);
+            updatePostingDetails(nextPostingDate);
         }
 
         Date transactionDate = new DateTimeService().getCurrentDateMidnight().toDate();
@@ -1674,6 +1675,10 @@ public class SavingsBO extends AccountBO {
         }
     }
 
+    public MeetingBO getInterestCalculationMeeting() {
+        return this.savingsOffering.getTimePerForInstcalc().getMeeting();
+    }
+
     public MeetingBO getInterestPostingMeeting() {
         return this.savingsOffering.getFreqOfPostIntcalc().getMeeting();
     }
@@ -1695,18 +1700,18 @@ public class SavingsBO extends AccountBO {
         return this.savingsOffering.getMinAmntForInt();
     }
 
-    public MeetingBO getTimePerForInstcalc() {
-        return this.savingsOffering.getTimePerForInstcalc().getMeeting();
-    }
+    public List<SavingsProductHistoricalInterestDetail> getHistoricalInterestDetailsForPeriod(CalendarPeriod period) {
 
-    private MeetingBO createNewMeetingFrom(final MeetingBO offeringMeeting) {
-        try {
-            RecurrenceType recurrenceType = offeringMeeting.getMeetingDetails().getRecurrenceTypeEnum();
-            MeetingType meetingType = MeetingType.fromInt(offeringMeeting.getMeetingType().getMeetingTypeId());
-            return new MeetingBO(recurrenceType, offeringMeeting.getMeetingDetails().getRecurAfter(), startOfFiscalYear(), meetingType);
-        } catch (MeetingException e) {
-            throw new BusinessRuleException(e.getKey(), e);
+        List<SavingsProductHistoricalInterestDetail> validHistoricalDetails = new ArrayList<SavingsProductHistoricalInterestDetail>();
+
+        List<SavingsProductHistoricalInterestDetail> allHistoricalDetails = this.savingsOffering.getHistoricalInterestDetails();
+        for (SavingsProductHistoricalInterestDetail interestDetail : allHistoricalDetails) {
+            if (period.contains(interestDetail.getStartDate())) {
+                validHistoricalDetails.add(interestDetail);
+            }
         }
+
+        return validHistoricalDetails;
     }
 
     private Date startOfFiscalYear() {
