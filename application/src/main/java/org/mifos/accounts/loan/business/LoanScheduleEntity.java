@@ -451,7 +451,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getExtraInterest() {
-        return extraInterest==null? Money.zero(getCurrency()):extraInterest;
+        return extraInterest == null ? Money.zero(getCurrency()) : new Money(getCurrency(), extraInterest.getAmount());
     }
 
     public void setExtraInterest(Money extraInterest) {
@@ -459,7 +459,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
     }
 
     public Money getExtraInterestPaid() {
-        return extraInterestPaid == null? Money.zero(getCurrency()): extraInterestPaid;
+        return extraInterestPaid == null ? Money.zero(getCurrency()) : new Money(getCurrency(), extraInterestPaid.getAmount());
     }
 
     public void setExtraInterestPaid(Money extraInterestPaid) {

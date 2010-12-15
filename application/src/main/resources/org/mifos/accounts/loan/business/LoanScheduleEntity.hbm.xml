@@ -57,8 +57,12 @@
 			<column name="penalty_paid_currency_id" />
 			<column name="penalty_paid" />
 		</property>
-        <property name="extraInterestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType" insert="false" update="false">
-			<column name="interest_currency_id" />
+        <property name="extraInterest" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="extra_interest_currency_id" />
+			<column name="extra_interest" />
+		</property>
+        <property name="extraInterestPaid" type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+			<column name="extra_interest_paid_currency_id" />
 			<column name="extra_interest_paid" />
 		</property>
 
