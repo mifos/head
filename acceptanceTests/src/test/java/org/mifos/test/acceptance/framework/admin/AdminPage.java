@@ -221,6 +221,13 @@ public class AdminPage extends MifosPage {
         waitForPageToLoad();
         return new DefineNewSavingsProductPage(selenium);
     }
+
+    public ViewLatenessAndDormancyDefinitionPage navigateToViewLatenessAndDormancyDefinitionPage() {
+        selenium.click("admin.link.viewLatenessDormancyDefinition");
+        waitForPageToLoad();
+        return new ViewLatenessAndDormancyDefinitionPage(selenium);
+    }
+
     public CreateHolidayEntryPage navigateToDefineHolidayPage() {
         selenium.click("admin.link.defineNewHoliday");
         waitForPageToLoad();
@@ -249,6 +256,18 @@ public class AdminPage extends MifosPage {
         selenium.click("admin.link.manageRoles");
         waitForPageToLoad();
         return new ViewRolesPage(selenium);
+    }
+
+    public ViewOrganizationSettingsPage navigateToViewOrganizationSettingsPage() {
+        selenium.click("admin.link.viewOrganizationSettings");
+        waitForPageToLoad();
+        return new ViewOrganizationSettingsPage(selenium);
+    }
+
+    public ViewOfficeHierarchyPage navigateToViewOfficeHierarchyPage() {
+        selenium.click("admin.link.viewOfficeHierarchy");
+        waitForPageToLoad();
+        return new ViewOfficeHierarchyPage(selenium);
     }
 
     public AdminPage failNavigationToSystemInfoPage() {
