@@ -20,33 +20,23 @@
 
 package org.mifos.accounts.loan.business;
 
-import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.accounts.util.helpers.OverDueAmounts;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
-import java.io.Serializable;
-import java.sql.Date;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
-public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanScheduleEntity>,Serializable{
-    private Integer actionDateId;
-    private AccountBO account;
-    private CustomerBO customer;
-    private Short installmentId;
-    private Date actionDate;
-    private Short paymentStatus;
-    private Date paymentDate;
+import static org.mifos.framework.util.helpers.NumberUtils.min;
 
+public class OriginalLoanScheduleEntity extends AccountActionDateEntity {
     private Money principal;
 
     private Money interest;
@@ -74,58 +64,44 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
     private Money miscPenaltyPaid;
 
 
-    private Set<OriginalLoanFeeScheduleEntity> accountFeesActionDetails = new HashSet<OriginalLoanFeeScheduleEntity>();
+    private Set<AccountFeesActionDetailEntity> accountFeesActionDetails = new HashSet<AccountFeesActionDetailEntity>();
 
     private int versionNo;
 
     private PaymentAllocation paymentAllocation;
 
-
-    public OriginalLoanScheduleEntity() {
+    protected OriginalLoanScheduleEntity() {
+        super(null, null, null, null, null);
     }
 
     public OriginalLoanScheduleEntity(AccountBO account, CustomerBO customer, Short installmentId, java.sql.Date actionDate,
-                                      PaymentStatus paymentStatus, Money principal, Money interest) {
-        this.actionDateId = null;
-        this.account = account;
-        this.customer = customer;
-        this.installmentId = installmentId;
-        this.actionDate = actionDate;
-        if (paymentStatus != null) {
-            this.paymentStatus = paymentStatus.getValue();
-        }
+            PaymentStatus paymentStatus, Money principal, Money interest) {
+        super(account, customer, installmentId, actionDate, paymentStatus);
         this.principal = principal;
         this.interest = interest;
         reset(account.getCurrency());
     }
 
     public OriginalLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity) {
-        this.actionDateId = null;
-        this.account = loanScheduleEntity.getAccount();
-        this.customer = loanScheduleEntity.getCustomer();
-        this.installmentId = loanScheduleEntity.getInstallmentId();
-        this.actionDate = loanScheduleEntity.getActionDate();
-        if (paymentStatus != null) {
-            this.paymentStatus = loanScheduleEntity.getPaymentStatus();
+        super(loanScheduleEntity.getAccount(), loanScheduleEntity.getCustomer(),
+                loanScheduleEntity.getInstallmentId(), loanScheduleEntity.getActionDate(), loanScheduleEntity.getPaymentStatusAsEnum());
+        for (AccountFeesActionDetailEntity accountFeesActionDetail : loanScheduleEntity.getAccountFeesActionDetails()) {
+            this.addAccountFeesAction(new OriginalLoanFeeScheduleEntity(accountFeesActionDetail,this));
         }
         this.principal = loanScheduleEntity.getPrincipal();
-        this.interest = loanScheduleEntity.getInterest();
-        this.penalty = loanScheduleEntity.getPenalty();
-        this.extraInterest = loanScheduleEntity.getExtraInterest();
-        this.miscFee = loanScheduleEntity.getMiscFee();
-        this.miscPenalty = loanScheduleEntity.getMiscPenalty();
-        this.miscFeePaid = loanScheduleEntity.getMiscFeePaid();
-        this.miscPenaltyPaid = loanScheduleEntity.getMiscPenaltyPaid();
-        this.extraInterestPaid = loanScheduleEntity.getExtraInterestPaid();
-        this.penaltyPaid = loanScheduleEntity.getPenaltyPaid();
-        this.interestPaid = loanScheduleEntity.getInterestPaid();
+        this.interest= loanScheduleEntity.getInterest();
+        this.penalty= loanScheduleEntity.getPenalty();
+        this.extraInterest= loanScheduleEntity.getExtraInterest();
+        this.miscFee= loanScheduleEntity.getMiscFee();
+        this.miscPenalty= loanScheduleEntity.getMiscPenalty();
+        this.miscFeePaid= loanScheduleEntity.getMiscFeePaid();
+        this.miscPenaltyPaid= loanScheduleEntity.getMiscPenaltyPaid();
+        this.extraInterestPaid= loanScheduleEntity.getExtraInterestPaid();
+        this.penaltyPaid= loanScheduleEntity.getPenaltyPaid();
+        this.interestPaid= loanScheduleEntity.getInterestPaid();
         this.principalPaid = loanScheduleEntity.getPrincipalPaid();
         this.versionNo = loanScheduleEntity.getVersionNo();
         this.paymentAllocation = loanScheduleEntity.getPaymentAllocation();
-        for (AccountFeesActionDetailEntity accountFeesActionDetail : loanScheduleEntity.getAccountFeesActionDetails()) {
-            this.addAccountFeesAction(new OriginalLoanFeeScheduleEntity(accountFeesActionDetail, this));
-        }
-        reset(getCurrency());
     }
 
     private void reset(MifosCurrency currency) {
@@ -197,11 +173,11 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
         return penalty;
     }
 
-    public Collection<OriginalLoanFeeScheduleEntity> getAccountFeesActionDetails() {
+    public Set<AccountFeesActionDetailEntity> getAccountFeesActionDetails() {
         return accountFeesActionDetails;
     }
 
-    public void addAccountFeesAction(OriginalLoanFeeScheduleEntity accountFeesAction) {
+    public void addAccountFeesAction(AccountFeesActionDetailEntity accountFeesAction) {
         accountFeesActionDetails.add(accountFeesAction);
     }
 
@@ -249,8 +225,39 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
         return principal.subtract(principalPaid).add(getEffectiveInterestDue()).add(getPenaltyDue()).add(getMiscFeeDue());
     }
 
+    public Money getTotalDueWithoutPrincipal() {
+        return getInterestDue().add(getPenaltyDue()).add(getMiscFeeDue());
+    }
+
+    public Money getTotalPenalty() {
+        return penalty.add(miscPenalty);
+    }
+
     public Money getTotalDueWithFees() {
         return getTotalDue().add(getTotalFeesDue());
+    }
+
+    public Money getTotalScheduleAmountWithFees() {
+        return principal.add(
+                interest.add(penalty).add(getTotalScheduledFeeAmountWithMiscFee()).add(miscPenalty));
+    }
+
+    public OverDueAmounts getDueAmnts() {
+        OverDueAmounts overDueAmounts = new OverDueAmounts();
+        overDueAmounts.setFeesOverdue(getTotalFeesDue().add(getMiscFeeDue()));
+        overDueAmounts.setInterestOverdue(getInterestDue());
+        overDueAmounts.setPenaltyOverdue(getPenaltyDue());
+        overDueAmounts.setPrincipalOverDue(getPrincipalDue());
+        overDueAmounts.setTotalPrincipalPaid(getPrincipalPaid());
+        return overDueAmounts;
+    }
+
+    void updatePaymentDetails(Money principal, Money interest, Money penalty, Money miscPenalty, Money miscFee) {
+        principalPaid = principalPaid.add(principal);
+        interestPaid = interestPaid.add(interest);
+        penaltyPaid = penaltyPaid.add(penalty);
+        miscPenaltyPaid = miscPenaltyPaid.add(miscPenalty);
+        miscFeePaid = miscFeePaid.add(miscFee);
     }
 
     void removeAccountFeesActionDetailEntity(AccountFeesActionDetailEntity accountFeesActionDetailEntity) {
@@ -263,25 +270,107 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
 
     public Money getTotalFeesDue() {
         Money totalFees = new Money(getCurrency());
-        for (OriginalLoanFeeScheduleEntity obj : accountFeesActionDetails) {
+        for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
             totalFees = totalFees.add(obj.getFeeDue());
         }
         return totalFees;
     }
 
+    public Money getTotalFeeAmountPaidWithMiscFee() {
+        Money totalFees = new Money(getCurrency());
+        for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
+            totalFees = totalFees.add(obj.getFeeAmountPaid());
+        }
+        totalFees = totalFees.add(getMiscFeePaid());
+        return totalFees;
+    }
+
     public Money getTotalScheduledFeeAmountWithMiscFee() {
         Money totalFees = new Money(getCurrency());
-        for (OriginalLoanFeeScheduleEntity obj : accountFeesActionDetails) {
+        for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
             totalFees = totalFees.add(obj.getFeeAmount());
         }
         totalFees = totalFees.add(getMiscFee());
         return totalFees;
     }
 
+    public Money getTotalFeesDueWithMiscFee() {
+        return miscFee.add(getTotalFeesDue());
+    }
+
+    public Money getTotalFees() {
+        Money totalFees = new Money(getCurrency());
+        for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
+            totalFees = totalFees.add(obj.getFeeAmount());
+        }
+        return totalFees;
+    }
+
+    public Money getTotalFeesPaid() {
+        Money totalFees = new Money(getCurrency());
+        for (AccountFeesActionDetailEntity obj : accountFeesActionDetails) {
+            totalFees = totalFees.add(obj.getFeeAmountPaid());
+        }
+        return totalFees;
+    }
+
+    public Money getTotalFeeDueWithMiscFeeDue() {
+        return getMiscFeeDue().add(getTotalFeesDue());
+    }
+
     public Money getTotalPaymentDue() {
         return getTotalDue().add(getTotalFeesDue());
     }
 
+    public AccountFeesActionDetailEntity getAccountFeesAction(Short feeId) {
+        for (AccountFeesActionDetailEntity accountFeesAction : getAccountFeesActionDetails()) {
+            if (accountFeesAction.getFee().getFeeId().equals(feeId)) {
+                return accountFeesAction;
+            }
+        }
+        return null;
+    }
+
+    Money waivePenaltyCharges() {
+        Money chargeWaived = new Money(getCurrency());
+        chargeWaived = chargeWaived.add(getMiscPenaltyDue());
+        setMiscPenalty(getMiscPenaltyPaid());
+        return chargeWaived;
+    }
+
+    void applyMiscCharge(Short chargeType, Money charge) {
+        if (chargeType.equals(Short.valueOf(AccountConstants.MISC_FEES))) {
+            setMiscFee(getMiscFee().add(charge));
+        } else if (chargeType.equals(Short.valueOf(AccountConstants.MISC_PENALTY))) {
+            setMiscPenalty(getMiscPenalty().add(charge));
+        }
+    }
+
+    public boolean isPrincipalZero() {
+        return principal.isZero();
+    }
+
+    public boolean isFeeAlreadyAttatched(Short feeId) {
+        for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : this.getAccountFeesActionDetails()) {
+            if (accountFeesActionDetailEntity.getFee().getFeeId().equals(feeId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean isPaymentAppliedToAccountFees() {
+        Money feesPaid = new Money(getCurrency(),"0.0");
+        for (AccountFeesActionDetailEntity accountFeesActionDetail : getAccountFeesActionDetails()) {
+            feesPaid = feesPaid.add(accountFeesActionDetail.getFeeAmountPaid());
+        }
+        return feesPaid.isNonZero();
+    }
+
+    public boolean isPaymentApplied() {
+        return getPrincipalPaid().isNonZero() || getEffectiveInterestPaid().isNonZero() || getMiscFeePaid().isNonZero()
+                || getMiscPenaltyPaid().isNonZero() || isPaymentAppliedToAccountFees();
+    }
 
     public void setVersionNo(int versionNo) {
         this.versionNo = versionNo;
@@ -291,14 +380,26 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
         return versionNo;
     }
 
+    public List<AccountFeesActionDetailEntity> getAccountFeesActionDetailsSortedByFeeId() {
+        List<AccountFeesActionDetailEntity> sortedList = new ArrayList<AccountFeesActionDetailEntity>();
+        sortedList.addAll(this.getAccountFeesActionDetails());
+        Collections.sort(sortedList);
+        return sortedList;
+    }
+
+
     public RepaymentScheduleInstallment toDto(Locale userLocale) {
         return new RepaymentScheduleInstallment(this.installmentId,
                 this.actionDate, this.principal, this.interest,
                 this.getTotalFeesDue(), this.miscFee, this.miscPenalty, userLocale);
     }
 
+    public boolean isSameAs(AccountActionDateEntity accountActionDateEntity) {
+        return getInstallmentId().equals(accountActionDateEntity.getInstallmentId());
+    }
+
     public Money getExtraInterest() {
-        return extraInterest == null ? Money.zero(getCurrency()) : extraInterest;
+        return extraInterest==null? Money.zero(getCurrency()):extraInterest;
     }
 
     public void setExtraInterest(Money extraInterest) {
@@ -306,7 +407,7 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
     }
 
     public Money getExtraInterestPaid() {
-        return extraInterestPaid == null ? Money.zero(getCurrency()) : extraInterestPaid;
+        return extraInterestPaid == null? Money.zero(getCurrency()): extraInterestPaid;
     }
 
     public void setExtraInterestPaid(Money extraInterestPaid) {
@@ -317,8 +418,109 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
         return getExtraInterest().subtract(getExtraInterestPaid());
     }
 
+    public Money getEffectiveInterestPaid() {
+        return interestPaid.add(getExtraInterestPaid());
+    }
+
     public Money getEffectiveInterestDue() {
         return getInterestDue().add(getExtraInterestDue());
+    }
+
+    private Money payMiscPenalty(final Money amount, boolean updateMiscPenaltyPaid) {
+        Money payable = min(amount, getMiscPenaltyDue());
+        allocateMiscPenalty(payable, updateMiscPenaltyPaid);
+        return amount.subtract(payable);
+    }
+
+    private void allocateMiscPenalty(Money payable, boolean updateMiscPenaltyPaid) {
+        paymentAllocation.allocateForMiscPenalty(payable);
+        miscPenaltyPaid = updateMiscPenaltyPaid ? miscPenaltyPaid.add(payable) : payable;
+    }
+
+    private Money payPenalty(final Money amount, boolean updatePenaltyPaid) {
+        Money payable = min(amount, (getPenalty().subtract(getPenaltyPaid())));
+        allocatePenalty(payable, updatePenaltyPaid);
+        return amount.subtract(payable);
+    }
+
+    private void allocatePenalty(Money payable, boolean updatePenaltyPaid) {
+        paymentAllocation.allocateForPenalty(payable);
+        penaltyPaid = updatePenaltyPaid ? penaltyPaid.add(payable) : payable;
+    }
+
+    private Money payMiscFees(final Money amount, boolean updateMiscFeePaid) {
+        Money payable = min(amount, getMiscFeeDue());
+        allocateMiscFees(payable, updateMiscFeePaid);
+        return amount.subtract(payable);
+    }
+
+    private void allocateMiscFees(Money payable, boolean updateMiscFeePaid) {
+        paymentAllocation.allocateForMiscFees(payable);
+        miscFeePaid = updateMiscFeePaid ? miscFeePaid.add(payable) : payable;
+    }
+
+    private void allocateExtraInterest(Money payable) {
+        paymentAllocation.allocateForExtraInterest(payable);
+        extraInterestPaid = payable;
+    }
+
+    private Money payFees(final Money amount) {
+        Money balance = amount;
+        for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : getAccountFeesActionDetails()) {
+            balance = accountFeesActionDetailEntity.payFee(balance);
+            Integer feeId = accountFeesActionDetailEntity.getAccountFeesActionDetailId();
+            Money feeAllocated = accountFeesActionDetailEntity.getFeeAllocated();
+            paymentAllocation.allocateForFee(feeId, feeAllocated);
+        }
+        return balance;
+    }
+
+    private Money payInterest(final Money amount, boolean updateInterestPaid) {
+        Money payable = min(amount, getInterestDue());
+        allocateInterest(payable, updateInterestPaid);
+        return amount.subtract(payable);
+    }
+
+    private void allocateInterest(Money payable, boolean updateInterestPaid) {
+        paymentAllocation.allocateForInterest(payable);
+        interestPaid = updateInterestPaid ? interestPaid.add(payable) : payable;
+    }
+
+    private Money payPrincipal(final Money amount, boolean updatePrincipalPaid) {
+        Money payable = min(amount, getPrincipalDue());
+        allocatePrincipal(payable, updatePrincipalPaid);
+        return amount.subtract(payable);
+    }
+
+    private void allocatePrincipal(Money payable, boolean updatePrincipalPaid) {
+        paymentAllocation.allocateForPrincipal(payable);
+        principalPaid = updatePrincipalPaid ? principalPaid.add(payable) : payable;
+    }
+
+    public Money payComponents(Money paymentAmount, Date paymentDate) {
+        initPaymentAllocation(paymentAmount.getCurrency());
+        Money balanceAmount = paymentAmount;
+        balanceAmount = payMiscPenalty(balanceAmount, true);
+        balanceAmount = payPenalty(balanceAmount, true);
+        balanceAmount = payMiscFees(balanceAmount, true);
+        balanceAmount = payFees(balanceAmount);
+        balanceAmount = payInterest(balanceAmount, true);
+        balanceAmount = payPrincipal(balanceAmount, true);
+        recordPayment(paymentDate);
+        return balanceAmount;
+    }
+
+    public void payComponents(Installment installment, MifosCurrency currency, Date paymentDate) {
+        initPaymentAllocation(currency);
+        allocatePrincipal(new Money(currency, installment.getPrincipalPaid()), false);
+        allocateInterest(new Money(currency, installment.getInterestPaid()), false);
+        allocateExtraInterest(new Money(currency, installment.getExtraInterestPaid()));
+        payFees(new Money(currency, installment.getFeesPaid()));
+        allocateMiscFees(new Money(currency, installment.getMiscFeesPaid()), false);
+        allocatePenalty(new Money(currency, installment.getPenaltyPaid()), false);
+        allocateMiscPenalty(new Money(currency, installment.getMiscPenaltyPaid()), false);
+        setInterest(new Money(currency, installment.getApplicableInterest()));
+        recordPayment(paymentDate);
     }
 
     private void initPaymentAllocation(MifosCurrency currency) {
@@ -329,93 +531,81 @@ public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanSchedu
         return paymentAllocation;
     }
 
-    public Integer getActionDateId() {
-        return actionDateId;
+    void recordPayment(Date paymentDate) {
+        setPaymentDate(new java.sql.Date(paymentDate.getTime()));
+        setPaymentStatus(getTotalDueWithFees().isGreaterThanZero() ? PaymentStatus.UNPAID : PaymentStatus.PAID);
     }
 
-    public void setActionDateId(Integer actionDateId) {
-        this.actionDateId = actionDateId;
+    public double getPrincipalAsDouble() {
+        return principal.getAmount().doubleValue();
     }
 
-    public AccountBO getAccount() {
-        return account;
+    public double getInterestAsDouble() {
+        return interest.getAmount().doubleValue();
     }
 
-    public CustomerBO getCustomer() {
-        return customer;
+    public double getPenaltyAsDouble() {
+        return penalty.getAmount().doubleValue();
     }
 
-    public Short getInstallmentId() {
-        return installmentId;
+    public double getMiscFeeAsDouble() {
+        return miscFee.getAmount().doubleValue();
     }
 
-    public Date getActionDate() {
-        return actionDate;
+    public double getMiscPenaltyAsDouble() {
+        return miscPenalty.getAmount().doubleValue();
     }
 
-    public void setActionDate(Date actionDate) {
-        this.actionDate = actionDate;
+    public double getTotalFeesAsDouble() {
+        return getTotalFees().getAmount().doubleValue();
     }
 
-    public Date getPaymentDate() {
-        return paymentDate;
+    public double getPrincipalPaidAsDouble() {
+        return principalPaid.getAmount().doubleValue();
     }
 
-    public void setPaymentDate(Date paymentDate) {
-        this.paymentDate = paymentDate;
+    public double getInterestPaidAsDouble() {
+        return interestPaid.getAmount().doubleValue();
     }
 
-    public Short getPaymentStatus() {
-        return paymentStatus;
+    public double getPenaltyPaidAsDouble() {
+        return penaltyPaid.getAmount().doubleValue();
     }
 
-    public PaymentStatus getPaymentStatusAsEnum() {
-        return PaymentStatus.fromInt(paymentStatus);
+    public double getMiscFeePaidAsDouble() {
+        return miscFeePaid.getAmount().doubleValue();
     }
 
-    public void setPaymentStatus(PaymentStatus status) {
-        this.paymentStatus = status.getValue();
+    public double getMiscPenaltyPaidAsDouble() {
+        return miscPenaltyPaid.getAmount().doubleValue();
     }
 
-    public void setPaymentStatus(Short paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public double getTotalFeesPaidAsDouble() {
+        return getTotalFeesPaid().getAmount().doubleValue();
     }
 
-    public int compareDate(java.util.Date date) {
-        return this.getActionDate().compareTo(date);
+    public double getPrincipalDueAsDouble() {
+        return getPrincipalDue().getAmount().doubleValue();
     }
 
-    public boolean isPaid() {
-        return this.getPaymentStatusAsEnum() == PaymentStatus.PAID;
+    public double getInterestDueAsDouble() {
+        return getInterestDue().getAmount().doubleValue();
     }
 
-    public int compareTo(OriginalLoanScheduleEntity obj) {
-        return this.getInstallmentId().compareTo(obj.getInstallmentId());
+    public double getPenaltyDueAsDouble() {
+        return getPenaltyDue().getAmount().doubleValue();
     }
 
-    public MifosCurrency getCurrency() {
-        return account.getCurrency();
+    public double getMiscFeesDueAsDouble() {
+        return getMiscFeeDue().getAmount().doubleValue();
     }
 
-    public boolean isDueToday() {
-        return DateUtils.getDateWithoutTimeStamp(this.getActionDate().getTime()).equals(
-                DateUtils.getCurrentDateWithoutTimeStamp());
+    public double getMiscPenaltyDueAsDouble() {
+        return getMiscPenaltyDue().getAmount().doubleValue();
     }
 
-    public void setAccount(AccountBO account) {
-        this.account = account;
-    }
-
-    public boolean isBeforeOrOn(LocalDate date) {
-        return new LocalDate(this.actionDate).isBefore(date) || new LocalDate(this.actionDate).isEqual(date);
-    }
-
-    public boolean isNotPaid() {
-        return !this.isPaid();
-    }
-
-    public void setInstallmentId(Short installmentId) {
-        this.installmentId = installmentId;
+    public double getTotalFeesDueAsDouble() {
+        return getTotalFeesDue().getAmount().doubleValue();
     }
 
 }
