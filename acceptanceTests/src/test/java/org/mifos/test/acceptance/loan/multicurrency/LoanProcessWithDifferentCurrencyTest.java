@@ -47,7 +47,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = { "loanproduct", "acceptance", "smoke" })
+@Test(sequential = true, groups = { "loanproduct", "acceptance"})
 public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
     private AppLauncher appLauncher;
@@ -90,7 +90,6 @@ public class LoanProcessWithDifferentCurrencyTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     // one of the dependent methods throws Exception
-    @Test(enabled=true, groups={"smoke"})
     public void createLoanProductThenAccount() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, //
                 "LoanProcessWithDifferentCurrencyTest_001_dbunit.xml", dataSource, selenium);

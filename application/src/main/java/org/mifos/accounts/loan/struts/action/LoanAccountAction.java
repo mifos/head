@@ -1188,6 +1188,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
             for (LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
                 LoanBO newlyCreatedLoan = this.loanDao.findByGlobalAccountNum(loanCreationResultDto.getGlobalAccountNum());
+                newlyCreatedLoan.updateDetails(userContext);
                 createIndividualLoanAccount(loanActionForm, newlyCreatedLoan, isRepaymentIndepOfMeetingEnabled,
                                             loanAccountDetail, isRedoOperation(perspective));
             }
