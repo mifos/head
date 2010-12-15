@@ -424,7 +424,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
         for (LoanRepaymentScheduleInstallmentDto installment : loanRepayments) {
-            RepaymentScheduleInstallment repaymentScheduleInstallment = RepaymentScheduleInstallment.createForScheduleCopy(installment.getInstallmentNumber(), installment.getPrincipal(), installment.getInterest(), installment.getDueDate(), userContext.getPreferredLocale());
+            RepaymentScheduleInstallment repaymentScheduleInstallment = RepaymentScheduleInstallment.createForScheduleCopy(installment.getInstallmentNumber(), installment.getPrincipal(), installment.getInterest(), installment.getDueDate(), userContext.getPreferredLocale(), loan.getCurrency());
             installments.add(repaymentScheduleInstallment);
         }
 

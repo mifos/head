@@ -57,11 +57,11 @@ public class RepaymentScheduleInstallment implements Serializable {
 
     private String dateFormat;
 
-    public static RepaymentScheduleInstallment createForScheduleCopy(Integer installmentNumber, String principal, String interest, LocalDate dueDate, Locale locale) {
+    public static RepaymentScheduleInstallment createForScheduleCopy(Integer installmentNumber, String principal, String interest, LocalDate dueDate, Locale locale, MifosCurrency currency) {
         Money feess = null;
         Money miscFeess = null;
         Money miscPenaltys = null;
-        return new RepaymentScheduleInstallment(installmentNumber, new java.sql.Date(dueDate.toDateMidnight().toDate().getTime()), new Money(Money.getDefaultCurrency(), principal), new Money(Money.getDefaultCurrency(), interest), feess, miscFeess, miscPenaltys, locale);
+        return new RepaymentScheduleInstallment(installmentNumber, new java.sql.Date(dueDate.toDateMidnight().toDate().getTime()), new Money(currency, principal), new Money(currency, interest), feess, miscFeess, miscPenaltys, locale);
     }
 
     public RepaymentScheduleInstallment(int installment, Date dueDateValue, Money principal, Money interest, Money fees,
