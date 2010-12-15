@@ -52,7 +52,6 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.CenterInformationDto;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -126,7 +125,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.load_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.LOAN_OFFICER_LIST, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
+//        Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
 
         CenterCustActionForm actionForm = (CenterCustActionForm) request.getSession().getAttribute(
                 "centerCustActionForm");
@@ -196,47 +195,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
-    public void testFailurePreview_WithoutMandatoryCustomField_IfAny() throws Exception {
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("officeId", "3");
-        actionPerform();
-
-        List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
-        boolean isCustomFieldMandatory = false;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            if (customFieldDef.isMandatory()) {
-                isCustomFieldMandatory = true;
-                break;
-            }
-        }
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "preview");
-        addRequestParameter("officeId", "3");
-        addRequestParameter("displayName", "center");
-        addRequestParameter("loanOfficerId", "1");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        int i = 0;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "");
-            i++;
-        }
-        actionPerform();
-
-        if (isCustomFieldMandatory) {
-            Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        } else {
-            Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CustomFieldDto> retrieveCustomFieldsFromSession() throws PageExpiredException {
-        List<CustomFieldDto> customFieldDefs = (List<CustomFieldDto>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        return customFieldDefs;
-    }
-
     public void testFailurePreview_WithDuplicateFee() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
         setRequestPathInfo("/centerCustAction.do");
@@ -301,7 +259,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
 
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, new MeetingBO(RecurrenceType.MONTHLY, Short
                 .valueOf("2"), new Date(), MeetingType.CUSTOMER_MEETING), request);
-        List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
         List<ApplicableAccountFeeDto> feeList = retrieveAdditionalFeesFromSession();
         ApplicableAccountFeeDto fee = feeList.get(0);
         setRequestPathInfo("/centerCustAction.do");
@@ -309,12 +266,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("displayName", "center");
         addRequestParameter("loanOfficerId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        int i = 0;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "11");
-            i++;
-        }
+
         addRequestParameter("selectedFee[0].feeId", fee.getFeeId().toString());
         addRequestParameter("selectedFee[0].amount", fee.getAmount());
         actionPerform();
@@ -354,7 +306,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_MEETING, weeklyMeeting, request);
 
-        List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
         List<ApplicableAccountFeeDto> feeList = retrieveAdditionalFeesFromSession();
 
         ApplicableAccountFeeDto fee = feeList.get(0);
@@ -363,12 +314,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("displayName", "center");
         addRequestParameter("loanOfficerId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        int i = 0;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "11");
-            i++;
-        }
+
         addRequestParameter("selectedFee[0].feeId", fee.getFeeId().toString());
         addRequestParameter("selectedFee[0].amount", fee.getAmount());
         actionPerform();
@@ -425,41 +371,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
-    public void testFailureEditPreviewWith_MandatoryCustomFieldNull() throws Exception {
-        createAndSetCenterInSession();
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "manage");
-        addRequestParameter("officeId", "3");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-
-        List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
-        boolean isCustomFieldMandatory = false;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            if (customFieldDef.isMandatory()) {
-                isCustomFieldMandatory = true;
-                break;
-            }
-        }
-
-        setRequestPathInfo("/centerCustAction.do");
-        addRequestParameter("method", "editPreview");
-        addRequestParameter("loanOfficerId", "");
-        int i = 0;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "");
-            i++;
-        }
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        actionPerform();
-        if (isCustomFieldMandatory) {
-            Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        } else {
-            Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        }
-        verifyInputForward();
-    }
 
     public void testSuccessfulEditPreview() throws Exception {
         createAndSetCenterInSession();
@@ -469,7 +380,6 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
-        List<CustomFieldDto> customFieldDefs = retrieveCustomFieldsFromSession();
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "editPreview");
         addRequestParameter("displayName", "center");
@@ -477,12 +387,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("mfiJoiningDateDD", "01");
         addRequestParameter("mfiJoiningDateMM", "01");
         addRequestParameter("mfiJoiningDateYY", "01");
-        int i = 0;
-        for (CustomFieldDto customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "11");
-            i++;
-        }
+
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
 
