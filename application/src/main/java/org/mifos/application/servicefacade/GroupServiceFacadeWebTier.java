@@ -205,8 +205,6 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         try {
             List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
 
-//            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
-
             PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
 
             Short loanOfficerId;

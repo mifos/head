@@ -22,7 +22,6 @@ package org.mifos.customers;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import static org.mifos.domain.builders.PersonnelBuilder.anyLoanOfficer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
@@ -31,21 +30,14 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -185,38 +177,5 @@ public class CenterCreationTest {
         // verification
         verify(hibernateTransaction).rollbackTransaction();
         verify(hibernateTransaction).closeSession();
-    }
-
-    @Test
-    public void cannotCreateCenterWithMandatoryAdditionalFieldsNotPopulated() {
-
-        // setup
-        DateTime today = new DateTime();
-        MeetingBuilder aWeeklyMeeting = new MeetingBuilder().customerMeeting().weekly();
-        CenterBO centerWithNoCustomFields = new CenterBuilder().withName("center1").withLoanOfficer(anyLoanOfficer()).with(aWeeklyMeeting).withMfiJoiningDate(today).build();
-
-        List<AccountFeesEntity> noAccountFees = new ArrayList<AccountFeesEntity>();
-
-        LookUpEntity name = null;
-        Short fieldIndex = Short.valueOf("1");
-        CustomFieldType fieldType = CustomFieldType.ALPHA_NUMERIC;
-        EntityType entityType = EntityType.CENTER;
-        String defaultValue = "defalutValue";
-        YesNoFlag mandatory = YesNoFlag.YES;
-
-        CustomFieldDefinitionEntity mandatoryDefinition = new CustomFieldDefinitionEntity(name, fieldIndex, fieldType, entityType, defaultValue, mandatory);
-        List<CustomFieldDefinitionEntity> mandatoryCustomFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
-        mandatoryCustomFieldDefinitions.add(mandatoryDefinition);
-
-        // stub
-        when(customerDao.retrieveCustomFieldEntitiesForCenter()).thenReturn(mandatoryCustomFieldDefinitions);
-
-        // exercise test
-        try {
-            customerService.createCenter(centerWithNoCustomFields, aWeeklyMeeting.build(), noAccountFees);
-            fail("cannotCreateCenterWithMandatoryAdditionalFieldsNotEntered");
-        } catch (BusinessRuleException e) {
-            assertThat(e.getMessageKey(), is(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-        }
     }
 }

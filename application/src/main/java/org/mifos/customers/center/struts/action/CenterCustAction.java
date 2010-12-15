@@ -134,10 +134,10 @@ public class CenterCustAction extends CustAction {
 
         CenterFormCreationDto centerFormCreation = this.centerServiceFacade.retrieveCenterFormCreationData(centerCreationDto);
 
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerFormCreation.getCustomFieldViews(), request);
+//        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<Serializable>(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerFormCreation.getActiveLoanOfficersForBranch(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, centerFormCreation.getAdditionalFees(), request);
-        actionForm.setCustomFields(centerFormCreation.getCustomFieldViews());
+//        actionForm.setCustomFields(centerFormCreation.getCustomFieldViews());
         actionForm.setDefaultFees(centerFormCreation.getDefaultFees());
 
         DateTime today = new DateTime().toDateMidnight().toDateTime();

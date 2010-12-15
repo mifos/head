@@ -22,13 +22,10 @@ package org.mifos.application.master.business.service;
 
 import java.util.List;
 
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.CustomerDto;
@@ -107,19 +104,6 @@ public class MasterDataService implements BusinessService {
             throw new ServiceException(e);
         }
 
-    }
-
-    /**
-     * @deprecated - use {@link CustomerDao#retrieveCustomFieldsForCenter(UserContext)}
-     */
-    @Deprecated
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(EntityType entityType)
-            throws ServiceException {
-        try {
-            return masterPersistence.retrieveCustomFieldsDefinition(entityType);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
     }
 
     public String retrieveMasterEntities(Integer entityId, Short localeId) throws ServiceException {

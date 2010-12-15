@@ -24,8 +24,6 @@ import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
 import static org.mifos.framework.util.helpers.MoneyUtils.zero;
 
 import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,8 +44,6 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
@@ -82,7 +78,6 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ChapterNum;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -831,30 +826,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
         return !isSameBranch(otherOffice);
     }
 
-    public void updateCustomFields(final List<CustomFieldDto> customFields) throws CustomerException {
-
-        try {
-            if (customFields != null) {
-                for (CustomFieldDto fieldView : customFields) {
-                    if (CustomFieldType.fromInt(fieldView.getFieldType()).equals(CustomFieldType.DATE)
-                            && StringUtils.isNotBlank(fieldView.getFieldValue())) {
-                        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, getUserContext().getPreferredLocale());
-                        String databaseFormat = DateUtils.convertToCurrentDateFormat(format.toPattern());
-                        fieldView.setFieldValue(DateUtils.convertUserToDbFmt(fieldView.getFieldValue(), databaseFormat));
-                    }
-
-                    for (CustomerCustomFieldEntity fieldEntity : getCustomFields()) {
-                        if (fieldView.getFieldId().equals(fieldEntity.getFieldId())) {
-                            fieldEntity.setFieldValue(fieldView.getFieldValue());
-                        }
-                    }
-                }
-            }
-        } catch (InvalidDateException e) {
-            throw new CustomerException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
-        }
-    }
-
     public void checkIfClientIsATitleHolder() throws CustomerException {
         if (getParentCustomer() != null) {
             for (CustomerPositionEntity position : getParentCustomer().getCustomerPositions()) {
@@ -1284,46 +1255,6 @@ public abstract class CustomerBO extends AbstractBusinessObject {
 
     public boolean isNameDifferent(final String nameToCheck) {
         return !this.displayName.equalsIgnoreCase(nameToCheck);
-    }
-
-    public void validateMandatoryCustomFields(List<CustomFieldDefinitionEntity> allCustomFieldsApplicable)
-            throws CustomerException {
-
-        for (CustomFieldDefinitionEntity customFieldDefinition : allCustomFieldsApplicable) {
-
-            if (customFieldDefinition.isMandatory()) {
-
-                CustomerCustomFieldEntity centerCustomField = findMandatoryCustomFieldOrFail(this.getCustomFields(),
-                        customFieldDefinition);
-
-                if (StringUtils.isBlank(centerCustomField.getFieldValue())) {
-                    throw new CustomerException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
-                }
-
-                if (CustomFieldType.DATE.equals(customFieldDefinition.getFieldTypeAsEnum())) {
-                    try {
-                        // is set as database format coming in...
-                        String userFormattedDate = DateUtils.convertDbToUserFmt(centerCustomField.getFieldValue(), "dd/MM/yyyy");
-                        DateUtils.getDate(userFormattedDate);
-                    } catch (Exception e) {
-                        throw new CustomerException(CustomerConstants.ERRORS_CUSTOM_DATE_FIELD, e);
-                    }
-                }
-            }
-        }
-    }
-
-    private CustomerCustomFieldEntity findMandatoryCustomFieldOrFail(Set<CustomerCustomFieldEntity> customFields,
-            CustomFieldDefinitionEntity customFieldDefinition) throws CustomerException {
-
-        for (CustomerCustomFieldEntity centerCustomField : customFields) {
-
-            if (customFieldDefinition.getFieldId().equals(centerCustomField.getFieldId())) {
-                return centerCustomField;
-            }
-        }
-
-        throw new CustomerException(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE);
     }
 
     public void updateCenterDetails(UserContext userContext, CenterUpdate centerUpdate) throws CustomerException {
