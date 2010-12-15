@@ -7,7 +7,7 @@
 <hibernate-mapping>
 
 	<class name="org.mifos.accounts.loan.business.OriginalLoanScheduleEntity" table="original_loan_schedule">
-		<id name="actionDateId" column="id" type="integer" unsaved-value="-1" access="field">
+        <id name="actionDateId" column="id" type="integer" unsaved-value="-1" access="field">
 			<generator class="native" />
 		</id>
 		<version name="versionNo" column="version_no" type="integer" unsaved-value="null" />

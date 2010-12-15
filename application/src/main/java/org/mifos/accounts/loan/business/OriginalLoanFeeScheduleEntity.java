@@ -26,48 +26,65 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.framework.util.helpers.Money;
 
-public class OriginalLoanFeeScheduleEntity extends AccountFeesActionDetailEntity {
+import java.io.Serializable;
 
+public class OriginalLoanFeeScheduleEntity implements Comparable<OriginalLoanFeeScheduleEntity>, Serializable {
+    private Integer accountFeesActionDetailId;
+    private OriginalLoanScheduleEntity accountActionDate;
+
+    private Short installmentId;
+
+    private FeeBO fee;
+
+    private AccountFeesEntity accountFee;
+
+    private Money feeAmount;
+
+    private Money feeAmountPaid;
+
+    private Money feeAllocated;
     private int versionNo;
 
-    protected OriginalLoanFeeScheduleEntity() {
-        super(null, null, null, null);
+    public OriginalLoanFeeScheduleEntity() {
     }
 
-    public OriginalLoanFeeScheduleEntity(AccountActionDateEntity accountActionDate, FeeBO fee, AccountFeesEntity accountFee,
-            Money feeAmount) {
-        super(accountActionDate, fee, accountFee, feeAmount);
+    //Introduced to aid testing
+    public OriginalLoanFeeScheduleEntity(OriginalLoanScheduleEntity originalLoanScheduleEntity, FeeBO fee, AccountFeesEntity accountFee, Money feeAmount, int versionNo) {
+        this.accountActionDate = originalLoanScheduleEntity;
+        if (accountActionDate != null) {
+            this.installmentId = accountActionDate.getInstallmentId();
+            this.feeAmountPaid = new Money(accountActionDate.getAccount().getCurrency());
+        }
+        else {
+            this.installmentId = null;
+        }
+        this.fee = fee;
+        this.accountFee = accountFee;
+        this.feeAmount = feeAmount;
+        this.versionNo = versionNo;
     }
 
     public OriginalLoanFeeScheduleEntity(AccountFeesActionDetailEntity accountFeesActionDetail, OriginalLoanScheduleEntity originalLoanScheduleEntity) {
-        super(originalLoanScheduleEntity,accountFeesActionDetail.getFee(),
-                accountFeesActionDetail.getAccountFee(), accountFeesActionDetail.getFeeAmount());
+        this.accountActionDate = originalLoanScheduleEntity;
+        if (accountActionDate != null) {
+            this.installmentId = accountActionDate.getInstallmentId();
+            this.feeAmountPaid = new Money(accountActionDate.getAccount().getCurrency());
+        }
+        else {
+            this.installmentId = null;
+        }
+        this.fee = accountFeesActionDetail.getFee();
+        this.accountFee = accountFeesActionDetail.getAccountFee();
+        this.feeAmount = accountFeesActionDetail.getFeeAmount();
         this.versionNo = ((LoanFeeScheduleEntity)accountFeesActionDetail).getVersionNo();
     }
 
-    @Override
     protected void setFeeAmount(Money feeAmount) {
-        super.setFeeAmount(feeAmount);
+        this.feeAmount = feeAmount;
     }
 
-    @Override
     protected void setFeeAmountPaid(Money feeAmountPaid) {
-        super.setFeeAmountPaid(feeAmountPaid);
-    }
-
-    @Override
-    protected void makePayment(Money feePaid) {
-        super.makePayment(feePaid);
-    }
-
-    @Override
-    protected void makeRepaymentEnteries(String payFullOrPartial) {
-        super.makeRepaymentEnteries(payFullOrPartial);
-    }
-
-    @Override
-    protected Money waiveCharges() {
-        return super.waiveCharges();
+        this.feeAmountPaid = feeAmountPaid;
     }
 
     public void setVersionNo(int versionNo) {
@@ -78,4 +95,55 @@ public class OriginalLoanFeeScheduleEntity extends AccountFeesActionDetailEntity
         return versionNo;
     }
 
+    public OriginalLoanScheduleEntity getAccountActionDate() {
+        return this.accountActionDate;
+    }
+
+    public AccountFeesEntity getAccountFee() {
+        return this.accountFee;
+    }
+
+    public Integer getAccountFeesActionDetailId() {
+        return this.accountFeesActionDetailId;
+    }
+
+    public FeeBO getFee() {
+        return this.fee;
+    }
+
+    public Money getFeeAmount() {
+        return this.feeAmount;
+    }
+
+    public Money getFeeAmountPaid() {
+        return this.feeAmountPaid == null ? new Money(this.accountFee.getAccount().getCurrency()) : this.feeAmountPaid;
+    }
+
+    public Short getInstallmentId() {
+        return this.installmentId;
+    }
+
+    public int compareTo(OriginalLoanFeeScheduleEntity obj) {
+        return this.getFee().getFeeId().compareTo(obj.getFee().getFeeId());
+    }
+
+    public Money getFeeAllocated() {
+        return this.feeAllocated;
+    }
+
+    public void setAccountFeesActionDetailId(Integer accountFeesActionDetailId) {
+        this.accountFeesActionDetailId = accountFeesActionDetailId;
+    }
+
+    public void setInstallmentId(Short installmentId) {
+        this.installmentId = installmentId;
+    }
+
+    public Integer getAccountFeeId() {
+        return this.accountFee.getAccountFeeId();
+    }
+
+    public Money getFeeDue() {
+        return this.feeAmount.subtract(getFeeAmountPaid());
+    }
 }
