@@ -597,7 +597,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         if (loanOffering != null && loanOffering.isCashFlowCheckEnabled()) {
             InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
-                    loanForm.getInstallments(), loanForm.getCashFlowForm().getMonthlyCashFlows());
+                    loanForm.getInstallments(),
+                    loanForm.getCashFlowForm().getMonthlyCashFlows(),
+                    loanForm.getLoanAmountAsBigDecimal(),
+                    loanForm.getDisbursementDateValue(userContext.getPreferredLocale()));
 
             loanForm.setCashflowDataHtmlBeans(cashflowUtility.mapToCashflowDataHtmlBeans());
             cashflowBound = true;

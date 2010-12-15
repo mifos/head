@@ -283,9 +283,10 @@ public class LoanServiceFacadeWebTierTest {
     @Test
     public void shouldValidateForRepaymentCapacity() {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
+        BigDecimal loanAmount = new BigDecimal(1000);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, loanAmount, 10d);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
-        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
+        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55).add(loanAmount));
 
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).withTotalValue("10").build();
         RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).withTotalValue("20").build();

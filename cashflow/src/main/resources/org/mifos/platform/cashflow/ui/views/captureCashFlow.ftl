@@ -50,6 +50,9 @@
 	                    <td width="45%">[@spring.formInput "cashFlow.monthlyCashFlows[${monthlyCashFlow_index}].notes", 'maxlength="300" style="width:100%;"' /]</td>
 	                </tr>
 	                [/#list]
+	                <tr>
+	                    <td colspan="4">[@spring.message "cashFlowForm.message"/]</td>
+	                </tr>
 	            </tbody>
 	          </table>
               [#if captureCapitalLiabilityInfo]
