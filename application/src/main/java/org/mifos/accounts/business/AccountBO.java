@@ -583,14 +583,8 @@ public class AccountBO extends AbstractBusinessObject {
 
     public final void adjustPmnt(final String adjustmentComment) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
-            logger.debug(
-                    "Adjustment is possible hence attempting to adjust.");
+            logger.debug("Adjustment is possible hence attempting to adjust.");
             adjustPayment(findMostRecentNonzeroPaymentByPaymentDate(), getLoggedInUser(), adjustmentComment);
-            try {
-                getAccountPersistence().createOrUpdate(this);
-            } catch (PersistenceException e) {
-                throw new AccountException(AccountExceptionConstants.CANNOTADJUST, e);
-            }
         } else {
             throw new AccountException(AccountExceptionConstants.CANNOTADJUST);
         }

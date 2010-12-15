@@ -26,38 +26,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.struts.actionforms.CustomerApplyAdjustmentActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 public class CustomerApplyAdjustmentAction extends BaseAction {
-    private CustomerBusinessService customerBusinessService;
 
-    public CustomerApplyAdjustmentAction() throws ServiceException {
-        customerBusinessService = (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.Customer);
-    }
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return customerBusinessService;
+    public CustomerApplyAdjustmentAction() {
     }
 
     public static ActionSecurity getSecurity() {
@@ -71,13 +56,14 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm) form;
         resetActionFormFields(applyAdjustmentActionForm);
-        CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm
-                .getGlobalCustNum());
+        String globalCustNum = applyAdjustmentActionForm.getGlobalCustNum();
+        CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+
         request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
         if (null == customerBO.getCustomerAccount().findMostRecentNonzeroPaymentByPaymentDate()) {
             request.setAttribute("isDisabled", "true");
@@ -88,13 +74,14 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
         CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm) form;
-        CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm
-                .getGlobalCustNum());
+        String globalCustNum = applyAdjustmentActionForm.getGlobalCustNum();
+        CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
+
         if (null == customerBO.getCustomerAccount().findMostRecentNonzeroPaymentByPaymentDate()) {
             request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_LOAD_ADJUSTMENT);
             request.setAttribute("isDisabled", "true");
@@ -106,35 +93,25 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward applyAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String forward = null;
         request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_APPLY_ADJUSTMENT);
         CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm) form;
-        CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        CustomerBO customerBO = ((CustomerBusinessService) getService()).findBySystemId(applyAdjustmentActionForm
-                .getGlobalCustNum());
-        checkVersionMismatch(customerBOInSession.getVersionNo(), customerBO.getVersionNo());
+        String globalCustNum = applyAdjustmentActionForm.getGlobalCustNum();
+        CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
+
         SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
         if (null == customerBO.getCustomerAccount().findMostRecentNonzeroPaymentByPaymentDate()) {
             request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
             throw new ApplicationException(AccountExceptionConstants.ZEROAMNTADJUSTMENT);
         }
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        customerBO.setUserContext(uc);
-        customerBO.getCustomerAccount().setUserContext(uc);
-        if (customerBO.getPersonnel() != null) {
-            getAccountBizService().checkPermissionForAdjustment(AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel(),
-                    uc, customerBO.getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
-        } else {
-            getAccountBizService().checkPermissionForAdjustment(AccountTypes.CUSTOMER_ACCOUNT, customerBO.getLevel(),
-                    uc, customerBO.getOffice().getOfficeId(), uc.getId());
-        }
+
         try {
-            customerBO.adjustPmnt(applyAdjustmentActionForm.getAdjustmentNote());
-        } catch (ApplicationException ae) {
+            this.centerServiceFacade.revertLastChargesPayment(globalCustNum, applyAdjustmentActionForm.getAdjustmentNote());
+        } catch (BusinessRuleException e) {
             request.setAttribute(CustomerConstants.METHOD, CustomerConstants.METHOD_PREVIEW_ADJUSTMENT);
-            throw ae;
+            throw e;
         }
 
         String inputPage = applyAdjustmentActionForm.getInput();
@@ -152,11 +129,10 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancelAdjustment(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancelAdjustment(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String forward = null;
         CustomerApplyAdjustmentActionForm applyAdjustmentActionForm = (CustomerApplyAdjustmentActionForm) form;
-        resetActionFormFields(applyAdjustmentActionForm);
         String inputPage = applyAdjustmentActionForm.getInput();
         resetActionFormFields(applyAdjustmentActionForm);
         if (inputPage != null) {
@@ -171,17 +147,7 @@ public class CustomerApplyAdjustmentAction extends BaseAction {
         return mapping.findForward(forward);
     }
 
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-
-    }
-
     private void resetActionFormFields(CustomerApplyAdjustmentActionForm applyAdjustmentActionForm) {
         applyAdjustmentActionForm.setAdjustmentNote(null);
-    }
-
-    private AccountBusinessService getAccountBizService() {
-        return new AccountBusinessService();
     }
 }

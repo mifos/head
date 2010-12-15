@@ -191,22 +191,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         customerAccountBO = client.getCustomerAccount();
         Assert.assertFalse("Last payment was null hence adjustment is not possible", customerAccountBO
                 .isAdjustPossibleOnLastTrxn());
-
-    }
-
-    @Test
-    public void testIsAdjustPossibleOnLastTrxn_LastPaymentWasAdjustment() throws Exception {
-        userContext = TestUtils.makeUser();
-        createInitialObjects();
-        applyPayment();
-        customerAccountBO = TestObjectFactory.getObject(CustomerAccountBO.class, customerAccountBO.getAccountId());
-        client = customerAccountBO.getCustomer();
-        customerAccountBO.setUserContext(userContext);
-        customerAccountBO.adjustPmnt("payment adjusted");
-        TestObjectFactory.updateObject(customerAccountBO);
-        Assert.assertFalse("Last payment was adjustment hence adjustment is not possible", customerAccountBO
-                .isAdjustPossibleOnLastTrxn());
-
     }
 
     @Test
@@ -230,34 +214,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         for (CustomerActivityEntity customerActivityEntity : customerAccountBO.getCustomerActivitDetails()) {
             Assert.assertEquals("Amnt Adjusted", customerActivityEntity.getDescription());
         }
-
-    }
-
-    @Test
-    public void testAdjustPmnt() throws Exception {
-        userContext = TestUtils.makeUser();
-        createInitialObjects();
-        applyPayment();
-        customerAccountBO = TestObjectFactory.getObject(CustomerAccountBO.class, customerAccountBO.getAccountId());
-        client = customerAccountBO.getCustomer();
-        customerAccountBO.setUserContext(userContext);
-        customerAccountBO.adjustPmnt("payment adjusted");
-        TestObjectFactory.updateObject(customerAccountBO);
-        int countFinTrxns = 0;
-        for (AccountTrxnEntity accountTrxnEntity : customerAccountBO.findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
-            countFinTrxns += accountTrxnEntity.getFinancialTransactions().size();
-
-        }
-
-        Assert.assertEquals(countFinTrxns, 6);
-
-        CustomerTrxnDetailEntity custTrxn = null;
-        for (AccountTrxnEntity accTrxn : customerAccountBO.findMostRecentPaymentByPaymentDate().getAccountTrxns()) {
-            custTrxn = (CustomerTrxnDetailEntity) accTrxn;
-            break;
-        }
-        AccountActionDateEntity installment = customerAccountBO.getAccountActionDate(custTrxn.getInstallmentId());
-        Assert.assertFalse("The installment adjusted should now be marked unpaid(due).", installment.isPaid());
 
     }
 

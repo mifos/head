@@ -39,6 +39,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
@@ -111,6 +112,7 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
@@ -803,6 +805,42 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             throw new BusinessRuleException(e.getKey(), e);
         } finally {
             this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void revertLastChargesPayment(String globalCustNum, String adjustmentNote) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
+        customerBO.updateDetails(userContext);
+
+        if (customerBO.getCustomerAccount().findMostRecentNonzeroPaymentByPaymentDate() != null) {
+            customerBO.getCustomerAccount().updateDetails(userContext);
+
+            try {
+                if (customerBO.getPersonnel() != null) {
+                    new AccountBusinessService().checkPermissionForAdjustment(AccountTypes.CUSTOMER_ACCOUNT, customerBO
+                            .getLevel(), userContext, customerBO.getOffice().getOfficeId(), customerBO.getPersonnel()
+                            .getPersonnelId());
+                } else {
+                    new AccountBusinessService().checkPermissionForAdjustment(AccountTypes.CUSTOMER_ACCOUNT, customerBO
+                            .getLevel(), userContext, customerBO.getOffice().getOfficeId(), userContext.getId());
+                }
+
+                this.transactionHelper.startTransaction();
+                customerBO.adjustPmnt(adjustmentNote);
+                this.customerDao.save(customerBO);
+                this.transactionHelper.commitTransaction();
+            } catch (SystemException e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new MifosRuntimeException(e);
+            } catch (ApplicationException e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new BusinessRuleException(e.getKey(), e);
+            }
         }
     }
 }

@@ -97,4 +97,7 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void removeAccountFee(Integer accountId, Short feeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void revertLastChargesPayment(String globalCustNum, String adjustmentNote);
 }
