@@ -401,7 +401,7 @@ public class LoanPersistence extends Persistence {
     public void saveOriginalSchedule(Collection<OriginalLoanScheduleEntity> originalLoanScheduleEntities) throws PersistenceException {
             try {
             Session session = StaticHibernateUtil.getSessionTL();
-            for (AccountActionDateEntity entity : originalLoanScheduleEntities) {
+            for (OriginalLoanScheduleEntity entity : originalLoanScheduleEntities) {
                 session.saveOrUpdate(entity);
             }
         } catch (HibernateException he) {

@@ -26,9 +26,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanBOTestUtils;
-import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
+import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.fees.business.FeeBO;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
+import org.mifos.accounts.loan.business.*;
 import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -220,7 +225,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private AccountBO getLoanAccount(final String shortName, final CustomerBO customer, final MeetingBO meeting,
-            final AccountState state) {
+                                     final AccountState state) {
         Date startDate = new Date(System.currentTimeMillis());
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering("Loan123", shortName, ApplicableTo.GROUPS,
                 startDate, PrdStatus.LOAN_ACTIVE, 300.0, 1.2, (short) 3, InterestType.FLAT, meeting);
@@ -339,12 +344,44 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testSaveAndGetOriginalLoanScheduleEntity() throws PersistenceException {
         ArrayList<OriginalLoanScheduleEntity> originalLoanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
-        originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(goodAccount,group,new Short("1"), new Date(new java.util.Date().getTime()), PaymentStatus.UNPAID, Money.zero(), Money.zero()));
+        originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(goodAccount, group, new Short("1"), new Date(new java.util.Date().getTime()), PaymentStatus.UNPAID, Money.zero(), Money.zero()));
         loanPersistence.saveOriginalSchedule(originalLoanScheduleEntities);
         List<OriginalLoanScheduleEntity> actual = loanPersistence.getOriginalLoanScheduleEntity(goodAccount.getAccountId());
         Assert.assertEquals(1, actual.size());
         Assert.assertNotNull(actual.get(0));
         assertThat(actual, is(new OriginalLoanScheduleEntitiesMatcher(originalLoanScheduleEntities)));
+    }
+
+    @Test
+    public void testSaveAndGetOriginalLoanScheduleEntityWithFees() throws PersistenceException {
+        ArrayList<OriginalLoanScheduleEntity> originalLoanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
+        Date date = new Date(new java.util.Date().getTime());
+        Short installmentId = new Short("1");
+
+        FeeBO upfrontFee = TestObjectFactory.createOneTimeRateFee("Upfront Fee", FeeCategory.LOAN,
+                Double.valueOf("20"), FeeFormula.AMOUNT, FeePayment.UPFRONT, null);
+        AccountFeesEntity accountUpfrontFee = new AccountFeesEntity(goodAccount, upfrontFee, new Double("20.0"),
+                FeeStatus.ACTIVE.getValue(), null, date);
+        AccountTestUtils.addAccountFees(accountUpfrontFee, goodAccount);
+        TestObjectFactory.updateObject(goodAccount);
+        goodAccount = (LoanBO) TestObjectFactory.getObject(AccountBO.class, goodAccount.getAccountId());
+
+        OriginalLoanScheduleEntity originalLoanScheduleEntity = new OriginalLoanScheduleEntity(goodAccount, group, installmentId,
+                date, PaymentStatus.UNPAID, Money.zero(), Money.zero());
+        OriginalLoanFeeScheduleEntity scheduleEntityFee = new OriginalLoanFeeScheduleEntity(originalLoanScheduleEntity,
+                        upfrontFee, accountUpfrontFee, Money.zero(), 1);
+        originalLoanScheduleEntity.addAccountFeesAction(scheduleEntityFee);
+        originalLoanScheduleEntities.add(originalLoanScheduleEntity);
+
+        loanPersistence.saveOriginalSchedule(originalLoanScheduleEntities);
+
+        List<OriginalLoanScheduleEntity> actual = loanPersistence.getOriginalLoanScheduleEntity(goodAccount.getAccountId());
+        
+        List<OriginalLoanFeeScheduleEntity> fees = new ArrayList<OriginalLoanFeeScheduleEntity>(actual.get(0).getAccountFeesActionDetails());
+        Assert.assertEquals(1, actual.size());
+        Assert.assertEquals(1, fees.size());
+        assertThat(actual, is(new OriginalLoanScheduleEntitiesMatcher(originalLoanScheduleEntities)));
+        assertThat(fees.get(0), is(scheduleEntityFee));
     }
 
     @Test
