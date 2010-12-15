@@ -12,10 +12,11 @@ if [ -z "$deployNickname" ]
 then
     echo "ERROR: Must provide a deployment nickname like 'head-master' to proceed"
     echo "Usage: $0 NICKNAME"
+    echo "(Example: $0 chinese)"
     exit 1
 fi
 
-deployRoot=$HOME/deploys/mifos-$deployNickname-deploy
+deployRoot=$HOME/deploys/mifos-head-master-$deployNickname-deploy
 if [ -e $deployRoot ]
 then
     echo ERROR: $deployRoot already exists.
