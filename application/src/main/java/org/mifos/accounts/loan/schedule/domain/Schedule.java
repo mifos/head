@@ -108,6 +108,7 @@ public class Schedule {
             if (earlierBalance.compareTo(balance) > 0) {
                 principalOutstanding = principalOutstanding.subtract(earlierBalance.subtract(balance));
             }
+            installment.recordCurrentPayment();
         }
         return principalOutstanding;
     }
@@ -202,5 +203,11 @@ public class Schedule {
 
     public Map<Integer, Installment> getInstallments() {
         return installments;
+    }
+
+    public void resetCurrentPayment() {
+        for (Installment installment : installments.values()) {
+            installment.resetCurrentPayment();
+        }
     }
 }

@@ -9,8 +9,8 @@ public class InstallmentBuilder {
 
     public InstallmentBuilder(String installmentId) {
         installment = new Installment();
-        installmentPayment = new InstallmentPayment();
-        installment.addPayment(installmentPayment);
+        installmentPayment = installment.getCurrentPayment();
+        installment.recordCurrentPayment();
         withInstallmentId(installmentId).
                 withDueDate(new Date(0)).withPaymentDate(new Date(0)).
                 withPrincipal(0).withPrincipalPaid(0).

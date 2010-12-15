@@ -478,42 +478,42 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return getInterestDue().add(getExtraInterestDue());
     }
 
-    private Money payMiscPenalty(final Money amount, boolean updateMiscPenaltyPaid) {
+    private Money payMiscPenalty(final Money amount) {
         Money payable = min(amount, getMiscPenaltyDue());
-        allocateMiscPenalty(payable, updateMiscPenaltyPaid);
+        allocateMiscPenalty(payable);
         return amount.subtract(payable);
     }
 
-    private void allocateMiscPenalty(Money payable, boolean updateMiscPenaltyPaid) {
+    private void allocateMiscPenalty(Money payable) {
         paymentAllocation.allocateForMiscPenalty(payable);
-        miscPenaltyPaid = updateMiscPenaltyPaid ? miscPenaltyPaid.add(payable) : payable;
+        miscPenaltyPaid = miscPenaltyPaid.add(payable);
     }
 
-    private Money payPenalty(final Money amount, boolean updatePenaltyPaid) {
+    private Money payPenalty(final Money amount) {
         Money payable = min(amount, (getPenalty().subtract(getPenaltyPaid())));
-        allocatePenalty(payable, updatePenaltyPaid);
+        allocatePenalty(payable);
         return amount.subtract(payable);
     }
 
-    private void allocatePenalty(Money payable, boolean updatePenaltyPaid) {
+    private void allocatePenalty(Money payable) {
         paymentAllocation.allocateForPenalty(payable);
-        penaltyPaid = updatePenaltyPaid ? penaltyPaid.add(payable) : payable;
+        penaltyPaid = penaltyPaid.add(payable);
     }
 
-    private Money payMiscFees(final Money amount, boolean updateMiscFeePaid) {
+    private Money payMiscFees(final Money amount) {
         Money payable = min(amount, getMiscFeeDue());
-        allocateMiscFees(payable, updateMiscFeePaid);
+        allocateMiscFees(payable);
         return amount.subtract(payable);
     }
 
-    private void allocateMiscFees(Money payable, boolean updateMiscFeePaid) {
+    private void allocateMiscFees(Money payable) {
         paymentAllocation.allocateForMiscFees(payable);
-        miscFeePaid = updateMiscFeePaid ? miscFeePaid.add(payable) : payable;
+        miscFeePaid = miscFeePaid.add(payable);
     }
 
     private void allocateExtraInterest(Money payable) {
         paymentAllocation.allocateForExtraInterest(payable);
-        extraInterestPaid = payable;
+        extraInterestPaid = extraInterestPaid.add(payable);
     }
 
     private Money payFees(final Money amount) {
@@ -527,50 +527,50 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return balance;
     }
 
-    private Money payInterest(final Money amount, boolean updateInterestPaid) {
+    private Money payInterest(final Money amount) {
         Money payable = min(amount, getInterestDue());
-        allocateInterest(payable, updateInterestPaid);
+        allocateInterest(payable);
         return amount.subtract(payable);
     }
 
-    private void allocateInterest(Money payable, boolean updateInterestPaid) {
+    private void allocateInterest(Money payable) {
         paymentAllocation.allocateForInterest(payable);
-        interestPaid = updateInterestPaid ? interestPaid.add(payable) : payable;
+        interestPaid = interestPaid.add(payable);
     }
 
-    private Money payPrincipal(final Money amount, boolean updatePrincipalPaid) {
+    private Money payPrincipal(final Money amount) {
         Money payable = min(amount, getPrincipalDue());
-        allocatePrincipal(payable, updatePrincipalPaid);
+        allocatePrincipal(payable);
         return amount.subtract(payable);
     }
 
-    private void allocatePrincipal(Money payable, boolean updatePrincipalPaid) {
+    private void allocatePrincipal(Money payable) {
         paymentAllocation.allocateForPrincipal(payable);
-        principalPaid = updatePrincipalPaid ? principalPaid.add(payable) : payable;
+        principalPaid = principalPaid.add(payable);
     }
 
     public Money payComponents(Money paymentAmount, Date paymentDate) {
         initPaymentAllocation(paymentAmount.getCurrency());
         Money balanceAmount = paymentAmount;
-        balanceAmount = payMiscPenalty(balanceAmount, true);
-        balanceAmount = payPenalty(balanceAmount, true);
-        balanceAmount = payMiscFees(balanceAmount, true);
+        balanceAmount = payMiscPenalty(balanceAmount);
+        balanceAmount = payPenalty(balanceAmount);
+        balanceAmount = payMiscFees(balanceAmount);
         balanceAmount = payFees(balanceAmount);
-        balanceAmount = payInterest(balanceAmount, true);
-        balanceAmount = payPrincipal(balanceAmount, true);
+        balanceAmount = payInterest(balanceAmount);
+        balanceAmount = payPrincipal(balanceAmount);
         recordPayment(paymentDate);
         return balanceAmount;
     }
 
     public void payComponents(Installment installment, MifosCurrency currency, Date paymentDate) {
         initPaymentAllocation(currency);
-        allocatePrincipal(new Money(currency, installment.getPrincipalPaid()), false);
-        allocateInterest(new Money(currency, installment.getInterestPaid()), false);
-        allocateExtraInterest(new Money(currency, installment.getExtraInterestPaid()));
-        payFees(new Money(currency, installment.getFeesPaid()));
-        allocateMiscFees(new Money(currency, installment.getMiscFeesPaid()), false);
-        allocatePenalty(new Money(currency, installment.getPenaltyPaid()), false);
-        allocateMiscPenalty(new Money(currency, installment.getMiscPenaltyPaid()), false);
+        allocatePrincipal(new Money(currency, installment.getCurrentPayment().getPrincipalPaid()));
+        allocateInterest(new Money(currency, installment.getCurrentPayment().getInterestPaid()));
+        allocateExtraInterest(new Money(currency, installment.getCurrentPayment().getExtraInterestPaid()));
+        payFees(new Money(currency, installment.getCurrentPayment().getFeesPaid()));
+        allocateMiscFees(new Money(currency, installment.getCurrentPayment().getMiscFeesPaid()));
+        allocatePenalty(new Money(currency, installment.getCurrentPayment().getPenaltyPaid()));
+        allocateMiscPenalty(new Money(currency, installment.getCurrentPayment().getMiscPenaltyPaid()));
         setInterest(new Money(currency, installment.getApplicableInterest()));
         recordPayment(paymentDate);
     }

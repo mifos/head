@@ -166,6 +166,12 @@ public class LoanScheduleEntityTest {
         };
         when(loanBO.getCurrency()).thenReturn(RUPEE);
         loanScheduleEntity.setAccount(loanBO);
+        loanScheduleEntity.setPrincipalPaid(Money.zero(RUPEE));
+        loanScheduleEntity.setInterestPaid(Money.zero(RUPEE));
+        loanScheduleEntity.setExtraInterestPaid(Money.zero(RUPEE));
+        loanScheduleEntity.setPenaltyPaid(Money.zero(RUPEE));
+        loanScheduleEntity.setMiscPenaltyPaid(Money.zero(RUPEE));
+        loanScheduleEntity.setMiscFeePaid(Money.zero(RUPEE));
         AccountFeesActionDetailEntity feesActionDetailEntity = new LoanFeeScheduleEntity(loanScheduleEntity,
                 mock(FeeBO.class), mock(AccountFeesEntity.class), new Money(RUPEE, 100d));
         feesActionDetailEntity.setAccountFeesActionDetailId(1);

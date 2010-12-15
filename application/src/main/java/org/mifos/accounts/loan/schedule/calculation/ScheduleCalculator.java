@@ -26,6 +26,7 @@ import java.util.Date;
 
 public class ScheduleCalculator {
     public void applyPayment(Schedule schedule, BigDecimal amount, Date transactionDate) {
+        schedule.resetCurrentPayment();
         computeExtraInterest(schedule, transactionDate);
         BigDecimal balance = schedule.payInstallmentsOnOrBefore(transactionDate, amount);
         schedule.adjustFutureInstallments(balance, transactionDate);

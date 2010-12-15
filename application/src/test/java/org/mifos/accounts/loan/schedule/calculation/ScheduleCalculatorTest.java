@@ -20,7 +20,6 @@
 package org.mifos.accounts.loan.schedule.calculation;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
