@@ -20,6 +20,9 @@
 
 package org.mifos.framework.util.helpers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -27,6 +30,7 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -65,9 +69,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  */
@@ -92,6 +93,7 @@ public class IntegrationTestObjectMother {
     private static final SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
     private static final SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
     private static final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+    private static final LoanDao loanDao = DependencyInjectedServiceLocator.locateLoanDao();
     private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
@@ -473,6 +475,10 @@ public class IntegrationTestObjectMother {
 
     public static CustomerBO findCustomerById(Integer customerId) {
         return customerDao.findCustomerById(customerId);
+    }
+
+    public static LoanBO findLoanBySystemId(String globalAccountNum) {
+        return loanDao.findByGlobalAccountNum(globalAccountNum);
     }
 
     public static void applyAccountPayment(AccountBO loan, PaymentData paymentData) {

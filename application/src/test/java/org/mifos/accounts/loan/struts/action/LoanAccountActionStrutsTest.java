@@ -106,6 +106,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -128,8 +129,14 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 @SuppressWarnings("unchecked")
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
@@ -1008,21 +1015,14 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .getPrdOfferingId()));
     }
 
-    /*
-     * TODO: turn back on when IntersetDeductedAtDisbursement is re-enabled
-     *
-     *
-     * public void testSchedulePreviewWithDataForIntDedAtDisb() throws
-     * Exception { request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-     * schedulePreviewPageParams.put("intDedDisbursement", "1");
-     * jumpToSchedulePreview(); performNoErrors();
-     * verifyForward(ActionForwards.schedulePreview_success.toString());
-     * LoanAccountActionForm actionForm = (LoanAccountActionForm) request
-     * .getSession
-     * ().getAttribute("loanAccountActionForm");Assert.assertEquals("0",
-     * actionForm.getGracePeriodDuration()); }
-     */
     public void testCreate() throws Exception {
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         jumpToSchedulePreview();
         actionPerform();
@@ -1191,46 +1191,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(DateUtils.format(originalDate), DateUtils.getUserLocaleDate(TestObjectFactory.getContext()
                 .getPreferredLocale(), DateUtils.toDatabaseFormat(loan.getDisbursementDate())));
         Assert.assertEquals(firstInstallmentDate, loan.getAccountActionDate(Short.valueOf("1")).getActionDate());
-    }
-
-    public void testLoanAccountFromLastLoan() throws Exception {
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        LoanOfferingBO loanOffering = getLoanOfferingFromLastLoan("lastLoan", "lamt", ApplicableTo.GROUPS, WEEKLY,
-                EVERY_WEEK);
-        initPageParams(loanOffering);
-        jumpToSchedulePreview();
-        actionPerform();
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        addRequestParameter("method", "create");
-        addRequestParameter("stateSelected", "1");
-        actionPerform();
-        LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
-                "loanAccountActionForm");
-        LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-
-        Assert.assertEquals(new Money(getCurrency(), "200"), loan.getLoanAmount());
-        Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
-        loan = null;
-        accountBO = null;
-    }
-
-    public void testLoanAccountFromLoanCycle() throws Exception {
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        LoanOfferingBO loanOffering = getLoanOfferingFromLoanCycle("loanCycle", "lcyc", ApplicableTo.GROUPS, WEEKLY,
-                EVERY_WEEK);
-        initPageParams(loanOffering);
-        jumpToSchedulePreview();
-        actionPerform();
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        addRequestParameter("method", "create");
-        addRequestParameter("stateSelected", "1");
-        actionPerform();
-        LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
-                "loanAccountActionForm");
-        LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        Assert.assertEquals(new Money(getCurrency(), "2000"), loan.getLoanAmount());
-        Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
-        loan = null;
     }
 
     private void modifyActionDateForFirstInstallment() throws Exception {

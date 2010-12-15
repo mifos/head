@@ -1510,7 +1510,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     public Double getMinLoanAmountValue() {
-        return amountRange.getMinLoanAmount();
+        if (this.amountRange != null) {
+            return amountRange.getMinLoanAmount();
+        }
+
+        return Double.valueOf("0");
     }
 
     public String getMaxLoanAmount() {
@@ -1518,7 +1522,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     public Double getMaxLoanAmountValue() {
-        return amountRange.getMaxLoanAmount();
+        if (this.amountRange != null) {
+            return amountRange.getMaxLoanAmount();
+        }
+
+        return Double.valueOf("0");
     }
 
     public String getMinNoInstallments() {
@@ -1526,7 +1534,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     public Short getMinNoInstallmentsValue() {
-        return installmentRange.getMinNoOfInstall();
+        if (this.installmentRange != null) {
+            return installmentRange.getMinNoOfInstall();
+        }
+
+        return Short.valueOf("0");
     }
 
     public String getMaxNoInstallments() {
@@ -1534,7 +1546,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     public Short getMaxNoInstallmentsValue() {
-        return installmentRange.getMaxNoOfInstall();
+        if (this.installmentRange != null) {
+            return installmentRange.getMaxNoOfInstall();
+        }
+
+        return Short.valueOf("0");
     }
 
     public void removeClientDetailsWithNoMatchingClients() {

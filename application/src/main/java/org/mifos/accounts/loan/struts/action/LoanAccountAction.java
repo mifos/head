@@ -73,6 +73,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -128,7 +129,6 @@ import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
-import org.mifos.application.servicefacade.LoanCreationResultDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.Methods;
@@ -146,10 +146,14 @@ import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.LoanAccountInfoDto;
+import org.mifos.dto.screen.LoanAccountMeetingDto;
 import org.mifos.dto.screen.LoanCreationGlimDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanRepaymentScheduleInstallmentDto;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -1111,13 +1115,71 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         LoanCreationResultDto loanCreationResultDto;
         if (isRedoOperation(perspective)) {
-            loanCreationResultDto = this.loanServiceFacade.redoLoan(userContext, customerId, disbursementDate,
-                    loanActionForm);
-            SessionUtils.setAttribute(Constants.BUSINESS_KEY, loanCreationResultDto.getLoan(), request);
+            loanCreationResultDto = this.loanServiceFacade.redoLoan(userContext, customerId, disbursementDate, loanActionForm);
+            LoanBO newlyCreatedLoan = this.loanDao.findByGlobalAccountNum(loanCreationResultDto.getGlobalAccountNum());
+            SessionUtils.setAttribute(Constants.BUSINESS_KEY, newlyCreatedLoan, request);
         } else {
-            FundBO fund = getFund(request, loanActionForm.getLoanOfferingFundValue());
-            loanCreationResultDto = this.loanServiceFacade.createLoan(userContext, customerId, disbursementDate, fund,
-                    loanActionForm);
+            Short fundId = loanActionForm.getLoanOfferingFundValue();
+
+            LoanAccountMeetingDto loanAccountMeetingDto = new LoanAccountMeetingDto();
+            if (StringUtils.isNotBlank(loanActionForm.getRecurrenceId())) {
+                loanAccountMeetingDto.setRecurrenceId(Short.valueOf(loanActionForm.getRecurrenceId()));
+            }
+            if (StringUtils.isNotBlank(loanActionForm.getWeekDay())) {
+                loanAccountMeetingDto.setWeekDay(Short.valueOf(loanActionForm.getWeekDay()));
+            }
+            if (StringUtils.isNotBlank(loanActionForm.getRecurWeek())) {
+                loanAccountMeetingDto.setEveryWeek(Short.valueOf(loanActionForm.getRecurWeek()));
+            }
+
+            loanAccountMeetingDto.setMonthType(loanActionForm.getMonthType());
+            if (StringUtils.isNotBlank(loanActionForm.getMonthDay())) {
+                loanAccountMeetingDto.setDayOfMonth(Short.valueOf(loanActionForm.getMonthDay()));
+            }
+            if (StringUtils.isNotBlank(loanActionForm.getDayRecurMonth())) {
+                loanAccountMeetingDto.setDayRecurMonth(Short.valueOf(loanActionForm.getDayRecurMonth()));
+            }
+
+            if (StringUtils.isNotBlank(loanActionForm.getMonthWeek())) {
+                loanAccountMeetingDto.setWeekOfMonth(Short.valueOf(loanActionForm.getMonthWeek()));
+            }
+            if (StringUtils.isNotBlank(loanActionForm.getRecurMonth())) {
+                loanAccountMeetingDto.setEveryMonth(Short.valueOf(loanActionForm.getRecurMonth()));
+            }
+            if (StringUtils.isNotBlank(loanActionForm.getMonthRank())) {
+                loanAccountMeetingDto.setMonthRank(Short.valueOf(loanActionForm.getMonthRank()));
+            }
+
+            LoanAccountInfoDto loanAccountInfo = new LoanAccountInfoDto();
+            loanAccountInfo.setCustomerId(customerId);
+            loanAccountInfo.setFundId(fundId);
+            loanAccountInfo.setDisbursementDate(disbursementDate.toLocalDate());
+
+            loanAccountInfo.setProductId(loanActionForm.getPrdOfferingIdValue());
+            loanAccountInfo.setLoanAmount(loanActionForm.getLoanAmount());
+            loanAccountInfo.setInterestDeductedAtDisbursement(loanActionForm.isInterestDedAtDisbValue());
+            loanAccountInfo.setInterest(loanActionForm.getInterestDoubleValue());
+            loanAccountInfo.setGracePeriod(loanActionForm.getGracePeriodDurationValue());
+            loanAccountInfo.setMaxLoanAmount(loanActionForm.getMaxLoanAmount());
+            loanAccountInfo.setMinLoanAmount(loanActionForm.getMinLoanAmount());
+            loanAccountInfo.setNumOfInstallments(loanActionForm.getNoOfInstallmentsValue());
+            loanAccountInfo.setMaxNumOfInstallments(loanActionForm.getMaxNoInstallmentsValue());
+            loanAccountInfo.setMinNumOfInstallments(loanActionForm.getMinNoInstallmentsValue());
+            loanAccountInfo.setExternalId(loanActionForm.getExternalId());
+            loanAccountInfo.setSelectedLoanPurpose(loanActionForm.getBusinessActivityIdValue());
+            loanAccountInfo.setSelectedCollateralType(loanActionForm.getCollateralTypeIdValue());
+            loanAccountInfo.setAccountState(loanActionForm.getState().getValue());
+
+
+            List<LoanRepaymentScheduleInstallmentDto> loanRepayments = new ArrayList<LoanRepaymentScheduleInstallmentDto>();
+            List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
+            for (RepaymentScheduleInstallment installment : installments) {
+                LoanRepaymentScheduleInstallmentDto repaymentInstallment = new LoanRepaymentScheduleInstallmentDto(installment.getInstallment(), installment.getPrincipal().toString(), installment.getInterest().toString(), new LocalDate(installment.getDueDateValue()));
+                loanRepayments.add(repaymentInstallment);
+            }
+
+            loanCreationResultDto = this.loanAccountServiceFacade.createLoan(loanAccountMeetingDto, loanAccountInfo, loanRepayments);
+
             createLoanQuestionnaire.saveResponses(request, loanActionForm, loanCreationResultDto.getAccountId());
         }
         cashFlowAdaptor.save((CashFlowCaptor) form, request);
@@ -1125,16 +1187,21 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         if (loanCreationResultDto.isGlimApplicable()) {
             boolean isRepaymentIndepOfMeetingEnabled = configService.isRepaymentIndepOfMeetingEnabled();
             for (LoanAccountDetailsDto loanAccountDetail : loanAccountDetailsList) {
-                createIndividualLoanAccount(loanActionForm, loanCreationResultDto.getLoan(),
-                        isRepaymentIndepOfMeetingEnabled, loanAccountDetail, isRedoOperation(perspective));
+                LoanBO newlyCreatedLoan = this.loanDao.findByGlobalAccountNum(loanCreationResultDto.getGlobalAccountNum());
+                createIndividualLoanAccount(loanActionForm, newlyCreatedLoan, isRepaymentIndepOfMeetingEnabled,
+                                            loanAccountDetail, isRedoOperation(perspective));
             }
         }
 
         loanActionForm.setAccountId(loanCreationResultDto.getAccountId().toString());
         request.setAttribute(GLOBAL_ACCOUNT_NUM, loanCreationResultDto.getGlobalAccountNum());
 
+        LoanBO newlyCreatedLoan = this.loanDao.findByGlobalAccountNum(loanCreationResultDto.getGlobalAccountNum());
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, newlyCreatedLoan, request);
+
         // NOTE: needed for link creation
-        request.setAttribute("customer", loanCreationResultDto.getCustomer());
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
+        request.setAttribute("customer", customer);
 
         return mapping.findForward(ActionForwards.create_success.toString());
     }

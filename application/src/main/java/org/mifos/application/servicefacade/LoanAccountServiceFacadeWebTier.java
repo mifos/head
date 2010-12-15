@@ -1,15 +1,19 @@
 package org.mifos.application.servicefacade;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateMachines;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
@@ -18,6 +22,7 @@ import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
@@ -35,6 +40,10 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
+import org.mifos.application.meeting.exceptions.MeetingException;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -48,6 +57,7 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
@@ -55,10 +65,14 @@ import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
+import org.mifos.dto.screen.LoanAccountInfoDto;
+import org.mifos.dto.screen.LoanAccountMeetingDto;
 import org.mifos.dto.screen.LoanCreationGlimDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanRepaymentScheduleInstallmentDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -66,7 +80,13 @@ import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
+import org.mifos.security.authorization.AuthorizationManager;
+import org.mifos.security.util.ActivityContext;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -290,21 +310,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<ValueListElement> loanPurposes = new MasterDataService().retrieveMasterEntities(
                     MasterConstants.LOAN_PURPOSES, userContext.getLocaleId());
 
-            // List<CustomFieldDefinitionEntity> customFieldDefs = new
-            // AccountBusinessService().retrieveCustomFieldsDefinition(EntityType.LOAN);
-            //
-            // List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-            // for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            // if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
-            // && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-            // customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(userContext
-            // .getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
-            // } else {
-            // customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
-            // .getFieldType()));
-            // }
-            // }
-
             MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
                     .getMeetingDetails();
 
@@ -375,14 +380,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                 tempLoanAccount.setLoanAmount((null != account.getLoanAmount()
                         && !EMPTY.equals(account.getLoanAmount().toString()) ? account.getLoanAmount() : "0.0"));
 
-//                String businessActName = null;
-//                for (ValueListElement busact : businessActEntity) {
-//                    if (busact.getId().toString().equals(account.getBusinessActivity())) {
-//                        businessActName = busact.getName();
-//                    }
-//                }
                 tempLoanAccount.setBusinessActivity(account.getBusinessActivity());
-//                tempLoanAccount.setBusinessActivityName((StringUtils.isNotBlank(businessActName) ? businessActName : "-").toString());
                 tempLoanAccount.setGovermentId((StringUtils.isNotBlank(client.getGovernmentId()) ? client.getGovernmentId() : "-").toString());
 
                 loanAccountDetailsView.add(tempLoanAccount);
@@ -390,5 +388,165 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         return new LoanCreationPreviewDto(isGlimEnabled, isGroup, loanAccountDetailsView);
+    }
+
+    @Override
+    public LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto,
+                                            LoanAccountInfoDto loanAccountInfo,
+                                            List<LoanRepaymentScheduleInstallmentDto> loanRepayments) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());
+        boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
+
+        if (!isPermissionAllowed(loanAccountInfo.getAccountState(), userContext, customer.getOffice().getOfficeId(),
+                customer.getPersonnel().getPersonnelId())) {
+            throw new BusinessRuleException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+
+        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
+
+        DateTime disbursementDate = loanAccountInfo.getDisbursementDate().toDateMidnight().toDateTime();
+        MeetingBO newMeetingForRepaymentDay = null;
+        if (isRepaymentIndependentOfMeetingEnabled) {
+            newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(disbursementDate, loanAccountMeetingDto, customer);
+        }
+
+        FundBO fund = null;
+        if (loanAccountInfo.getFundId() != null) {
+            fund = this.fundDao.findById(loanAccountInfo.getFundId());
+        }
+
+        LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
+                                   isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanAccountInfo);
+
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        for (LoanRepaymentScheduleInstallmentDto installment : loanRepayments) {
+            RepaymentScheduleInstallment repaymentScheduleInstallment = RepaymentScheduleInstallment.createForScheduleCopy(installment.getInstallmentNumber(), installment.getPrincipal(), installment.getInterest(), installment.getDueDate(), userContext.getPreferredLocale());
+            installments.add(repaymentScheduleInstallment);
+        }
+
+        loan.copyInstallmentSchedule(installments);
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
+            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan
+                    .getAccountState(), createdBy, loan));
+            this.loanDao.save(loan);
+            StaticHibernateUtil.flushSession();
+
+            loan.setGlobalAccountNum(loan.generateId(userContext.getBranchGlobalNum()));
+            this.loanDao.save(loan);
+            StaticHibernateUtil.commitTransaction();
+        } catch (AccountException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
+        return new LoanCreationResultDto(isGlimApplicable, loan.getAccountId(), loan.getGlobalAccountNum());
+    }
+
+    private MeetingBO createNewMeetingForRepaymentDay(DateTime disbursementDate,
+            final LoanAccountMeetingDto loanAccountActionForm, final CustomerBO customer) {
+
+        MeetingBO newMeetingForRepaymentDay = null;
+        Short recurrenceId = Short.valueOf(loanAccountActionForm.getRecurrenceId());
+
+        final int minDaysInterval = new ConfigurationPersistence().getConfigurationKeyValueInteger(
+                MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY).getValue();
+
+        final Date repaymentStartDate = disbursementDate.plusDays(minDaysInterval).toDate();
+        try {
+            if (RecurrenceType.WEEKLY.getValue().equals(recurrenceId)) {
+                WeekDay weekDay = WeekDay.getWeekDay(Short.valueOf(loanAccountActionForm.getWeekDay()));
+                Short recurEvery = Short.valueOf(loanAccountActionForm.getEveryWeek());
+                newMeetingForRepaymentDay = new MeetingBO(weekDay, recurEvery, repaymentStartDate,
+                        MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
+            } else if (RecurrenceType.MONTHLY.getValue().equals(recurrenceId)) {
+                if (loanAccountActionForm.getMonthType().equals("1")) {
+                    Short dayOfMonth = Short.valueOf(loanAccountActionForm.getDayOfMonth());
+                    Short dayRecurMonth = Short.valueOf(loanAccountActionForm.getDayRecurMonth());
+                    newMeetingForRepaymentDay = new MeetingBO(dayOfMonth, dayRecurMonth, repaymentStartDate,
+                            MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace());
+                } else {
+                    Short weekOfMonth = Short.valueOf(loanAccountActionForm.getWeekOfMonth());
+                    Short everyMonth = Short.valueOf(loanAccountActionForm.getEveryMonth());
+                    Short monthRank = Short.valueOf(loanAccountActionForm.getMonthRank());
+                    newMeetingForRepaymentDay = new MeetingBO(weekOfMonth, everyMonth , repaymentStartDate,
+                            MeetingType.LOAN_INSTALLMENT, customer.getCustomerMeeting().getMeeting().getMeetingPlace(),
+                            monthRank);
+                }
+            }
+            return newMeetingForRepaymentDay;
+        } catch (NumberFormatException nfe) {
+            throw new MifosRuntimeException(nfe);
+        } catch (MeetingException me) {
+            throw new BusinessRuleException(me.getKey(), me);
+        }
+    }
+
+    private LoanBO assembleLoan(UserContext userContext, CustomerBO customer, DateTime disbursementDate, FundBO fund,
+            boolean isRepaymentIndependentOfMeetingEnabled, MeetingBO newMeetingForRepaymentDay,
+            LoanAccountInfoDto loanActionForm) {
+
+        try {
+            Short productId = loanActionForm.getProductId();
+            LoanOfferingBO loanOffering = this.loanProductDao.findById(productId.intValue());
+
+            Money loanAmount = new Money(loanOffering.getCurrency(), loanActionForm.getLoanAmount());
+            Short numOfInstallments = loanActionForm.getNumOfInstallments();
+            boolean isInterestDeductedAtDisbursement = loanActionForm.isInterestDeductedAtDisbursement();
+            Double interest = loanActionForm.getInterest();
+            Short gracePeriod = loanActionForm.getGracePeriod();
+
+            // FIXME - PUT BACK IN.
+//            List<FeeDto> fees = loanActionForm.getFeesToApply();
+            List<FeeDto> fees = new ArrayList<FeeDto>();
+            List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
+            Double maxLoanAmount = Double.valueOf(loanActionForm.getMaxLoanAmount());
+            Double minLoanAmount = Double.valueOf(loanActionForm.getMinLoanAmount());
+            Short maxNumOfInstallments = loanActionForm.getMaxNumOfInstallments();
+            Short minNumOfShortInstallments = loanActionForm.getMinNumOfInstallments();
+            String externalId = loanActionForm.getExternalId();
+            Integer selectedLoanPurpose = loanActionForm.getSelectedLoanPurpose();
+            String collateralNote = loanActionForm.getCollateralNote();
+            Integer selectedCollateralType = loanActionForm.getSelectedCollateralType();
+            Short accountState = loanActionForm.getAccountState();
+
+            AccountState accountStateType = null;
+            if (accountState != null) {
+                accountStateType = AccountState.fromShort(accountState);
+            }
+            if (accountStateType == null) {
+                accountStateType = AccountState.LOAN_PARTIAL_APPLICATION;
+            }
+
+            LoanBO loan = LoanBO.createLoan(userContext, loanOffering, customer, accountStateType, loanAmount,
+                    numOfInstallments, disbursementDate.toDate(), isInterestDeductedAtDisbursement, interest, gracePeriod,
+                    fund, fees, customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
+                    minNumOfShortInstallments, isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
+
+            loan.setExternalId(externalId);
+            loan.setBusinessActivityId(selectedLoanPurpose);
+            loan.setCollateralNote(collateralNote);
+            loan.setCollateralTypeId(selectedCollateralType);
+
+            return loan;
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
+            final Short loanOfficerId) {
+        return AuthorizationManager.getInstance().isActivityAllowed(
+                userContext,
+                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId, loanOfficerId));
     }
 }

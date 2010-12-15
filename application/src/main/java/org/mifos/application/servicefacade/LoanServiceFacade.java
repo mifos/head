@@ -28,7 +28,6 @@ import org.joda.time.DateTime;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
@@ -41,6 +40,7 @@ import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsB
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -68,9 +68,6 @@ public interface LoanServiceFacade {
      */
     @Deprecated
     LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
-
-    LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
-            FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
 
     LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
             LoanAccountActionForm loanActionForm) throws ApplicationException;

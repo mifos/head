@@ -27,9 +27,13 @@ import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
+import org.mifos.dto.screen.LoanAccountInfoDto;
+import org.mifos.dto.screen.LoanAccountMeetingDto;
 import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
+import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanRepaymentScheduleInstallmentDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface LoanAccountServiceFacade {
@@ -54,4 +58,7 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanRepaymentScheduleInstallmentDto> loanRepayments);
 }

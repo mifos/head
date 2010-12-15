@@ -116,6 +116,7 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
+import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -129,10 +130,6 @@ import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.MifosUser;
-import org.mifos.security.authorization.AuthorizationManager;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.ActivityMapper;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -416,50 +413,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
-            FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException {
-
-        CustomerBO customer = loadCustomer(customerId);
-        boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
-
-        if (!isPermissionAllowed(loanActionForm.getState().getValue(), userContext, customer.getOffice().getOfficeId(),
-                customer.getPersonnel().getPersonnelId())) {
-            throw new ApplicationException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-
-        boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
-
-        MeetingBO newMeetingForRepaymentDay = null;
-        if (isRepaymentIndependentOfMeetingEnabled) {
-            newMeetingForRepaymentDay = this.createNewMeetingForRepaymentDay(disbursementDate, loanActionForm, customer);
-        }
-
-        LoanBO loan = assembleLoan(userContext, customer, disbursementDate, fund,
-                isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay, loanActionForm);
-        loan.copyInstallmentSchedule(loanActionForm.getInstallments());
-
-        try {
-            PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
-            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan
-                    .getAccountState(), createdBy, loan));
-            new LoanPersistence().createOrUpdate(loan);
-            StaticHibernateUtil.commitTransaction();
-
-            loan.setGlobalAccountNum(loan.generateId(userContext.getBranchGlobalNum()));
-            new LoanPersistence().createOrUpdate(loan);
-            StaticHibernateUtil.commitTransaction();
-        } catch (PersistenceException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-        return new LoanCreationResultDto(isGlimApplicable, loan.getAccountId(), loan.getGlobalAccountNum(), loan,
-                customer);
-    }
-
-    @Override
     public LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
             LoanAccountActionForm loanAccountActionForm) throws ApplicationException {
 
@@ -483,16 +436,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             StaticHibernateUtil.closeSession();
         }
 
-        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled() && customer.isGroup(), loan.getAccountId(), loan
-                .getGlobalAccountNum(), loan, customer);
-    }
-
-    private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
-            final Short loanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
-                userContext,
-                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId,
-                        loanOfficerId));
+        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled() && customer.isGroup(), loan.getAccountId(), loan.getGlobalAccountNum());
     }
 
     @Override
