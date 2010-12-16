@@ -111,6 +111,7 @@ public class DependencyInjectedServiceLocator {
     // service facade
     private static CollectionSheetServiceFacade collectionSheetServiceFacade;
     private static LoanServiceFacade loanServiceFacade;
+    private static LoanAccountServiceFacade loanAccountServiceFacade;
     private static SavingsServiceFacade savingsServiceFacade;
     private static CustomerServiceFacade customerServiceFacade;
     private static CenterServiceFacade centerServiceFacade;
@@ -304,6 +305,16 @@ public class DependencyInjectedServiceLocator {
         return loanServiceFacade;
     }
 
+
+    public static LoanAccountServiceFacade locateLoanAccountServiceFacade() {
+        if (loanAccountServiceFacade == null) {
+            loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
+                    fundDao, loanDao, locateInstallmentsValidator(), locateScheduleCalculatorAdaptor(),
+                    locateLoanBusinessService(), locateHolidayServiceFacade(), locateLoanPrdBusinessService());
+        }
+        return loanAccountServiceFacade;
+    }
+
     public static LoanPrdBusinessService locateLoanPrdBusinessService() {
         if (loanPrdBusinessService == null) {
             loanPrdBusinessService = new LoanPrdBusinessService();
@@ -313,7 +324,8 @@ public class DependencyInjectedServiceLocator {
 
     public static LoanBusinessService locateLoanBusinessService() {
         if (loanBusinessService == null) {
-            loanBusinessService = new LoanBusinessService(loanPersistence, locateConfigurationBusinessService(), locateAccountBusinessService(), locateHolidayService());
+            loanBusinessService = new LoanBusinessService(loanPersistence, locateConfigurationBusinessService(), locateAccountBusinessService(),
+                    locateHolidayService(), locateScheduleCalculatorAdaptor());
         }
         return loanBusinessService;
     }
@@ -480,6 +492,14 @@ public class DependencyInjectedServiceLocator {
 
     public static FundDao locateFundDao() {
         return fundDao;
+    }
+
+    public static LoanDao locateLoanDao() {
+        return loanDao;
+    }
+
+    public static LoanProductDao locateLoanProductDao() {
+        return loanProductDao;
     }
 
     public static InstallmentFormatValidator locateInstallmentFormatValidator() {

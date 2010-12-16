@@ -482,6 +482,8 @@
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
     <message-resources key="OfficeUIResources" parameter="org.mifos.config.localizedResources.OfficeUIResources"
                        factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
+    <message-resources key="LookupValueMessages" parameter="org.mifos.config.localizedResources.LookupValueMessages"
+                       factory="org.mifos.framework.struts.tags.MifosPropertyMessageResourcesFactory"/>
 
     <!-- meeting resources -->
     <message-resources key="MeetingResources" parameter="org.mifos.config.localizedResources.Meeting"

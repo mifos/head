@@ -28,13 +28,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.framework.business.service.BusinessService;
+import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.framework.components.tabletag.TableTagConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
@@ -45,11 +43,6 @@ import org.mifos.security.util.UserContext;
 public class SearchAction extends BaseAction {
 
     public SearchAction() {
-    }
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return null;
     }
 
     private void setPerspective(HttpServletRequest request) {
@@ -98,7 +91,6 @@ public class SearchAction extends BaseAction {
         SessionUtils.setAttribute(Constants.SEARCH_STRING, searchString, request);
         SessionUtils.setAttribute(Constants.BRANCH_ID, officeId, request);
         SessionUtils.setAttribute(Constants.OFFICE_NAME, officeName, request);
-
     }
 
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request,

@@ -16,7 +16,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 public class CashFlowFormTest {
-    
+
     @Test
     public void testGetMonthlyCashFlows() throws Exception {
         MonthlyCashFlowDetail cashFlowDetail1 = new MonthlyCashFlowDetail(new DateTime(), new BigDecimal(12), new BigDecimal(12), "notes");
@@ -53,13 +53,13 @@ public class CashFlowFormTest {
         cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), 123d);
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(true));
     }
-    
+
     @Test
     public void shouldComputeRepaymentCapacity() {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
-        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
+        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55).add(BigDecimal.valueOf(1000)));
         BigDecimal repaymentCapacity = cashFlowForm.computeRepaymentCapacity(BigDecimal.valueOf(60));
         assertThat(repaymentCapacity, is(notNullValue()));
         assertThat(repaymentCapacity.doubleValue(), is(1631.67));

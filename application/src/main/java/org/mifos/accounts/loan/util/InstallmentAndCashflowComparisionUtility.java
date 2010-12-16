@@ -3,10 +3,12 @@ package org.mifos.accounts.loan.util;
 import org.joda.time.DateTime;
 import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -16,12 +18,16 @@ public class InstallmentAndCashflowComparisionUtility {
 
     private List<MonthlyCashFlowForm> monthlyCashFlows;
     private List<RepaymentScheduleInstallment> installments;
+    private final BigDecimal loanAmount;
+    private final Date disbursementDate;
 
 
     public InstallmentAndCashflowComparisionUtility(List<RepaymentScheduleInstallment> installments,
-                                                    List<MonthlyCashFlowForm> monthlyCashFlows) {
+                                                    List<MonthlyCashFlowForm> monthlyCashFlows, BigDecimal loanAmount, Date disbursementDate) {
         this.installments = installments;
         this.monthlyCashFlows = monthlyCashFlows;
+        this.loanAmount = loanAmount;
+        this.disbursementDate = disbursementDate;
     }
 
 
@@ -29,19 +35,39 @@ public class InstallmentAndCashflowComparisionUtility {
         List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = null;
         if (monthlyCashFlows != null && monthlyCashFlows.size() > 0) {
             cashflowDataHtmlBeans = new ArrayList<CashFlowDataHtmlBean>();
+
+            addLoanAmountToRespectiveCashFlow();
+
             for (MonthlyCashFlowForm monthlyCashflowform : monthlyCashFlows) {
                 CashFlowDataHtmlBean cashflowDataHtmlBean = mapCashFlowDataHtmlBean(monthlyCashflowform);
                 cashflowDataHtmlBeans.add(cashflowDataHtmlBean);
             }
         }
+
         return cashflowDataHtmlBeans;
     }
+
+
+    void addLoanAmountToRespectiveCashFlow() {
+        for (MonthlyCashFlowForm monthlyCashFlowForm : monthlyCashFlows) {
+            if(DateUtils.sameMonthYear(monthlyCashFlowForm.getDate(),disbursementDate)) {
+                BigDecimal revenue = monthlyCashFlowForm.getRevenue();
+                if(revenue !=null) {
+                    monthlyCashFlowForm.setRevenue(revenue.add(loanAmount));
+                }else {
+                    monthlyCashFlowForm.setRevenue(loanAmount);
+                    break;
+                }
+            }
+        }
+    }
+
 
     private CashFlowDataHtmlBean mapCashFlowDataHtmlBean(MonthlyCashFlowForm monthlyCashflowform) {
         CashFlowDataHtmlBean cashflowDataHtmlBean = new CashFlowDataHtmlBean();
         cashflowDataHtmlBean.setMonth(monthlyCashflowform.getMonth());
         cashflowDataHtmlBean.setYear(String.valueOf(monthlyCashflowform.getYear()));
-        cashflowDataHtmlBean.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow()));
+        cashflowDataHtmlBean.setCumulativeCashFlow(String.valueOf(monthlyCashflowform.getCumulativeCashFlow().setScale(2)));
         String cumulativeCashflowAndInstallment = computeDiffBetweenCumulativeAndInstallment(monthlyCashflowform.getDateTime(), monthlyCashflowform.getCumulativeCashFlow());
         cashflowDataHtmlBean.setDiffCumulativeCashflowAndInstallment(cumulativeCashflowAndInstallment);
         String cashflowAndInstallmentPercent = computeDiffBetweenCumulativeAndInstallmentPercent(monthlyCashflowform.getDateTime(), monthlyCashflowform.getCumulativeCashFlow());
@@ -78,8 +104,7 @@ public class InstallmentAndCashflowComparisionUtility {
             Calendar cashFlowDate = Calendar.getInstance();
             cashFlowDate.setTime(dateOfCashFlow.toDate());
 
-
-            if ((dueDate.get(Calendar.MONTH) == cashFlowDate.get(Calendar.MONTH)) && (dueDate.get(Calendar.YEAR) == cashFlowDate.get(Calendar.YEAR))) {
+            if (DateUtils.sameMonthYear(dueDate, cashFlowDate)) {
                 value = value.add(repaymentScheduleInstallment.getTotalValue().getAmount());
             }
         }

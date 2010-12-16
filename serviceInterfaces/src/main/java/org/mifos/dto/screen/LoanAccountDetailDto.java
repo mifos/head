@@ -18,36 +18,26 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.dto.domain;
+package org.mifos.dto.screen;
 
-public class SavingsAccountUpdateStatus {
+import org.mifos.dto.domain.PrdOfferingDto;
 
-    private final Long savingsId;
-    private final Short newStatusId;
-    private final Short flagId;
-    private final String comment;
+public class LoanAccountDetailDto {
 
-    public SavingsAccountUpdateStatus(Long savingsId, Short newStatusId, Short flagId, String comment) {
-        this.savingsId = savingsId;
-        this.newStatusId = newStatusId;
-        this.flagId = flagId;
-        this.comment = comment;
+    private final PrdOfferingDto productDetails;
+    private final String globalAccountNum;
+
+    public LoanAccountDetailDto(PrdOfferingDto productDetails, String globalAccountNum) {
+        this.productDetails = productDetails;
+        this.globalAccountNum = globalAccountNum;
     }
 
-    public Long getSavingsId() {
-        return this.savingsId;
+    public PrdOfferingDto getProductDetails() {
+        return this.productDetails;
     }
 
-    public Short getNewStatusId() {
-        return this.newStatusId;
-    }
-
-    public Short getFlagId() {
-        return this.flagId;
-    }
-
-    public String getComment() {
-        return this.comment;
+    public String getGlobalAccountNum() {
+        return this.globalAccountNum;
     }
 
 }

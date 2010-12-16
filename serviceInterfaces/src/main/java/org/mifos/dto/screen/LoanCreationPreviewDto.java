@@ -18,30 +18,30 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.screen;
 
 import java.util.List;
 
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 
 public class LoanCreationPreviewDto {
 
-    private final boolean isGlimEnabled;
-    private final boolean isGroup;
+    private final boolean glimEnabled;
+    private final boolean group;
     private final List<LoanAccountDetailsDto> loanAccountDetailsView;
 
     public LoanCreationPreviewDto(boolean isGlimEnabled, boolean isGroup, List<LoanAccountDetailsDto> loanAccountDetailsView) {
-        this.isGlimEnabled = isGlimEnabled;
-        this.isGroup = isGroup;
+        this.glimEnabled = isGlimEnabled;
+        this.group = isGroup;
         this.loanAccountDetailsView = loanAccountDetailsView;
     }
 
     public boolean isGlimEnabled() {
-        return this.isGlimEnabled;
+        return this.glimEnabled;
     }
 
     public boolean isGroup() {
-        return this.isGroup;
+        return this.group;
     }
 
     public List<LoanAccountDetailsDto> getLoanAccountDetailsView() {

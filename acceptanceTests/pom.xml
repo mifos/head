@@ -192,12 +192,6 @@
         </profile>
     </profiles>
     <dependencies>
-        <!-- for this module -->
-        <dependency>
-            <groupId>org.mifos</groupId>
-            <artifactId>mifos-common</artifactId>
-            <version>1.8-SNAPSHOT</version>
-        </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-webapp</artifactId>

@@ -26,6 +26,7 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import com.thoughtworks.selenium.Selenium;
 
 import java.util.List;
+
 import org.testng.Assert;
 
 public class DefineNewLoanProductPage extends AbstractPage {
@@ -37,6 +38,8 @@ public class DefineNewLoanProductPage extends AbstractPage {
     String minInstalmentAmountTextBox = "minimumInstallmentAmount";
     String cashFlowCheckbox = "cashFlowValidation";
     String cashFlowThresholdTextBox = "cashFlowThreshold";
+    String indebtentRate = "indebtednessRatio";
+    String repaymentCapacity = "repaymentCapacity";
 
     public DefineNewLoanProductPage() {
         super();
@@ -47,7 +50,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public void verifyPage() {
-          this.verifyPage("CreateLoanProduct");
+        this.verifyPage("CreateLoanProduct");
 
     }
 
@@ -55,8 +58,9 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return this;
     }
 
-    @SuppressWarnings("PMD.TooManyFields") // lots of fields ok for form input case
-   public static class SubmitFormParameters {
+    @SuppressWarnings("PMD.TooManyFields")
+    // lots of fields ok for form input case
+    public static class SubmitFormParameters {
         // interest types
         public static final int FLAT = 1;
         public static final int DECLINING_BALANCE = 2;
@@ -95,7 +99,8 @@ public class DefineNewLoanProductPage extends AbstractPage {
         private String principalGLCode;
         private boolean interestWaiver;
         private List<String> questionGroups;
-       public String getBranch() {
+
+        public String getBranch() {
             return this.branch;
         }
 
@@ -247,21 +252,21 @@ public class DefineNewLoanProductPage extends AbstractPage {
             this.principalGLCode = principalGLCode;
         }
 
-       public void setInterestWaiver(boolean interestWaiver) {
-           this.interestWaiver = interestWaiver;
-       }
+        public void setInterestWaiver(boolean interestWaiver) {
+            this.interestWaiver = interestWaiver;
+        }
 
-       public boolean isInterestWaiver() {
-           return interestWaiver;
-       }
+        public boolean isInterestWaiver() {
+            return interestWaiver;
+        }
 
-       public List<String> getQuestionGroups() {
-           return questionGroups;
-       }
+        public List<String> getQuestionGroups() {
+            return questionGroups;
+        }
 
-       public void setQuestionGroups(List<String> questionGroups) {
-           this.questionGroups = questionGroups;
-       }
+        public void setQuestionGroups(List<String> questionGroups) {
+            this.questionGroups = questionGroups;
+        }
     }
 
     public DefineNewLoanProductPage fillLoanParameters(SubmitFormParameters parameters) {
@@ -275,7 +280,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         selenium.type("defaultLoanAmount", parameters.getDefaultLoanAmount());
         selenium.select("interestTypes", "value=" + parameters.getInterestTypes());
         selenium.type("createLoanProduct.input.maxInterestRate", parameters.getMaxInterestRate());
-        selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate() );
+        selenium.type("createLoanProduct.input.minInterestRate", parameters.getMinInterestRate());
         selenium.type("createLoanProduct.input.defInterestRate", parameters.getDefaultInterestRate());
         selenium.click("name=freqOfInstallments value=" + parameters.getFreqOfInstallments());
         selenium.type("maxNoInstallments", parameters.getMaxInstallments());
@@ -321,29 +326,30 @@ public class DefineNewLoanProductPage extends AbstractPage {
         Assert.assertTrue(selenium.getValue(minInstalmentAmountTextBox).equals(""));
         return this;
     }
+
     public DefineNewLoanProductPage verifyVariableInstalmentOptionsFields() {
         fillInstalmentOptionsAndSubmit("text,", "text,", "text,");
-        Assert.assertTrue(selenium.isTextPresent("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed"));
+        isTextPresentInPage("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed");
         Assert.assertTrue(!selenium.getValue(maxInstalmentGapTextBox).contains("text") & !selenium.getValue(maxInstalmentGapTextBox).contains(","));
         Assert.assertTrue(!selenium.getValue(minInstalmentGapTextBox).contains("text") & !selenium.getValue(minInstalmentGapTextBox).contains(","));
 
-        fillInstalmentOptionsAndSubmit("1000","1000", "1");
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than 4 digits for loans with variable installments"));
-        Assert.assertTrue(selenium.isTextPresent("Maximum gap must be less than 4 digits for loans with variable installments"));
+        fillInstalmentOptionsAndSubmit("1000", "1000", "1");
+        isTextPresentInPage("Minimum gap must be less than 4 digits for loans with variable installments");
+        isTextPresentInPage("Maximum gap must be less than 4 digits for loans with variable installments");
 
-        fillInstalmentOptionsAndSubmit("-1","-1", "-1");
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap must not be zero or negative for loans with variable installments"));
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap must not be zero or negative for loans with variable installments"));
-        Assert.assertTrue(selenium.isTextPresent("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed."));
+        fillInstalmentOptionsAndSubmit("-1", "-1", "-1");
+        isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
+        isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
+        isTextPresentInPage("The min installment amount for variable installments is invalid because only numbers or decimal separator are allowed.");
 
-        fillInstalmentOptionsAndSubmit("0","0", "0");
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap must not be zero or negative for loans with variable installments"));
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap must not be zero or negative for loans with variable installments"));
+        fillInstalmentOptionsAndSubmit("0", "0", "0");
+        isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
+        isTextPresentInPage("Minimum gap must not be zero or negative for loans with variable installments");
 
         fillInstalmentOptionsAndSubmit("1", "10", "1");
-        Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than the maximum gap for loans with variable installments"));
+        isTextPresentInPage("Minimum gap must be less than the maximum gap for loans with variable installments");
 
-        fillVariableInstalmentOption("","","");
+        fillVariableInstalmentOption("", "", "");
 //        Assert.assertTrue(selenium.isTextPresent("Minimum gap must be less than the maximum gap for loans with variable installments"));
         return this;
     }
@@ -354,7 +360,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
     }
 
     public DefineNewLoanProductPage fillVariableInstalmentOption(String maxGap, String minGap, String minInstalmentAmount) {
-        if (!selenium.isChecked(configureVariableInstalmentsCheckbox)){
+        if (!selenium.isChecked(configureVariableInstalmentsCheckbox)) {
             selectVariableInstalmentAndWaitForLoad();
         }
         selenium.type(maxInstalmentGapTextBox, maxGap);
@@ -374,11 +380,13 @@ public class DefineNewLoanProductPage extends AbstractPage {
         return this;
     }
 
-    public DefineNewLoanProductPage fillCashFlow(String warningThreshold) {
+    public DefineNewLoanProductPage fillCashFlow(String warningThreshold, String indebtentValue, String repaymentValue) {
         if (!selenium.isChecked(cashFlowCheckbox)) {
             selenium.click(cashFlowCheckbox);
         }
         selenium.type(cashFlowThresholdTextBox, warningThreshold);
+        selenium.type(indebtentRate, indebtentValue);
+        selenium.type(repaymentCapacity, repaymentValue);
         return this;
     }
 
@@ -387,37 +395,73 @@ public class DefineNewLoanProductPage extends AbstractPage {
         Assert.assertTrue(!selenium.isVisible(cashFlowThresholdTextBox));
 
         selenium.click(cashFlowCheckbox);
-        Assert.assertTrue(selenium.isVisible(cashFlowThresholdTextBox));
+        Assert.assertTrue(selenium.isVisible(cashFlowThresholdTextBox) & selenium.getValue(cashFlowThresholdTextBox).equals(""));
+        Assert.assertTrue(selenium.isVisible(indebtentRate) & selenium.getValue(indebtentRate).equals(""));
+        Assert.assertTrue(selenium.isVisible(repaymentCapacity) & selenium.getValue(repaymentCapacity).equals(""));
         return this;
     }
 
     public void verifyCashFlowFields() {
-        fillCashFlow("100");
+        verifyMaximumLimitForCashFlow();
+        verifyNonNumericForCashFlow();
+        verifyMinimumLimitForCashFlow();
+        verifyDecimalsForCashFlow();
+    }
+
+    private void verifyDecimalsForCashFlow() {
+        fillCashFlow("99.999", "45.000", "200.000");
+        submit();
+        isTextPresentInPage("The Warning Threshold is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
+        isTextPresentInPage("The Repayment Capacity is invalid because the number of digits after the decimal separator exceeds the allowed number 2");
         submitAndGotoNewLoanProductPreviewPage();
-        Assert.assertTrue(selenium.isTextPresent("Warning Threshold should be a value less than 100.0"));
-        fillCashFlow("abc");
+    }
+
+    private void verifyMinimumLimitForCashFlow() {
+        fillCashFlow("-1", "-1", "149.9");
         submitAndGotoNewLoanProductPreviewPage();
-        Assert.assertTrue(selenium.isTextPresent("Warning threshold should be a non-negative number."));
-        fillCashFlow("99.999");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only numbers or decimal separator are allowed");
+        isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
+        isTextPresentInPage("The Warning Threshold is invalid because only numbers or decimal separator are allowed.");
+    }
+
+    private void verifyNonNumericForCashFlow() {
+        fillCashFlow("abc", "abc", "abc");
         submitAndGotoNewLoanProductPreviewPage();
-        Assert.assertTrue(selenium.isTextPresent("Warning threshold should be a non-negative number."));
-        fillCashFlow("-10");
+        isTextPresentInPage("The Warning Threshold is invalid because only numbers or decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only numbers or decimal separator are allowed");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because only numbers or decimal separator are allowed");
+    }
+
+    private void verifyMaximumLimitForCashFlow() {
+        fillCashFlow("99.1", "50", "1000");
         submitAndGotoNewLoanProductPreviewPage();
-        Assert.assertTrue(selenium.isTextPresent("Warning threshold should be a non-negative number."));
+        isTextPresentInPage("The Warning Threshold is invalid because it is not in between 0.0 and 99.0");
+        isTextPresentInPage("Inebtedness Ratio should be a value less than 50.0");
+        isTextPresentInPage("Repayment Capacity should be a value less than 1000.0");
+        fillCashFlow("100", "55", "1001");
+        submitAndGotoNewLoanProductPreviewPage();
+        isTextPresentInPage("The Warning Threshold is invalid because it is not in between 0.0 and 99.0");
+        isTextPresentInPage("The Indebtedness Ratio is invalid because it is not in between 0.0 and 50.0.");
+        isTextPresentInPage("The Repayment Capacity is invalid because it is not in between 150.0 and 1000.0");
+    }
+
+    private void isTextPresentInPage(String expectedText) {
+        Assert.assertTrue(selenium.isTextPresent(expectedText),expectedText + " not found in the page");
     }
 
     public DefineNewLoanProductPage verifyBlockedInterestTypes() {
         verifyInterestBlockedForVariableInstallment(SubmitFormParameters.FLAT);
-//        verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_PRINCIPLE_BALANCE);
+        verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_PRINCIPLE_BALANCE);
         verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_BALANCE_EPI);
         return this;
     }
 
     private void verifyInterestBlockedForVariableInstallment(int interestType) {
         selenium.select("interestTypes", "value=" + interestType);
-        fillInstalmentOptionsAndSubmit("10","10","100");
+        fillInstalmentOptionsAndSubmit("10", "10", "100");
         submit();
-        Assert.assertTrue(selenium.isTextPresent("The selected interest type is invalid for variable installment loan product"));
+        isTextPresentInPage("The selected interest type is invalid for variable installment loan product");
     }
 
     public void verifyFeeTypesBlocked(String[] feeNames) {
@@ -429,7 +473,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         submit();
         for (int index = 0; index < feeNames.length; index++) {
             String feeName = feeNames[index];
-            Assert.assertTrue(selenium.isTextPresent(feeName + " fee cannot be applied to variable installment loan product"));
+            isTextPresentInPage(feeName + " fee cannot be applied to variable installment loan product");
         }
     }
 

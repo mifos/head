@@ -47,6 +47,7 @@ public enum ActionForwards {
     viewAll_success,
     cancel_success,
     getLoanRepaymentSchedule,
+    viewOriginalSchedule,
     beginRedoLoanDisbursal_success,
     viewStatusHistory,
     getHistoricalData,

@@ -20,12 +20,9 @@
 
 package org.mifos.application.questionnaire.migration.mappers;
 
-import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.office.business.OfficeCustomFieldEntity;
-import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.customers.surveys.business.Survey;
 import org.mifos.customers.surveys.business.SurveyInstance;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
@@ -45,12 +42,5 @@ public interface QuestionnaireMigrationMapper {
 
     QuestionGroupInstanceDto map(SurveyInstance surveyInstance, Integer questionGroupId, Integer eventSourceId);
 
-    QuestionGroupInstanceDto mapForCustomers(Integer questionGroupId, Integer eventSourceId, List<CustomerCustomFieldEntity> customerResponses, Map<Short, Integer> customFieldQuestionIdMap);
-
-    QuestionGroupInstanceDto mapForAccounts(Integer questionGroupId, Integer eventSourceId, List<AccountCustomFieldEntity> accountResponses, Map<Short, Integer> customFieldQuestionIdMap);
-
-    QuestionGroupInstanceDto mapForOffice(Integer questionGroupId, Integer eventSourceId, List<OfficeCustomFieldEntity> officeResponses, Map<Short, Integer> customFieldQuestionIdMap);
-
-    QuestionGroupInstanceDto mapForPersonnel(Integer questionGroupId,
-                                             Integer eventSourceId, List<PersonnelCustomFieldEntity> personnelResponses, Map<Short, Integer> customFieldQuestionIdMap);
+    QuestionGroupInstanceDto map(Integer questionGroupId, Integer eventSourceId, List<CustomFieldForMigrationDto> customerResponses, Map<Short, Integer> customFieldQuestionIdMap);
 }

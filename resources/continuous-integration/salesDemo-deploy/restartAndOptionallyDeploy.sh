@@ -1,6 +1,5 @@
 #!/bin/bash
-set -x
-set -o errexit
+set -ex
 
 # JOB_NAME environment variable must be set. We count on Hudson for this.
 
@@ -21,3 +20,12 @@ then
 else
     $controlScript restart
 fi
+
+can_hit_test_server=1
+while [ $can_hit_test_server -ne 0 ]
+do
+    set +e # or a failure would stop the script prematurely
+    curl --fail http://sdemo.mifos.org/mifos/
+    can_hit_test_server=$?
+    sleep 1
+done

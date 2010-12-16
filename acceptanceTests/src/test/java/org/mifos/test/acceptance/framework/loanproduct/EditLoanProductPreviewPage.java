@@ -66,12 +66,22 @@ public class EditLoanProductPreviewPage extends MifosPage {
     }
 
 
-    public EditLoanProductPreviewPage verifyCashflowThresholdInEditPreview(String warningThreshold) {
+    public EditLoanProductPreviewPage verifyCashflowThresholdInEditPreview(String warningThreshold, String indebetedValues, String repaymentCapacityValue) {
         Assert.assertTrue(selenium.isTextPresent("Compare with Cash Flow: Yes"));
         if ("".equals(warningThreshold)) {
             Assert.assertTrue(selenium.isTextPresent("Warning Threshold: N/A"));
         } else {
             Assert.assertTrue(selenium.isTextPresent("Warning Threshold: " + warningThreshold + " %"));
+        }
+        if ("".equals(indebetedValues)) {
+            Assert.assertTrue(selenium.isTextPresent("Indebtedness Rate: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Indebtedness Rate: " + indebetedValues + " %"));
+        }
+        if ("".equals(repaymentCapacityValue)) {
+            Assert.assertTrue(selenium.isTextPresent("Repayment Capacity: N/A"));
+        } else {
+            Assert.assertTrue(selenium.isTextPresent("Repayment Capacity: " + repaymentCapacityValue + " %"));
         }
         return this;
     }

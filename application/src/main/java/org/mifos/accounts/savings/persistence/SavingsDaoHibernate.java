@@ -23,7 +23,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,6 @@ import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.interest.EndOfDayDetail;
@@ -205,18 +203,18 @@ public class SavingsDaoHibernate implements SavingsDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public final Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings() {
+    public final List<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForSavings() {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.SAVINGS.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) baseDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        return (List<CustomFieldDefinitionEntity>) baseDao.executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<AccountCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (Iterator<AccountCustomFieldEntity>) baseDao.executeNamedQueryIterator("AccountCustomFieldEntity.getResponses", queryParameters);
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
+        return (List<Object[]>) baseDao.executeNamedQuery("AccountCustomFieldEntity.getResponses", queryParameters);
     }
 
 

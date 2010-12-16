@@ -20,24 +20,28 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.cashflow.struts.CashFlowAdaptor;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.servicefacade.LoanServiceFacade;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionDetail;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
@@ -56,10 +60,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
@@ -109,25 +112,28 @@ public class LoanAccountActionTest {
     private LoanServiceFacade loanServiceFacade;
     @Mock
     private UserContext userContext;
+    @Mock
+    private LoanBO loanBO;
+    private Short localeId = new Short("1");
 
     @Before
     public void setUp() throws PageExpiredException {
         loanAccountAction = new LoanAccountAction(null, null, null, loanPrdBusinessService, null, null, null, null) {
             @Override
-            protected UserContext getUserContext(HttpServletRequest request) {
+            protected UserContext getUserContext(@SuppressWarnings("unused") HttpServletRequest request) {
                 return userContext;
             }
-
-            @Override
-            protected LoanServiceFacade getLoanServiceFacade() {
-                return loanServiceFacade;
-            }
         };
+        loanAccountAction.setLoanServiceFacade(loanServiceFacade);
+
         when(request.getAttribute(Constants.CURRENTFLOWKEY)).thenReturn(FLOW_KEY);
         when(request.getSession()).thenReturn(session);
         when(session.getAttribute(Constants.FLOWMANAGER)).thenReturn(flowManager);
         flow = new Flow();
         when(flowManager.getFlowWithValidation(FLOW_KEY)).thenReturn(flow);
+        when(userContext.getLocaleId()).thenReturn(localeId);
+        when(userContext.getPreferredLocale()).thenReturn(Locale.US);
+
     }
 
     @Test
@@ -164,42 +170,101 @@ public class LoanAccountActionTest {
     }
 
     @Test
-    public void shouldValidateForCashFlowInPreviewIfCashFlowIsEnabled() throws Exception {
+    public void previewShouldBeFailureIfErrorMessagesArePresent() throws Exception {
         ActionForward previewFailure = new ActionForward("preview_failure");
-        Short localeId = new Short("1");
         CashFlowForm cashFlowForm = mock(CashFlowForm.class);
         Errors errors = new Errors();
-        errors.addError("preview is failing",new String[]{});
+        errors.addError("preview is failing", new String[]{});
+        double repaymentCapacity = 123d;
         when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
-        when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
-        when(userContext.getLocaleId()).thenReturn(localeId);
+        when(loanOffering.getRepaymentCapacity()).thenReturn(repaymentCapacity);
+        List installments = Collections.EMPTY_LIST;
+        when(form.getInstallments()).thenReturn(installments);
         when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
-        when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
         when(form.getCashFlowForm()).thenReturn(cashFlowForm);
         when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
-        when(loanServiceFacade.validateCashFlowForInstallments(form, localeId)).thenReturn(errors);
+        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(errors);
+        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(errors);
         when(mapping.findForward("preview_failure")).thenReturn(previewFailure);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
         assertThat(forward, is(previewFailure));
+        verify(mapping, never()).findForward("preview_success");
     }
-    
+
     @Test
-    public void shouldReturnPreviewSuccessIfValidateForCashFlowInPreviewIsPassed() throws Exception {
+    public void previewShouldBeSuccessIfOnlyWarningMessagesArePresentAndNoErrorMessagesArePresent() throws Exception {
+        ActionForward previewSuccess = new ActionForward("preview_success");
+        Short localeId = new Short("1");
+        CashFlowForm cashFlowForm = mock(CashFlowForm.class);
+        Errors warning = new Errors();
+        Errors error = new Errors();
+        warning.addError("this is warning message", new String[]{});
+        double repaymentCapacity = 123d;
+        when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
+        when(loanOffering.getRepaymentCapacity()).thenReturn(repaymentCapacity);
+        List installments = Collections.EMPTY_LIST;
+        when(form.getInstallments()).thenReturn(installments);
+        when(userContext.getLocaleId()).thenReturn(localeId);
+        when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
+        when(form.getCashFlowForm()).thenReturn(cashFlowForm);
+        when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
+        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(warning);
+        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(error);
+        when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
+        ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
+        assertThat(forward, is(previewSuccess));
+        verify(mapping, never()).findForward("preview_failure");
+    }
+
+    @Test
+    public void previewShouldBeSuccessIfNoErrorMessagesArePresent() throws Exception {
         ActionForward previewSuccess = new ActionForward("preview_success");
         Short localeId = new Short("1");
         CashFlowForm cashFlowForm = mock(CashFlowForm.class);
         Errors errors = new Errors();
+        List installments = Collections.EMPTY_LIST;
+        double repaymentCapacity = 123d;
+        when(loanOffering.getRepaymentCapacity()).thenReturn(repaymentCapacity);
         when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
-        when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
+        when(form.getInstallments()).thenReturn(installments);
         when(userContext.getLocaleId()).thenReturn(localeId);
         when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
-        when(form.getInstallments()).thenReturn(Collections.EMPTY_LIST);
         when(form.getCashFlowForm()).thenReturn(cashFlowForm);
         when(cashFlowForm.getMonthlyCashFlows()).thenReturn(Collections.EMPTY_LIST);
-        when(loanServiceFacade.validateCashFlowForInstallments(form, localeId)).thenReturn(errors);
+        when(loanServiceFacade.validateCashFlowForInstallmentsForWarnings(form, localeId)).thenReturn(errors);
+        when(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity)).thenReturn(errors);
+
         when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
         assertThat(forward, is(previewSuccess));
+        verify(mapping, never()).findForward("preview_failure");
+    }
+
+    @Test
+    public void shouldViewOriginalSchedule() throws Exception {
+        ActionForward viewOriginalScheduleForward = new ActionForward("viewOriginalSchedule");
+        int loanId = 1;
+        String loanAmount = "123";
+        List installments = Collections.EMPTY_LIST;
+        java.sql.Date disbursementDate = new java.sql.Date(new DateTime().toDate().getTime());
+
+        OriginalScheduleInfoDto dto = mock(OriginalScheduleInfoDto.class);
+        when(dto.getOriginalLoanScheduleInstallment()).thenReturn(installments);
+        when(dto.getLoanAmount()).thenReturn(loanAmount);
+        when(dto.getDisbursementDate()).thenReturn(disbursementDate);
+        when(request.getParameter(LoanAccountAction.ACCOUNT_ID)).thenReturn(String.valueOf(loanId));
+        when(loanServiceFacade.retrieveOriginalLoanSchedule(loanId, Locale.US)).thenReturn(dto);
+        when(mapping.findForward("viewOriginalSchedule")).thenReturn(viewOriginalScheduleForward);
+
+        ActionForward forward = loanAccountAction.viewOriginalSchedule(mapping, form, request, response);
+
+        assertThat(forward, is(viewOriginalScheduleForward));
+        verify(request).getParameter(LoanAccountAction.ACCOUNT_ID);
+        verify(loanServiceFacade).retrieveOriginalLoanSchedule(loanId, Locale.US);
+        verify(dto).getOriginalLoanScheduleInstallment();
+        verify(dto).getLoanAmount();
+        verify(dto).getDisbursementDate();
+        verify(mapping).findForward("viewOriginalSchedule");
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {

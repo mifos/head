@@ -20,15 +20,14 @@
 
 package org.mifos.accounts.util.helpers;
 
-import org.joda.time.DateTime;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /*
  * Used to hold information entered about a payment made.
@@ -37,19 +36,13 @@ import java.util.List;
 public class PaymentData {
 
     private final Money totalAmount;
-
     private CustomerBO customer;
-
     private final PersonnelBO personnel;
-
     private Date transactionDate;
 
     private String receiptNum;
-
     private Date receiptDate;
-
     private final Short paymentTypeId;
-
     private String comment;
 
     /*
@@ -58,22 +51,26 @@ public class PaymentData {
      */
     private List<AccountPaymentData> accountPayments;
 
-    private PaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId, Date transactionDate) {
-        accountPayments = new ArrayList<AccountPaymentData>();
-        this.totalAmount = totalAmount;
-        this.personnel = personnel;
-        this.paymentTypeId = paymentId;
-        this.transactionDate = transactionDate;
-    }
-
     public static PaymentData createPaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId,
             Date transactionDate) {
         return new PaymentData(totalAmount, personnel, paymentId, transactionDate);
     }
 
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public static PaymentData createPaymentData(PaymentDataTemplate template) throws InvalidDateException {
         return new PaymentData(template.getTotalAmount(), template.getPersonnel(), template.getPaymentTypeId(),
                 template.getTransactionDate());
+    }
+
+    public PaymentData(Money totalAmount, PersonnelBO personnel, Short paymentId, Date transactionDate) {
+        accountPayments = new ArrayList<AccountPaymentData>();
+        this.totalAmount = totalAmount;
+        this.personnel = personnel;
+        this.paymentTypeId = paymentId;
+        this.transactionDate = transactionDate;
     }
 
     public List<AccountPaymentData> getAccountPayments() {

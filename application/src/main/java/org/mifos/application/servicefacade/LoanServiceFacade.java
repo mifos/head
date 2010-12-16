@@ -20,25 +20,25 @@
 
 package org.mifos.application.servicefacade;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.joda.time.DateTime;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
-import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
+import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
-import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.dto.domain.PrdOfferingDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -46,45 +46,26 @@ import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.List;
-
 
 public interface LoanServiceFacade {
 
-    List<PrdOfferingDto> retrieveActiveLoanProductsApplicableForCustomer(CustomerBO customer);
+    /**
+     * @deprecated - unable at present to decouple Dto and ActionForm
+     */
+    @Deprecated
+    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForRedoLoan(Integer customerId, DateTime disbursementDate, Short fundId, LoanAccountActionForm loanActionForm);
 
-    LoanCreationGlimDto retrieveGlimSpecificDataForGroup(CustomerBO customer);
+    /**
+     * @deprecated - unable at present to decouple Dto and ActionForm
+     */
+    @Deprecated
+    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(Integer customerId, DateTime disbursementDate, Short fundId, LoanAccountActionForm loanActionForm);
 
-    LoanCreationProductDetailsDto retrieveGetProductDetailsForLoanAccountCreation(Integer customerId)
-            throws ApplicationException;
-
-    LoanCreationLoanDetailsDto retrieveLoanDetailsForLoanAccountCreation(UserContext userContext, Integer customerId,
-            Short productId) throws ApplicationException;
-
-    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForLoanCreation(UserContext userContext,
-                                                                              Integer customerId, DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm)
-            throws ApplicationException;
-
-    LoanCreationLoanScheduleDetailsDto retrieveScheduleDetailsForRedoLoan(UserContext userContext, Integer customerId,
-            DateTime disbursementDate, FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
-
-    LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm,
-            DateTime disbursementDate, UserContext userContext) throws ApplicationException;
-
-    LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails,
-            List<String> selectedClientIds, List<BusinessActivityEntity> businessActEntity);
-
-    LoanCreationResultDto createLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
-            FundBO fund, LoanAccountActionForm loanActionForm) throws ApplicationException;
-
-    LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
-            LoanAccountActionForm loanActionForm) throws ApplicationException;
-
-    void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException,
-            AccountException;
-
-    LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException;
+    /**
+     * @deprecated - unable at present to decouple LoanBO and ActionForm for redo functionality
+     */
+    @Deprecated
+    LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
 
     List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);
 
@@ -110,7 +91,9 @@ public interface LoanServiceFacade {
 
     Errors validateInstallmentSchedule(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO);
 
-    Errors validateCashFlowForInstallments(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException;
+    Errors validateCashFlowForInstallmentsForWarnings(LoanAccountActionForm loanActionForm, Short localeId) throws ServiceException;
 
     Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity);
+
+    OriginalScheduleInfoDto retrieveOriginalLoanSchedule(Integer accountId, Locale locale) throws PersistenceException;
 }

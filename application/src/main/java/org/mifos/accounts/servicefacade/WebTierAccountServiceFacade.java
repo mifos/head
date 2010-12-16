@@ -107,7 +107,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
         try {
             List<PaymentTypeEntity> paymentTypeList = null;
-            if (paymentType != null && paymentType.trim() != Constants.EMPTY_STRING) {
+            if (paymentType != null && !Constants.EMPTY_STRING.equals(paymentType.trim())) {
                 if (isLoanPayment(paymentType)) {
                     paymentTypeList = acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(
                             localeId, TrxnTypes.loan_repayment.getValue());

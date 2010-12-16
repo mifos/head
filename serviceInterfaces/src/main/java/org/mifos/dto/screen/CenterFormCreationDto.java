@@ -23,30 +23,23 @@ package org.mifos.dto.screen;
 import java.util.List;
 
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PersonnelDto;
 
 public class CenterFormCreationDto {
 
     private final List<PersonnelDto> activeLoanOfficersForBranch;
-    private final List<CustomFieldDto> customFieldDtos;
     private final List<ApplicableAccountFeeDto> additionalFees;
     private final List<ApplicableAccountFeeDto> defaultFees;
 
-    public CenterFormCreationDto(List<PersonnelDto> activeLoanOfficersForBranch, List<CustomFieldDto> customFieldDtos,
+    public CenterFormCreationDto(List<PersonnelDto> activeLoanOfficersForBranch,
                                  List<ApplicableAccountFeeDto> additionalFees, List<ApplicableAccountFeeDto> defaultFees) {
         this.activeLoanOfficersForBranch = activeLoanOfficersForBranch;
-        this.customFieldDtos = customFieldDtos;
         this.additionalFees = additionalFees;
         this.defaultFees = defaultFees;
     }
 
     public List<PersonnelDto> getActiveLoanOfficersForBranch() {
         return this.activeLoanOfficersForBranch;
-    }
-
-    public List<CustomFieldDto> getCustomFieldViews() {
-        return this.customFieldDtos;
     }
 
     public List<ApplicableAccountFeeDto> getAdditionalFees() {

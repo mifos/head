@@ -310,6 +310,10 @@ public class AccountBO extends AbstractBusinessObject {
         return accountStatusChangeHistory;
     }
 
+    public AccountStatusChangeHistoryEntity getLastAccountStatusChange() {
+        return accountStatusChangeHistory.get(accountStatusChangeHistory.size() - 1);
+    }
+
     /**
      * For most purposes this is deprecated and one should call {@link #getState()} instead.
      */

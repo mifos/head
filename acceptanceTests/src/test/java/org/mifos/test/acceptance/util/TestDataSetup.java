@@ -67,7 +67,9 @@ public class TestDataSetup {
                 submit().navigateToClientViewDetailsPage().
                 navigateToCustomerChangeStatusPage().
                 submitAndGotoCustomerChangeStatusPreviewDataPage(setApprovalStatus()).
-                submitAndGotoClientViewDetailsPage();
+                submitAndGotoClientViewDetailsPage().
+                navigateToEditMeetingSchedule().
+                editClientMeeting(setMeetingScheduleParameters());
     }
 
     public void createFee(FeesCreatePage.SubmitFormParameters feeParameters) throws SQLException {
@@ -118,5 +120,12 @@ public class TestDataSetup {
         clientPersonalInfoParameters.setSpouseFirstName("father");
         clientPersonalInfoParameters.setSpouseLastName("lastname" + StringUtil.getRandomString(8));
         return clientPersonalInfoParameters;
+    }
+
+    public void addDecliningPrincipalBalance() throws SQLException {
+        if (!applicationDatabaseOperation.doesDecliningPrincipalBalanceExist()) {
+            applicationDatabaseOperation.insertDecliningPrincipalBalanceInterestType();
+        }
+        //To change body of created methods use File | Settings | File Templates.
     }
 }

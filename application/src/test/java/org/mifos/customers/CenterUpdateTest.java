@@ -20,13 +20,13 @@
 
 package org.mifos.customers;
 
-import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.List;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -36,12 +36,7 @@ import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.service.CustomerAccountFactory;
 import org.mifos.customers.business.service.CustomerService;
@@ -169,42 +164,6 @@ public class CenterUpdateTest {
             fail("cannotUpdateCenterWithDifferentVersion");
         } catch (ApplicationException e) {
             assertThat(e.getKey(), is(Constants.ERROR_VERSION_MISMATCH));
-        }
-    }
-
-    @Test
-    public void cannotUpdateCenterWithMandatoryAdditionalFieldsNotPopulated() {
-
-        // setup
-        int versionNum = 1;
-        PersonnelBO existingLoanOfficer = PersonnelBuilder.anyLoanOfficer();
-        CenterBO existingCenter = new CenterBuilder().withLoanOfficer(existingLoanOfficer).withVersion(versionNum).build();
-
-        UserContext userContext = TestUtils.makeUser();
-        CenterUpdate centerUpdate = new CenterUpdateBuilder().build();
-
-        LookUpEntity name = null;
-        Short fieldIndex = Short.valueOf("1");
-        CustomFieldType fieldType = CustomFieldType.ALPHA_NUMERIC;
-        EntityType entityType = EntityType.CENTER;
-        String defaultValue = "defalutValue";
-        YesNoFlag mandatory = YesNoFlag.YES;
-
-        CustomFieldDefinitionEntity mandatoryDefinition = new CustomFieldDefinitionEntity(name, fieldIndex, fieldType, entityType, defaultValue, mandatory);
-        List<CustomFieldDefinitionEntity> mandatoryCustomFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
-        mandatoryCustomFieldDefinitions.add(mandatoryDefinition);
-
-        // stub
-        when(customerDao.findCustomerById(centerUpdate.getCustomerId())).thenReturn(existingCenter);
-        when(personnelDao.findPersonnelById(anyShort())).thenReturn(existingLoanOfficer);
-        when(customerDao.retrieveCustomFieldEntitiesForCenter()).thenReturn(mandatoryCustomFieldDefinitions);
-
-        // exercise test
-        try {
-            customerService.updateCenter(userContext, centerUpdate);
-            fail("cannotUpdateCenterWithMandatoryAdditionalFieldsNotPopulated");
-        } catch (ApplicationException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
         }
     }
 

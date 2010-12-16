@@ -287,7 +287,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li"));
     }
 
-    public void verifyCashFlow(int cashFlowIncremental) {
+    public ViewInstallmentDetailsPage verifyCashFlow(int cashFlowIncremental) {
         int noOfMonths = selenium.getXpathCount(tableXpath + "//tr").intValue() - 1;
         int  cashFlow = cashFlowIncremental;
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
@@ -295,7 +295,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
             Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex+1) + "]/td[5]"), "notes" + rowIndex);
             cashFlow = cashFlow + cashFlowIncremental;
         }
-
+        return this;
     }
 
     public void verifyCashFlowCalcualted(int cashFlowIncremental) {
@@ -432,9 +432,9 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         verifyCellValueOfInstallments(1,4,"3.8");
         verifyCellValueOfInstallments(2,4,"2.6");
         verifyCellValueOfInstallments(3,4,"1.3");
-        verifyCellValueOfInstallments(1,5,"336.0");
-        verifyCellValueOfInstallments(2,5,"336.0");
-        verifyCellValueOfInstallments(3,5,"335.7");
+        verifyCellValueOfInstallments(1,6,"336.0");
+        verifyCellValueOfInstallments(2,6,"336.0");
+        verifyCellValueOfInstallments(3,6,"335.7");
         return this;
         //To change body of created methods use File | Settings | File Templates.
     }
@@ -496,6 +496,13 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
 
     public ViewInstallmentDetailsPage verifyInstallmentDatesOutOfCashFlowCapturedOnPreview() {
         verifyErrorMessageOnDatesOutOfCashFlow(previewButton);
+        return this;
+    }
+
+    public ViewInstallmentDetailsPage verifyRepaymentCapacityOnPreview(String expectedRc, String minRc) {
+        clickPreviewAndGoToReviewLoanAccountPage();
+        verifyPage("SchedulePreview");
+        Assert.assertTrue(selenium.isTextPresent("Repayment Capacity of the client is " + expectedRc + " % which should be greater than the required value of " + minRc + " %"));
         return this;
     }
 }

@@ -13,9 +13,17 @@
 		<property name="fieldValue" column="field_value" />
 		<many-to-one name="personnel" column="personnel_id" class="org.mifos.customers.personnel.business.PersonnelBO"  cascade="none" insert="true" update="true" unique="true" access="field"/>
 	</class>
-	<query name="PersonnelCustomFieldEntity.getResponses">
-        <![CDATA[
-        from PersonnelCustomFieldEntity as ccfe
-        where ccfe.fieldId = :CUSTOM_FIELD_ID ]]>
-    </query>
+    <sql-query name="PersonnelCustomFieldEntity.getResponses">
+        <return-scalar column="personnel_custom_field_id" type="integer" />
+		<return-scalar column="field_id" type="short" />
+		<return-scalar column="field_value" type="string" />
+        <return-scalar column="created_date" type="date" />
+        <return-scalar column="updated_date" type="date" />
+        <return-scalar column="created_by" type="short" />
+        <return-scalar column="updated_by" type="short" />
+        <return-scalar column="personnel_id" type="integer" />
+	    <![CDATA[SELECT a.personnel_custom_field_id, a.field_id, a.field_value, b.created_date, b.updated_date, b.created_by, b.updated_by, b.personnel_id
+	    FROM personnel_custom_field a join personnel b on a.personnel_id = b.personnel_id
+	    where a.field_id in (:CUSTOM_FIELD_ID) order by b.personnel_id]]>
+	</sql-query>
 </hibernate-mapping>

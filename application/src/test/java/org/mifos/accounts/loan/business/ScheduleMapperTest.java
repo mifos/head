@@ -230,13 +230,13 @@ public class ScheduleMapperTest {
     public Schedule getScheduleWithSingleInstallment() {
         Installment installment1 = new InstallmentBuilder("1").
                 withDueDate(getDate(23, 10, 2010)).
-                withPrincipal(100).withPrincipalPaid(100).
-                withInterest(10).withInterestPaid(10).
-                withExtraInterest(9).withExtraInterestPaid(9).
-                withMiscFees(8).withMiscFeesPaid(8).
-                withPenalty(7).withPenaltyPaid(7).
-                withMiscPenalty(6).withMiscPenaltyPaid(6).
-                withFees(5).withFeesPaid(5).
+                withPrincipal(100).withPrincipalPaid(50).
+                withInterest(10).withInterestPaid(5).
+                withExtraInterest(9).withExtraInterestPaid(4.5).
+                withMiscFees(8).withMiscFeesPaid(4).
+                withPenalty(7).withPenaltyPaid(3.5).
+                withMiscPenalty(6).withMiscPenaltyPaid(3).
+                withFees(5).withFeesPaid(2.5).
                 build();
         return new Schedule(DISBURSEMENT_DATE, DAILY_INTEREST_RATE, LOAN_AMOUNT, Arrays.asList(installment1));
     }

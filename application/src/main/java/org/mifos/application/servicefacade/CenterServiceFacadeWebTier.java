@@ -41,7 +41,6 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
@@ -52,7 +51,6 @@ import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerActivityEntity;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
@@ -96,6 +94,7 @@ import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
+import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
 import org.mifos.dto.screen.ClosedAccountDto;
 import org.mifos.dto.screen.CustomerNoteFormDto;
@@ -150,9 +149,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         List<PersonnelDto> activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForCenter();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
-
         List<FeeBO> fees = customerDao.retrieveFeesApplicableToCenters();
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
 
@@ -166,7 +162,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
             applicableDefaultAdditionalFees.add(new ApplicableAccountFeeDto(fee.getFeeIdValue().intValue(), fee.getFeeName(), fee.getAmount(), fee.isRemoved(), fee.isWeekly(), fee.isMonthly(), fee.isPeriodic(), fee.getFeeSchedule()));
         }
 
-        return new CenterFormCreationDto(activeLoanOfficersForBranch, customFieldDtos, applicableDefaultAdditionalFees, applicableDefaultAccountFees);
+        return new CenterFormCreationDto(activeLoanOfficersForBranch, applicableDefaultAdditionalFees, applicableDefaultAccountFees);
     }
 
     @Override
@@ -237,10 +233,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(center, userContext
                 .getLocaleId());
 
-        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForCenter();
-        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(center.getCustomFields(),
-                fieldDefinitions, userContext);
-
         DateTime mfiJoiningDate = new DateTime();
         String mfiJoiningDateAsString = "";
         if (center.getMfiJoiningDate() != null) {
@@ -255,7 +247,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         }
         return new CenterDto(loanOfficerId, center.getCustomerId(), center.getGlobalCustNum(), mfiJoiningDate,
                 mfiJoiningDateAsString, center.getExternalId(), address, customerPositionDtos,
-                customFieldDtos, customerList, activeLoanOfficersForBranch, true);
+                customerList, activeLoanOfficersForBranch, true);
     }
 
     private Short extractLoanOfficerId(CustomerBO customer) {
@@ -830,5 +822,31 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public List<CustomerDetailDto> retrieveCustomersUnderUser(Short loanOfficerId) {
+
+        PersonnelBO loanOfficer = this.personnelDao.findPersonnelById(loanOfficerId);
+
+        List<CustomerDetailDto> customerList = new ArrayList<CustomerDetailDto>();
+
+        if (ClientRules.getCenterHierarchyExists()) {
+            customerList = this.customerDao.findActiveCentersUnderUser(loanOfficer);
+        } else {
+            customerList = this.customerDao.findGroupsUnderUser(loanOfficer);
+        }
+
+        return customerList;
+    }
+
+    @Override
+    public String retrieveOfficeName(Short officeId) {
+        return this.officeDao.findOfficeById(officeId).getOfficeName();
+    }
+
+    @Override
+    public UserDetailDto retrieveUsersDetails(Short userId) {
+        return this.personnelDao.findPersonnelById(userId).toDto();
     }
 }

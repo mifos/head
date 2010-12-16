@@ -31,8 +31,8 @@ import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
-import org.mifos.dto.domain.SavingsAccountStatusDto;
-import org.mifos.dto.domain.SavingsAccountUpdateStatus;
+import org.mifos.dto.domain.AccountStatusDto;
+import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
@@ -82,10 +82,10 @@ public interface SavingsServiceFacade {
     Long createSavingsAccount(SavingsAccountCreationDto savingsAccountCreation);
 
     @PreAuthorize("isFullyAuthenticated()")
-    SavingsAccountStatusDto retrieveAccountStatuses(Long savingsId);
+    AccountStatusDto retrieveAccountStatuses(Long savingsId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus);
+    void updateSavingsAccountStatus(AccountUpdateStatus updateStatus);
 
     @PreAuthorize("isFullyAuthenticated()")
     SavingsAccountDepositDueDto retrieveDepositDueDetails(String savingsSystemId);

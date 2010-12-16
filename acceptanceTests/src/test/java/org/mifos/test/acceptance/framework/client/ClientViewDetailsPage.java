@@ -196,5 +196,11 @@ public class ClientViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ViewClientChargesDetail(selenium);
     }
+
+    public EditMeetingPage navigateToEditMeetingSchedule() {
+        selenium.click("viewClientDetails.link.editMeetingScheduleAddGroup");
+        waitForPageToLoad();
+        return new EditMeetingPage(selenium);
+    }
 }
 

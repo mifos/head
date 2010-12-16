@@ -89,7 +89,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 
         final AccountReferenceDto accountReferenceDto = new AccountReferenceDto(Integer.valueOf(actionForm.getAccountId()));
         AccountPaymentDto accountPaymentDto = accountServiceFacade.getAccountPaymentInformation(
-                Integer.valueOf(accountReferenceDto.getAccountId()), request.getParameter(Constants.INPUT), userContext.getLocaleId(),
+                accountReferenceDto.getAccountId(), request.getParameter(Constants.INPUT), userContext.getLocaleId(),
                 new UserReferenceDto(userContext.getId()), DateUtils.getCurrentJavaDateTime());
 
         SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.getVersion(), request);
@@ -98,7 +98,7 @@ public class AccountApplyPaymentAction extends BaseAction {
 
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, accountPaymentDto.getPaymentTypeList(), request);
 
-        actionForm.setAmount(accountPaymentDto.getTotalPaymentDue().toString());
+        actionForm.setAmount(accountPaymentDto.getTotalPaymentDue());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 

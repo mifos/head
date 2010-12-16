@@ -17,31 +17,32 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.loan.struts.action;
 
-import java.util.List;
+package org.mifos.dto.screen;
 
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.dto.domain.ValueListElement;
+import java.sql.Date;
 
-/**
- *
- */
-public class LoanCreationGlimDto {
+public class CustomerHistoricalDataDto {
 
-    private final List<ValueListElement> loanPurposes;
-    private final List<ClientBO> activeClientsOfGroup;
+    private final boolean client;
+    private final boolean group;
+    private final Date mfiJoiningDate;
 
-    public LoanCreationGlimDto(final List<ValueListElement> loanPurposes, final List<ClientBO> activeClientsOfGroup) {
-        this.loanPurposes = loanPurposes;
-        this.activeClientsOfGroup = activeClientsOfGroup;
+    public CustomerHistoricalDataDto(boolean client, boolean group, Date mfiJoiningDate) {
+        this.client = client;
+        this.group = group;
+        this.mfiJoiningDate = mfiJoiningDate;
     }
 
-    public List<ValueListElement> getLoanPurposes() {
-        return this.loanPurposes;
+    public boolean isClient() {
+        return this.client;
     }
 
-    public List<ClientBO> getActiveClientsOfGroup() {
-        return this.activeClientsOfGroup;
+    public boolean isGroup() {
+        return this.group;
+    }
+
+    public Date getMfiJoiningDate() {
+        return this.mfiJoiningDate;
     }
 }

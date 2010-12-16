@@ -20,6 +20,10 @@
 
 package org.mifos.customers.persistence;
 
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
@@ -27,7 +31,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
@@ -60,11 +63,6 @@ import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.util.UserContext;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  *
@@ -234,18 +232,12 @@ public interface CustomerDao {
 
     List<PersonnelLevelEntity> retrievePersonnelLevels();
 
-    Iterator<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId);
-
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator();
-
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator();
+    List<Object[]> getCustomFieldResponses(List<Short> customFieldIds);
 
     /**
      * <code>phoneNumber</code> is stripped to contain numeric characters only
      */
     List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber);
-
-    Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForCenterIterator();
 
     List<AccountBO> retrieveAllClosedLoanAndSavingsAccounts(Integer customerId);
 }

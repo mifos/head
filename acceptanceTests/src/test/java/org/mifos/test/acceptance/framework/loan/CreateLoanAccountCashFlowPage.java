@@ -10,6 +10,9 @@ import org.testng.Assert;
 import java.util.Locale;
 
 public class CreateLoanAccountCashFlowPage extends AbstractPage{
+    String totalCapital = "totalCapital";
+    String totalLiability = "totalLiability";
+
     public CreateLoanAccountCashFlowPage(Selenium selenium) {
         super(selenium);
     }
@@ -44,13 +47,15 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         return this;
     }
 
-    public CreateLoanAccountCashFlowPage enterValidData(int incremental, int cashFlowBase) {
+    public CreateLoanAccountCashFlowPage enterValidData(int incremental, int cashFlowBase, String totalCapital, String totalLiability) {
         int noOfMonths = selenium.getXpathCount("//input[contains(@id,'expense')]").intValue();
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
             selenium.type("//tr[" + rowIndex + "]/td[2]/input","100");
             selenium.type("//tr[" + rowIndex + "]/td[3]/input", String.valueOf(cashFlowBase + incremental));
             selenium.type("//tr[" + rowIndex + "]/td[4]/input","notes" + rowIndex);
         }
+        selenium.type(this.totalCapital, totalCapital);
+        selenium.type(this.totalLiability, totalLiability);
         return this;
     }
 
@@ -58,5 +63,26 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         selenium.click("_eventId_capture");
         waitForPageToLoad();
         return new ViewInstallmentDetailsPage(selenium);
+    }
+
+    public CreateLoanAccountCashFlowPage verifyCashFlowFields() {
+        Assert.assertTrue(selenium.getValue(totalCapital).equals(""));
+        Assert.assertTrue(selenium.getValue(totalLiability).equals(""));
+        clickContinue();
+        Assert.assertTrue(selenium.isTextPresent("Total Capital should not be empty"));
+        Assert.assertTrue(selenium.isTextPresent("Total Liability should not be empty"));
+//        selenium.type(totalCapital,"abc");
+//        selenium.type(totalLiability,"abc");
+//        Assert.assertTrue(selenium.getValue(totalCapital).equals(""));
+//        Assert.assertTrue(selenium.getValue(totalLiability).equals(""));
+        return this;
+    }
+
+    public CreateLoanAccountCashFlowPage verifyInvalidIndebentRate(String maxValue, String capital, String liability) {
+        selenium.type(totalCapital, capital);
+        selenium.type(totalLiability, liability);
+        clickContinue();
+        Assert.assertTrue(selenium.isTextPresent("Indebtedness rate of the client is 49.99 % which should be lesser than the allowable value of " + maxValue + " %"));
+        return this;
     }
 }

@@ -42,6 +42,7 @@ public class MarkdownLinkFilterWriter extends Writer {
         this.dest = dest;
     }
 
+    @Override
     public void write(char[] cbuf, int off, int len) throws IOException {
         StringBuffer slurped = new StringBuffer();
         for (int i = 0; i < len; i++) {
@@ -54,10 +55,12 @@ public class MarkdownLinkFilterWriter extends Writer {
         out.write(markedDown);
     }
 
+    @Override
     public void flush() throws IOException {
         out.flush();
     }
 
+    @Override
     public void close() throws IOException {
         out.close();
     }

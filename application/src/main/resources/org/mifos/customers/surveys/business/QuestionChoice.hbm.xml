@@ -8,7 +8,7 @@
                <id name="choiceId" column="choice_id" type="integer" unsaved-value="0" access="field">
                        <generator class="native"/>
                </id>
-               <discriminator column="ppi" type="yes_no"/>
+               <discriminator column="ppi" type="yes_no" force="true"/>
                <property name="choiceText" column="choice_text" not-null="true"/>
                <property name="choiceOrder" column="choice_order" not-null="true" insert="false" update="false"/>
                <subclass name="org.mifos.customers.ppi.business.PPIChoice" discriminator-value="Y">

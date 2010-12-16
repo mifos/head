@@ -49,7 +49,6 @@ import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
@@ -1697,26 +1696,10 @@ public class CustomerDaoHibernate implements CustomerDao {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Iterator<CustomerCustomFieldEntity> getCustomFieldResponses(Short customFieldId) {
+    public List<Object[]> getCustomFieldResponses(List<Short> customFieldIds) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOM_FIELD_ID", customFieldId);
-        return (Iterator<CustomerCustomFieldEntity>) genericDao.executeNamedQueryIterator("CustomerCustomFieldEntity.getResponses", queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForClientIterator() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.CLIENT.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public Iterator<CustomFieldDefinitionEntity> retrieveCustomFieldEntitiesForGroupIterator() {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(MasterConstants.ENTITY_TYPE, EntityType.GROUP.getValue());
-        return (Iterator<CustomFieldDefinitionEntity>) genericDao.executeNamedQueryIterator(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
+        queryParameters.put("CUSTOM_FIELD_ID", customFieldIds);
+        return (List<Object[]>) this.genericDao.executeNamedQuery("CustomerCustomFieldEntity.getResponses", queryParameters);
     }
 
     @SuppressWarnings("unchecked")

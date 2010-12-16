@@ -45,7 +45,7 @@ import org.testng.annotations.Test;
 
 @SuppressWarnings("PMD")
 @ContextConfiguration(locations = { "classpath:ui-test-context.xml" })
-@Test(sequential = true, groups = {"loan","acceptance","ui"})
+@Test(sequential = true, groups = {"loan","acceptance","ui", "smoke"})
 public class CreateGroupLoanAccountTest extends UiTestCaseBase {
 
     private LoanTestHelper loanTestHelper;
@@ -99,7 +99,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPage();
     }
 
-//    @Test( groups = {"smoke"})
     @SuppressWarnings({ "PMD.SignatureDeclareThrowsException"})
     private void newMonthlyGroupLoanAccountWithMeetingOnSpecificDayOfMonth() throws Exception {
 
@@ -127,7 +126,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountPage.verifyPage();
     }
 
-    @Test( groups = {"smoke"})
+    @Test(enabled=false, groups={"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void newMonthlyGroupLoanAccountWithMeetingOnSameWeekAndWeekdayOfMonth() throws Exception {
 
@@ -155,6 +154,7 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true, groups={"smoke"})
     public void tryCreateGroupLoanWithoutMandatoryPurposeOfLoan() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_011_dbunit.xml", dataSource, selenium);
 

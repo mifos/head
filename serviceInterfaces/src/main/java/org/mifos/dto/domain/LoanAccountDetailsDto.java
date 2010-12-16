@@ -18,14 +18,34 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.loan.util.helpers;
+package org.mifos.dto.domain;
+
+import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.util.LocalizationConverter;
 
-public class LoanAccountDetailsDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
+public class LoanAccountDetailsDto implements Serializable {
+
+    private final Integer individualAccountId;
+    private String accountId;
+    private String clientId;
+    private String clientName;
+    private String govermentId;
+    private String loanPurpose;
+    private String loanAmount;
+    private String businessActivity;
+    private String businessActivityName;
+
+    /**
+     * @deprecated use builder to create test doubles
+     */
+    @Deprecated
+    public static LoanAccountDetailsDto createInstanceForTest(String clientId, String businessActivity,
+            String loanAmount, String accountId) {
+        return new LoanAccountDetailsDto(clientId, businessActivity, loanAmount, accountId);
+    }
 
     public LoanAccountDetailsDto(Integer individualAccountId) {
         this.individualAccountId = individualAccountId;
@@ -35,38 +55,28 @@ public class LoanAccountDetailsDto implements DataTransferObject {
         this(null);
     }
 
-    LoanAccountDetailsDto(String clientId, String businessActivity, String loanAmount) {
+    /**
+     * @deprecated use builder to create test doubles
+     */
+    @Deprecated
+    public LoanAccountDetailsDto(String clientId, String businessActivity, String loanAmount) {
         this(null);
         this.clientId = clientId;
         this.businessActivity = businessActivity;
         this.loanAmount = loanAmount;
     }
 
-    LoanAccountDetailsDto(String clientId, String businessActivity, String loanAmount, String accountId) {
+    /**
+     * @deprecated use builder to create test doubles
+     */
+    @Deprecated
+    public LoanAccountDetailsDto(String clientId, String businessActivity, String loanAmount, String accountId) {
         this(null);
         this.clientId = clientId;
         this.businessActivity = businessActivity;
         this.loanAmount = loanAmount;
         this.accountId = accountId;
     }
-
-    private final Integer individualAccountId;
-
-    private String accountId;
-
-    private String clientId;
-
-    private String clientName;
-
-    private String govermentId;
-
-    private String loanPurpose;
-
-    private String loanAmount;
-
-    private String businessActivity;
-
-    private String businessActivityName;
 
     public String getBusinessActivityName() {
         return businessActivityName;
@@ -138,12 +148,6 @@ public class LoanAccountDetailsDto implements DataTransferObject {
 
     public boolean isEmpty() {
         return StringUtils.isBlank(loanAmount) && StringUtils.isBlank(businessActivity);
-    }
-
-    public boolean isAmountZeroOrNull() {
-        return loanAmount == null
-                || (Double.compare(new LocalizationConverter().getDoubleValueForCurrentLocale(loanAmount),
-                        NumberUtils.DOUBLE_ZERO) == 0);
     }
 
     @Override
@@ -238,10 +242,5 @@ public class LoanAccountDetailsDto implements DataTransferObject {
             return false;
         }
         return true;
-    }
-
-    public static LoanAccountDetailsDto createInstanceForTest(String clientId, String businessActivity,
-            String loanAmount, String accountId) {
-        return new LoanAccountDetailsDto(clientId, businessActivity, loanAmount, accountId);
     }
 }

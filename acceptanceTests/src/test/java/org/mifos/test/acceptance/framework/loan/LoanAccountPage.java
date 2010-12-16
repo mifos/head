@@ -87,9 +87,10 @@ public class LoanAccountPage extends AbstractPage {
         return new HomePage(selenium);
     }
 
-    public void navigateToRepaymentSchedulePage() {
+    public ViewRepaymentSchedulePage navigateToRepaymentSchedulePage() {
         selenium.click("link=View repayment schedule");
         waitForPageToLoad();
+        return new ViewRepaymentSchedulePage(selenium);
     }
 
     public AccountActivityPage navigateToAccountActivityPage() {
@@ -231,4 +232,9 @@ public class LoanAccountPage extends AbstractPage {
         return selenium.getTable("loanSummaryTable.1.1").trim();
     }
 
+    public LoanAccountPage verifyInterestTypeInLoanAccountDetails(String interestType) {
+        Assert.assertTrue(selenium.isTextPresent("Interest Rate Type:  " + interestType));
+        return this;
+
+    }
 }

@@ -53,7 +53,6 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
@@ -113,7 +112,7 @@ public class ClientBO extends CustomerBO {
 
     public static ClientBO createNewInGroupHierarchy(UserContext userContext, String clientName,
             CustomerStatus clientStatus, DateTime mfiJoiningDate, CustomerBO group, PersonnelBO formedBy,
-            List<CustomerCustomFieldEntity> customerCustomFields, ClientNameDetailEntity clientNameDetailEntity,
+            ClientNameDetailEntity clientNameDetailEntity,
             DateTime dateOfBirth, String governmentId, boolean trained, DateTime trainedDate, Short groupFlag,
             String clientFirstName, String clientLastName, String secondLastName,
             ClientNameDetailEntity spouseFatherNameDetailEntity, ClientDetailEntity clientDetailEntity,
@@ -152,18 +151,12 @@ public class ClientBO extends CustomerBO {
             client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
         }
 
-        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
-                .fromCustomerCustomFieldEntity(customerCustomFields, client);
-        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-            client.addCustomField(customerCustomFieldEntity);
-        }
-
         return client;
     }
 
     public static ClientBO createNewOutOfGroupHierarchy(UserContext userContext, String clientName,
             CustomerStatus clientStatus, DateTime mfiJoiningDate, OfficeBO office, PersonnelBO loanOfficer,
-            MeetingBO meeting, PersonnelBO formedBy, List<CustomerCustomFieldEntity> customerCustomFields,
+            MeetingBO meeting, PersonnelBO formedBy,
             ClientNameDetailEntity clientNameDetailEntity, DateTime dob, String governmentId, boolean trainedBool,
             DateTime trainedDateTime, Short groupFlagValue, String clientFirstName, String clientLastName,
             String secondLastName, ClientNameDetailEntity spouseFatherNameDetailEntity,
@@ -187,12 +180,6 @@ public class ClientBO extends CustomerBO {
 
         for (ClientInitialSavingsOfferingEntity clientInitialSavingsOfferingEntity : associatedOfferings) {
             client.addOfferingAssociatedInCreate(clientInitialSavingsOfferingEntity);
-        }
-
-        List<CustomerCustomFieldEntity> populatedWithCustomerReference = CustomerCustomFieldEntity
-                .fromCustomerCustomFieldEntity(customerCustomFields, client);
-        for (CustomerCustomFieldEntity customerCustomFieldEntity : populatedWithCustomerReference) {
-            client.addCustomField(customerCustomFieldEntity);
         }
 
         return client;

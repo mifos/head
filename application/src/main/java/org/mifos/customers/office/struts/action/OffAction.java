@@ -367,8 +367,8 @@ public class OffAction extends BaseAction {
     }
 
     private void loadCustomFieldDefinitions(HttpServletRequest request) throws Exception {
-        MasterDataService masterDataService = new MasterDataService();
-        List<CustomFieldDefinitionEntity> customFieldDefs = masterDataService.retrieveCustomFieldsDefinition(EntityType.OFFICE);
+
+        List<CustomFieldDefinitionEntity> customFieldDefs = new ArrayList<CustomFieldDefinitionEntity>();
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
     }
 

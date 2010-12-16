@@ -20,8 +20,7 @@
 
 package org.mifos.customers.struts.action;
 
-import java.sql.Date;
-import java.util.Locale;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,48 +28,27 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerHistoricalDataEntity;
-import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.struts.actionforms.CustHistoricalDataActionForm;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.dto.domain.CustomerHistoricalDataUpdateRequest;
+import org.mifos.dto.screen.CustomerHistoricalDataDto;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class CustHistoricalDataAction extends BaseAction {
-
-    @Override
-    protected BusinessService getService() {
-        return getCustomerBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("custHistoricalDataAction");
@@ -85,96 +63,110 @@ public class CustHistoricalDataAction extends BaseAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward getHistoricalData(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        CustomerBO customerBO = new CustomerBusinessService().findBySystemId(request
-                .getParameter(CustomerConstants.GLOBAL_CUST_NUM));
-        customerBO.setUserContext(getUserContext(request));
-        SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerBO, request);
-        setTypeForGet(customerBO, form);
-        CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO.getHistoricalData();
-        if (customerHistoricalDataEntity == null) {
-            customerHistoricalDataEntity = new CustomerHistoricalDataEntity(customerBO);
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
+        CustHistoricalDataActionForm actionForm = (CustHistoricalDataActionForm) form;
+        String globalCustNum = request.getParameter(CustomerConstants.GLOBAL_CUST_NUM);
+
+        CustomerHistoricalDataDto historicalData = this.groupServiceFacade.retrieveCustomerHistoricalData(globalCustNum);
+
+        CustomerBO customer = this.customerDao.findCustomerBySystemId(globalCustNum);
+        UserContext userContext = getUserContext(request);
+        customer.updateDetails(userContext);
+
+        if (historicalData.isClient()) {
+            actionForm.setType("Client");
+        } else if (historicalData.isGroup()) {
+            actionForm.setType("Group");
         }
-        String currentDate = DateUtils.getCurrentDate(getUserContext(request).getPreferredLocale());
-        SessionUtils.setAttribute(CustomerConstants.MFIJOININGDATE,
-                (customerHistoricalDataEntity.getMfiJoiningDate() == null ? DateUtils.getLocaleDate(getUserContext(
-                        request).getPreferredLocale(), currentDate) : new Date(customerHistoricalDataEntity
-                        .getMfiJoiningDate().getTime())), request);
+
+        CustomerHistoricalDataEntity customerHistoricalDataEntity = customer.getHistoricalData();
+        if (customerHistoricalDataEntity == null) {
+            customerHistoricalDataEntity = new CustomerHistoricalDataEntity(customer);
+        }
+
+        SessionUtils.removeAttribute(Constants.BUSINESS_KEY, request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, customer, request);
+        SessionUtils.setAttribute(CustomerConstants.MFIJOININGDATE, historicalData.getMfiJoiningDate(), request);
         SessionUtils.setAttribute(CustomerConstants.CUSTOMER_HISTORICAL_DATA, customerHistoricalDataEntity, request);
         return mapping.findForward(ActionForwards.getHistoricalData_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadHistoricalData(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
+        UserContext userContext = getUserContext(request);
         CustomerHistoricalDataEntity customerHistoricalDataEntity = (CustomerHistoricalDataEntity) SessionUtils
                 .getAttribute(CustomerConstants.CUSTOMER_HISTORICAL_DATA, request);
-        setFormAttributes(request, historicalActionForm, customerHistoricalDataEntity);
-        historicalActionForm
-                .setMfiJoiningDate(getMfiJoiningDate(getUserContext(request).getPreferredLocale(), request));
+
+        historicalActionForm.setInterestPaid(getStringValue(customerHistoricalDataEntity.getInterestPaid()));
+        historicalActionForm.setLoanAmount(getStringValue(customerHistoricalDataEntity.getLoanAmount()));
+        historicalActionForm.setLoanCycleNumber(getStringValue(customerHistoricalDataEntity.getLoanCycleNumber()));
+        historicalActionForm.setMissedPaymentsCount(getStringValue(customerHistoricalDataEntity.getMissedPaymentsCount()));
+        historicalActionForm.setCommentNotes(customerHistoricalDataEntity.getNotes());
+        historicalActionForm.setProductName(customerHistoricalDataEntity.getProductName());
+        historicalActionForm.setTotalAmountPaid(getStringValue(customerHistoricalDataEntity.getTotalAmountPaid()));
+        historicalActionForm.setTotalPaymentsCount(getStringValue(customerHistoricalDataEntity.getTotalPaymentsCount()));
+
+        String mfiJoiningDate = SessionUtils.getAttribute(CustomerConstants.MFIJOININGDATE, request).toString();
+        historicalActionForm.setMfiJoiningDate(DateUtils.getUserLocaleDate(userContext.getPreferredLocale(), mfiJoiningDate));
         return mapping.findForward(ActionForwards.loadHistoricalData_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previewHistoricalData(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previewHistoricalData(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.previewHistoricalData_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previousHistoricalData(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previousHistoricalData(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.previousHistoricalData_success.toString());
     }
 
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward updateHistoricalData(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         CustomerBO customerBOInSession = (CustomerBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        CustomerBO customerBO = getCustomerBusinessService().getCustomer(customerBOInSession.getCustomerId());
+        CustomerBO customerBO = this.customerDao.findCustomerById(customerBOInSession.getCustomerId());
         checkVersionMismatch(customerBOInSession.getVersionNo(), customerBO.getVersionNo());
-        customerBO.setVersionNo(customerBOInSession.getVersionNo());
         customerBO.setUserContext(getUserContext(request));
-        customerBOInSession = null;
-        setInitialObjectForAuditLogging(customerBO);
-        CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO.getHistoricalData();
-        if (customerBO.getPersonnel() != null) {
-            checkPermissionForAddingHistoricalData(customerBO.getLevel(), getUserContext(request), customerBO
-                    .getOffice().getOfficeId(), customerBO.getPersonnel().getPersonnelId());
-        } else {
-            checkPermissionForAddingHistoricalData(customerBO.getLevel(), getUserContext(request), customerBO
-                    .getOffice().getOfficeId(), getUserContext(request).getId());
-        }
-        // Integer oldLoanCycleNo = 0;
-        if (customerHistoricalDataEntity == null) {
-            customerHistoricalDataEntity = new CustomerHistoricalDataEntity(customerBO);
-            customerHistoricalDataEntity.setCreatedBy(customerBO.getUserContext().getId());
-            customerHistoricalDataEntity.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
-        } else {
-            // oldLoanCycleNo =
-            // customerHistoricalDataEntity.getLoanCycleNumber();
-            customerHistoricalDataEntity.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
-            customerHistoricalDataEntity.setUpdatedBy(customerBO.getUserContext().getId());
-        }
-        setCustomerHistoricalDataEntity(customerBO, historicalActionForm, customerHistoricalDataEntity);
-        customerBO.updateHistoricalData(customerHistoricalDataEntity);
-        customerBO.update();
+
+
+        CustHistoricalDataActionForm historicalActionForm = (CustHistoricalDataActionForm) form;
+        CustomerHistoricalDataUpdateRequest historicalData = createHistoricalDataUpdateRequest(historicalActionForm, getUserContext(request));
+        this.groupServiceFacade.updateCustomerHistoricalData(customerBO.getGlobalCustNum(), historicalData);
+
         return mapping.findForward(ActionForwards.updateHistoricalData_success.toString());
     }
 
+    private CustomerHistoricalDataUpdateRequest createHistoricalDataUpdateRequest(CustHistoricalDataActionForm historicalActionForm, UserContext userContext) throws InvalidDateException {
+        String interestPaid = historicalActionForm.getInterestPaid();
+        String loanAmount = historicalActionForm.getLoanAmount();
+        Integer loanCycleNumber = historicalActionForm.getLoanCycleNumberValue();
+        Integer missedPaymentsCount = historicalActionForm.getMissedPaymentsCountValue();
+        String notes = historicalActionForm.getCommentNotes();
+        String productName = historicalActionForm.getProductName();
+        String totalAmountPaid = historicalActionForm.getTotalAmountPaid();
+        Integer totalPaymentsCount = historicalActionForm.getTotalPaymentsCountValue();
+        Date mfiJoiningDate = getDateFromString(historicalActionForm.getMfiJoiningDate(), userContext.getPreferredLocale());
+
+        return new CustomerHistoricalDataUpdateRequest(mfiJoiningDate, interestPaid, loanAmount, loanCycleNumber,
+                missedPaymentsCount, notes, productName, totalAmountPaid, totalPaymentsCount);
+    }
+
     @TransactionDemarcate(saveToken = true)
-    public ActionForward cancelHistoricalData(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancelHistoricalData(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(getDetailAccountPage(form));
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute(SavingsConstants.METHODCALLED);
         String forward = null;
         if (method != null) {
@@ -183,15 +175,6 @@ public class CustHistoricalDataAction extends BaseAction {
             }
         }
         return mapping.findForward(forward);
-    }
-
-    private void setTypeForGet(CustomerBO customerBO, ActionForm form) {
-        CustHistoricalDataActionForm actionForm = (CustHistoricalDataActionForm) form;
-        if (customerBO instanceof ClientBO) {
-            actionForm.setType("Client");
-        } else if (customerBO instanceof GroupBO) {
-            actionForm.setType("Group");
-        }
     }
 
     private String getDetailAccountPage(ActionForm form) {
@@ -204,53 +187,5 @@ public class CustHistoricalDataAction extends BaseAction {
             forward = ActionForwards.client_detail_page.toString();
         }
         return forward;
-    }
-
-    private void setFormAttributes(HttpServletRequest request, CustHistoricalDataActionForm historicalActionForm,
-            CustomerHistoricalDataEntity historicalDataEntity) {
-        historicalActionForm.setInterestPaid(getStringValue(historicalDataEntity.getInterestPaid()));
-        historicalActionForm.setLoanAmount(getStringValue(historicalDataEntity.getLoanAmount()));
-        historicalActionForm.setLoanCycleNumber(getStringValue(historicalDataEntity.getLoanCycleNumber()));
-        historicalActionForm.setMissedPaymentsCount(getStringValue(historicalDataEntity.getMissedPaymentsCount()));
-        historicalActionForm.setCommentNotes(historicalDataEntity.getNotes());
-        historicalActionForm.setProductName(historicalDataEntity.getProductName());
-        historicalActionForm.setTotalAmountPaid(getStringValue(historicalDataEntity.getTotalAmountPaid()));
-        historicalActionForm.setTotalPaymentsCount(getStringValue(historicalDataEntity.getTotalPaymentsCount()));
-    }
-
-    private String getMfiJoiningDate(Locale locale, HttpServletRequest request) throws ApplicationException {
-        return DateUtils.getUserLocaleDate(locale, SessionUtils.getAttribute(CustomerConstants.MFIJOININGDATE, request)
-                .toString());
-    }
-
-    private void setCustomerHistoricalDataEntity(CustomerBO customerBO,
-            CustHistoricalDataActionForm historicalActionForm, CustomerHistoricalDataEntity historicalDataEntity) throws InvalidDateException {
-        historicalDataEntity.setInterestPaid(StringUtils.isBlank(historicalActionForm.getInterestPaid()) ? null : new Money(Money.getDefaultCurrency(), historicalActionForm.getInterestPaid()));
-        historicalDataEntity.setLoanAmount(StringUtils.isBlank(historicalActionForm.getLoanAmount()) ? null : new Money(Money.getDefaultCurrency(), historicalActionForm.getLoanAmount()));
-        historicalDataEntity.setLoanCycleNumber(historicalActionForm.getLoanCycleNumberValue());
-        historicalDataEntity.setMissedPaymentsCount(historicalActionForm.getMissedPaymentsCountValue());
-        historicalDataEntity.setNotes(historicalActionForm.getCommentNotes());
-        historicalDataEntity.setProductName(historicalActionForm.getProductName());
-        historicalDataEntity.setTotalAmountPaid(StringUtils.isBlank(historicalActionForm.getTotalAmountPaid()) ? null : new Money(Money.getDefaultCurrency(), historicalActionForm.getTotalAmountPaid()));
-        historicalDataEntity.setTotalPaymentsCount(historicalActionForm.getTotalPaymentsCountValue());
-        historicalDataEntity.setMfiJoiningDate(getDateFromString(historicalActionForm.getMfiJoiningDate(), customerBO
-                .getUserContext().getPreferredLocale()));
-    }
-
-    private CustomerBusinessService getCustomerBusinessService() {
-        return (CustomerBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Customer);
-    }
-
-    private void checkPermissionForAddingHistoricalData(CustomerLevel customerLevel, UserContext userContext,
-            Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
-        if (!isPermissionAllowed(customerLevel, userContext, recordOfficeId, recordLoanOfficerId)) {
-            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
-
-    private boolean isPermissionAllowed(CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId,
-            Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isAddingHistoricaldataPermittedForCustomers(customerLevel, userContext,
-                recordOfficeId, recordLoanOfficerId);
     }
 }

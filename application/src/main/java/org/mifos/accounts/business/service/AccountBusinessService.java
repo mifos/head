@@ -62,7 +62,6 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
@@ -321,14 +320,6 @@ public class AccountBusinessService implements BusinessService {
         applicableCharge.setFeeName("Misc Penalty");
         applicableCharge.setIsRateType(false);
         applicableChargeList.add(applicableCharge);
-    }
-
-    public void initializeStateMachine(AccountTypes accountType, CustomerLevel customerLevel) throws ServiceException {
-        try {
-            AccountStateMachines.getInstance().initialize(accountType, customerLevel);
-        } catch (StatesInitializationException e) {
-            throw new ServiceException(e);
-        }
     }
 
     public String getStatusName(AccountState accountState, AccountTypes accountType) {

@@ -174,6 +174,7 @@ public class BranchReportHelperIntegrationTest extends BranchReportIntegrationTe
         assertSameCollections(generatedClientSummaryReport, retrievedBranchReportClientSummaries);
     }
 
+    @Override
     @Before
     public void setUp() throws Exception {
         session = StaticHibernateUtil.getSessionTL();

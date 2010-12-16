@@ -90,7 +90,7 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
         return paymentStatus;
     }
 
-    private PaymentStatus getPaymentStatusAsEnum() {
+    public PaymentStatus getPaymentStatusAsEnum() {
         return PaymentStatus.fromInt(paymentStatus);
     }
 
@@ -115,7 +115,7 @@ public abstract class AccountActionDateEntity extends AbstractEntity implements 
     }
 
     public MifosCurrency getCurrency() {
-        return getAccount().getCurrency();
+        return account.getCurrency();
     }
 
     public boolean isDueToday() {

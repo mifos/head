@@ -211,4 +211,5 @@ public interface LoanConstants {
     String INSTALLMENTS = "installments";
     String WAIVER_INTEREST_SELECTED = "waiverInterestSelected";
     String WAIVER_INTEREST_NOT_CONFIGURED= "loan.waiverInterest.not.configured";
+    String ORIGINAL_INSTALLMENTS = "originalInstallments";
 }

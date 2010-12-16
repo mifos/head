@@ -20,24 +20,20 @@
 
 package org.mifos.dto.screen;
 
-import java.util.List;
-
 import org.mifos.dto.domain.ClientRulesDto;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 
 public class ClientPersonalInfoDto {
 
     private final ClientDropdownsDto clientDropdowns;
-    private final List<CustomFieldDto> customFieldDtos;
     private final ClientRulesDto clientRules;
     private final CustomerDetailDto customerDetail;
     private final ClientDetailDto clientDetail;
 
     @SuppressWarnings("PMD")
-    public ClientPersonalInfoDto(ClientDropdownsDto clientDropdowns, List<CustomFieldDto> customFieldDtos, ClientRulesDto clientRules, CustomerDetailDto customerDetailDto, ClientDetailDto clientDetailDto) {
+    public ClientPersonalInfoDto(ClientDropdownsDto clientDropdowns,
+            ClientRulesDto clientRules, CustomerDetailDto customerDetailDto, ClientDetailDto clientDetailDto) {
         this.clientDropdowns = clientDropdowns;
-        this.customFieldDtos = customFieldDtos;
         this.clientRules = clientRules;
         this.customerDetail = customerDetailDto;
         this.clientDetail = clientDetailDto;
@@ -45,10 +41,6 @@ public class ClientPersonalInfoDto {
 
     public ClientDropdownsDto getClientDropdowns() {
         return this.clientDropdowns;
-    }
-
-    public List<CustomFieldDto> getCustomFieldViews() {
-        return this.customFieldDtos;
     }
 
     public ClientRulesDto getClientRules() {

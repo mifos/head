@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
@@ -49,7 +50,6 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -74,12 +74,14 @@ import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.service.CustomerBusinessService;
+import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
@@ -887,7 +889,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     private void performGlimSpecificValidations(ActionErrors errors, MifosCurrency currency, HttpServletRequest request)
-            throws PageExpiredException, ServiceException {
+            throws PageExpiredException, PersistenceException {
         if (configService.isGlimEnabled() && getCustomer(request).isGroup()) {
             Locale locale = getUserContext(request).getPreferredLocale();
             removeClientsNotCheckedInForm(request);
@@ -1202,6 +1204,12 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         }
     }
 
+    public boolean isAmountZeroOrNull(String loanAmount) {
+        return StringUtils.isBlank(loanAmount)
+                || (Double.compare(new LocalizationConverter().getDoubleValueForCurrentLocale(loanAmount),
+                        NumberUtils.DOUBLE_ZERO) == 0);
+    }
+
     void validateSumOfTheAmountsSpecified(ActionErrors errors) {
         List<String> ids_clients_selected = getClients();
         double totalAmount = new Double(0);
@@ -1209,7 +1217,8 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         for (LoanAccountDetailsDto loanDetail : getClientDetails()) {
             if (!foundInvalidAmount) {
                 if (ids_clients_selected.contains(loanDetail.getClientId())) {
-                    if (loanDetail.isAmountZeroOrNull()) {
+
+                    if (isAmountZeroOrNull(loanDetail.getLoanAmount())) {
                         addError(errors, LoanExceptionConstants.CUSTOMER_LOAN_AMOUNT_FIELD);
                         foundInvalidAmount = true;
                     } else {
@@ -1364,7 +1373,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         } catch (PageExpiredException e) {
             errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
                     ExceptionConstants.PAGEEXPIREDEXCEPTION));
-        } catch (ServiceException e) {
+        } catch (PersistenceException e) {
             errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, new ActionMessage(
                     ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
         }
@@ -1398,15 +1407,15 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         }
     }
 
-    private CustomerBO getCustomer(Integer customerId) throws ServiceException {
-        return new CustomerBusinessService().getCustomer(customerId);
+    private CustomerBO getCustomer(Integer customerId) throws PersistenceException {
+        return new CustomerPersistence().getCustomer(customerId);
     }
 
     /**
      * FIXME - keithw - loan refactoring - try to remove this usage from validation stages
      */
     @Deprecated
-    private CustomerBO getCustomer(HttpServletRequest request) throws PageExpiredException, ServiceException {
+    private CustomerBO getCustomer(HttpServletRequest request) throws PageExpiredException, PersistenceException {
         CustomerDetailDto oldCustomer = (CustomerDetailDto) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
         Integer oldCustomerId;
         if (oldCustomer == null) {
@@ -1501,7 +1510,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     public Double getMinLoanAmountValue() {
-        return amountRange.getMinLoanAmount();
+        if (this.amountRange != null) {
+            return amountRange.getMinLoanAmount();
+        }
+
+        return Double.valueOf("0");
     }
 
     public String getMaxLoanAmount() {
@@ -1509,7 +1522,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     public Double getMaxLoanAmountValue() {
-        return amountRange.getMaxLoanAmount();
+        if (this.amountRange != null) {
+            return amountRange.getMaxLoanAmount();
+        }
+
+        return Double.valueOf("0");
     }
 
     public String getMinNoInstallments() {
@@ -1517,7 +1534,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     public Short getMinNoInstallmentsValue() {
-        return installmentRange.getMinNoOfInstall();
+        if (this.installmentRange != null) {
+            return installmentRange.getMinNoOfInstall();
+        }
+
+        return Short.valueOf("0");
     }
 
     public String getMaxNoInstallments() {
@@ -1525,7 +1546,11 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     public Short getMaxNoInstallmentsValue() {
-        return installmentRange.getMaxNoOfInstall();
+        if (this.installmentRange != null) {
+            return installmentRange.getMaxNoOfInstall();
+        }
+
+        return Short.valueOf("0");
     }
 
     public void removeClientDetailsWithNoMatchingClients() {

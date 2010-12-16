@@ -137,4 +137,8 @@ public class PaymentAllocation {
     boolean hasAllocation() {
         return getTotalPaid().isGreaterThanZero();
     }
+
+    Money getTotalInterestPaid() {
+        return getInterestPaid().add(getExtraInterestPaid());
+    }
 }

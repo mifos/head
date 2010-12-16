@@ -1,21 +1,20 @@
 package org.mifos.application.master.business.service;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.util.helpers.EntityType;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class MasterDataServiceTest {
     final PersonnelPersistence personnelPersistence = mock(PersonnelPersistence.class);
@@ -111,20 +110,4 @@ public class MasterDataServiceTest {
         } catch (ServiceException e) {
         }
     }
-
-    @Test
-    @ExpectedException(value = ServiceException.class)
-    public void testInvalidConnectionForRetrieveCustomFieldsDefinition() throws PersistenceException {
-        try {
-            Short id = Short.valueOf("1");
-            when(masterPersistence.retrieveCustomFieldsDefinition(EntityType.CENTER)).
-                    thenThrow(new PersistenceException("some exception"));
-            service.retrieveCustomFieldsDefinition(EntityType.CENTER);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-
 }
-

@@ -20,7 +20,10 @@
 
 package org.mifos.customers.client.business.service;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,20 +38,12 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
-import java.util.List;
-
 public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
-    private SavingsOfferingBO savingsOffering1;
-
     private SavingsOfferingBO savingsOffering2;
-
     private SavingsOfferingBO savingsOffering3;
-
     private SavingsOfferingBO savingsOffering4;
-
     private ClientBusinessService service;
-
     private ClientBO client;
 
     @Before
@@ -58,7 +53,6 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     @After
     public void tearDown() throws Exception {
-        savingsOffering1 = null;
         TestObjectFactory.removeObject(savingsOffering2);
         TestObjectFactory.removeObject(savingsOffering3);
         TestObjectFactory.removeObject(savingsOffering4);
@@ -77,40 +71,18 @@ public class ClientBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     @Test
-    public void testGetActiveClientsUnderGroup() throws ServiceException {
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
-        GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
-                CustomerStatus.GROUP_ACTIVE, center);
-        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
-                CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two",
-                CustomerStatus.CLIENT_ACTIVE, group);
-        List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderGroup(group.getCustomerId());
-        Assert.assertEquals(2, clients.size());
-
-//        client = null;
-//        TestObjectFactory.cleanUp(client1);
-//        group = null;
-//        center = null;
-    }
-
-    @Test
     public void testGetActiveClientsUnderParent() throws ServiceException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         CenterBO center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
         GroupBO group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
                 CustomerStatus.GROUP_ACTIVE, center);
-        ClientBO client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
-                CustomerStatus.CLIENT_ACTIVE, group);
-        ClientBO client1 = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two",
-                CustomerStatus.CLIENT_ACTIVE, group);
+        TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client", CustomerStatus.CLIENT_ACTIVE, group);
+        TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client Two", CustomerStatus.CLIENT_ACTIVE, group);
         List<ClientBO> clients = new ClientBusinessService().getActiveClientsUnderParent(center.getSearchId(), center
                 .getOffice().getOfficeId());
         Assert.assertEquals(2, clients.size());
 
         client = null;
-//        TestObjectFactory.cleanUp(client1);
         group = null;
         center = null;
     }

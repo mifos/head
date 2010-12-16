@@ -33,10 +33,18 @@
         ]]>
     </query>
 
-    <query name="CustomerCustomFieldEntity.getResponses">
-        <![CDATA[
-        from CustomerCustomFieldEntity as ccfe
-        where ccfe.fieldId = :CUSTOM_FIELD_ID ]]>
-    </query>
+    <sql-query name="CustomerCustomFieldEntity.getResponses">
+        <return-scalar column="customer_customfield_id" type="integer" />
+		<return-scalar column="field_id" type="short" />
+		<return-scalar column="field_value" type="string" />
+        <return-scalar column="created_date" type="date" />
+        <return-scalar column="updated_date" type="date" />
+        <return-scalar column="created_by" type="short" />
+        <return-scalar column="updated_by" type="short" />
+        <return-scalar column="customer_id" type="integer" />
+	    <![CDATA[SELECT a.customer_customfield_id, a.field_id, a.field_value, b.created_date, b.updated_date, b.updated_date, b.created_by, b.updated_by, b.customer_id
+	    FROM customer_custom_field a join customer b on a.customer_id = b.customer_id
+	    where a.field_id in (:CUSTOM_FIELD_ID) order by b.customer_id]]>
+	</sql-query>
 
 </hibernate-mapping>

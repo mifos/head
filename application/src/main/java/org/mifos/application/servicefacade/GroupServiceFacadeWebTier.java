@@ -20,9 +20,11 @@
 
 package org.mifos.application.servicefacade;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -31,8 +33,8 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
@@ -42,7 +44,7 @@ import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.business.CustomerHistoricalDataEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
 import org.mifos.customers.business.service.CustomerService;
@@ -70,6 +72,7 @@ import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.CustomerFlagDto;
+import org.mifos.dto.domain.CustomerHistoricalDataUpdateRequest;
 import org.mifos.dto.domain.CustomerMeetingDto;
 import org.mifos.dto.domain.CustomerNoteDto;
 import org.mifos.dto.domain.CustomerPositionDto;
@@ -85,6 +88,7 @@ import org.mifos.dto.domain.SavingsDetailDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.screen.CenterHierarchySearchDto;
 import org.mifos.dto.screen.CenterSearchInput;
+import org.mifos.dto.screen.CustomerHistoricalDataDto;
 import org.mifos.dto.screen.GroupDisplayDto;
 import org.mifos.dto.screen.GroupInformationDto;
 import org.mifos.dto.screen.GroupPerformanceHistoryDto;
@@ -92,6 +96,9 @@ import org.mifos.dto.screen.LoanCycleCounter;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -109,6 +116,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     private final PersonnelDao personnelDao;
     private final CustomerDao customerDao;
     private final CustomerService customerService;
+    private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     public GroupServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
@@ -176,12 +184,10 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             applicableDefaultAdditionalFees.add(new ApplicableAccountFeeDto(fee.getFeeIdValue().intValue(), fee.getFeeName(), fee.getAmount(), fee.isRemoved(), fee.isWeekly(), fee.isMonthly(), fee.isPeriodic(), fee.getFeeSchedule()));
         }
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
         List<PersonnelDto> formedByPersonnel = customerDao.findLoanOfficerThatFormedOffice(centerCreation.getOfficeId());
 
-        return new GroupFormCreationDto(isCenterHierarchyExists, customFieldDtos,
-                personnelList, formedByPersonnel, applicableDefaultAccountFees, applicableDefaultAdditionalFees);
+        return new GroupFormCreationDto(isCenterHierarchyExists, personnelList,
+                formedByPersonnel, applicableDefaultAccountFees, applicableDefaultAdditionalFees);
     }
 
     @Override
@@ -194,8 +200,6 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         try {
             List<AccountFeesEntity> feesForCustomerAccount = convertFeeViewsToAccountFeeEntities(actionForm.getFeesToApply());
-
-//            CustomerCustomFieldEntity.convertCustomFieldDateToUniformPattern(customerCustomFields, userContext.getPreferredLocale());
 
             PersonnelBO formedBy = this.personnelDao.findPersonnelById(actionForm.getLoanOfficerId());
 
@@ -395,10 +399,6 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(group, userContext.getLocaleId());
 
-        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(group.getCustomFields(),
-                fieldDefinitions, userContext);
-
         DateTime mfiJoiningDate = new DateTime();
         String mfiJoiningDateAsString = "";
         if (group.getMfiJoiningDate() != null) {
@@ -413,7 +413,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         }
         return new CenterDto(loanOfficerId, group.getCustomerId(), group.getGlobalCustNum(), mfiJoiningDate,
                 mfiJoiningDateAsString, group.getExternalId(), address, customerPositionDtos,
-                customFieldDtos, customerList, activeLoanOfficersForBranch, isCenterHierarchyExists);
+                customerList, activeLoanOfficersForBranch, isCenterHierarchyExists);
     }
 
     private List<CustomerPositionDto> generateCustomerPositionViews(CustomerBO customer, Short localeId) {
@@ -554,5 +554,111 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         } catch (ApplicationException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
+    }
+
+    @Override
+    public CustomerHistoricalDataDto retrieveCustomerHistoricalData(String globalCustNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CustomerBO customer = this.customerDao.findCustomerBySystemId(globalCustNum);
+        boolean client = false;
+        boolean group = false;
+        if (customer.isClient()) {
+            client = true;
+        } else if (customer.isGroup()) {
+            group = true;
+        }
+
+        CustomerHistoricalDataEntity customerHistoricalDataEntity = customer.getHistoricalData();
+        if (customerHistoricalDataEntity == null) {
+            customerHistoricalDataEntity = new CustomerHistoricalDataEntity(customer);
+        }
+
+        try {
+            String currentDate = DateUtils.getCurrentDate(userContext.getPreferredLocale());
+
+            java.sql.Date mfiJoiningDate = null;
+            if (customerHistoricalDataEntity.getMfiJoiningDate() == null) {
+                mfiJoiningDate = DateUtils.getLocaleDate(userContext.getPreferredLocale(), currentDate);
+            } else {
+                mfiJoiningDate = new Date(customerHistoricalDataEntity.getMfiJoiningDate().getTime());
+            }
+
+            return new CustomerHistoricalDataDto(client, group, mfiJoiningDate);
+        } catch (InvalidDateException e) {
+            throw new BusinessRuleException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void updateCustomerHistoricalData(String globalCustNum, CustomerHistoricalDataUpdateRequest historicalData) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
+        customerBO.updateDetails(userContext);
+
+        try {
+            CustomerHistoricalDataEntity customerHistoricalDataEntity = customerBO.getHistoricalData();
+            if (customerBO.getPersonnel() != null) {
+
+                checkPermissionForAddingHistoricalData(customerBO.getLevel(), userContext, customerBO.getOffice()
+                        .getOfficeId(), customerBO.getPersonnel().getPersonnelId());
+            } else {
+                checkPermissionForAddingHistoricalData(customerBO.getLevel(), userContext, customerBO.getOffice()
+                        .getOfficeId(), userContext.getId());
+            }
+            // Integer oldLoanCycleNo = 0;
+            if (customerHistoricalDataEntity == null) {
+                customerHistoricalDataEntity = new CustomerHistoricalDataEntity(customerBO);
+                customerHistoricalDataEntity.setCreatedBy(customerBO.getUserContext().getId());
+                customerHistoricalDataEntity.setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
+            } else {
+                // oldLoanCycleNo =
+                // customerHistoricalDataEntity.getLoanCycleNumber();
+                customerHistoricalDataEntity.setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+                customerHistoricalDataEntity.setUpdatedBy(customerBO.getUserContext().getId());
+            }
+
+            customerHistoricalDataEntity.setInterestPaid(StringUtils.isBlank(historicalData.getInterestPaid()) ? null
+                    : new Money(Money.getDefaultCurrency(), historicalData.getInterestPaid()));
+            customerHistoricalDataEntity.setLoanAmount(StringUtils.isBlank(historicalData.getLoanAmount()) ? null
+                    : new Money(Money.getDefaultCurrency(), historicalData.getLoanAmount()));
+            customerHistoricalDataEntity.setLoanCycleNumber(historicalData.getLoanCycleNumber());
+            customerHistoricalDataEntity.setMissedPaymentsCount(historicalData.getMissedPaymentsCount());
+            customerHistoricalDataEntity.setNotes(historicalData.getNotes());
+            customerHistoricalDataEntity.setProductName(historicalData.getProductName());
+            customerHistoricalDataEntity
+                    .setTotalAmountPaid(StringUtils.isBlank(historicalData.getTotalAmountPaid()) ? null : new Money(
+                            Money.getDefaultCurrency(), historicalData.getTotalAmountPaid()));
+            customerHistoricalDataEntity.setTotalPaymentsCount(historicalData.getTotalPaymentsCount());
+            customerHistoricalDataEntity.setMfiJoiningDate(historicalData.getMfiJoiningDate());
+
+            this.transactionHelper.startTransaction();
+            this.transactionHelper.beginAuditLoggingFor(customerBO);
+
+            customerBO.updateHistoricalData(customerHistoricalDataEntity);
+            this.customerDao.save(customerBO);
+            this.transactionHelper.commitTransaction();
+        } catch (ApplicationException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        }
+    }
+
+    private void checkPermissionForAddingHistoricalData(CustomerLevel customerLevel, UserContext userContext,
+            Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
+        if (!isPermissionAllowed(customerLevel, userContext, recordOfficeId, recordLoanOfficerId)) {
+            throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    private boolean isPermissionAllowed(CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId,
+            Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isAddingHistoricaldataPermittedForCustomers(customerLevel, userContext,
+                recordOfficeId, recordLoanOfficerId);
     }
 }

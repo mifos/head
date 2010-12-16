@@ -56,7 +56,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
-        (new MifosPage(selenium)).logout();
+         (new MifosPage(selenium)).logout();
     }
 
     @Override
@@ -73,6 +73,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
         dataSetup.createUser(userLoginName, userName, officeName);
         dataSetup.createClient(clientName, officeName, userName);
+        dataSetup.addDecliningPrincipalBalance();
     }
 
     @Test(enabled=false)
@@ -82,21 +83,28 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         int noOfInstallments = 3;
         int loanAmount = 1000;
         int interestRate = 20;
+        //TODO: change interest type name
         String interestTypeName = "Declining Balance-Interest Recalculation";
+//        String interestTypeName = "InterestTypes-DecliningPrincipalBalance ";
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_PRINCIPLE_BALANCE;
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(noOfInstallments, loanAmount, interestRate, interestType);
         applicationDatabaseOperation.updateLSIM(1);
-
         DateTime disbursalDate = systemDateTime.plusDays(1);
         String loanProductName = formParameters.getOfferingName();
+        verifyDecliningPrincipalLoanProduct(interestTypeName, formParameters);
+        verifyDecliningPrincipalLoanAccount(noOfInstallments, interestTypeName, disbursalDate, loanProductName);
+    }
 
-
+    private void verifyDecliningPrincipalLoanProduct(String interestTypeName, DefineNewLoanProductPage.SubmitFormParameters formParameters) {
         loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().
                 verifyInterestTypeInPreview(interestTypeName).
                 submit().navigateToViewLoanDetails().
                 verifyInterestTypeInSummary(interestTypeName);
+    }
+
+    private void verifyDecliningPrincipalLoanAccount(int noOfInstallments, String interestTypeName, DateTime disbursalDate, String loanProductName) {
         navigationHelper.navigateToHomePage();
         loanTestHelper.
                 navigateToCreateLoanAccountEntryPageWithoutLogout(clientName,loanProductName).
@@ -104,9 +112,14 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 setInstallments(noOfInstallments).
                 verifyInterestTypeInLoanCreation(interestTypeName).
                 clickContinue().
-//                verifyLoanScheduleForDecliningPrincipal().
+                verifyLoanScheduleForDecliningPrincipal().
                 clickPreviewAndGoToReviewLoanAccountPage().
-                verifyPage().verifyInterestTypeInLoanPreview(interestTypeName);
+                verifyPage().verifyInterestTypeInLoanPreview(interestTypeName).
+                submit().navigateToLoanAccountDetailsPage().
+                verifyInterestTypeInLoanAccountDetails(interestTypeName).
+                navigateToRepaymentSchedulePage().
+                verifyScheduleForDecliningPrincipal(systemDateTime).
+                verifyScheduleDateField();
     }
 
     private DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate, int interestType) {

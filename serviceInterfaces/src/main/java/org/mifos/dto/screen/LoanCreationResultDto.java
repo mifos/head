@@ -18,29 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
-
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.customers.business.CustomerBO;
+package org.mifos.dto.screen;
 
 public class LoanCreationResultDto {
 
-    private final boolean isGlimApplicable;
+    private final boolean glimApplicable;
     private final Integer accountId;
     private final String globalAccountNum;
-    private final LoanBO loan;
-    private final CustomerBO customer;
 
-    public LoanCreationResultDto(boolean isGlimApplicable, Integer accountId, String globalAccountNum, LoanBO loan, CustomerBO customer) {
-        this.isGlimApplicable = isGlimApplicable;
+    public LoanCreationResultDto(boolean isGlimApplicable, Integer accountId, String globalAccountNum) {
+        this.glimApplicable = isGlimApplicable;
         this.accountId = accountId;
         this.globalAccountNum = globalAccountNum;
-        this.loan = loan;
-        this.customer = customer;
     }
 
     public boolean isGlimApplicable() {
-        return this.isGlimApplicable;
+        return this.glimApplicable;
     }
 
     public Integer getAccountId() {
@@ -49,13 +42,5 @@ public class LoanCreationResultDto {
 
     public String getGlobalAccountNum() {
         return this.globalAccountNum;
-    }
-
-    public LoanBO getLoan() {
-        return this.loan;
-    }
-
-    public CustomerBO getCustomer() {
-        return this.customer;
     }
 }

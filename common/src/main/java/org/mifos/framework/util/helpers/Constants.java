@@ -111,4 +111,5 @@ public interface Constants {
     String ERROR_VERSION_MISMATCH = "error.versionnodonotmatch";
     String LOAN = "loan";
     String EMPTY_STRING = "";
+    String ORIGINAL_SCHEDULE_AVAILABLE = "originalScheduleIsAvailable";
 }

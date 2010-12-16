@@ -30,18 +30,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-@NamedQueries(
- {
-  @NamedQuery(
-    name="AccountCustomFieldEntity.getResponses",
-    query="from AccountCustomFieldEntity as acfe where acfe.fieldId = :CUSTOM_FIELD_ID"
-  )
- }
-)
 @Entity
 @Table(name = "account_custom_field")
 public class AccountCustomFieldEntity extends AbstractEntity {

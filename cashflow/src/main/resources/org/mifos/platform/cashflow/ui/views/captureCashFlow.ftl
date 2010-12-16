@@ -17,7 +17,7 @@
 *
 *  See also http://www.apache.org/licenses/LICENSE-2.0.html for an
 *  explanation of the license and how it is applied.
---]
+--]s
 [#include "layout.ftl"]
 [@headerOnlyLayout]
 <script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
@@ -32,6 +32,10 @@
               <div id="allErrorsDiv" class="allErrorsDiv" align="left">
                 [@mifosmacros.showAllErrors "cashFlow.*"/]
               </div>
+              <div id="note" align="left" >
+	               <span class="indigo fontBold"> [@spring.message "cashFlowForm.message"/] </span>
+              </div>
+              <br/>
 	          <table class="table_common" border="0">
 	            <thead>
 	              <tr>

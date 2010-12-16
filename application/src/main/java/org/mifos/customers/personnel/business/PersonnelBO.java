@@ -853,7 +853,8 @@ public class PersonnelBO extends AbstractBusinessObject {
     }
 
     public UserDetailDto toDto() {
-        return new UserDetailDto(this.office.getOfficeName(), this.personnelId.intValue(), this.globalPersonnelNum, this.personnelDetails.getName().getFirstName(), this.personnelDetails.getName().getLastName());
+        boolean loanOfficer = isLoanOfficer();
+        return new UserDetailDto(this.office.getOfficeName(), this.personnelId.intValue(), this.globalPersonnelNum, this.personnelDetails.getName().getFirstName(), this.personnelDetails.getName().getLastName(), loanOfficer);
     }
 
     public void updateUserDetails(String firstName, String middleName, String secondLastName, String lastName,

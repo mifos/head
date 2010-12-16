@@ -19,55 +19,19 @@
  */
 package org.mifos.application.servicefacade;
 
-import org.joda.time.DateMidnight;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
-import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
-import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.loan.struts.action.LoanCreationGlimDto;
-import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
-import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
-import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.master.business.BusinessActivityEntity;
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.personnel.persistence.PersonnelDao;
-import org.mifos.dto.domain.PrdOfferingDto;
-import org.mifos.dto.domain.ValueListElement;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.platform.cashflow.service.CashFlowDetail;
-import org.mifos.platform.cashflow.ui.model.CashFlowForm;
-import org.mifos.platform.validations.Errors;
-import org.mifos.security.util.UserContext;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyObject;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -76,20 +40,51 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Mockito.anyBoolean;
-import static org.mockito.Mockito.anyObject;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.matchers.OriginalScheduleInfoDtoMatcher;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
+import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
+import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
+import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
+import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
+import org.mifos.accounts.util.helpers.AccountConstants;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
+import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.business.PaymentTypeEntity;
+import org.mifos.application.util.helpers.TrxnTypes;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
+import org.mifos.platform.cashflow.ui.model.CashFlowForm;
+import org.mifos.platform.validations.Errors;
+import org.mifos.security.util.UserContext;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanServiceFacadeWebTierTest {
@@ -124,12 +119,6 @@ public class LoanServiceFacadeWebTierTest {
     private CustomerBO customer;
 
     @Mock
-    private ClientBO client;
-
-    @Mock
-    private LoanOfferingBO activeLoanProduct;
-
-    @Mock
     private LoanBO loanBO;
 
     @Mock
@@ -154,50 +143,6 @@ public class LoanServiceFacadeWebTierTest {
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         loanServiceFacade = new LoanServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
                 fundDao, loanDao, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
-    }
-
-    @Test
-    public void shouldFindAllActiveLoanProductsWithMeetingThatMatchCustomerMeeting() {
-
-        // setup
-        MeetingBO meeting = new MeetingBuilder().build();
-        CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.GROUP);
-
-        List<LoanOfferingBO> activeLoanProducts = asList(activeLoanProduct);
-
-        // stubbing
-        when(customer.getCustomerLevel()).thenReturn(customerLevelEntity);
-        when(loanProductDao.findActiveLoanProductsApplicableToCustomerLevel(customerLevelEntity)).thenReturn(
-                activeLoanProducts);
-        when(customer.getCustomerMeetingValue()).thenReturn(meeting);
-        when(activeLoanProduct.getLoanOfferingMeetingValue()).thenReturn(meeting);
-
-        // exercise test
-        List<PrdOfferingDto> activeLoanProductsForCustomer = loanServiceFacade.retrieveActiveLoanProductsApplicableForCustomer(customer);
-
-        // verification
-        assertThat(activeLoanProductsForCustomer, hasItem(activeLoanProduct.toDto()));
-    }
-
-    @Test
-    public void shouldFindGlimDataForGroupCustomer() {
-
-        // setup
-        ValueListElement valueListElement = new BusinessActivityEntity(1, "", "");
-        List<ValueListElement> loanPurposes = asList(valueListElement);
-
-        List<ClientBO> clients = asList(client);
-
-        // stubbing
-        when(loanProductDao.findAllLoanPurposes()).thenReturn(loanPurposes);
-        when(customerDao.findActiveClientsUnderGroup(customer)).thenReturn(clients);
-
-        // exercise test
-        LoanCreationGlimDto glimData = loanServiceFacade.retrieveGlimSpecificDataForGroup(customer);
-
-        // verification
-        assertThat(glimData.getLoanPurposes(), hasItem(valueListElement));
-        assertThat(glimData.getActiveClientsOfGroup(), hasItem(client));
     }
 
     @Test
@@ -309,11 +254,39 @@ public class LoanServiceFacadeWebTierTest {
     }
 
     @Test
+    public void retrieveOriginalLoanSchedule() throws PersistenceException {
+        Integer accountId = new Integer(1);
+        List<OriginalLoanScheduleEntity> loanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
+        OriginalLoanScheduleEntity originalLoanScheduleEntity1 = mock(OriginalLoanScheduleEntity.class);
+        OriginalLoanScheduleEntity originalLoanScheduleEntity2 = mock(OriginalLoanScheduleEntity.class);
+        loanScheduleEntities.add(originalLoanScheduleEntity1);
+        loanScheduleEntities.add(originalLoanScheduleEntity2);
+        RepaymentScheduleInstallment installment1 = new RepaymentScheduleInstallment(locale);
+        RepaymentScheduleInstallment installment2 = new RepaymentScheduleInstallment(locale);
+        when(originalLoanScheduleEntity1.toDto(locale)).thenReturn(installment1);
+        when(originalLoanScheduleEntity2.toDto(locale)).thenReturn(installment2);
+
+        List<RepaymentScheduleInstallment> expected = new ArrayList<RepaymentScheduleInstallment>();
+        expected.add(installment1);
+        expected.add(installment2);
+        Date date = new Date();
+        when(loanBO.getDisbursementDate()).thenReturn(date);
+        Money money = new Money(rupee, "4.9");
+        when(loanBO.getLoanAmount()).thenReturn(money);
+        when(loanBusinessService.retrieveOriginalLoanSchedule(accountId)).thenReturn(loanScheduleEntities);
+        when(loanDao.findById(accountId)).thenReturn(loanBO);
+        OriginalScheduleInfoDto expectedOriginalScheduleInfoDto = new OriginalScheduleInfoDto(money.toString(), date,expected);
+        OriginalScheduleInfoDto originalScheduleInfoDto = loanServiceFacade.retrieveOriginalLoanSchedule(accountId, locale);
+        assertThat(originalScheduleInfoDto, is(new OriginalScheduleInfoDtoMatcher(expectedOriginalScheduleInfoDto)));
+    }
+
+    @Test
     public void shouldValidateForRepaymentCapacity() {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
+        BigDecimal loanAmount = new BigDecimal(1000);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, loanAmount, 10d);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
-        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
+        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55).add(loanAmount));
 
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).withTotalValue("10").build();
         RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).withTotalValue("20").build();
@@ -327,5 +300,38 @@ public class LoanServiceFacadeWebTierTest {
 
         errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1700d);
         assertThat(errors.hasErrorEntryWithCode(AccountConstants.REPAYMENT_CAPACITY_LESS_THAN_ALLOWED), is(true));
+    }
+
+    @Test
+    public void shouldValidateForInstallmentDateBeyondCashFlowData() {
+        ArrayList<MonthlyCashFlowDetail> monthlyCashFlows = new ArrayList<MonthlyCashFlowDetail>();
+        DateTime dateTime = new DateTime().withDate(2010, 10, 30);
+        monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime,new BigDecimal(123), new BigDecimal(234),""));
+        monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime.plusMonths(1),new BigDecimal(123), new BigDecimal(234),""));
+        monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime.plusMonths(2),new BigDecimal(123), new BigDecimal(234),""));
+        CashFlowDetail cashFlowDetail = new CashFlowDetail(monthlyCashFlows);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
+        cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
+        cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
+
+        RepaymentScheduleInstallment installment = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).
+                                                        withTotalValue("10").withDueDateValue("30-Nov-2010").build();
+        RepaymentScheduleInstallment installmentBeforeCashFlowDate = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).
+                                                        withTotalValue("10").withDueDateValue("30-Nov-2010").build();
+        List<RepaymentScheduleInstallment> installments = asList(installment);
+
+        Errors errors;
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1600d);
+        assertThat(errors.hasErrorEntryWithCode(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE), is(false));
+
+        RepaymentScheduleInstallment installmentBeyondCashFlowDate = installmentBuilder.reset(locale).withPrincipal(new Money(rupee, "4.9")).
+                                                        withTotalValue("10").withDueDateValue("30-Jan-2011").build();
+
+        installments = asList(installmentBeyondCashFlowDate);
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1600d);
+        assertThat(errors.hasErrorEntryWithCode(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE), is(true));
+
+        errors = loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, 1700d);
+        assertThat(errors.hasErrorEntryWithCode(AccountConstants.INSTALLMENT_BEYOND_CASHFLOW_DATE), is(true));
     }
 }

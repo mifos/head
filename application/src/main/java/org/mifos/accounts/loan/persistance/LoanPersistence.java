@@ -31,6 +31,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
@@ -48,15 +49,10 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.rolesandpermission.business.ActivityEntity;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class LoanPersistence extends Persistence {
 
@@ -402,4 +398,20 @@ public class LoanPersistence extends Persistence {
         }
     }
 
+    public void saveOriginalSchedule(Collection<OriginalLoanScheduleEntity> originalLoanScheduleEntities) throws PersistenceException {
+            try {
+            Session session = StaticHibernateUtil.getSessionTL();
+            for (OriginalLoanScheduleEntity entity : originalLoanScheduleEntities) {
+                session.saveOrUpdate(entity);
+            }
+        } catch (HibernateException he) {
+            throw new PersistenceException(he);
+        }
+    }
+
+    public List<OriginalLoanScheduleEntity> getOriginalLoanScheduleEntity(Integer accountId) throws PersistenceException {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("id", accountId);
+        return executeNamedQuery(NamedQueryConstants.GET_ORIGINAL_SCHEDULE_BY_ACCOUNT_ID, queryParameters);
+    }
 }

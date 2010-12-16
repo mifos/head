@@ -56,6 +56,7 @@ import org.mifos.dto.domain.CenterDto;
 import org.mifos.dto.domain.CenterInformationDto;
 import org.mifos.dto.domain.CenterUpdate;
 import org.mifos.dto.domain.CreateAccountFeeDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailsDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.screen.CenterFormCreationDto;
@@ -134,10 +135,10 @@ public class CenterCustAction extends CustAction {
 
         CenterFormCreationDto centerFormCreation = this.centerServiceFacade.retrieveCenterFormCreationData(centerCreationDto);
 
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerFormCreation.getCustomFieldViews(), request);
+//        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<Serializable>(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerFormCreation.getActiveLoanOfficersForBranch(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, centerFormCreation.getAdditionalFees(), request);
-        actionForm.setCustomFields(centerFormCreation.getCustomFieldViews());
+//        actionForm.setCustomFields(centerFormCreation.getCustomFieldViews());
         actionForm.setDefaultFees(centerFormCreation.getDefaultFees());
 
         DateTime today = new DateTime().toDateMidnight().toDateTime();
@@ -230,11 +231,11 @@ public class CenterCustAction extends CustAction {
                 .getMonthOfYear(), centerDto.getMfiJoiningDate().getYear());
         actionForm.setAddress(center.getAddress());
         actionForm.setCustomerPositions(centerDto.getCustomerPositionViews());
-        actionForm.setCustomFields(centerDto.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerDto.getActiveLoanOfficersForBranch(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerDto.getCustomFieldViews(),request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, centerDto.getCustomerPositionViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, centerDto.getClientList(), request);
 

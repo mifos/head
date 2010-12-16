@@ -20,28 +20,45 @@ package org.mifos.accounts.loan.business.service;
  * explanation of the license and how it is applied.
  */
 
+import junit.framework.Assert;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.matchers.LoanScheduleEntityMatcher;
+import org.mifos.accounts.loan.business.matchers.OriginalLoanScheduleEntitiesMatcher;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.util.helpers.PaymentData;
+import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Matchers;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
+import java.sql.*;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
@@ -62,15 +79,75 @@ public class LoanBusinessServiceTest {
     @Mock
     private HolidayService holidayService;
 
+    @Mock
+    private AccountPaymentEntity accountPaymentEntity;
+
+    @Mock
+    ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
+
+    @Mock
+    private PaymentData paymentData;
+
+    @Mock
+    private PersonnelBO personnel;
+
+    @Mock
+    private LoanPersistence loanPersistence;
     private Short officeId;
+
 
     @Before
     public void setupAndInjectDependencies() {
-        loanBusinessService = new LoanBusinessService(null, null, null, holidayService);
+        loanBusinessService = new LoanBusinessService(loanPersistence, null, null, holidayService, scheduleCalculatorAdaptor);
         locale = new Locale("en", "GB");
         installmentBuilder = new RepaymentScheduleInstallmentBuilder(locale);
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
         officeId = Short.valueOf("1");
+    }
+
+    @Test
+    public void shouldApplyPaymentForInterestRecalculationLoanInterestType() {
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        Date transactionDate = new Date();
+        Money totalAmount = new Money(rupee, 10.0);
+        when(paymentData.getTransactionDate()).thenReturn(transactionDate);
+        when(paymentData.getTotalAmount()).thenReturn(totalAmount);
+        when(paymentData.getPersonnel()).thenReturn(personnel);
+        loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
+        verify(scheduleCalculatorAdaptor, times(1)).applyPayment(loanBO, totalAmount,
+                transactionDate, personnel, accountPaymentEntity);
+        verify(loanBO, times(1)).isDecliningBalanceInterestRecalculation();
+        verify(paymentData).getTransactionDate();
+        verify(paymentData).getTotalAmount();
+        verify(paymentData).getPersonnel();
+    }
+
+    @Test
+    public void shouldApplyPaymentForNonInterestRecalculationLoanInterestType() {
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
+        List<AccountActionDateEntity> installments = new ArrayList<AccountActionDateEntity>();
+        LoanScheduleEntity installment1 = mock(LoanScheduleEntity.class);
+        LoanScheduleEntity installment2 = mock(LoanScheduleEntity.class);
+        when(installment1.applyPayment(Mockito.<AccountPaymentEntity>any(), Mockito.<Money>any(), Mockito.eq(personnel), Mockito.<Date>any())).thenReturn(new Money(rupee, 100d));
+        when(installment2.applyPayment(Mockito.<AccountPaymentEntity>any(), Mockito.<Money>any(), Mockito.eq(personnel), Mockito.<Date>any())).thenReturn(new Money(rupee, 0d));
+        installments.add(installment1);
+        installments.add(installment2);
+        when(loanBO.getAccountActionDatesSortedByInstallmentId()).thenReturn(installments);
+        Date transactionDate = new Date();
+        Money totalAmount = new Money(rupee, 10.0);
+        when(paymentData.getTransactionDate()).thenReturn(transactionDate);
+        when(paymentData.getTotalAmount()).thenReturn(totalAmount);
+        when(paymentData.getPersonnel()).thenReturn(personnel);
+        loanBusinessService.applyPayment(paymentData, loanBO, accountPaymentEntity);
+        verify(scheduleCalculatorAdaptor, times(0)).applyPayment(loanBO, totalAmount,
+                transactionDate, personnel, accountPaymentEntity);
+        verify(loanBO, times(1)).getAccountActionDatesSortedByInstallmentId();
+        verify(loanBO, times(1)).isDecliningBalanceInterestRecalculation();
+        verify(paymentData).getTransactionDate();
+        verify(paymentData).getTotalAmount();
+        verify(paymentData).getPersonnel();
+        verify(installment1).applyPayment(Matchers.<AccountPaymentEntity>any(), Matchers.<Money>any(), Matchers.eq(personnel), Matchers.<Date>any());
+        verify(installment2).applyPayment(Matchers.<AccountPaymentEntity>any(), Matchers.<Money>any(), Matchers.eq(personnel), Matchers.<Date>any());
     }
 
     @Test
@@ -295,6 +372,39 @@ public class LoanBusinessServiceTest {
         assertInstallmentDueDate(installment7, "15-Nov-2010");
         verify(holidayService, times(7)).getNextWorkingDay(Matchers.<Date>any(), eq(officeId));
     }
+
+    @Test
+    public void persistOriginalSchedule() throws PersistenceException {
+        List<LoanScheduleEntity> installments = new ArrayList<LoanScheduleEntity>();
+        MifosCurrency mifosCurrency = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
+        Money money = new Money(mifosCurrency,"123");
+        AccountBO accountBO = mock(AccountBO.class);
+        CustomerBO customerBO = mock(CustomerBO.class);
+        when(accountBO.getCurrency()).thenReturn(mifosCurrency);
+        LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(accountBO, customerBO, new Short("1"),
+                                        new java.sql.Date(new Date().getTime()), PaymentStatus.UNPAID, money,money);
+        installments.add(loanScheduleEntity);
+        when(loanBO.getLoanScheduleEntities()).thenReturn(installments);
+        loanBusinessService.persistOriginalSchedule(loanBO);
+        ArrayList<OriginalLoanScheduleEntity> expected = new ArrayList<OriginalLoanScheduleEntity>();
+        expected.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
+        verify(loanPersistence).saveOriginalSchedule(Mockito.argThat(
+                new OriginalLoanScheduleEntitiesMatcher(expected)
+        ));
+    }
+
+    @Test
+    public void shouldRetrieveOriginalLoanSchedule() throws PersistenceException {
+        Integer accountId = new Integer(1);
+
+        ArrayList<OriginalLoanScheduleEntity> expected = new ArrayList<OriginalLoanScheduleEntity>();
+        when(loanPersistence.getOriginalLoanScheduleEntity(accountId)).thenReturn(expected);
+        List<OriginalLoanScheduleEntity> loanScheduleEntities = loanBusinessService.retrieveOriginalLoanSchedule(accountId);
+        Assert.assertNotNull(loanScheduleEntities);
+        verify(loanPersistence).getOriginalLoanScheduleEntity(accountId);
+        Assert.assertEquals(expected,loanScheduleEntities);
+    }
+    
 
     private void assertInstallmentDueDate(RepaymentScheduleInstallment installment, String expectedDueDate) {
         String actualDueDate = DateUtils.getDBtoUserFormatString(installment.getDueDateValue(), locale);

@@ -20,7 +20,35 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+
 import junit.framework.Assert;
+
 import org.joda.time.DateMidnight;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -38,7 +66,6 @@ import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.LoanAccountDetailsDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.AccountPersistence;
@@ -79,7 +106,9 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -100,35 +129,14 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 @SuppressWarnings("unchecked")
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
@@ -654,7 +662,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.load_success.toString());
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANFUNDS, request));
-        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
+//        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
     }
 
     public void testLoadForMasterData() throws Exception {
@@ -1007,21 +1015,14 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .getPrdOfferingId()));
     }
 
-    /*
-     * TODO: turn back on when IntersetDeductedAtDisbursement is re-enabled
-     *
-     *
-     * public void testSchedulePreviewWithDataForIntDedAtDisb() throws
-     * Exception { request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-     * schedulePreviewPageParams.put("intDedDisbursement", "1");
-     * jumpToSchedulePreview(); performNoErrors();
-     * verifyForward(ActionForwards.schedulePreview_success.toString());
-     * LoanAccountActionForm actionForm = (LoanAccountActionForm) request
-     * .getSession
-     * ().getAttribute("loanAccountActionForm");Assert.assertEquals("0",
-     * actionForm.getGracePeriodDuration()); }
-     */
     public void testCreate() throws Exception {
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         jumpToSchedulePreview();
         actionPerform();
@@ -1190,46 +1191,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(DateUtils.format(originalDate), DateUtils.getUserLocaleDate(TestObjectFactory.getContext()
                 .getPreferredLocale(), DateUtils.toDatabaseFormat(loan.getDisbursementDate())));
         Assert.assertEquals(firstInstallmentDate, loan.getAccountActionDate(Short.valueOf("1")).getActionDate());
-    }
-
-    public void testLoanAccountFromLastLoan() throws Exception {
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        LoanOfferingBO loanOffering = getLoanOfferingFromLastLoan("lastLoan", "lamt", ApplicableTo.GROUPS, WEEKLY,
-                EVERY_WEEK);
-        initPageParams(loanOffering);
-        jumpToSchedulePreview();
-        actionPerform();
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        addRequestParameter("method", "create");
-        addRequestParameter("stateSelected", "1");
-        actionPerform();
-        LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
-                "loanAccountActionForm");
-        LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-
-        Assert.assertEquals(new Money(getCurrency(), "200"), loan.getLoanAmount());
-        Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
-        loan = null;
-        accountBO = null;
-    }
-
-    public void testLoanAccountFromLoanCycle() throws Exception {
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        LoanOfferingBO loanOffering = getLoanOfferingFromLoanCycle("loanCycle", "lcyc", ApplicableTo.GROUPS, WEEKLY,
-                EVERY_WEEK);
-        initPageParams(loanOffering);
-        jumpToSchedulePreview();
-        actionPerform();
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        addRequestParameter("method", "create");
-        addRequestParameter("stateSelected", "1");
-        actionPerform();
-        LoanAccountActionForm actionForm = (LoanAccountActionForm) request.getSession().getAttribute(
-                "loanAccountActionForm");
-        LoanBO loan = TestObjectFactory.getObject(LoanBO.class, new Integer(actionForm.getAccountId()).intValue());
-        Assert.assertEquals(new Money(getCurrency(), "2000"), loan.getLoanAmount());
-        Assert.assertEquals(new Short("20"), loan.getNoOfInstallments());
-        loan = null;
     }
 
     private void modifyActionDateForFirstInstallment() throws Exception {
@@ -1493,27 +1454,6 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     private void initPrdOfferingPageParams(LoanOfferingBO loanOffering) {
         prdOfferingPageParams.put("prdOfferingId", loanOffering.getPrdOfferingId().toString());
-    }
-
-    public void testShouldGetGlimSpecificAttributes() throws Exception {
-        customerMock = createMock(CustomerBO.class);
-        expect(customerMock.isGroup()).andReturn(true);
-        expect(customerMock.getCustomerId()).andReturn(1);
-        LoanBusinessService loanBusinessServiceMock = createMock(LoanBusinessService.class);
-        expect(loanBusinessServiceMock.getAllChildrenForParentGlobalAccountNum("1")).andReturn(Collections.EMPTY_LIST);
-        ConfigurationBusinessService configurationBusinessServiceMock = createMock(ConfigurationBusinessService.class);
-        expect(configurationBusinessServiceMock.isGlimEnabled()).andReturn(true);
-        LoanAccountAction loanAccountAction = new LoanAccountAction(loanBusinessServiceMock,
-                configurationBusinessServiceMock, new GlimLoanUpdater());
-        HttpServletRequest requestMock = createMock(HttpServletRequest.class);
-
-        LoanAccountAction.GlimSessionAttributes glimSessionAttributes = new LoanAccountAction.GlimSessionAttributes(
-                LoanConstants.GLIM_ENABLED_VALUE, Collections.EMPTY_LIST, LoanConstants.LOAN_ACCOUNT_OWNER_IS_GROUP_YES);
-        replay(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
-
-        Assert.assertEquals(glimSessionAttributes, loanAccountAction.getGlimSpecificPropertiesToSet(
-                new LoanAccountActionForm(), "1", customerMock, new ArrayList<ValueListElement>()));
-        verify(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
     }
 
     public void testShouldNotSetAnyGlimSpecificAttributesIfGlimDisabled() throws Exception {

@@ -33,7 +33,6 @@ public class CenterDto {
     private final String mfiJoiningDateAsString;
     private final AddressDto address;
     private final List<CustomerPositionDto> customerPositionDtos;
-    private final List<CustomFieldDto> customFieldDtos;
     private final List<CustomerDto> clientList;
     private final String externalId;
     private final List<PersonnelDto> activeLoanOfficersForBranch;
@@ -42,7 +41,7 @@ public class CenterDto {
     @SuppressWarnings("PMD")
     public CenterDto(Short loanOfficerId, Integer customerId, String globalCustNum, DateTime mfiJoiningDate,
             String mfiJoiningDateAsString, String externalId, AddressDto address,
-            List<CustomerPositionDto> customerPositionDtos, List<CustomFieldDto> customFieldDtos,
+            List<CustomerPositionDto> customerPositionDtos,
             List<CustomerDto> customerList, List<PersonnelDto> activeLoanOfficersForBranch, boolean centerHierarchyExists) {
         this.loanOfficerId = loanOfficerId;
         this.customerId = customerId;
@@ -52,7 +51,6 @@ public class CenterDto {
         this.externalId = externalId;
         this.address = address;
         this.customerPositionDtos = customerPositionDtos;
-        this.customFieldDtos = customFieldDtos;
         this.clientList = customerList;
         this.activeLoanOfficersForBranch = activeLoanOfficersForBranch;
         this.centerHierarchyExists = centerHierarchyExists;
@@ -88,10 +86,6 @@ public class CenterDto {
 
     public List<CustomerPositionDto> getCustomerPositionViews() {
         return this.customerPositionDtos;
-    }
-
-    public List<CustomFieldDto> getCustomFieldViews() {
-        return this.customFieldDtos;
     }
 
     public List<CustomerDto> getClientList() {

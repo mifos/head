@@ -23,6 +23,7 @@ package org.mifos.accounts.loan.business;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.framework.util.helpers.Money;
 
@@ -72,4 +73,8 @@ public class LoanFeeScheduleEntity extends AccountFeesActionDetailEntity {
         return versionNo;
     }
 
+    void adjustFees(FeesTrxnDetailEntity feesTrxnDetailEntity) {
+        Money feeAmntAdjusted = feesTrxnDetailEntity.getFeeAmount();
+        setFeeAmountPaid(getFeeAmountPaid().add(feeAmntAdjusted));
+    }
 }

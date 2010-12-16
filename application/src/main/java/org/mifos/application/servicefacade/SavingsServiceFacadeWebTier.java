@@ -91,6 +91,8 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.AccountStatusDto;
+import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.AuditLogDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -100,8 +102,6 @@ import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SavingsAccountClosureDto;
 import org.mifos.dto.domain.SavingsAccountCreationDto;
 import org.mifos.dto.domain.SavingsAccountDetailDto;
-import org.mifos.dto.domain.SavingsAccountStatusDto;
-import org.mifos.dto.domain.SavingsAccountUpdateStatus;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.domain.SavingsDepositDto;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
@@ -718,7 +718,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     }
 
     @Override
-    public SavingsAccountStatusDto retrieveAccountStatuses(Long savingsId) {
+    public AccountStatusDto retrieveAccountStatuses(Long savingsId) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
@@ -735,14 +735,14 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
                 savingsStatesList.add(new ListElement(accountState.getId().intValue(), accountState.getName()));
             }
 
-            return new SavingsAccountStatusDto(savingsStatesList);
+            return new AccountStatusDto(savingsStatesList);
         } catch (StatesInitializationException e) {
             throw new MifosRuntimeException(e);
         }
     }
 
     @Override
-    public void updateSavingsAccountStatus(SavingsAccountUpdateStatus updateStatus) {
+    public void updateSavingsAccountStatus(AccountUpdateStatus updateStatus) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);

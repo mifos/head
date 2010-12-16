@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.joda.time.LocalDate;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.SavingsStatusChangeHistoryDto;
 import org.mifos.framework.business.AbstractEntity;
@@ -117,4 +118,8 @@ public class AccountStatusChangeHistoryEntity extends AbstractEntity {
         return new SavingsStatusChangeHistoryDto(getPersonnelName(), getNewStatusName(), getOldStatusName(), getUserPrefferedTransactionDate(), new LocalDate(this.createdDate));
     }
 
+    public boolean isLoanActive() {
+        return oldStatus.getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue())
+                || oldStatus.getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue());
+    }
 }

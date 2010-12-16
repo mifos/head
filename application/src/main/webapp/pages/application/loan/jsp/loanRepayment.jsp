@@ -41,6 +41,8 @@ explanation of the license and how it is applied.
 		<html-el:form method="post" action="/loanAccountAction.do">
 		<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />
 		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
+		<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'originalScheduleIsAvailable')}"
+		                                                var="originalScheduleIsAvailable" />
 			<table width="95%" border="0" cellpadding="0" cellspacing="0">
 				<tr>
 					<td class="bluetablehead05">
@@ -72,6 +74,16 @@ explanation of the license and how it is applied.
                                         </c:otherwise>
                                 </c:choose>
 							</td>
+							<td>
+                            <c:choose>
+                                <c:when test="${originalScheduleIsAvailable}">
+                                    <html-el:link styleId="loanRepayment.link.original_schedule"
+                                    href="loanAccountAction.do?method=viewOriginalSchedule&accountId=${BusinessKey.accountId}&randomNUm=${sessionScope.randomNUm}&currentFlowKey=${requestScope.currentFlowKey}">
+                                        <mifos:mifoslabel name="loan.view_original_schedule" />
+                                    </html-el:link>
+								</c:when>
+							</c:choose>
+							 </td>
 						</tr>
                         <tr>
                         <logic:messagesPresent>

@@ -137,10 +137,6 @@ public class CustomerServiceImpl implements CustomerService {
 
             customerDao.validateCenterNameIsNotTakenForOffice(customer.getDisplayName(), customer.getOfficeId());
 
-            List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
-
-            customer.validateMandatoryCustomFields(allCustomFieldsForCenter);
-
             createCustomer(customer, meeting, accountFees);
         } catch (CustomerException e) {
             throw new BusinessRuleException(e.getKey(), e);
@@ -155,12 +151,6 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerDao.validateGroupNameIsNotTakenForOffice(group.getDisplayName(), group.getOffice().getOfficeId());
 
-        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
-        group.validateMandatoryCustomFields(allCustomFieldsForGroup);
-
-        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
-        // List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
-
         createCustomer(group, meeting, accountFees);
     }
 
@@ -172,12 +162,6 @@ public class CustomerServiceImpl implements CustomerService {
         client.validateNoDuplicateSavings(savingProducts);
 
         customerDao.validateClientForDuplicateNameOrGovtId(client);
-
-        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForClient();
-        client.validateMandatoryCustomFields(allCustomFieldsForGroup);
-
-        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer creation (center, group, client)
-        // List<FieldConfigurationEntity> mandatoryConfigurableFields = this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
 
         if (client.isActive()) {
             client.validateFieldsForActiveClient();
@@ -291,16 +275,7 @@ public class CustomerServiceImpl implements CustomerService {
         center.validateVersion(centerUpdate.getVersionNum());
         center.setUserContext(userContext);
 
-        List<CustomFieldDefinitionEntity> allCustomFieldsForCenter = customerDao.retrieveCustomFieldEntitiesForCenter();
-        center.updateCustomFields(centerUpdate.getCustomFields());
-        center.validateMandatoryCustomFields(allCustomFieldsForCenter);
-
         assembleCustomerPostionsFromDto(centerUpdate.getCustomerPositions(), center);
-
-        // FIXME - #000003 - keithw - mandatory configurable fields are not validated in customer update (center, group,
-        // client)
-        // List<FieldConfigurationEntity> mandatoryConfigurableFields =
-        // this.customerDao.findMandatoryConfigurableFieldsApplicableToCenter();
 
         try {
             hibernateTransactionHelper.startTransaction();
@@ -330,10 +305,6 @@ public class CustomerServiceImpl implements CustomerService {
         GroupBO group = customerDao.findGroupBySystemId(groupUpdate.getGlobalCustNum());
         group.validateVersion(groupUpdate.getVersionNo());
         group.setUserContext(userContext);
-
-        List<CustomFieldDefinitionEntity> allCustomFieldsForGroup = customerDao.retrieveCustomFieldEntitiesForGroup();
-        group.updateCustomFields(groupUpdate.getCustomFields());
-        group.validateMandatoryCustomFields(allCustomFieldsForGroup);
 
         assembleCustomerPostionsFromDto(groupUpdate.getCustomerPositions(), group);
 
@@ -380,10 +351,6 @@ public class CustomerServiceImpl implements CustomerService {
         ClientBO client = (ClientBO) this.customerDao.findCustomerById(personalInfo.getCustomerId());
         client.validateVersion(personalInfo.getOriginalClientVersionNumber());
         client.updateDetails(userContext);
-
-        List<CustomFieldDefinitionEntity> allCustomFieldsForClient = customerDao.retrieveCustomFieldEntitiesForClient();
-        client.updateCustomFields(personalInfo.getClientCustomFields());
-        client.validateMandatoryCustomFields(allCustomFieldsForClient);
 
         try {
             hibernateTransactionHelper.startTransaction();

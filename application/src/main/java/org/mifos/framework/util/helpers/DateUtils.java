@@ -69,6 +69,18 @@ public class DateUtils {
         internalLocale = new LocalizationConverter().getDateLocale();
     }
 
+    public static boolean sameMonthYear(Date firstDate, Date secondDate) {
+        Calendar first = Calendar.getInstance();
+        first.setTime(firstDate);
+        Calendar second = Calendar.getInstance();
+        second.setTime(secondDate);
+        return sameMonthYear(first,second);
+    }
+
+    public static boolean sameMonthYear(Calendar first, Calendar second) {
+        return ((first.get(Calendar.MONTH) == second.get(Calendar.MONTH)) && (first.get(Calendar.YEAR) == second.get(Calendar.YEAR)));
+    }
+
     public static String convertUserToDbFmt(String userDate, String userPattern) throws InvalidDateException {
         try {
             SimpleDateFormat userFormat = new SimpleDateFormat(userPattern, dateLocale);

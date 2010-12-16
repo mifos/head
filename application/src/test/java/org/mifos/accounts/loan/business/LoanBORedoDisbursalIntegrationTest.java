@@ -1019,13 +1019,12 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         return loanOffering;
     }
 
-    private LoanBO redoLoanAccount(GroupBO group, LoanOfferingBO loanOffering, MeetingBO meeting,
-            Date disbursementDate, List<FeeDto> feeDtos) throws AccountException {
+    private LoanBO redoLoanAccount(GroupBO group, LoanOfferingBO loanOffering, MeetingBO meeting, List<FeeDto> feeDtos) throws AccountException {
         Short numberOfInstallments = Short.valueOf("6");
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(group.getOfficeId(), meeting, numberOfInstallments);
         loanBO = LoanBO.redoLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, TestUtils
                 .createMoney("300.0"), numberOfInstallments, meetingDates.get(0), false, 1.2, (short) 0, null,
-                feeDtos, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false, null);
+                feeDtos, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO, false, null);
         ((LoanBO) loanBO).save();
         new TestObjectPersistence().persist(loanBO);
         return (LoanBO) loanBO;
@@ -1079,7 +1078,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         // group = createGroup(userContext, groupTemplate, disbursementDate);
 
         LoanOfferingBO loanOffering = createLoanOffering(userContext, meeting, disbursementDate);
-        return redoLoanAccount(group, loanOffering, meeting, disbursementDate, feeDtos);
+        return redoLoanAccount(group, loanOffering, meeting, feeDtos);
     }
 
     private LoanBO redoLoanWithMeetingToday(UserContext userContext, Date disbursementDate, List<FeeDto> feeDtos)
@@ -1095,7 +1094,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         group = createGroup(userContext, groupTemplate, disbursementDate);
 
         LoanOfferingBO loanOffering = createLoanOffering(userContext, meeting, disbursementDate);
-        return redoLoanAccount((GroupBO)group, loanOffering, meeting, disbursementDate, feeDtos);
+        return redoLoanAccount((GroupBO)group, loanOffering, meeting, feeDtos);
     }
 
     protected LoanBO redoLoanWithMondayMeetingAndVerify(UserContext userContext, int numberOfDaysInPast,

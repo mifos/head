@@ -41,6 +41,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -234,7 +235,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
                 accountBusinessServiceMock);
 
         Assert.assertEquals(asList(loanMock1), new LoanBusinessService(new LoanPersistence(), configServiceMock,
-                accountBusinessServiceMock, createMock(HolidayService.class)).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
+                accountBusinessServiceMock, createMock(HolidayService.class), createMock(ScheduleCalculatorAdaptor.class)).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
 
         verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
                 accountBusinessServiceMock);

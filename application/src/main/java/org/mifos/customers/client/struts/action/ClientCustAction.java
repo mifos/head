@@ -189,7 +189,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             actionForm.setLoanOfficerId(clientFormCreationDto.getFormedByPersonnelId().toString());
         }
         actionForm.setLoanOfficerName(clientFormCreationDto.getFormedByPersonnelName());
-        actionForm.setCustomFields(clientFormCreationDto.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         List<ApplicableAccountFeeDto> defaultFees = clientFormCreationDto.getDefaultFees();
         actionForm.setDefaultFees(defaultFees);
@@ -209,7 +209,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.BUSINESS_ACTIVITIES_ENTITY, clientFormCreationDto.getClientDropdowns().getBusinessActivity(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.POVERTY_STATUS, clientFormCreationDto.getClientDropdowns().getPoverty(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, clientFormCreationDto.getClientDropdowns().getHandicapped(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFormCreationDto.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto.getPersonnelList(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, clientFormCreationDto.getFormedByPersonnelList(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.SAVINGS_OFFERING_LIST, clientFormCreationDto.getSavingsOfferings(), request);
@@ -633,7 +633,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, personalInfo.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
 
         // customer specific
         actionForm.setCustomerId(personalInfo.getCustomerDetail().getCustomerId().toString());
@@ -658,7 +658,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             actionForm.setSpouseName(spouseName);
         }
         actionForm.setSpouseName(spouseName);
-        actionForm.setCustomFields(personalInfo.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
 
@@ -770,7 +770,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, clientFamilyInfo.getClientDropdowns().getLivingStatus(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFamilyInfo.getClientDropdowns().getGenders(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFamilyInfo.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
 
         UserContext userContext = getUserContext(request);
         List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().retrieveMasterEntities(SpouseFatherLookupEntity.class, userContext.getLocaleId());
@@ -792,7 +792,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setClientDetailView(clientFamilyInfo.getClientDetail().getCustomerDetail());
         actionForm.setClientName(clientFamilyInfo.getClientDetail().getClientName());
         actionForm.setSpouseName(clientFamilyInfo.getClientDetail().getSpouseName());
-        actionForm.setCustomFields(clientFamilyInfo.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         // client family specific
         int familyMemberCount = 0;
