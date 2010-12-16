@@ -22,6 +22,7 @@ import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Mockito.mock;
@@ -54,7 +55,7 @@ public class CashFlowAdaptorTest {
         when(request.getSession()).thenReturn(httpSession);
         when(cashFlowServiceLocator.getService(request)).thenReturn(cashFlowService);
         CashFlowDetail cashFlowDetail = getCashFlowDetails(totalCapital, totalLiability);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, null);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, null,Locale.US);
         when(cashFlowCaptor.getCashFlowForm()).thenReturn(cashFlowForm);
         cashFlowAdaptor.save(cashFlowCaptor, request);
         verify(cashFlowService).save(argThat(new CashFlowDetailMatcher(totalCapital, totalLiability)));
@@ -76,7 +77,7 @@ public class CashFlowAdaptorTest {
         String cancelUrl = "cancelUrl";
         String joinUrl = "joinUrl";
         BigDecimal loanAmount = BigDecimal.valueOf(2000);
-        cashFlowAdaptor.renderCashFlow(firstInstallment, lastInstallment, joinUrl, cancelUrl, mock(ActionMapping.class), request, loanOfferingBO, loanAmount);
+        cashFlowAdaptor.renderCashFlow(firstInstallment, lastInstallment, joinUrl, cancelUrl, mock(ActionMapping.class), request, loanOfferingBO, loanAmount, Locale.US);
         verify(httpSession).setAttribute(CashFlowConstants.CANCEL_URL, cancelUrl);
         verify(httpSession).setAttribute(CashFlowConstants.JOIN_URL, joinUrl);
         verify(httpSession).setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO, true);

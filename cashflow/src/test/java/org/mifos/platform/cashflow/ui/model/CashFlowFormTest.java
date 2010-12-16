@@ -10,6 +10,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -25,7 +26,7 @@ public class CashFlowFormTest {
         monthlyCashFlowDetails.add(cashFlowDetail1);
         monthlyCashFlowDetails.add(cashFlowDetail2);
         CashFlowDetail cashFlowDetail = new CashFlowDetail(monthlyCashFlowDetails);
-        CashFlowForm cashFlowForm= new CashFlowForm(cashFlowDetail, false, null, 0d);
+        CashFlowForm cashFlowForm= new CashFlowForm(cashFlowDetail, false, null, 0d, Locale.US);
         List<MonthlyCashFlowForm> actual = cashFlowForm.getMonthlyCashFlows();
         List<MonthlyCashFlowForm> expected = new ArrayList<MonthlyCashFlowForm>();
         expected.add(new MonthlyCashFlowForm(cashFlowDetail1));
@@ -40,24 +41,24 @@ public class CashFlowFormTest {
         cashFlowDetail.setTotalCapital(BigDecimal.TEN);
         cashFlowDetail.setTotalLiability(BigDecimal.TEN);
         CashFlowForm cashFlowForm;
-        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), null);
+        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), null, Locale.US);
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
-        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), 0d);
+        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), 0d, Locale.US);
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
-        cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 123d);
+        cashFlowForm = new CashFlowForm(cashFlowDetail, true, null, 123d, Locale.US);
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
-        cashFlowForm = new CashFlowForm(null, true, new BigDecimal(123), 123d);
+        cashFlowForm = new CashFlowForm(null, true, new BigDecimal(123), 123d, Locale.US);
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
-        cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(123), 123d);
+        cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(123), 123d, Locale.US);
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(false));
-        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), 123d);
+        cashFlowForm = new CashFlowForm(cashFlowDetail, true, new BigDecimal(123), 123d, Locale.US);
         assertThat(cashFlowForm.shouldForValidateIndebtednessRate(), is(true));
     }
 
     @Test
     public void shouldComputeRepaymentCapacity() {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d, Locale.US);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
         cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55).add(BigDecimal.valueOf(1000)));
         BigDecimal repaymentCapacity = cashFlowForm.computeRepaymentCapacity(BigDecimal.valueOf(60));

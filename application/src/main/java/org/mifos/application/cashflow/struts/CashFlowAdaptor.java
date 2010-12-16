@@ -19,6 +19,14 @@
  */
 package org.mifos.application.cashflow.struts;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
@@ -30,12 +38,6 @@ import org.mifos.platform.cashflow.service.CashFlowDetail;
 import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CashFlowAdaptor {
 
@@ -57,13 +59,13 @@ public class CashFlowAdaptor {
 
     public ActionForward renderCashFlow(DateTime firstInstallmentDueDate, DateTime lastInstallmentDueDate,
                                         String joinUrl, String cancelUrl, ActionMapping mapping,
-                                        HttpServletRequest request, LoanOfferingBO loanOffering, BigDecimal loanAmount) {
+                                        HttpServletRequest request, LoanOfferingBO loanOffering, BigDecimal loanAmount, Locale locale) {
         CashFlowService cashFlowService = cashFlowServiceLocator.getService(request);
         if (cashFlowService == null) {
             return null;
         }
         CashFlowBoundary cashFlowBoundary = cashFlowService.getCashFlowBoundary(firstInstallmentDueDate, lastInstallmentDueDate);
-        prepareCashFlowContext(joinUrl, cancelUrl, cashFlowBoundary, request.getSession(), loanOffering, loanAmount);
+        prepareCashFlowContext(joinUrl, cancelUrl, cashFlowBoundary, request.getSession(), loanOffering, loanAmount, locale);
         return mapping.findForward(cashFlowUrl);
     }
 
@@ -82,7 +84,7 @@ public class CashFlowAdaptor {
     }
 
     private void prepareCashFlowContext(String joinUrl, String cancelUrl, CashFlowBoundary cashFlowBoundary,
-                                        HttpSession session, LoanOfferingBO loanOffering, BigDecimal loanAmount) {
+                                        HttpSession session, LoanOfferingBO loanOffering, BigDecimal loanAmount, Locale locale) {
         session.setAttribute(CashFlowConstants.START_MONTH, cashFlowBoundary.getStartMonth());
         session.setAttribute(CashFlowConstants.START_YEAR, cashFlowBoundary.getStartYear());
         session.setAttribute(CashFlowConstants.NO_OF_MONTHS, cashFlowBoundary.getNumberOfMonths());
@@ -91,6 +93,7 @@ public class CashFlowAdaptor {
         session.setAttribute(CashFlowConstants.CAPTURE_CAPITAL_LIABILITY_INFO, loanOffering.shouldCaptureCapitalAndLiabilityInformation());
         session.setAttribute(CashFlowConstants.INDEBTEDNESS_RATIO, loanOffering.getIndebtednessRatio());
         session.setAttribute(CashFlowConstants.LOAN_AMOUNT_VALUE, loanAmount);
+        session.setAttribute(CashFlowConstants.LOCALE, locale);
     }
 
     private CashFlowDetail mapToCashFlowDetail(CashFlowCaptor cashFlowCaptor) {
@@ -116,5 +119,6 @@ public class CashFlowAdaptor {
         session.removeAttribute(CashFlowConstants.JOIN_URL);
         session.removeAttribute(CashFlowConstants.CANCEL_URL);
         session.removeAttribute(CashFlowConstants.CASH_FLOW_FORM);
+        session.removeAttribute(CashFlowConstants.LOCALE);
     }
 }

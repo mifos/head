@@ -445,7 +445,7 @@ explanation of the license and how it is applied.
 											</td>
 										</tr>
 									<br/>
-                                        <c:if test="${loanAccountActionForm.cashflowDataHtmlBeans != null}">
+                                        <c:if test="${loanAccountActionForm.cashflowDataDtos != null}">
 										<tr>
                                             <td>
                                                 <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -464,23 +464,23 @@ explanation of the license and how it is applied.
                                                                 <td width="22%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.totalinstallmentaspercent" /></b></td>
                                                                 <td width="17%" class="drawtablerow" align="left" ><b><mifos:mifoslabel name="loan.cashflownotes" /></b></td>
                                                             </tr>
-                                                                <c:forEach var="cashflowDataHtmlBean" items="${loanAccountActionForm.cashflowDataHtmlBeans}" varStatus="loopStatus">
+                                                                <c:forEach var="cashflowDataDto" items="${loanAccountActionForm.cashflowDataDtos}" varStatus="loopStatus">
                                                                 <tr>
                                                                     <td class="drawtablerow" align="left">
-                                                                        <mifos:mifoslabel name="${cashflowDataHtmlBean.month}" bundle="cashflow_messages" />
-                                                                        <c:out value="${cashflowDataHtmlBean.year}" />
+                                                                    	<c:out value="${cashflowDataDto.month}" />
+                                                                        <c:out value="${cashflowDataDto.year}" />
                                                                     </td>
                                                                     <td class="drawtablerow" align="center">
-                                                                        <c:out value="${cashflowDataHtmlBean.cumulativeCashFlow}" />
+                                                                        <c:out value="${cashflowDataDto.cumulativeCashFlow}" />
                                                                     </td>
                                                                     <td class="drawtablerow" align="center">
-																		<c:out value="${cashflowDataHtmlBean.diffCumulativeCashflowAndInstallment}" />
+																		<c:out value="${cashflowDataDto.diffCumulativeCashflowAndInstallment}" />
                                                                     </td>
                                                                     <td class="drawtablerow" align="center">
-                                                                        <c:out value="${cashflowDataHtmlBean.diffCumulativeCashflowAndInstallmentPercent}" />
+                                                                        <c:out value="${cashflowDataDto.diffCumulativeCashflowAndInstallmentPercent}" />
                                                                     </td>
                                                                     <td class="drawtablerow" align="left">
-                                                                        <c:out value="${cashflowDataHtmlBean.notes}" />
+                                                                        <c:out value="${cashflowDataDto.notes}" />
                                                                     </td>
                                                                 </tr>
                                                                 </c:forEach>

@@ -80,6 +80,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.CashFlowDataAdaptor;
 import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
@@ -90,7 +91,6 @@ import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
@@ -595,20 +595,25 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return forwardAfterCashflowBinding;
     }
 
+
+
+
     private boolean bindCashflowIfPresent(final HttpServletRequest request, final ActionForm form) throws Exception {
         boolean cashflowBound = false;
+
         UserContext userContext = getUserContext(request);
         LoanAccountActionForm loanForm = (LoanAccountActionForm) form;
         LoanOfferingBO loanOffering = getLoanOffering(loanForm.getPrdOfferingIdValue(), userContext.getLocaleId());
 
         if (loanOffering != null && loanOffering.isCashFlowCheckEnabled()) {
-            InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
+            CashFlowDataAdaptor cashflowUtility = new CashFlowDataAdaptor(
                     loanForm.getInstallments(),
                     loanForm.getCashFlowForm().getMonthlyCashFlows(),
                     loanForm.getLoanAmountAsBigDecimal(),
-                    loanForm.getDisbursementDateValue(userContext.getPreferredLocale()));
+                    loanForm.getDisbursementDateValue(userContext.getPreferredLocale()),
+                    userContext.getPreferredLocale());
 
-            loanForm.setCashflowDataHtmlBeans(cashflowUtility.mapToCashflowDataHtmlBeans());
+            loanForm.setCashflowDataDtos(cashflowUtility.getCashflowDataDtos());
             cashflowBound = true;
         }
         return cashflowBound;
@@ -674,7 +679,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             return cashFlowAdaptor.renderCashFlow(
                     loanScheduleDetailsDto.firstInstallmentDueDate(),
                     loanScheduleDetailsDto.lastInstallmentDueDate(),
-                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request, loanOffering, loanAmount);
+                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request, loanOffering, loanAmount, getUserContext(request).getPreferredLocale());
         }
         return mapping.findForward(ActionForwards.schedulePreview_success.toString());
     }

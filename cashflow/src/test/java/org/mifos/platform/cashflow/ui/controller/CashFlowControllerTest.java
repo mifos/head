@@ -13,6 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static org.junit.Assert.assertThat;
 
@@ -28,8 +29,8 @@ public class CashFlowControllerTest {
         CashFlowController cashFlowController = new CashFlowController(cashFlowService);
         BigDecimal loanAmount = new BigDecimal("1234");
         Double indebtednessRatio = 12d;
-        CashFlowForm cashFlowForm = cashFlowController.prepareCashFlowForm(2012, 1, 12, loanAmount, indebtednessRatio, true);
-        CashFlowForm expectedCashFlowForm = new CashFlowForm(cashFlowDetail, true, loanAmount, indebtednessRatio);
+        CashFlowForm cashFlowForm = cashFlowController.prepareCashFlowForm(2012, 1, 12, loanAmount, indebtednessRatio, true, Locale.US);
+        CashFlowForm expectedCashFlowForm = new CashFlowForm(cashFlowDetail, true, loanAmount, indebtednessRatio, Locale.US);
         assertThat(cashFlowForm, new CashFlowFormMatcher(expectedCashFlowForm));
         Mockito.verify(cashFlowService).cashFlowFor(2012, 1, 12);
     }

@@ -67,8 +67,8 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
+import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
@@ -825,20 +825,20 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         LoanOfferingBO loanOfferingBO = loanPrdBusinessService.getLoanOffering(loanActionForm.getPrdOfferingIdValue(), localeId);
         if (loanOfferingBO.shouldValidateCashFlowForInstallments()) {
             CashFlowDetail cashFlowDetail = loanOfferingBO.getCashFlowDetail();
-            List<CashFlowDataHtmlBean> cashFlowDataHtmlBeans = loanActionForm.getCashflowDataHtmlBeans();
-            if (CollectionUtils.isNotEmpty(cashFlowDataHtmlBeans)) {
-                for (CashFlowDataHtmlBean cashflowDataHtmlBean : cashFlowDataHtmlBeans) {
-                    validateCashFlow(errors, cashFlowDetail.getCashFlowThreshold(), cashflowDataHtmlBean);
+            List<CashFlowDataDto> cashFlowDataDtos = loanActionForm.getCashflowDataDtos();
+            if (CollectionUtils.isNotEmpty(cashFlowDataDtos)) {
+                for (CashFlowDataDto cashflowDataDto : cashFlowDataDtos) {
+                    validateCashFlow(errors, cashFlowDetail.getCashFlowThreshold(), cashflowDataDto);
                 }
             }
         }
         return errors;
     }
 
-    private void validateCashFlow(Errors errors, Double cashFlowThreshold, CashFlowDataHtmlBean cashflowDataHtmlBean) {
-        String cashFlowAndInstallmentDiffPercent = cashflowDataHtmlBean.getDiffCumulativeCashflowAndInstallmentPercent();
-        String monthYearAsString = cashflowDataHtmlBean.getMonthYearAsString();
-        String cumulativeCashFlow = cashflowDataHtmlBean.getCumulativeCashFlow();
+    private void validateCashFlow(Errors errors, Double cashFlowThreshold, CashFlowDataDto cashflowDataDto) {
+        String cashFlowAndInstallmentDiffPercent = cashflowDataDto.getDiffCumulativeCashflowAndInstallmentPercent();
+        String monthYearAsString = cashflowDataDto.getMonthYearAsString();
+        String cumulativeCashFlow = cashflowDataDto.getCumulativeCashFlow();
         if (StringUtils.isNotEmpty(cashFlowAndInstallmentDiffPercent) && Double.valueOf(cashFlowAndInstallmentDiffPercent) > cashFlowThreshold) {
             errors.addError(AccountConstants.BEYOND_CASHFLOW_THRESHOLD, new String[]{monthYearAsString, cashFlowThreshold.toString()});
         }
