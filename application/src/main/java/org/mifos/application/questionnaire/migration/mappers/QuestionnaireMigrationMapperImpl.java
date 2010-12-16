@@ -22,7 +22,6 @@ package org.mifos.application.questionnaire.migration.mappers;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
-import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -69,6 +68,7 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.MULTI_SELE
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_FOR_ADDITIONAL_FIELDS;
 import static org.mifos.platform.util.CollectionUtils.asMap;
 import static org.mifos.platform.util.MapEntry.makeEntry;
+import org.mifos.platform.validations.ValidationException;
 
 public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationMapper {
 
@@ -131,7 +131,7 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
             try {
                 questionId = questionnaireServiceFacade.createQuestion(questionDto);
             } catch (ValidationException e) {
-                if (e.containsChildExceptions() &&
+                if (e.hasChildExceptions() &&
                         QuestionnaireConstants.QUESTION_TITILE_MATCHES_EXISTING_QUESTION.equals(e.getChildExceptions().get(0).getKey())) {
                     modifyQuestionTitle(questionDto);
                     continue;
