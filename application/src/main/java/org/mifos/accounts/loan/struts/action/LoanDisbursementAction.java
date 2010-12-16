@@ -20,6 +20,17 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -29,9 +40,9 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.business.service.AcceptedPaymentTypeService;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -46,7 +57,7 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.UserReferenceDto;
-import org.mifos.framework.business.service.BusinessService;
+import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
@@ -60,16 +71,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-import static org.mifos.framework.util.helpers.DateUtils.getUserLocaleDate;
 
 public class LoanDisbursementAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(LoanDisbursementAction.class);
@@ -89,7 +90,7 @@ public class LoanDisbursementAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         setIsRepaymentScheduleEnabled(request);
         setIsBackdatedTransactionAllowed(request);
@@ -99,21 +100,21 @@ public class LoanDisbursementAction extends BaseAction {
         loanDisbursementActionForm.setAmountCannotBeZero(false);
 
         Integer loanAccountId = Integer.valueOf(loanDisbursementActionForm.getAccountId());
-        loanServiceFacade.checkIfProductsOfferingCanCoexist(loanAccountId);
+        this.loanAccountServiceFacade.checkIfProductsOfferingCanCoexist(loanAccountId);
 
-        LoanDisbursalDto loanDisbursalDto = loanServiceFacade.getLoanDisbursalDto(loanAccountId);
+        LoanDisbursalDto loanDisbursalDto = loanAccountServiceFacade.retrieveLoanDisbursalDetails(loanAccountId);
 
+        UserContext uc = getUserContext(request);
         SessionUtils.setAttribute(LoanConstants.PROPOSED_DISBURSAL_DATE, loanDisbursalDto.getProposedDate(), request);
-        loanDisbursementActionForm.setTransactionDate(getUserLocaleDate(getUserContext(request).getPreferredLocale(),
-                loanDisbursalDto.getProposedDate()));
+        loanDisbursementActionForm.setTransactionDate(getUserLocaleDate(uc.getPreferredLocale(), loanDisbursalDto.getProposedDate()));
 
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, getAcceptedPaymentTypes(uc.getLocaleId()),
-                request);
-        loanDisbursementActionForm.setAmount(loanDisbursalDto.getAmountPaidAtDisbursement().toString());
-        loanDisbursementActionForm.setLoanAmount(loanDisbursalDto.getLoanAmount().toString());
+
+        SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, getAcceptedPaymentTypes(uc.getLocaleId()),request);
+        loanDisbursementActionForm.setAmount(loanDisbursalDto.getAmountPaidAtDisbursement());
+        loanDisbursementActionForm.setLoanAmount(loanDisbursalDto.getLoanAmount());
         if (AccountingRules.isMultiCurrencyEnabled()) {
-            loanDisbursementActionForm.setCurrencyId(loanDisbursalDto.getLoanAmount().getCurrency().getCurrencyId());
+            LoanBO loan = this.loanDao.findById(loanAccountId);
+            loanDisbursementActionForm.setCurrencyId(loan.getCurrency().getCurrencyId());
         }
 
         return mapping.findForward(Constants.LOAD_SUCCESS);
@@ -135,21 +136,21 @@ public class LoanDisbursementAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         LoanDisbursementActionForm loanDisbursementActionForm = (LoanDisbursementActionForm) form;
         return createGroupQuestionnaire.fetchAppliedQuestions(mapping, loanDisbursementActionForm, request, ActionForwards.preview_success);
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+    public ActionForward previous(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form, @SuppressWarnings("unused") final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         return mapping.findForward(Constants.PREVIOUS_SUCCESS);
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     @CloseSession
     public ActionForward update(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanDisbursementActionForm actionForm = (LoanDisbursementActionForm) form;
 
@@ -200,8 +201,8 @@ public class LoanDisbursementAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
-            final HttpServletResponse response) throws Exception {
+    public ActionForward validate(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         String forward = null;
         if (method != null) {
@@ -211,17 +212,7 @@ public class LoanDisbursementAction extends BaseAction {
     }
 
     @Override
-    protected BusinessService getService() throws ServiceException {
-        return null;
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(final String method) {
-        return true;
-    }
-
-    @Override
-    protected boolean isNewBizRequired(final HttpServletRequest request) throws ServiceException {
+    protected boolean isNewBizRequired(@SuppressWarnings("unused") final HttpServletRequest request) throws ServiceException {
         return false;
     }
 

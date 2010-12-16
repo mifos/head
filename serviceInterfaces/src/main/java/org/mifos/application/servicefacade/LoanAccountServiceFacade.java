@@ -34,6 +34,7 @@ import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -65,4 +66,10 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void checkIfProductsOfferingCanCoexist(Integer loanAccountId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId);
 }

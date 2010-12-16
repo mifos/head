@@ -34,7 +34,6 @@ import org.mifos.accounts.loan.business.service.LoanInformationDto;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
-import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.application.master.business.BusinessActivityEntity;
@@ -67,11 +66,6 @@ public interface LoanServiceFacade {
      */
     @Deprecated
     LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
-
-    void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException,
-            AccountException;
-
-    LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException;
 
     List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);
 

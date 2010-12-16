@@ -22,6 +22,7 @@ import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -75,6 +76,7 @@ import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
+import org.mifos.dto.screen.LoanDisbursalDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -84,6 +86,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
@@ -685,5 +688,32 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
+    }
+
+    @Override
+    public void checkIfProductsOfferingCanCoexist(Integer loanAccountId) {
+        try {
+            LoanBO loan = this.loanDao.findById(loanAccountId);
+            new ProductMixValidator().checkIfProductsOfferingCanCoexist(loan);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId) {
+
+        LoanBO loan = this.loanDao.findById(loanAccountId);
+
+        Date proposedDate = new DateTimeService().getCurrentJavaDateTime();
+        if (AccountingRules.isBackDatedTxnAllowed()) {
+            proposedDate = loan.getDisbursementDate();
+        }
+
+        return new LoanDisbursalDto(loan.getAccountId(), proposedDate, loan.getLoanAmount().toString(), loan.getAmountTobePaidAtdisburtail().toString());
     }
 }

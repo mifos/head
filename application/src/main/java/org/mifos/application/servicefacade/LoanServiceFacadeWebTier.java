@@ -66,12 +66,10 @@ import org.mifos.accounts.loan.business.service.validators.InstallmentValidation
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
-import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.LoanDisbursalDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -98,7 +96,6 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
@@ -117,7 +114,6 @@ import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
@@ -406,27 +402,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             }
         }
         return newMeetingForRepaymentDay;
-    }
-
-    @Override
-    public void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException,
-            AccountException {
-        LoanBO loan = this.loanDao.findById(loanAccountId);
-        new ProductMixValidator().checkIfProductsOfferingCanCoexist(loan);
-    }
-
-    @Override
-    public LoanDisbursalDto getLoanDisbursalDto(Integer loanAccountId) throws ServiceException {
-
-        LoanBO loan = this.loanDao.findById(loanAccountId);
-
-        Date proposedDate = new DateTimeService().getCurrentJavaDateTime();
-        if (AccountingRules.isBackDatedTxnAllowed()) {
-            proposedDate = loan.getDisbursementDate();
-        }
-
-        return new LoanDisbursalDto(loan.getAccountId(), proposedDate, loan.getLoanAmount(), loan
-                .getAmountTobePaidAtdisburtail());
     }
 
     @Override
