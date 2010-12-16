@@ -20,48 +20,58 @@
 
 package org.mifos.accounts.loan.business;
 
-import org.mifos.accounts.business.AccountActionDateEntity;
+import org.hibernate.annotations.Columns;
+import org.hibernate.annotations.Type;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.framework.util.helpers.Money;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Table(name = "original_loan_fee_schedule")
 public class OriginalLoanFeeScheduleEntity implements Comparable<OriginalLoanFeeScheduleEntity>, Serializable {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "account_fees_detail_id")
     private Integer accountFeesActionDetailId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     private OriginalLoanScheduleEntity accountActionDate;
 
-    private Short installmentId;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "fee_id")
     private FeeBO fee;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_fee_id")
     private AccountFeesEntity accountFee;
 
+    @Column(name = "installment_id")
+    private Short installmentId;
+
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "amount_currency_id"),
+            @Column(name = "amount")
+    })
     private Money feeAmount;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "amount_paid_currency_id"),
+            @Column(name = "amount_paid")
+    })
     private Money feeAmountPaid;
 
-    private Money feeAllocated;
+    @Column(name = "version_no")
     private int versionNo;
 
     public OriginalLoanFeeScheduleEntity() {
-    }
-
-    //Introduced to aid testing
-    public OriginalLoanFeeScheduleEntity(OriginalLoanScheduleEntity originalLoanScheduleEntity, FeeBO fee, AccountFeesEntity accountFee, Money feeAmount, int versionNo) {
-        this.accountActionDate = originalLoanScheduleEntity;
-        if (accountActionDate != null) {
-            this.installmentId = accountActionDate.getInstallmentId();
-            this.feeAmountPaid = new Money(accountActionDate.getAccount().getCurrency());
-        }
-        else {
-            this.installmentId = null;
-        }
-        this.fee = fee;
-        this.accountFee = accountFee;
-        this.feeAmount = feeAmount;
-        this.versionNo = versionNo;
     }
 
     public OriginalLoanFeeScheduleEntity(AccountFeesActionDetailEntity accountFeesActionDetail, OriginalLoanScheduleEntity originalLoanScheduleEntity) {
@@ -69,14 +79,13 @@ public class OriginalLoanFeeScheduleEntity implements Comparable<OriginalLoanFee
         if (accountActionDate != null) {
             this.installmentId = accountActionDate.getInstallmentId();
             this.feeAmountPaid = new Money(accountActionDate.getAccount().getCurrency());
-        }
-        else {
+        } else {
             this.installmentId = null;
         }
         this.fee = accountFeesActionDetail.getFee();
         this.accountFee = accountFeesActionDetail.getAccountFee();
         this.feeAmount = accountFeesActionDetail.getFeeAmount();
-        this.versionNo = ((LoanFeeScheduleEntity)accountFeesActionDetail).getVersionNo();
+        this.versionNo = ((LoanFeeScheduleEntity) accountFeesActionDetail).getVersionNo();
     }
 
     protected void setFeeAmount(Money feeAmount) {
@@ -125,10 +134,6 @@ public class OriginalLoanFeeScheduleEntity implements Comparable<OriginalLoanFee
 
     public int compareTo(OriginalLoanFeeScheduleEntity obj) {
         return this.getFee().getFeeId().compareTo(obj.getFee().getFeeId());
-    }
-
-    public Money getFeeAllocated() {
-        return this.feeAllocated;
     }
 
     public void setAccountFeesActionDetailId(Integer accountFeesActionDetailId) {

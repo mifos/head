@@ -20,8 +20,9 @@
 
 package org.mifos.accounts.loan.business;
 
+import org.hibernate.annotations.Columns;
+import org.hibernate.annotations.Type;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -31,6 +32,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Date;
 import java.util.Collection;
@@ -38,65 +40,132 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanScheduleEntity>,Serializable{
+@NamedQueries( {
+        @NamedQuery(
+                name = "originalLoanScheduleEntity.getScheduleForLoan",
+                query = " from org.mifos.accounts.loan.business.OriginalLoanScheduleEntity originalLoanSchedule" +
+                        " where originalLoanSchedule.account.id = :id"
+        )
+})
+@Entity
+@Table(name = "original_loan_schedule")
+public class OriginalLoanScheduleEntity implements Comparable<OriginalLoanScheduleEntity>, Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Integer actionDateId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id")
     private AccountBO account;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_id")
     private CustomerBO customer;
+
+    @Column(name = "installment_id")
     private Short installmentId;
+
+    @Column(name = "action_date")
     private Date actionDate;
+
+    @Column(name = "payment_status")
     private Short paymentStatus;
+
+    @Column(name = "payment_date")
     private Date paymentDate;
 
+
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "principal_currency_id"),
+            @Column(name = "principal")
+    })
     private Money principal;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "interest_currency_id"),
+            @Column(name = "interest")
+    })
     private Money interest;
 
     // TODO: Instance variable "penalty" appears to be unused. Verify and
     // remove.
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "penalty_currency_id"),
+            @Column(name = "penalty")
+    })
     private Money penalty;
 
+    @Transient
     private Money extraInterest;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "miscFees_currency_id"),
+            @Column(name = "miscFees")
+    })
     private Money miscFee;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "misc_penalty_currency_id"),
+            @Column(name = "misc_penalty")
+    })
     private Money miscPenalty;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "principal_paid_currency_id"),
+            @Column(name = "principal_paid")
+    })
     private Money principalPaid;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "interest_paid_currency_id"),
+            @Column(name = "interest_paid")
+    })
     private Money interestPaid;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "penalty_paid_currency_id"),
+            @Column(name = "penalty_paid")
+    })
     private Money penaltyPaid;
 
+    @Transient
     private Money extraInterestPaid;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "misc_fees_paid_currency_id"),
+            @Column(name = "misc_fees_paid")
+    })
     private Money miscFeePaid;
 
+    @Type(type = "org.mifos.framework.util.helpers.MoneyCompositeUserType")
+    @Columns(columns = {
+            @Column(name = "misc_penalty_paid_currency_id"),
+            @Column(name = "misc_penalty_paid")
+    })
     private Money miscPenaltyPaid;
 
-
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "id", updatable = true, insertable = true)
     private Set<OriginalLoanFeeScheduleEntity> accountFeesActionDetails = new HashSet<OriginalLoanFeeScheduleEntity>();
 
+    @Column(name = "version_no")
     private int versionNo;
 
+    @Transient
     private PaymentAllocation paymentAllocation;
 
 
     public OriginalLoanScheduleEntity() {
-    }
-
-    public OriginalLoanScheduleEntity(AccountBO account, CustomerBO customer, Short installmentId, java.sql.Date actionDate,
-                                      PaymentStatus paymentStatus, Money principal, Money interest) {
-        this.actionDateId = null;
-        this.account = account;
-        this.customer = customer;
-        this.installmentId = installmentId;
-        this.actionDate = actionDate;
-        if (paymentStatus != null) {
-            this.paymentStatus = paymentStatus.getValue();
-        }
-        this.principal = principal;
-        this.interest = interest;
-        reset(account.getCurrency());
     }
 
     public OriginalLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity) {

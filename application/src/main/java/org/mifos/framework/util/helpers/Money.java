@@ -65,10 +65,16 @@ public final class Money implements Serializable, Comparable<Money> {
 
     private final BigDecimal amount;
 
+    public Money() {
+        amount = BigDecimal.ZERO;
+        currency = getDefaultCurrency();
+    }
+
     /**
      * This creates a Money object with currency set to MFICurrency and amount
      * set to zero.
      */
+
     public Money(MifosCurrency currency) {
         this(currency, new BigDecimal(0));
     }

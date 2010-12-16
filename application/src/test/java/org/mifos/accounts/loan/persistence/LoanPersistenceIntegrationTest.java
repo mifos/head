@@ -55,6 +55,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
+import java.io.*;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.*;
@@ -342,9 +343,12 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testSaveAndGetOriginalLoanScheduleEntity() throws PersistenceException {
+    public void testSaveAndGetOriginalLoanScheduleEntity() throws PersistenceException, IOException {
         ArrayList<OriginalLoanScheduleEntity> originalLoanScheduleEntities = new ArrayList<OriginalLoanScheduleEntity>();
-        originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(goodAccount, group, new Short("1"), new Date(new java.util.Date().getTime()), PaymentStatus.UNPAID, Money.zero(), Money.zero()));
+        Short installmentId = new Short("1");
+        Date date = new Date(new java.util.Date().getTime());
+        LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(goodAccount, group, installmentId, date, PaymentStatus.UNPAID, Money.zero(), Money.zero());
+        originalLoanScheduleEntities.add(new OriginalLoanScheduleEntity(loanScheduleEntity));
         loanPersistence.saveOriginalSchedule(originalLoanScheduleEntities);
         List<OriginalLoanScheduleEntity> actual = loanPersistence.getOriginalLoanScheduleEntity(goodAccount.getAccountId());
         Assert.assertEquals(1, actual.size());
@@ -366,17 +370,19 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
         TestObjectFactory.updateObject(goodAccount);
         goodAccount = (LoanBO) TestObjectFactory.getObject(AccountBO.class, goodAccount.getAccountId());
 
-        OriginalLoanScheduleEntity originalLoanScheduleEntity = new OriginalLoanScheduleEntity(goodAccount, group, installmentId,
-                date, PaymentStatus.UNPAID, Money.zero(), Money.zero());
-        OriginalLoanFeeScheduleEntity scheduleEntityFee = new OriginalLoanFeeScheduleEntity(originalLoanScheduleEntity,
-                        upfrontFee, accountUpfrontFee, Money.zero(), 1);
-        originalLoanScheduleEntity.addAccountFeesAction(scheduleEntityFee);
+        LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(goodAccount, group, installmentId, date, PaymentStatus.UNPAID, Money.zero(), Money.zero());
+        LoanFeeScheduleEntity feesEntity = new LoanFeeScheduleEntity(loanScheduleEntity, upfrontFee, accountUpfrontFee, Money.zero());
+        loanScheduleEntity.addAccountFeesAction(feesEntity);
+
+        OriginalLoanScheduleEntity originalLoanScheduleEntity = new OriginalLoanScheduleEntity(loanScheduleEntity);
+        OriginalLoanFeeScheduleEntity scheduleEntityFee = new OriginalLoanFeeScheduleEntity(feesEntity, originalLoanScheduleEntity);
+
         originalLoanScheduleEntities.add(originalLoanScheduleEntity);
 
         loanPersistence.saveOriginalSchedule(originalLoanScheduleEntities);
 
         List<OriginalLoanScheduleEntity> actual = loanPersistence.getOriginalLoanScheduleEntity(goodAccount.getAccountId());
-        
+
         List<OriginalLoanFeeScheduleEntity> fees = new ArrayList<OriginalLoanFeeScheduleEntity>(actual.get(0).getAccountFeesActionDetails());
         Assert.assertEquals(1, actual.size());
         Assert.assertEquals(1, fees.size());
