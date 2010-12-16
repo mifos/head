@@ -110,6 +110,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
         DepositWithdrawalReferenceDto depositWithdrawalReferenceDto = this.savingsServiceFacade.retrieveDepositWithdrawalReferenceData(savingsId, customerId);
 
         savings = this.savingsDao.findById(savingsId);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         if (savings.isGroupModelWithIndividualAccountability()) {
             List<CustomerBO> activeAndOnHoldClients = new CustomerPersistence().getActiveAndOnHoldChildren(savings.getCustomer().getSearchId(), savings.getCustomer().getOfficeId(), CustomerLevel.CLIENT);
             SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, activeAndOnHoldClients, request);

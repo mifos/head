@@ -22,6 +22,7 @@ package org.mifos.application.questionnaire.migration.mappers;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.platform.questionnaire.QuestionnaireConstants;
+import org.mifos.platform.questionnaire.exceptions.ValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -55,6 +56,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import static java.lang.String.format;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_EVENT_FOR_CUSTOM_FIELDS;
@@ -123,12 +126,36 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
 
     private Integer createQuestion(QuestionDto questionDto, Short fieldId) {
         Integer questionId = null;
-        try {
-            questionId = questionnaireServiceFacade.createQuestion(questionDto);
-        } catch (Exception e) {
-            logger.error(format("Unable to migrate a Custom Field with ID, %s to a Question", fieldId), e);
+        boolean unrecoverableError = false;
+        while (questionId == null && !unrecoverableError) {
+            try {
+                questionId = questionnaireServiceFacade.createQuestion(questionDto);
+            } catch (ValidationException e) {
+                if (e.containsChildExceptions() &&
+                        QuestionnaireConstants.QUESTION_TITILE_MATCHES_EXISTING_QUESTION.equals(e.getChildExceptions().get(0).getKey())) {
+                    modifyQuestionTitle(questionDto);
+                    continue;
+                }
+                unrecoverableError = true;
+            } catch (Exception e) {
+                logger.error(format("Unable to migrate a Custom Field with ID, %s to a Question", fieldId), e);
+                unrecoverableError = true;
+            }
         }
         return questionId;
+    }
+
+    private void modifyQuestionTitle(QuestionDto questionDto) {
+        String questionText = questionDto.getText();
+        if (questionText.matches("^.*_\\d+$")) {
+            Pattern p = Pattern.compile("^(.*)_(\\d)+$");
+            Matcher m = p.matcher(questionText);
+            m.find();
+            questionDto.setText(m.group(1) + "_" +  (Integer.parseInt(m.group(2)) + 1));
+        }
+        else {
+            questionDto.setText(questionText + "_1");
+        }
     }
 
     @Override
