@@ -332,13 +332,10 @@ public class CustomerAccountBO extends AccountBO {
             throw new AccountException(AccountConstants.NO_TRANSACTION_POSSIBLE, new String[] {"Trying to pay account charges before the due date."});
         }
 
-        /////////////////////////////////////////////
         Money totalAllUnpaidInstallments = new Money(totalPaid.getCurrency(), "0.0");
         for (CustomerScheduleEntity customerSchedule : customerAccountPayments) {
            totalAllUnpaidInstallments = totalAllUnpaidInstallments.add(new Money(totalPaid.getCurrency(), dueAmountForCustomerSchedule(customerSchedule)));
         }
-        System.out.printf("Should be %f is %f\n", totalAllUnpaidInstallments.getAmountDoubleValue(), totalPaid.getAmountDoubleValue());
-        /////////////////////////////////////////////////
 
         if (totalAllUnpaidInstallments.compareTo(totalPaid) < 0) {
             throw new AccountException(AccountConstants.NO_TRANSACTION_POSSIBLE, new String[] {"Overpayments are not supported"});

@@ -118,6 +118,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.framework.util.helpers.MifosStringUtils;
 
 public class CustomerDaoHibernate implements CustomerDao {
@@ -545,40 +546,16 @@ public class CustomerDaoHibernate implements CustomerDao {
                 loanOfficerName);
     }
 
-    @SuppressWarnings("unchecked")
+    @Override
     public CustomerAccountSummaryDto getCustomerAccountSummaryDto(Integer customerId) {
-
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("CUSTOMER_ID", customerId);
-        queryParameters.put("TODAY", new LocalDate().toString());
-
-        List<Object[]> queryResult = (List<Object[]>) this.genericDao.executeNamedQuery("getCustomerAccountSummaryDto",
-                queryParameters);
-
-        if (queryResult.size() > 1) {
-            throw new MifosRuntimeException("More than one row returned");
+        CustomerBO customer = findCustomerById(customerId);
+        for (AccountBO account : customer.getAccounts()) {
+            if (account instanceof CustomerAccountBO) {
+                CustomerAccountBO customerAccount = (CustomerAccountBO)account;
+                return new CustomerAccountSummaryDto(customerAccount.getGlobalAccountNum(), customerAccount.getTotalPaymentDue().toString());
+            }
         }
-        if (queryResult.size() == 0) {
-            return null;
-        }
-
-        final String globalAccountNum = (String) queryResult.get(0)[0];
-        // FIXME - johnw - currency
-        final Short currency = (Short) queryResult.get(0)[1];
-        BigDecimal totalChargesDue = (BigDecimal) queryResult.get(0)[2];
-        if (totalChargesDue == null) {
-            totalChargesDue = BigDecimal.ZERO;
-        }
-
-        BigDecimal totalFeesDue = (BigDecimal) queryResult.get(0)[3];
-        if (totalFeesDue == null) {
-            totalFeesDue = BigDecimal.ZERO;
-        }
-
-        MifosCurrency mifosCurrency = Money.getDefaultCurrency();
-        final Money totalAmountDue = new Money(mifosCurrency, (totalChargesDue.add(totalFeesDue)));
-
-        return new CustomerAccountSummaryDto(globalAccountNum, totalAmountDue.toString());
+        return null;
     }
 
     @Override
