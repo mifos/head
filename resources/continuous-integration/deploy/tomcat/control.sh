@@ -12,16 +12,16 @@ export CATALINA_OPTS="-Xmx512m -XX:MaxPermSize=128m -Djava.io.tmpdir=$JVM_TMPDIR
 export CATALINA_PID=$DEPLOY_ROOT/tomcat.pid
 export MIFOS_CONF=$DEPLOY_ROOT/mifos_conf
 
-[ -f $CATALINA_HOME/bin/catalina.sh ] || exit 0
+[[ -f $CATALINA_HOME/bin/catalina.sh ]] || exit 0
 
-[ -d $JVM_TMPDIR ] || mkdir -p $JVM_TMPDIR || exit 1
+[[ -d $JVM_TMPDIR ]] || mkdir -p $JVM_TMPDIR || exit 1
 
 start_tomcat() {
         $CATALINA_HOME/bin/startup.sh
 }
 
 stop_tomcat() {
-        if [ -e $CATALINA_PID ]
+        if [[ -e $CATALINA_PID ]]
         then
             $CATALINA_HOME/bin/shutdown.sh -force
             rm -f $CATALINA_PID
@@ -38,7 +38,7 @@ stop)
         stop_tomcat
         ;;
 status)  
-        if [ -e $CATALINA_PID ]
+        if [[ -e $CATALINA_PID ]]
         then
             echo "Tomcat appears to be running as process id `cat $CATALINA_PID`"
         else
@@ -54,5 +54,5 @@ restart)
         echo "Usage: $0 {start|stop|status}"
         exit 1
         ;;
-esac   
+esac
 exit 0
