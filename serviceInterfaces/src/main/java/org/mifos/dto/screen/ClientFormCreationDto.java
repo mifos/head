@@ -24,14 +24,12 @@ import java.util.List;
 
 import org.mifos.dto.domain.ApplicableAccountFeeDto;
 import org.mifos.dto.domain.ClientRulesDto;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.SavingsDetailDto;
 
 public class ClientFormCreationDto {
 
-    private final List<CustomFieldDto> customFieldDtos;
     private final Short officeId;
     private final Short formedByPersonnelId;
     private final List<PersonnelDto> personnelList;
@@ -48,7 +46,7 @@ public class ClientFormCreationDto {
     private final List<ApplicableAccountFeeDto> defaultFees;
 
     @SuppressWarnings("PMD")
-    public ClientFormCreationDto(ClientDropdownsDto clientDropdowns, List<CustomFieldDto> customFieldDtos, ClientRulesDto clientRules, Short officeId, String officeName,
+    public ClientFormCreationDto(ClientDropdownsDto clientDropdowns, ClientRulesDto clientRules, Short officeId, String officeName,
             Short formedByPersonnelId, String formedByPersonnelName, List<PersonnelDto> personnelList,
             List<PersonnelDto> formedByPersonnelList, List<SavingsDetailDto> savingsOfferings,
             MeetingDto parentCustomerMeeting, String centerDisplayName, String groupDisplayName,
@@ -56,7 +54,6 @@ public class ClientFormCreationDto {
             List<ApplicableAccountFeeDto> defaultFees) {
 
         this.clientDropdowns = clientDropdowns;
-        this.customFieldDtos = customFieldDtos;
         this.clientRules = clientRules;
         this.officeId = officeId;
         this.officeName = officeName;
@@ -70,10 +67,6 @@ public class ClientFormCreationDto {
         this.groupDisplayName = groupDisplayName;
         this.additionalFees = additionalFees;
         this.defaultFees = defaultFees;
-    }
-
-    public List<CustomFieldDto> getCustomFieldViews() {
-        return this.customFieldDtos;
     }
 
     public Short getOfficeId() {

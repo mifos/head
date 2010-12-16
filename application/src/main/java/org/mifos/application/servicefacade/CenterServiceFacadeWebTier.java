@@ -233,8 +233,6 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(center, userContext
                 .getLocaleId());
 
-        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
-
         DateTime mfiJoiningDate = new DateTime();
         String mfiJoiningDateAsString = "";
         if (center.getMfiJoiningDate() != null) {
@@ -249,7 +247,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         }
         return new CenterDto(loanOfficerId, center.getCustomerId(), center.getGlobalCustNum(), mfiJoiningDate,
                 mfiJoiningDateAsString, center.getExternalId(), address, customerPositionDtos,
-                customFieldDtos, customerList, activeLoanOfficersForBranch, true);
+                customerList, activeLoanOfficersForBranch, true);
     }
 
     private Short extractLoanOfficerId(CustomerBO customer) {

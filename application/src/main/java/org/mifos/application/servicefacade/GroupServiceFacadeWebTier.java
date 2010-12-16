@@ -35,7 +35,6 @@ import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
@@ -45,7 +44,6 @@ import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerHistoricalDataEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.PositionEntity;
@@ -186,12 +184,10 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
             applicableDefaultAdditionalFees.add(new ApplicableAccountFeeDto(fee.getFeeIdValue().intValue(), fee.getFeeName(), fee.getAmount(), fee.isRemoved(), fee.isWeekly(), fee.isMonthly(), fee.isPeriodic(), fee.getFeeSchedule()));
         }
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
         List<PersonnelDto> formedByPersonnel = customerDao.findLoanOfficerThatFormedOffice(centerCreation.getOfficeId());
 
-        return new GroupFormCreationDto(isCenterHierarchyExists, customFieldDtos,
-                personnelList, formedByPersonnel, applicableDefaultAccountFees, applicableDefaultAdditionalFees);
+        return new GroupFormCreationDto(isCenterHierarchyExists, personnelList,
+                formedByPersonnel, applicableDefaultAccountFees, applicableDefaultAdditionalFees);
     }
 
     @Override
@@ -403,10 +399,6 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(group, userContext.getLocaleId());
 
-        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(group.getCustomFields(),
-                fieldDefinitions, userContext);
-
         DateTime mfiJoiningDate = new DateTime();
         String mfiJoiningDateAsString = "";
         if (group.getMfiJoiningDate() != null) {
@@ -421,7 +413,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         }
         return new CenterDto(loanOfficerId, group.getCustomerId(), group.getGlobalCustNum(), mfiJoiningDate,
                 mfiJoiningDateAsString, group.getExternalId(), address, customerPositionDtos,
-                customFieldDtos, customerList, activeLoanOfficersForBranch, isCenterHierarchyExists);
+                customerList, activeLoanOfficersForBranch, isCenterHierarchyExists);
     }
 
     private List<CustomerPositionDto> generateCustomerPositionViews(CustomerBO customer, Short localeId) {

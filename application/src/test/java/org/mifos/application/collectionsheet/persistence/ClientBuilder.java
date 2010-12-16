@@ -27,7 +27,6 @@ import org.joda.time.DateTime;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.ClientDetailEntity;
@@ -58,7 +57,6 @@ public class ClientBuilder {
     private UserContext userContext;
     private DateTime mfiJoiningDate = new DateTime();
     private PersonnelBO formedBy;
-    private List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
 
     private DateTime dateOfBirth = new DateTime();
     private String governmentId;
@@ -86,7 +84,7 @@ public class ClientBuilder {
         }
 
         final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
-                parentCustomer, formedBy, customerCustomFields, clientNameDetailEntity, dateOfBirth, governmentId,
+                parentCustomer, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
                 spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address);
         client.setMeeting(this.meeting);
@@ -112,7 +110,7 @@ public class ClientBuilder {
         }
 
         final ClientBO client = ClientBO.createNewInGroupHierarchy(userContext, name, customerStatus, mfiJoiningDate,
-                parentCustomer, formedBy, customerCustomFields, clientNameDetailEntity, dateOfBirth, governmentId,
+                parentCustomer, formedBy, clientNameDetailEntity, dateOfBirth, governmentId,
                 trained, trainedDate, groupFlag, clientFirstName, clientLastName, secondLastName,
                 spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob, associatedOfferings, externalId, address);
         client.setCustomerActivationDate(activationDate.toDate());

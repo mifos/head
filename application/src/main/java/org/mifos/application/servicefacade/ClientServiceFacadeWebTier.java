@@ -38,7 +38,6 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.util.helpers.EntityType;
@@ -49,7 +48,6 @@ import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.client.business.ClientBO;
@@ -77,7 +75,6 @@ import org.mifos.dto.domain.ClientFamilyInfoUpdate;
 import org.mifos.dto.domain.ClientMfiInfoUpdate;
 import org.mifos.dto.domain.ClientPersonalInfoUpdate;
 import org.mifos.dto.domain.ClientRulesDto;
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerDetailDto;
@@ -198,10 +195,6 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             additionalFees.add(new ApplicableAccountFeeDto(fee.getFeeIdValue().intValue(), fee.getFeeName(), fee.getAmount(), fee.isRemoved(), fee.isWeekly(), fee.isMonthly(), fee.isPeriodic(), fee.getFeeSchedule()));
         }
 
-//        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-//        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext.getPreferredLocale());
-
-        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
         List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
 
         ClientRulesDto clientRules = retrieveClientRules();
@@ -215,7 +208,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             parentMeeting = parentCustomerMeeting.toDto();
         }
 
-        return new ClientFormCreationDto(clientDropdowns, customFieldDtos, clientRules, applicableOfficeId, officeName,
+        return new ClientFormCreationDto(clientDropdowns, clientRules, applicableOfficeId, officeName,
                 formedByPersonnelId, formedByPersonnelName, personnelList, formedByPersonnel, savingsOfferings,
                 parentMeeting, centerDisplayName, groupDisplayName, additionalFees, defaultFees);
     }
@@ -388,18 +381,10 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                     personnelId = group.getPersonnel().getPersonnelId();
                 }
 
-                if (group.getParentCustomer() != null) {
-//                    actionForm.setGroupDisplayName(group.getDisplayName());
-                    if (group.getParentCustomer() != null) {
-//                        actionForm.setCenterDisplayName(group.getParentCustomer().getDisplayName());
-                    }
-                }
-
                 officeId = group.getOffice().getOfficeId();
 
-                List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
                 client = ClientBO.createNewInGroupHierarchy(userContext, clientCreationDetail.getClientName(), clientStatus, new DateTime(
-                       clientCreationDetail.getDateOfBirth()), group, formedBy, customerCustomFields, clientNameDetailEntity, dob,
+                       clientCreationDetail.getDateOfBirth()), group, formedBy, clientNameDetailEntity, dob,
                        clientCreationDetail.getGovernmentId(), trainedBool, trainedDateTime, clientCreationDetail.getGroupFlag(), clientFirstName, clientLastName,
                         secondLastName, spouseFatherNameDetailEntity, clientDetailEntity, pictureAsBlob,
                         offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address);
@@ -428,9 +413,8 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
                 }
 
 
-                List<CustomerCustomFieldEntity> customerCustomFields = new ArrayList<CustomerCustomFieldEntity>();
                 client = ClientBO.createNewOutOfGroupHierarchy(userContext, clientCreationDetail.getClientName(), clientStatus, new DateTime(
-                        clientCreationDetail.getMfiJoiningDate()), office, loanOfficer, clientMeeting, formedBy, customerCustomFields,
+                        clientCreationDetail.getMfiJoiningDate()), office, loanOfficer, clientMeeting, formedBy,
                         clientNameDetailEntity, dob, clientCreationDetail.getGovernmentId(), trainedBool, trainedDateTime, clientCreationDetail.getGroupFlag(),
                         clientFirstName, clientLastName, secondLastName, spouseFatherNameDetailEntity,
                         clientDetailEntity, pictureAsBlob, offeringsAssociatedInCreate, clientCreationDetail.getExternalId(), address,
@@ -515,11 +499,8 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(clientId);
 
-        List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(clientId,
-                EntityType.CLIENT.getValue(), userContext);
-
         return new ClientInformationDto(clientDisplay, customerAccountSummary, clientPerformanceHistory, clientAddress,
-                recentCustomerNotes, customerFlags, loanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys, customFields);
+                recentCustomerNotes, customerFlags, loanDetail, savingsDetail, customerMeeting, activeSurveys, customerSurveys);
     }
 
     private ClientPerformanceHistoryDto assembleClientPerformanceHistoryDto(
@@ -559,23 +540,16 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     @Override
     public ClientPersonalInfoDto retrieveClientPersonalInfoForUpdate(String clientSystemId) {
 
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = toUserContext(user);
-
         ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
         ClientRulesDto clientRules = retrieveClientRules();
 
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
-                customFieldDefinitions, userContext);
-
         CustomerDetailDto customerDetailDto = client.toCustomerDetailDto();
         ClientDetailDto clientDetailDto = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
 
-        return new ClientPersonalInfoDto(clientDropdowns, customFieldDtos, clientRules, customerDetailDto, clientDetailDto);
+        return new ClientPersonalInfoDto(clientDropdowns, clientRules, customerDetailDto, clientDetailDto);
     }
 
     @Override
@@ -599,15 +573,8 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     @Override
     public ClientFamilyInfoDto retrieveFamilyInfoForEdit(String clientGlobalCustNum) {
 
-//        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        UserContext userContext = toUserContext(user);
-
         ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
 
-//        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-//        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),fieldDefinitions, userContext);
-
-        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
         ClientDropdownsDto clientDropdowns = retrieveClientDropdownData();
 
         ClientRulesDto clientRules = retrieveClientRules();
@@ -638,7 +605,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
             }
         }
 
-        return new ClientFamilyInfoDto(clientDropdowns, customFieldDtos, customerDetail, clientDetail, familyMembers, clientFamilyDetails);
+        return new ClientFamilyInfoDto(clientDropdowns, customerDetail, clientDetail, familyMembers, clientFamilyDetails);
     }
 
     private void addFamilyDetailsDtoToMap(Map<Integer, List<ClientFamilyDetailDto>> clientFamilyDetails,

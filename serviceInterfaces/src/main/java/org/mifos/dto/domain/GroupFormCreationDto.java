@@ -25,17 +25,15 @@ import java.util.List;
 public class GroupFormCreationDto {
 
     private final boolean centerHierarchyExists;
-    private final List<CustomFieldDto> customFieldDtos;
     private final List<PersonnelDto> personnelList;
     private final List<PersonnelDto> formedByPersonnel;
     private final List<ApplicableAccountFeeDto> defaultFees;
     private final List<ApplicableAccountFeeDto> additionalFees;
 
-    public GroupFormCreationDto(boolean centerHierarchyExists, List<CustomFieldDto> customFieldDtos,
+    public GroupFormCreationDto(boolean centerHierarchyExists,
             List<PersonnelDto> personnelList, List<PersonnelDto> formedByPersonnel,
             List<ApplicableAccountFeeDto> defaultFees, List<ApplicableAccountFeeDto> additionalFees) {
         this.centerHierarchyExists = centerHierarchyExists;
-        this.customFieldDtos = customFieldDtos;
         this.personnelList = personnelList;
         this.formedByPersonnel = formedByPersonnel;
         this.defaultFees = defaultFees;
@@ -48,10 +46,6 @@ public class GroupFormCreationDto {
 
     public List<PersonnelDto> getPersonnelList() {
         return this.personnelList;
-    }
-
-    public List<CustomFieldDto> getCustomFieldViews() {
-        return this.customFieldDtos;
     }
 
     public boolean isCenterHierarchyExists() {

@@ -23,7 +23,6 @@ package org.mifos.dto.screen;
 import java.io.Serializable;
 import java.util.List;
 
-import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerAccountSummaryDto;
 import org.mifos.dto.domain.CustomerAddressDto;
 import org.mifos.dto.domain.CustomerFlagDto;
@@ -53,7 +52,6 @@ public class ClientInformationDto implements Serializable {
     private final CustomerMeetingDto customerMeeting;
     private final Boolean activeSurveys;
     private final List<SurveyDto> customerSurveys;
-    private final List<CustomFieldDto> customFields;
 
     public ClientInformationDto(final ClientDisplayDto clientDisplay,
             final CustomerAccountSummaryDto customerAccountSummary,
@@ -61,7 +59,7 @@ public class ClientInformationDto implements Serializable {
             final List<CustomerNoteDto> recentCustomerNotes, final List<CustomerFlagDto> customerFlags,
             final List<LoanDetailDto> loanAccountsInUse, final List<SavingsDetailDto> savingsAccountsInUse,
             final CustomerMeetingDto customerMeeting, final Boolean activeSurveys,
-            final List<SurveyDto> customerSurveys, final List<CustomFieldDto> customFields) {
+            final List<SurveyDto> customerSurveys) {
         this.clientDisplay = clientDisplay;
         this.customerAccountSummary = customerAccountSummary;
         this.clientPerformanceHistory = clientPerformanceHistory;
@@ -73,7 +71,6 @@ public class ClientInformationDto implements Serializable {
         this.customerMeeting = customerMeeting;
         this.activeSurveys = activeSurveys;
         this.customerSurveys = customerSurveys;
-        this.customFields = customFields;
     }
 
     public ClientDisplayDto getClientDisplay() {
@@ -119,9 +116,4 @@ public class ClientInformationDto implements Serializable {
     public List<SurveyDto> getCustomerSurveys() {
         return this.customerSurveys;
     }
-
-    public List<CustomFieldDto> getCustomFields() {
-        return this.customFields;
-    }
-
 }
