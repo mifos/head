@@ -281,41 +281,6 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    public void testPreview_WithMandatoryCustomField_IfAny() throws Exception {
-        createAndAddObjectsForCreate();
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("selectedPrdOfferingId", savingsOffering.getPrdOfferingId().toString());
-
-        actionPerform();
-        verifyForward("load_success");
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        boolean isCustomFieldMandatory = false;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            if (customFieldDef.isMandatory()) {
-                isCustomFieldMandatory = true;
-                break;
-            }
-        }
-        addRequestParameter("selectedPrdOfferingId", savingsOffering.getPrdOfferingId().toString());
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "preview");
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "");
-            i++;
-        }
-        actionPerform();
-        if (isCustomFieldMandatory) {
-            Assert.assertEquals("CustomField", 1, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        } else {
-            Assert.assertEquals("CustomField", 0, getErrorSize(CustomerConstants.CUSTOM_FIELD));
-        }
-
-    }
-
     public void testSuccessfulEditPreview() throws Exception {
         createAndAddObjectsForCreate();
         setRequestPathInfo("/savingsAction.do");
@@ -331,39 +296,6 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", "previous");
         actionPerform();
         verifyForward("previous_success");
-    }
-
-    public void testSuccessfulCreateWithCustomFields() throws Exception {
-        createAndAddObjectsForCreate();
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "load");
-        addRequestParameter("selectedPrdOfferingId", savingsOffering.getPrdOfferingId().toString());
-
-        actionPerform();
-        verifyForward("load_success");
-        addRequestParameter("selectedPrdOfferingId", savingsOffering.getPrdOfferingId().toString());
-        savingsOffering = null;
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(SavingsConstants.CUSTOM_FIELDS, request);
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "preview");
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "11");
-            i++;
-        }
-        actionPerform();
-        verifyForward("preview_success");
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("stateSelected", Short.toString(AccountStates.SAVINGS_ACC_PARTIALAPPLICATION));
-        addRequestParameter("method", "create");
-        performNoErrors();
-        verifyForward("create_success");
-        String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
-        Assert.assertNotNull(globalAccountNum);
-        savings = new SavingsPersistence().findBySystemId(globalAccountNum);
-       Assert.assertEquals(customFieldDefs.size(), savings.getAccountCustomFields().size());
     }
 
     public void testSuccessfulSave() throws Exception {

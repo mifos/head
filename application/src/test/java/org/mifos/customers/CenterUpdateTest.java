@@ -172,42 +172,6 @@ public class CenterUpdateTest {
         }
     }
 
-    @Test
-    public void cannotUpdateCenterWithMandatoryAdditionalFieldsNotPopulated() {
-
-        // setup
-        int versionNum = 1;
-        PersonnelBO existingLoanOfficer = PersonnelBuilder.anyLoanOfficer();
-        CenterBO existingCenter = new CenterBuilder().withLoanOfficer(existingLoanOfficer).withVersion(versionNum).build();
-
-        UserContext userContext = TestUtils.makeUser();
-        CenterUpdate centerUpdate = new CenterUpdateBuilder().build();
-
-        LookUpEntity name = null;
-        Short fieldIndex = Short.valueOf("1");
-        CustomFieldType fieldType = CustomFieldType.ALPHA_NUMERIC;
-        EntityType entityType = EntityType.CENTER;
-        String defaultValue = "defalutValue";
-        YesNoFlag mandatory = YesNoFlag.YES;
-
-        CustomFieldDefinitionEntity mandatoryDefinition = new CustomFieldDefinitionEntity(name, fieldIndex, fieldType, entityType, defaultValue, mandatory);
-        List<CustomFieldDefinitionEntity> mandatoryCustomFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
-        mandatoryCustomFieldDefinitions.add(mandatoryDefinition);
-
-        // stub
-        when(customerDao.findCustomerById(centerUpdate.getCustomerId())).thenReturn(existingCenter);
-        when(personnelDao.findPersonnelById(anyShort())).thenReturn(existingLoanOfficer);
-        when(customerDao.retrieveCustomFieldEntitiesForCenter()).thenReturn(mandatoryCustomFieldDefinitions);
-
-        // exercise test
-        try {
-            customerService.updateCenter(userContext, centerUpdate);
-            fail("cannotUpdateCenterWithMandatoryAdditionalFieldsNotPopulated");
-        } catch (ApplicationException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-        }
-    }
-
     @Test(expected = MifosRuntimeException.class)
     public void rollsbackTransactionClosesSessionAndThrowsRuntimeExceptionWhenExceptionOccurs() throws Exception {
 

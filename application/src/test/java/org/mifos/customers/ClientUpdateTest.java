@@ -221,25 +221,6 @@ public class ClientUpdateTest {
     }
 
     @Test
-    public void mandatoryAdditionalFieldsAreUpdatedForClientPersonalInfo() throws Exception {
-
-        // setup
-        UserContext userContext = TestUtils.makeUser();
-        ClientPersonalInfoUpdate clientPersonalInfoUpdate = new ClientPersonalInfoUpdateBuilder().build();
-
-        // stubbing
-        when(customerDao.findCustomerById(clientPersonalInfoUpdate.getCustomerId())).thenReturn(mockedClient);
-        when(customerDao.retrieveCustomFieldEntitiesForClient()).thenReturn(new ArrayList<CustomFieldDefinitionEntity>());
-
-        // exercise test
-        customerService.updateClientPersonalInfo(userContext, clientPersonalInfoUpdate);
-
-        // verification
-        verify(mockedClient).updateCustomFields(clientPersonalInfoUpdate.getClientCustomFields());
-        verify(mockedClient).validateMandatoryCustomFields(new ArrayList<CustomFieldDefinitionEntity>());
-    }
-
-    @Test
     public void clientPersonalDetailsAreUpdated() throws Exception {
 
         // setup

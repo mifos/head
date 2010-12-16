@@ -44,6 +44,7 @@ import org.mifos.customers.center.struts.actionforms.CenterCustActionForm;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -60,6 +61,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.ArrayList;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
@@ -127,13 +129,12 @@ public class CenterCustAction extends CustAction {
         CenterFormCreationDto centerFormCreation = this.customerServiceFacade.retrieveCenterFormCreationData(
                 centerCreationDto, userContext);
 
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerFormCreation
-                .getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerFormCreation
                 .getActiveLoanOfficersForBranch(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, centerFormCreation
                 .getAdditionalFees(), request);
-        actionForm.setCustomFields(centerFormCreation.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
         actionForm.setDefaultFees(centerFormCreation.getDefaultFees());
 
         DateTime today = new DateTime().toDateMidnight().toDateTime();
@@ -209,12 +210,12 @@ public class CenterCustAction extends CustAction {
                 .getMonthOfYear(), centerDto.getMfiJoiningDate().getYear());
         actionForm.setAddress(centerDto.getAddress());
         actionForm.setCustomerPositions(centerDto.getCustomerPositionViews());
-        actionForm.setCustomFields(centerDto.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, centerDto.getCenter(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, centerDto
                 .getActiveLoanOfficersForBranch(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, centerDto.getCustomFieldViews(),
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(),
                 request);
         SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, centerDto.getCustomerPositionViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, centerDto.getClientList(), request);

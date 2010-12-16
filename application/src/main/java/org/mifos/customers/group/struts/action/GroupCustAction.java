@@ -49,6 +49,7 @@ import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.struts.action.CustAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -69,6 +70,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
+import java.util.ArrayList;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
@@ -162,12 +164,12 @@ public class GroupCustAction extends CustAction {
         actionForm.setOfficeId(groupFormCreationDto.getParentOfficeId());
         actionForm.setFormedByPersonnel(groupFormCreationDto.getParentPersonnelId());
 
-        actionForm.setCustomFields(groupFormCreationDto.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
         actionForm.setDefaultFees(groupFormCreationDto.getDefaultFees());
 
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, groupFormCreationDto.getAdditionalFees(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, groupFormCreationDto.getPersonnelList(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, groupFormCreationDto.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, groupFormCreationDto.getFormedByPersonnel(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, groupFormCreationDto.isCenterHierarchyExists(), request);
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -292,7 +294,7 @@ public class GroupCustAction extends CustAction {
 
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, groupDto.getActiveLoanOfficersForBranch(), request);
         SessionUtils.setAttribute(GroupConstants.CENTER_HIERARCHY_EXIST, groupDto.isCenterHierarchyExists(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, groupDto.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.POSITIONS, groupDto.getCustomerPositionViews(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.CLIENT_LIST, groupDto.getClientList(), request);
 
@@ -303,7 +305,7 @@ public class GroupCustAction extends CustAction {
         actionForm.setExternalId(group1.getExternalId());
         actionForm.setAddress(group1.getAddress());
         actionForm.setCustomerPositions(groupDto.getCustomerPositionViews());
-        actionForm.setCustomFields(groupDto.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         if (group1.isTrained()) {
             actionForm.setTrained(GroupConstants.TRAINED);

@@ -172,11 +172,12 @@ public class PersonAction extends SearchAction {
         DefinePersonnelDto definePersonnelDto = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(
                                                     getShortValue(personActionForm.getOfficeId()), getUserContext(request).getPreferredLocale());
         SessionUtils.setAttribute("definePersonnelDto", definePersonnelDto, request);
-        loadCreateMasterData(request, personActionForm);
+        loadMasterData(request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDefinitionEntity>(), request);
         if (office.getOfficeLevel() != OfficeLevel.BRANCHOFFICE) {
             updatePersonnelLevelList(request);
         }
-        personActionForm.setCustomFields(definePersonnelDto.getCustomFields());
+        personActionForm.setCustomFields(new ArrayList<CustomFieldDto>());
         personActionForm.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser());
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -473,10 +474,6 @@ public class PersonAction extends SearchAction {
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.ROLEMASTERLIST,
                 ((PersonnelBusinessService) getService()).getRoles(), request);
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = masterPersistence
-                .retrieveCustomFieldsDefinition(EntityType.PERSONNEL);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
     }
 
     @SuppressWarnings("unchecked")
@@ -494,13 +491,15 @@ public class PersonAction extends SearchAction {
     @SuppressWarnings("unchecked")
     private void loadCreateMasterData(HttpServletRequest request, PersonActionForm personActionForm) throws Exception {
         loadMasterData(request);
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        List<CustomFieldDefinitionEntity> customFieldDefs = new MasterPersistence().retrieveCustomFieldsDefinition(EntityType.PERSONNEL);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
         loadCreateCustomFields(personActionForm, customFieldDefs, getUserContext(request));
     }
 
 
     private void loadUpdateMasterData(HttpServletRequest request) throws Exception {
         loadMasterData(request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDefinitionEntity>(), request);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
                 .getSession());
         SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, getMasterEntities(
@@ -544,7 +543,7 @@ public class PersonAction extends SearchAction {
         }
         actionForm.setLoginName(personnel.getUserName());
         actionForm.setGlobalPersonnelNum(personnel.getGlobalPersonnelNum());
-        actionForm.setCustomFields(createCustomFieldViews(personnel.getCustomFields(), request));
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         if (personnel.getPersonnelDetails() != null) {
             PersonnelDetailsEntity personnelDetails = personnel.getPersonnelDetails();
@@ -577,30 +576,6 @@ public class PersonAction extends SearchAction {
             selectList.add(personnelRole.getRole());
         }
         SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CustomFieldDto> createCustomFieldViews(Set<PersonnelCustomFieldEntity> customFieldEntities,
-            HttpServletRequest request) throws ApplicationException {
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        Locale locale = getUserContext(request).getPreferredLocale();
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            for (PersonnelCustomFieldEntity customFieldEntity : customFieldEntities) {
-                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
-                    if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
-                                .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
-                                .getFieldType()));
-                    } else {
-                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
-                                .getFieldValue(), customFieldDef.getFieldType()));
-                    }
-                }
-            }
-        }
-        return customFields;
     }
 
     @SuppressWarnings("unchecked")

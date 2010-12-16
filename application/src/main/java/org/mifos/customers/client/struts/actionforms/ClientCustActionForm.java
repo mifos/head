@@ -336,7 +336,6 @@ public class ClientCustActionForm extends CustomerActionForm implements Question
                 validateSpouseNames(errors, resources, request);
             }
             checkForMandatoryFields(EntityType.CLIENT.getValue(), errors, request);
-            validateCustomFieldsForCustomers(request, errors);
             validatePicture(request, errors);
         }
         if (method.equals(Methods.preview.toString()) && ClientConstants.INPUT_MFI_INFO.equals(input)) {

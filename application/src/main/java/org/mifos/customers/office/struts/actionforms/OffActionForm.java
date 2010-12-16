@@ -220,22 +220,6 @@ public class OffActionForm extends BaseActionForm implements QuestionResponseCap
         return (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
     }
 
-    protected void validateCustomFields(ActionErrors errors) {
-        for (CustomFieldDto customField : customFields) {
-            if (customField.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
-                errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(OfficeConstants.ENTERADDTIONALINFO, customField.getLabel()));
-            }
-            if (CustomFieldType.DATE.getValue().equals(customField.getFieldType())
-                    && (StringUtils.isNotBlank(customField.getFieldValue()))) {
-                try {
-                    DateUtils.getDate(customField.getFieldValue());
-                } catch (Exception e) {
-                    errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(OfficeConstants.ERROR_CUSTOMDATEFIELD, customField.getLabel()));
-                }
-            }
-        }
-    }
-
     @Override
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         ActionErrors errors = new ActionErrors();
@@ -248,7 +232,6 @@ public class OffActionForm extends BaseActionForm implements QuestionResponseCap
 
         if (method.equals(Methods.preview.toString()) || method.equals(Methods.editpreview.toString())) {
             verifyFields(errors, getUserContext(request));
-            validateCustomFields(errors);
             checkForMandatoryFields(EntityType.OFFICE.getValue(), errors, request);
             errors.add(super.validate(mapping, request));
         }

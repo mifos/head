@@ -411,37 +411,6 @@ public abstract class CustomerActionForm extends BaseActionForm {
         checkForMandatoryFields(entityType.getValue(), errors, request);
     }
 
-    @SuppressWarnings("unchecked")
-    protected void validateCustomFieldsForCustomers(HttpServletRequest request, ActionErrors errors) {
-        try {
-            List<CustomFieldDto> customFieldDefs = (List<CustomFieldDto>) SessionUtils.getAttribute(
-                    CustomerConstants.CUSTOM_FIELDS_LIST, request);
-            for (CustomFieldDto customField : customFields) {
-                for (CustomFieldDto customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
-                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
-                            errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
-                                    CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-                        }
-                        if (CustomFieldType.fromInt(customField.getFieldId()).equals(CustomFieldType.DATE) &&
-                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
-                            try {
-                                DateUtils.getDate(customField.getFieldValue());
-                            } catch (Exception e) {
-                                errors.add(CustomerConstants.CUSTOM_FIELD, new ActionMessage(
-                                        CustomerConstants.ERRORS_CUSTOM_DATE_FIELD));
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        } catch (PageExpiredException pee) {
-            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
-                    ExceptionConstants.PAGEEXPIREDEXCEPTION));
-        }
-    }
-
     protected abstract MeetingBO getCustomerMeeting(HttpServletRequest request) throws ApplicationException;
 
     protected void validateFees(HttpServletRequest request, ActionErrors errors) throws ApplicationException {

@@ -551,7 +551,6 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         validateUserHirerchy(errors);
         validateloginName(errors);
         checkForPassword(errors, request);
-        validateCustomFields(request, errors);
         validateConfigurableMandatoryFields(request, errors, EntityType.PERSONNEL);
 
     }
@@ -631,7 +630,6 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         validateUserHirerchy(errors);
         validateloginName(errors);
         checkForPassword(errors, request);
-        validateCustomFields(request, errors);
         validateConfigurableMandatoryFields(request, errors, EntityType.PERSONNEL);
     }
 
@@ -653,36 +651,6 @@ public class PersonActionForm extends BaseActionForm implements QuestionResponse
         String office = resources.getString("Personnel.OfficeLabel");
         if (StringUtils.isBlank(officeId)) {
             errors.add(PersonnelConstants.OFFICE, new ActionMessage(CustomerConstants.ERRORS_MANDATORY, office));
-        }
-    }
-
-    protected void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
-        try {
-            List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(
-                    CustomerConstants.CUSTOM_FIELDS_LIST, request);
-            for (CustomFieldDto customField : customFields) {
-                for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
-                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
-                            errors.add(PersonnelConstants.ERROR_CUSTOMfIELD, new ActionMessage(
-                                    PersonnelConstants.ERROR_CUSTOMfIELD, customFieldDef.getLabel()));
-                        }
-                        if (CustomFieldType.fromInt(customField.getFieldId()).equals(CustomFieldType.DATE) &&
-                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
-                            try {
-                                DateUtils.getDate(customField.getFieldValue());
-                            } catch (Exception e) {
-                                errors.add(PersonnelConstants.ERROR_CUSTOMfIELD, new ActionMessage(
-                                        PersonnelConstants.ERROR_CUSTOMDATEFIELD, customFieldDef.getLabel()));
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        } catch (PageExpiredException pee) {
-            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
-                    ExceptionConstants.PAGEEXPIREDEXCEPTION));
         }
     }
 

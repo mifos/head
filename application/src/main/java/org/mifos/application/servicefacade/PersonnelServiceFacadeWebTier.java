@@ -195,9 +195,8 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             roleList.add(listElement);
         }
 
-        List<CustomFieldDto> customFields = customerDao.retrieveCustomFieldsForPersonnel(preferredLocale);
         DefinePersonnelDto defineUserDto = new DefinePersonnelDto(officeName, titleList, personnelLevelList,
-                genderList, maritalStatusList, languageList, roleList, customFields);
+                genderList, maritalStatusList, languageList, roleList, new ArrayList<CustomFieldDto>());
         return defineUserDto;
     }
 

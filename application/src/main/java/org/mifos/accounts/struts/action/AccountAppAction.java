@@ -195,34 +195,4 @@ public class AccountAppAction extends BaseAction {
     protected AccountBusinessService getAccountBusinessService() {
         return accountBusinessService;
     }
-
-    protected List<CustomFieldDto> createCustomFieldViewsForEdit(Set<AccountCustomFieldEntity> customFieldEntities,
-            HttpServletRequest request) throws ApplicationException {
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(SavingsConstants.CUSTOM_FIELDS, request);
-        Locale locale = getUserContext(request).getPreferredLocale();
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            boolean customFieldPresent = false;
-            for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
-                customFieldPresent = true;
-                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
-                    if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
-                                .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
-                                .getFieldType()));
-                    } else {
-                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
-                                .getFieldValue(), customFieldDef.getFieldType()));
-                    }
-                }
-            }
-            if (!customFieldPresent) {
-                customFields.add(new CustomFieldDto(customFieldDef.getFieldId(), customFieldDef.getDefaultValue(),
-                        customFieldDef.getFieldType()));
-            }
-        }
-        return customFields;
-    }
 }

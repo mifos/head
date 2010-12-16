@@ -139,33 +139,4 @@ public class ClientCreationTest {
         // verify
         verify(customerDao).validateClientForDuplicateNameOrGovtId(mockedClient);
     }
-
-    @Test(expected = CustomerException.class)
-    public void throwsCheckedExceptionWhenValidationForMandatoryAdditionalFieldsNotPopulated() throws Exception {
-
-        // setup
-        List<AccountFeesEntity> accountFees = new ArrayList<AccountFeesEntity>();
-        List<SavingsOfferingBO> noSavings = new ArrayList<SavingsOfferingBO>();
-
-        LookUpEntity name = null;
-        Short fieldIndex = Short.valueOf("1");
-        CustomFieldType fieldType = CustomFieldType.ALPHA_NUMERIC;
-        EntityType entityType = EntityType.CENTER;
-        String defaultValue = "defalutValue";
-        YesNoFlag mandatory = YesNoFlag.YES;
-
-        CustomFieldDefinitionEntity mandatoryDefinition = new CustomFieldDefinitionEntity(name, fieldIndex, fieldType, entityType, defaultValue, mandatory);
-        List<CustomFieldDefinitionEntity> mandatoryCustomFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
-        mandatoryCustomFieldDefinitions.add(mandatoryDefinition);
-
-        // stubbing
-        when(customerDao.retrieveCustomFieldEntitiesForClient()).thenReturn(mandatoryCustomFieldDefinitions);
-        doThrow(new CustomerException(CustomerConstants.DUPLICATE_GOVT_ID_EXCEPTION)).when(mockedClient).validateMandatoryCustomFields(mandatoryCustomFieldDefinitions);
-
-        // exercise test
-        customerService.createClient(mockedClient, meeting, accountFees, noSavings);
-
-        // verify
-        verify(mockedClient).validateMandatoryCustomFields(mandatoryCustomFieldDefinitions);
-    }
 }

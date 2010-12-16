@@ -184,37 +184,4 @@ public class CenterCreationTest {
         verify(hibernateTransaction).rollbackTransaction();
         verify(hibernateTransaction).closeSession();
     }
-
-    @Test
-    public void cannotCreateCenterWithMandatoryAdditionalFieldsNotPopulated() {
-
-        // setup
-        DateTime today = new DateTime();
-        MeetingBuilder aWeeklyMeeting = new MeetingBuilder().customerMeeting().weekly();
-        CenterBO centerWithNoCustomFields = new CenterBuilder().withName("center1").withLoanOfficer(anyLoanOfficer()).with(aWeeklyMeeting).withMfiJoiningDate(today).build();
-
-        List<AccountFeesEntity> noAccountFees = new ArrayList<AccountFeesEntity>();
-
-        LookUpEntity name = null;
-        Short fieldIndex = Short.valueOf("1");
-        CustomFieldType fieldType = CustomFieldType.ALPHA_NUMERIC;
-        EntityType entityType = EntityType.CENTER;
-        String defaultValue = "defalutValue";
-        YesNoFlag mandatory = YesNoFlag.YES;
-
-        CustomFieldDefinitionEntity mandatoryDefinition = new CustomFieldDefinitionEntity(name, fieldIndex, fieldType, entityType, defaultValue, mandatory);
-        List<CustomFieldDefinitionEntity> mandatoryCustomFieldDefinitions = new ArrayList<CustomFieldDefinitionEntity>();
-        mandatoryCustomFieldDefinitions.add(mandatoryDefinition);
-
-        // stub
-        when(customerDao.retrieveCustomFieldEntitiesForCenter()).thenReturn(mandatoryCustomFieldDefinitions);
-
-        // exercise test
-        try {
-            customerService.createCenter(centerWithNoCustomFields, aWeeklyMeeting.build(), noAccountFees);
-            fail("cannotCreateCenterWithMandatoryAdditionalFieldsNotEntered");
-        } catch (ApplicationException e) {
-            assertThat(e.getKey(), is(CustomerConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE));
-        }
-    }
 }

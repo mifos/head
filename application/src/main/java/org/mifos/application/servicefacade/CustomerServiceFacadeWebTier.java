@@ -141,9 +141,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         List<PersonnelDto> activeLoanOfficersForBranch = personnelDao.findActiveLoanOfficersForOffice(centerCreation);
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForCenter();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
-                .getPreferredLocale());
+        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
 
         List<FeeBO> fees = customerDao.retrieveFeesApplicableToCenters();
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
@@ -183,9 +181,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
             applicableFees = CustomerApplicableFeesDto.toDto(fees, groupCreation.getUserContext());
         }
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, groupCreation
-                .getPreferredLocale());
+        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
         List<PersonnelDto> formedByPersonnel = customerDao
                 .findLoanOfficerThatFormedOffice(centerCreation.getOfficeId());
 
@@ -243,9 +239,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         CustomerApplicableFeesDto applicableFees = CustomerApplicableFeesDto.toDto(fees, userContext);
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-        List<CustomFieldDto> customFieldDtos = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, userContext
-                .getPreferredLocale());
+        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
 
         List<SavingsDetailDto> savingsOfferings = this.customerDao.retrieveSavingOfferingsApplicableToClient();
 
@@ -294,10 +288,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
             ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
 
-            List<CustomFieldDefinitionEntity> customFieldDefinitions = customerDao
-                    .retrieveCustomFieldEntitiesForClient();
-            List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
-                    customFieldDefinitions, userContext);
+            List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
 
             CustomerDetailDto customerDetailDto = client.toCustomerDetailDto();
             ClientDetailDto clientDetailDto = client.toClientDetailDto(clientRules.isFamilyDetailsRequired());
@@ -671,9 +662,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(center, userContext
                 .getLocaleId());
 
-        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForCenter();
-        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(center.getCustomFields(),
-                fieldDefinitions, userContext);
+        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
 
         DateTime mfiJoiningDate = new DateTime();
         String mfiJoiningDateAsString = "";
@@ -711,9 +700,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
 
         List<CustomerPositionDto> customerPositionDtos = generateCustomerPositionViews(group, userContext.getLocaleId());
 
-        List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForGroup();
-        List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(group.getCustomFields(),
-                fieldDefinitions, userContext);
+        List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
 
         DateTime mfiJoiningDate = new DateTime();
         String mfiJoiningDateAsString = "";
@@ -1041,9 +1028,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
         try {
             ClientBO client = this.customerDao.findClientBySystemId(clientGlobalCustNum);
 
-            List<CustomFieldDefinitionEntity> fieldDefinitions = customerDao.retrieveCustomFieldEntitiesForClient();
-            List<CustomFieldDto> customFieldDtos = CustomerCustomFieldEntity.toDto(client.getCustomFields(),
-                    fieldDefinitions, userContext);
+            List<CustomFieldDto> customFieldDtos = new ArrayList<CustomFieldDto>();
 
             ClientDropdownsDto clientDropdowns = retrieveClientDropdownData(userContext);
 

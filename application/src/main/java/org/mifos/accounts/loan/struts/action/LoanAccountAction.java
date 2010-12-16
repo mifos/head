@@ -415,10 +415,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             loanActionForm.setDisbursementDate("");
         }
 
-        loanActionForm.setCustomFields(loanCreationDetailsDto.getCustomFields());
+        loanActionForm.setCustomFields(new ArrayList<CustomFieldDto>());
         loanActionForm.setDefaultFees(loanCreationDetailsDto.getDefaultFees());
 
-        SessionUtils.setCollectionAttribute(LoanConstants.CUSTOM_FIELDS, loanCreationDetailsDto.getCustomFieldDefs(),
+        SessionUtils.setCollectionAttribute(LoanConstants.CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(),
                 request);
         SessionUtils.setCollectionAttribute(ADDITIONAL_FEES_LIST, loanCreationDetailsDto.getAdditionalFees(), request);
         SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, loanCreationDetailsDto
@@ -936,7 +936,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             }
         }
         SessionUtils.setAttribute(LOANOFFERING, loanOffering, request);
-        loadUpdateMasterData(request);
+        loadMasterData(request);
+        SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
 
         SessionUtils.setAttribute(RECURRENCEID, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum()
                 .getValue(), request);
@@ -1338,7 +1339,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         loanAccountActionForm.setInterestRate(getDoubleStringForInterest(loan.getInterestRate()));
         loanAccountActionForm.setNoOfInstallments(getStringValue(loan.getNoOfInstallments()));
         loanAccountActionForm.setGracePeriodDuration(getStringValue(loan.getGracePeriodDuration()));
-        loanAccountActionForm.setCustomFields(createCustomFieldViews(loan.getAccountCustomFields(), request));
+        loanAccountActionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         loanAccountActionForm.setOriginalDisbursementDate(new java.sql.Date(loan.getDisbursementDate().getTime()));
     }
@@ -1346,36 +1347,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void loadCustomFieldDefinitions(final HttpServletRequest request) throws Exception {
         SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, getAccountBusinessService().retrieveCustomFieldsDefinition(
                 EntityType.LOAN), request);
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CustomFieldDto> createCustomFieldViews(final Set<AccountCustomFieldEntity> customFieldEntities,
-            final HttpServletRequest request) throws ApplicationException {
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CUSTOM_FIELDS, request);
-        Locale locale = getUserContext(request).getPreferredLocale();
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            for (AccountCustomFieldEntity customFieldEntity : customFieldEntities) {
-                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
-                    if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
-                                .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
-                                .getFieldType()));
-                    } else {
-                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
-                                .getFieldValue(), customFieldDef.getFieldType()));
-                    }
-                }
-            }
-        }
-        return customFields;
-    }
-
-    private void loadUpdateMasterData(final HttpServletRequest request) throws Exception {
-        loadMasterData(request);
-        loadCustomFieldDefinitions(request);
     }
 
     static class GlimSessionAttributes {

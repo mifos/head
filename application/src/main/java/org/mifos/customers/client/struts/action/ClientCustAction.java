@@ -57,6 +57,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
+import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -82,6 +83,7 @@ import java.sql.Date;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
@@ -178,7 +180,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             actionForm.setLoanOfficerId(clientFormCreationDto.getFormedByPersonnelId().toString());
         }
         actionForm.setLoanOfficerName(clientFormCreationDto.getFormedByPersonnelName());
-        actionForm.setCustomFields(clientFormCreationDto.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
         actionForm.setDefaultFees(clientFormCreationDto.getApplicableFees().getDefaultFees());
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getClientDropdowns().getSalutations(), request);
@@ -191,7 +193,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.POVERTY_STATUS, clientFormCreationDto.getClientDropdowns().getPoverty(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, clientFormCreationDto.getClientDropdowns().getHandicapped(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFormCreationDto.getClientDropdowns().getSpouseFather(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFormCreationDto.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.LOAN_OFFICER_LIST, clientFormCreationDto.getPersonnelList(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, clientFormCreationDto.getApplicableFees().getAdditionalFees(), request);
         SessionUtils.setCollectionAttribute(CustomerConstants.FORMEDBY_LOAN_OFFICER_LIST, clientFormCreationDto.getFormedByPersonnelList(), request);
@@ -568,7 +570,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isSpouseFatherInformationMandatory(), request);
             SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_HIDDEN, isSpouseFatherInformationHidden(), request);
         }
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, personalInfo.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
 
         // customer specific
         actionForm.setCustomerId(personalInfo.getCustomerDetail().getCustomerId().toString());
@@ -583,7 +585,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setClientDetailView(personalInfo.getClientDetail().getCustomerDetail());
         actionForm.setClientName(personalInfo.getClientDetail().getClientName());
         actionForm.setSpouseName(personalInfo.getClientDetail().getSpouseName());
-        actionForm.setCustomFields(personalInfo.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         ClientBO client = this.customerDao.findClientBySystemId(clientSystemId);
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, client, request);
@@ -662,7 +664,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.LIVING_STATUS_ENTITY, clientFamilyInfo.getClientDropdowns().getLivingStatus(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.GENDER_ENTITY, clientFamilyInfo.getClientDropdowns().getGenders(), request);
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, clientFamilyInfo.getClientDropdowns().getSpouseFather(), request);
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, clientFamilyInfo.getCustomFieldViews(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
 
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);
 
@@ -681,7 +683,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         actionForm.setClientDetailView(clientFamilyInfo.getClientDetail().getCustomerDetail());
         actionForm.setClientName(clientFamilyInfo.getClientDetail().getClientName());
         actionForm.setSpouseName(clientFamilyInfo.getClientDetail().getSpouseName());
-        actionForm.setCustomFields(clientFamilyInfo.getCustomFieldViews());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
         // client family specific
         int familyMemberCount = 0;

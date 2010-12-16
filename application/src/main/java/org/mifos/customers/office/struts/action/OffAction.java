@@ -111,9 +111,9 @@ public class OffAction extends BaseAction {
             SessionUtils.setCollectionAttribute(OfficeConstants.PARENTS, validParentOffices, request);
         }
 
-        actionForm.setCustomFields(officeFormDto.getCustomFields());
+        actionForm.setCustomFields(new ArrayList<CustomFieldDto>());
 
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, officeFormDto.getCustomFields(), request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
         SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(getUserContext(request).getLocaleId()), request);
         SessionUtils.setAttribute(CustomerConstants.URL_MAP, null, request.getSession(false));
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -224,10 +224,10 @@ public class OffAction extends BaseAction {
 
         checkVersionMismatch(sessionOffice.getVersionNum(), office.getVersionNo());
 
-        loadCustomFieldDefinitions(request);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDefinitionEntity>(), request);
         loadofficeLevels(request);
         loadParents(request, offActionForm);
-        offActionForm.setCustomFields(createCustomFieldViews(office.getCustomFields(), request));
+        offActionForm.setCustomFields(new ArrayList<CustomFieldDto>());
         loadOfficeStatus(request);
 
         return mapping.findForward(ActionForwards.edit_success.toString());
@@ -286,32 +286,6 @@ public class OffAction extends BaseAction {
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
-    @SuppressWarnings({"unchecked"})
-    private List<CustomFieldDto> createCustomFieldViews(final Set<OfficeCustomFieldEntity> customFieldEntities,
-                                                        final HttpServletRequest request) throws PageExpiredException {
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = getCustomFieldDefinitionsFromSession(request);
-        Locale locale = getUserContext(request).getPreferredLocale();
-        if (customFieldEntities != null) {
-            for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                for (OfficeCustomFieldEntity customFieldEntity : customFieldEntities) {
-                    if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
-                        if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
-                                    .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
-                                    .getFieldType()));
-                        } else {
-                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
-                                    .getFieldValue(), customFieldDef.getFieldType()));
-                        }
-                    }
-                }
-            }
-        }
-        return customFields;
-    }
-
     private List<OfficeBO> getOffice(List<OfficeBO> officeList, OfficeLevel officeLevel) throws Exception {
         if (officeList != null) {
             List<OfficeBO> newOfficeList = new ArrayList<OfficeBO>();
@@ -358,12 +332,6 @@ public class OffAction extends BaseAction {
             }
             SessionUtils.setCollectionAttribute(OfficeConstants.PARENTS, parents, request);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CustomFieldDefinitionEntity> getCustomFieldDefinitionsFromSession(HttpServletRequest request)
-            throws PageExpiredException {
-        return (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
     }
 
     private void loadCustomFieldDefinitions(HttpServletRequest request) throws Exception {

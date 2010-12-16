@@ -117,7 +117,6 @@ public class SavingsActionForm extends AccountAppActionForm implements QuestionR
                                     FilePaths.SAVING_UI_RESOURCE_PROPERTYFILE);
                         }
                     }
-                    validateCustomFields(request, errors);
                 } catch (PageExpiredException e) {
                     errors.add(SavingsConstants.MANDATORY, new ActionMessage(SavingsConstants.MANDATORY,
                             mandatoryAmount));
@@ -183,35 +182,5 @@ public class SavingsActionForm extends AccountAppActionForm implements QuestionR
         this.setSelectedPrdOfferingId(null);
         this.setAccountCustomFieldSet(new ArrayList<CustomFieldDto>());
         this.setQuestionGroups(null);
-    }
-
-    private void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
-        try {
-            List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                    .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-            for (CustomFieldDto customField : getAccountCustomFieldSet()) {
-                for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
-                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
-                            errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
-                                    LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE, customFieldDef.getLabel()));
-                        }
-                        if (CustomFieldType.fromInt(customField.getFieldId()).equals(CustomFieldType.DATE) &&
-                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
-                            try {
-                                DateUtils.getDate(customField.getFieldValue());
-                            } catch (Exception e) {
-                                errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
-                                        LoanConstants.ERRORS_CUSTOM_DATE_FIELD, customFieldDef.getLabel()));
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        } catch (PageExpiredException pee) {
-            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
-                    ExceptionConstants.PAGEEXPIREDEXCEPTION));
-        }
     }
 }

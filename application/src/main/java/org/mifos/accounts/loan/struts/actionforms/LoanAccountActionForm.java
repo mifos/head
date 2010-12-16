@@ -773,7 +773,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         Locale locale = getUserContext(request).getPreferredLocale();
         checkValidationForPreviewBefore(errors, request);
         validateFees(request, errors);
-        validateCustomFields(request, errors);
         performGlimSpecificValidations(errors, currency, request);
         validateRepaymentDayRequired(errors);
         if (!configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
@@ -938,7 +937,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             }
         }
         performGlimSpecificValidations(errors, currency, request);
-        validateCustomFields(request, errors);
         validateRepaymentDayRequired(errors);
         if (!configService.isGlimEnabled() || !getCustomer(request).isGroup()) {
             validatePurposeOfLoanFields(errors, getMandatoryFields(request));
@@ -1076,36 +1074,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             }
         }
         return false;
-    }
-
-    private void validateCustomFields(HttpServletRequest request, ActionErrors errors) {
-        try {
-            List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                    .getAttribute(LoanConstants.CUSTOM_FIELDS, request);
-            for (CustomFieldDto customField : customFields) {
-                for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                    if (customField.getFieldId().equals(customFieldDef.getFieldId())) {
-                        if (customFieldDef.isMandatory() && StringUtils.isBlank(customField.getFieldValue())) {
-                            errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
-                                    LoanConstants.ERRORS_SPECIFY_CUSTOM_FIELD_VALUE, customFieldDef.getLabel()));
-                        }
-                        if (CustomFieldType.fromInt(customField.getFieldId()).equals(CustomFieldType.DATE) &&
-                                (StringUtils.isNotBlank(customField.getFieldValue()))) {
-                            try {
-                                DateUtils.getDate(customField.getFieldValue());
-                            } catch (Exception e) {
-                                errors.add(LoanConstants.CUSTOM_FIELDS, new ActionMessage(
-                                        LoanConstants.ERRORS_CUSTOM_DATE_FIELD, customFieldDef.getLabel()));
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-        } catch (PageExpiredException pee) {
-            errors.add(ExceptionConstants.PAGEEXPIREDEXCEPTION, new ActionMessage(
-                    ExceptionConstants.PAGEEXPIREDEXCEPTION));
-        }
     }
 
     void validateSelectedClients(ActionErrors errors) {

@@ -293,7 +293,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("parentOfficeId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyInputForward();
+        verifyForward(ActionForwards.preview_success.toString());
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         Assert.assertEquals(true, fm.isFlowValid(flowKey));
 
@@ -335,7 +335,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("parentOfficeId", "1");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
-        verifyInputForward();
+        verifyForward(ActionForwards.preview_success.toString());
         fm = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         Assert.assertEquals(true, fm.isFlowValid(flowKey));
 

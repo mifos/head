@@ -180,7 +180,8 @@ public class SavingsAction extends AccountAppAction {
         SessionUtils.setCollectionAttribute(MasterConstants.INTEREST_CAL_TYPES, masterDataService
                 .retrieveMasterEntities(InterestCalcTypeEntity.class, uc.getLocaleId()), request);
         loadMasterDataPartial(actionForm, request);
-        loadCustomFieldsForCreate(actionForm, request);
+        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
+        actionForm.setAccountCustomFieldSet(new ArrayList<CustomFieldDto>());
     }
 
     private void loadMasterDataPartial(SavingsActionForm actionForm, HttpServletRequest request) throws Exception {
@@ -191,25 +192,6 @@ public class SavingsAction extends AccountAppAction {
                 .retrieveMasterEntities(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService
                 .retrieveCustomFieldsDefinition(), request);
-    }
-
-    private void loadCustomFieldsForCreate(SavingsActionForm actionForm, HttpServletRequest request) throws Exception {
-        // Set Default values for custom fields
-        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils
-                .getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
-            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
-                    && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(getUserContext(
-                        request).getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
-            } else {
-                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
-                        .getFieldType()));
-            }
-        }
-        actionForm.setAccountCustomFieldSet(customFields);
     }
 
     private void loadPrdoffering(SavingsActionForm savingsActionForm, HttpServletRequest request)
@@ -360,7 +342,7 @@ public class SavingsAction extends AccountAppAction {
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         SavingsActionForm actionForm = (SavingsActionForm) form;
         actionForm.setRecommendedAmount(savings.getRecommendedAmount().toString());
-        actionForm.setAccountCustomFieldSet(createCustomFieldViewsForEdit(savings.getAccountCustomFields(), request));
+        actionForm.setAccountCustomFieldSet(new ArrayList<CustomFieldDto>());
         return mapping.findForward("edit_success");
     }
 
