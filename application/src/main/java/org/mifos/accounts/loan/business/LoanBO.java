@@ -302,7 +302,7 @@ public class LoanBO extends AccountBO {
             final CustomerBO customer, final AccountState accountState, final Money loanAmount,
             final Short noOfinstallments, final Date disbursementDate, final boolean interestDeductedAtDisbursement,
             final Double interestRate, final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
-            final List<CustomFieldDto> customFields, final Double maxLoanAmount, final Double minLoanAmount,
+            final Double maxLoanAmount, final Double minLoanAmount,
             final Short maxNoOfInstall, final Short minNoOfInstall, final boolean isRepaymentIndepOfMeetingEnabled,
             final MeetingBO newMeetingForRepaymentDay) throws AccountException {
         if (loanOffering == null || loanAmount == null || noOfinstallments == null || disbursementDate == null
@@ -335,6 +335,8 @@ public class LoanBO extends AccountBO {
                 throw new AccountException(LoanExceptionConstants.INVALIDDISBURSEMENTDATE);
             }
         }
+
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         return new LoanBO(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments,
                 disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
                 customFields, true, maxLoanAmount, minLoanAmount, loanOffering.getMaxInterestRate(), loanOffering

@@ -22,14 +22,14 @@ package org.mifos.dto.screen;
 
 import org.joda.time.LocalDate;
 
-public class LoanRepaymentScheduleInstallmentDto {
+public class LoanScheduledInstallmentDto {
 
     private final Integer installmentNumber;
     private final String principal;
     private final String interest;
     private final LocalDate dueDate;
 
-    public LoanRepaymentScheduleInstallmentDto(Integer installmentNumber, String principal, String interest, LocalDate dueDate) {
+    public LoanScheduledInstallmentDto(Integer installmentNumber, String principal, String interest, LocalDate dueDate) {
         this.installmentNumber = installmentNumber;
         this.principal = principal;
         this.interest = interest;

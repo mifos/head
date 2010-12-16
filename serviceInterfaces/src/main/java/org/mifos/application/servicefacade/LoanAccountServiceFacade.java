@@ -26,6 +26,7 @@ import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanAccountInfoDto;
 import org.mifos.dto.screen.LoanAccountMeetingDto;
@@ -33,7 +34,7 @@ import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
-import org.mifos.dto.screen.LoanRepaymentScheduleInstallmentDto;
+import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface LoanAccountServiceFacade {
@@ -60,5 +61,8 @@ public interface LoanAccountServiceFacade {
     LoanCreationPreviewDto previewLoanCreationDetails(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds);
 
     @PreAuthorize("isFullyAuthenticated()")
-    LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanRepaymentScheduleInstallmentDto> loanRepayments);
+    LoanCreationResultDto createLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanScheduledInstallmentDto> loanRepayments);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments);
 }

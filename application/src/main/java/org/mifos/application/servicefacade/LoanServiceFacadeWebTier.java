@@ -65,7 +65,6 @@ import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
@@ -82,7 +81,6 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountConstants;
-import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
@@ -116,11 +114,9 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -201,7 +197,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             Double interest = loanActionForm.getInterestDoubleValue();
             Short gracePeriod = loanActionForm.getGracePeriodDurationValue();
             List<FeeDto> fees = loanActionForm.getFeesToApply();
-            List<CustomFieldDto> customFields = loanActionForm.getCustomFields();
+
             Double maxLoanAmount = loanActionForm.getMaxLoanAmountValue();
             Double minLoanAmount = loanActionForm.getMinLoanAmountValue();
             Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
@@ -218,7 +214,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             }
             LoanBO loan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
                     numOfInstallments, disbursementDate.toDate(), isInterestDeductedAtDisbursement, interest,
-                    gracePeriod, fund, fees, customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
+                    gracePeriod, fund, fees, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
                     minNumOfShortInstallments, isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
             loan.setExternalId(externalId);
 
@@ -413,33 +409,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
-            LoanAccountActionForm loanAccountActionForm) throws ApplicationException {
-
-        CustomerBO customer = loadCustomer(customerId);
-        LoanBO loan = redoLoan(customer, loanAccountActionForm, disbursementDate);
-
-        PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
-        try {
-            loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan
-                    .getAccountState(), createdBy, loan));
-            new LoanPersistence().createOrUpdate(loan);
-            StaticHibernateUtil.commitTransaction();
-
-            loan.setGlobalAccountNum(loan.generateId(userContext.getBranchGlobalNum()));
-            new LoanPersistence().createOrUpdate(loan);
-            StaticHibernateUtil.commitTransaction();
-        } catch (PersistenceException e) {
-            StaticHibernateUtil.rollbackTransaction();
-            throw new AccountException(AccountExceptionConstants.CREATEEXCEPTION, e);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-        return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled() && customer.isGroup(), loan.getAccountId(), loan.getGlobalAccountNum());
-    }
-
-    @Override
     public void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException,
             AccountException {
         LoanBO loan = this.loanDao.findById(loanAccountId);
@@ -489,7 +458,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
             Double interest = loanAccountActionForm.getInterestDoubleValue();
             Short gracePeriod = loanAccountActionForm.getGracePeriodDurationValue();
             List<FeeDto> fees = loanAccountActionForm.getFeesToApply();
-            List<CustomFieldDto> customFields = loanAccountActionForm.getCustomFields();
+
             Double maxLoanAmount = loanAccountActionForm.getMaxLoanAmountValue();
             Double minLoanAmount = loanAccountActionForm.getMinLoanAmountValue();
             Short maxNumOfInstallments = loanAccountActionForm.getMaxNoInstallmentsValue();
@@ -511,7 +480,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
             LoanBO redoLoan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
                     numOfInstallments, disbursementDate.toDate(), isInterestDeductedAtDisbursement, interest, gracePeriod,
-                    fund, fees, customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
+                    fund, fees, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
                     minNumOfShortInstallments, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
             redoLoan.setExternalId(externalId);
             redoLoan.setBusinessActivityId(selectedLoanPurpose);

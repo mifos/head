@@ -40,7 +40,6 @@ import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsB
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
-import org.mifos.dto.screen.LoanCreationResultDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -68,9 +67,6 @@ public interface LoanServiceFacade {
      */
     @Deprecated
     LoanBO previewLoanRedoDetails(Integer customerId, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate);
-
-    LoanCreationResultDto redoLoan(UserContext userContext, Integer customerId, DateTime disbursementDate,
-            LoanAccountActionForm loanActionForm) throws ApplicationException;
 
     void checkIfProductsOfferingCanCoexist(Integer loanAccountId) throws ServiceException, PersistenceException,
             AccountException;

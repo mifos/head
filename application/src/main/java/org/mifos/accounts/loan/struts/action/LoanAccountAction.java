@@ -89,6 +89,7 @@ import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -144,6 +145,7 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.LoanAccountInfoDto;
@@ -153,7 +155,7 @@ import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
 import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.dto.screen.LoanCreationProductDetailsDto;
 import org.mifos.dto.screen.LoanCreationResultDto;
-import org.mifos.dto.screen.LoanRepaymentScheduleInstallmentDto;
+import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -1112,71 +1114,77 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         List<LoanAccountDetailsDto> loanAccountDetailsList = getLoanAccountDetailsFromSession(request);
         DateTime disbursementDate = getDisbursementDate(loanActionForm, userContext.getPreferredLocale());
         Integer customerId = (getCustomer(request)).getCustomerId();
+        Short fundId = loanActionForm.getLoanOfferingFundValue();
+
+        LoanAccountMeetingDto loanAccountMeetingDto = new LoanAccountMeetingDto();
+        if (StringUtils.isNotBlank(loanActionForm.getRecurrenceId())) {
+            loanAccountMeetingDto.setRecurrenceId(Short.valueOf(loanActionForm.getRecurrenceId()));
+        }
+        if (StringUtils.isNotBlank(loanActionForm.getWeekDay())) {
+            loanAccountMeetingDto.setWeekDay(Short.valueOf(loanActionForm.getWeekDay()));
+        }
+        if (StringUtils.isNotBlank(loanActionForm.getRecurWeek())) {
+            loanAccountMeetingDto.setEveryWeek(Short.valueOf(loanActionForm.getRecurWeek()));
+        }
+
+        loanAccountMeetingDto.setMonthType(loanActionForm.getMonthType());
+        if (StringUtils.isNotBlank(loanActionForm.getMonthDay())) {
+            loanAccountMeetingDto.setDayOfMonth(Short.valueOf(loanActionForm.getMonthDay()));
+        }
+        if (StringUtils.isNotBlank(loanActionForm.getDayRecurMonth())) {
+            loanAccountMeetingDto.setDayRecurMonth(Short.valueOf(loanActionForm.getDayRecurMonth()));
+        }
+
+        if (StringUtils.isNotBlank(loanActionForm.getMonthWeek())) {
+            loanAccountMeetingDto.setWeekOfMonth(Short.valueOf(loanActionForm.getMonthWeek()));
+        }
+        if (StringUtils.isNotBlank(loanActionForm.getRecurMonth())) {
+            loanAccountMeetingDto.setEveryMonth(Short.valueOf(loanActionForm.getRecurMonth()));
+        }
+        if (StringUtils.isNotBlank(loanActionForm.getMonthRank())) {
+            loanAccountMeetingDto.setMonthRank(Short.valueOf(loanActionForm.getMonthRank()));
+        }
+
+        LoanAccountInfoDto loanAccountInfo = new LoanAccountInfoDto();
+        loanAccountInfo.setCustomerId(customerId);
+        loanAccountInfo.setFundId(fundId);
+        loanAccountInfo.setDisbursementDate(disbursementDate.toLocalDate());
+
+        loanAccountInfo.setProductId(loanActionForm.getPrdOfferingIdValue());
+        loanAccountInfo.setLoanAmount(loanActionForm.getLoanAmount());
+        loanAccountInfo.setInterestDeductedAtDisbursement(loanActionForm.isInterestDedAtDisbValue());
+        loanAccountInfo.setInterest(loanActionForm.getInterestDoubleValue());
+        loanAccountInfo.setGracePeriod(loanActionForm.getGracePeriodDurationValue());
+        loanAccountInfo.setMaxLoanAmount(loanActionForm.getMaxLoanAmount());
+        loanAccountInfo.setMinLoanAmount(loanActionForm.getMinLoanAmount());
+        loanAccountInfo.setNumOfInstallments(loanActionForm.getNoOfInstallmentsValue());
+        loanAccountInfo.setMaxNumOfInstallments(loanActionForm.getMaxNoInstallmentsValue());
+        loanAccountInfo.setMinNumOfInstallments(loanActionForm.getMinNoInstallmentsValue());
+        loanAccountInfo.setExternalId(loanActionForm.getExternalId());
+        loanAccountInfo.setSelectedLoanPurpose(loanActionForm.getBusinessActivityIdValue());
+        loanAccountInfo.setSelectedCollateralType(loanActionForm.getCollateralTypeIdValue());
+        loanAccountInfo.setAccountState(loanActionForm.getState().getValue());
+
+
+        List<LoanScheduledInstallmentDto> loanRepayments = new ArrayList<LoanScheduledInstallmentDto>();
+        List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
+        for (RepaymentScheduleInstallment installment : installments) {
+            LoanScheduledInstallmentDto repaymentInstallment = new LoanScheduledInstallmentDto(installment.getInstallment(), installment.getPrincipal().toString(), installment.getInterest().toString(), new LocalDate(installment.getDueDateValue()));
+            loanRepayments.add(repaymentInstallment);
+        }
+
+        List<LoanPaymentDto> existingLoanPayments = new ArrayList<LoanPaymentDto>();
+        List<PaymentDataHtmlBean> paymentBeans = loanActionForm.getPaymentDataBeans();
+        for (PaymentDataHtmlBean existingPayment : paymentBeans) {
+            existingLoanPayments.add( new LoanPaymentDto(existingPayment.getAmount(), new LocalDate(existingPayment.getTransactionDate()), existingPayment.getPaymentTypeId().longValue(), existingPayment.getPersonnel().getPersonnelId()));
+        }
 
         LoanCreationResultDto loanCreationResultDto;
         if (isRedoOperation(perspective)) {
-            loanCreationResultDto = this.loanServiceFacade.redoLoan(userContext, customerId, disbursementDate, loanActionForm);
+            loanCreationResultDto = this.loanAccountServiceFacade.redoLoan(loanAccountMeetingDto, loanAccountInfo, existingLoanPayments);
             LoanBO newlyCreatedLoan = this.loanDao.findByGlobalAccountNum(loanCreationResultDto.getGlobalAccountNum());
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, newlyCreatedLoan, request);
         } else {
-            Short fundId = loanActionForm.getLoanOfferingFundValue();
-
-            LoanAccountMeetingDto loanAccountMeetingDto = new LoanAccountMeetingDto();
-            if (StringUtils.isNotBlank(loanActionForm.getRecurrenceId())) {
-                loanAccountMeetingDto.setRecurrenceId(Short.valueOf(loanActionForm.getRecurrenceId()));
-            }
-            if (StringUtils.isNotBlank(loanActionForm.getWeekDay())) {
-                loanAccountMeetingDto.setWeekDay(Short.valueOf(loanActionForm.getWeekDay()));
-            }
-            if (StringUtils.isNotBlank(loanActionForm.getRecurWeek())) {
-                loanAccountMeetingDto.setEveryWeek(Short.valueOf(loanActionForm.getRecurWeek()));
-            }
-
-            loanAccountMeetingDto.setMonthType(loanActionForm.getMonthType());
-            if (StringUtils.isNotBlank(loanActionForm.getMonthDay())) {
-                loanAccountMeetingDto.setDayOfMonth(Short.valueOf(loanActionForm.getMonthDay()));
-            }
-            if (StringUtils.isNotBlank(loanActionForm.getDayRecurMonth())) {
-                loanAccountMeetingDto.setDayRecurMonth(Short.valueOf(loanActionForm.getDayRecurMonth()));
-            }
-
-            if (StringUtils.isNotBlank(loanActionForm.getMonthWeek())) {
-                loanAccountMeetingDto.setWeekOfMonth(Short.valueOf(loanActionForm.getMonthWeek()));
-            }
-            if (StringUtils.isNotBlank(loanActionForm.getRecurMonth())) {
-                loanAccountMeetingDto.setEveryMonth(Short.valueOf(loanActionForm.getRecurMonth()));
-            }
-            if (StringUtils.isNotBlank(loanActionForm.getMonthRank())) {
-                loanAccountMeetingDto.setMonthRank(Short.valueOf(loanActionForm.getMonthRank()));
-            }
-
-            LoanAccountInfoDto loanAccountInfo = new LoanAccountInfoDto();
-            loanAccountInfo.setCustomerId(customerId);
-            loanAccountInfo.setFundId(fundId);
-            loanAccountInfo.setDisbursementDate(disbursementDate.toLocalDate());
-
-            loanAccountInfo.setProductId(loanActionForm.getPrdOfferingIdValue());
-            loanAccountInfo.setLoanAmount(loanActionForm.getLoanAmount());
-            loanAccountInfo.setInterestDeductedAtDisbursement(loanActionForm.isInterestDedAtDisbValue());
-            loanAccountInfo.setInterest(loanActionForm.getInterestDoubleValue());
-            loanAccountInfo.setGracePeriod(loanActionForm.getGracePeriodDurationValue());
-            loanAccountInfo.setMaxLoanAmount(loanActionForm.getMaxLoanAmount());
-            loanAccountInfo.setMinLoanAmount(loanActionForm.getMinLoanAmount());
-            loanAccountInfo.setNumOfInstallments(loanActionForm.getNoOfInstallmentsValue());
-            loanAccountInfo.setMaxNumOfInstallments(loanActionForm.getMaxNoInstallmentsValue());
-            loanAccountInfo.setMinNumOfInstallments(loanActionForm.getMinNoInstallmentsValue());
-            loanAccountInfo.setExternalId(loanActionForm.getExternalId());
-            loanAccountInfo.setSelectedLoanPurpose(loanActionForm.getBusinessActivityIdValue());
-            loanAccountInfo.setSelectedCollateralType(loanActionForm.getCollateralTypeIdValue());
-            loanAccountInfo.setAccountState(loanActionForm.getState().getValue());
-
-
-            List<LoanRepaymentScheduleInstallmentDto> loanRepayments = new ArrayList<LoanRepaymentScheduleInstallmentDto>();
-            List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
-            for (RepaymentScheduleInstallment installment : installments) {
-                LoanRepaymentScheduleInstallmentDto repaymentInstallment = new LoanRepaymentScheduleInstallmentDto(installment.getInstallment(), installment.getPrincipal().toString(), installment.getInterest().toString(), new LocalDate(installment.getDueDateValue()));
-                loanRepayments.add(repaymentInstallment);
-            }
 
             loanCreationResultDto = this.loanAccountServiceFacade.createLoan(loanAccountMeetingDto, loanAccountInfo, loanRepayments);
 
