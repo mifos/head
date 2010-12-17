@@ -96,13 +96,18 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             AccountTypeDto accountType = AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId());
             String totalPaymentDue = account.getTotalPaymentDue().toString();
 
-            StaticHibernateUtil.getSessionTL().clear();
-            transactionHelper.rollbackTransaction();
+            clearSessionAndRollback();
 
             return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, totalPaymentDue, accountUser);
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    // Exposed for testing
+    void clearSessionAndRollback() {
+        StaticHibernateUtil.getSessionTL().clear();
+        transactionHelper.rollbackTransaction();
     }
 
     private boolean isLoanPayment(String paymentType) {

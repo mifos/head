@@ -296,7 +296,7 @@ public class Installment implements Comparable<Installment> {
         return previousPayments.getFeesPaid();
     }
 
-    private BigDecimal getEffectiveInterest() {
+    public BigDecimal getEffectiveInterest() {
         return actualAmounts.get(InstallmentComponent.EFFECTIVE_INTEREST);
     }
 

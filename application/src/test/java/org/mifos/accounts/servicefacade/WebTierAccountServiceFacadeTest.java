@@ -20,7 +20,6 @@
 package org.mifos.accounts.servicefacade;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
@@ -42,9 +41,7 @@ import java.util.Date;
 
 import static java.util.Collections.EMPTY_LIST;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WebTierAccountServiceFacadeTest {
@@ -70,12 +67,16 @@ public class WebTierAccountServiceFacadeTest {
 
     @Before
     public void setUp() throws Exception {
-        accountServiceFacade = new WebTierAccountServiceFacade(null, null, accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence);
+        accountServiceFacade = new WebTierAccountServiceFacade(null, null, accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence){
+            @Override
+            void clearSessionAndRollback() {
+                // do nothing
+            }
+        };
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
     }
 
     @Test
-    @Ignore("Need to move to integration-test")
     public void testGetAccountPaymentInformation() throws ServiceException, PersistenceException {
         Date paymentDate = TestUtils.getDate(12, 12, 2012);
         when(accountBusinessService.getAccount(LOAN_ID)).thenReturn(loanBO);
