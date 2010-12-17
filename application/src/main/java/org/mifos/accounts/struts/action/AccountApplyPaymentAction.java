@@ -148,9 +148,13 @@ public class AccountApplyPaymentAction extends BaseAction {
     }
 
     private void validateAmount(AccountPaymentDto accountPaymentDto, String amount) throws ApplicationException {
-        if (new BigDecimal(amount).compareTo(new BigDecimal(accountPaymentDto.getTotalPaymentDue())) > 0 ||
-            new BigDecimal(amount).compareTo(BigDecimal.ZERO) <= 0) {
+        if (new BigDecimal(amount).compareTo(BigDecimal.ZERO) <= 0) {
             throw new ApplicationException("errors.invalid_amount_according_to_due");
+        }
+        if (!accountPaymentDto.getAccountType().equals(AccountTypeDto.LOAN_ACCOUNT)) {
+            if (new BigDecimal(amount).compareTo(new BigDecimal(accountPaymentDto.getTotalPaymentDue())) > 0) {
+                throw new ApplicationException("errors.invalid_amount_according_to_due");
+            }
         }
     }
 
