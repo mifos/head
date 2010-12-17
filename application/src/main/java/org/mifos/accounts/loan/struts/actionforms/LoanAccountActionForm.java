@@ -47,9 +47,9 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.LoanUIHelperFn;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
+import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -218,18 +218,18 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
 
     private CashFlowForm cashFlowForm;
 
-    private List<CashFlowDataHtmlBean> cashflowDataHtmlBeans;
+    private List<CashFlowDataDto> cashflowDataDtos;
 
     private String scheduleViewDate;
 
     private Money loanAmountValue;
 
-    public List<CashFlowDataHtmlBean> getCashflowDataHtmlBeans(){
-        return cashflowDataHtmlBeans;
+    public List<CashFlowDataDto> getCashflowDataDtos(){
+        return cashflowDataDtos;
     }
 
-    public void setCashflowDataHtmlBeans(List<CashFlowDataHtmlBean> cashflowDataHtmlBeans) {
-        this.cashflowDataHtmlBeans = cashflowDataHtmlBeans;
+    public void setCashflowDataDtos(List<CashFlowDataDto> cashflowDataDtos) {
+        this.cashflowDataDtos = cashflowDataDtos;
     }
 
 
@@ -658,7 +658,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 }
             }
         } else if (method.equals(Methods.load.toString())) {
-            cashflowDataHtmlBeans = null;
+            cashflowDataDtos = null;
             clients = new ArrayList<String>();
         } else if (method.equals(Methods.managePreview.toString())) {
             intDedDisbursement = "0";

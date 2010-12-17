@@ -1,4 +1,4 @@
-package org.mifos.accounts.loan.util;
+package org.mifos.accounts.loan.business;
 
 import static org.mockito.Mockito.when;
 
@@ -6,12 +6,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
+import org.mifos.accounts.loan.business.CashFlowDataAdaptor;
+import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.framework.util.helpers.Money;
@@ -22,7 +24,7 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
-public class InstallmentAndCashflowComparisionUtilityTest {
+public class CashFlowDataAdaptorTest {
 
     @Mock
     RepaymentScheduleInstallment repaymentScheduleInstallment;
@@ -38,7 +40,19 @@ public class InstallmentAndCashflowComparisionUtilityTest {
     MonthlyCashFlowDetail monthlyCashFlowDetail;
 
     @Test
-    public void shouldGetCorrectValueFromGetCashflowDataHtmlBeansForPositiveCashflow() {
+    public void shouldReturnTheMonthNamesInDifferentLocales() {
+        Date date = new Date(2010,0,1);
+        when(monthlyCashFlowDetail.getDateTime()).thenReturn(new DateTime(date));
+
+        MonthlyCashFlowForm monthlyCashFlowForm = new MonthlyCashFlowForm(monthlyCashFlowDetail);
+        Assert.assertEquals("January", monthlyCashFlowForm.getMonthInLocale());
+
+        monthlyCashFlowForm.setLocale(Locale.FRENCH);
+        Assert.assertEquals("janvier", monthlyCashFlowForm.getMonthInLocale());
+    }
+
+    @Test
+    public void shouldGetCorrectValueFromGetCashflowDataDtosForPositiveCashflow() {
         Date date = new Date();
 
         when(repaymentScheduleInstallment.getTotalValue()).thenReturn(new Money(currency,100.00));
@@ -52,15 +66,15 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("50.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows, BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("50.00",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
-    public void shouldGetCorrectValueFromGetCashflowDataHtmlBeansForPositiveCashflowWithDecimal() {
+    public void shouldGetCorrectValueFromGetCashflowDataDtosForPositiveCashflowWithDecimal() {
         Date date = new Date();
 
         when(repaymentScheduleInstallment.getTotalValue()).thenReturn(new Money(currency,100.56));
@@ -74,15 +88,15 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,  BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("49.44",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows,  BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("49.44",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
-    public void shouldGetCorrectValueFromGetCashflowDataHtmlBeansForEqualCashflow() {
+    public void shouldGetCorrectValueFromGetCashflowDataDtosForEqualCashflow() {
         Date date = new Date();
 
         when(repaymentScheduleInstallment.getTotalValue()).thenReturn(new Money(currency,150.00));
@@ -96,15 +110,15 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows , BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("0.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows , BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("0.00",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
-    public void shouldGetCorrectValueFromGetCashflowDataHtmlBeansForNegativeCashFlow() {
+    public void shouldGetCorrectValueFromGetCashflowDataDtosForNegativeCashFlow() {
         Date date = new Date();
 
         when(repaymentScheduleInstallment.getTotalValue()).thenReturn(new Money(currency,100.00));
@@ -118,15 +132,15 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,  BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("-50.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows,  BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("-50.00",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
-    public void shouldGetCorrectValueFromGetCashflowDataHtmlBeansForMultipleInstallmentsInSameMonth() {
+    public void shouldGetCorrectValueFromGetCashflowDataDtosForMultipleInstallmentsInSameMonth() {
         Date date = new Date(2010,10,1);
         Date date1 = new Date(2010,10,10);
 
@@ -146,15 +160,15 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,  BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("100.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallment());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows,  BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("100.00",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallment());
     }
 
     @Test
-    public void shouldGetCorrectPercentFromGetCashflowDataHtmlBeansForPositiveCashflow() {
+    public void shouldGetCorrectPercentFromGetCashflowDataDtosForPositiveCashflow() {
         Date date = new Date();
 
         when(repaymentScheduleInstallment.getTotalValue()).thenReturn(new Money(currency,100.00));
@@ -168,11 +182,11 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,  BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("66.67",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows,  BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("66.67",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
     @Test
@@ -190,17 +204,17 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,  BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("Infinity",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows,  BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("Infinity",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
 
 
     @Test
-    public void shouldGetCorrectPercentFromGetCashflowDataHtmlBeansForEqualCashflow() {
+    public void shouldGetCorrectPercentFromGetCashflowDataDtosForEqualCashflow() {
         Date date = new Date();
 
         when(repaymentScheduleInstallment.getTotalValue()).thenReturn(new Money(currency,150.00));
@@ -214,15 +228,15 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,  BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("100.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows,  BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("100.00",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
     @Test
-    public void shouldGetCorrectPercentFromGetCashflowDataHtmlBeansForNegativeCashFlow() {
+    public void shouldGetCorrectPercentFromGetCashflowDataDtosForNegativeCashFlow() {
         Date date = new Date();
 
         when(repaymentScheduleInstallment.getTotalValue()).thenReturn(new Money(currency,100.00));
@@ -236,15 +250,15 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         ArrayList<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         monthlyCashFlows.add(monthlyCashFlowForm);
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,  BigDecimal.ZERO, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("200.00",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows,  BigDecimal.ZERO, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("200.00",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
     @Test
-    public void shouldGetCorrectPercentFromGetCashflowDataHtmlBeansForMultipleInstallmentsInSameMonth() {
+    public void shouldGetCorrectPercentFromGetCashflowDataDtosForMultipleInstallmentsInSameMonth() {
         Date date = new Date(2010,10,1);
         Date date1 = new Date(2010,10,10);
         BigDecimal loanAmount = BigDecimal.ZERO;
@@ -266,11 +280,11 @@ public class InstallmentAndCashflowComparisionUtilityTest {
         monthlyCashFlows.add(monthlyCashFlowForm);
 
 
-        InstallmentAndCashflowComparisionUtility utility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows,  loanAmount, date);
-        List<CashFlowDataHtmlBean> cashflowDataHtmlBeans = utility.mapToCashflowDataHtmlBeans();
-        Assert.assertNotNull(cashflowDataHtmlBeans);
-        Assert.assertEquals(1,cashflowDataHtmlBeans.size());
-        Assert.assertEquals("71.43",cashflowDataHtmlBeans.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
+        CashFlowDataAdaptor utility = new CashFlowDataAdaptor(installments, monthlyCashFlows,  loanAmount, date, Locale.ENGLISH);
+        List<CashFlowDataDto> cashflowDataDtos = utility.getCashflowDataDtos();
+        Assert.assertNotNull(cashflowDataDtos);
+        Assert.assertEquals(1,cashflowDataDtos.size());
+        Assert.assertEquals("71.43",cashflowDataDtos.get(0).getDiffCumulativeCashflowAndInstallmentPercent());
     }
 
     @Test
@@ -299,7 +313,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
     installments.add(repaymentScheduleInstallment);
     installments.add(repaymentScheduleInstallment1);
 
-    InstallmentAndCashflowComparisionUtility installmentAndCashflowComparisionUtility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, loanAmount, date);
+    CashFlowDataAdaptor installmentAndCashflowComparisionUtility = new CashFlowDataAdaptor(installments, monthlyCashFlows, loanAmount, date, Locale.ENGLISH);
     installmentAndCashflowComparisionUtility.addLoanAmountToRespectiveCashFlow();
     Mockito.verify(monthlyCashFlowForm).setRevenue(loanAmount.add(REVENUE_FOR_MONTH));
 
@@ -340,7 +354,7 @@ public class InstallmentAndCashflowComparisionUtilityTest {
     installments.add(repaymentScheduleInstallment);
     installments.add(repaymentScheduleInstallment1);
 
-    InstallmentAndCashflowComparisionUtility installmentAndCashflowComparisionUtility = new InstallmentAndCashflowComparisionUtility(installments, monthlyCashFlows, loanAmount, date);
+    CashFlowDataAdaptor installmentAndCashflowComparisionUtility = new CashFlowDataAdaptor(installments, monthlyCashFlows, loanAmount, date, Locale.ENGLISH);
     installmentAndCashflowComparisionUtility.addLoanAmountToRespectiveCashFlow();
     Mockito.verify(monthlyCashFlowForm).setRevenue(loanAmount.add(REVENUE_FOR_MONTH));
     Mockito.verify(monthlyCashFlowForm2, Mockito.never()).setRevenue(Mockito.any(BigDecimal.class));

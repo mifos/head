@@ -13,7 +13,8 @@
                     externalContext.sessionMap.noOfMonths,
                     externalContext.sessionMap.loanAmountValue,
                     externalContext.sessionMap.indebtednessRatio,
-                    externalContext.sessionMap.captureCapitalLiabilityInfo)"
+                    externalContext.sessionMap.captureCapitalLiabilityInfo,
+                    externalContext.sessionMap.locale)"
                 result="cashFlow"/>
         <set name="flowScope.joinUrl" value="externalContext.sessionMap.joinUrl" type="string"/>
         <set name="flowScope.flowKey" value="requestParameters.currentFlowKey" type="string"/>

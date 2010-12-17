@@ -19,13 +19,13 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
-import org.apache.commons.lang.ObjectUtils;
 import org.mifos.accounts.loan.schedule.utils.Utilities;
 
 import java.math.BigDecimal;
 import java.util.*;
 
 import static org.mifos.accounts.loan.schedule.utils.Utilities.getDaysInBetween;
+import static org.mifos.framework.util.helpers.NumberUtils.max;
 
 public class Schedule {
     private Map<Integer, Installment> installments;
@@ -83,8 +83,8 @@ public class Schedule {
 
     private long getDurationForAdjustment(Installment installment, Date toDate) {
         Installment previousInstallment = getPreviousInstallment(installment);
-        Date prevDueDate = previousInstallment != null ? previousInstallment.getEarliestPaidDate() : this.disbursementDate;
-        prevDueDate = (Date) ObjectUtils.max(prevDueDate, installment.getRecentPartialPaymentDate());
+        Date prevDueDate = previousInstallment != null ? previousInstallment.getDueDate() : this.disbursementDate;
+        prevDueDate = max(prevDueDate, installment.getRecentPartialPaymentDate());
         return getDaysInBetween(toDate, prevDueDate);
     }
 
@@ -170,17 +170,17 @@ public class Schedule {
             Installment nextInstallment = getNextInstallment(installment);
             if (installment.isPrincipalDue()) {
                 BigDecimal principalDue = installment.getPrincipalDue();
+                long duration = getDaysInBetween(transactionDate, installment.fromDateForOverdueComputation());
                 if (installment.isAnyPrincipalPaid()) {
-                    updateExtraInterest(transactionDate, installment, nextInstallment, principalDue);
+                    updateExtraInterest(installment, nextInstallment, principalDue, duration);
                 } else {
-                    setExtraInterest(transactionDate, installment, nextInstallment, principalDue);
+                    setExtraInterest(installment, nextInstallment, principalDue, duration);
                 }
             }
         }
     }
 
-    private void setExtraInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
-        long duration = getDaysInBetween(transactionDate, installment.getDueDate());
+    private void setExtraInterest(Installment installment, Installment nextInstallment, BigDecimal principalDue, long duration) {
         if (duration <= 0) return;
         if (nextInstallment != null) {
             nextInstallment.setExtraInterest(computeInterest(principalDue, duration));
@@ -190,8 +190,7 @@ public class Schedule {
         }
     }
 
-    private void updateExtraInterest(Date transactionDate, Installment installment, Installment nextInstallment, BigDecimal principalDue) {
-        long duration = getDaysInBetween(transactionDate, installment.getRecentPrincipalPaidDate());
+    private void updateExtraInterest(Installment installment, Installment nextInstallment, BigDecimal principalDue, long duration) {
         if (duration <= 0) return;
         if (nextInstallment != null) {
             nextInstallment.addExtraInterest(computeInterest(principalDue, duration));

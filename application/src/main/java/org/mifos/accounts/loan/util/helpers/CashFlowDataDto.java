@@ -1,8 +1,8 @@
-package org.mifos.accounts.loan.struts.uihelpers;
+package org.mifos.accounts.loan.util.helpers;
 
 import java.util.Date;
 
-public class CashFlowDataHtmlBean {
+public class CashFlowDataDto {
     private String month = new String();
     private String year = new String();
     private String cumulativeCashflow = new String();

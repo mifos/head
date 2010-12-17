@@ -571,8 +571,17 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         allocateMiscFees(new Money(currency, installment.getCurrentPayment().getMiscFeesPaid()));
         allocatePenalty(new Money(currency, installment.getCurrentPayment().getPenaltyPaid()));
         allocateMiscPenalty(new Money(currency, installment.getCurrentPayment().getMiscPenaltyPaid()));
-        setInterest(new Money(currency, installment.getApplicableInterest()));
+        updateInterest(installment, currency);
+        setExtraInterest(new Money(currency, installment.getExtraInterest()));
         recordPayment(paymentDate);
+    }
+
+    private void updateInterest(Installment installment, MifosCurrency currency) {
+        if (installment.hasEffectiveInterest()) {
+            setInterest(new Money(currency, installment.getEffectiveInterest().add(interestPaid.getAmount())));
+        } else {
+            setInterest(new Money(currency, installment.getInterest()));
+        }
     }
 
     private void initPaymentAllocation(MifosCurrency currency) {
