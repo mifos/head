@@ -92,6 +92,10 @@ public class FeeDto implements DataTransferObject {
         this.feeRemoved = YesNoFlag.NO.getValue();
     }
 
+    public void setFeeSchedule(String feeSchedule) {
+        this.feeSchedule = feeSchedule;
+    }
+
     public String getFeeSchedule() {
         return feeSchedule;
     }
@@ -110,6 +114,10 @@ public class FeeDto implements DataTransferObject {
 
     public void setAmount(String amount) {
         this.amount = amount;
+    }
+
+    public void setPeriodic(boolean periodic) {
+        this.periodic = periodic;
     }
 
     public boolean isPeriodic() {
