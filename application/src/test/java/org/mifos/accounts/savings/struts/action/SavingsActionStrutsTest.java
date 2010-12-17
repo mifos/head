@@ -559,7 +559,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(EntityType.SAVINGS.getValue(), auditLogList.get(0).getEntityType());
        Assert.assertEquals(savings.getAccountId(), auditLogList.get(0).getEntityId());
 
-       Assert.assertEquals(2, auditLogList.get(0).getAuditLogRecords().size());
+       Assert.assertEquals(1, auditLogList.get(0).getAuditLogRecords().size());
 
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Recommended Amount")) {
