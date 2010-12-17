@@ -572,6 +572,7 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         allocatePenalty(new Money(currency, installment.getCurrentPayment().getPenaltyPaid()));
         allocateMiscPenalty(new Money(currency, installment.getCurrentPayment().getMiscPenaltyPaid()));
         setInterest(new Money(currency, installment.getApplicableInterest()));
+        setExtraInterest(new Money(currency, installment.getExtraInterest()));
         recordPayment(paymentDate);
     }
 

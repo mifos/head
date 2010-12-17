@@ -185,6 +185,8 @@ public class LoanScheduleEntityTest {
         assertEquals(new Money(RUPEE, 50.0), paymentAllocation.getMiscFeePaid());
         assertEquals(new Money(RUPEE, 40.0), paymentAllocation.getPenaltyPaid());
         assertEquals(new Money(RUPEE, 30.0), paymentAllocation.getMiscPenaltyPaid());
+        assertEquals(new Money(RUPEE, 100.0), loanScheduleEntity.getExtraInterest());
+        assertEquals(new Money(RUPEE, 100.0), loanScheduleEntity.getInterest());
     }
 
     private Installment getInstallment() {

@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static org.mifos.accounts.loan.schedule.utils.Utilities.isGreaterThanZero;
+import static org.mifos.framework.util.helpers.NumberUtils.max;
 
 public class Installment implements Comparable<Installment> {
     private Integer id;
@@ -255,14 +256,6 @@ public class Installment implements Comparable<Installment> {
         return previousPayments.getPrincipalPaid();
     }
 
-    public Date getEarliestPaidDate() {
-        return NumberUtils.min(getTotalPrincipalPaymentDate(), dueDate);
-    }
-
-    private Date getTotalPrincipalPaymentDate() {
-        return isDue() ? this.dueDate : getRecentPartialPaymentDate();
-    }
-
     public Date getRecentPartialPaymentDate() {
         return previousPayments.getRecentPartialPaymentDate();
     }
@@ -354,5 +347,9 @@ public class Installment implements Comparable<Installment> {
 
     public void resetCurrentPayment() {
         currentPayment = new InstallmentPayment();
+    }
+
+    public Date fromDateForOverdueComputation() {
+        return max(getDueDate(), getRecentPrincipalPaidDate());
     }
 }

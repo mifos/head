@@ -76,4 +76,8 @@ public class NumberUtils {
     public static <T extends Comparable> T min(T comparable1, T comparable2) {
         return (T) ObjectUtils.min(comparable1, comparable2);
     }
+
+    public static <T extends Comparable> T max(T comparable1, T comparable2) {
+        return (T) ObjectUtils.max(comparable1, comparable2);
+    }
 }
