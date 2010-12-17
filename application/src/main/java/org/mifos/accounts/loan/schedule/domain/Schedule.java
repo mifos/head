@@ -74,17 +74,19 @@ public class Schedule {
 
     private void adjustInterestForInstallments(List<Installment> futureInstallments, BigDecimal principalOutstanding) {
         for (Installment installment : futureInstallments) {
-            long duration = getDurationForAdjustment(installment, installment.getDueDate());
-            if (duration <= 0) continue;
-            BigDecimal principalForInterest = computePrincipalForInterest(principalOutstanding, installment);
-            installment.setEffectiveInterest(computeInterest(principalForInterest, duration));
+            if (installment.getCurrentPayment().isPrincipalPayment()) {
+                long duration = getDurationForAdjustment(installment, installment.getDueDate());
+                if (duration <= 0) continue;
+                BigDecimal principalForInterest = computePrincipalForInterest(principalOutstanding, installment);
+                installment.setEffectiveInterest(computeInterest(principalForInterest, duration));
+            }
         }
     }
 
     private long getDurationForAdjustment(Installment installment, Date toDate) {
         Installment previousInstallment = getPreviousInstallment(installment);
         Date prevDueDate = previousInstallment != null ? previousInstallment.getDueDate() : this.disbursementDate;
-        prevDueDate = max(prevDueDate, installment.getRecentPartialPaymentDate());
+        prevDueDate = max(prevDueDate, installment.getRecentPrincipalPaidDate());
         return getDaysInBetween(toDate, prevDueDate);
     }
 
@@ -117,7 +119,13 @@ public class Schedule {
         long duration = getDurationForAdjustment(installment, transactionDate);
         if (duration <= 0) return BigDecimal.ZERO;
         BigDecimal principalForInterest = computePrincipalForInterest(principalOutstanding, installment);
-        return computeInterest(principalForInterest, duration);
+        BigDecimal computedInterest = computeInterest(principalForInterest, duration);
+        BigDecimal interestPaid = installment.getInterestPaid();
+        BigDecimal difference = computedInterest.subtract(interestPaid);
+        if (difference.compareTo(BigDecimal.ZERO) > 0) {
+            return difference;
+        }
+        return computedInterest;
     }
 
     private BigDecimal computePrincipalForInterest(BigDecimal principalOutstanding, Installment installment) {
