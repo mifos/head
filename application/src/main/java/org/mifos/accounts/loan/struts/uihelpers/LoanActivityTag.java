@@ -20,10 +20,10 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
-import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -161,9 +161,7 @@ public class LoanActivityTag extends BodyTagSupport {
         xmlBuilder.text(loanRecentActivityView.getRunningBalanceFees().toString());
         xmlBuilder.endTag("td");
         xmlBuilder.startTag("td", "align", "right", "class", "drawtablerow");
-        xmlBuilder.text(loanRecentActivityView.getRunningBalancePrinciple().add(
-                loanRecentActivityView.getRunningBalanceInterest()).add(loanRecentActivityView.getRunningBalanceFees())
-                .toString());
+        xmlBuilder.text(loanRecentActivityView.getRunningBalancePrincipleWithInterestAndFees());
         xmlBuilder.endTag("td");
         xmlBuilder.startTag("td", "align", "right", "class", "fontnormalbold");
         xmlBuilder.singleTag("br");

@@ -80,7 +80,6 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -145,6 +144,8 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -822,13 +823,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         Integer accountId = Integer.valueOf(request.getParameter(ACCOUNT_ID));
 
-        LoanInstallmentDetailsDto loanInstallmentDetailsDto = this.loanServiceFacade
-                .retrieveInstallmentDetails(accountId);
+        LoanInstallmentDetailsDto loanInstallmentDetailsDto = this.loanAccountServiceFacade.retrieveInstallmentDetails(accountId);
 
-        SessionUtils.setAttribute(VIEW_UPCOMING_INSTALLMENT_DETAILS, loanInstallmentDetailsDto
-                .getUpcomingInstallmentDetails(), request);
-        SessionUtils.setAttribute(VIEW_OVERDUE_INSTALLMENT_DETAILS, loanInstallmentDetailsDto
-                .getOverDueInstallmentDetails(), request);
+        SessionUtils.setAttribute(VIEW_UPCOMING_INSTALLMENT_DETAILS, loanInstallmentDetailsDto.getUpcomingInstallmentDetails(), request);
+        SessionUtils.setAttribute(VIEW_OVERDUE_INSTALLMENT_DETAILS, loanInstallmentDetailsDto.getOverDueInstallmentDetails(), request);
         SessionUtils.setAttribute(TOTAL_AMOUNT_OVERDUE, loanInstallmentDetailsDto.getTotalAmountDue(), request);
         SessionUtils.setAttribute(NEXTMEETING_DATE, loanInstallmentDetailsDto.getNextMeetingDate(), request);
 
@@ -842,8 +840,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         String globalAccountNum = request.getParameter(GLOBAL_ACCOUNT_NUM);
 
-        List<LoanActivityDto> allLoanAccountActivities = this.loanServiceFacade
-                .retrieveAllLoanAccountActivities(globalAccountNum);
+        List<LoanActivityDto> allLoanAccountActivities = this.loanAccountServiceFacade.retrieveAllLoanAccountActivities(globalAccountNum);
 
         SessionUtils.setCollectionAttribute(LOAN_ALL_ACTIVITY_VIEW, allLoanAccountActivities, request);
         return mapping.findForward(MethodNameConstants.GETALLACTIVITY_SUCCESS);

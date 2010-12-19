@@ -26,6 +26,8 @@ import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanAccountInfoDto;
@@ -72,4 +74,10 @@ public interface LoanAccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId);
 }

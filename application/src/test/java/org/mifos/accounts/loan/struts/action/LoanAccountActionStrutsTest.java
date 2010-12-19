@@ -54,11 +54,9 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
-import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
@@ -108,7 +106,9 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.InstallmentDetailsDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.audit.business.AuditLog;
@@ -478,10 +478,10 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
         InstallmentDetailsDto view = (InstallmentDetailsDto) SessionUtils.getAttribute(
                 LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS, request);
-        Assert.assertEquals(new Money(getCurrency(), "12.0"), view.getInterest());
-        Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getFees());
-        Assert.assertEquals(new Money(getCurrency(), "0.0"), view.getPenalty());
-        Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getPrincipal());
+        Assert.assertEquals("12.0", view.getInterest());
+        Assert.assertEquals("100.0", view.getFees());
+        Assert.assertEquals("0.0", view.getPenalty());
+        Assert.assertEquals("100.0", view.getPrincipal());
     }
 
     public void testGet() throws Exception {

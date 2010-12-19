@@ -26,21 +26,18 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
-import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
@@ -49,6 +46,7 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -61,6 +59,8 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReverseLoanDisbursalAction extends BaseAction {
 
@@ -214,9 +214,9 @@ public class ReverseLoanDisbursalAction extends BaseAction {
                         amount = accountPayment.getAmount();
                     }
                     if (amount.isGreaterThanZero()) {
-                        LoanActivityDto loanActivityDto = new LoanActivityDto(amount.getCurrency());
+                        LoanActivityDto loanActivityDto = new LoanActivityDto();
                         loanActivityDto.setActionDate(accountPayment.getPaymentDate());
-                        loanActivityDto.setTotal(amount);
+                        loanActivityDto.setTotal(amount.toString());
                         payments.add(0, loanActivityDto);
                     }
                 }

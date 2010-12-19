@@ -37,21 +37,17 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
-import org.mifos.accounts.business.InstallmentDetailsDto;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.AccountFeesDto;
@@ -65,7 +61,6 @@ import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentValidationContext;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
-import org.mifos.accounts.loan.struts.action.LoanInstallmentDetailsDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.CashFlowDataHtmlBean;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
@@ -86,7 +81,6 @@ import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -109,6 +103,7 @@ import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -497,63 +492,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     @Override
-    public List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum) {
-
-        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
-        List<LoanActivityEntity> loanAccountActivityDetails = loan.getLoanActivityDetails();
-        List<LoanActivityDto> loanActivityViewSet = new ArrayList<LoanActivityDto>();
-        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
-            loanActivityViewSet.add(loanActivity.toDto());
-        }
-
-        return loanActivityViewSet;
-    }
-
-    @Override
-    public LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId) {
-
-        LoanBO loanBO = this.loanDao.findById(accountId);
-
-        InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO
-                .getDetailsOfNextInstallment(), loanBO.getCurrency());
-        InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO
-                .getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
-        Money totalAmountDue = viewUpcomingInstallmentDetails.getSubTotal().add(
-                viewOverDueInstallmentDetails.getSubTotal());
-
-        return new LoanInstallmentDetailsDto(viewUpcomingInstallmentDetails, viewOverDueInstallmentDetails,
-                totalAmountDue, loanBO.getNextMeetingDate());
-    }
-
-    private InstallmentDetailsDto getUpcomingInstallmentDetails(
-            final AccountActionDateEntity upcomingAccountActionDate, final MifosCurrency currency) {
-        if (upcomingAccountActionDate != null) {
-            LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) upcomingAccountActionDate;
-            return new InstallmentDetailsDto(upcomingInstallment.getPrincipalDue(), upcomingInstallment
-                    .getInterestDue(), upcomingInstallment.getTotalFeeDueWithMiscFeeDue(), upcomingInstallment
-                    .getPenaltyDue());
-        }
-        return new InstallmentDetailsDto(new Money(currency), new Money(currency), new Money(currency), new Money(
-                currency));
-    }
-
-    private InstallmentDetailsDto getOverDueInstallmentDetails(
-            final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
-        Money principalDue = new Money(currency);
-        Money interestDue = new Money(currency);
-        Money feesDue = new Money(currency);
-        Money penaltyDue = new Money(currency);
-        for (AccountActionDateEntity accountActionDate : overDueInstallmentList) {
-            LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDate;
-            principalDue = principalDue.add(installment.getPrincipalDue());
-            interestDue = interestDue.add(installment.getInterestDue());
-            feesDue = feesDue.add(installment.getTotalFeeDueWithMiscFeeDue());
-            penaltyDue = penaltyDue.add(installment.getPenaltyDue());
-        }
-        return new InstallmentDetailsDto(principalDue, interestDue, feesDue, penaltyDue);
-    }
-
-    @Override
     public boolean isTrxnDateValid(Integer loanAccountId, Date trxnDate) throws ApplicationException {
 
         LoanBO loan = this.loanDao.findById(loanAccountId);
@@ -736,21 +674,24 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     }
 
     private LoanActivityDto getLoanActivityView(final LoanActivityEntity loanActivity) {
-        LoanActivityDto loanActivityDto = new LoanActivityDto(loanActivity.getAccount().getCurrency());
+        LoanActivityDto loanActivityDto = new LoanActivityDto();
         loanActivityDto.setId(loanActivity.getAccount().getAccountId());
         loanActivityDto.setActionDate(loanActivity.getTrxnCreatedDate());
         loanActivityDto.setActivity(loanActivity.getComments());
-        loanActivityDto.setPrincipal(removeSign(loanActivity.getPrincipal()));
-        loanActivityDto.setInterest(removeSign(loanActivity.getInterest()));
-        loanActivityDto.setPenalty(removeSign(loanActivity.getPenalty()));
-        loanActivityDto.setFees(removeSign(loanActivity.getFee()));
-        loanActivityDto.setTotal(removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
-                removeSign(loanActivity.getPrincipal())).add(removeSign(loanActivity.getInterest())));
+        loanActivityDto.setPrincipal(removeSign(loanActivity.getPrincipal()).toString());
+        loanActivityDto.setInterest(removeSign(loanActivity.getInterest()).toString());
+        loanActivityDto.setPenalty(removeSign(loanActivity.getPenalty()).toString());
+        loanActivityDto.setFees(removeSign(loanActivity.getFee()).toString());
+        Money total = removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
+                removeSign(loanActivity.getPrincipal())).add(removeSign(loanActivity.getInterest()));
+        loanActivityDto.setTotal(total.toString());
         loanActivityDto.setTimeStamp(loanActivity.getTrxnCreatedDate());
-        loanActivityDto.setRunningBalanceInterest(loanActivity.getInterestOutstanding());
-        loanActivityDto.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding());
-        loanActivityDto.setRunningBalanceFees(loanActivity.getFeeOutstanding());
-        loanActivityDto.setRunningBalancePenalty(loanActivity.getPenaltyOutstanding());
+        loanActivityDto.setRunningBalanceInterest(loanActivity.getInterestOutstanding().toString());
+        loanActivityDto.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding().toString());
+        loanActivityDto.setRunningBalanceFees(loanActivity.getFeeOutstanding().toString());
+        loanActivityDto.setRunningBalancePenalty(loanActivity.getPenaltyOutstanding().toString());
+
+        loanActivityDto.setRunningBalancePrincipleWithInterestAndFees(loanActivity.getPrincipalOutstanding().add(loanActivity.getInterestOutstanding()).add(loanActivity.getFeeOutstanding()).toString());
 
         return loanActivityDto;
     }

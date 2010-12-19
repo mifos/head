@@ -25,6 +25,7 @@ import java.util.Date;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
@@ -161,20 +162,22 @@ public class LoanActivityEntity extends AbstractEntity {
     }
 
     public LoanActivityDto toDto() {
-        LoanActivityDto loanActivityDto = new LoanActivityDto(this.account.getCurrency());
+        LoanActivityDto loanActivityDto = new LoanActivityDto();
         loanActivityDto.setId(this.account.getAccountId());
         loanActivityDto.setActionDate(this.trxnCreatedDate);
         loanActivityDto.setActivity(this.comments);
-        loanActivityDto.setPrincipal(removeSign(this.principal));
-        loanActivityDto.setInterest(removeSign(this.interest));
-        loanActivityDto.setPenalty(removeSign(this.penalty));
-        loanActivityDto.setFees(removeSign(this.fee));
-        loanActivityDto.setTotal(removeSign(this.fee).add(removeSign(this.penalty)).add(removeSign(this.principal)).add(removeSign(this.interest)));
+        loanActivityDto.setPrincipal(removeSign(this.principal).toString());
+        loanActivityDto.setInterest(removeSign(this.interest).toString());
+        loanActivityDto.setPenalty(removeSign(this.penalty).toString());
+        loanActivityDto.setFees(removeSign(this.fee).toString());
+        Money total = removeSign(this.fee).add(removeSign(this.penalty)).add(removeSign(this.principal)).add(removeSign(this.interest));
+        loanActivityDto.setTotal(total.toString());
         loanActivityDto.setTimeStamp(this.trxnCreatedDate);
-        loanActivityDto.setRunningBalanceInterest(this.interestOutstanding);
-        loanActivityDto.setRunningBalancePrinciple(this.principalOutstanding);
-        loanActivityDto.setRunningBalanceFees(this.feeOutstanding);
-        loanActivityDto.setRunningBalancePenalty(this.penaltyOutstanding);
+        loanActivityDto.setRunningBalanceInterest(this.interestOutstanding.toString());
+        loanActivityDto.setRunningBalancePrinciple(this.principalOutstanding.toString());
+        loanActivityDto.setRunningBalanceFees(this.feeOutstanding.toString());
+        loanActivityDto.setRunningBalancePenalty(this.penaltyOutstanding.toString());
+        loanActivityDto.setRunningBalancePrincipleWithInterestAndFees(this.principalOutstanding.add(this.interestOutstanding).add(this.feeOutstanding).toString());
 
         return loanActivityDto;
     }

@@ -18,43 +18,34 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.loan.business;
+package org.mifos.dto.domain;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Locale;
 
-import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-
-public class LoanActivityDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+public class LoanActivityDto implements Serializable {
 
     private Integer id;
     private Date actionDate;
     private String activity;
-    private Money principal;
-    private Money interest;
-    private Money fees;
-    private Money penalty;
-    private Money total;
-    private Money runningBalancePrinciple;
-    private Money runningBalanceInterest;
-    private Money runningBalanceFees;
-    private Money runningBalancePenalty;
+    private String principal;
+    private String interest;
+    private String fees;
+    private String penalty;
+    private String total;
+    private String runningBalancePrinciple;
+    private String runningBalanceInterest;
+    private String runningBalanceFees;
+    private String runningBalancePenalty;
     private Locale locale = null;
     private java.sql.Timestamp timeStamp;
+    private String runningBalancePrincipleWithInterestAndFees;
+//    private String userPrefferedDate;
 
-    public LoanActivityDto(MifosCurrency currency) {
-        this.principal = new Money(currency);
-        this.interest = new Money(currency);
-        this.fees = new Money(currency);
-        this.penalty = new Money(currency);
-        this.total = new Money(currency);
-        this.runningBalancePrinciple = new Money(currency);
-        this.runningBalanceInterest = new Money(currency);
-        this.runningBalanceFees = new Money(currency);
-        this.runningBalancePenalty = new Money(currency);
+    public LoanActivityDto() {
     }
 
     public Date getActionDate() {
@@ -73,11 +64,11 @@ public class LoanActivityDto implements DataTransferObject {
         this.activity = activity;
     }
 
-    public Money getFees() {
+    public String getFees() {
         return fees;
     }
 
-    public void setFees(Money fees) {
+    public void setFees(String fees) {
         this.fees = fees;
     }
 
@@ -89,11 +80,11 @@ public class LoanActivityDto implements DataTransferObject {
         this.id = id;
     }
 
-    public Money getInterest() {
+    public String getInterest() {
         return interest;
     }
 
-    public void setInterest(Money interest) {
+    public void setInterest(String interest) {
         this.interest = interest;
     }
 
@@ -105,43 +96,43 @@ public class LoanActivityDto implements DataTransferObject {
         this.locale = locale;
     }
 
-    public Money getPenalty() {
+    public String getPenalty() {
         return penalty;
     }
 
-    public void setPenalty(Money penalty) {
+    public void setPenalty(String penalty) {
         this.penalty = penalty;
     }
 
-    public Money getPrincipal() {
+    public String getPrincipal() {
         return principal;
     }
 
-    public void setPrincipal(Money principal) {
+    public void setPrincipal(String principal) {
         this.principal = principal;
     }
 
-    public Money getRunningBalanceFees() {
+    public String getRunningBalanceFees() {
         return runningBalanceFees;
     }
 
-    public void setRunningBalanceFees(Money runningBalanceFees) {
+    public void setRunningBalanceFees(String runningBalanceFees) {
         this.runningBalanceFees = runningBalanceFees;
     }
 
-    public Money getRunningBalanceInterest() {
+    public String getRunningBalanceInterest() {
         return runningBalanceInterest;
     }
 
-    public void setRunningBalanceInterest(Money runningBalanceInterest) {
+    public void setRunningBalanceInterest(String runningBalanceInterest) {
         this.runningBalanceInterest = runningBalanceInterest;
     }
 
-    public Money getRunningBalancePrinciple() {
+    public String getRunningBalancePrinciple() {
         return runningBalancePrinciple;
     }
 
-    public void setRunningBalancePrinciple(Money runningBalancePrinciple) {
+    public void setRunningBalancePrinciple(String runningBalancePrinciple) {
         this.runningBalancePrinciple = runningBalancePrinciple;
     }
 
@@ -153,24 +144,38 @@ public class LoanActivityDto implements DataTransferObject {
         this.timeStamp = timeStamp;
     }
 
-    public Money getTotal() {
+    public String getTotal() {
         return total;
     }
 
-    public void setTotal(Money total) {
+    public void setTotal(String total) {
         this.total = total;
     }
 
-    public Money getRunningBalancePenalty() {
+    public String getRunningBalancePenalty() {
         return runningBalancePenalty;
     }
 
-    public void setRunningBalancePenalty(Money runningBalancePenalty) {
+    public void setRunningBalancePenalty(String runningBalancePenalty) {
         this.runningBalancePenalty = runningBalancePenalty;
     }
 
-    public String getUserPrefferedDate() {
-        return DateUtils.getUserLocaleDate(getLocale(), getActionDate().toString());
+//    public String getUserPrefferedDate() {
+//        return userPrefferedDate;
+//        return DateUtils.getUserLocaleDate(getLocale(), getActionDate().toString());
+//    }
+
+//    public void setUserPrefferedDate(String userPrefferedDate) {
+//        this.userPrefferedDate = userPrefferedDate;
+//    }
+
+    public String getRunningBalancePrincipleWithInterestAndFees() {
+        return runningBalancePrincipleWithInterestAndFees;
     }
+
+    public void setRunningBalancePrincipleWithInterestAndFees(String runningBalancePrincipleWithInterestAndFees) {
+        this.runningBalancePrincipleWithInterestAndFees = runningBalancePrincipleWithInterestAndFees;
+    }
+
 
 }

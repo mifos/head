@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
+import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateMachines;
@@ -17,7 +18,9 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
+import org.mifos.accounts.loan.business.LoanActivityEntity;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
@@ -37,6 +40,7 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
+import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
@@ -62,7 +66,10 @@ import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.InstallmentDetailsDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.domain.LoanActivityDto;
+import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -665,19 +672,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                     redoLoan.applyPayment(paymentData);
                 }
             }
-//            PaymentData payment;
-//
-//            for (PaymentDataTemplate template : paymentDataBeans) {
-//                if (template.hasValidAmount() && template.getTransactionDate() != null) {
-//                    if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),
-//                            DateUtils.getLastDayOfNextYear())) {
-//                        throw new BusinessRuleException("errors.invalidTxndate");
-//                    }
-//                    payment = PaymentData.createPaymentData(template);
-//                    redoLoan.applyPayment(payment);
-//                }
-//            }
-
             return redoLoan;
         } catch (MeetingException e) {
                 throw new MifosRuntimeException(e);
@@ -715,5 +709,64 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         return new LoanDisbursalDto(loan.getAccountId(), proposedDate, loan.getLoanAmount().toString(), loan.getAmountTobePaidAtdisburtail().toString());
+    }
+
+    @Override
+    public List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum) {
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        List<LoanActivityEntity> loanAccountActivityDetails = loan.getLoanActivityDetails();
+        List<LoanActivityDto> loanActivityViewSet = new ArrayList<LoanActivityDto>();
+        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
+            loanActivityViewSet.add(loanActivity.toDto());
+        }
+
+        return loanActivityViewSet;
+    }
+
+    @Override
+    public LoanInstallmentDetailsDto retrieveInstallmentDetails(Integer accountId) {
+
+        LoanBO loanBO = this.loanDao.findById(accountId);
+
+        InstallmentDetailsDto viewUpcomingInstallmentDetails = getUpcomingInstallmentDetails(loanBO.getDetailsOfNextInstallment(), loanBO.getCurrency());
+        InstallmentDetailsDto viewOverDueInstallmentDetails = getOverDueInstallmentDetails(loanBO.getDetailsOfInstallmentsInArrears(), loanBO.getCurrency());
+
+        Money upcomingInstallmentSubTotal = new Money(loanBO.getCurrency(), viewUpcomingInstallmentDetails.getSubTotal());
+        Money overdueInstallmentSubTotal = new Money(loanBO.getCurrency(), viewOverDueInstallmentDetails.getSubTotal());
+        Money totalAmountDue = upcomingInstallmentSubTotal.add(overdueInstallmentSubTotal);
+
+        return new LoanInstallmentDetailsDto(viewUpcomingInstallmentDetails, viewOverDueInstallmentDetails,
+                totalAmountDue.toString(), loanBO.getNextMeetingDate());
+    }
+
+    private InstallmentDetailsDto getUpcomingInstallmentDetails(
+            final AccountActionDateEntity upcomingAccountActionDate, final MifosCurrency currency) {
+        if (upcomingAccountActionDate != null) {
+            LoanScheduleEntity upcomingInstallment = (LoanScheduleEntity) upcomingAccountActionDate;
+            Money subTotal = upcomingInstallment.getPrincipalDue().add(upcomingInstallment.getInterestDue()).add(upcomingInstallment.getTotalFeesDueWithMiscFee()).add(upcomingInstallment.getPenaltyDue());
+            return new InstallmentDetailsDto(upcomingInstallment.getPrincipalDue().toString(), upcomingInstallment
+                    .getInterestDue().toString(), upcomingInstallment.getTotalFeeDueWithMiscFeeDue().toString(), upcomingInstallment
+                    .getPenaltyDue().toString(), subTotal.toString());
+        }
+        String zero = new Money(currency).toString();
+        return new InstallmentDetailsDto(zero, zero, zero, zero, zero);
+    }
+
+    private InstallmentDetailsDto getOverDueInstallmentDetails(
+            final List<AccountActionDateEntity> overDueInstallmentList, final MifosCurrency currency) {
+        Money principalDue = new Money(currency);
+        Money interestDue = new Money(currency);
+        Money feesDue = new Money(currency);
+        Money penaltyDue = new Money(currency);
+        for (AccountActionDateEntity accountActionDate : overDueInstallmentList) {
+            LoanScheduleEntity installment = (LoanScheduleEntity) accountActionDate;
+            principalDue = principalDue.add(installment.getPrincipalDue());
+            interestDue = interestDue.add(installment.getInterestDue());
+            feesDue = feesDue.add(installment.getTotalFeeDueWithMiscFeeDue());
+            penaltyDue = penaltyDue.add(installment.getPenaltyDue());
+        }
+        Money subTotal = principalDue.add(interestDue).add(feesDue).add(penaltyDue);
+        return new InstallmentDetailsDto(principalDue.toString(), interestDue.toString(), feesDue.toString(), penaltyDue.toString(), subTotal.toString());
     }
 }

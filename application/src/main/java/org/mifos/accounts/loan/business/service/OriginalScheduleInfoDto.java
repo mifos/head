@@ -2,10 +2,10 @@ package org.mifos.accounts.loan.business.service;
 
 import org.mifos.accounts.business.AccountCustomFieldEntity;
 import org.mifos.accounts.business.AccountNotesEntity;
-import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.customers.api.DataTransferObject;
+import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.framework.util.helpers.Money;
 

@@ -30,16 +30,13 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.LoanActivityDto;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
@@ -57,12 +54,6 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.SystemException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
@@ -106,81 +97,6 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         Assert.assertEquals(Short.valueOf("1"), loanBO.get(0).getAccountType().getAccountTypeId());
         Assert.assertNotNull(loanBO.size());
 
-    }
-
-    @Test
-    public void testGetRecentActivityView() throws SystemException, NumberFormatException, ApplicationException {
-        Date startDate = new Date(System.currentTimeMillis());
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + "_Center_Active", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + "_Group",
-                CustomerStatus.GROUP_ACTIVE, center);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
-        accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
-        StaticHibernateUtil.flushSession();
-
-        applyPayments();
-
-        accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-        List<LoanActivityDto> loanRecentActivityView = loanBusinessService.getRecentActivityView(accountBO
-                .getGlobalAccountNum());
-
-        Assert.assertEquals(3, loanRecentActivityView.size());
-        Assert.assertNotNull(loanRecentActivityView);
-    }
-
-    private void applyPayments() throws PersistenceException {
-        Set<AccountActionDateEntity> actionDates = accountBO.getAccountActionDates();
-        // Is this always true or does it depend on System.currentTimeMillis?
-        // Assert.assertEquals(6, actionDates.size());
-        for (AccountActionDateEntity actionDate : actionDates) {
-            Assert.assertNotNull(actionDate);
-            accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-            PaymentData paymentData = createPaymentViewObject(accountBO);
-            IntegrationTestObjectMother.applyAccountPayment(accountBO, paymentData);
-            TestObjectFactory.updateObject(accountBO);
-        }
-    }
-
-    @Test
-    public void testGetAllActivityView() throws SystemException, NumberFormatException, ApplicationException {
-        Date startDate = new Date(System.currentTimeMillis());
-        MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + "_Center_Active", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + "_Group",
-                CustomerStatus.GROUP_ACTIVE, center);
-        LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
-        accountBO = TestObjectFactory.createLoanAccount("42423142341", group,
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
-        StaticHibernateUtil.flushSession();
-
-        applyPayments();
-        StaticHibernateUtil.flushAndClearSession();
-
-        accountBO = accountPersistence.getAccount(accountBO.getAccountId());
-        List<LoanActivityDto> loanAllActivityView = loanBusinessService.getAllActivityView(accountBO.getGlobalAccountNum());
-        Assert.assertNotNull(loanAllActivityView);
-        Assert.assertEquals(6, loanAllActivityView.size());
-
-        // get first loan activity created which is last in the list because
-        // hibernate is configured order-by "ID desc"
-        LoanActivityDto view = loanAllActivityView.get(5);
-        Assert.assertNotNull(view.getActivity());
-        Assert.assertNotNull(view.getUserPrefferedDate());
-        Assert.assertNotNull(view.getActionDate().getTime());
-        Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getFees());
-        Assert.assertNotNull(view.getId());
-        Assert.assertEquals(new Money(getCurrency(), "12.0"), view.getInterest());
-        Assert.assertNull(view.getLocale());
-        Assert.assertEquals(new Money(getCurrency(), "0.0"), view.getPenalty());
-        Assert.assertEquals(new Money(getCurrency(), "100.0"), view.getPrincipal());
-        Assert.assertEquals(new Money(getCurrency(), "212.0"), view.getTotal());
-        Assert.assertNotNull(view.getTimeStamp());
-        Assert.assertEquals(new Money(getCurrency(), "-100.0"), view.getRunningBalanceFees());
-        Assert.assertEquals(new Money(getCurrency(), "24.0"), view.getRunningBalanceInterest());
-        Assert.assertEquals(new Money(getCurrency(), "0.0"), view.getRunningBalancePenalty());
-        Assert.assertEquals(new Money(getCurrency(), "200.0"), view.getRunningBalancePrinciple());
     }
 
     @Test
@@ -239,7 +155,5 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
         verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
                 accountBusinessServiceMock);
-
     }
-
 }

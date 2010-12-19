@@ -18,49 +18,51 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.business;
+package org.mifos.dto.domain;
 
-import org.mifos.customers.api.DataTransferObject;
-import org.mifos.framework.util.helpers.Money;
+import java.io.Serializable;
 
-public class InstallmentDetailsDto implements DataTransferObject {
+import org.apache.commons.lang.StringUtils;
 
-    private final Money principal;
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+public class InstallmentDetailsDto implements Serializable {
 
-    private final Money interest;
+    private final String principal;
+    private final String interest;
+    private final String fees;
+    private final String penalty;
+    private String subTotal;
 
-    private final Money fees;
-
-    private final Money penalty;
-
-    public InstallmentDetailsDto(Money principal, Money interest, Money fees, Money penalty) {
-        if (principal == null || interest == null || fees == null || penalty == null) {
+    public InstallmentDetailsDto(String principal, String interest, String fees, String penalty, String subTotal) {
+        if (StringUtils.isBlank(principal) || StringUtils.isBlank(interest) ||
+            StringUtils.isBlank(fees) || StringUtils.isBlank(penalty) || StringUtils.isBlank(subTotal)) {
             throw new IllegalArgumentException("Illegal null argument passed");
         }
         this.principal = principal;
         this.interest = interest;
         this.fees = fees;
         this.penalty = penalty;
+        this.subTotal = subTotal;
     }
 
-    public Money getFees() {
+    public String getFees() {
         return fees;
     }
 
-    public Money getInterest() {
+    public String getInterest() {
         return interest;
     }
 
-    public Money getPenalty() {
+    public String getPenalty() {
         return penalty;
     }
 
-    public Money getPrincipal() {
+    public String getPrincipal() {
         return principal;
     }
 
-    public Money getSubTotal() {
-        return this.principal.add(this.interest).add(this.fees).add(this.penalty);
+    public String getSubTotal() {
+        return this.subTotal;
     }
-
 }

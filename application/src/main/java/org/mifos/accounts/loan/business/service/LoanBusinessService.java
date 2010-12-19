@@ -20,18 +20,26 @@
 
 package org.mifos.accounts.loan.business.service;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.loan.business.*;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.LoanScheduleEntity;
+import org.mifos.accounts.loan.business.OriginalLoanScheduleEntity;
+import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.service.HolidayService;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
@@ -43,12 +51,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
 
 public class LoanBusinessService implements BusinessService {
 
@@ -124,62 +126,6 @@ public class LoanBusinessService implements BusinessService {
             throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
                     new Object[] { accountId });
         }
-    }
-
-    public List<LoanActivityDto> getRecentActivityView(final String globalAccountNumber) throws ServiceException {
-        LoanBO loanBO = findBySystemId(globalAccountNumber);
-        List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
-        List<LoanActivityDto> recentActivityView = new ArrayList<LoanActivityDto>();
-
-        int count = 0;
-        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
-            recentActivityView.add(getLoanActivityView(loanActivity));
-            if (++count == 3) {
-                break;
-            }
-        }
-        return recentActivityView;
-    }
-
-    /**
-     */
-    @Deprecated
-    public List<LoanActivityDto> getAllActivityView(final String globalAccountNumber) throws ServiceException {
-        LoanBO loanBO = findBySystemId(globalAccountNumber);
-        List<LoanActivityEntity> loanAccountActivityDetails = loanBO.getLoanActivityDetails();
-        List<LoanActivityDto> loanActivityViewSet = new ArrayList<LoanActivityDto>();
-        for (LoanActivityEntity loanActivity : loanAccountActivityDetails) {
-            loanActivityViewSet.add(getLoanActivityView(loanActivity));
-        }
-        return loanActivityViewSet;
-    }
-
-    private LoanActivityDto getLoanActivityView(final LoanActivityEntity loanActivity) {
-        LoanActivityDto loanActivityDto = new LoanActivityDto(loanActivity.getAccount().getCurrency());
-        loanActivityDto.setId(loanActivity.getAccount().getAccountId());
-        loanActivityDto.setActionDate(loanActivity.getTrxnCreatedDate());
-        loanActivityDto.setActivity(loanActivity.getComments());
-        loanActivityDto.setPrincipal(removeSign(loanActivity.getPrincipal()));
-        loanActivityDto.setInterest(removeSign(loanActivity.getInterest()));
-        loanActivityDto.setPenalty(removeSign(loanActivity.getPenalty()));
-        loanActivityDto.setFees(removeSign(loanActivity.getFee()));
-        loanActivityDto.setTotal(removeSign(loanActivity.getFee()).add(removeSign(loanActivity.getPenalty())).add(
-                removeSign(loanActivity.getPrincipal())).add(removeSign(loanActivity.getInterest())));
-        loanActivityDto.setTimeStamp(loanActivity.getTrxnCreatedDate());
-        loanActivityDto.setRunningBalanceInterest(loanActivity.getInterestOutstanding());
-        loanActivityDto.setRunningBalancePrinciple(loanActivity.getPrincipalOutstanding());
-        loanActivityDto.setRunningBalanceFees(loanActivity.getFeeOutstanding());
-        loanActivityDto.setRunningBalancePenalty(loanActivity.getPenaltyOutstanding());
-
-        return loanActivityDto;
-    }
-
-    private Money removeSign(final Money amount) {
-        if (amount != null && amount.isLessThanZero()) {
-            return amount.negate();
-        }
-
-        return amount;
     }
 
     /**
