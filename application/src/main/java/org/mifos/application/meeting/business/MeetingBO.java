@@ -27,7 +27,6 @@ import java.util.Locale;
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.mifos.application.holiday.util.helpers.HolidayUtils;
 import org.mifos.application.meeting.MeetingTemplate;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingConstants;
@@ -265,7 +264,8 @@ public class MeetingBO extends AbstractBusinessObject {
         Date currentScheduleDate = currentScheduleDateTime.toDate();
         Calendar c = Calendar.getInstance();
         c.setTime(currentScheduleDate);
-        currentScheduleDate = HolidayUtils.getNextWorkingDay(c).getTime();
+        currentScheduleDate = getNextWorkingDay(c).getTime();
+
         Date meetingDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(meetingDate.getTime());
         Date endDateWOTimeStamp = DateUtils.getDateWithoutTimeStamp(endDate.getTime());
         if (meetingDateWOTimeStamp.compareTo(endDateWOTimeStamp) > 0) {
@@ -276,7 +276,7 @@ public class MeetingBO extends AbstractBusinessObject {
                 && currentScheduleDate.compareTo(endDateWOTimeStamp) < 0) {
             currentScheduleDate = findNextMatchingDate(new DateTime(currentScheduleDate)).toDate();
             c.setTime(currentScheduleDate);
-            currentScheduleDate = HolidayUtils.getNextWorkingDay(c).getTime();
+            currentScheduleDate = getNextWorkingDay(c).getTime();
         }
 
         boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
@@ -287,6 +287,13 @@ public class MeetingBO extends AbstractBusinessObject {
         // match
         return currentScheduleDate.compareTo(endDateWOTimeStamp) <= 0
                 && currentScheduleDate.compareTo(meetingDateWOTimeStamp) == 0;
+    }
+
+    private Calendar getNextWorkingDay(final Calendar day) {
+        while (!new FiscalCalendarRules().isWorkingDay(day)) {
+            day.add(Calendar.DATE, 1);
+        }
+        return day;
     }
 
     public boolean isValidMeetingDate(final Date meetingDate, final int occurrences) throws MeetingException {
