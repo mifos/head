@@ -23,34 +23,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
-import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 
 import static java.util.Collections.EMPTY_LIST;
 import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WebTierAccountServiceFacadeTest {
@@ -76,7 +67,12 @@ public class WebTierAccountServiceFacadeTest {
 
     @Before
     public void setUp() throws Exception {
-        accountServiceFacade = new WebTierAccountServiceFacade(null, null, accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence);
+        accountServiceFacade = new WebTierAccountServiceFacade(null, null, accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence){
+            @Override
+            void clearSessionAndRollback() {
+                // do nothing
+            }
+        };
         rupee = new MifosCurrency(Short.valueOf("1"), "Rupee", BigDecimal.valueOf(1), "INR");
     }
 

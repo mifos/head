@@ -43,6 +43,7 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 
 /**
@@ -207,6 +208,10 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         return outstandingLoanFeesGroupedByCustomerId;
     }
 
+    private String currentDateAsString() {
+        return new LocalDate(DateUtils.getCurrentDateWithoutTimeStamp()).toString();
+    }
+
     @SuppressWarnings("unchecked")
     public Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> findAccountCollectionsOnCustomerAccount(
             final Short branchId, final String searchId, final LocalDate transactionDate,
@@ -214,7 +219,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         final Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerAtTopOfHierarchyId);
-        queryParameters.put("TRANSACTION_DATE", transactionDate.toString());
+        queryParameters.put("TRANSACTION_DATE", currentDateAsString());
 
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> accountCollectionsOnCustomerAccountGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerAccountCollectionDto>>();
 
@@ -230,7 +235,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         final Map<String, Object> withinHierarchyQueryParameters = new HashMap<String, Object>();
         withinHierarchyQueryParameters.put("BRANCH_ID", branchId);
         withinHierarchyQueryParameters.put("SEARCH_ID", searchId);
-        withinHierarchyQueryParameters.put("TRANSACTION_DATE", transactionDate.toString());
+        withinHierarchyQueryParameters.put("TRANSACTION_DATE", currentDateAsString());
 
         final List<CollectionSheetCustomerAccountCollectionDto> customerAccountFees = executeNamedQueryWithResultTransformer(
                 "findAccountCollectionsOnCustomerAccountForCustomerHierarchyAsDto", withinHierarchyQueryParameters,
@@ -263,7 +268,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
         final Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerAtTopOfHierarchyId);
-        queryParameters.put("TRANSACTION_DATE", transactionDate.toString());
+        queryParameters.put("TRANSACTION_DATE", currentDateAsString());
 
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> accountCollectionsOnCustomerAccountGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerAccountCollectionDto>>();
 
@@ -279,7 +284,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
         final Map<String, Object> withinHierarchyQueryParameters = new HashMap<String, Object>();
         withinHierarchyQueryParameters.put("BRANCH_ID", branchId);
         withinHierarchyQueryParameters.put("SEARCH_ID", searchId);
-        withinHierarchyQueryParameters.put("TRANSACTION_DATE", transactionDate.toString());
+        withinHierarchyQueryParameters.put("TRANSACTION_DATE", currentDateAsString());
 
         final List<CollectionSheetCustomerAccountCollectionDto> customerAccountFees = executeNamedQueryWithResultTransformer(
                 "findOutstandingFeesForCustomerAccountOnCustomerHierarchyAsDto", withinHierarchyQueryParameters,

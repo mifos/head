@@ -80,6 +80,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.CashFlowDataAdaptor;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -89,7 +90,6 @@ import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.InstallmentAndCashflowComparisionUtility;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
@@ -596,20 +596,25 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return forwardAfterCashflowBinding;
     }
 
+
+
+
     private boolean bindCashflowIfPresent(final HttpServletRequest request, final ActionForm form) throws Exception {
         boolean cashflowBound = false;
+
         UserContext userContext = getUserContext(request);
         LoanAccountActionForm loanForm = (LoanAccountActionForm) form;
         LoanOfferingBO loanOffering = getLoanOffering(loanForm.getPrdOfferingIdValue(), userContext.getLocaleId());
 
         if (loanOffering != null && loanOffering.isCashFlowCheckEnabled()) {
-            InstallmentAndCashflowComparisionUtility cashflowUtility = new InstallmentAndCashflowComparisionUtility(
+            CashFlowDataAdaptor cashflowUtility = new CashFlowDataAdaptor(
                     loanForm.getInstallments(),
                     loanForm.getCashFlowForm().getMonthlyCashFlows(),
                     loanForm.getLoanAmountAsBigDecimal(),
-                    loanForm.getDisbursementDateValue(userContext.getPreferredLocale()));
+                    loanForm.getDisbursementDateValue(userContext.getPreferredLocale()),
+                    userContext.getPreferredLocale());
 
-            loanForm.setCashflowDataHtmlBeans(cashflowUtility.mapToCashflowDataHtmlBeans());
+            loanForm.setCashflowDataDtos(cashflowUtility.getCashflowDataDtos());
             cashflowBound = true;
         }
         return cashflowBound;
@@ -658,8 +663,30 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void setAttributesForSchedulePreview(HttpServletRequest request, LoanAccountActionForm loanActionForm, DateTime disbursementDate, LoanCreationLoanScheduleDetailsDto loanScheduleDetailsDto) throws PageExpiredException {
         setGlimOnSession(request, loanActionForm, loanScheduleDetailsDto);
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, loanScheduleDetailsDto.isLoanPendingApprovalDefined(), request);
-        SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate, request);
+        SessionUtils.setAttribute(CustomerConstants.DISBURSEMENT_DATE, disbursementDate.toString("yyyy-MM-dd"), request);
         SessionUtils.setAttribute(CustomerConstants.LOAN_AMOUNT, loanActionForm.getLoanAmount(), request);
+        SessionUtils.setAttribute(CustomerConstants.INTEREST_RATE, loanActionForm.getInterestRate(), request);
+        SessionUtils.setAttribute(CustomerConstants.NO_OF_INSTALLMENTS, loanActionForm.getNoOfInstallments(), request);
+        SessionUtils.setAttribute(CustomerConstants.GRACE_PERIOD_DURATION, loanActionForm.getGracePeriodDuration(), request);
+        FundBO fund = getFund(loanActionForm);
+        SessionUtils.setAttribute(CustomerConstants.FUND_NAME, fund != null ? fund.getFundName() : "", request);
+        SessionUtils.setAttribute(CustomerConstants.INTEREST_DEDUCTED_AT_DISBURSEMENT, loanActionForm.getIntDedDisbursement(), request);
+        SessionUtils.setAttribute(CustomerConstants.BUSINESS_ACTIVITY_ID, loanActionForm.getBusinessActivityId(), request);
+        SessionUtils.setAttribute(CustomerConstants.COLLATERAL_TYPE_ID, loanActionForm.getCollateralTypeId(), request);
+        SessionUtils.setAttribute(CustomerConstants.COLLATERAL_NOTE, loanActionForm.getCollateralNote(), request);
+        SessionUtils.setAttribute(CustomerConstants.EXTERNAL_ID, loanActionForm.getExternalId(), request);
+        List<FeeDto> originalFees = (List<FeeDto>) SessionUtils.getAttribute(ADDITIONAL_FEES_LIST, request);
+        for (FeeDto feeDto : loanActionForm.getAdditionalFees()) {
+            if (!StringUtils.isEmpty(feeDto.getFeeId())) {
+                for (FeeDto originalFee : originalFees) {
+                    if (feeDto.getFeeId().equals(originalFee.getFeeId())) {
+                        feeDto.setPeriodic(originalFee.isPeriodic());
+                        feeDto.setFeeSchedule(originalFee.getFeeSchedule());
+                    }
+                }
+            }
+        }
+        SessionUtils.setCollectionAttribute(CustomerConstants.ACCOUNT_FEES, loanActionForm.getAdditionalFees(), request);
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in schedulePreview.jsp
         setInstallmentsOnSession(request, loanActionForm);
     }
@@ -675,7 +702,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             return cashFlowAdaptor.renderCashFlow(
                     loanScheduleDetailsDto.firstInstallmentDueDate(),
                     loanScheduleDetailsDto.lastInstallmentDueDate(),
-                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request, loanOffering, loanAmount);
+                    SHOW_PREVIEW, CUSTOMER_SEARCH_URL, mapping, request, loanOffering, loanAmount, getUserContext(request).getPreferredLocale());
         }
         return mapping.findForward(ActionForwards.schedulePreview_success.toString());
     }

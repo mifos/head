@@ -157,8 +157,9 @@ public class LoanAccountActionTest {
         when(loanScheduleDetailsDto.lastInstallmentDueDate()).thenReturn(lastInstallmentDueDate);
         ActionForward cashFlowForward = new ActionForward("cashFlow");
         BigDecimal loanAmount = new BigDecimal(2000);
+        Locale locale = Locale.US;
         when(cashFlowAdaptor.renderCashFlow(eq(firstInstallmentDueDate), eq(lastInstallmentDueDate), anyString(),
-                anyString(), eq(mapping), eq(request), eq(loanOffering), eq(loanAmount))).thenReturn(cashFlowForward);
+                anyString(), eq(mapping), eq(request), eq(loanOffering), eq(loanAmount), eq(locale))).thenReturn(cashFlowForward);
         ActionForward pageAfterQuestionnaire = loanAccountAction.getPageAfterQuestionnaire(mapping, request, loanOffering,
                 loanScheduleDetailsDto, cashFlowAdaptor, loanAmount);
         assertThat(pageAfterQuestionnaire, is(cashFlowForward));
@@ -166,7 +167,7 @@ public class LoanAccountActionTest {
         verify(loanScheduleDetailsDto).firstInstallmentDueDate();
         verify(loanScheduleDetailsDto).lastInstallmentDueDate();
         verify(cashFlowAdaptor).renderCashFlow(eq(firstInstallmentDueDate), eq(lastInstallmentDueDate), anyString(),
-                anyString(), eq(mapping), eq(request), eq(loanOffering), eq(loanAmount));
+                anyString(), eq(mapping), eq(request), eq(loanOffering), eq(loanAmount), eq(locale));
     }
 
     @Test

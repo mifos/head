@@ -284,7 +284,7 @@ public class LoanServiceFacadeWebTierTest {
     public void shouldValidateForRepaymentCapacity() {
         CashFlowDetail cashFlowDetail = new CashFlowDetail(Collections.EMPTY_LIST);
         BigDecimal loanAmount = new BigDecimal(1000);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, loanAmount, 10d);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, loanAmount, 10d, Locale.US);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
         cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55).add(loanAmount));
 
@@ -310,7 +310,7 @@ public class LoanServiceFacadeWebTierTest {
         monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime.plusMonths(1),new BigDecimal(123), new BigDecimal(234),""));
         monthlyCashFlows.add(new MonthlyCashFlowDetail(dateTime.plusMonths(2),new BigDecimal(123), new BigDecimal(234),""));
         CashFlowDetail cashFlowDetail = new CashFlowDetail(monthlyCashFlows);
-        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d);
+        CashFlowForm cashFlowForm = new CashFlowForm(cashFlowDetail, false, new BigDecimal(1000), 10d, Locale.US);
         cashFlowForm.setTotalExpenses(BigDecimal.valueOf(76));
         cashFlowForm.setTotalRevenues(BigDecimal.valueOf(55));
 

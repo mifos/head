@@ -47,6 +47,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityMapper;
@@ -93,10 +94,20 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
             List<ListItem<Short>> paymentTypeList = constructPaymentTypeList(paymentType, localeId);
             AccountTypeDto accountType = AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId());
-            return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, account.getTotalPaymentDue().toString(), accountUser);
+            String totalPaymentDue = account.getTotalPaymentDue().toString();
+
+            clearSessionAndRollback();
+
+            return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, totalPaymentDue, accountUser);
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    // Exposed for testing
+    void clearSessionAndRollback() {
+        StaticHibernateUtil.getSessionTL().clear();
+        transactionHelper.rollbackTransaction();
     }
 
     private boolean isLoanPayment(String paymentType) {

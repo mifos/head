@@ -118,9 +118,9 @@ public class CollectionSheetEntryDtoPostPreviewValidator {
                 && customerAccountDto.isValidCustomerAccountAmountEntered()) {
             customerAccountAmountEntered = getDoubleValue(customerAccountDto.getCustomerAccountAmountEntered());
         }
-        if (!customerAccountDto.isValidCustomerAccountAmountEntered()
-                || !customerAccountAmountEntered.equals(customerAccountDto.getTotalAmountDue().getAmountDoubleValue())
-                && !customerAccountAmountEntered.equals(0.0)) {
+
+        if (!customerAccountDto.isValidCustomerAccountAmountEntered() ||
+                customerAccountAmountEntered < 0.0) {
             errors.add(CollectionSheetEntryConstants.BULKENTRYINVALIDACCOLLECTIONS, new ActionMessage(
                     CollectionSheetEntryConstants.BULKENTRYINVALIDACCOLLECTIONS, acCollections, parent
                             .getCustomerDetail().getDisplayName()));

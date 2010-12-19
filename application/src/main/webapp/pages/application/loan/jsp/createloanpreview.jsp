@@ -78,8 +78,18 @@ explanation of the license and how it is applied.
 		<html-el:form action="/loanAccountAction.do">
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanOffering')}" var="LoanOffering" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAccountOwner')}" var="customer" />
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="BusinessKey" />
-			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessKey')}" var="loanDisbursementDate" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanAmount')}" var="loanAmount" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestRate')}" var="interestRate" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'noOfInstallments')}" var="noOfInstallments" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'disbursementDate')}" var="disbursementDate" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'gracePeriodDuration')}" var="gracePeriodDuration" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'fundName')}" var="fundName" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'interestDeductedAtDisbursement')}" var="interestDeductedAtDisbursement" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'businessActivityId')}" var="businessActivityId" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'collateralTypeId')}" var="collateralTypeId" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'collateralNote')}" var="collateralNote" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'externalId')}" var="externalId" />
+            <c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'accountFees')}" var="accountFees" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanIndividualMonitoringIsEnabled')}" var="loanIndividualMonitoringIsEnabled" />
 			<c:set value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'loanaccountownerisagroup')}" var="loanaccountownerisagroup" />			
 			
@@ -268,7 +278,7 @@ explanation of the license and how it is applied.
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.amount" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.loanAmount}" /> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
+												:&nbsp; <span class="fontnormal"> <c:out value="${loanAmount}" /> <mifos:mifoslabel name="loan.allowed_amount"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minLoanAmount}" /> &nbsp; - &nbsp; <c:out
 														value="${loanAccountActionForm.maxLoanAmount}" />) </span>
 											</td>
 										</tr>
@@ -276,33 +286,33 @@ explanation of the license and how it is applied.
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.interest_rate" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.interestRate}" /> <mifos:mifoslabel name="loan.allowed_interest1" /> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
+												:&nbsp; <span class="fontnormal"> <c:out value="${interestRate}" /> <mifos:mifoslabel name="loan.allowed_interest1" /> <mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" /> <mifos:mifoslabel
 														name="loan.allowed_interest2" /> :&nbsp; <c:out value="${LoanOffering.minInterestRate}" />&nbsp; - &nbsp; <c:out value="${LoanOffering.maxInterestRate}" />) </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.no_of_inst" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.noOfInstallments}" /> <mifos:mifoslabel name="loan.allowed_no_of_inst"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minNoInstallments}" />&nbsp;
+												:&nbsp; <span class="fontnormal"> <c:out value="${noOfInstallments}" /> <mifos:mifoslabel name="loan.allowed_no_of_inst"></mifos:mifoslabel>&nbsp; <c:out value="${loanAccountActionForm.minNoInstallments}" />&nbsp;
 													- &nbsp; <c:out value="${loanAccountActionForm.maxNoInstallments}" />) </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.proposed_date" />
-												:&nbsp; <span class="fontnormal"><c:out value="${loanDisbursementDate}" /> </span>
+												:&nbsp; <span class="fontnormal"><c:out value="${disbursementDate}" /> </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.grace_period" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.gracePeriodDuration}" />&nbsp; <mifos:mifoslabel name="loan.inst"></mifos:mifoslabel> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${gracePeriodDuration}" />&nbsp; <mifos:mifoslabel name="loan.inst"></mifos:mifoslabel> </span>
 											</td>
 										</tr>
 										<tr>
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.source_fund" />
-												:&nbsp; <span class="fontnormal"> <c:out value="${BusinessKey.fund.fundName}" /> </span>
+												:&nbsp; <span class="fontnormal"> <c:out value="${fundName}" /> </span>
 											</td>
 										</tr>
 										<tr>
@@ -310,7 +320,7 @@ explanation of the license and how it is applied.
 												<mifos:mifoslabel name="${ConfigurationConstants.INTEREST}" />
 												<mifos:mifoslabel name="loan.interest_disb" />
 												:&nbsp; <span class="fontnormal"> <c:choose>
-														<c:when test="${BusinessKey.interestDeductedAtDisbursement}">
+														<c:when test="${interestDeductedAtDisbursement}">
 															<mifos:mifoslabel name="loan.yes" />
 														</c:when>
 														<c:otherwise>
@@ -325,7 +335,7 @@ explanation of the license and how it is applied.
 													<mifos:mifoslabel name="loan.business_work_act" keyhm="Loan.PurposeOfLoan" isManadatoryIndicationNotRequired="yes" />
 													<mifos:mifoslabel name="${ConfigurationConstants.LOAN}" isColonRequired="yes" />
 													&nbsp; <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'BusinessActivities')}" var="busId">
-															<c:if test="${busId.id eq BusinessKey.businessActivityId}">
+															<c:if test="${busId.id eq businessActivityId}">
 																<c:out value="${busId.name}" />
 															</c:if>
 														</c:forEach> </span>
@@ -337,7 +347,7 @@ explanation of the license and how it is applied.
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.collateral_type" keyhm="Loan.CollateralType" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
 												&nbsp; <span class="fontnormal"> <c:forEach items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'CollateralTypes')}" var="collateralType">
-														<c:if test="${collateralType.id eq BusinessKey.collateralTypeId}">
+														<c:if test="${collateralType.id eq collateralTypeId}">
 															<c:out value="${collateralType.name}" />
 														</c:if>
 													</c:forEach></span>
@@ -346,13 +356,13 @@ explanation of the license and how it is applied.
 										<tr id="Loan.CollateralNotes">
 											<td class="fontnormalbold">
 												<mifos:mifoslabel name="loan.collateral_notes" keyhm="Loan.CollateralNotes" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-												&nbsp; <span class="fontnormal"><br> <c:out value="${BusinessKey.collateralNote}" /> </span>
+												&nbsp; <span class="fontnormal"><br> <c:out value="${collateralNote}" /> </span>
 											</td>
 										</tr>
                                         <tr id="Loan.ExternalId">
                                             <td class="fontnormalbold">
                                                 <mifos:mifoslabel name="accounts.externalId" keyhm="Loan.ExternalId" isColonRequired="yes" isManadatoryIndicationNotRequired="yes" />
-                                                &nbsp; <span class="fontnormal"><c:out value="${BusinessKey.externalId}" /> </span>
+                                                &nbsp; <span class="fontnormal"><c:out value="${externalId}" /> </span>
                                             </td>
                                         </tr>
 										<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
@@ -385,32 +395,32 @@ explanation of the license and how it is applied.
 												<c:forEach var="fee" items="${requestScope.feeFormulaList}" varStatus="loopStatus3">
 													<input type="hidden" id="FEE_${fee.feeFormulaId}" value="${fee.feeFormulaName}" />
 												</c:forEach>
-												<c:forEach items="${BusinessKey.accountFees}" var="feesSet">
-													<c:if test="${feesSet.fees.feeId != null }">
+												<c:forEach items="${accountFees}" var="feesSet">
+													<c:if test="${!empty feesSet.feeId}">
 														<!--<span class="fontnormal">-->
 														<table cellpadding="0" cellspacing="0">
 															<tr>
 																<td class="fontnormalbold" align="left">
-																	<c:out value="${feesSet.fees.feeName}" />
+																	<c:out value="${feesSet.feeName}" />
 																	&nbsp;
 																	<mifos:mifoslabel name="loan.amt" />
 																	:&nbsp;
 																</td>
 																<td class="fontnormal" align="left">
-																	<c:out value="${feesSet.accountFeeAmount}" />
+																	<c:out value="${feesSet.amount}" />
 																	&nbsp;&nbsp;
 																</td>
 																<td class="fontnormal" align="left">
-																	<!--<SPAN id="feeFormulaAdminSpan${feesSet.fees.feeId}" class="fontnormal"/></SPAN>
-															<SCRIPT> displayAdminFormula(${feesSet.fees.feeId},${feesSet.fees.feeId}); </SCRIPT> -->
+																	<!--<SPAN id="feeFormulaAdminSpan${feesSet.feeId}" class="fontnormal"/></SPAN>
+															<SCRIPT> displayAdminFormula(${feesSet.feeId},${feesSet.feeId}); </SCRIPT> -->
 																</td>
 																<td class="fontnormal" align="left">
 																	&nbsp;
 																	<mifos:mifoslabel name="loan.periodicity" />
 																	:
 																	<c:choose>
-																		<c:when test="${feesSet.fees.periodic}">
-																			<c:out value="${loanfn:getMeetingRecurrence(feesSet.fees.feeFrequency.feeMeetingFrequency,sessionScope.UserContext)}" />
+																		<c:when test="${feesSet.periodic}">
+																			<c:out value="${feesSet.feeSchedule}" />
 																		</c:when>
 																		<c:otherwise>
 																			<mifos:mifoslabel name="loan.periodicityTypeFlat" />

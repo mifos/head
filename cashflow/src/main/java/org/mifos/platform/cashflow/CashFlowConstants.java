@@ -46,4 +46,5 @@ public class CashFlowConstants {
     public static final int EXTRA_DURATION_FOR_CASH_FLOW_SCHEDULE = 1;
     public static final String LOAN_AMOUNT_VALUE="loanAmountValue";
     public static final BigDecimal HUNDRED = BigDecimal.valueOf(100);
+    public static final String LOCALE = "locale";
 }

@@ -19,14 +19,15 @@
  */
 package org.mifos.platform.cashflow.ui.model;
 
-import org.mifos.platform.cashflow.CashFlowConstants;
-import org.mifos.platform.cashflow.service.CashFlowDetail;
-import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+
+import org.mifos.platform.cashflow.CashFlowConstants;
+import org.mifos.platform.cashflow.service.CashFlowDetail;
+import org.mifos.platform.cashflow.service.MonthlyCashFlowDetail;
 
 public class CashFlowForm implements Serializable {
     private static final long serialVersionUID = -3806820293757764245L;
@@ -37,16 +38,18 @@ public class CashFlowForm implements Serializable {
     private Double indebtednessRatio;
     private BigDecimal totalRevenues;
     private BigDecimal totalExpenses;
+    private Locale locale;
 
     @SuppressWarnings({"UnusedDeclaration", "PMD.UnnecessaryConstructor", "PMD.UncommentedEmptyConstructor"})
     public CashFlowForm() {
     }
 
-    public CashFlowForm(CashFlowDetail cashFlowDetail, boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio) {
+    public CashFlowForm(CashFlowDetail cashFlowDetail, boolean captureCapitalLiabilityInfo, BigDecimal loanAmount, Double indebtednessRatio, Locale locale) {
         this.cashFlowDetail = cashFlowDetail;
         this.captureCapitalLiabilityInfo = captureCapitalLiabilityInfo;
         this.loanAmount = loanAmount;
         this.indebtednessRatio = indebtednessRatio;
+        this.locale = locale;
     }
 
     public void setTotalCapital(BigDecimal totalCapital) {
@@ -69,7 +72,9 @@ public class CashFlowForm implements Serializable {
     public List<MonthlyCashFlowForm> getMonthlyCashFlows() {
         List<MonthlyCashFlowForm> monthlyCashFlows = new ArrayList<MonthlyCashFlowForm>();
         for (MonthlyCashFlowDetail monthlyCashFlowDetail : cashFlowDetail.getMonthlyCashFlowDetails()) {
-            monthlyCashFlows.add(new MonthlyCashFlowForm(monthlyCashFlowDetail));
+            MonthlyCashFlowForm monthlyCashFlowForm = new MonthlyCashFlowForm(monthlyCashFlowDetail);
+            monthlyCashFlowForm.setLocale(locale);
+            monthlyCashFlows.add(monthlyCashFlowForm);
         }
         return monthlyCashFlows;
     }

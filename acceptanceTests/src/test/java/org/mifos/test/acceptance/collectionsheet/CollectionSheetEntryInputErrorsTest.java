@@ -68,7 +68,7 @@ public class CollectionSheetEntryInputErrorsTest extends UiTestCaseBase {
         CollectionSheetEntryEnterDataPage enterDataPage = navigateToCollectionSheetEntryPage(formParameters);
         enterDataPage.verifyPage();
 
-        enterDataPage.enterCustomerAccountValue(0, 6, 888.4); // invalid amount
+        enterDataPage.enterCustomerAccountValue(0, 6, -5); // invalid amount
 
         CollectionSheetEntryEnterDataPage nextPage = enterDataPage.clickPreviewButton();
 

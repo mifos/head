@@ -55,6 +55,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import static java.lang.String.format;
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.DEFAULT_EVENT_FOR_CUSTOM_FIELDS;
@@ -66,6 +68,7 @@ import static org.mifos.platform.questionnaire.QuestionnaireConstants.MULTI_SELE
 import static org.mifos.platform.questionnaire.QuestionnaireConstants.QUESTION_GROUP_TITLE_FOR_ADDITIONAL_FIELDS;
 import static org.mifos.platform.util.CollectionUtils.asMap;
 import static org.mifos.platform.util.MapEntry.makeEntry;
+import org.mifos.platform.validations.ValidationException;
 
 public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationMapper {
 
@@ -123,12 +126,36 @@ public class QuestionnaireMigrationMapperImpl implements QuestionnaireMigrationM
 
     private Integer createQuestion(QuestionDto questionDto, Short fieldId) {
         Integer questionId = null;
-        try {
-            questionId = questionnaireServiceFacade.createQuestion(questionDto);
-        } catch (Exception e) {
-            logger.error(format("Unable to migrate a Custom Field with ID, %s to a Question", fieldId), e);
+        boolean unrecoverableError = false;
+        while (questionId == null && !unrecoverableError) {
+            try {
+                questionId = questionnaireServiceFacade.createQuestion(questionDto);
+            } catch (ValidationException e) {
+                if (e.hasChildExceptions() &&
+                        QuestionnaireConstants.QUESTION_TITILE_MATCHES_EXISTING_QUESTION.equals(e.getChildExceptions().get(0).getKey())) {
+                    modifyQuestionTitle(questionDto);
+                    continue;
+                }
+                unrecoverableError = true;
+            } catch (Exception e) {
+                logger.error(format("Unable to migrate a Custom Field with ID, %s to a Question", fieldId), e);
+                unrecoverableError = true;
+            }
         }
         return questionId;
+    }
+
+    private void modifyQuestionTitle(QuestionDto questionDto) {
+        String questionText = questionDto.getText();
+        if (questionText.matches("^.*_\\d+$")) {
+            Pattern p = Pattern.compile("^(.*)_(\\d)+$");
+            Matcher m = p.matcher(questionText);
+            m.find();
+            questionDto.setText(m.group(1) + "_" +  (Integer.parseInt(m.group(2)) + 1));
+        }
+        else {
+            questionDto.setText(questionText + "_1");
+        }
     }
 
     @Override

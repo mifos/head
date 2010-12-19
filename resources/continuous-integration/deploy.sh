@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -ex
 
 # JOB_NAME environment variable must be set. We count on Hudson for this.
@@ -18,9 +18,9 @@ $controlScript start
 # If TEST_SERVER_PORT is set by Hudson, we can test if the deployed test server
 # is online. Using parameterized builds the the preferred means for setting
 # TEST_SERVER_PORT.
-if [ -n "$TEST_SERVER_PORT" ]; then
+if [[ -n "$TEST_SERVER_PORT" ]]; then
     can_hit_test_server=1
-    while [ $can_hit_test_server -ne 0 ]
+    while [[ $can_hit_test_server -ne 0 ]]
     do
         # The purpose of this sleep is twofold:
         # 1) on the first iteration, give tomcat a second to start up.

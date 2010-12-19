@@ -38,7 +38,8 @@ public class PaymentData {
     private final Money totalAmount;
     private CustomerBO customer;
     private final PersonnelBO personnel;
-    private final Date transactionDate;
+    private Date transactionDate;
+
     private String receiptNum;
     private Date receiptDate;
     private final Short paymentTypeId;
@@ -127,4 +128,9 @@ public class PaymentData {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    public void setTransactionDate(Date date) {
+        this.transactionDate = date;
+    }
+
 }

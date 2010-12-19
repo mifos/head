@@ -413,16 +413,16 @@ public class ScheduleCalculatorTest {
 
         assertInstallmentInterests(installment1, 2.54, 2.54, 0);
         assertInstallmentInterests(installment2, 2.54, 2.54, 0);
-        assertInstallmentInterests(installment3, 1.28, 1.28, 0);
+        assertInstallmentInterests(installment3, 1.3, 1.3, 0);
 
         scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(10d), getDate(11, 10, 2010));
         assertInstallmentPrincipals(installment1, 332.2, 0, 332.2);
         assertInstallmentPrincipals(installment2, 333.4, 318.6, 14.8);
         assertInstallmentPrincipals(installment3, 334.4, 334.4, 0);
 
-        assertInstallmentInterests(installment1, 2.5, 2.5, 0);
+        assertInstallmentInterests(installment1, 2.54, 2.54, 0);
         assertInstallmentInterests(installment2, 2.5, 2.5, 0);
-        assertInstallmentInterests(installment3, 1.28, 1.28, 0);
+        assertInstallmentInterests(installment3, 1.3, 1.3, 0);
     }
 
     @Test

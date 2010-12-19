@@ -409,7 +409,13 @@
 			from customer_schedule as cs
 			join account a on cs.account_id = a.account_id
 			join customer c on a.customer_id = c.customer_id
-			where cs.action_date <= date(:TRANSACTION_DATE)
+                        where (cs.action_date <= date(:TRANSACTION_DATE)
+                           or ((not exists(select cs2.id from customer_schedule as cs2 where
+                                  cs2.account_id = cs.account_id and cs2.action_date = date(:TRANSACTION_DATE)) or
+                              (select cs2.payment_status from customer_schedule as cs2
+                                  where cs2.account_id = cs.account_id and cs2.action_date = date(:TRANSACTION_DATE)) <> 0)
+                                and cs.action_date = (select min(cs2.action_date) from customer_schedule as cs2
+                                where cs2.account_id = cs.account_id and cs2.action_date > date(:TRANSACTION_DATE))))
 			and cs.payment_status= 0
 			and c.search_id like :SEARCH_ID
 			and c.branch_id = :BRANCH_ID
@@ -442,7 +448,13 @@
 			from customer_schedule as cs
 			join account a on cs.account_id = a.account_id
 			join customer c on a.customer_id = c.customer_id
-			where cs.action_date <= date(:TRANSACTION_DATE)
+                        where (cs.action_date <= date(:TRANSACTION_DATE)
+                           or ((not exists(select cs2.id from customer_schedule as cs2 where
+                                  cs2.account_id = cs.account_id and cs2.action_date = date(:TRANSACTION_DATE)) or
+                              (select cs2.payment_status from customer_schedule as cs2
+                                  where cs2.account_id = cs.account_id and cs2.action_date = date(:TRANSACTION_DATE)) <> 0)
+                                and cs.action_date = (select min(cs2.action_date) from customer_schedule as cs2
+                                where cs2.account_id = cs.account_id and cs2.action_date > date(:TRANSACTION_DATE))))
 			and cs.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
@@ -467,7 +479,13 @@
 			join customer_fee_schedule cfs on cfs.id = cs.id
 			join account a on cs.account_id = a.account_id
 			join customer c on a.customer_id = c.customer_id
-			where cs.action_date <= date(:TRANSACTION_DATE)
+                        where (cs.action_date <= date(:TRANSACTION_DATE)
+                           or ((not exists(select cs2.id from customer_schedule as cs2 where
+                                  cs2.account_id = cs.account_id and cs2.action_date = date(:TRANSACTION_DATE)) or
+                              (select cs2.payment_status from customer_schedule as cs2
+                                  where cs2.account_id = cs.account_id and cs2.action_date = date(:TRANSACTION_DATE)) <> 0)
+                                and cs.action_date = (select min(cs2.action_date) from customer_schedule as cs2
+                                where cs2.account_id = cs.account_id and cs2.action_date > date(:TRANSACTION_DATE))))
 			and cs.payment_status= 0
 			and c.search_id like :SEARCH_ID
 			and c.branch_id = :BRANCH_ID
@@ -492,7 +510,13 @@
 			join customer_fee_schedule cfs on cfs.id = cs.id
 			join account a on cs.account_id = a.account_id
 			join customer c on a.customer_id = c.customer_id
-			where cs.action_date <= date(:TRANSACTION_DATE)
+                        where (cs.action_date <= date(:TRANSACTION_DATE)
+                           or ((not exists(select cs2.id from customer_schedule as cs2 where
+                                  cs2.account_id = cs.account_id and cs2.action_date = date(:TRANSACTION_DATE)) or
+                              (select cs2.payment_status from customer_schedule as cs2
+                                  where cs2.account_id = cs.account_id and cs2.action_date = date(:TRANSACTION_DATE)) <> 0)
+                                and cs.action_date = (select min(cs2.action_date) from customer_schedule as cs2
+                                where cs2.account_id = cs.account_id and cs2.action_date > date(:TRANSACTION_DATE))))
 			and cs.payment_status= 0
 			and c.customer_id = :CUSTOMER_ID
 			and c.status_id in (3,4,9,10,13)
