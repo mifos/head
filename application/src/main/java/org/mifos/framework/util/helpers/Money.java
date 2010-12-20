@@ -286,10 +286,6 @@ public final class Money implements Serializable, Comparable<Money> {
         return this.compareTo(money) < 0;
     }
 
-    private boolean isLessThanEqualTo(double value) {
-        return this.getAmount().doubleValue() <= value;
-    }
-
     public boolean isLessThanOrEqual(Money money) {
         return this.compareTo(money) <= 0;
     }
