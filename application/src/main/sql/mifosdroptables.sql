@@ -48,6 +48,8 @@ drop table if exists customer_fee_schedule;
 
 drop table if exists fee_trxn_detail;
 
+drop table if exists calculated_interest_on_payment;
+
 drop table if exists account_trxn;
 
 drop table if exists savings_activity_details;

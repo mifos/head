@@ -366,6 +366,7 @@
   <batch_staffing_level_summary/>
   <branch_ho_update/>
   <cash_flow/>
+  <cash_flow_detail/>
   <category_type category_id="1" category_lookup_id="81"/>
   <category_type category_id="2" category_lookup_id="82"/>
   <category_type category_id="3" category_lookup_id="83"/>
@@ -2496,6 +2497,8 @@
   <office_level level_id="5" parent_level_id="4" level_name_id="108" interaction_flag="1" configured="1"/>
   <office_status status_id="1" lookup_id="15"/>
   <office_status status_id="2" lookup_id="16"/>
+  <original_loan_fee_schedule/>
+  <original_loan_schedule/>
   <payment_type payment_type_id="1" payment_type_lookup_id="177"/>
   <payment_type payment_type_id="2" payment_type_lookup_id="179"/>
   <payment_type payment_type_id="3" payment_type_lookup_id="180"/>

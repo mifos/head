@@ -27,6 +27,7 @@ truncate table  loan_arrears_aging;
 truncate table  loan_fee_schedule;
 truncate table  customer_fee_schedule;
 truncate table  fee_trxn_detail;
+truncate table  calculated_interest_on_payment;
 truncate table  account_trxn;
 truncate table  savings_activity_details;
 truncate table  savings_account;

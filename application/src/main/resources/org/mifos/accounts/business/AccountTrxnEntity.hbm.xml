@@ -79,6 +79,9 @@
 				<one-to-many
 					class="org.mifos.accounts.business.FeesTrxnDetailEntity"/>
 			</set>
+            <one-to-one name="calculatedInterestOnPayment"
+                class="org.mifos.accounts.loan.business.CalculatedInterestOnPayment" cascade="all"
+                access="field" />
 		</joined-subclass>
 		<joined-subclass
 			name="org.mifos.accounts.savings.business.SavingsTrxnDetailEntity"

@@ -20,13 +20,6 @@
 
 package org.mifos.accounts.loan.business;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
@@ -41,6 +34,13 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Money;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /*
  * LoanTrxnDetailEntity encapsulates a financial transaction
@@ -62,6 +62,8 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     private final Money miscPenaltyAmount;
 
     private final Set<FeesTrxnDetailEntity> feesTrxnDetails;
+
+    private CalculatedInterestOnPayment calculatedInterestOnPayment;
 
     public Set<FeesTrxnDetailEntity> getFeesTrxnDetails() {
         return feesTrxnDetails;
@@ -242,4 +244,11 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
         }
     }
 
+    public CalculatedInterestOnPayment getCalculatedInterestOnPayment() {
+        return calculatedInterestOnPayment;
+    }
+
+    public void setCalculatedInterestOnPayment(CalculatedInterestOnPayment calculatedInterestOnPayment) {
+        this.calculatedInterestOnPayment = calculatedInterestOnPayment;
+    }
 }

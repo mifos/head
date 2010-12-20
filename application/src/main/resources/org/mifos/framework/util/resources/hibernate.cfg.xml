@@ -241,6 +241,8 @@
 		<mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationCenterRecoveryBO.hbm.xml" />	
 		<mapping resource="org/mifos/reports/cashconfirmationreport/BranchCashConfirmationInfoBO.hbm.xml" />	
 
+        <mapping class="org.mifos.accounts.loan.business.CalculatedInterestOnPayment" />
+
 	</session-factory>
 
 </hibernate-configuration>
