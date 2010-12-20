@@ -215,6 +215,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         typeText("disbursementDateDD",dd);
         typeText("disbursementDateMM",mm);
         typeText("disbursementDateYY",yyyy);
+        selenium.type("disbursementDateDD",dd);
 
         return this;
     }

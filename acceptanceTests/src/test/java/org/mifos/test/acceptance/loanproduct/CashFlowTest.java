@@ -87,7 +87,7 @@ public class CashFlowTest extends UiTestCaseBase {
         createAndValidateLoanProductWithCashFlow("", formParameters, "", "", false);
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowUnChecked() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -105,7 +105,7 @@ public class CashFlowTest extends UiTestCaseBase {
                 verifyPage("SchedulePreview");
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
@@ -115,7 +115,7 @@ public class CashFlowTest extends UiTestCaseBase {
         createAndValidateLoanProductWithCashFlow(warningThreshold,formParameters, "49.99", minRc, false);
         validateCashFlowForLoanAccount(formParameters, minRc, "999.68");
     }
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyWarningsForNonVariableInstallmentLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
@@ -166,7 +166,7 @@ public class CashFlowTest extends UiTestCaseBase {
                 clickContinueToNavigateToCashFlowPage();
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyCashFlowForVariableInstallmentLoan() throws Exception {
         String minRC = "999.99";

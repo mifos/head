@@ -89,7 +89,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
                 {"1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0"},
                 {"2", "26-Oct-2010", "-", "333.4", "4.2", "0.0", "337.6"},
                 {"Future Installments", "", "", "", "", ""},
-                {"3", "02-Nov-2010", "-", "334.4", "1.7", "0.0", "336.0"}};
+                {"3", "02-Nov-2010", "-", "334.4", "1.7", "0.0", "336.1"}};
         verifyScheduleTable(tableOnDayBetweenSecondAndThirdInstallment);
     }
 
@@ -97,7 +97,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         String[][] tableOnSecondInstallment =
                 {{"Installments due", "", "", "", "", ""},
                 {"1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0"},
-                {"2", "26-Oct-2010", "-", "333.4", "3.8", "0.0", "337.3"},
+                {"2", "26-Oct-2010", "-", "333.4", "3.9", "0.0", "337.3"},
                 {"Future Installments", "", "", "", "", ""},
                 {"3", "02-Nov-2010", "-", "334.4", "1.3", "0.0", "335.7"}};
         verifyScheduleTable(tableOnSecondInstallment);
