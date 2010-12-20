@@ -30,15 +30,23 @@
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.question.groups":"viewQuestionGroups.ftl",questionGroupForm.questionGroupDetail.title:""}/]
         [@mifos.crumbpairs breadcrumb/]
     <div class="content_panel">
-        <h1 id="questionGroup.title" >
-            ${questionGroupForm.questionGroupDetail.title}
-        </h1>
+        <table>
+            <tr>
+                <td>
+                    <div id="questionGroup.title" class="headingorange" style="padding: 3px;">
+                        ${questionGroupForm.questionGroupDetail.title}
+                    </div>
+                </td>
+                <td>
+                    <a href="editQuestionGroup#" class="topRight">[@spring.message "questionnaire.editquestiongroup"/]</a>
+                </td>
+            </tr>
+        </table>
         <form name="viewQuestionGroupDetailsForm" action="viewAndEditQuestionGroup.ftl?execution=${flowExecutionKey}" method="POST" class="marginLeft30">
             [#assign boolean_text_yes][@spring.message "questionnaire.yes"/][/#assign]
             [#assign boolean_text_no][@spring.message "questionnaire.no"/][/#assign]
             <ul class="no_bullet">
                     <li>
-                        <a href="editQuestionGroup#" class="topRight">[@spring.message "questionnaire.edit"/]</a>
                         <input type="submit" id="_eventId_editQuestionGroup" name="_eventId_editQuestionGroup" value="${questionGroupForm.questionGroupDetail.id}" style="display:none"/>
                         [@spring.message "questionnaire.questionGroup"/]: ${questionGroupForm.questionGroupDetail.title}
                     </li>

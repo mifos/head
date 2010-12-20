@@ -33,16 +33,24 @@
         [#assign breadcrumb = {"admin":"AdminAction.do?method=load", "questionnaire.view.questions":"viewQuestions.ftl",question.text:""}/]
         [@mifos.crumbpairs breadcrumb/]
         <div class="content_panel">
-            <h1>
-                ${question.text}
-            </h1>
+            <table>
+                <tr>
+                    <td>
+                        <div id="questionGroup.title" class="headingorange" style="padding: 3px;">
+                            ${question.text}
+                        </div>
+                    </td>
+                    <td>
+                        [#if question.editable]
+                            <a href="editQuestion#" class="topRight">[@spring.message "questionnaire.editquestion"/]</a>
+                        [/#if]
+                    </td>
+                </tr>
+            </table>
             <form name="viewQuestionDetailsForm" action="viewAndEditQuestion.ftl?execution=${flowExecutionKey}" method="POST" class="marginLeft30">
                 <fieldset>
                     <ol>
                         <li>
-                            [#if question.editable]
-                                <a href="editQuestion#" class="topRight">[@spring.message "questionnaire.edit"/]</a>
-                            [/#if]
                             <input type="submit" id="_eventId_editQuestion" name="_eventId_editQuestion" value="${question.id}" style="display:none"/>
                             [@spring.message "questionnaire.question"/]: ${question.text}
                         </li>

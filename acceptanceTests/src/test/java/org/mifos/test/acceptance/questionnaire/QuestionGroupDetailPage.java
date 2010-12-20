@@ -78,7 +78,7 @@ public class QuestionGroupDetailPage extends MifosPage {
     }
 
     public EditQuestionGroupPage navigateToEditPage() {
-        selenium.click("link=Edit");
+        selenium.click("link=Edit Question Group");
         waitForPageToLoad();
         return new EditQuestionGroupPage(selenium);
     }
