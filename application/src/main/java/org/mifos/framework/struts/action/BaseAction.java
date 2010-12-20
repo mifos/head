@@ -432,7 +432,10 @@ public abstract class BaseAction extends DispatchAction {
     private ActionForward logout(ActionMapping mapping, HttpServletRequest request) {
         request.getSession(false).invalidate();
         ActionErrors error = new ActionErrors();
-        error.add(LoginConstants.BATCH_JOB_RUNNING, new ActionMessage(LoginConstants.BATCH_JOB_RUNNING));
+        error.add(LoginConstants.BATCH_JOB_RUNNING, new ActionMessage(
+                messages.getMessage(LoginConstants.BATCH_JOB_RUNNING,
+                        "You have been logged out of the system because batch jobs are running.")
+                ));
         request.setAttribute(Globals.ERROR_KEY, error);
         return mapping.findForward(ActionForwards.load_main_page.toString());
     }
@@ -440,7 +443,10 @@ public abstract class BaseAction extends DispatchAction {
     private ActionForward shutdown(ActionMapping mapping, HttpServletRequest request) {
         request.getSession(false).invalidate();
         ActionErrors error = new ActionErrors();
-        error.add(LoginConstants.SHUTDOWN, new ActionMessage(LoginConstants.SHUTDOWN));
+        error.add(LoginConstants.SHUTDOWN, new ActionMessage(
+                messages.getMessage(LoginConstants.SHUTDOWN,
+                        "You have been logged out of the system because Mifos is shutting down.")
+        ));
         request.setAttribute(Globals.ERROR_KEY, error);
         return mapping.findForward(ActionForwards.load_main_page.toString());
     }

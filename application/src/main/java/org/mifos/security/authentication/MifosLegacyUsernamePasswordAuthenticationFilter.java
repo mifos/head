@@ -81,14 +81,16 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             allowAuthenticationToContinue = false;
 
             request.getSession(false).invalidate();
-            denied = new AuthenticationServiceException(LoginConstants.BATCH_JOB_RUNNING);
+            denied = new AuthenticationServiceException(messages.getMessage(LoginConstants.BATCH_JOB_RUNNING,
+                    "You have been logged out of the system because batch jobs are running."));
         }
 
         ShutdownManager shutdownManager = (ShutdownManager) ServletUtils.getGlobal(request, ShutdownManager.class.getName());
         if (shutdownManager.isShutdownDone()) {
             allowAuthenticationToContinue = false;
             request.getSession(false).invalidate();
-            denied = new AuthenticationServiceException(LoginConstants.SHUTDOWN);
+            denied = new AuthenticationServiceException(messages.getMessage(LoginConstants.SHUTDOWN,
+                    "You have been logged out of the system because Mifos is shutting down."));
         }
 
         if (shutdownManager.isInShutdownCountdownNotificationThreshold()) {
