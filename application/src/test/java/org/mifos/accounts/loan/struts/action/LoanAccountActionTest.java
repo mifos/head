@@ -27,16 +27,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.matchers.ListMatcher;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.cashflow.struts.CashFlowAdaptor;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.servicefacade.LoanServiceFacade;
+import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
@@ -53,6 +62,7 @@ import org.mifos.platform.questionnaire.service.SectionQuestionDetail;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.validations.Errors;
 import org.mifos.security.util.UserContext;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -65,8 +75,11 @@ import java.util.*;
 import java.util.Date;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.any;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
+import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
 import static org.mockito.Matchers.anyShort;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -116,9 +129,12 @@ public class LoanAccountActionTest {
     private LoanBO loanBO;
     private Short localeId = new Short("1");
 
+    @Mock
+    LoanBusinessService loanBusinessService;
+
     @Before
     public void setUp() throws PageExpiredException {
-        loanAccountAction = new LoanAccountAction(null, null, null, loanPrdBusinessService, null, null, null, null) {
+        loanAccountAction = new LoanAccountAction(null, loanBusinessService, null, loanPrdBusinessService, null, null, null, null) {
             @Override
             protected UserContext getUserContext(@SuppressWarnings("unused") HttpServletRequest request) {
                 return userContext;
@@ -149,7 +165,7 @@ public class LoanAccountActionTest {
     }
 
     @Test
-    public void shouldSchedulePreviewForCashFlow() {
+    public void pageAfterQuestionnaireIsCashFlowWhenCashFlowEnabled() {
         DateTime firstInstallmentDueDate = new DateTime();
         DateTime lastInstallmentDueDate = firstInstallmentDueDate.plusMonths(12);
         when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
@@ -168,6 +184,22 @@ public class LoanAccountActionTest {
         verify(loanScheduleDetailsDto).lastInstallmentDueDate();
         verify(cashFlowAdaptor).renderCashFlow(eq(firstInstallmentDueDate), eq(lastInstallmentDueDate), anyString(),
                 anyString(), eq(mapping), eq(request), eq(loanOffering), eq(loanAmount), eq(locale));
+    }
+
+    @Test
+    public void pageAfterQuestionnaireIsNotCashFlowWhenCashFlowEnabledAndIfRedoPerspectiveIsSet() {
+        when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
+        when(request.getParameter(PERSPECTIVE)).thenReturn(PERSPECTIVE_VALUE_REDO_LOAN);
+        ActionForward schedulePreviewSuccess = new ActionForward(ActionForwards.schedulePreview_success.toString());
+        BigDecimal loanAmount = new BigDecimal(2000);
+        when(mapping.findForward(ActionForwards.schedulePreview_success.toString())).thenReturn(schedulePreviewSuccess);
+        ActionForward pageAfterQuestionnaire = loanAccountAction.getPageAfterQuestionnaire(mapping, request, loanOffering,
+                loanScheduleDetailsDto, cashFlowAdaptor, loanAmount);
+        assertThat(pageAfterQuestionnaire, is(schedulePreviewSuccess));
+        verify(loanOffering).isCashFlowCheckEnabled();
+        verify(cashFlowAdaptor, never()).renderCashFlow(Matchers.<DateTime>anyObject(), Matchers.<DateTime>anyObject(), anyString(),
+                anyString(), Matchers.<ActionMapping>anyObject(), Matchers.<HttpServletRequest>anyObject(),
+                Matchers.<LoanOfferingBO>anyObject(), Matchers.<BigDecimal>anyObject(), Matchers.<Locale>anyObject());
     }
 
     @Test
@@ -239,6 +271,77 @@ public class LoanAccountActionTest {
         ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
         assertThat(forward, is(previewSuccess));
         verify(mapping, never()).findForward("preview_failure");
+    }
+
+    @Test
+    public void previewShouldBeSuccessInRedoOperation() throws Exception {
+        PaymentDataHtmlBean paymentDataHtmlBean = mock(PaymentDataHtmlBean.class);
+        RepaymentScheduleInstallment installment = mock(RepaymentScheduleInstallment.class);
+        VariableInstallmentDetailsBO variableInstallmentDetailsBO = mock(VariableInstallmentDetailsBO.class);
+        java.sql.Date disbursementDate = mock(java.sql.Date.class);
+        LoanAccountServiceFacade loanAccountServiceFacade = mock(LoanAccountServiceFacade.class);
+
+        ActionForward previewSuccess = new ActionForward("preview_success");
+        Short localeId = new Short("1");
+        Errors errors = new Errors();
+        List<PaymentDataHtmlBean> paymentDataBeans = new ArrayList<PaymentDataHtmlBean>();
+        paymentDataBeans.add(paymentDataHtmlBean);
+        Integer customerId = new Integer(1);
+        ArrayList<RepaymentScheduleInstallment> repaymentScheduleInstallments = new ArrayList<RepaymentScheduleInstallment>();
+        repaymentScheduleInstallments.add(installment);
+        loanAccountAction.setLoanAccountServiceFacade(loanAccountServiceFacade);
+
+        when(form.getPaymentDataBeans()).thenReturn(paymentDataBeans);
+        when(form.getPerspective()).thenReturn(PERSPECTIVE_VALUE_REDO_LOAN);
+        when(loanOffering.isCashFlowCheckEnabled()).thenReturn(true);
+        when(loanOffering.isVariableInstallmentsAllowed()).thenReturn(true);
+        when(paymentDataHtmlBean.getInstallment()).thenReturn(installment);
+        when(userContext.getLocaleId()).thenReturn(localeId);
+        when(userContext.getPreferredLocale()).thenReturn(Locale.US);
+        when(loanPrdBusinessService.getLoanOffering(anyShort(), eq(localeId))).thenReturn(loanOffering);
+        when(loanOffering.getVariableInstallmentDetails()).thenReturn(variableInstallmentDetailsBO);
+        when(form.getDisbursementDateValue(Locale.US)).thenReturn(disbursementDate);
+        when(form.getCustomerIdValue()).thenReturn(customerId);
+        when(loanServiceFacade.validateInputInstallments(eq(disbursementDate), eq(variableInstallmentDetailsBO),
+                argThat(new ListMatcher<RepaymentScheduleInstallment>(repaymentScheduleInstallments)), eq(customerId))).
+                thenReturn(errors);
+        when(mapping.findForward("preview_success")).thenReturn(previewSuccess);
+        when(request.getParameter(PERSPECTIVE)).thenReturn(PERSPECTIVE_VALUE_REDO_LOAN);
+        when(loanAccountServiceFacade.previewLoanCreationDetails(anyInt(), Matchers.<List<LoanAccountDetailsDto>>any(),
+                Matchers.<List<String>>any())).thenReturn(new LoanCreationPreviewDto(false, false,
+                new ArrayList<LoanAccountDetailsDto>()));
+        when(loanServiceFacade.validateCashFlowForInstallments(Matchers.<List<RepaymentScheduleInstallment>>any(),
+                Matchers.<CashFlowForm>any(), Matchers.<Double>any())).thenReturn(errors);
+        when(loanServiceFacade.validateInstallmentSchedule(Matchers.<List<RepaymentScheduleInstallment>>any(),
+                Matchers.<VariableInstallmentDetailsBO>any())).thenReturn(errors);
+
+        ActionForward forward = loanAccountAction.preview(mapping, form, request, response);
+
+        assertThat(forward, is(previewSuccess));
+
+        verify(form,times(1)).getPaymentDataBeans();
+        verify(form,times(1)).getPerspective();
+        verify(loanOffering,times(1)).isCashFlowCheckEnabled();
+        verify(paymentDataHtmlBean,times(1)).getInstallment();
+        verify(userContext,times(2)).getLocaleId();
+        verify(userContext,times(2)).getPreferredLocale();
+        verify(loanPrdBusinessService,times(2)).getLoanOffering(anyShort(), eq(localeId));
+        verify(form,times(1)).getCashFlowForm();
+        verify(mapping, never()).findForward("preview_failure");
+        verify(form,times(2)).getDisbursementDateValue(Locale.US);
+        verify(form,times(2)).getCustomerIdValue();
+        verify(request,times(2)).getParameter(PERSPECTIVE);
+        verify(loanAccountServiceFacade,times(1)).previewLoanCreationDetails(anyInt(), Matchers.<List<LoanAccountDetailsDto>>any(),
+                Matchers.<List<String>>any());
+        verify(loanServiceFacade,times(1)).validateInstallmentSchedule(Matchers.<List<RepaymentScheduleInstallment>>any(),
+                Matchers.<VariableInstallmentDetailsBO>any());
+        verify(loanServiceFacade,times(1)).validateInputInstallments(eq(disbursementDate), eq(variableInstallmentDetailsBO),
+                argThat(new ListMatcher<RepaymentScheduleInstallment>(repaymentScheduleInstallments)), eq(customerId));
+        verify(loanServiceFacade).validateInputInstallments(eq(disbursementDate), eq(variableInstallmentDetailsBO),
+                argThat(new ListMatcher<RepaymentScheduleInstallment>(repaymentScheduleInstallments)), eq(customerId));
+        verify(loanServiceFacade, never()).validateCashFlowForInstallmentsForWarnings(Matchers.<LoanAccountActionForm>anyObject(), anyShort());
+        verify(loanServiceFacade, times(1)).validateCashFlowForInstallments(Matchers.<List<RepaymentScheduleInstallment>>anyObject(),
+                Matchers.<CashFlowForm>anyObject(), anyDouble());
     }
 
     @Test
