@@ -20,6 +20,15 @@
 
 package org.mifos.customers.personnel.persistence;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+import java.util.Set;
+
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
 import org.hibernate.Session;
@@ -28,12 +37,10 @@ import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
@@ -47,16 +54,6 @@ import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.Set;
 
 public class PersonnelDaoHibernate implements PersonnelDao {
 
@@ -129,6 +126,8 @@ public class PersonnelDaoHibernate implements PersonnelDao {
     @Override
     public List<PersonnelDto> findActiveLoanOfficersForOffice(CenterCreation centerCreationDto) {
 
+        List<PersonnelDto> activeLoanOfficers = new ArrayList<PersonnelDto>();
+
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("levelId", PersonnelLevel.LOAN_OFFICER.getValue());
         queryParameters.put("userId", centerCreationDto.getLoggedInUserId());
@@ -138,8 +137,11 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         List<PersonnelDto> queryResult = (List<PersonnelDto>) genericDao.executeNamedQuery(
                 NamedQueryConstants.MASTERDATA_ACTIVE_LOANOFFICERS_INBRANCH, queryParameters);
+        if (queryResult != null) {
+            activeLoanOfficers.addAll(queryResult);
+        }
 
-        return queryResult;
+        return activeLoanOfficers;
     }
 
     @Override

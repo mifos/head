@@ -73,6 +73,7 @@
     </bean>
     
     <bean id="loanAccountServiceFacade" class="org.mifos.application.servicefacade.LoanAccountServiceFacadeWebTier" >
+    	<constructor-arg ref="officeDao" />
     	<constructor-arg ref="customerDao" />
     	<constructor-arg ref="loanProductDao" />
     	<constructor-arg ref="personnelDao" />

@@ -82,12 +82,14 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -97,6 +99,7 @@ import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
+import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
@@ -106,11 +109,14 @@ import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
 import org.mifos.dto.domain.MeetingDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.PaymentTypeDto;
+import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.dto.domain.SurveyDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.AccountFeesDto;
+import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanAccountInfoDto;
@@ -148,6 +154,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
+    private final OfficeDao officeDao;
     private final LoanProductDao loanProductDao;
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
@@ -161,11 +168,12 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final LoanPrdBusinessService loanPrdBusinessService;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
-    public LoanAccountServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
+    public LoanAccountServiceFacadeWebTier(final OfficeDao officeDao, final LoanProductDao loanProductDao, final CustomerDao customerDao,
             PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao, final AccountService accountService,
             InstallmentsValidator installmentsValidator, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
             LoanBusinessService loanBusinessService, HolidayServiceFacade holidayServiceFacade,
             LoanPrdBusinessService loanPrdBusinessService) {
+        this.officeDao = officeDao;
         this.loanProductDao = loanProductDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
@@ -209,7 +217,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     @Override
-    public void updateLoanAccountStatus(AccountUpdateStatus updateStatus) {
+    public String updateLoanAccountStatus(AccountUpdateStatus updateStatus) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
         PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
@@ -224,6 +232,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             loanAccount.changeStatus(newStatus, updateStatus.getFlagId(), updateStatus.getComment(), loggedInUser);
             this.loanDao.save(loanAccount);
             this.transactionHelper.commitTransaction();
+            return loanAccount.getGlobalAccountNum();
         } catch (BusinessRuleException e) {
             this.transactionHelper.rollbackTransaction();
             throw new BusinessRuleException(e.getMessageKey(), e);
@@ -1104,5 +1113,62 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (Exception e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    @Override
+    public ChangeAccountStatusDto retrieveAllActiveBranchesAndLoanOfficerDetails() {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        List<PersonnelDto> loanOfficers = new ArrayList<PersonnelDto>();
+        List<OfficeDetailsDto> activeBranches = this.officeDao.findActiveBranches(userContext.getBranchId());
+        if (onlyOneActiveBranchExists(activeBranches)) {
+            OfficeDetailsDto singleOffice = activeBranches.get(0);
+            CenterCreation officeDetails = new CenterCreation(singleOffice.getOfficeId(), userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
+            loanOfficers = this.personnelDao.findActiveLoanOfficersForOffice(officeDetails);
+        }
+
+        boolean loanPendingApprovalStateEnabled = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
+        Short accountState = AccountState.LOAN_PARTIAL_APPLICATION.getValue();
+        if (loanPendingApprovalStateEnabled) {
+            accountState = AccountState.LOAN_PENDING_APPROVAL.getValue();
+        }
+
+        return new ChangeAccountStatusDto(activeBranches, loanOfficers, loanPendingApprovalStateEnabled, accountState);
+    }
+
+    private boolean onlyOneActiveBranchExists(List<OfficeDetailsDto> activeBranches) {
+        return activeBranches.size() == 1;
+    }
+
+    @Override
+    public ChangeAccountStatusDto retrieveLoanOfficerDetailsForBranch(Short officeId) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        CenterCreation officeDetails = new CenterCreation(officeId, userContext.getId(), userContext.getLevelId(), userContext.getPreferredLocale());
+        List<PersonnelDto> loanOfficers = this.personnelDao.findActiveLoanOfficersForOffice(officeDetails);
+
+        boolean loanPendingApprovalStateEnabled = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
+        Short accountState = AccountState.LOAN_PARTIAL_APPLICATION.getValue();
+        if (loanPendingApprovalStateEnabled) {
+            accountState = AccountState.LOAN_PENDING_APPROVAL.getValue();
+        }
+
+        return new ChangeAccountStatusDto(new ArrayList<OfficeDetailsDto>(), loanOfficers, loanPendingApprovalStateEnabled, accountState);
+    }
+
+    @Override
+    public List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate) {
+
+        List<String> updatedAccountNumbers = new ArrayList<String>();
+        for (AccountUpdateStatus accountUpdate : accountsForUpdate) {
+            String accountNumber = updateLoanAccountStatus(accountUpdate);
+            updatedAccountNumbers.add(accountNumber);
+        }
+
+        return updatedAccountNumbers;
     }
 }

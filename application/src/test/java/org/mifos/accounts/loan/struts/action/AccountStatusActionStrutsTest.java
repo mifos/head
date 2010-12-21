@@ -59,6 +59,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     protected GroupBO group;
 
+    @SuppressWarnings("unused")
     private ClientBO client;
 
     private MeetingBO meeting;
@@ -99,6 +100,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.changeAccountStatus_success.toString());
     }
 
+    @SuppressWarnings("unchecked")
     public void testSearchResults() throws Exception {
         createCustomers();
         account = getLoanAccount(group);
@@ -150,19 +152,6 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("method", Methods.searchResults.toString());
         actionPerform();
         verifyInputForward();
-    }
-
-    public void testGetLoanOfficers() throws Exception {
-        createCustomers();
-        account = getLoanAccount(group);
-        setRequestPathInfo("/ChangeAccountStatus.do");
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        addRequestParameter("method", "getLoanOfficers");
-        addRequestParameter("officeId", account.getOffice().getOfficeId().toString());
-        actionPerform();
-        verifyForward(ActionForwards.changeAccountStatus_success.toString());
-        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request));
-       Assert.assertEquals(1, ((List<PersonnelDto>) SessionUtils.getAttribute(LoanConstants.LOAN_OFFICERS, request)).size());
     }
 
     public void testUpdate() throws Exception {

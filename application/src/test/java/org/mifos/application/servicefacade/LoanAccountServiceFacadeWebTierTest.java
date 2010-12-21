@@ -49,6 +49,7 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.screen.RepayLoanDto;
@@ -103,9 +104,12 @@ public class LoanAccountServiceFacadeWebTierTest {
     @Mock
     private HolidayServiceFacade holidayServiceFacade;
 
+    @Mock
+    private OfficeDao officeDao;
+
     @Before
     public void setupAndInjectDependencies() {
-        loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(loanProductDao, customerDao, personnelDao,
+        loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(officeDao, loanProductDao, customerDao, personnelDao,
                 fundDao, loanDao, accountService, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
     }
 

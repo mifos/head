@@ -31,6 +31,7 @@ import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
 import org.mifos.dto.domain.LoanInstallmentDetailsDto;
 import org.mifos.dto.domain.LoanPaymentDto;
+import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.LoanAccountDetailDto;
 import org.mifos.dto.screen.LoanAccountInfoDto;
 import org.mifos.dto.screen.LoanAccountMeetingDto;
@@ -50,7 +51,7 @@ public interface LoanAccountServiceFacade {
     AccountStatusDto retrieveAccountStatuses(Long loanAccountId);
 
     @PreAuthorize("isFullyAuthenticated()")
-    void updateLoanAccountStatus(AccountUpdateStatus updateStatus);
+    String updateLoanAccountStatus(AccountUpdateStatus updateStatus);
 
     @PreAuthorize("isFullyAuthenticated()")
     LoanAccountDetailDto retrieveLoanAccountNotes(Long loanAccountId);
@@ -74,9 +75,6 @@ public interface LoanAccountServiceFacade {
     LoanCreationResultDto redoLoan(LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments);
 
     @PreAuthorize("isFullyAuthenticated()")
-    LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId);
-
-    @PreAuthorize("isFullyAuthenticated()")
     List<LoanActivityDto> retrieveAllLoanAccountActivities(String globalAccountNum);
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -97,6 +95,20 @@ public interface LoanAccountServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     List<LoanAccountDetailsDto> retrieveLoanAccountDetails(LoanInformationDto loanInformationDto);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DISBURSE_LOAN')")
+    LoanDisbursalDto retrieveLoanDisbursalDetails(Integer loanAccountId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_DISBURSE_LOAN')")
     void disburseLoan(AccountPaymentParametersDto loanDisbursement, Short paymentTypeId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK')")
+    ChangeAccountStatusDto retrieveAllActiveBranchesAndLoanOfficerDetails();
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK')")
+    ChangeAccountStatusDto retrieveLoanOfficerDetailsForBranch(Short officeId);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK')")
+    List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate);
+
+
 }
