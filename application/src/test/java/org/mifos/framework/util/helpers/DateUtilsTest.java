@@ -276,8 +276,9 @@ public class DateUtilsTest extends TestCase {
         }
     }
 
-    private Date getDate(int year, int month, int day) {
-        return DateUtils.getDateWithoutTimeStamp((new GregorianCalendar(year, month, day)).getTime());
+    public void testShortDate(){
+        String shortDateFormat = DateUtils.getShortDateFormat(new Locale("en", "GB"));
+        assertEquals("dd-MMM-yyyy",shortDateFormat);
     }
 
 }

@@ -617,13 +617,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     public ActionForward showPreview(final ActionMapping mapping, final ActionForm form,
                                      final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "showPreview");
-
-        ActionForward forwardAfterCashflowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
+        setPerspectiveOnRequest(request);
+        ActionForward forwardAfterCashFlowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
                 ActionForwards.schedulePreview_success.toString(), request.getSession(), mapping);
-
         bindCashFlowIfPresent(request, form);
-
-        return forwardAfterCashflowBinding;
+        return forwardAfterCashFlowBinding;
     }
 
     private boolean bindCashFlowIfPresent(final HttpServletRequest request, final ActionForm form) throws Exception {
@@ -939,7 +937,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void setPerspectiveOnRequest(HttpServletRequest request) {
         String perspective = request.getParameter(PERSPECTIVE);
         if (perspective != null) {
-            request.setAttribute(PERSPECTIVE, request.getParameter(PERSPECTIVE));
+            request.setAttribute(PERSPECTIVE, perspective);
         }
     }
 
@@ -1069,7 +1067,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
             List<PaymentDataHtmlBean> paymentDataBeans = loanAccountActionForm.getPaymentDataBeans();
             PaymentData payment;
-
+            List<RepaymentScheduleInstallment> installments = getInstallmentFromPaymentDataBeans(paymentDataBeans);
+            loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(redoLoan.getDisbursementDate(),
+                redoLoan, redoLoan.isVariableInstallmentsAllowed(), redoLoan.getLoanAmount(), redoLoan.getInterestRate()), installments);
             for (PaymentDataTemplate template : paymentDataBeans) {
                 if (template.hasValidAmount() && template.getTransactionDate() != null) {
                     if (!customer.getCustomerMeeting().getMeeting().isValidMeetingDate(template.getTransactionDate(),
@@ -1090,6 +1090,16 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
+    }
+
+    private List<RepaymentScheduleInstallment> getInstallmentFromPaymentDataBeans(Collection<PaymentDataHtmlBean> paymentDataBeans) {
+        return (List<RepaymentScheduleInstallment>) org.mifos.framework.util.CollectionUtils.collect(paymentDataBeans,
+                new Transformer<PaymentDataHtmlBean, RepaymentScheduleInstallment>() {
+                    @Override
+                    public RepaymentScheduleInstallment transform(PaymentDataHtmlBean input) {
+                        return input.getInstallment();
+                    }
+                });
     }
 
     private ActionForwards validateInstallmentsAndCashFlow(ActionForm form, HttpServletRequest request,
@@ -1477,26 +1487,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             loanAccountMeetingDto.setMonthRank(Short.valueOf(loanActionForm.getMonthRank()));
         }
 
-        LoanAccountInfoDto loanAccountInfo = new LoanAccountInfoDto();
-        loanAccountInfo.setCustomerId(customerId);
-        loanAccountInfo.setFundId(fundId);
-        loanAccountInfo.setDisbursementDate(disbursementDate.toLocalDate());
-
-        loanAccountInfo.setProductId(loanActionForm.getPrdOfferingIdValue());
-        loanAccountInfo.setLoanAmount(loanActionForm.getLoanAmount());
-        loanAccountInfo.setInterestDeductedAtDisbursement(loanActionForm.isInterestDedAtDisbValue());
-        loanAccountInfo.setInterest(loanActionForm.getInterestDoubleValue());
-        loanAccountInfo.setGracePeriod(loanActionForm.getGracePeriodDurationValue());
-        loanAccountInfo.setMaxLoanAmount(loanActionForm.getMaxLoanAmount());
-        loanAccountInfo.setMinLoanAmount(loanActionForm.getMinLoanAmount());
-        loanAccountInfo.setNumOfInstallments(loanActionForm.getNoOfInstallmentsValue());
-        loanAccountInfo.setMaxNumOfInstallments(loanActionForm.getMaxNoInstallmentsValue());
-        loanAccountInfo.setMinNumOfInstallments(loanActionForm.getMinNoInstallmentsValue());
-        loanAccountInfo.setExternalId(loanActionForm.getExternalId());
-        loanAccountInfo.setSelectedLoanPurpose(loanActionForm.getBusinessActivityIdValue());
-        loanAccountInfo.setSelectedCollateralType(loanActionForm.getCollateralTypeIdValue());
-        loanAccountInfo.setAccountState(loanActionForm.getState().getValue());
-
+        LoanAccountInfoDto loanAccountInfo = getLoanAccountInfo(loanActionForm, disbursementDate, customerId, fundId);
 
         List<LoanScheduledInstallmentDto> loanRepayments = new ArrayList<LoanScheduledInstallmentDto>();
         List<RepaymentScheduleInstallment> installments = loanActionForm.getInstallments();
@@ -1545,6 +1536,29 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         request.setAttribute("customer", customer);
 
         return mapping.findForward(ActionForwards.create_success.toString());
+    }
+
+    private LoanAccountInfoDto getLoanAccountInfo(LoanAccountActionForm loanActionForm, DateTime disbursementDate, Integer customerId, Short fundId) {
+        LoanAccountInfoDto loanAccountInfo = new LoanAccountInfoDto();
+        loanAccountInfo.setCustomerId(customerId);
+        loanAccountInfo.setFundId(fundId);
+        loanAccountInfo.setDisbursementDate(disbursementDate.toLocalDate());
+
+        loanAccountInfo.setProductId(loanActionForm.getPrdOfferingIdValue());
+        loanAccountInfo.setLoanAmount(loanActionForm.getLoanAmount());
+        loanAccountInfo.setInterestDeductedAtDisbursement(loanActionForm.isInterestDedAtDisbValue());
+        loanAccountInfo.setInterest(loanActionForm.getInterestDoubleValue());
+        loanAccountInfo.setGracePeriod(loanActionForm.getGracePeriodDurationValue());
+        loanAccountInfo.setMaxLoanAmount(loanActionForm.getMaxLoanAmount());
+        loanAccountInfo.setMinLoanAmount(loanActionForm.getMinLoanAmount());
+        loanAccountInfo.setNumOfInstallments(loanActionForm.getNoOfInstallmentsValue());
+        loanAccountInfo.setMaxNumOfInstallments(loanActionForm.getMaxNoInstallmentsValue());
+        loanAccountInfo.setMinNumOfInstallments(loanActionForm.getMinNoInstallmentsValue());
+        loanAccountInfo.setExternalId(loanActionForm.getExternalId());
+        loanAccountInfo.setSelectedLoanPurpose(loanActionForm.getBusinessActivityIdValue());
+        loanAccountInfo.setSelectedCollateralType(loanActionForm.getCollateralTypeIdValue());
+        loanAccountInfo.setAccountState(loanActionForm.getState().getValue());
+        return loanAccountInfo;
     }
 
     @SuppressWarnings("unchecked")

@@ -26,7 +26,9 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.Money;
 
 import java.util.Date;
@@ -47,7 +49,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         this.paymentTypeId = PaymentTypes.CASH.getValue();
 
         long currentTime = new DateTimeService().getCurrentJavaDateTime().getTime();
-        this.date = DateUtils.getUserLocaleDate(locale, installment.getDueDateValue().toString());
+        this.date = installment.getDueDate();
         if (installment.getDueDateValue().getTime() <= currentTime) {
             this.amount = installment.getTotalValue().toString();
         }
@@ -78,7 +80,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
     public Date getTransactionDate() throws InvalidDateException {
         String date = getDate();
         if (date != null && !date.equals("")) {
-            return DateUtils.getLocaleDate(locale, date);
+            return DateUtils.getDate(date, locale, DateUtils.getShortDateFormat(locale));
         }
         return null;
     }
@@ -103,7 +105,29 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         this.date = date;
     }
 
+    public String getDueDate() {
+        return this.installment.getDueDate();
+    }
+
+    public String getTotal() {
+        return this.installment.getTotal();
+    }
+
+    public void setDueDate(String dueDate) {
+        this.installment.setDueDate(dueDate);
+        this.installment.setDueDateValue(DateUtils.getDate(dueDate, locale, DateUtils.getShortDateFormat(locale)));
+    }
+
+    public void setTotal(String total) {
+        this.installment.setTotal(total);
+        LocalizationConverter localizationConverter = new LocalizationConverter(installment.getCurrency());
+        DoubleConversionResult conversionResult = localizationConverter.parseDoubleForInstallmentTotalAmount(installment.getTotal());
+        this.installment.setTotalValue(conversionResult.getDoubleValue()) ;
+    }
+
     public void setPaymentTypeId(Short paymentTypeId) {
         this.paymentTypeId = paymentTypeId;
     }
+
+
 }

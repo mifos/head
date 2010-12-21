@@ -23,11 +23,7 @@ package org.mifos.application.servicefacade;
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
@@ -49,9 +45,11 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
+import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
+import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -143,6 +141,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.Transformer;
 import org.mifos.security.MifosUser;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActivityContext;
@@ -489,7 +488,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
         for (LoanScheduledInstallmentDto installment : loanRepayments) {
-            RepaymentScheduleInstallment repaymentScheduleInstallment = RepaymentScheduleInstallment.createForScheduleCopy(installment.getInstallmentNumber(), installment.getPrincipal(), installment.getInterest(), installment.getDueDate(), userContext.getPreferredLocale(), loan.getCurrency());
+            RepaymentScheduleInstallment repaymentScheduleInstallment = RepaymentScheduleInstallment.createForScheduleCopy(
+                                                                        installment.getInstallmentNumber(),
+                                                                        installment.getPrincipal(), installment.getInterest(),
+                                                                        installment.getDueDate(), userContext.getPreferredLocale(),
+                                                                        loan.getCurrency());
             installments.add(repaymentScheduleInstallment);
         }
 
@@ -623,7 +626,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         UserContext userContext = toUserContext(user);
 
         CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfoDto.getCustomerId());
-        LoanBO loan = redoLoan(customer, loanAccountMeetingDto, loanAccountInfoDto, existingLoanPayments);
+        LoanBO loan = getLoanBOForRedo(customer, loanAccountMeetingDto, loanAccountInfoDto, existingLoanPayments);
 
         StaticHibernateUtil.startTransaction();
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
@@ -646,7 +649,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         return new LoanCreationResultDto(new ConfigurationPersistence().isGlimEnabled() && customer.isGroup(), loan.getAccountId(), loan.getGlobalAccountNum());
     }
 
-    private LoanBO redoLoan(CustomerBO customer, LoanAccountMeetingDto loanAccountMeetingDto, LoanAccountInfoDto loanAccountActionForm, List<LoanPaymentDto> existingLoanPayments) {
+    public LoanBO getLoanBOForRedo(CustomerBO customer, LoanAccountMeetingDto loanAccountMeetingDto,
+                                   LoanAccountInfoDto loanAccountInfoDto, List<LoanPaymentDto> existingLoanPayments) {
 
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
@@ -656,32 +660,32 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             MeetingBO newMeetingForRepaymentDay = null;
             if (isRepaymentIndepOfMeetingEnabled) {
-                newMeetingForRepaymentDay = createNewMeetingForRepaymentDay(loanAccountActionForm.getDisbursementDate(), loanAccountMeetingDto, customer);
+                newMeetingForRepaymentDay = createNewMeetingForRepaymentDay(loanAccountInfoDto.getDisbursementDate(), loanAccountMeetingDto, customer);
             }
 
-            Short productId = loanAccountActionForm.getProductId();
+            Short productId = loanAccountInfoDto.getProductId();
 
             LoanOfferingBO loanOffering = new LoanPrdBusinessService().getLoanOffering(productId, userContext.getLocaleId());
 
-            Money loanAmount = new Money(loanOffering.getCurrency(), loanAccountActionForm.getLoanAmount());
-            Short numOfInstallments = loanAccountActionForm.getNumOfInstallments();
-            boolean isInterestDeductedAtDisbursement = loanAccountActionForm.isInterestDeductedAtDisbursement();
-            Double interest = loanAccountActionForm.getInterest();
-            Short gracePeriod = loanAccountActionForm.getGracePeriod();
+            Money loanAmount = new Money(loanOffering.getCurrency(), loanAccountInfoDto.getLoanAmount());
+            Short numOfInstallments = loanAccountInfoDto.getNumOfInstallments();
+            boolean isInterestDeductedAtDisbursement = loanAccountInfoDto.isInterestDeductedAtDisbursement();
+            Double interest = loanAccountInfoDto.getInterest();
+            Short gracePeriod = loanAccountInfoDto.getGracePeriod();
             // FIXME - put back in fees
-//            List<FeeDto> fees = loanAccountActionForm.getFeesToApply();
+            // List<FeeDto> fees = loanAccountInfoDto.getFeesToApply();
             List<FeeDto> fees = new ArrayList<FeeDto>();
-            Double maxLoanAmount = Double.valueOf(loanAccountActionForm.getMaxLoanAmount());
-            Double minLoanAmount = Double.valueOf(loanAccountActionForm.getMinLoanAmount());
-            Short maxNumOfInstallments = loanAccountActionForm.getMaxNumOfInstallments();
-            Short minNumOfShortInstallments = loanAccountActionForm.getMinNumOfInstallments();
-            String externalId = loanAccountActionForm.getExternalId();
-            Integer selectedLoanPurpose = loanAccountActionForm.getSelectedLoanPurpose();
-            String collateralNote = loanAccountActionForm.getCollateralNote();
-            Integer selectedCollateralType = loanAccountActionForm.getSelectedCollateralType();
+            Double maxLoanAmount = Double.valueOf(loanAccountInfoDto.getMaxLoanAmount());
+            Double minLoanAmount = Double.valueOf(loanAccountInfoDto.getMinLoanAmount());
+            Short maxNumOfInstallments = loanAccountInfoDto.getMaxNumOfInstallments();
+            Short minNumOfShortInstallments = loanAccountInfoDto.getMinNumOfInstallments();
+            String externalId = loanAccountInfoDto.getExternalId();
+            Integer selectedLoanPurpose = loanAccountInfoDto.getSelectedLoanPurpose();
+            String collateralNote = loanAccountInfoDto.getCollateralNote();
+            Integer selectedCollateralType = loanAccountInfoDto.getSelectedCollateralType();
 
             AccountState accountState = null;
-            Short accountStateValue = loanAccountActionForm.getAccountState();
+            Short accountStateValue = loanAccountInfoDto.getAccountState();
             if (accountStateValue != null) {
                 accountState = AccountState.fromShort(accountStateValue);
             } else {
@@ -689,13 +693,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             }
 
             FundBO fund = null;
-            Short fundId = loanAccountActionForm.getFundId();
+            Short fundId = loanAccountInfoDto.getFundId();
             if (fundId != null) {
                 fund = this.fundDao.findById(fundId);
             }
 
             LoanBO redoLoan = LoanBO.redoLoan(userContext, loanOffering, customer, accountState, loanAmount,
-                    numOfInstallments, loanAccountActionForm.getDisbursementDate().toDateMidnight().toDate(),
+                    numOfInstallments, loanAccountInfoDto.getDisbursementDate().toDateMidnight().toDate(),
                     isInterestDeductedAtDisbursement, interest, gracePeriod,
                     fund, fees, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
                     minNumOfShortInstallments, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
@@ -735,6 +739,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
+    }
+
+    private List<RepaymentScheduleInstallment> getInstallmentFromPaymentDataBeans(Collection<PaymentDataHtmlBean> paymentDataBeans) {
+        return (List<RepaymentScheduleInstallment>) org.mifos.framework.util.CollectionUtils.collect(paymentDataBeans,
+                new Transformer<PaymentDataHtmlBean, RepaymentScheduleInstallment>() {
+                    @Override
+                    public RepaymentScheduleInstallment transform(PaymentDataHtmlBean input) {
+                        return input.getInstallment();
+                    }
+                });
     }
 
     @Override

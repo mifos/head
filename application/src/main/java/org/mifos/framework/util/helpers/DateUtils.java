@@ -69,6 +69,12 @@ public class DateUtils {
         internalLocale = new LocalizationConverter().getDateLocale();
     }
 
+    public static String getShortDateFormat(Locale locale) {
+        String dateSeparator = DateUtils.getDateSeparatorByLocale(locale, DateFormat.MEDIUM);
+        return String.format("dd%sMMM%syyyy", dateSeparator, dateSeparator);
+    }
+
+
     public static boolean sameMonthYear(Date firstDate, Date secondDate) {
         Calendar first = Calendar.getInstance();
         first.setTime(firstDate);

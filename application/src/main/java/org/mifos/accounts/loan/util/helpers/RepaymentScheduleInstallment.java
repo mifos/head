@@ -21,7 +21,6 @@
 package org.mifos.accounts.loan.util.helpers;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -74,7 +73,7 @@ public class RepaymentScheduleInstallment implements Serializable {
         this.miscPenalty = miscPenalty;
         setTotalAndTotalValue(this.principal.add(this.interest).add(this.fees).add(this.miscFees).add(this.miscPenalty));
         this.locale = locale;
-        this.dateFormat = computeDateFormat(this.locale);
+        this.dateFormat = DateUtils.getShortDateFormat(this.locale);
         this.dueDateValue = dueDateValue;
         this.dueDate = DateUtils.getDBtoUserFormatString(dueDateValue, locale);
     }
@@ -82,12 +81,7 @@ public class RepaymentScheduleInstallment implements Serializable {
     @Deprecated
     public RepaymentScheduleInstallment(Locale locale) {
         this.locale = locale;
-        this.dateFormat = computeDateFormat(locale);
-    }
-
-    private String computeDateFormat(Locale locale) {
-        String dateSeparator = DateUtils.getDateSeparatorByLocale(locale, DateFormat.MEDIUM);
-        return String.format("dd%sMMM%syyyy", dateSeparator, dateSeparator);
+        this.dateFormat = DateUtils.getShortDateFormat(locale);
     }
 
     public void setInstallment(Integer installment) {

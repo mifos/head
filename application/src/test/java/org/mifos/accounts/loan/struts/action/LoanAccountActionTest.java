@@ -54,6 +54,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
@@ -301,6 +302,14 @@ public class LoanAccountActionTest {
         verify(dto).getLoanAmount();
         verify(dto).getDisbursementDate();
         verify(mapping).findForward("viewOriginalSchedule");
+    }
+
+    @Test
+    public void showPreviewShouldSetPerspective() throws Exception {
+        when(request.getParameter(PERSPECTIVE)).thenReturn(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
+        loanAccountAction.showPreview(mapping, form, request, response);
+        verify(request,times(1)).setAttribute(LoanConstants.METHODCALLED, "showPreview");
+        verify(request,times(1)).setAttribute(PERSPECTIVE, LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {
