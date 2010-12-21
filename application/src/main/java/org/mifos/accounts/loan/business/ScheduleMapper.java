@@ -64,9 +64,13 @@ public class ScheduleMapper {
         for (LoanScheduleEntity loanScheduleEntity : loanBO.getLoanScheduleEntities()) {
             if (loanScheduleEntity.isNotPaid()) {
                 Installment installment = installments.get(Integer.valueOf(loanScheduleEntity.getInstallmentId()));
+                Money originalInterest = loanScheduleEntity.getInterest();
+                Money extraInterestPaid = new Money(currency, installment.getCurrentExtraInterestPaid());
                 loanScheduleEntity.payComponents(installment, currency, paymentDate);
                 if (loanScheduleEntity.getPaymentAllocation().hasAllocation()) {
-                    loanScheduleEntity.updateLoanSummaryAndPerformanceHistory(accountPaymentEntity, personnel, paymentDate);
+                    LoanTrxnDetailEntity loanTrxnDetailEntity = loanScheduleEntity.updateSummaryAndPerformanceHistory(
+                            accountPaymentEntity, personnel, paymentDate);
+                    loanTrxnDetailEntity.computeAndSetCalculatedInterestOnPayment(originalInterest, extraInterestPaid);
                 }
             }
         }

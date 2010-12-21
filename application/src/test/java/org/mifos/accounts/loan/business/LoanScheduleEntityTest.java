@@ -31,25 +31,25 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentBuilder;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
-import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
-import static java.math.BigDecimal.valueOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.RUPEE;
 import static org.mifos.framework.TestUtils.getDate;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanScheduleEntityTest {
@@ -61,10 +61,6 @@ public class LoanScheduleEntityTest {
     private AccountPaymentEntity accountPayment;
     @Mock
     private LoanPersistence loanPersistence;
-    @Mock
-    private LoanSummaryEntity loanSummary;
-    @Mock
-    private LoanPerformanceHistoryEntity loanPerformanceHistory;
 
     private LoanScheduleEntity loanScheduleEntity;
     private Date paymentDate;
@@ -104,56 +100,44 @@ public class LoanScheduleEntityTest {
     // TODO: Use a AccountTrxnEntityMatcher to verify the allocation totals
     @Test
     public void shouldUpdateLoanSummaryAndPerformanceHistoryOnPayOff() {
+        PaymentAllocation paymentAllocation = new PaymentAllocation(RUPEE);
         loanScheduleEntity = new LoanScheduleEntity() {
-            @Override
-            public PaymentAllocation getPaymentAllocation() {
-                return new PaymentAllocation(RUPEE);
-            }
-
             @Override
             public boolean isPaid() {
                 return true;
             }
         };
         loanScheduleEntity.setAccount(loanBO);
+        loanScheduleEntity.setPaymentAllocation(paymentAllocation);
         Mockito.doNothing().when(accountPayment).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
         when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
         when(accountPayment.getAccount()).thenReturn(loanBO);
-        when(loanBO.getLoanSummary()).thenReturn(loanSummary);
-        when(loanBO.getPerformanceHistory()).thenReturn(loanPerformanceHistory);
-        loanScheduleEntity.updateLoanSummaryAndPerformanceHistory(accountPayment, personnel, paymentDate);
+        loanScheduleEntity.updateSummaryAndPerformanceHistory(accountPayment, personnel, paymentDate);
         verify(accountPayment, times(1)).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
         verify(loanBO, times(1)).getLoanPersistence();
         verify(accountPayment, times(1)).getAccount();
-        verify(loanBO, times(1)).getLoanSummary();
-        verify(loanBO, times(1)).getPerformanceHistory();
+        verify(loanBO, times(1)).recordSummaryAndPerfHistory(true, paymentAllocation);
     }
 
     @Test
     public void shouldUpdateLoanSummaryAndNotPerformanceHistoryOnPartPay() {
+        PaymentAllocation paymentAllocation = new PaymentAllocation(RUPEE);
         loanScheduleEntity = new LoanScheduleEntity() {
-            @Override
-            public PaymentAllocation getPaymentAllocation() {
-                return new PaymentAllocation(RUPEE);
-            }
-
             @Override
             public boolean isPaid() {
                 return false;
             }
         };
         loanScheduleEntity.setAccount(loanBO);
+        loanScheduleEntity.setPaymentAllocation(paymentAllocation);
         Mockito.doNothing().when(accountPayment).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
         when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
         when(accountPayment.getAccount()).thenReturn(loanBO);
-        when(loanBO.getLoanSummary()).thenReturn(loanSummary);
-        when(loanBO.getPerformanceHistory()).thenReturn(loanPerformanceHistory);
-        loanScheduleEntity.updateLoanSummaryAndPerformanceHistory(accountPayment, personnel, paymentDate);
+        loanScheduleEntity.updateSummaryAndPerformanceHistory(accountPayment, personnel, paymentDate);
         verify(accountPayment, times(1)).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
         verify(loanBO, times(1)).getLoanPersistence();
         verify(accountPayment, times(1)).getAccount();
-        verify(loanBO, times(1)).getLoanSummary();
-        verify(loanBO, times(0)).getPerformanceHistory();
+        verify(loanBO, times(1)).recordSummaryAndPerfHistory(false, paymentAllocation);
     }
 
     @Test

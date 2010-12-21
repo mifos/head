@@ -24,6 +24,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -564,13 +565,13 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     public void payComponents(Installment installment, MifosCurrency currency, Date paymentDate) {
         initPaymentAllocation(currency);
-        allocatePrincipal(new Money(currency, installment.getCurrentPayment().getPrincipalPaid()));
-        allocateInterest(new Money(currency, installment.getCurrentPayment().getInterestPaid()));
-        allocateExtraInterest(new Money(currency, installment.getCurrentPayment().getExtraInterestPaid()));
-        payFees(new Money(currency, installment.getCurrentPayment().getFeesPaid()));
-        allocateMiscFees(new Money(currency, installment.getCurrentPayment().getMiscFeesPaid()));
-        allocatePenalty(new Money(currency, installment.getCurrentPayment().getPenaltyPaid()));
-        allocateMiscPenalty(new Money(currency, installment.getCurrentPayment().getMiscPenaltyPaid()));
+        allocatePrincipal(new Money(currency, installment.getCurrentPrincipalPaid()));
+        allocateInterest(new Money(currency, installment.getCurrentInterestPaid()));
+        allocateExtraInterest(new Money(currency, installment.getCurrentExtraInterestPaid()));
+        payFees(new Money(currency, installment.getCurrentFeesPaid()));
+        allocateMiscFees(new Money(currency, installment.getCurrentMiscFeesPaid()));
+        allocatePenalty(new Money(currency, installment.getCurrentPenaltyPaid()));
+        allocateMiscPenalty(new Money(currency, installment.getCurrentMiscPenaltyPaid()));
         updateInterest(installment, currency);
         setExtraInterest(new Money(currency, installment.getExtraInterest()));
         recordPayment(paymentDate);
@@ -674,27 +675,38 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         return getTotalFeesDue().getAmount().doubleValue();
     }
 
-    public void updateLoanSummaryAndPerformanceHistory(AccountPaymentEntity accountPayment, PersonnelBO personnel, Date transactionDate) {
+    public LoanTrxnDetailEntity updateSummaryAndPerformanceHistory(AccountPaymentEntity accountPayment,
+                                                                   PersonnelBO personnel, Date transactionDate) {
 
-        accountPayment.addAccountTrxn(new LoanTrxnDetailEntity(accountPayment, this, personnel, transactionDate,
-                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, ((LoanBO)account).getLoanPersistence()));
+        LoanBO loanBO = (LoanBO) account;
+        LoanPersistence loanPersistence = loanBO.getLoanPersistence();
+        LoanTrxnDetailEntity loanTrxnDetailEntity = recordTransaction(accountPayment, personnel, transactionDate, loanPersistence);
+        loanBO.recordSummaryAndPerfHistory(isPaid(), paymentAllocation);
+        return loanTrxnDetailEntity;
+    }
 
-        ((LoanBO)account).getLoanSummary().updatePaymentDetails(getPaymentAllocation());
-
-        if (isPaid()) {
-            ((LoanBO)account).getPerformanceHistory().incrementPayments();
-        }
+    private LoanTrxnDetailEntity recordTransaction(AccountPaymentEntity accountPayment, PersonnelBO personnel,
+                                                   Date transactionDate, LoanPersistence loanPersistence) {
+        // TODO: Avoid passing the persistence instance in the constructor for reference data lookup
+        LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment, this, personnel, transactionDate,
+                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, loanPersistence);
+        accountPayment.addAccountTrxn(loanTrxnDetailEntity);
+        return loanTrxnDetailEntity;
     }
 
     public Money applyPayment(AccountPaymentEntity accountPaymentEntity, Money balance, PersonnelBO personnel, Date transactionDate) {
         if (isNotPaid() && balance.isGreaterThanZero()) {
             balance = payComponents(balance, transactionDate);
-            updateLoanSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
+            updateSummaryAndPerformanceHistory(accountPaymentEntity, personnel, transactionDate);
         }
         return balance;
     }
 
     boolean hasFees() {
         return CollectionUtils.isNotEmpty(accountFeesActionDetails);
+    }
+
+    public void setPaymentAllocation(PaymentAllocation paymentAllocation) {
+        this.paymentAllocation = paymentAllocation;
     }
 }

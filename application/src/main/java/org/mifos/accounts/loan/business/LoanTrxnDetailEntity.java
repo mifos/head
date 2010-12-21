@@ -251,4 +251,12 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     public void setCalculatedInterestOnPayment(CalculatedInterestOnPayment calculatedInterestOnPayment) {
         this.calculatedInterestOnPayment = calculatedInterestOnPayment;
     }
+
+    public void computeAndSetCalculatedInterestOnPayment(Money originalInterest, Money extraInterestPaid) {
+        CalculatedInterestOnPayment calculatedInterestOnPayment = new CalculatedInterestOnPayment();
+        calculatedInterestOnPayment.setLoanTrxnDetailEntity(this);
+        calculatedInterestOnPayment.setOriginalInterest(originalInterest);
+        calculatedInterestOnPayment.setExtraInterestPaid(extraInterestPaid);
+        setCalculatedInterestOnPayment(calculatedInterestOnPayment);
+    }
 }

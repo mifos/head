@@ -34,6 +34,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -131,8 +132,6 @@ public class ScheduleCalculatorAdaptorTest {
         when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
         when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
         when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
-        when(loanBO.getLoanSummary()).thenReturn(loanSummary);
-        when(loanBO.getPerformanceHistory()).thenReturn(performanceHistory);
         when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
         scheduleCalculatorAdaptor.applyPayment(loanBO, new Money(rupee, 112.00), getDate(30, 10, 2010), personnel, accountPaymentEntity);
         verify(scheduleMapper, times(1)).mapToSchedule(Mockito.<Collection<LoanScheduleEntity>>any(), Mockito.<Date>any(), Mockito.<Double>any(), Mockito.<BigDecimal>any());
@@ -142,12 +141,9 @@ public class ScheduleCalculatorAdaptorTest {
         verify(loanBO, times(1)).getDisbursementDate();
         verify(loanBO, times(1)).getInterestRate();
         verify(loanBO, times(2)).getLoanPersistence();
-        verify(loanBO, times(2)).getLoanSummary();
-        verify(loanBO, times(1)).getPerformanceHistory();
+        verify(loanBO, times(2)).recordSummaryAndPerfHistory(anyBoolean(), Matchers.<PaymentAllocation>any());
         verify(accountPaymentEntity, times(2)).getAccount();
         verify(loanPersistence, times(2)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
-        verify(loanSummary, times(2)).updatePaymentDetails(Mockito.<PaymentAllocation>any());
-        verify(performanceHistory, times(1)).incrementPayments();
     }
 
     @Test

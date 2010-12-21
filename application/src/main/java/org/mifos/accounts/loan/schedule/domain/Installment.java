@@ -256,10 +256,6 @@ public class Installment implements Comparable<Installment> {
         return previousPayments.getPrincipalPaid();
     }
 
-    public Date getRecentPartialPaymentDate() {
-        return previousPayments.getRecentPartialPaymentDate();
-    }
-
     public boolean isAnyPrincipalPaid() {
         return isGreaterThanZero(getPrincipalPaid());
     }
@@ -351,5 +347,33 @@ public class Installment implements Comparable<Installment> {
 
     public Date fromDateForOverdueComputation() {
         return max(getDueDate(), getRecentPrincipalPaidDate());
+    }
+
+    public BigDecimal getCurrentPrincipalPaid() {
+        return currentPayment.getPrincipalPaid();
+    }
+
+    public BigDecimal getCurrentInterestPaid() {
+        return currentPayment.getInterestPaid();
+    }
+
+    public BigDecimal getCurrentExtraInterestPaid() {
+        return currentPayment.getExtraInterestPaid();
+    }
+
+    public BigDecimal getCurrentFeesPaid() {
+        return currentPayment.getFeesPaid();
+    }
+
+    public BigDecimal getCurrentMiscFeesPaid() {
+        return currentPayment.getMiscFeesPaid();
+    }
+
+    public BigDecimal getCurrentPenaltyPaid() {
+        return currentPayment.getPenaltyPaid();
+    }
+
+    public BigDecimal getCurrentMiscPenaltyPaid() {
+        return currentPayment.getMiscPenaltyPaid();
     }
 }

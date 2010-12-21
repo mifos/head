@@ -576,7 +576,7 @@ public class LoanBO extends AccountBO {
     }
 
     public boolean isInterestDeductedAtDisbursement() {
-        return intrestAtDisbursement == LoanConstants.INTEREST_DEDUCTED_AT_DISBURSEMENT;
+        return LoanConstants.INTEREST_DEDUCTED_AT_DISBURSEMENT.equals(intrestAtDisbursement);
     }
 
     void setInterestDeductedAtDisbursement(final boolean interestDedAtDisb) {
@@ -685,7 +685,7 @@ public class LoanBO extends AccountBO {
         // adjustment is possible only if account state is
         // 1. active in good standing.
         // 2. active in bad standing.
-        // 3. Closed - Obligation Met : Check permisssion first ; Can adjust
+        // 3. Closed - Obligation Met : Check permission first ; Can adjust
         // payment when account status is "closed-obligation met"
 
         if (!(getAccountState().isLoanActiveInGoodStanding()
@@ -815,7 +815,7 @@ public class LoanBO extends AccountBO {
     public final void removeFeesAssociatedWithUpcomingAndAllKnownFutureInstallments(final Short feeId,
             final Short personnelId) throws AccountException {
         List<Short> installmentIds = getApplicableInstallmentIdsForRemoveFees();
-        Money totalFeeAmount = new Money(getCurrency());
+        Money totalFeeAmount;
         if (installmentIds != null && installmentIds.size() != 0 && isFeeActive(feeId)) {
 
             FeeBO fee = getAccountFeesObject(feeId);
@@ -951,14 +951,10 @@ public class LoanBO extends AccountBO {
         Set<AccountActionDateEntity> accountActionDateEntities = getAccountActionDates();
         OverDueAmounts totalOverDueAmounts = new OverDueAmounts();
         if (null != accountActionDateEntities && accountActionDateEntities.size() > 0) {
-            Iterator<AccountActionDateEntity> accountActionDatesIterator = accountActionDateEntities.iterator();
-            while (accountActionDatesIterator.hasNext()) {
-                LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountActionDatesIterator.next();
-
-                if (accountActionDateEntity.getInstallmentId() < installmentId) {
-                    OverDueAmounts dueAmounts = new OverDueAmounts();
-                    dueAmounts = accountActionDateEntity.getDueAmnts();
-                    totalOverDueAmounts.add(dueAmounts);
+            for (AccountActionDateEntity accountActionDateEntity : accountActionDateEntities) {
+                LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) accountActionDateEntity;
+                if (loanScheduleEntity.getInstallmentId() < installmentId) {
+                    totalOverDueAmounts.add(loanScheduleEntity.getDueAmnts());
                 }
             }
         }
@@ -1960,16 +1956,14 @@ public class LoanBO extends AccountBO {
 
     private LoanActivityEntity buildLoanActivity(final Money totalPrincipal, final PersonnelBO personnel,
             final String comments, final Date trxnDate) {
-        Date activityDate = trxnDate;
-        Money principal = totalPrincipal;
         Money interest = new Money(getCurrency());
         Money penalty = new Money(getCurrency());
         Money fees = new Money(getCurrency());
-        return new LoanActivityEntity(this, personnel, comments, principal, loanSummary.getOriginalPrincipal()
+        return new LoanActivityEntity(this, personnel, comments, totalPrincipal, loanSummary.getOriginalPrincipal()
                 .subtract(loanSummary.getPrincipalPaid()), interest, loanSummary.getOriginalInterest().subtract(
                 loanSummary.getInterestPaid()), fees,
                 loanSummary.getOriginalFees().subtract(loanSummary.getFeesPaid()), penalty, loanSummary
-                        .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), activityDate);
+                        .getOriginalPenalty().subtract(loanSummary.getPenaltyPaid()), trxnDate);
     }
 
     private Short getInstallmentSkipToStartRepayment(final boolean isRepaymentIndepOfMeetingEnabled) {
@@ -1994,7 +1988,7 @@ public class LoanBO extends AccountBO {
         }
 
         if (getGraceType() == GraceType.PRINCIPALONLYGRACE || getGraceType() == GraceType.NONE) {
-            return (short) firstRepaymentInstallment;
+            return firstRepaymentInstallment;
         }
         return (short) (getGracePeriodDuration() + firstRepaymentInstallment);
     }
@@ -2031,7 +2025,7 @@ public class LoanBO extends AccountBO {
      * periods rounded to the nearest integer? Note that the spreadsheet assumes that the number of periods is an exact
      * floating point number, not rounded.
      *
-     * Ththe formula is incorrect for monthly loans, when fiscal year is 365. You should just divide recurAfter by 12.
+     * The formula is incorrect for monthly loans, when fiscal year is 365. You should just divide recurAfter by 12.
      */
     private double getDecliningInterestAnnualPeriods() {
         RecurrenceType meetingFrequency = getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum();
@@ -2114,14 +2108,12 @@ public class LoanBO extends AccountBO {
     public static Boolean isDisbursementDateValid(final CustomerBO specifiedCustomer, final Date disbursementDate)
             throws AccountException {
         logger.debug("IsDisbursementDateValid invoked ");
-        Boolean isValid = false;
         try {
-            isValid = specifiedCustomer.getCustomerMeeting().getMeeting().isValidMeetingDate(disbursementDate,
-                    DateUtils.getLastDayOfNextYear());
+            MeetingBO meeting = specifiedCustomer.getCustomerMeeting().getMeeting();
+            return meeting.isValidMeetingDate(disbursementDate, DateUtils.getLastDayOfNextYear());
         } catch (MeetingException e) {
             throw new AccountException(e);
         }
-        return isValid;
     }
 
     /**
@@ -2317,7 +2309,7 @@ public class LoanBO extends AccountBO {
             MeetingType meetingType = MeetingType.fromInt(customerMeeting.getMeetingType().getMeetingTypeId());
             Short recurAfter = loanOfferingMeeting.getMeetingDetails().getRecurAfter();
             try {
-                MeetingBO meetingToReturn = null;
+                MeetingBO meetingToReturn;
                 if (meetingFrequency.equals(RecurrenceType.MONTHLY)) {
                     if (customerMeeting.isMonthlyOnDate()) {
                         meetingToReturn = new MeetingBO(customerMeeting.getMeetingDetails().getDayNumber(), recurAfter,
@@ -3865,6 +3857,11 @@ public class LoanBO extends AccountBO {
 
     public boolean paymentsNotAllowed() {
         return !paymentsAllowed();
+    }
+
+    public void recordSummaryAndPerfHistory(boolean paid, PaymentAllocation paymentAllocation) {
+        loanSummary.updatePaymentDetails(paymentAllocation);
+        if (paid) performanceHistory.incrementPayments();
     }
 
     /**

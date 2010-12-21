@@ -19,12 +19,14 @@
  */
 package org.mifos.accounts.loan.business;
 
-import org.junit.Assert;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.loan.business.matchers.LoanScheduleEntityMatcher;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.loan.schedule.domain.Installment;
@@ -37,12 +39,14 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Transformer;
+import org.mockito.Matchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
@@ -50,8 +54,12 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.getDate;
+import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -76,10 +84,6 @@ public class ScheduleMapperTest {
     private LoanPersistence loanPersistence;
     @Mock
     private AccountActionEntity accountActionEntity;
-    @Mock
-    private LoanSummaryEntity loanSummary;
-    @Mock
-    private LoanPerformanceHistoryEntity performanceHistory;
 
     @Before
     public void setUp() {
@@ -91,30 +95,36 @@ public class ScheduleMapperTest {
     public void shouldMapLoanScheduleEntityToSchedule() {
         Collection<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities(getDate(24, 11, 2010));
         Schedule schedule = scheduleMapper.mapToSchedule(loanScheduleEntities, DISBURSEMENT_DATE, DAILY_INTEREST_RATE, LOAN_AMOUNT);
-        Assert.assertThat(schedule, new ScheduleMatcher(getSchedule()));
+        assertThat(schedule, new ScheduleMatcher(getSchedule()));
     }
 
     @Test
     public void shouldMapScheduleToLoanScheduleEntity() throws PersistenceException {
+        AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(loanBO, null, null, null, null, null);
         LoanScheduleEntity scheduleEntityForPopulateTestInput = getLoanScheduleEntityForPopulateTestInput();
         Collection<LoanScheduleEntity> loanScheduleEntities = Arrays.asList(scheduleEntityForPopulateTestInput);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
-        when(loanBO.getLoanSummary()).thenReturn(loanSummary);
-        when(loanBO.getPerformanceHistory()).thenReturn(performanceHistory);
-        when(accountPaymentEntity.getAccount()).thenReturn(loanBO);
         when(loanPersistence.getPersistentObject(Mockito.eq(AccountActionEntity.class), Mockito.<Serializable>any())).thenReturn(accountActionEntity);
         Date paymentDate = getDate(24, 11, 2010);
-        scheduleMapper.populatePaymentDetails(getScheduleWithSingleInstallment(), loanBO, paymentDate, personnelBO, accountPaymentEntity);
-        Assert.assertThat(getLoanScheduleEntity(paymentDate), new LoanScheduleEntityMatcher(scheduleEntityForPopulateTestInput));
+        Schedule schedule = getScheduleWithSingleInstallment();
+        scheduleMapper.populatePaymentDetails(schedule, loanBO, paymentDate, personnelBO, accountPaymentEntity);
+        assertCalculatedInterestOnPayment(accountPaymentEntity);
+        assertThat(getLoanScheduleEntity(paymentDate), new LoanScheduleEntityMatcher(scheduleEntityForPopulateTestInput));
         verify(loanBO, times(1)).getLoanScheduleEntities();
         verify(loanBO, times(1)).getLoanPersistence();
-        verify(loanBO, times(1)).getLoanSummary();
-        verify(loanBO, times(1)).getPerformanceHistory();
-        verify(accountPaymentEntity, times(1)).getAccount();
+        verify(loanBO, times(1)).recordSummaryAndPerfHistory(anyBoolean(), Matchers.<PaymentAllocation>any());
         verify(loanPersistence, times(1)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
-        verify(loanSummary, times(1)).updatePaymentDetails(Mockito.<PaymentAllocation>any());
-        verify(performanceHistory, times(1)).incrementPayments();
+    }
+
+    private void assertCalculatedInterestOnPayment(AccountPaymentEntity accountPaymentEntity) {
+        List<AccountTrxnEntity> accountTrxns = new ArrayList<AccountTrxnEntity>(accountPaymentEntity.getAccountTrxns());
+        assertThat(accountTrxns.size(), is(1));
+        LoanTrxnDetailEntity loanTrxnDetailEntity = (LoanTrxnDetailEntity) accountTrxns.get(0);
+        CalculatedInterestOnPayment calculatedInterestOnPayment = loanTrxnDetailEntity.getCalculatedInterestOnPayment();
+        assertThat(calculatedInterestOnPayment, is(not(nullValue())));
+        assertThat(calculatedInterestOnPayment.getOriginalInterest().getAmount().doubleValue(), is(10d));
+        assertThat(calculatedInterestOnPayment.getExtraInterestPaid().getAmount().doubleValue(), is(4.5d));
     }
 
     @Test
@@ -242,7 +252,7 @@ public class ScheduleMapperTest {
     }
 
     private void assertExtraInterest(LoanScheduleEntity loanScheduleEntity, double extraInterest) {
-        Assert.assertThat(loanScheduleEntity.getExtraInterest().getAmount().doubleValue(), is(extraInterest));
+        assertThat(loanScheduleEntity.getExtraInterest().getAmount().doubleValue(), is(extraInterest));
     }
 
     private List<Installment> getInstallments(double... extraInterest) {
@@ -263,6 +273,30 @@ public class ScheduleMapperTest {
                 return Integer.valueOf(input.getInstallmentId());
             }
         });
+    }
+
+    // TODO: This matcher currently verifies only the CalculatedInterestOnPayment details. Needs extension to cover other fields !!!
+    private class LoanTrxnDetailEntityMatcher extends TypeSafeMatcher<LoanTrxnDetailEntity> {
+        private double originalInterest;
+        private double extraInterestPaid;
+
+        public LoanTrxnDetailEntityMatcher(double originalInterest, double extraInterestPaid) {
+            this.originalInterest = originalInterest;
+            this.extraInterestPaid = extraInterestPaid;
+        }
+
+        @Override
+        public boolean matchesSafely(LoanTrxnDetailEntity loanTrxnDetailEntity) {
+            CalculatedInterestOnPayment calculatedInterestOnPayment = loanTrxnDetailEntity.getCalculatedInterestOnPayment();
+            return calculatedInterestOnPayment != null
+                    && calculatedInterestOnPayment.getOriginalInterest().getAmount().doubleValue() == originalInterest
+                    && calculatedInterestOnPayment.getExtraInterestPaid().getAmount().doubleValue() == originalInterest;
+        }
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("LoanTrxnDetailEntity did not match");
+        }
     }
 }
 
