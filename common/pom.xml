@@ -101,11 +101,6 @@
             <groupId>org.springframework.webflow</groupId>
             <artifactId>spring-binding</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <defaultGoal>jar</defaultGoal>
