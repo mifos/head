@@ -258,8 +258,6 @@ public class SaveCollectionSheetAssembler {
 
                     final PaymentData accountPaymentDataView = getCustomerAccountPaymentDataView(new Money(Money
                             .getDefaultCurrency(), amount.toString()), payment);
-                    // override transaction date with current date - Earlier Repayment of Fees requirement
-                    accountPaymentDataView.setTransactionDate(DateUtils.getCurrentDateWithoutTimeStamp());
 
                     final Integer accountId = saveCollectionSheetCustomer.getSaveCollectionSheetCustomerAccount()
                             .getAccountId();
@@ -270,8 +268,8 @@ public class SaveCollectionSheetAssembler {
                         account.applyPayment(accountPaymentDataView);
                         customerAccountList.add(account);
                     } catch (AccountException ae) {
-                        logger.error("Payment of collection/fee on account [" + accountId
-                                + "] failed. Account changes will not be persisted due to: " + ae.getMessage(), ae);
+                        logger.warn("Payment of collection/fee on account [" + accountId
+                                + "] failed. Account changes will not be persisted due to: " + ae.getMessage());
                         failedCustomerAccountPaymentNums.add(accountId.toString());
                         StaticHibernateUtil.getSessionTL().evict(account);
                     }
