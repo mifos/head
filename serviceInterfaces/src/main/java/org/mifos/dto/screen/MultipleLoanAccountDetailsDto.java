@@ -22,23 +22,16 @@ package org.mifos.dto.screen;
 
 import java.util.List;
 
-import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.dto.domain.ValueListElement;
 
 public class MultipleLoanAccountDetailsDto {
 
-    private final List<MultipleLoanCreationDto> multipleLoanDetails;
     private final List<ValueListElement> allLoanPruposes;
     private final boolean loanPendingApprovalStateEnabled;
 
-    public MultipleLoanAccountDetailsDto(List<MultipleLoanCreationDto> multipleLoanDetails, List<ValueListElement> allLoanPruposes, boolean loanPendingApprovalStateEnabled) {
-        this.multipleLoanDetails = multipleLoanDetails;
+    public MultipleLoanAccountDetailsDto(List<ValueListElement> allLoanPruposes, boolean loanPendingApprovalStateEnabled) {
         this.allLoanPruposes = allLoanPruposes;
         this.loanPendingApprovalStateEnabled = loanPendingApprovalStateEnabled;
-    }
-
-    public List<MultipleLoanCreationDto> getMultipleLoanDetails() {
-        return this.multipleLoanDetails;
     }
 
     public List<ValueListElement> getAllLoanPruposes() {
@@ -48,5 +41,4 @@ public class MultipleLoanAccountDetailsDto {
     public boolean isLoanPendingApprovalStateEnabled() {
         return this.loanPendingApprovalStateEnabled;
     }
-
 }

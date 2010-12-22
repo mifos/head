@@ -1328,12 +1328,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         LoanOfferingBO loanOffering = this.loanProductDao.findById(productId);
 
+        // FIXME - Refactor MultipleLoanCreationDto into proper Dto
         List<MultipleLoanCreationDto> multipleLoanDetails = buildClientViewHelper(loanOffering, clients);
 
         List<ValueListElement> allLoanPruposes = this.loanProductDao.findAllLoanPurposes();
         boolean loanPendingApprovalStateEnabled = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
 
-        return new MultipleLoanAccountDetailsDto(multipleLoanDetails, allLoanPruposes, loanPendingApprovalStateEnabled);
+        return new MultipleLoanAccountDetailsDto(allLoanPruposes, loanPendingApprovalStateEnabled);
     }
 
     private List<MultipleLoanCreationDto> buildClientViewHelper(final LoanOfferingBO loanOffering,

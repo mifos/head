@@ -20,6 +20,8 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import static org.mifos.framework.util.CollectionUtils.collect;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -48,6 +50,7 @@ import org.mifos.config.ClientRules;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
@@ -56,9 +59,11 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.helpers.Transformer;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,16 +172,33 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 
         MultipleLoanAccountDetailsDto multipleLoanDetails = this.loanAccountServiceFacade.retrieveMultipleLoanAccountDetails(searchId, branchId, productId);
 
-
-        loanActionForm.setClientDetails(multipleLoanDetails.getMultipleLoanDetails());
-
+        List<ClientBO> clients = this.customerDao.findActiveClientsUnderParent(searchId, branchId);
+        if (clients.isEmpty()) {
+            throw new BusinessRuleException(LoanConstants.NOSEARCHRESULTS);
+        }
         LoanOfferingBO loanOffering = this.loanProductDao.findById(productId);
-        SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering, request);
+        List<MultipleLoanCreationDto> multipleLoanDetailsXX = buildClientViewHelper(loanOffering, clients);
 
+        loanActionForm.setClientDetails(multipleLoanDetailsXX);
+
+        SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering, request);
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, multipleLoanDetails.getAllLoanPruposes(), request);
         SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, multipleLoanDetails.isLoanPendingApprovalStateEnabled(), request);
 
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private List<MultipleLoanCreationDto> buildClientViewHelper(final LoanOfferingBO loanOffering,
+            List<ClientBO> clients) {
+        return (List<MultipleLoanCreationDto>) collect(clients,
+                new Transformer<ClientBO, MultipleLoanCreationDto>() {
+                    public MultipleLoanCreationDto transform(ClientBO client) {
+                        return new MultipleLoanCreationDto(client, loanOffering.eligibleLoanAmount(client
+                                .getMaxLoanAmount(loanOffering), client.getMaxLoanCycleForProduct(loanOffering)),
+                                loanOffering.eligibleNoOfInstall(client.getMaxLoanAmount(loanOffering), client
+                                        .getMaxLoanCycleForProduct(loanOffering)), loanOffering.getCurrency());
+                    }
+                });
     }
 
     @TransactionDemarcate(joinToken = true)
