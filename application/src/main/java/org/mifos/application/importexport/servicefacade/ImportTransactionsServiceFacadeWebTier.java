@@ -20,11 +20,24 @@
 
 package org.mifos.application.importexport.servicefacade;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+import org.mifos.accounts.api.TransactionImport;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
 import org.mifos.application.importexport.business.service.ImportedFilesService;
+import org.mifos.application.servicefacade.ListItem;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.dto.domain.ParseResultDto;
+import org.mifos.dto.domain.UserReferenceDto;
+import org.mifos.framework.plugin.PluginManager;
+import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -63,5 +76,83 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
 
         PersonnelBO submittedBy = this.personnelDao.findPersonnelById(userContext.getId());
         importedFilesService.saveImportedFileName(importTransactionsFileName, submittedBy);
+    }
+
+    @Override
+    public List<ListItem<String>> retrieveImportPlugins() {
+        List<ListItem<String>> importPlugins = new ArrayList<ListItem<String>>();
+        for (TransactionImport ti : new PluginManager().loadImportPlugins()) {
+            importPlugins.add(new ListItem<String>(ti.getClass().getName(), ti.getDisplayName()));
+        }
+        return importPlugins;
+    }
+
+    @Override
+    public ParseResultDto parseImportTransactions(String importPluginClassname, InputStream inputStream) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        final TransactionImport ti = getInitializedImportPlugin(importPluginClassname, userContext.getId());
+        final ParseResultDto importResult = ti.parse(inputStream);
+
+        int numberRowSuccessfullyParsed = ti.getSuccessfullyParsedRows();
+        importResult.setNumberRowSuccessfullyParsed(numberRowSuccessfullyParsed);
+
+        String statusLogFile = generateStatusLogfile(importResult, ti);
+        importResult.setStatusLogFile(statusLogFile);
+
+        return importResult;
+    }
+
+    private TransactionImport getInitializedImportPlugin(String importPluginClassname, Short userId) {
+        final TransactionImport ti = new PluginManager().getImportPlugin(importPluginClassname);
+        final UserReferenceDto userReferenceDTO = new UserReferenceDto(userId);
+        ti.setUserReferenceDto(userReferenceDTO);
+        return ti;
+    }
+
+    private static final String LOG_TEMPLATE =
+        "%d rows were read.\n" +
+        "\n" +
+        "%d rows contained no errors and will be imported\n" +
+        "%d rows will be ignored\n" +
+        "%d rows contained errors and were not imported\n" +
+        "\n" +
+        "Total amount of transactions imported: %s\n" +
+        "Total amount of transactions with error: %s\n" +
+        "\n" +
+        "%s";
+
+    private String generateStatusLogfile(ParseResultDto result, TransactionImport transactionImport) {
+        String rowErrors = "";
+        if (!result.getParseErrors().isEmpty()) {
+            rowErrors = StringUtils.join(result.getParseErrors(), System.getProperty("line.separator"));
+        }
+        return String.format(LOG_TEMPLATE,
+                result.getNumberOfReadRows(),
+                transactionImport.getSuccessfullyParsedRows(),
+                result.getNumberOfIgnoredRows(),
+                result.getNumberOfErrorRows(),
+                new Money(Money.getDefaultCurrency(), result.getTotalAmountOfTransactionsImported()).toString(),
+                new Money(Money.getDefaultCurrency(), result.getTotalAmountOfTransactionsWithError()).toString(),
+                rowErrors);
+    }
+
+    @Override
+    public ParseResultDto confirmImport(String importPluginClassname, FileInputStream transactionsTempFile) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        try {
+            final TransactionImport transactionImport = getInitializedImportPlugin(importPluginClassname, userContext.getId());
+            final ParseResultDto importResult = transactionImport.parse(transactionsTempFile);
+
+            transactionImport.store(transactionsTempFile);
+            return importResult;
+        } catch (Exception e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

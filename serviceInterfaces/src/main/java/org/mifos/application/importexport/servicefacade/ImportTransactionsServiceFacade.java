@@ -20,10 +20,22 @@
 
 package org.mifos.application.importexport.servicefacade;
 
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.util.List;
+
+import org.mifos.application.servicefacade.ListItem;
+import org.mifos.dto.domain.ParseResultDto;
+
 public interface ImportTransactionsServiceFacade {
 
     void saveImportedFileName(String importTransactionsFileName);
 
     boolean isAlreadyImported(String importTransactionsFileName);
 
+    List<ListItem<String>> retrieveImportPlugins();
+
+    ParseResultDto parseImportTransactions(String importPluginClassname, InputStream inputStream);
+
+    ParseResultDto confirmImport(String importPluginClassname, FileInputStream transactionsTempFile);
 }

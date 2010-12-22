@@ -33,6 +33,8 @@ public class ParseResultDto {
 	private Integer numberOfErrorRows;
 	private BigDecimal totalAmountOfTransactionsImported;
 	private BigDecimal totalAmountOfTransactionsWithError;
+	private int numberRowSuccessfullyParsed;
+	private String statusLogFile;
 
     public ParseResultDto(final List<String> parseErrors, final List<AccountPaymentParametersDto> successfullyParsedRows) {
         this.parseErrors = parseErrors;
@@ -94,5 +96,21 @@ public class ParseResultDto {
 	public boolean isExtraRowInformationFilled() {
 		return numberOfErrorRows != null && numberOfIgnoredRows != null && numberOfReadRows != null;
 	}
+
+    public int getNumberRowSuccessfullyParsed() {
+        return this.numberRowSuccessfullyParsed;
+    }
+
+    public void setNumberRowSuccessfullyParsed(int numberRowSuccessfullyParsed) {
+        this.numberRowSuccessfullyParsed = numberRowSuccessfullyParsed;
+    }
+
+    public String getStatusLogFile() {
+        return this.statusLogFile;
+    }
+
+    public void setStatusLogFile(String statusLogFile) {
+        this.statusLogFile = statusLogFile;
+    }
 
 }
