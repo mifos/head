@@ -29,8 +29,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -52,21 +50,17 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.business.service.ClientBusinessService;
-import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.dto.domain.CustomerDto;
-import org.mifos.dto.domain.OfficeDetailsDto;
-import org.mifos.dto.domain.PersonnelDto;
-import org.mifos.framework.business.service.ServiceFactory;
+import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -77,6 +71,8 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MultipleLoanAccountsCreationAction extends BaseAction {
 
@@ -105,50 +101,47 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("Inside load method");
-        List<OfficeDetailsDto> activeBranches = new MasterDataService().getActiveBranches(getUserContext(request)
-                .getBranchId());
-        SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, activeBranches, request);
+    public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS,
-                ClientRules.getCenterHierarchyExists() ? Constants.YES : Constants.NO, request);
+        ChangeAccountStatusDto accountDetails = this.loanAccountServiceFacade.retrieveAllActiveBranchesAndLoanOfficerDetails();
+
+        SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_OFFICES_LIST, accountDetails.getActiveBranches(), request);
+
+        Short centerHierarchyExistsValue = accountDetails.isCenterHierarchyExists() ? Constants.YES : Constants.NO;
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, centerHierarchyExistsValue, request);
+
         request.getSession().setAttribute(LoanConstants.MULTIPLE_LOANS_ACTION_FORM, null);
         request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
-        logger.debug("outside load method");
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getLoanOfficers(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("Inside getLoanOfficers method");
-        UserContext userContext = getUserContext(request);
-        List<PersonnelDto> loanOfficers = ((MasterDataService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.MasterDataService)).getListOfActiveLoanOfficers(PersonnelLevel.LOAN_OFFICER
-                .getValue(), getShortValue(((MultipleLoanAccountsCreationActionForm) form).getBranchOfficeId()),
-                userContext.getId(), userContext.getLevelId());
-        SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, loanOfficers, request);
-        logger.debug("outside getLoanOfficers method");
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
+        Short officeId = getShortValue(((MultipleLoanAccountsCreationActionForm) form).getBranchOfficeId());
+        ChangeAccountStatusDto accountDetails = this.loanAccountServiceFacade.retrieveLoanOfficerDetailsForBranch(officeId);
+
+        SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, accountDetails.getLoanOfficers(), request);
+
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getCenters(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("Inside getCenters method");
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
         Short loanOfficerId = getShortValue(loanActionForm.getLoanOfficerId());
         Short officeId = getShortValue(loanActionForm.getBranchOfficeId());
-        List<CustomerDto> parentCustomerList = loadCustomers(loanOfficerId, officeId);
+
+        List<CustomerDto> topLevelCustomers = this.loanAccountServiceFacade.retrieveActiveGroupingAtTopOfCustomerHierarchyForLoanOfficer(loanOfficerId, officeId);
 
         boolean isCenterHierarchyExists = ClientRules.getCenterHierarchyExists();
 
-        SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, parentCustomerList, request);
-        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, isCenterHierarchyExists ? Constants.YES
-                : Constants.NO, request);
-        logger.debug("Inside getCenters method");
+        SessionUtils.setCollectionAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, topLevelCustomers, request);
+        SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, isCenterHierarchyExists ? Constants.YES: Constants.NO, request);
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -167,7 +160,15 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         loanActionForm.setCenterSearchId(customer.getSearchId());
         List<LoanOfferingBO> loanOfferings = loanPrdBusinessService.getApplicablePrdOfferings(new CustomerLevelEntity(
                 CustomerLevel.CLIENT));
-        removePrdOfferingsNotMachingCustomerMeeting(loanOfferings, customer);
+        logger.debug("Inside removePrdOfferingsNotMachingCustomerMeeting method");
+        MeetingBO customerMeeting = customer.getCustomerMeeting().getMeeting();
+        for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter.hasNext();) {
+            LoanOfferingBO loanOffering = iter.next();
+            if (!isMeetingMatched(customerMeeting, loanOffering.getLoanOfferingMeeting().getMeeting())) {
+                iter.remove();
+            }
+        }
+        logger.debug("outside removePrdOfferingsNotMachingCustomerMeeting method");
         SessionUtils.setCollectionAttribute(LoanConstants.LOANPRDOFFERINGS, loanOfferings, request);
         logger.debug("outside getPrdOfferings method");
         return mapping.findForward(ActionForwards.load_success.toString());
@@ -252,31 +253,6 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         logger.debug("cancel method called");
         return mapping.findForward(ActionForwards.cancel_success.toString());
-    }
-
-    private List<CustomerDto> loadCustomers(Short loanOfficerId, Short officeId) throws Exception {
-        logger.debug("Inside loadCustomers method");
-        CustomerLevel customerLevel = CustomerLevel.CENTER;
-        if (!ClientRules.getCenterHierarchyExists()) {
-            customerLevel = CustomerLevel.GROUP;
-        }
-        List<CustomerDto> activeParentsUnderLoanOfficer = ((MasterDataService) ServiceFactory.getInstance()
-                .getBusinessService(BusinessServiceName.MasterDataService)).getListOfActiveParentsUnderLoanOfficer(
-                loanOfficerId, customerLevel.getValue(), officeId);
-        logger.debug("oouside loadCustomers method");
-        return activeParentsUnderLoanOfficer;
-    }
-
-    private void removePrdOfferingsNotMachingCustomerMeeting(List<LoanOfferingBO> loanOfferings, CustomerBO customer) {
-        logger.debug("Inside removePrdOfferingsNotMachingCustomerMeeting method");
-        MeetingBO customerMeeting = customer.getCustomerMeeting().getMeeting();
-        for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter.hasNext();) {
-            LoanOfferingBO loanOffering = iter.next();
-            if (!isMeetingMatched(customerMeeting, loanOffering.getLoanOfferingMeeting().getMeeting())) {
-                iter.remove();
-            }
-        }
-        logger.debug("outside removePrdOfferingsNotMachingCustomerMeeting method");
     }
 
     private boolean isMeetingMatched(MeetingBO meetingToBeMatched, MeetingBO meetingToBeMatchedWith) {

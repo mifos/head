@@ -212,6 +212,10 @@ public class CustomerPersistence extends Persistence {
         return queryResult;
     }
 
+    /**
+     * @deprecated - use customerDao findTopOfHierarchyCustomers
+     */
+    @Deprecated
     public List<CustomerDto> getActiveParentList(final Short personnelId, final Short customerLevelId,
             final Short officeId) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();

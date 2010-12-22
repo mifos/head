@@ -30,6 +30,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerFlagDetailEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
@@ -240,4 +241,7 @@ public interface CustomerDao {
     List<CustomerDto> findCustomersWithGivenPhoneNumber(String phoneNumber);
 
     List<AccountBO> retrieveAllClosedLoanAndSavingsAccounts(Integer customerId);
+
+    List<CustomerDto> findTopOfHierarchyCustomersUnderLoanOfficer(CustomerLevel customerLevel, Short loanOfficerId,
+            Short officeId);
 }

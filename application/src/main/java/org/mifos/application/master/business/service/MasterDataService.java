@@ -96,6 +96,7 @@ public class MasterDataService implements BusinessService {
 
     }
 
+    @Deprecated
     public List<CustomerDto> getListOfActiveParentsUnderLoanOfficer(Short personnelId, Short customerLevel,
             Short officeId) throws ServiceException {
         try {

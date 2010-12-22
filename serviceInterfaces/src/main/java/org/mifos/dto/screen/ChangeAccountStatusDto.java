@@ -31,12 +31,14 @@ public class ChangeAccountStatusDto {
     private final List<PersonnelDto> loanOfficers;
     private final boolean loanPendingApprovalStateEnabled;
     private final Short accountState;
+    private final boolean centerHierarchyExists;
 
-    public ChangeAccountStatusDto(List<OfficeDetailsDto> activeBranches, List<PersonnelDto> loanOfficers, boolean loanPendingApprovalStateEnabled, Short accountState) {
+    public ChangeAccountStatusDto(List<OfficeDetailsDto> activeBranches, List<PersonnelDto> loanOfficers, boolean loanPendingApprovalStateEnabled, Short accountState, boolean centerHierarchyExists) {
         this.activeBranches = activeBranches;
         this.loanOfficers = loanOfficers;
         this.loanPendingApprovalStateEnabled = loanPendingApprovalStateEnabled;
         this.accountState = accountState;
+        this.centerHierarchyExists = centerHierarchyExists;
     }
 
     public List<OfficeDetailsDto> getActiveBranches() {
@@ -53,5 +55,9 @@ public class ChangeAccountStatusDto {
 
     public Short getAccountState() {
         return this.accountState;
+    }
+
+    public boolean isCenterHierarchyExists() {
+        return this.centerHierarchyExists;
     }
 }

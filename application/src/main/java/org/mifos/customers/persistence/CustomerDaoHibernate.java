@@ -1739,4 +1739,24 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         return closedLoanAndSavingsAccounts;
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<CustomerDto> findTopOfHierarchyCustomersUnderLoanOfficer(CustomerLevel customerLevel,
+            Short loanOfficerId, Short officeId) {
+
+        List<CustomerDto> activeTopOfHierarchyCustomer = new ArrayList<CustomerDto>();
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("customerLevelId", customerLevel.getValue());
+        queryParameters.put("personnelId", loanOfficerId);
+        queryParameters.put("officeId", officeId);
+
+        List<CustomerDto> queryResult = (List<CustomerDto>) this.genericDao.executeNamedQuery(NamedQueryConstants.GET_PARENTCUSTOMERS_FOR_LOANOFFICER, queryParameters);
+        if (queryResult != null) {
+            activeTopOfHierarchyCustomer.addAll(queryResult);
+        }
+
+        return activeTopOfHierarchyCustomer;
+    }
 }

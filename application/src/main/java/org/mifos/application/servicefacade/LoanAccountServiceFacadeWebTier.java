@@ -23,7 +23,12 @@ package org.mifos.application.servicefacade;
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
@@ -48,7 +53,6 @@ import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
@@ -84,10 +88,12 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
@@ -108,6 +114,7 @@ import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
+import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.InstallmentDetailsDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.dto.domain.LoanActivityDto;
@@ -157,15 +164,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static org.apache.commons.lang.StringUtils.EMPTY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
 
 public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade {
 
@@ -1166,7 +1164,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             accountState = AccountState.LOAN_PENDING_APPROVAL.getValue();
         }
 
-        return new ChangeAccountStatusDto(activeBranches, loanOfficers, loanPendingApprovalStateEnabled, accountState);
+        boolean centerHierarchyExists = ClientRules.getCenterHierarchyExists();
+
+        return new ChangeAccountStatusDto(activeBranches, loanOfficers, loanPendingApprovalStateEnabled, accountState, centerHierarchyExists);
     }
 
     private boolean onlyOneActiveBranchExists(List<OfficeDetailsDto> activeBranches) {
@@ -1187,8 +1187,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         if (loanPendingApprovalStateEnabled) {
             accountState = AccountState.LOAN_PENDING_APPROVAL.getValue();
         }
+        boolean centerHierarchyExists = ClientRules.getCenterHierarchyExists();
 
-        return new ChangeAccountStatusDto(new ArrayList<OfficeDetailsDto>(), loanOfficers, loanPendingApprovalStateEnabled, accountState);
+        return new ChangeAccountStatusDto(new ArrayList<OfficeDetailsDto>(), loanOfficers, loanPendingApprovalStateEnabled, accountState, centerHierarchyExists);
     }
 
     @Override
@@ -1208,6 +1209,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
         MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
+        userContext.setOfficeLevelId(userOffice.getOfficeLevel().getValue());
 
         LoanBO loan = null;
         LoanBO searchedLoan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
@@ -1298,5 +1302,16 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } finally {
             this.transactionHelper.closeSession();
         }
+    }
+
+    @Override
+    public List<CustomerDto> retrieveActiveGroupingAtTopOfCustomerHierarchyForLoanOfficer(Short loanOfficerId, Short officeId) {
+
+        CustomerLevel customerLevel = CustomerLevel.CENTER;
+        if (!ClientRules.getCenterHierarchyExists()) {
+            customerLevel = CustomerLevel.GROUP;
+        }
+
+        return this.customerDao.findTopOfHierarchyCustomersUnderLoanOfficer(customerLevel, loanOfficerId, officeId);
     }
 }
