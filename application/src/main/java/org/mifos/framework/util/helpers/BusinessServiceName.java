@@ -27,7 +27,6 @@ import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.center.business.service.CenterBusinessService;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.group.business.service.GroupBusinessService;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
@@ -47,7 +46,7 @@ import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBu
 public enum BusinessServiceName {
     Customer(CustomerBusinessService.class), MasterDataService(MasterDataService.class), ReportsService(
             ReportsBusinessService.class), Personnel(
-            PersonnelBusinessService.class), Center(CenterBusinessService.class), Client(ClientBusinessService.class), Group(
+            PersonnelBusinessService.class), Center(CenterBusinessService.class), Group(
             GroupBusinessService.class), Office(OfficeBusinessService.class), LoanProduct(LoanPrdBusinessService.class), RolesPermissions(
             RolesPermissionsBusinessService.class), Admin(AdminBusinessService.class), AuditLog(
             AuditBusinessService.class), Configuration(ConfigurationBusinessService.class), PrdMix(
@@ -67,5 +66,4 @@ public enum BusinessServiceName {
     public String getName() {
         return name;
     }
-
 }

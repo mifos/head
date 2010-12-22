@@ -146,7 +146,6 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.service.CustomerBusinessService;
 import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
@@ -267,7 +266,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private final LoanBusinessService loanBusinessService;
     private final LoanPrdBusinessService loanPrdBusinessService;
-    private final ClientBusinessService clientBusinessService;
     private final MasterDataService masterDataService;
     private final ConfigurationPersistence configurationPersistence;
     private final ConfigurationBusinessService configService;
@@ -288,13 +286,13 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     public LoanAccountAction() {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
-                new LoanPrdBusinessService(), new ClientBusinessService(), new MasterDataService(),
+                new LoanPrdBusinessService(), new MasterDataService(),
                 new ConfigurationPersistence(), new AccountBusinessService());
     }
 
     public LoanAccountAction(final ConfigurationBusinessService configService,
                              final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater,
-                             final LoanPrdBusinessService loanPrdBusinessService, final ClientBusinessService clientBusinessService,
+                             final LoanPrdBusinessService loanPrdBusinessService,
                              final MasterDataService masterDataService, final ConfigurationPersistence configurationPersistence,
                              final AccountBusinessService accountBusinessService) {
         super(accountBusinessService);
@@ -303,7 +301,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.loanBusinessService = loanBusinessService;
         this.glimLoanUpdater = glimLoanUpdater;
         this.loanPrdBusinessService = loanPrdBusinessService;
-        this.clientBusinessService = clientBusinessService;
         this.masterDataService = masterDataService;
         this.configurationPersistence = configurationPersistence;
         this.questionGroupFilter = new QuestionGroupFilterForLoan();
@@ -327,8 +324,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     @Deprecated
     private LoanAccountAction(final ConfigurationBusinessService configService,
                               final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
-        this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(),
-                new ClientBusinessService(), new MasterDataService(), new ConfigurationPersistence(),
+        this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new MasterDataService(), new ConfigurationPersistence(),
                 new AccountBusinessService());
     }
 
@@ -1863,8 +1859,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
     }
 
-    private String findGovernmentId(final Integer clientId) throws ServiceException {
-        ClientBO client = clientBusinessService.getClient(clientId);
+    private String findGovernmentId(final Integer clientId) {
+        ClientBO client = (ClientBO) this.customerDao.findCustomerById(clientId);
         String governmentId = client.getGovernmentId();
         return StringUtils.isBlank(governmentId) ? "-" : governmentId;
     }

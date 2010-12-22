@@ -20,8 +20,6 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.mifos.framework.util.CollectionUtils.collect;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.service.LoanDto;
 import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
@@ -43,32 +40,23 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.ClientRules;
-import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.business.service.CustomerBusinessService;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.client.business.service.ClientBusinessService;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.helpers.Transformer;
-import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
@@ -78,13 +66,11 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(MultipleLoanAccountsCreationAction.class);
     private LoanPrdBusinessService loanPrdBusinessService;
-    private ClientBusinessService clientBusinessService;
     private LoanProductService loanProductService;
     private LoanService loanService;
 
     public MultipleLoanAccountsCreationAction() {
         loanPrdBusinessService = new LoanPrdBusinessService();
-        clientBusinessService = new ClientBusinessService();
         loanProductService = new LoanProductService(loanPrdBusinessService);
         loanService = new LoanService(loanProductService, new LoanDaoLegacyImpl());
     }
@@ -147,59 +133,55 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getPrdOfferings(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("Inside getPrdOfferings method");
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
-        CustomerBO customer = new CustomerBusinessService().getCustomer(getIntegerValue(loanActionForm.getCenterId()));
 
-        // FIXME remove next two lines, doesn't make sense to me
-        customer.getOffice().getOfficeId();
-        customer.getPersonnel().getPersonnelId();
+        Integer customerId = getIntegerValue(loanActionForm.getCenterId());
+        CustomerBO customer = this.customerDao.findCustomerById(customerId);
 
         loanActionForm.setCenterSearchId(customer.getSearchId());
-        List<LoanOfferingBO> loanOfferings = loanPrdBusinessService.getApplicablePrdOfferings(new CustomerLevelEntity(
-                CustomerLevel.CLIENT));
-        logger.debug("Inside removePrdOfferingsNotMachingCustomerMeeting method");
-        MeetingBO customerMeeting = customer.getCustomerMeeting().getMeeting();
+
+        List<LoanOfferingBO> loanOfferings = this.loanProductDao.findActiveLoanProductsApplicableToCustomerLevel(new CustomerLevelEntity(CustomerLevel.CLIENT));
+
+        MeetingBO customerMeeting = customer.getCustomerMeetingValue();
         for (Iterator<LoanOfferingBO> iter = loanOfferings.iterator(); iter.hasNext();) {
             LoanOfferingBO loanOffering = iter.next();
             if (!isMeetingMatched(customerMeeting, loanOffering.getLoanOfferingMeeting().getMeeting())) {
                 iter.remove();
             }
         }
-        logger.debug("outside removePrdOfferingsNotMachingCustomerMeeting method");
         SessionUtils.setCollectionAttribute(LoanConstants.LOANPRDOFFERINGS, loanOfferings, request);
-        logger.debug("outside getPrdOfferings method");
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("Inside get method");
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
-        List<ClientBO> clients = clientBusinessService.getActiveClientsUnderParent(loanActionForm.getCenterSearchId(),
-                getShortValue(loanActionForm.getBranchOfficeId()));
-        if (clients == null || clients.isEmpty()) {
-            throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
-        }
-        LoanOfferingBO loanOffering = loanPrdBusinessService.getLoanOffering(getShortValue(loanActionForm
-                .getPrdOfferingId()), getUserContext(request).getLocaleId());
-        loanActionForm.setClientDetails(buildClientViewHelper(loanOffering, clients));
-        SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, new MasterDataService()
-                .retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request).getLocaleId()), request);
+
+        String searchId = loanActionForm.getCenterSearchId();
+        Short branchId = getShortValue(loanActionForm.getBranchOfficeId());
+        Integer productId = Integer.parseInt(loanActionForm.getPrdOfferingId());
+
+        MultipleLoanAccountDetailsDto multipleLoanDetails = this.loanAccountServiceFacade.retrieveMultipleLoanAccountDetails(searchId, branchId, productId);
+
+
+        loanActionForm.setClientDetails(multipleLoanDetails.getMultipleLoanDetails());
+
+        LoanOfferingBO loanOffering = this.loanProductDao.findById(productId);
         SessionUtils.setAttribute(LoanConstants.LOANOFFERING, loanOffering, request);
-        SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, ProcessFlowRules
-                .isLoanPendingApprovalStateEnabled(), request);
-        logger.debug("outside get method");
+
+        SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES, multipleLoanDetails.getAllLoanPruposes(), request);
+        SessionUtils.setAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, multipleLoanDetails.isLoanPendingApprovalStateEnabled(), request);
+
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("Inside validate method");
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ActionForwards actionForward = ActionForwards.load_success;
         String method = (String) request.getAttribute("methodCalled");
         if (method != null) {
@@ -210,14 +192,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
                 actionForward = ActionForwards.get_success;
             }
         }
-        logger.debug("outside validata method");
         return mapping.findForward(actionForward.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("Inside create method");
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         MultipleLoanAccountsCreationActionForm loanActionForm = (MultipleLoanAccountsCreationActionForm) form;
         Integer centerId = getIntegerValue(loanActionForm.getCenterId());
         Short loanProductId = getShortValue(loanActionForm.getPrdOfferingId());
@@ -244,14 +224,12 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
             }
         }
         request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountNumbers);
-        logger.debug("outside create method");
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
-        logger.debug("cancel method called");
+    public ActionForward cancel(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.cancel_success.toString());
     }
 
@@ -267,35 +245,5 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 
     private boolean isMultiple(Short valueToBeChecked, Short valueToBeCheckedWith) {
         return valueToBeChecked % valueToBeCheckedWith == 0;
-    }
-
-    private List<MultipleLoanCreationDto> buildClientViewHelper(final LoanOfferingBO loanOffering,
-            List<ClientBO> clients) {
-        return (List<MultipleLoanCreationDto>) collect(clients,
-                new Transformer<ClientBO, MultipleLoanCreationDto>() {
-                    public MultipleLoanCreationDto transform(ClientBO client) {
-                        return new MultipleLoanCreationDto(client, loanOffering.eligibleLoanAmount(client
-                                .getMaxLoanAmount(loanOffering), client.getMaxLoanCycleForProduct(loanOffering)),
-                                loanOffering.eligibleNoOfInstall(client.getMaxLoanAmount(loanOffering), client
-                                        .getMaxLoanCycleForProduct(loanOffering)), loanOffering.getCurrency());
-                    }
-                });
-    }
-
-    protected void checkPermissionForCreate(Short newState, UserContext userContext, Short flagSelected,
-            Short officeId, Short loanOfficerId) throws ApplicationException {
-        logger.debug("inside checkPermissionForCreate called");
-        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId, true)) {
-            throw new AccountException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
-        }
-    }
-
-    private boolean isPermissionAllowed(Short newSate, UserContext userContext, Short officeId, Short loanOfficerId,
-            boolean saveFlag) {
-        logger.debug("inside isPermissionAllowed called");
-        return AuthorizationManager.getInstance().isActivityAllowed(
-                userContext,
-                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId,
-                        loanOfficerId));
     }
 }

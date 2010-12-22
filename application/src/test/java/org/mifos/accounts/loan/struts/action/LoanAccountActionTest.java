@@ -132,7 +132,7 @@ public class LoanAccountActionTest {
 
     @Before
     public void setUp() throws PageExpiredException {
-        loanAccountAction = new LoanAccountAction(null, loanBusinessService, null, loanPrdBusinessService, null, null, null, null) {
+        loanAccountAction = new LoanAccountAction(null, loanBusinessService, null, loanPrdBusinessService, null, null, null) {
             @Override
             protected UserContext getUserContext(@SuppressWarnings("unused") HttpServletRequest request) {
                 return userContext;

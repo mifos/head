@@ -1759,4 +1759,20 @@ public class CustomerDaoHibernate implements CustomerDao {
 
         return activeTopOfHierarchyCustomer;
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<ClientBO> findActiveClientsUnderParent(String searchId, Short officeId) {
+
+        List<ClientBO> activeClients = new ArrayList<ClientBO>();
+
+        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put("SEARCH_STRING", searchId + ".%");
+        queryParameters.put("OFFICE_ID", officeId);
+        List<ClientBO> queryResult = (List<ClientBO>) this.genericDao.executeNamedQuery(NamedQueryConstants.ACTIVE_CLIENTS_UNDER_PARENT, queryParameters);
+        if (queryResult != null) {
+            activeClients.addAll(queryResult);
+        }
+        return activeClients;
+    }
 }

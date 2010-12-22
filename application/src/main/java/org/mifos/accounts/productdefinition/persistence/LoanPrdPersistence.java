@@ -31,7 +31,6 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 
@@ -151,19 +150,5 @@ public class LoanPrdPersistence extends Persistence {
             }
         }
         return loanOfferings;
-    }
-
-    /**
-     * @deprecated use
-     *             {@link LoanProductDao#findActiveLoanProductsApplicableToCustomerLevel(CustomerLevelEntity)}
-     */
-    @SuppressWarnings("unchecked")
-    @Deprecated
-    public List<LoanOfferingBO> getApplicablePrdOfferings(final CustomerLevelEntity customerLevel)
-            throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.LOAN_ACTIVE.getValue());
-        queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO, customerLevel.getProductApplicableType());
-        return executeNamedQuery(NamedQueryConstants.APPLICABLE_LOAN_PRODUCTS, queryParameters);
     }
 }

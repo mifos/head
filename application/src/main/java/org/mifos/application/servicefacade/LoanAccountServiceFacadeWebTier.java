@@ -22,6 +22,7 @@ package org.mifos.application.servicefacade;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
+import static org.mifos.framework.util.CollectionUtils.collect;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,6 +59,7 @@ import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.action.validate.ProductMixValidator;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountOption;
@@ -143,6 +145,7 @@ import org.mifos.dto.screen.LoanInformationDto;
 import org.mifos.dto.screen.LoanPerformanceHistoryDto;
 import org.mifos.dto.screen.LoanScheduledInstallmentDto;
 import org.mifos.dto.screen.LoanSummaryDto;
+import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -1313,5 +1316,36 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         return this.customerDao.findTopOfHierarchyCustomersUnderLoanOfficer(customerLevel, loanOfficerId, officeId);
+    }
+
+    @Override
+    public MultipleLoanAccountDetailsDto retrieveMultipleLoanAccountDetails(String searchId, Short branchId, Integer productId) {
+
+        List<ClientBO> clients = this.customerDao.findActiveClientsUnderParent(searchId, branchId);
+        if (clients.isEmpty()) {
+            throw new BusinessRuleException(LoanConstants.NOSEARCHRESULTS);
+        }
+
+        LoanOfferingBO loanOffering = this.loanProductDao.findById(productId);
+
+        List<MultipleLoanCreationDto> multipleLoanDetails = buildClientViewHelper(loanOffering, clients);
+
+        List<ValueListElement> allLoanPruposes = this.loanProductDao.findAllLoanPurposes();
+        boolean loanPendingApprovalStateEnabled = ProcessFlowRules.isLoanPendingApprovalStateEnabled();
+
+        return new MultipleLoanAccountDetailsDto(multipleLoanDetails, allLoanPruposes, loanPendingApprovalStateEnabled);
+    }
+
+    private List<MultipleLoanCreationDto> buildClientViewHelper(final LoanOfferingBO loanOffering,
+            List<ClientBO> clients) {
+        return (List<MultipleLoanCreationDto>) collect(clients,
+                new Transformer<ClientBO, MultipleLoanCreationDto>() {
+                    public MultipleLoanCreationDto transform(ClientBO client) {
+                        return new MultipleLoanCreationDto(client, loanOffering.eligibleLoanAmount(client
+                                .getMaxLoanAmount(loanOffering), client.getMaxLoanCycleForProduct(loanOffering)),
+                                loanOffering.eligibleNoOfInstall(client.getMaxLoanAmount(loanOffering), client
+                                        .getMaxLoanCycleForProduct(loanOffering)), loanOffering.getCurrency());
+                    }
+                });
     }
 }

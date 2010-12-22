@@ -244,4 +244,6 @@ public interface CustomerDao {
 
     List<CustomerDto> findTopOfHierarchyCustomersUnderLoanOfficer(CustomerLevel customerLevel, Short loanOfficerId,
             Short officeId);
+
+    List<ClientBO> findActiveClientsUnderParent(String searchId, Short branchId);
 }
