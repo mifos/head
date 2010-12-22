@@ -114,6 +114,7 @@ import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CenterCreation;
 import org.mifos.dto.domain.CreateAccountNote;
+import org.mifos.dto.domain.CreateLoanRequest;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.CustomerDto;
@@ -626,13 +627,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         } catch (AccountException e) {
             throw new BusinessRuleException(e.getKey(), e);
         }
-    }
-
-    private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
-            final Short loanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
-                userContext,
-                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId, loanOfficerId));
     }
 
     @Override
@@ -1348,5 +1342,100 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
                                         .getMaxLoanCycleForProduct(loanOffering)), loanOffering.getCurrency());
                     }
                 });
+    }
+
+    @Override
+    public List<String> createMultipleLoans(List<CreateLoanRequest> multipleLoans) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
+        userContext.setBranchGlobalNum(userOffice.getGlobalOfficeNum());
+
+        List<String> createdLoanAccountNumbers = new ArrayList<String>();
+        for (CreateLoanRequest loanDetail : multipleLoans) {
+
+            try {
+                CustomerBO center = this.customerDao.findCustomerById(loanDetail.getCenterId());
+
+                Short loanProductId = loanDetail.getLoanProductId();
+                LoanOfferingBO loanProduct = this.loanProductDao.findById(loanProductId.intValue());
+                CustomerBO client = this.customerDao.findCustomerById(loanDetail.getClientId());
+
+                AccountState accountState = AccountState.fromShort(loanDetail.getAccountStateId());
+                Money loanAmount = new Money(loanProduct.getCurrency(), loanDetail.getLoanAmount());
+                Short defaultNumOfInstallments = loanDetail.getDefaultNoOfInstall();
+                Date disbursementDate = center.getCustomerAccount().getNextMeetingDate();
+                boolean interestDeductedAtDisbursement = loanProduct.isIntDedDisbursement();
+                boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationBusinessService().isRepaymentIndepOfMeetingEnabled();
+                Double interestRate = loanProduct.getDefInterestRate();
+                Short gracePeriodDuration = loanProduct.getGracePeriodDuration();
+
+                checkPermissionForCreate(accountState.getValue(), userContext, userContext.getBranchId(), userContext.getId());
+
+                List<FeeDto> additionalFees = new ArrayList<FeeDto>();
+                List<FeeDto> defaultFees = new ArrayList<FeeDto>();
+
+                new LoanProductService().getDefaultAndAdditionalFees(loanProductId, userContext, defaultFees, additionalFees);
+
+                FundBO fund = null;
+                List<FeeDto> feeDtos = new ArrayList<FeeDto>();
+                List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+                boolean isRedone = false;
+
+                // FIXME - keithw - tidy up constructor and use domain concepts rather than primitives, e.g. money v double, loanpurpose v integer.
+                Double maxLoanAmount = Double.valueOf(loanDetail.getMaxLoanAmount());
+                Double minLoanAmount = Double.valueOf(loanDetail.getMinLoanAmount());
+                Short maxNoOfInstall  =loanDetail.getMaxNoOfInstall();
+                Short minNoOfInstall = loanDetail.getMinNoOfInstall();
+                LoanBO loan = new LoanBO(userContext, loanProduct, client, accountState, loanAmount, defaultNumOfInstallments,
+                        disbursementDate, interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos,
+                        customFields, isRedone, maxLoanAmount, minLoanAmount,
+                        loanProduct.getMaxInterestRate(), loanProduct.getMinInterestRate(),
+                        maxNoOfInstall, minNoOfInstall, isRepaymentIndepOfMeetingEnabled, null);
+                loan.setBusinessActivityId(loanDetail.getLoanPurpose());
+                loan.setBusinessActivityId(loanDetail.getLoanPurpose());
+
+                PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+                AccountStateEntity newAccountState = new AccountStateEntity(accountState);
+                AccountStatusChangeHistoryEntity statusChange = new AccountStatusChangeHistoryEntity(null, newAccountState, loggedInUser, loan);
+
+                this.transactionHelper.startTransaction();
+                loan.addAccountStatusChangeHistory(statusChange);
+                this.loanDao.save(loan);
+                this.transactionHelper.flushSession();
+                String globalAccountNum = loan.generateId(userContext.getBranchGlobalNum());
+                loan.setGlobalAccountNum(globalAccountNum);
+                this.loanDao.save(loan);
+                this.transactionHelper.commitTransaction();
+
+                createdLoanAccountNumbers.add(loan.getGlobalAccountNum());
+            } catch (ServiceException e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new MifosRuntimeException(e);
+            } catch (PersistenceException e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new MifosRuntimeException(e);
+            } catch (AccountException e) {
+                this.transactionHelper.rollbackTransaction();
+                throw new BusinessRuleException(e.getKey(), e);
+            }
+        }
+
+        return createdLoanAccountNumbers;
+    }
+
+    private void checkPermissionForCreate(Short newState, UserContext userContext, Short officeId, Short loanOfficerId) {
+        if (!isPermissionAllowed(newState, userContext, officeId, loanOfficerId)) {
+            throw new BusinessRuleException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    private boolean isPermissionAllowed(final Short newSate, final UserContext userContext, final Short officeId,
+            final Short loanOfficerId) {
+        return AuthorizationManager.getInstance().isActivityAllowed(
+                userContext,
+                new ActivityContext(ActivityMapper.getInstance().getActivityIdForState(newSate), officeId, loanOfficerId));
     }
 }

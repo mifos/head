@@ -88,7 +88,6 @@ import org.mifos.accounts.loan.business.MaxMinInterestRate;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
-import org.mifos.accounts.loan.business.service.LoanService;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 import org.mifos.accounts.loan.persistance.LoanDaoHibernate;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
@@ -664,7 +663,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LocalizationConverter localizationConverter = new LocalizationConverter();
         CustomerBO customer = this.customerDao.findCustomerById(oldCustomer.getCustomerId());
 
-        new LoanService().validateDisbursementDateForNewLoan(customer.getOfficeId(), disbursementDate);
+        this.holidayServiceFacade.validateDisbursementDateForNewLoan(customer.getOfficeId(), disbursementDate);
 
         boolean isRepaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
 

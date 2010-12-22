@@ -19,31 +19,39 @@
  */
 package org.mifos.application.holiday.persistence;
 
-import org.joda.time.DateTime;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
-import org.mifos.application.holiday.business.service.HolidayService;
-import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
-import org.mifos.dto.domain.HolidayDetails;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import org.joda.time.DateMidnight;
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
+import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.business.service.HolidayService;
+import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
+import org.mifos.calendar.DayOfWeek;
+import org.mifos.domain.builders.HolidayBuilder;
+import org.mifos.dto.domain.HolidayDetails;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.service.BusinessRuleException;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HolidayServiceFacadeWebTierTest {
@@ -82,6 +90,45 @@ public class HolidayServiceFacadeWebTierTest {
     private String computeDateFormat(Locale locale) {
         String dateSeparator = DateUtils.getDateSeparatorByLocale(locale, DateFormat.MEDIUM);
         return String.format("dd%sMMM%syyyy", dateSeparator, dateSeparator);
+    }
+
+    @Test
+    public void validateDisbursementDateIsWorkingDayShouldThrowException () throws Exception {
+
+        try {
+            DateTime sundayDisbursementDate = new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.sunday());
+
+            holidayServiceFacade.validateDisbursementDateForNewLoan(officeId, sundayDisbursementDate);
+            fail("Should have thrown BusinessRuleException");
+        } catch (BusinessRuleException e) {
+            assertThat(e.getMessageKey(), is(LoanExceptionConstants.DISBURSEMENTDATE_MUST_BE_A_WORKING_DAY));
+        }
+    }
+
+    @Test
+    public void validateDisbursementDateIsNotInHolidayShouldThrowExceptionWhenDateIsInAHoliday () throws Exception {
+        DateTime disbursementDate = new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.monday());
+        List<Holiday> holidays = new ArrayList<Holiday>();
+        Holiday holiday = new HolidayBuilder().from(disbursementDate.minusDays(1)).to(disbursementDate.plusDays(6)).build();
+        holidays.add(holiday);
+        try {
+
+            when(holidayDao.findAllHolidaysThisYearAndNext(officeId)).thenReturn(holidays);
+
+            holidayServiceFacade.validateDisbursementDateForNewLoan(officeId, disbursementDate);
+            fail("Should have thrown BusinessRuleException");
+        } catch (BusinessRuleException e) {
+            assertThat(e.getMessageKey(), is(LoanExceptionConstants.DISBURSEMENTDATE_MUST_NOT_BE_IN_A_HOLIDAY));
+        }
+    }
+
+    @Test
+    public void validateDisbursementDateIsWorkingDayAndNotAHolidayShouldReturnNormally () throws Exception {
+        DateTime disbursementDate = new DateMidnight().toDateTime().withDayOfWeek(DayOfWeek.monday());
+
+        when(holidayDao.findAllHolidaysThisYearAndNext(officeId)).thenReturn(new ArrayList<Holiday>());
+
+        holidayServiceFacade.validateDisbursementDateForNewLoan(officeId, disbursementDate);
     }
 
     @Ignore

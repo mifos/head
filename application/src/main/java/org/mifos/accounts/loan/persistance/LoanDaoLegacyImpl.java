@@ -49,6 +49,7 @@ import org.mifos.security.util.UserContext;
  * Further refactoring: loan creation seems like a good candidate to make use of
  * the Factory pattern.
  */
+@Deprecated
 public class LoanDaoLegacyImpl implements DataAccessObject {
 
     private static final Logger logger = LoggerFactory.getLogger(LoanDaoLegacyImpl.class);
@@ -114,5 +115,4 @@ public class LoanDaoLegacyImpl implements DataAccessObject {
         }
         return isValid;
     }
-
 }

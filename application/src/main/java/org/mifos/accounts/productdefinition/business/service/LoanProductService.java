@@ -26,6 +26,7 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.business.service.Service;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -41,6 +42,7 @@ import org.mifos.security.util.UserContext;
  * appears that existing "View" classes (such as FeeDto) serve as a kind of
  * DTO.
  */
+@Deprecated
 public class LoanProductService implements Service {
     private LoanPrdBusinessService loanProductBusinessService;
 
@@ -78,7 +80,7 @@ public class LoanProductService implements Service {
      */
     public void getDefaultAndAdditionalFees(Short loanProductId, UserContext userContext, List<FeeDto> defaultFees,
             List<FeeDto> additionalFees) throws ServiceException, PersistenceException {
-        LoanOfferingBO loanOffering = loanProductBusinessService.getLoanOffering(loanProductId);
+        LoanOfferingBO loanOffering = new LoanPrdPersistence().getLoanOffering(loanProductId);
         List<FeeBO> fees = new FeePersistence().getAllAppllicableFeeForLoanCreation();
         for (FeeBO fee : fees) {
             if (!fee.isPeriodic()

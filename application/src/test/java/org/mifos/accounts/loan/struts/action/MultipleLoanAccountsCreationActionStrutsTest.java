@@ -40,6 +40,7 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
@@ -47,8 +48,14 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -74,6 +81,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
 
     protected CustomerBO group = null;
 
+    @SuppressWarnings("unused")
     private CustomerBO client = null;
 
     private String flowKey;
@@ -213,6 +221,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         TestObjectFactory.removeObject(loanOffering1);
     }
 
+    @SuppressWarnings("unchecked")
     public void testGetPrdOfferingsApplicableForCustomer() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialCustomers();
@@ -229,14 +238,15 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-       Assert.assertEquals(1, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
-                .size());
+        Assert.assertEquals(1, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS,
+                request)).size());
 
         TestObjectFactory.removeObject(loanOffering1);
         TestObjectFactory.removeObject(loanOffering2);
         TestObjectFactory.removeObject(loanOffering3);
     }
 
+    @SuppressWarnings("unchecked")
     public void testGetPrdOfferingsApplicableForCustomersWithMeeting() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialCustomers();
@@ -254,14 +264,14 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, Constants.YES, request);
         /*
-         * Why two calls to actionPerform? Are we trying to test the case where
-         * the user clicks twice or is this just a mistake?
+         * Why two calls to actionPerform? Are we trying to test the case where the user clicks twice or is this just a
+         * mistake?
          */
         actionPerform();
         performNoErrors();
         verifyForward(ActionForwards.load_success.toString());
-       Assert.assertEquals(3, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS, request))
-                .size());
+        Assert.assertEquals(3, ((List<LoanOfferingBO>) SessionUtils.getAttribute(LoanConstants.LOANPRDOFFERINGS,
+                request)).size());
 
         TestObjectFactory.removeObject(loanOffering1);
         TestObjectFactory.removeObject(loanOffering2);
@@ -301,6 +311,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         TestObjectFactory.removeObject(loanOffering1);
     }
 
+    @SuppressWarnings("unchecked")
     public void testGet() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialCustomers();
@@ -319,7 +330,8 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
 
         // this retrieve the loan purposes so this is 129 if empty lookup name
         // are removed
-       Assert.assertEquals(131, ((List) SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request)).size());
+        Assert.assertEquals(131, ((List) SessionUtils.getAttribute(MasterConstants.BUSINESS_ACTIVITIES, request))
+                .size());
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.LOANOFFERING, request));
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.PENDING_APPROVAL_DEFINED, request));
         TestObjectFactory.removeObject(loanOffering);
@@ -355,7 +367,15 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         TestObjectFactory.removeObject(loanOffering);
     }
 
+    @SuppressWarnings("unchecked")
     public void testCreate() throws Exception {
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         EntityMasterData.getInstance().init();
         FieldConfig fieldConfig = FieldConfig.getInstance();
         fieldConfig.init();
@@ -389,19 +409,20 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyForward(ActionForwards.create_success.toString());
 
         List<String> accountNumbers = ((List<String>) request.getAttribute(LoanConstants.ACCOUNTS_LIST));
-       Assert.assertEquals(1, accountNumbers.size());
+        Assert.assertEquals(1, accountNumbers.size());
         LoanBO loan = new LoanBusinessService().findBySystemId(accountNumbers.get(0));
-       Assert.assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(), loan
+        Assert.assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(), loan
                 .getLoanAmount().toString());
-       Assert.assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
-       Assert.assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall(), loan
+        Assert.assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());
+        Assert.assertEquals(loanOffering.getEligibleInstallmentSameForAllLoan().getDefaultNoOfInstall(), loan
                 .getNoOfInstallments());
-       Assert.assertEquals(Short.valueOf("1"), loan.getGracePeriodDuration());
-       Assert.assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
+        Assert.assertEquals(Short.valueOf("1"), loan.getGracePeriodDuration());
+        Assert.assertEquals(Short.valueOf("1"), loan.getAccountState().getId());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
         loan = null;
     }
 
+    @SuppressWarnings("unchecked")
     public void testCreateWithoutPermission() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         UserContext userContext = TestUtils.makeUser();

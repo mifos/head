@@ -232,18 +232,6 @@ public class LoanBO extends AccountBO {
         this.performanceHistory = performanceHistory;
     }
 
-    private LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
-            final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
-            final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,
-            final Short gracePeriodDuration, final FundBO fund, final List<FeeDto> feeDtos,
-            final List<CustomFieldDto> customFields, final Boolean isRedone,
-            final boolean isRepaymentIndepOfMeetingEnabled, final MeetingBO newMeetingForRepaymentDay)
-            throws AccountException {
-        this(userContext, loanOffering, customer, accountState, loanAmount, noOfinstallments, disbursementDate,
-                interestDeductedAtDisbursement, interestRate, gracePeriodDuration, fund, feeDtos, customFields,
-                isRedone, AccountTypes.LOAN_ACCOUNT, isRepaymentIndepOfMeetingEnabled, newMeetingForRepaymentDay);
-    }
-
     public LoanBO(final UserContext userContext, final LoanOfferingBO loanOffering, final CustomerBO customer,
             final AccountState accountState, final Money loanAmount, final Short noOfinstallments,
             final Date disbursementDate, final boolean interestDeductedAtDisbursement, final Double interestRate,

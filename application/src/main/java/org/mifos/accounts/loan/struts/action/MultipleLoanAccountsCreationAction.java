@@ -32,16 +32,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.loan.business.service.LoanDto;
-import org.mifos.accounts.loan.business.service.LoanService;
-import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
 import org.mifos.accounts.loan.struts.actionforms.MultipleLoanAccountsCreationActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.MultipleLoanCreationDto;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
-import org.mifos.accounts.productdefinition.business.service.LoanProductService;
-import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -52,6 +46,7 @@ import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.CreateLoanRequest;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.dto.screen.MultipleLoanAccountDetailsDto;
@@ -62,7 +57,6 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.helpers.Transformer;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,14 +64,8 @@ import org.slf4j.LoggerFactory;
 public class MultipleLoanAccountsCreationAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(MultipleLoanAccountsCreationAction.class);
-    private LoanPrdBusinessService loanPrdBusinessService;
-    private LoanProductService loanProductService;
-    private LoanService loanService;
 
     public MultipleLoanAccountsCreationAction() {
-        loanPrdBusinessService = new LoanPrdBusinessService();
-        loanProductService = new LoanProductService(loanPrdBusinessService);
-        loanService = new LoanService(loanProductService, new LoanDaoLegacyImpl());
     }
 
     public static ActionSecurity getSecurity() {
@@ -224,27 +212,22 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
         Integer centerId = getIntegerValue(loanActionForm.getCenterId());
         Short loanProductId = getShortValue(loanActionForm.getPrdOfferingId());
         Short accountStateId = getShortValue(loanActionForm.getStateSelected());
-        AccountState accountState = AccountState.fromShort(accountStateId);
-        UserContext userContext = getUserContext(request);
 
         List<MultipleLoanCreationDto> applicableClientDetails = loanActionForm.getApplicableClientDetails();
 
-        List<String> accountNumbers = new ArrayList<String>();
+        List<CreateLoanRequest> createMultipleLoans = new ArrayList<CreateLoanRequest>();
+        for (MultipleLoanCreationDto clientDetail : applicableClientDetails) {
 
-        if (applicableClientDetails != null) {
-            for (MultipleLoanCreationDto clientDetail : applicableClientDetails) {
-                LoanDto loanDto = loanService.createLoan(userContext, centerId, loanProductId, clientDetail
-                        .getClientId(), accountState, clientDetail.getLoanAmount(), clientDetail
-                        //FIXME: Loan are created using double, the better way to do this would be to
-                        // make those double argument as Money or BigDecimal. this workaround is added
-                        // to fix MIFOS-2698
-                        .getDefaultNoOfInstall(), clientDetail.getMaxLoanAmount().getAmountDoubleValue()
-                        , clientDetail.getMinLoanAmount().getAmountDoubleValue(),
-                        clientDetail.getMaxNoOfInstall(), clientDetail.getMinNoOfInstall(),
-                        getIntegerValue(clientDetail.getBusinessActivity()));
-                accountNumbers.add(loanDto.getGlobalAccountNumber());
-            }
+            CreateLoanRequest createLoanRequest = new CreateLoanRequest(centerId, loanProductId,  accountStateId,
+                    clientDetail.getClientId(), clientDetail.getLoanAmount(), clientDetail.getDefaultNoOfInstall(),
+                    clientDetail.getMaxLoanAmount().toString(), clientDetail.getMinLoanAmount().toString(),
+                    clientDetail.getMaxNoOfInstall(), clientDetail.getMinNoOfInstall(), getIntegerValue(clientDetail.getBusinessActivity()));
+
+            createMultipleLoans.add(createLoanRequest);
         }
+
+        List<String> accountNumbers = this.loanAccountServiceFacade.createMultipleLoans(createMultipleLoans);
+
         request.setAttribute(LoanConstants.ACCOUNTS_LIST, accountNumbers);
         return mapping.findForward(ActionForwards.create_success.toString());
     }
