@@ -110,9 +110,9 @@ public interface LoanAccountServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_APPROVE_LOANS_IN_BULK')")
     List<String> updateSeveralLoanAccountStatuses(List<AccountUpdateStatus> accountsForUpdate);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_REVERSE_LOAN_DISBURSAL')")
     List<LoanActivityDto> retrieveLoanPaymentsForReversal(String globalAccountNum);
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CAN_REVERSE_LOAN_DISBURSAL')")
     void reverseLoanDisbursal(String globalAccountNum, String note);
 }
