@@ -118,11 +118,10 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         selectPage.verifyPage();
         //enter same search data and inspect displayed client account (A/C Collection) values
         CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
-        // nonzero because fees for the next meeting are displayed - after ERF implementation
-        enterDataPage.verifyCustomerAccountValue(0, 6, 17.0);
+        enterDataPage.verifyCustomerAccountValue(0, 6, 0.0);
         enterDataPage.verifyCustomerAccountValue(1, 6, 0.0);
         enterDataPage.verifyCustomerAccountValue(2, 6, 0.0);
-        enterDataPage.verifyCustomerAccountValue(3, 6, 17.0);
+        enterDataPage.verifyCustomerAccountValue(3, 6, 0.0);
         enterDataPage.verifyCustomerAccountValue(4, 6, 0.0);
         enterDataPage.cancel();
 
@@ -141,10 +140,10 @@ public class CollectionSheetEntryCustomerAccountTest extends UiTestCaseBase {
         selectPage.verifyPage();
         //enter same search data and inspect displayed client account (A/C Collection) values
         CollectionSheetEntryEnterDataPage enterDataPage = selectCenterAndContinue(formParameters, selectPage);
-        enterDataPage.verifyCustomerAccountValue(0, 6, 17.0);
+        enterDataPage.verifyCustomerAccountValue(0, 6, 0.0);
         enterDataPage.verifyCustomerAccountValue(1, 6, 77.0);
         enterDataPage.verifyCustomerAccountValue(2, 6, 0.0);
-        enterDataPage.verifyCustomerAccountValue(3, 6, 268.0);
+        enterDataPage.verifyCustomerAccountValue(3, 6, 251.0);
         enterDataPage.verifyCustomerAccountValue(4, 6, 0.0);
         enterDataPage.cancel();
 
