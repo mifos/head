@@ -372,6 +372,10 @@ public class MoneyTest extends TestCase {
         assertFalse(money.isTinyAmount());
         money = new Money(RUPEE, "0.005");
         assertTrue(money.isTinyAmount());
+        money = new Money(RUPEE, "-0.005");
+        assertTrue(money.isTinyAmount());
+        money = new Money(RUPEE, "-1.0");
+        assertFalse(money.isTinyAmount());
         AccountingRules.setDigitsAfterDecimal(Short.valueOf(digitsAfterDecimal));
     }
 

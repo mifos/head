@@ -20,6 +20,8 @@
 
 package org.mifos.dto.screen;
 
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+
 public class LoanAccountMeetingDto {
 
     private Short recurrenceId;
@@ -33,6 +35,36 @@ public class LoanAccountMeetingDto {
     private Short weekOfMonth;
     private Short everyMonth;
     private Short monthRank;
+
+    public LoanAccountMeetingDto(String recurrenceId, String weekDay, String recurWeek,
+                                 String monthType, String monthDay, String dayRecurMonth,
+                                 String monthWeek, String recurMonth, String monthRank) {
+        this.monthType = monthType;
+        if (isNotBlank(recurrenceId)) {
+            this.recurrenceId = Short.valueOf(recurrenceId);
+        }
+        if (isNotBlank(weekDay)) {
+            this.weekDay = Short.valueOf(weekDay);
+        }
+        if (isNotBlank(recurWeek)) {
+            this.everyWeek = Short.valueOf(recurWeek);
+        }
+        if (isNotBlank(monthDay)) {
+            this.dayOfMonth = Short.valueOf(monthDay);
+        }
+        if (isNotBlank(dayRecurMonth)) {
+            this.dayRecurMonth = Short.valueOf(dayRecurMonth);
+        }
+        if (isNotBlank(monthWeek)) {
+            this.weekOfMonth = Short.valueOf(monthWeek);
+        }
+        if (isNotBlank(recurMonth)) {
+            this.everyMonth = Short.valueOf(recurMonth);
+        }
+        if (isNotBlank(monthRank)) {
+            this.monthRank = Short.valueOf(monthRank);
+        }
+    }
 
     public Short getRecurrenceId() {
         return this.recurrenceId;

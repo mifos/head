@@ -1,13 +1,6 @@
 $(document).ready(function() {
 
-    $(":regex(id, dueDate.[0-9]+)").datepicker({
-        dateFormat: 'dd-M-yy',
-        showOn: "button",
-        buttonImage: "pages/framework/images/mainbox/calendaricon.gif",
-		buttonImageOnly: true
-    });
-
-    $('.date-pick-payment-data-beans').datepicker({
+    $(":regex(id, *.[0-9]+)").datepicker({
         dateFormat: 'dd-M-yy',
         showOn: "button",
         buttonImage: "pages/framework/images/mainbox/calendaricon.gif",

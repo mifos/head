@@ -388,18 +388,18 @@ explanation of the license and how it is applied.
                                                         </tr>
 
 
-                                                        <c:forEach var="paymentDataBeans" items="${loanAccountActionForm.paymentDataBeans}">
+                                                        <c:forEach var="paymentDataBeans" items="${loanAccountActionForm.paymentDataBeans}" varStatus="loopStatus">
                                                         <tr>
                                                             <td class="drawtablerow" align="center">
                                                                 <c:out value="${paymentDataBeans.installment.installment}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                                <html-el:text styleId="paymentDataBeans.dueDate"
+                                                                <html-el:text styleId="paymentDataBeans.dueDate.${loopStatus.index}"
                                                                 styleClass="date-pick-payment-data-beans" indexed="true"
                                                                 name="paymentDataBeans" property="dueDate" size="10" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                            	<html-el:text styleId="paymentDataBeans.date"
+                                                            	<html-el:text styleId="paymentDataBeans.date.${loopStatus.index}"
                                                             	styleClass="date-pick-payment-data-beans" indexed="true"
                                                             	name="paymentDataBeans" property="date" size="10" />
                                                             </td>

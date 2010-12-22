@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
@@ -120,9 +121,13 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
 
     public void setTotal(String total) {
         this.installment.setTotal(total);
+        if(StringUtils.isBlank(total)){
+            total = "0";
+        }
         LocalizationConverter localizationConverter = new LocalizationConverter(installment.getCurrency());
-        DoubleConversionResult conversionResult = localizationConverter.parseDoubleForInstallmentTotalAmount(installment.getTotal());
+        DoubleConversionResult conversionResult = localizationConverter.parseDoubleForInstallmentTotalAmount(total);
         this.installment.setTotalValue(conversionResult.getDoubleValue()) ;
+
     }
 
     public void setPaymentTypeId(Short paymentTypeId) {

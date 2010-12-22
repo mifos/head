@@ -340,6 +340,6 @@ public final class Money implements Serializable, Comparable<Money> {
 
     public boolean isTinyAmount() {
         double delta = 9 * Math.pow(10, -(getDigitsAfterDecimal() + Short.valueOf("1")));
-        return this.getAmount().doubleValue() <= delta;
+        return Math.abs(this.getAmount().doubleValue()) <= delta;
     }
 }

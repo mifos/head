@@ -2600,7 +2600,8 @@ public class LoanBO extends AccountBO {
     @Override
     public boolean paymentAmountIsValid(final Money amount) {
         Money totalRepayableAmount = getTotalRepayableAmount();
-        return (null != amount) && (amount.isGreaterThanOrEqualZero()) && (amount.isLessThanOrEqual(totalRepayableAmount));
+        return (null != amount) && (amount.isGreaterThanOrEqualZero()) &&
+                (amount.isLessThanOrEqual(totalRepayableAmount) || totalRepayableAmount.subtract(amount).isTinyAmount());
     }
 
     private LoanPaymentTypes getLoanPaymentType(final Money amount) {
