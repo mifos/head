@@ -20,61 +20,33 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.ReverseLoanDisbursalActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.service.OfficeBusinessService;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.dto.domain.LoanActivityDto;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ReverseLoanDisbursalAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(ReverseLoanDisbursalAction.class);
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
-
-    @Override
-    protected BusinessService getService() {
-        return DependencyInjectedServiceLocator.locateLoanBusinessService();
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("reverseloandisbaction");
@@ -88,8 +60,8 @@ public class ReverseLoanDisbursalAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward search(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("Inside search method");
         request.getSession().setAttribute(LoanConstants.REVERSE_LOAN_DIBURSAL_ACTION_FORM, null);
         request.getSession().setAttribute(Constants.BUSINESS_KEY, null);
@@ -99,39 +71,38 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("Inside load method");
         ReverseLoanDisbursalActionForm actionForm = (ReverseLoanDisbursalActionForm) form;
+
         String searchString = actionForm.getSearchString();
-        if (searchString != null) {
-            searchString = searchString.trim();
+
+        String globalAccountNum = searchString;
+        if (StringUtils.isNotEmpty(globalAccountNum)) {
+            globalAccountNum = globalAccountNum.trim();
         }
-        LoanBO loan = getLoanAccount(searchString, getUserContext(request));
-        if (loan == null) {
-            throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
-        }
-        if (!(loan.getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING.getValue()) || loan
-                .getAccountState().getId().equals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING.getValue()))) {
-            throw new ApplicationException(LoanConstants.NOSEARCHRESULTS);
-        }
-        List<LoanActivityDto> payments = getApplicablePayments(loan);
+
+        List<LoanActivityDto> payments = this.loanAccountServiceFacade.retrieveLoanPaymentsForReversal(globalAccountNum);
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         SessionUtils.setCollectionAttribute(LoanConstants.PAYMENTS_LIST, payments, request);
         SessionUtils.setAttribute(LoanConstants.PAYMENTS_SIZE, payments.size(), request);
+
         logger.debug("Outside load method");
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward preview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("preview method called");
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("Inside validate method");
         ActionForwards actionForward = ActionForwards.search_success;
         String method = (String) request.getAttribute("methodCalled");
@@ -150,79 +121,22 @@ public class ReverseLoanDisbursalAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("Inside update method");
         ReverseLoanDisbursalActionForm actionForm = (ReverseLoanDisbursalActionForm) form;
+
         LoanBO loan = (LoanBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        loan = ((LoanBusinessService) getService()).getAccount(loan.getAccountId());
-        PersonnelBO personnel = ((PersonnelBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.Personnel)).getPersonnel(getUserContext(request).getId());
-        loan.setUserContext(getUserContext(request));
-        loan.reverseLoanDisbursal(personnel, actionForm.getNote());
+
+        this.loanAccountServiceFacade.reverseLoanDisbursal(loan.getGlobalAccountNum(), actionForm.getNote());
+
         logger.debug("Outside update method");
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancel(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("cancel method called");
         return mapping.findForward(ActionForwards.cancel_success.toString());
-    }
-
-    private LoanBO getLoanAccount(String globalAccountNum, UserContext userContext) throws Exception {
-        LoanBO loan = ((LoanBusinessService) getService()).findBySystemId(globalAccountNum);
-        if (loan != null && isAccountUnderUserScope(loan, userContext)) {
-            return loan;
-        }
-        return null;
-    }
-
-    private boolean isAccountUnderUserScope(LoanBO loan, UserContext userContext) throws Exception {
-        if (userContext.getLevelId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
-            return (loan.getPersonnel().getPersonnelId().equals(userContext.getId()));
-        } else {
-            if (userContext.getOfficeLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue())) {
-                return (loan.getOffice().getOfficeId().equals(userContext.getBranchId()));
-            } else {
-                OfficeBO userOffice = ((OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(
-                        BusinessServiceName.Office)).getOffice(userContext.getBranchId());
-                return (userOffice.isParent(loan.getOffice()));
-            }
-        }
-    }
-
-    private List<LoanActivityDto> getApplicablePayments(LoanBO loan) {
-        List<LoanActivityDto> payments = new ArrayList<LoanActivityDto>();
-        List<AccountPaymentEntity> accountPayments = loan.getAccountPayments();
-        int i = accountPayments.size() - 1;
-        if (accountPayments.size() > 0) {
-            for (AccountPaymentEntity accountPayment : accountPayments) {
-                if (accountPayment.getAmount().isGreaterThanZero()) {
-                    Money amount = new Money(accountPayment.getAmount().getCurrency());
-                    if (i == 0) {
-                        for (AccountTrxnEntity accountTrxn : accountPayment.getAccountTrxns()) {
-                            short accountActionTypeId = accountTrxn.getAccountActionEntity().getId().shortValue();
-                            boolean isLoanRepayment = accountActionTypeId == AccountActionTypes.LOAN_REPAYMENT
-                                    .getValue();
-                            boolean isFeeRepayment = accountActionTypeId == AccountActionTypes.FEE_REPAYMENT.getValue();
-                            if (isLoanRepayment || isFeeRepayment) {
-                                amount = amount.add(accountTrxn.getAmount());
-                            }
-                        }
-                    } else {
-                        amount = accountPayment.getAmount();
-                    }
-                    if (amount.isGreaterThanZero()) {
-                        LoanActivityDto loanActivityDto = new LoanActivityDto();
-                        loanActivityDto.setActionDate(accountPayment.getPaymentDate());
-                        loanActivityDto.setTotal(amount.toString());
-                        payments.add(0, loanActivityDto);
-                    }
-                }
-                i--;
-            }
-        }
-        return payments;
     }
 }

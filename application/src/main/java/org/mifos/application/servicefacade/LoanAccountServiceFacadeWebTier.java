@@ -32,10 +32,12 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountNotesEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountStateFlagEntity;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
@@ -62,6 +64,7 @@ import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessServ
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
@@ -88,11 +91,14 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.util.helpers.GroupConstants;
+import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
+import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
@@ -1195,5 +1201,102 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         }
 
         return updatedAccountNumbers;
+    }
+
+    @Override
+    public List<LoanActivityDto> retrieveLoanPaymentsForReversal(String globalAccountNum) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        LoanBO loan = null;
+        LoanBO searchedLoan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        if (searchedLoan != null && isAccountUnderUserScope(searchedLoan, userContext)) {
+            loan = searchedLoan;
+        }
+
+        if (loan == null) {
+            throw new BusinessRuleException(LoanConstants.NOSEARCHRESULTS);
+        }
+
+        if (!loan.isAccountActive()) {
+            throw new BusinessRuleException(LoanConstants.NOSEARCHRESULTS);
+        }
+
+        return getApplicablePayments(loan);
+    }
+
+    private boolean isAccountUnderUserScope(LoanBO loan, UserContext userContext) {
+        if (userContext.getLevelId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
+            return (loan.getPersonnel().getPersonnelId().equals(userContext.getId()));
+        }
+
+        if (userContext.getOfficeLevelId().equals(OfficeLevel.BRANCHOFFICE.getValue())) {
+            return (loan.getOffice().getOfficeId().equals(userContext.getBranchId()));
+        }
+
+        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
+        return (userOffice.isParent(loan.getOffice()));
+    }
+
+    private List<LoanActivityDto> getApplicablePayments(LoanBO loan) {
+
+        List<LoanActivityDto> payments = new ArrayList<LoanActivityDto>();
+        List<AccountPaymentEntity> accountPayments = loan.getAccountPayments();
+        int i = accountPayments.size() - 1;
+        if (accountPayments.size() > 0) {
+            for (AccountPaymentEntity accountPayment : accountPayments) {
+                if (accountPayment.getAmount().isGreaterThanZero()) {
+                    Money amount = new Money(accountPayment.getAmount().getCurrency());
+                    if (i == 0) {
+                        for (AccountTrxnEntity accountTrxn : accountPayment.getAccountTrxns()) {
+                            short accountActionTypeId = accountTrxn.getAccountActionEntity().getId().shortValue();
+                            boolean isLoanRepayment = accountActionTypeId == AccountActionTypes.LOAN_REPAYMENT
+                                    .getValue();
+                            boolean isFeeRepayment = accountActionTypeId == AccountActionTypes.FEE_REPAYMENT.getValue();
+                            if (isLoanRepayment || isFeeRepayment) {
+                                amount = amount.add(accountTrxn.getAmount());
+                            }
+                        }
+                    } else {
+                        amount = accountPayment.getAmount();
+                    }
+                    if (amount.isGreaterThanZero()) {
+                        LoanActivityDto loanActivityDto = new LoanActivityDto();
+                        loanActivityDto.setActionDate(accountPayment.getPaymentDate());
+                        loanActivityDto.setTotal(amount.toString());
+                        payments.add(0, loanActivityDto);
+                    }
+                }
+                i--;
+            }
+        }
+        return payments;
+    }
+
+    @Override
+    public void reverseLoanDisbursal(String globalAccountNum, String note) {
+
+        MifosUser mifosUser = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(mifosUser);
+
+        LoanBO loan = this.loanDao.findByGlobalAccountNum(globalAccountNum);
+        PersonnelBO personnel = this.personnelDao.findPersonnelById(userContext.getId());
+        loan.updateDetails(userContext);
+
+        try {
+            this.transactionHelper.startTransaction();
+            loan.reverseLoanDisbursal(personnel, note);
+            this.loanDao.save(loan);
+            this.transactionHelper.commitTransaction();
+        } catch (BusinessRuleException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getMessageKey(), e);
+        } catch (AccountException e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
     }
 }

@@ -1491,14 +1491,8 @@ public class LoanBO extends AccountBO {
                 }
             }
         }
-        addLoanActivity(buildLoanActivity(loanAmount, loggedInUser, "Disbursal Adjusted", DateUtils
-                .getCurrentDateWithoutTimeStamp()));
+        addLoanActivity(buildLoanActivity(loanAmount, loggedInUser, "Disbursal Adjusted", DateUtils.getCurrentDateWithoutTimeStamp()));
         updateCustomerHistoryOnReverseLoan();
-        try {
-            getLoanPersistence().createOrUpdate(this);
-        } catch (PersistenceException pe) {
-            throw new AccountException(pe);
-        }
     }
 
     protected void updatePerformanceHistoryOnAdjustment(final int numberOfTransactions) {
@@ -3861,7 +3855,9 @@ public class LoanBO extends AccountBO {
 
     public void recordSummaryAndPerfHistory(boolean paid, PaymentAllocation paymentAllocation) {
         loanSummary.updatePaymentDetails(paymentAllocation);
-        if (paid) performanceHistory.incrementPayments();
+        if (paid) {
+            performanceHistory.incrementPayments();
+        }
     }
 
     /**
