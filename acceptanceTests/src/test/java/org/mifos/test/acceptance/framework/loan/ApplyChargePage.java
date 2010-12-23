@@ -51,4 +51,11 @@ public class ApplyChargePage extends MifosPage {
             Assert.assertTrue(!selenium.isElementPresent("//select[@name='chargeType']/option[text()='" + fee + "']"));
         }
     }
+
+    public LoanAccountPage applyFeeAndConfirm(ChargeParameters chargeParameters) {
+        selenium.select("applyCharges.input.type","label=" + chargeParameters.getType());
+        selenium.click("applyCharges.button.submit");
+        waitForPageToLoad();
+        return new LoanAccountPage(selenium);
+    }
 }

@@ -123,7 +123,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         verifyScheduleTable(tableOnFirstInstalment);
     }
 
-    private void verifyScheduleTable(String[][] tableOnFirstInstalment) {
+    public ViewRepaymentSchedulePage verifyScheduleTable(String[][] tableOnFirstInstalment) {
         for (int rowIndex = 0; rowIndex < tableOnFirstInstalment.length; rowIndex++) {
             String[] rowValues = tableOnFirstInstalment[rowIndex];
             int row = rowIndex + 3;
@@ -136,6 +136,7 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
                 }
             }
         }
+        return this;
     }
 
     private void setScheduleDate(String date) {

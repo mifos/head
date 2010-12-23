@@ -22,6 +22,7 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import com.thoughtworks.selenium.Selenium;
 import org.joda.time.DateTime;
+import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
@@ -399,8 +400,9 @@ public class LoanTestHelper {
     }
 
 
-    public void setApplicationTime(DateTime systemDateTime) throws UnsupportedEncodingException {
+    public AbstractPage setApplicationTime(DateTime systemDateTime) throws UnsupportedEncodingException {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
+        return new AbstractPage(selenium);
     }
 }

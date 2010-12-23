@@ -34,7 +34,6 @@ public class AbstractPage {
 
     private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "8000";
     protected Selenium selenium;
-    String tabKey = "\t";
 
     public AbstractPage() {
         // do nothing
@@ -68,10 +67,16 @@ public class AbstractPage {
     public void typeText(String locator, String text) {
         selenium.focus(locator);
         selenium.type(locator,text);
-        selenium.keyDown(locator, tabKey);
+//        selenium.keyDown(locator, tabKey);
+//        selenium.keyUp(locator, tabKey);
+        selenium.keyPressNative("9");
     }
     public void waitForElementToPresent(String locator){
         selenium.waitForCondition("selenium.isElementPresent(\"" + locator + "\")",MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS);
+    }
+
+    public void navigateBack(){
+        selenium.goBack();
     }
 
 }
