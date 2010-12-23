@@ -1634,7 +1634,7 @@ public class LoanBO extends AccountBO {
                     loanSummary.updatePaymentDetails(loanReverseTrxn);
                     if (loanReverseTrxn.isNotEmptyTransaction()) {
                         LoanScheduleEntity installment = (LoanScheduleEntity) getAccountActionDate(loanReverseTrxn.getInstallmentId());
-                        installment.updatePaymentDetails(loanReverseTrxn);
+                        installment.updatePaymentDetailsForAdjustment(loanReverseTrxn);
 
                         /*
                          * John W - mifos-1986 - when adjusting a loan that is LOAN_CLOSED_OBLIGATIONS_MET and was

@@ -4867,6 +4867,9 @@ create table calculated_interest_on_payment (
   extra_interest_paid decimal(21,4),
   extra_interest_paid_currency_id smallint,
 
+  interest_due_till_paid decimal(21,4),
+  interest_due_till_paid_currency_id smallint,
+
   primary key(loan_account_trxn_id),
   foreign key(loan_account_trxn_id)
     references loan_trxn_detail(account_trxn_id)
@@ -4879,6 +4882,11 @@ create table calculated_interest_on_payment (
       on update no action,
 
   foreign key(extra_interest_paid_currency_id)
+    references currency(currency_id)
+      on delete no action
+      on update no action,
+
+  foreign key(interest_due_till_paid_currency_id)
     references currency(currency_id)
       on delete no action
       on update no action

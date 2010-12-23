@@ -164,7 +164,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
                 .negate(), comment, this, getPrincipalAmount().negate(), getInterestAmount().negate(),
                 getPenaltyAmount().negate(), getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate(), null,
                 new MasterPersistence());
-
+        reverseAccntTrxn.setCalculatedInterestOnPayment(this.getCalculatedInterestOnPayment());
 
         if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
             logger.debug(
@@ -252,11 +252,12 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
         this.calculatedInterestOnPayment = calculatedInterestOnPayment;
     }
 
-    public void computeAndSetCalculatedInterestOnPayment(Money originalInterest, Money extraInterestPaid) {
+    public void computeAndSetCalculatedInterestOnPayment(Money originalInterest, Money extraInterestPaid, Money interestDueTillPaid) {
         CalculatedInterestOnPayment calculatedInterestOnPayment = new CalculatedInterestOnPayment();
         calculatedInterestOnPayment.setLoanTrxnDetailEntity(this);
         calculatedInterestOnPayment.setOriginalInterest(originalInterest);
         calculatedInterestOnPayment.setExtraInterestPaid(extraInterestPaid);
+        calculatedInterestOnPayment.setInterestDueTillPaid(interestDueTillPaid);
         setCalculatedInterestOnPayment(calculatedInterestOnPayment);
     }
 }

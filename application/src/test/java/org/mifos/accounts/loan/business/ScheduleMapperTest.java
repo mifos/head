@@ -125,6 +125,7 @@ public class ScheduleMapperTest {
         assertThat(calculatedInterestOnPayment, is(not(nullValue())));
         assertThat(calculatedInterestOnPayment.getOriginalInterest().getAmount().doubleValue(), is(10d));
         assertThat(calculatedInterestOnPayment.getExtraInterestPaid().getAmount().doubleValue(), is(4.5d));
+        assertThat(calculatedInterestOnPayment.getInterestDueTillPaid().getAmount().doubleValue(), is(5d));
     }
 
     @Test

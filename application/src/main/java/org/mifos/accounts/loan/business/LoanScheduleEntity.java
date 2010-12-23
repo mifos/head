@@ -262,18 +262,29 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
         }
     }
 
-    private void updatePaymentDetails(Money principal, Money interest, Money penalty, Money miscPenalty, Money miscFee) {
-        principalPaid = principalPaid.add(principal);
-        interestPaid = interestPaid.add(interest);
-        penaltyPaid = penaltyPaid.add(penalty);
-        miscPenaltyPaid = miscPenaltyPaid.add(miscPenalty);
-        miscFeePaid = miscFeePaid.add(miscFee);
+    public void updatePaymentDetailsForAdjustment(LoanTrxnDetailEntity loanReverseTrxn) {
+        CalculatedInterestOnPayment interestOnPayment = loanReverseTrxn.getCalculatedInterestOnPayment();
+        Money overdueInterestPaid = calculateExtraInterestPaid(interestOnPayment);
+        principalPaid = principalPaid.add(loanReverseTrxn.getPrincipalAmount());
+        interest = calculateAdjustedInterest(interestOnPayment, overdueInterestPaid, loanReverseTrxn);
+        interestPaid = interestPaid.add(loanReverseTrxn.getInterestAmount()).add(overdueInterestPaid);
+        penaltyPaid = penaltyPaid.add(loanReverseTrxn.getPenaltyAmount());
+        miscPenaltyPaid = miscPenaltyPaid.add(loanReverseTrxn.getMiscPenaltyAmount());
+        miscFeePaid = miscFeePaid.add(loanReverseTrxn.getMiscFeeAmount());
+        extraInterestPaid = extraInterestPaid.subtract(overdueInterestPaid);
     }
 
-    public void updatePaymentDetails(LoanTrxnDetailEntity loanReverseTrxn) {
-        updatePaymentDetails(loanReverseTrxn.getPrincipalAmount(), loanReverseTrxn.getInterestAmount(),
-                loanReverseTrxn.getPenaltyAmount(), loanReverseTrxn.getMiscPenaltyAmount(),
-                loanReverseTrxn.getMiscFeeAmount());
+    private Money calculateExtraInterestPaid(CalculatedInterestOnPayment interestOnPayment) {
+        return interestOnPayment == null ? Money.zero(getCurrency()) : interestOnPayment.getExtraInterestPaid();
+    }
+
+    private Money calculateAdjustedInterest(CalculatedInterestOnPayment interestOnPayment, Money overdueInterestPaid,
+                                            LoanTrxnDetailEntity loanReverseTrxn) {
+        if (((LoanBO)account).isDecliningBalanceInterestRecalculation()) {
+            return interestOnPayment.getOriginalInterest().subtract(loanReverseTrxn.getInterestAmount()).subtract(overdueInterestPaid.
+                    add(interestOnPayment.getInterestDueTillPaid()));
+        }
+        return interest;
     }
 
     Money waiveFeeCharges() {
@@ -708,5 +719,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     public void setPaymentAllocation(PaymentAllocation paymentAllocation) {
         this.paymentAllocation = paymentAllocation;
+    }
+
+    double getExtraInterestPaidAsDouble() {
+        return getExtraInterestPaid().getAmount().doubleValue();
     }
 }

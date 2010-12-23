@@ -66,11 +66,12 @@ public class ScheduleMapper {
                 Installment installment = installments.get(Integer.valueOf(loanScheduleEntity.getInstallmentId()));
                 Money originalInterest = loanScheduleEntity.getInterest();
                 Money extraInterestPaid = new Money(currency, installment.getCurrentExtraInterestPaid());
+                Money interestDueTillPaid = new Money(currency, installment.getCurrentInterestPaid());
                 loanScheduleEntity.payComponents(installment, currency, paymentDate);
                 if (loanScheduleEntity.getPaymentAllocation().hasAllocation()) {
                     LoanTrxnDetailEntity loanTrxnDetailEntity = loanScheduleEntity.updateSummaryAndPerformanceHistory(
                             accountPaymentEntity, personnel, paymentDate);
-                    loanTrxnDetailEntity.computeAndSetCalculatedInterestOnPayment(originalInterest, extraInterestPaid);
+                    loanTrxnDetailEntity.computeAndSetCalculatedInterestOnPayment(originalInterest, extraInterestPaid, interestDueTillPaid);
                 }
             }
         }

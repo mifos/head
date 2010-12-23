@@ -20,6 +20,11 @@
             <column name="extra_interest_paid_currency_id"/>
             <column name="extra_interest_paid"/>
         </property>
+        <property name="interestDueTillPaid"
+                  type="org.mifos.framework.util.helpers.MoneyCompositeUserType">
+            <column name="interest_due_till_paid_currency_id"/>
+            <column name="interest_due_till_paid"/>
+        </property>
         <one-to-one name="loanTrxnDetailEntity"
                     class="org.mifos.accounts.loan.business.LoanTrxnDetailEntity"
                     access="field"/>

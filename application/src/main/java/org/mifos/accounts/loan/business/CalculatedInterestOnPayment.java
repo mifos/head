@@ -13,6 +13,8 @@ public class CalculatedInterestOnPayment extends AbstractEntity {
 
     private Money extraInterestPaid;
 
+    private Money interestDueTillPaid;
+
     public CalculatedInterestOnPayment() {
     }
 
@@ -38,5 +40,13 @@ public class CalculatedInterestOnPayment extends AbstractEntity {
 
     public void setExtraInterestPaid(Money extraInterestPaid) {
         this.extraInterestPaid = extraInterestPaid;
+    }
+
+    public Money getInterestDueTillPaid() {
+        return interestDueTillPaid;
+    }
+
+    public void setInterestDueTillPaid(Money interestDueTillPaid) {
+        this.interestDueTillPaid = interestDueTillPaid;
     }
 }
