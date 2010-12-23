@@ -265,7 +265,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         return officeBO;
     }
 
-    public void testFlowSuccess() throws Exception {
+    public void ignore_testFlowSuccess() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.load.toString());
         addRequestParameter("officeLevel", "5");
@@ -304,7 +304,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(false, fm.isFlowValid(flowKey));
     }
 
-    public void testFlowFailure() throws Exception {
+    public void ignore_testFlowFailure() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.load.toString());
         addRequestParameter("officeLevel", "5");
