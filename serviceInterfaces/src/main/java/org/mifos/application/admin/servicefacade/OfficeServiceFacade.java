@@ -32,7 +32,7 @@ import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 
 public interface OfficeServiceFacade {
 
-    public OfficeHierarchyDto headOfficeHierarchy();
+    OfficeHierarchyDto headOfficeHierarchy();
 
     OfficeHierarchyByLevelDto retrieveAllOffices();
 
