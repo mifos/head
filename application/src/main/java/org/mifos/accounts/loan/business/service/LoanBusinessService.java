@@ -40,6 +40,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.service.HolidayService;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
@@ -88,7 +89,7 @@ public class LoanBusinessService implements BusinessService {
      */
     @Deprecated
     public LoanBusinessService() {
-        this(new LoanPersistence(), new ConfigurationBusinessService(), new AccountBusinessService(), null, null);
+        this(new LoanPersistence(), new ConfigurationBusinessService(), new AccountBusinessService(), DependencyInjectedServiceLocator.locateHolidayService(), null);
     }
 
     public LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService,
