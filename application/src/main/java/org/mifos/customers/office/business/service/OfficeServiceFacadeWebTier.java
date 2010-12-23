@@ -20,21 +20,20 @@
 package org.mifos.customers.office.business.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.exceptions.OfficeValidationException;
 import org.mifos.customers.office.persistence.OfficeDao;
+import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -71,24 +70,6 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
     @Override
     public OfficeHierarchyDto headOfficeHierarchy() {
         return officeDao.headOfficeHierarchy();
-    }
-
-    @Override
-    public String topLevelOfficeNames(String ids) {
-        String[] idArray = ids.split(",");
-        List<Short> idList = new LinkedList<Short>();
-        for (String id : idArray) {
-            idList.add(new Short(id));
-        }
-        List<String> topLevelOffices = officeDao.topLevelOfficeNames(idList);
-        StringBuffer stringBuffer = new StringBuffer();
-        for (Iterator<String> iterator = topLevelOffices.iterator(); iterator.hasNext();) {
-            stringBuffer.append(iterator.next());
-            if (iterator.hasNext()) {
-                stringBuffer.append(", ");
-            }
-        }
-        return stringBuffer.toString();
     }
 
     @Override
@@ -216,22 +197,31 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
     @Override
     public OfficeFormDto retrieveOfficeFormInformation(Short officeLevelId) {
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = this.officeDao.retrieveCustomFieldsForOffice();
-        List<CustomFieldDto> customFields = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, Locale.getDefault());
+        try {
+            List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
-        OfficeLevel officeLevel = OfficeLevel.HEADOFFICE;
-        if (officeLevelId != null) {
-            officeLevel = OfficeLevel.getOfficeLevel(officeLevelId);
+            OfficeLevel officeLevel = OfficeLevel.HEADOFFICE;
+            if (officeLevelId != null) {
+                officeLevel = OfficeLevel.getOfficeLevel(officeLevelId);
+            }
+
+            List<OfficeDto> parents = this.officeDao.findActiveParents(officeLevel);
+
+            for (OfficeDto office : parents) {
+                String levelName = MessageLookup.getInstance().lookup(office.getLookupNameKey());
+                office.setLevelName(levelName);
+            }
+
+            List<OfficeDetailsDto> officeLevels = new OfficePersistence().getActiveLevels();
+            for (OfficeDetailsDto officeDetailsDto : officeLevels) {
+                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
+                officeDetailsDto.setLevelName(levelName);
+            }
+
+            return new OfficeFormDto(customFields, parents, officeLevels);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
         }
-
-        List<OfficeDto> parents = this.officeDao.findActiveParents(officeLevel);
-
-        for (OfficeDto office : parents) {
-            String levelName = MessageLookup.getInstance().lookup(office.getLookupNameKey());
-            office.setLevelName(levelName);
-        }
-
-        return new OfficeFormDto(customFields, parents);
     }
 
     @Override
@@ -264,10 +254,9 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
     }
 
     @Override
-    public ListElement createOffice(Short userId, Locale preferredLocale, Short operationMode, OfficeDto officeDto) {
+    public ListElement createOffice(Short operationMode, OfficeDto officeDto) {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
-        userContext.setPreferredLocale(preferredLocale);
 
         OfficeLevel level = OfficeLevel.getOfficeLevel(officeDto.getLevelId());
         OfficeBO parentOffice = officeDao.findOfficeById(officeDto.getParentId());

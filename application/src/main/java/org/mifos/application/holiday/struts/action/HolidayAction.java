@@ -57,7 +57,7 @@ public class HolidayAction extends BaseAction {
             HttpServletResponse response) throws Exception {
         response.setContentType("application/json");
         PrintWriter out = response.getWriter();
-        out.println(this.legacyOfficeServiceFacade.headOfficeHierarchy().toJSONString());
+        out.println(this.officeServiceFacade.headOfficeHierarchy().toJSONString());
         out.flush();
         return null;
     }

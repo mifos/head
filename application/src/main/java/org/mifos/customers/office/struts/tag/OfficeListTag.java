@@ -77,7 +77,7 @@ public class OfficeListTag extends BodyTagSupport {
                 OfficePersistence officePersistence = new OfficePersistence();
                 OfficeBO officeBO = officePersistence.getOffice(userContext.getBranchId());
 
-                List<OfficeDetailsDto> levels = officePersistence.getActiveLevels(userContext.getLocaleId());
+                List<OfficeDetailsDto> levels = officePersistence.getActiveLevels();
                 OfficeBO loggedInOffice = officePersistence.getOffice(userContext.getBranchId());
 
                 List<OfficeBO> branchParents = officePersistence.getBranchParents(officeBO.getSearchId());

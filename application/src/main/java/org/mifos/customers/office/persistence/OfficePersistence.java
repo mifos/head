@@ -199,7 +199,7 @@ public class OfficePersistence extends Persistence {
 
     }
 
-    public List<OfficeDetailsDto> getActiveLevels(Short localeId) throws PersistenceException {
+    public List<OfficeDetailsDto> getActiveLevels() throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         List<OfficeDetailsDto> queryResult = executeNamedQuery(NamedQueryConstants.GETACTIVELEVELS, queryParameters);
         if (queryResult == null) {

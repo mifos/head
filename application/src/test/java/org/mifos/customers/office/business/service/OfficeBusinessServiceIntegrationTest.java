@@ -63,7 +63,7 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
 
     @Test
     public void testGetActiveLevels() throws NumberFormatException, ServiceException {
-        Assert.assertEquals(4, officeBusinessService.getConfiguredLevels(Short.valueOf("1")).size());
+        Assert.assertEquals(4, officeBusinessService.getConfiguredLevels().size());
     }
 
     @Test

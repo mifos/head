@@ -30,8 +30,8 @@ public class OfficeBusinessServiceTest {
     @ExpectedException(value = CustomerException.class)
     public void testInvalidConnectionInGetActiveLevel() throws PersistenceException {
         try {
-            when(officePersistence.getActiveLevels(id)).thenThrow(new PersistenceException("some exception"));
-            service.getConfiguredLevels(id);
+            when(officePersistence.getActiveLevels()).thenThrow(new PersistenceException("some exception"));
+            service.getConfiguredLevels();
             junit.framework.Assert.fail("should fail because of invalid session");
         } catch (ServiceException e) {
         }

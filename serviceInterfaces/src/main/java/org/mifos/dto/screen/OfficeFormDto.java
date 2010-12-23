@@ -23,16 +23,19 @@ package org.mifos.dto.screen;
 import java.util.List;
 
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 
 public class OfficeFormDto {
 
     private final List<CustomFieldDto> customFields;
     private final List<OfficeDto> parents;
+    private final List<OfficeDetailsDto> officeLevels;
 
-    public OfficeFormDto(List<CustomFieldDto> customFields, List<OfficeDto> parents) {
+    public OfficeFormDto(List<CustomFieldDto> customFields, List<OfficeDto> parents, List<OfficeDetailsDto> officeLevels) {
         this.customFields = customFields;
         this.parents = parents;
+        this.officeLevels = officeLevels;
     }
 
     public List<CustomFieldDto> getCustomFields() {
@@ -41,5 +44,9 @@ public class OfficeFormDto {
 
     public List<OfficeDto> getParents() {
         return this.parents;
+    }
+
+    public List<OfficeDetailsDto> getOfficeLevels() {
+        return this.officeLevels;
     }
 }

@@ -20,6 +20,18 @@
 
 package org.mifos.customers.office.struts.action;
 
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -27,11 +39,9 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.OfficeCustomFieldEntity;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
@@ -61,17 +71,6 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.UserContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-
 public class OffAction extends BaseAction {
 
     @Override
@@ -92,7 +91,6 @@ public class OffAction extends BaseAction {
 
         OfficeFormDto officeFormDto = this.officeServiceFacade.retrieveOfficeFormInformation(officeLevelId);
 
-        // loadParents
         if (StringUtils.isNotBlank(officeLevel)) {
             actionForm.setOfficeLevel(officeLevel);
 
@@ -114,7 +112,7 @@ public class OffAction extends BaseAction {
         actionForm.setCustomFields(officeFormDto.getCustomFields());
 
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, officeFormDto.getCustomFields(), request);
-        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(getUserContext(request).getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, officeFormDto.getOfficeLevels(), request);
         SessionUtils.setAttribute(CustomerConstants.URL_MAP, null, request.getSession(false));
         return mapping.findForward(ActionForwards.load_success.toString());
     }
@@ -132,7 +130,7 @@ public class OffAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward preview(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+    public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm officeActionForm = (OffActionForm) form;
         return createGroupQuestionnaire.fetchAppliedQuestions(mapping, officeActionForm, request, ActionForwards.preview_success);
@@ -153,8 +151,8 @@ public class OffAction extends BaseAction {
         OfficeDto officeDto = new OfficeDto(getShortValue(offActionForm.getOfficeLevel()), getShortValue(offActionForm.getParentOfficeId()),
                 offActionForm.getCustomFields(), offActionForm.getOfficeName(), offActionForm.getShortName(),
                 Address.toDto(offActionForm.getAddress()));
-        UserContext userContext = getUserContext(request);
-        ListElement element = officeServiceFacade.createOffice(userContext.getId(), userContext.getPreferredLocale(), OperationMode.REMOTE_SERVER.getValue(), officeDto);
+
+        ListElement element = officeServiceFacade.createOffice(OperationMode.REMOTE_SERVER.getValue(), officeDto);
         offActionForm.setOfficeId(element.getId().toString());
         offActionForm.setGlobalOfficeNum(element.getName());
         createGroupQuestionnaire.saveResponses(request, offActionForm, element.getId());
@@ -312,32 +310,6 @@ public class OffAction extends BaseAction {
         return customFields;
     }
 
-    private List<OfficeBO> getOffice(List<OfficeBO> officeList, OfficeLevel officeLevel) throws Exception {
-        if (officeList != null) {
-            List<OfficeBO> newOfficeList = new ArrayList<OfficeBO>();
-            for (OfficeBO officeBO : officeList) {
-                if (officeBO.getOfficeLevel().equals(officeLevel)) {
-                    newOfficeList.add(officeBO);
-                }
-            }
-            if (newOfficeList.isEmpty()) {
-                return null;
-            }
-            return newOfficeList;
-        }
-        return null;
-    }
-
-    private List<OfficeBO> getOffices(UserContext userContext, List<OfficeBO> officeList) throws Exception {
-        if (officeList != null) {
-            for (OfficeBO officeBO : officeList) {
-                officeBO.getLevel().setLocaleId(userContext.getLocaleId());
-                officeBO.getStatus().setLocaleId(userContext.getLocaleId());
-            }
-        }
-        return officeList;
-    }
-
     private void loadParents(HttpServletRequest request, OffActionForm form) throws Exception {
         String officeLevel = request.getParameter("officeLevel");
         if (StringUtils.isNotBlank(officeLevel)) {
@@ -373,8 +345,7 @@ public class OffAction extends BaseAction {
     }
 
     private void loadofficeLevels(HttpServletRequest request) throws Exception {
-        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService())
-                .getConfiguredLevels(getUserContext(request).getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(), request);
     }
 
     private void loadOfficeStatus(HttpServletRequest request) throws Exception {

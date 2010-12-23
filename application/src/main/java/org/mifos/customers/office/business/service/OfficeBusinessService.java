@@ -65,9 +65,9 @@ public class OfficeBusinessService implements BusinessService {
         }
     }
 
-    public List<OfficeDetailsDto> getConfiguredLevels(Short localeId) throws ServiceException {
+    public List<OfficeDetailsDto> getConfiguredLevels() throws ServiceException {
         try {
-            List<OfficeDetailsDto> officeLevels = officePersistence.getActiveLevels(localeId);
+            List<OfficeDetailsDto> officeLevels = officePersistence.getActiveLevels();
             for (OfficeDetailsDto officeDetailsDto : officeLevels) {
                 String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
                 officeDetailsDto.setLevelName(levelName);
