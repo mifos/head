@@ -20,7 +20,16 @@
 
 package org.mifos.customers.personnel.business;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.After;
 import org.junit.Before;
@@ -53,19 +62,10 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.BusinessServiceName;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.UserContext;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -420,40 +420,6 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
     }
 
     @Test
-    public void testAddNotes() throws Exception {
-        createdBranchOffice = TestObjectFactory.createOffice(OfficeLevel.BRANCHOFFICE, office, "Office_BRanch1", "OFB");
-        createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
-                createdBranchOffice.getOfficeId());
-        createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-        Assert.assertEquals(branchOffice.getOfficeId(), personnel.getOffice().getOfficeId());
-        createInitialObjects(branchOffice.getOfficeId(), personnel.getPersonnelId());
-        personnel.addNotes(PersonnelConstants.SYSTEM_USER, createNotes("1.Personnel notes created"));
-        StaticHibernateUtil.flushAndClearSession();
-        personnel.addNotes(PersonnelConstants.SYSTEM_USER, createNotes("2.Personnel notes created"));
-        StaticHibernateUtil.flushAndClearSession();
-        personnel.addNotes(PersonnelConstants.SYSTEM_USER, createNotes("3.Personnel notes created"));
-        StaticHibernateUtil.flushAndClearSession();
-        personnel.addNotes(PersonnelConstants.SYSTEM_USER, createNotes("4.Personnel notes created"));
-        StaticHibernateUtil.flushAndClearSession();
-        personnel.addNotes(PersonnelConstants.SYSTEM_USER, createNotes("5.Personnel notes created"));
-        StaticHibernateUtil.flushAndClearSession();
-        client = (ClientBO) StaticHibernateUtil.getSessionTL().get(ClientBO.class, client.getCustomerId());
-        group = (GroupBO) StaticHibernateUtil.getSessionTL().get(GroupBO.class, group.getCustomerId());
-        center = (CenterBO) StaticHibernateUtil.getSessionTL().get(CenterBO.class, center.getCustomerId());
-        personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
-        createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
-                createdBranchOffice.getOfficeId());
-        Assert.assertEquals("Size of notes should be 5", 5, personnel.getPersonnelNotes().size());
-        Assert.assertEquals("Size of recent notes should be 3", 3, personnel.getRecentPersonnelNotes().size());
-        for (PersonnelNotesEntity notes : personnel.getPersonnelNotes()) {
-           Assert.assertEquals(DateUtils.getCurrentDateWithoutTimeStamp(), notes.getCommentDate());
-           Assert.assertEquals("The most recent note should be the last one added", "5.Personnel notes created", notes
-                    .getComment());
-            break;
-        }
-    }
-
-    @Test
     public void testSuccessfullLogin() throws Exception {
         personnel = createPersonnel();
         String password = "ABCD";
@@ -769,7 +735,7 @@ public class PersonnelBOIntegrationTest extends MifosIntegrationTestCase {
         createdBranchOffice = (OfficeBO) StaticHibernateUtil.getSessionTL().get(OfficeBO.class,
                 createdBranchOffice.getOfficeId());
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
-        StaticHibernateUtil.flushAndClearSession();        
+        StaticHibernateUtil.flushAndClearSession();
         return new PersonnelPersistence().getPersonnelByUserName(personnel.getUserName());
     }
 
