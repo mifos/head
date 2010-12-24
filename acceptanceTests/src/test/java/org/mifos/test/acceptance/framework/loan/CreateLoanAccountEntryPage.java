@@ -212,9 +212,15 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         String mm = DateTimeFormat.forPattern("MM").print(validDisbursalDate);
         String yyyy = DateTimeFormat.forPattern("yyyy").print(validDisbursalDate);
 
-        typeText("disbursementDateDD",dd);
-        typeText("disbursementDateMM",mm);
-        typeText("disbursementDateYY",yyyy);
+        selenium.type("disbursementDateDD",dd);
+        selenium.fireEvent("name=disbursementDateDD", "blur");
+
+        selenium.type("disbursementDateMM",mm);
+        selenium.fireEvent("name=disbursementDateMM", "blur");
+
+        selenium.type("disbursementDateYY",yyyy);
+        selenium.fireEvent("name=disbursementDateYY", "blur");
+
         return this;
     }
 

@@ -150,7 +150,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         makePaymentAndVerifyPayment(paymentDate, "100", ScheduleData.EARLY_LESS_FIRST_PAYMENT); //verifying interest till date
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void createLoan() throws Exception {
         createAndDisburseLoanAccount(4,systemDateTime.plusDays(1),"productWeekly7466");
