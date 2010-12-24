@@ -69,6 +69,7 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.LogUtils;
 import org.mifos.framework.business.service.BusinessService;
@@ -110,6 +111,7 @@ public abstract class BaseAction extends DispatchAction {
         return null;
     }
 
+    protected PersonnelDao personnelDao = DependencyInjectedServiceLocator.locatePersonnelDao();
     protected OfficeDao officeDao = DependencyInjectedServiceLocator.locateOfficeDao();
     protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     protected SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
@@ -142,6 +144,7 @@ public abstract class BaseAction extends DispatchAction {
         WebApplicationContext springAppContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
 
         if (springAppContext != null) {
+            this.personnelDao = springAppContext.getBean(PersonnelDao.class);
             this.officeDao = springAppContext.getBean(OfficeDao.class);
             this.customerDao = springAppContext.getBean(CustomerDao.class);
             this.savingsDao = springAppContext.getBean(SavingsDao.class);

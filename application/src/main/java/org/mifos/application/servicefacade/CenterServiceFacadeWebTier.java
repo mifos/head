@@ -64,6 +64,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelNotesEntity;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
@@ -117,6 +118,8 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -848,5 +851,43 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     @Override
     public UserDetailDto retrieveUsersDetails(Short userId) {
         return this.personnelDao.findPersonnelById(userId).toDto();
+    }
+
+    @Override
+    public void addNoteToPersonnel(Short personnelId, String comment) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = toUserContext(user);
+
+        try {
+            PersonnelBO personnel = this.personnelDao.findPersonnelById(personnelId);
+            PersonnelBO loggedInUser = this.personnelDao.findPersonnelById(userContext.getId());
+            if (personnel != null) {
+                checkPermissionForAddingNotesToPersonnel(userContext, personnel.getOffice().getOfficeId(), personnel.getPersonnelId());
+            }
+
+            this.transactionHelper.startTransaction();
+            PersonnelNotesEntity personnelNote = new PersonnelNotesEntity(comment, loggedInUser, personnel);
+            personnel.addNotes(userContext.getId(), personnelNote);
+            this.personnelDao.save(personnel);
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
+    }
+
+    private void checkPermissionForAddingNotesToPersonnel(UserContext userContext, Short recordOfficeId,
+            Short recordLoanOfficerId) {
+        if (!isPermissionAllowed(userContext, recordOfficeId, recordLoanOfficerId)) {
+            throw new BusinessRuleException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
+
+    private boolean isPermissionAllowed(UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
+        return ActivityMapper.getInstance().isAddingNotesPermittedForPersonnel(userContext, recordOfficeId,
+                recordLoanOfficerId);
     }
 }

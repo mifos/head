@@ -109,8 +109,8 @@ public class SurveysAction extends BaseAction {
         // return new SurveysBusinessService();
     }
 
-    public ActionForward mainpage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward mainpage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
 
         // TODO: change this to aggregate the customers and accounts lists from
@@ -130,7 +130,7 @@ public class SurveysAction extends BaseAction {
     }
 
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         GenericActionForm actionForm = (GenericActionForm) form;
         int surveyId = BaseActionForm.getIntegerValue(actionForm.getValue("surveyId"));
@@ -153,7 +153,7 @@ public class SurveysAction extends BaseAction {
     }
 
     public ActionForward create_entry(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         GenericActionForm actionForm = (GenericActionForm) form;
         actionForm.clear();
         List<Question> questionsList = getQuestions();
@@ -164,7 +164,7 @@ public class SurveysAction extends BaseAction {
     }
 
     public ActionForward prePrintVersion(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Survey survey = createSurvey(form, request);
 
         request.getSession().setAttribute(Constants.BUSINESS_KEY, survey);
@@ -184,8 +184,9 @@ public class SurveysAction extends BaseAction {
         return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
-    private void doPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws ValidationError {
+    @SuppressWarnings("unchecked")
+    private void doPreview(@SuppressWarnings("unused") ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws ValidationError {
         Map<String, Object> results = previewValidator.validate(request);
 
         request.getSession().setAttribute(SurveysConstants.KEY_VALIDATED_VALUES, results);
@@ -194,8 +195,9 @@ public class SurveysAction extends BaseAction {
         request.setAttribute(SurveysConstants.KEY_ITEM_COUNT, addedQuestions.size());
     }
 
+    @SuppressWarnings("unchecked")
     public ActionForward add_new_question(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         GenericActionForm actionForm = (GenericActionForm) form;
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         List<Question> questionsList = (List<Question>) request.getSession().getAttribute(
@@ -227,8 +229,9 @@ public class SurveysAction extends BaseAction {
         return mapping.findForward(ActionForwards.edit_success.toString());
     }
 
+    @SuppressWarnings("unchecked")
     public ActionForward delete_new_question(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         GenericActionForm actionForm = (GenericActionForm) form;
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         int questionNum = Integer.parseInt(actionForm.getValue("questionNum"));
@@ -250,13 +253,8 @@ public class SurveysAction extends BaseAction {
         return mapping.findForward(ActionForwards.edit_success.toString());
     }
 
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
-
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Survey newSurvey = createSurvey(form, request);
         new SurveysPersistence().createOrUpdate(newSurvey);
         request.setAttribute(SurveysConstants.KEY_NEW_SURVEY_ID, newSurvey.getSurveyId());
@@ -264,6 +262,7 @@ public class SurveysAction extends BaseAction {
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
+    @SuppressWarnings("unchecked")
     private Survey createSurvey(ActionForm form, HttpServletRequest request) {
         GenericActionForm actionForm = (GenericActionForm) form;
         SurveyState state = Enum.valueOf(SurveyState.class, actionForm.getValue("state"));
@@ -295,13 +294,13 @@ public class SurveysAction extends BaseAction {
         }
     }
 
-    public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward edit(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.create_entry_success.toString());
     }
 
-    public ActionForward edit_update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward edit_update(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.edit_success.toString());
     }
 
@@ -351,6 +350,7 @@ public class SurveysAction extends BaseAction {
         return mapping.findForward(ActionForwards.editpreview_success.toString());
     }
 
+    @SuppressWarnings("unchecked")
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         GenericActionForm actionForm = (GenericActionForm) form;
@@ -369,5 +369,4 @@ public class SurveysAction extends BaseAction {
         actionForm.setValue("surveyId", survey.getSurveyId());
         return get(mapping, form, request, response);
     }
-
 }

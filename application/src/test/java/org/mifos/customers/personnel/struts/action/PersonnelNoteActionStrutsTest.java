@@ -28,6 +28,7 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -38,8 +39,14 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -158,6 +165,13 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessCreatePersonnelNote() throws Exception {
+
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/personnelNoteAction.do");
         addRequestParameter("method", Methods.create.toString());
@@ -171,6 +185,12 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public void testSuccessSearch() throws Exception {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(principal, principal);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
+
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/personnelNoteAction.do");
         addRequestParameter("method", Methods.load.toString());

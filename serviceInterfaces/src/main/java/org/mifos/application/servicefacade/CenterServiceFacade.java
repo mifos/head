@@ -115,4 +115,7 @@ public interface CenterServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     UserDetailDto retrieveUsersDetails(Short userId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void addNoteToPersonnel(Short personnelId, String comment);
 }

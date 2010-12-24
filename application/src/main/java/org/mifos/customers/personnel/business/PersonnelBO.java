@@ -382,10 +382,6 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
     }
 
-    private void addPersonnelNotes(final PersonnelNotesEntity personnelNotes) {
-        this.personnelNotes.add(personnelNotes);
-    }
-
     /**
      * @deprecated use creational pattern from tests to for saving personnel.
      */
@@ -402,14 +398,9 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
     }
 
-    public void addNotes(final Short userId, final PersonnelNotesEntity personnelNotes) throws PersonnelException {
+    public void addNotes(final Short userId, final PersonnelNotesEntity personnelNotes) {
         setUpdateDetails(userId);
-        addPersonnelNotes(personnelNotes);
-        try {
-            new PersonnelPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new PersonnelException(e);
-        }
+        this.personnelNotes.add(personnelNotes);
     }
 
     public void generateGlobalPersonnelNum() {
