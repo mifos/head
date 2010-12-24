@@ -20,6 +20,8 @@
 
 package org.mifos.config;
 
+import java.util.Locale;
+
 public class ConfigLocale {
 
     public static final String DEFAULT_DIRECTION = "auto";
@@ -100,6 +102,10 @@ public class ConfigLocale {
 
     public void setLanguageCode(String languageCode) {
         this.languageCode = languageCode;
+    }
+
+    public Locale getLocale() {
+        return new Locale(languageCode, countryCode);
     }
 
     public void setDirection(String direction) {

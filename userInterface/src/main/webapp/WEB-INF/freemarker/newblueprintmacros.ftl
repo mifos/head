@@ -134,3 +134,7 @@
 [#-- Useful (and very specific) for parsing i18n messages containing links. --]
 [#-- usage [@mifos.mlink dest="viewQuestions.ftl"][@spring.message "view.questions.mlink"][/@mifos.mlink] --]
 [#assign mlink="org.mifos.ui.ftl.MarkdownLinker"?new()]
+
+[#-- Template method for localized formatting of Java or Joda dates --]
+[#-- usage: ${mifos.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.ConfigLocale.locale)} --]
+[#assign date_formatter="org.mifos.ui.ftl.DateFormatter"?new()]
