@@ -40,18 +40,19 @@ import org.mifos.customers.ppi.persistence.PPIPersistence;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.formulaic.EnumValidator;
 import org.mifos.framework.formulaic.IntValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
-import org.mifos.framework.struts.action.PersistenceAction;
+import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.PPICalculator;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
-public class PPIAction extends PersistenceAction {
+public class PPIAction extends BaseAction {
 
     private Schema validator;
 
@@ -70,6 +71,11 @@ public class PPIAction extends PersistenceAction {
         validator.setSimpleValidator("nonPoorMax", new IntValidator());
     }
 
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        throw new RuntimeException("not implemented");
+    }
+
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("ppiAction");
         security.allow("configure", SecurityConstants.VIEW);
@@ -80,7 +86,7 @@ public class PPIAction extends PersistenceAction {
     }
 
     public ActionForward configure(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PPIPersistence ppiPersistence = new PPIPersistence();
         PPISurvey activeSurvey = ppiPersistence.retrieveActivePPISurvey();
 
@@ -106,7 +112,7 @@ public class PPIAction extends PersistenceAction {
     }
 
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Map<String, Object> results;
         ActionMessages errors = new ActionMessages();
         try {
@@ -146,7 +152,7 @@ public class PPIAction extends PersistenceAction {
     }
 
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         Map<String, Object> results;
         try {
@@ -173,7 +179,8 @@ public class PPIAction extends PersistenceAction {
                 // state of an existing survey
                 // ie. active/inactive. It will not update questions,
                 // likelihoods etc
-                updatePPISurvey(results, ppiSurvey);
+                ppiSurvey.setState((SurveyState) results.get("state"));
+                new PPIPersistence().createOrUpdate(ppiSurvey);
             }
 
         } catch (Exception e) {
@@ -214,28 +221,17 @@ public class PPIAction extends PersistenceAction {
         ppiPersistence.createOrUpdate(ppiSurvey);
     }
 
-    private void updatePPISurvey(Map<String, Object> results, PPISurvey ppiSurvey) throws PersistenceException {
-        ppiSurvey.setState((SurveyState) results.get("state"));
-        new PPIPersistence().createOrUpdate(ppiSurvey);
-    }
-
-    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) {
+    public ActionForward get(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) {
         PPIPersistence persistence = new PPIPersistence();
 
         PPISurvey survey = persistence.retrieveActivePPISurvey();
 
         if (survey == null) {
             return mapping.findForward(ActionForwards.get_success.toString());
-        } else {
-            request.setAttribute(SurveysConstants.KEY_SURVEY, survey);
-            return mapping.findForward(ActionForwards.get_success.toString());
         }
-    }
 
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
+        request.setAttribute(SurveysConstants.KEY_SURVEY, survey);
+        return mapping.findForward(ActionForwards.get_success.toString());
     }
-
 }

@@ -43,12 +43,12 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.formulaic.NotNullEmptyValidator;
 import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
-import org.mifos.framework.struts.action.PersistenceAction;
+import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
-public class QuestionsAction extends PersistenceAction {
+public class QuestionsAction extends BaseAction {
 
     private static final int QUESTIONS_PER_PAGE = 20;
     private static Schema addQuestionValidator;
@@ -62,7 +62,6 @@ public class QuestionsAction extends PersistenceAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         throw new RuntimeException("not implemented");
-        // return new SurveysBusinessService();
     }
 
     public static ActionSecurity getSecurity() {
@@ -82,8 +81,8 @@ public class QuestionsAction extends PersistenceAction {
         return security;
     }
 
-    public ActionForward viewQuestions(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward viewQuestions(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
 
         int length = surveysPersistence.getNumQuestions();
@@ -97,8 +96,8 @@ public class QuestionsAction extends PersistenceAction {
         return mapping.findForward(ActionForwards.viewAll_success.toString());
     }
 
-    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward get(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
 
         int questionId = Integer.parseInt(request.getParameter("questionId"));
@@ -109,7 +108,7 @@ public class QuestionsAction extends PersistenceAction {
     }
 
     public ActionForward edit_entry(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
         List<QuestionChoice> choices = question.getChoices();
 
@@ -133,7 +132,7 @@ public class QuestionsAction extends PersistenceAction {
     }
 
     public ActionForward preview_entry(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ActionMessages errors = new ActionMessages();
         try {
             addQuestionValidator.validate(request);
@@ -151,7 +150,7 @@ public class QuestionsAction extends PersistenceAction {
     }
 
     public ActionForward update_entry(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         Question question = (Question) request.getSession().getAttribute(SurveysConstants.KEY_QUESTION);
@@ -165,7 +164,7 @@ public class QuestionsAction extends PersistenceAction {
     }
 
     public ActionForward defineQuestions(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         LinkedList<String> choices = new LinkedList<String>();
         request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, choices);
         LinkedList<Question> newQuestions = new LinkedList<Question>();
@@ -174,8 +173,9 @@ public class QuestionsAction extends PersistenceAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
+    @SuppressWarnings("unchecked")
     public ActionForward addChoice(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         GenericActionForm actionForm = (GenericActionForm) form;
         LinkedList<String> choices = (LinkedList<String>) request.getSession().getAttribute(
                 SurveysConstants.KEY_NEW_QUESTION_CHOICES);
@@ -184,8 +184,9 @@ public class QuestionsAction extends PersistenceAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    public ActionForward deleteChoice(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    @SuppressWarnings("unchecked")
+    public ActionForward deleteChoice(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         LinkedList<String> choices = (LinkedList<String>) request.getSession().getAttribute(
                 SurveysConstants.KEY_NEW_QUESTION_CHOICES);
         int index = Integer.parseInt(request.getParameter("choiceNum"));
@@ -193,8 +194,9 @@ public class QuestionsAction extends PersistenceAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    public ActionForward deleteNewQuestion(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    @SuppressWarnings("unchecked")
+    public ActionForward deleteNewQuestion(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         LinkedList<Question> questions = (LinkedList<Question>) request.getSession().getAttribute(
                 SurveysConstants.KEY_NEW_QUESTIONS);
         int index = Integer.parseInt(request.getParameter("newQuestionNum"));
@@ -202,8 +204,9 @@ public class QuestionsAction extends PersistenceAction {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    public ActionForward createQuestions(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    @SuppressWarnings("unchecked")
+    public ActionForward createQuestions(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         List<Question> questions = (List<Question>) request.getSession().getAttribute(
                 SurveysConstants.KEY_NEW_QUESTIONS);
         SurveysPersistence persistence = new SurveysPersistence();
@@ -221,8 +224,9 @@ public class QuestionsAction extends PersistenceAction {
         return mapping.findForward(ActionForwards.viewAll_success.toString());
     }
 
+    @SuppressWarnings("unchecked")
     public ActionForward addQuestion(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         GenericActionForm actionForm = (GenericActionForm) form;
         ActionMessages errors = new ActionMessages();
@@ -231,7 +235,6 @@ public class QuestionsAction extends PersistenceAction {
         } catch (SchemaValidationError e) {
             errors.add(e.makeActionMessages());
         }
-        SurveysPersistence surveysPersistence = new SurveysPersistence();
 
         LinkedList<Question> newQuestions = (LinkedList<Question>) request.getSession().getAttribute(
                 SurveysConstants.KEY_NEW_QUESTIONS);
@@ -263,10 +266,5 @@ public class QuestionsAction extends PersistenceAction {
         actionForm.clear();
         request.getSession().setAttribute(SurveysConstants.KEY_NEW_QUESTION_CHOICES, new LinkedList<Question>());
         return mapping.findForward(ActionForwards.load_success.toString());
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
     }
 }
