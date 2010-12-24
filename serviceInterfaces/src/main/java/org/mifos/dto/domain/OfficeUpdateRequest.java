@@ -18,34 +18,26 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.office.struts;
+package org.mifos.dto.domain;
 
-import java.util.List;
-
-import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.office.util.helpers.OfficeStatus;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.framework.business.util.Address;
 
 public class OfficeUpdateRequest {
 
     private final String officeName;
     private final String shortName;
-    private final OfficeStatus newStatus;
-    private final OfficeLevel newlevel;
+    private final Short newStatus;
+    private final Short newlevel;
     private final Short parentOfficeId;
-    private final Address address;
-    private final List<CustomFieldDto> customFields;
+    private final AddressDto address;
 
-    public OfficeUpdateRequest(String officeName, String shortName, OfficeStatus newStatus, OfficeLevel newlevel,
-            Short parentOfficeId, Address address, List<CustomFieldDto> customFields) {
+    public OfficeUpdateRequest(String officeName, String shortName, Short newStatus, Short newlevel,
+            Short parentOfficeId, AddressDto address) {
         this.officeName = officeName;
         this.shortName = shortName;
         this.newStatus = newStatus;
         this.newlevel = newlevel;
         this.parentOfficeId = parentOfficeId;
         this.address = address;
-        this.customFields = customFields;
     }
 
     public String getOfficeName() {
@@ -56,11 +48,11 @@ public class OfficeUpdateRequest {
         return this.shortName;
     }
 
-    public OfficeStatus getNewStatus() {
+    public Short getNewStatus() {
         return this.newStatus;
     }
 
-    public OfficeLevel getNewlevel() {
+    public Short getNewlevel() {
         return this.newlevel;
     }
 
@@ -68,11 +60,7 @@ public class OfficeUpdateRequest {
         return this.parentOfficeId;
     }
 
-    public Address getAddress() {
+    public AddressDto getAddress() {
         return this.address;
-    }
-
-    public List<CustomFieldDto> getCustomFields() {
-        return this.customFields;
     }
 }

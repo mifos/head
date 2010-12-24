@@ -41,16 +41,17 @@ import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
-import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.struts.actionforms.OffActionForm;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
+import org.mifos.dto.domain.OfficeUpdateRequest;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OfficeDetailsForEdit;
 import org.mifos.dto.screen.OfficeFormDto;
@@ -62,7 +63,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.authorization.HierarchyManager;
-import org.mifos.security.util.UserContext;
 
 public class OffAction extends BaseAction {
 
@@ -277,12 +277,11 @@ public class OffAction extends BaseAction {
         ActionForward forward = null;
         OfficeDto sessionOffice = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
 
-        UserContext userContext = getUserContext(request);
         Short officeId = sessionOffice.getOfficeId();
         Integer versionNum = sessionOffice.getVersionNum();
         OfficeUpdateRequest officeUpdateRequest = officeUpdateRequestFrom(offActionForm);
 
-        boolean isParentOfficeChanged = this.legacyOfficeServiceFacade.updateOffice(userContext, officeId, versionNum, officeUpdateRequest);
+        boolean isParentOfficeChanged = this.officeServiceFacade.updateOffice(officeId, versionNum, officeUpdateRequest);
 
         if (isParentOfficeChanged) {
             forward = mapping.findForward(ActionForwards.update_cache_success.toString());
@@ -301,7 +300,12 @@ public class OffAction extends BaseAction {
         OfficeLevel newlevel = OfficeLevel.getOfficeLevel(getShortValue(offActionForm.getOfficeLevel()));
 
         Short parentOfficeId = getShortValue(offActionForm.getParentOfficeId());
-        return new OfficeUpdateRequest(offActionForm.getOfficeName(), offActionForm.getShortName(), newStatus, newlevel, parentOfficeId, offActionForm.getAddress(), offActionForm.getCustomFields());
+        Address address = offActionForm.getAddress();
+        AddressDto addressDto = null;
+        if (address != null) {
+            addressDto = Address.toDto(address);
+        }
+        return new OfficeUpdateRequest(offActionForm.getOfficeName(), offActionForm.getShortName(), newStatus.getValue(), newlevel.getValue(), parentOfficeId, addressDto);
     }
 
     public ActionForward updateCache(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,

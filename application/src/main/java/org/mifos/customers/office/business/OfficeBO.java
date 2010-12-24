@@ -37,13 +37,14 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.exceptions.OfficeValidationException;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
+import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
+import org.mifos.dto.domain.OfficeUpdateRequest;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -460,7 +461,15 @@ public class OfficeBO extends AbstractBusinessObject implements Comparable<Offic
 
     public void update(UserContext userContext, OfficeUpdateRequest officeUpdateRequest, OfficeBO newParentOffice) throws OfficeException {
         updateDetails(userContext);
-        update(officeUpdateRequest.getOfficeName(), officeUpdateRequest.getShortName(), officeUpdateRequest.getNewStatus(), officeUpdateRequest.getNewlevel() , newParentOffice, officeUpdateRequest.getAddress(), officeUpdateRequest.getCustomFields());
+
+        OfficeStatus officeStatus = OfficeStatus.getOfficeStatus(officeUpdateRequest.getNewStatus());
+        OfficeLevel officeLevel = OfficeLevel.getOfficeLevel(officeUpdateRequest.getNewlevel());
+        Address address = null;
+        AddressDto dto = officeUpdateRequest.getAddress();
+        if (dto != null) {
+            address = new Address(dto.getLine1(), dto.getLine2(), dto.getLine3(), dto.getCity(), dto.getState(), dto.getCountry(), dto.getZip(), dto.getPhoneNumber());
+        }
+        update(officeUpdateRequest.getOfficeName(), officeUpdateRequest.getShortName(), officeStatus, officeLevel, newParentOffice, address, new ArrayList<CustomFieldDto>());
     }
 
     public void update(final String newName, final String newShortName, final OfficeStatus newStatus,

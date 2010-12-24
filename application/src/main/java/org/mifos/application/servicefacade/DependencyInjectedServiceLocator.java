@@ -89,7 +89,6 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
-import org.mifos.customers.office.business.service.LegacyOfficeServiceFacade;
 import org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.office.persistence.OfficeDaoHibernate;
@@ -127,7 +126,6 @@ public class DependencyInjectedServiceLocator {
     private static MeetingServiceFacade meetingServiceFacade;
 
     private static HolidayServiceFacade holidayServiceFacade;
-    private static LegacyOfficeServiceFacade legacyOfficeServiceFacade;
     private static OfficeServiceFacade officeServiceFacade;
     private static FeeServiceFacade feeServiceFacade;
     private static FundServiceFacade fundServiceFacade;
@@ -440,13 +438,6 @@ public class DependencyInjectedServiceLocator {
             officeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
         }
         return officeServiceFacade;
-    }
-
-    public static LegacyOfficeServiceFacade locateLegacyOfficeServiceFacade() {
-        if (legacyOfficeServiceFacade == null) {
-            legacyOfficeServiceFacade = new OfficeServiceFacadeWebTier(officeDao, holidayDao);
-        }
-        return legacyOfficeServiceFacade;
     }
 
     public static FeeServiceFacade locateFeeServiceFacade() {

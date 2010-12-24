@@ -26,6 +26,7 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
+import org.mifos.dto.domain.OfficeUpdateRequest;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OfficeDetailsForEdit;
 import org.mifos.dto.screen.OfficeFormDto;
@@ -53,4 +54,6 @@ public interface OfficeServiceFacade {
     List<OfficeDetailsDto> retrieveActiveParentOffices(Short officeLevelId);
 
     OfficeDetailsForEdit retrieveOfficeDetailsForEdit(String officeLevel);
+
+    boolean updateOffice(Short officeId, Integer versionNum, OfficeUpdateRequest officeUpdateRequest);
 }
