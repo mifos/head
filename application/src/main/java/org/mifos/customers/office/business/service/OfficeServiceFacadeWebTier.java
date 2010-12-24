@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.holiday.persistence.HolidayDao;
@@ -45,6 +46,7 @@ import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.OfficeDetailsForEdit;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
@@ -311,5 +313,46 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
 
         OfficeDto office = officeDao.findOfficeDtoById(user.getBranchId());
         return officeDao.findNonBranchesOnlyWithParentsMatching(office.getSearchId());
+    }
+
+    @Override
+    public List<OfficeDetailsDto> retrieveActiveParentOffices(Short officeLevelId) {
+        OfficeLevel Level = OfficeLevel.getOfficeLevel(officeLevelId);
+        try {
+            List<OfficeDetailsDto> officeParents = new OfficePersistence().getActiveParents(Level);
+            for (OfficeDetailsDto officeDetailsDto : officeParents) {
+                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
+                officeDetailsDto.setLevelName(levelName);
+            }
+            return officeParents;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public OfficeDetailsForEdit retrieveOfficeDetailsForEdit(String officeLevel) {
+
+        List<OfficeDetailsDto> parents = new ArrayList<OfficeDetailsDto>();
+        if (StringUtils.isNotBlank(officeLevel)) {
+            parents = retrieveActiveParentOffices(Short.valueOf(officeLevel));
+        }
+
+        try {
+            List<OfficeDetailsDto> configuredOfficeLevels = new OfficePersistence().getActiveLevels();
+            for (OfficeDetailsDto officeDetailsDto : configuredOfficeLevels) {
+                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
+                officeDetailsDto.setLevelName(levelName);
+            }
+
+            List<OfficeDetailsDto> statusList = new OfficePersistence().getStatusList();
+            for (OfficeDetailsDto officeDetailsDto : statusList) {
+                officeDetailsDto.setLevelName(MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey()));
+            }
+
+            return new OfficeDetailsForEdit(parents, statusList, configuredOfficeLevels);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

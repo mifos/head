@@ -20,20 +20,19 @@
 
 package org.mifos.customers.office.business.service;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelFixture;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.util.List;
 
 public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -48,46 +47,8 @@ public class OfficeBusinessServiceIntegrationTest extends MifosIntegrationTestCa
     }
 
     @Test
-    public void testGetActiveParents() throws NumberFormatException, ServiceException {
-        List<OfficeDetailsDto> parents = officeBusinessService.getActiveParents(OfficeLevel.BRANCHOFFICE,
-                Short.valueOf("1"));
-        Assert.assertEquals(2, parents.size());
-        for (OfficeDetailsDto view : parents) {
-            if (view.getLevelId().equals(OfficeLevel.HEADOFFICE)) {
-                Assert.assertEquals("Head Office", view.getLevelName());
-            } else if (view.getLevelId().equals(OfficeLevel.AREAOFFICE)) {
-                Assert.assertEquals("Area Office", view.getLevelName());
-            }
-        }
-    }
-
-    @Test
-    public void testGetActiveLevels() throws NumberFormatException, ServiceException {
-        Assert.assertEquals(4, officeBusinessService.getConfiguredLevels().size());
-    }
-
-    @Test
     public void testGetOffice() throws Exception {
         Assert.assertNotNull(officeBusinessService.getOffice(TestObjectFactory.HEAD_OFFICE));
-    }
-
-    @Test
-    public void testGetStatusList() throws NumberFormatException, ServiceException {
-        Assert.assertEquals(2, officeBusinessService.getStatusList().size());
-    }
-
-    @Test @org.junit.Ignore
-    public void testGetStatusListFailure() throws Exception {
-
-        try {
-            officeBusinessService.getStatusList();
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.flushSession();
-        }
-
     }
 
     @Test

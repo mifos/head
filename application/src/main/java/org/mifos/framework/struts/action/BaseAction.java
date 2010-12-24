@@ -51,7 +51,6 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
-import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -69,6 +68,7 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.office.business.service.LegacyOfficeServiceFacade;
+import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.LogUtils;
@@ -111,6 +111,7 @@ public abstract class BaseAction extends DispatchAction {
         return null;
     }
 
+    protected OfficeDao officeDao = DependencyInjectedServiceLocator.locateOfficeDao();
     protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     protected SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
     protected LoanDao loanDao = DependencyInjectedServiceLocator.locateLoanDao();
@@ -143,6 +144,7 @@ public abstract class BaseAction extends DispatchAction {
         WebApplicationContext springAppContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
 
         if (springAppContext != null) {
+            this.officeDao = springAppContext.getBean(OfficeDao.class);
             this.customerDao = springAppContext.getBean(CustomerDao.class);
             this.savingsDao = springAppContext.getBean(SavingsDao.class);
             this.loanDao = springAppContext.getBean(LoanDao.class);

@@ -26,8 +26,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,13 +36,10 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeCustomFieldEntity;
-import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.struts.OfficeUpdateRequest;
 import org.mifos.customers.office.struts.actionforms.OffActionForm;
@@ -57,15 +52,13 @@ import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.OfficeDetailsForEdit;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
-import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.PageExpiredException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.authorization.HierarchyManager;
@@ -73,10 +66,8 @@ import org.mifos.security.util.UserContext;
 
 public class OffAction extends BaseAction {
 
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return new OfficeBusinessService();
-    }
+    private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Office",
+            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", new DefaultQuestionnaireServiceFacadeLocator());
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
@@ -121,7 +112,24 @@ public class OffAction extends BaseAction {
     public ActionForward loadParent(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         OffActionForm offActionForm = (OffActionForm) form;
-        loadParents(request, offActionForm);
+        String officeLevel = request.getParameter("officeLevel");
+        if (StringUtils.isNotBlank(officeLevel)) {
+            offActionForm.setOfficeLevel(officeLevel);
+
+            List<OfficeDetailsDto> parents = this.officeServiceFacade.retrieveActiveParentOffices(Short.valueOf(officeLevel));
+
+            OfficeDto office = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
+
+            if (offActionForm.getInput() != null && offActionForm.getInput().equals("edit") && office != null) {
+                for (int i = 0; i < parents.size(); i++) {
+                    OfficeDetailsDto view = parents.get(i);
+                    if (view.getOfficeId().equals(office.getOfficeId())) {
+                        parents.remove(view);
+                    }
+                }
+            }
+            SessionUtils.setCollectionAttribute(OfficeConstants.PARENTS, parents, request);
+        }
         if (offActionForm.getInput() != null && offActionForm.getInput().equals("edit")) {
             return mapping.findForward(ActionForwards.edit_success.toString());
         }
@@ -191,7 +199,8 @@ public class OffAction extends BaseAction {
 
         OfficeDto officeDto = this.officeServiceFacade.retrieveOfficeById(Short.valueOf(actionForm.getOfficeId()));
         actionForm.clear();
-        loadCustomFieldDefinitions(request);
+        List<CustomFieldDefinitionEntity> customFieldDefs = new ArrayList<CustomFieldDefinitionEntity>();
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
         actionForm.populate(officeDto);
         SessionUtils.setAttribute(OfficeConstants.OFFICE_DTO, officeDto, request);
         setCurrentPageUrl(request, officeDto);
@@ -207,9 +216,6 @@ public class OffAction extends BaseAction {
         return URLEncoder.encode(url, "UTF-8");
     }
 
-
-
-
     @TransactionDemarcate(joinToken = true)
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
@@ -217,16 +223,36 @@ public class OffAction extends BaseAction {
         OffActionForm offActionForm = (OffActionForm) form;
 
         OfficeDto sessionOffice = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
-
-        OfficeBO office = ((OfficeBusinessService) getService()).getOffice(sessionOffice.getOfficeId());
+        OfficeBO office = this.officeDao.findOfficeById(sessionOffice.getOfficeId());
 
         checkVersionMismatch(sessionOffice.getVersionNum(), office.getVersionNo());
 
-        loadCustomFieldDefinitions(request);
-        loadofficeLevels(request);
-        loadParents(request, offActionForm);
-        offActionForm.setCustomFields(createCustomFieldViews(office.getCustomFields(), request));
-        loadOfficeStatus(request);
+        String officeLevel = request.getParameter("officeLevel");
+        OfficeDetailsForEdit officeDetailsForEdit = this.officeServiceFacade.retrieveOfficeDetailsForEdit(officeLevel);
+
+        if (StringUtils.isNotBlank(officeLevel)) {
+            offActionForm.setOfficeLevel(officeLevel);
+
+            List<OfficeDetailsDto> parents = this.officeServiceFacade.retrieveActiveParentOffices(Short.valueOf(officeLevel));
+            OfficeDto office1 = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
+
+            if (offActionForm.getInput() != null && offActionForm.getInput().equals("edit") && office1 != null) {
+                for (int i = 0; i < parents.size(); i++) {
+                    OfficeDetailsDto view = parents.get(i);
+                    if (view.getOfficeId().equals(office1.getOfficeId())) {
+                        parents.remove(view);
+                    }
+                }
+            }
+            SessionUtils.setCollectionAttribute(OfficeConstants.PARENTS, parents, request);
+        }
+        offActionForm.setCustomFields(new ArrayList<CustomFieldDto>());
+
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, officeDetailsForEdit.getConfiguredOfficeLevels(), request);
+        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESTATUSLIST, officeDetailsForEdit.getStatusList(), request);
+
+        List<CustomFieldDefinitionEntity> customFieldDefs = new ArrayList<CustomFieldDefinitionEntity>();
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
 
         return mapping.findForward(ActionForwards.edit_success.toString());
     }
@@ -284,75 +310,6 @@ public class OffAction extends BaseAction {
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
-    @SuppressWarnings({"unchecked"})
-    private List<CustomFieldDto> createCustomFieldViews(final Set<OfficeCustomFieldEntity> customFieldEntities,
-                                                        final HttpServletRequest request) throws PageExpiredException {
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = getCustomFieldDefinitionsFromSession(request);
-        Locale locale = getUserContext(request).getPreferredLocale();
-        if (customFieldEntities != null) {
-            for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-                for (OfficeCustomFieldEntity customFieldEntity : customFieldEntities) {
-                    if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
-                        if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
-                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
-                                    .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
-                                    .getFieldType()));
-                        } else {
-                            customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
-                                    .getFieldValue(), customFieldDef.getFieldType()));
-                        }
-                    }
-                }
-            }
-        }
-        return customFields;
-    }
-
-    private void loadParents(HttpServletRequest request, OffActionForm form) throws Exception {
-        String officeLevel = request.getParameter("officeLevel");
-        if (StringUtils.isNotBlank(officeLevel)) {
-            form.setOfficeLevel(officeLevel);
-            OfficeLevel Level = OfficeLevel.getOfficeLevel(Short.valueOf(officeLevel));
-
-            List<OfficeDetailsDto> parents = ((OfficeBusinessService) getService()).getActiveParents(Level, getUserContext(
-                    request).getLocaleId());
-            OfficeDto office = (OfficeDto) SessionUtils.getAttribute(OfficeConstants.OFFICE_DTO, request);
-
-            if (form.getInput() != null && form.getInput().equals("edit") && office != null) {
-                for (int i = 0; i < parents.size(); i++) {
-                    OfficeDetailsDto view = parents.get(i);
-                    if (view.getOfficeId().equals(office.getOfficeId())) {
-                        parents.remove(view);
-                    }
-                }
-            }
-            SessionUtils.setCollectionAttribute(OfficeConstants.PARENTS, parents, request);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<CustomFieldDefinitionEntity> getCustomFieldDefinitionsFromSession(HttpServletRequest request)
-            throws PageExpiredException {
-        return (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
-    }
-
-    private void loadCustomFieldDefinitions(HttpServletRequest request) throws Exception {
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = new ArrayList<CustomFieldDefinitionEntity>();
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
-    }
-
-    private void loadofficeLevels(HttpServletRequest request) throws Exception {
-        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICELEVELLIST, ((OfficeBusinessService) getService()).getConfiguredLevels(), request);
-    }
-
-    private void loadOfficeStatus(HttpServletRequest request) throws Exception {
-        SessionUtils.setCollectionAttribute(OfficeConstants.OFFICESTATUSLIST, ((OfficeBusinessService) getService()).getStatusList(), request);
-
-    }
-
     @TransactionDemarcate(joinToken = true)
     public ActionForward captureQuestionResponses(
             final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
@@ -373,7 +330,4 @@ public class OffAction extends BaseAction {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createGroupQuestionnaire.editResponses(mapping, request, (OffActionForm) form);
     }
-
-    private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Office",
-            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", new DefaultQuestionnaireServiceFacadeLocator());
 }

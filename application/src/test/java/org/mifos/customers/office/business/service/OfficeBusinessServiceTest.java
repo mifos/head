@@ -1,18 +1,17 @@
 package org.mifos.customers.office.business.service;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class OfficeBusinessServiceTest {
@@ -25,29 +24,6 @@ public class OfficeBusinessServiceTest {
         }
     };
     Short id = new Short("1");
-
-    @Test
-    @ExpectedException(value = CustomerException.class)
-    public void testInvalidConnectionInGetActiveLevel() throws PersistenceException {
-        try {
-            when(officePersistence.getActiveLevels()).thenThrow(new PersistenceException("some exception"));
-            service.getConfiguredLevels();
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = CustomerException.class)
-    public void testInvalidConnectionInGetActiveParents() throws PersistenceException {
-        try {
-            when(officePersistence.getActiveParents(OfficeLevel.BRANCHOFFICE, id)).
-                    thenThrow(new PersistenceException("some exception"));
-            service.getActiveParents(OfficeLevel.BRANCHOFFICE, id);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
 
     @Test
     @ExpectedException(value = CustomerException.class)
@@ -96,18 +72,6 @@ public class OfficeBusinessServiceTest {
             when(officePersistence.getOffice(id)).
                     thenThrow(new PersistenceException("some exception"));
             service.getOffice(id);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = CustomerException.class)
-    public void testInvalidConnectionInGetStatusList() throws PersistenceException {
-        try {
-            when(officePersistence.getStatusList()).
-                    thenThrow(new PersistenceException("some exception"));
-            service.getStatusList();
             junit.framework.Assert.fail("should fail because of invalid session");
         } catch (ServiceException e) {
         }

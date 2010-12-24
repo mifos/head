@@ -23,9 +23,11 @@ package org.mifos.application.admin.servicefacade;
 import java.util.List;
 
 import org.mifos.dto.domain.CustomFieldDto;
+import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
 import org.mifos.dto.screen.ListElement;
+import org.mifos.dto.screen.OfficeDetailsForEdit;
 import org.mifos.dto.screen.OfficeFormDto;
 import org.mifos.dto.screen.OfficeHierarchyByLevelDto;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
@@ -47,4 +49,8 @@ public interface OfficeServiceFacade {
     OnlyBranchOfficeHierarchyDto retrieveBranchOnlyOfficeHierarchy();
 
     List<OfficeDto> retrieveAllNonBranchOfficesApplicableToLoggedInUser();
+
+    List<OfficeDetailsDto> retrieveActiveParentOffices(Short officeLevelId);
+
+    OfficeDetailsForEdit retrieveOfficeDetailsForEdit(String officeLevel);
 }

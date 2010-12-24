@@ -22,10 +22,8 @@ package org.mifos.customers.office.business.service;
 
 import java.util.List;
 
-import org.mifos.application.master.MessageLookup;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.dto.domain.OfficeDetailsDto;
@@ -52,48 +50,9 @@ public class OfficeBusinessService implements BusinessService {
         return null;
     }
 
-    public List<OfficeDetailsDto> getActiveParents(OfficeLevel level, Short localeId) throws ServiceException {
-        try {
-            List<OfficeDetailsDto> officeParents = officePersistence.getActiveParents(level, localeId);
-            for (OfficeDetailsDto officeDetailsDto : officeParents) {
-                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
-                officeDetailsDto.setLevelName(levelName);
-            }
-            return officeParents;
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<OfficeDetailsDto> getConfiguredLevels() throws ServiceException {
-        try {
-            List<OfficeDetailsDto> officeLevels = officePersistence.getActiveLevels();
-            for (OfficeDetailsDto officeDetailsDto : officeLevels) {
-                String levelName = MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey());
-                officeDetailsDto.setLevelName(levelName);
-            }
-            return officeLevels;
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-
-    }
-
     public OfficeBO getOffice(Short officeId) throws ServiceException {
         try {
             return officePersistence.getOffice(officeId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<OfficeDetailsDto> getStatusList() throws ServiceException {
-        try {
-            List<OfficeDetailsDto> statusList = officePersistence.getStatusList();
-            for (OfficeDetailsDto officeDetailsDto : statusList) {
-                officeDetailsDto.setLevelName(MessageLookup.getInstance().lookup(officeDetailsDto.getLevelNameKey()));
-            }
-            return statusList;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

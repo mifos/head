@@ -190,7 +190,7 @@ public class OfficePersistence extends Persistence {
      * see {@link OfficeDao}
      */
     @Deprecated
-    public List<OfficeDetailsDto> getActiveParents(OfficeLevel level, Short localeId) throws PersistenceException {
+    public List<OfficeDetailsDto> getActiveParents(OfficeLevel level) throws PersistenceException {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("LEVEL_ID", level.getValue());
         queryParameters.put("STATUS_ID", OfficeStatus.ACTIVE.getValue());
