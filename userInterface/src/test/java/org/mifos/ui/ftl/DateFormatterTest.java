@@ -21,6 +21,7 @@
 package org.mifos.ui.ftl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,6 +71,19 @@ public class DateFormatterTest {
         String result = (String) formatter.exec(args);
         String expected = "janvier";
         assertEquals(expected, result);
+    }
+
+    @Test
+    @SuppressWarnings("PMD.EmptyCatchBlock")
+    public void wrongDateTypeShouldFail() throws TemplateModelException {
+        List<Object> args = getFormatterArgs("not a date!", Locale.ENGLISH);
+        DateFormatter formatter = new DateFormatter();
+        try {
+            formatter.exec(args);
+            fail("Passing a non-date object should have raised an exception");
+        } catch (IllegalArgumentException e) {
+            // good! this is expected
+        }
     }
 
     private List<Object> getFormatterArgs(Object date, Locale locale) throws TemplateModelException {
