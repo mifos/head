@@ -109,7 +109,7 @@ public class MasterDataService implements BusinessService {
 
     public String retrieveMasterEntities(Integer entityId, Short localeId) throws ServiceException {
         try {
-            return masterPersistence.retrieveMasterEntities(entityId, localeId);
+            return masterPersistence.retrieveMasterEntities(entityId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

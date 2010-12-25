@@ -20,6 +20,7 @@
 
 package org.mifos.application.servicefacade;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,6 +36,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
@@ -65,6 +67,7 @@ import org.mifos.dto.screen.PersonnelDetailsDto;
 import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.dto.screen.PersonnelNoteDto;
 import org.mifos.dto.screen.SystemUserSearchResultsDto;
+import org.mifos.dto.screen.UserSettingsDto;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -74,6 +77,7 @@ import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -356,7 +360,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                     PersonnelLevelEntity.class, userHierarchyLevel.getValue());
 
             Short preferredLocaleId = Localization.getInstance().getLocaleId();
-            List<SupportedLocalesEntity> allLocales = new PersonnelBusinessService().getAllLocales();
+            List<SupportedLocalesEntity> allLocales = new ApplicationConfigurationPersistence().getSupportedLocale();
             for (SupportedLocalesEntity locale : allLocales) {
                 if (personnel.getPreferredLocale() != null
                         && locale.getLanguage().getLookUpValue().getLookUpId() == personnel.getPreferredLocale()
@@ -472,5 +476,99 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         }
 
         return found;
+    }
+
+    @Override
+    public UserSettingsDto retrieveUserSettings() {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+        PersonnelBO personnel = this.personnelDao.findPersonnelById(userContext.getId());
+
+        String gender = getNameForBusinessActivityEntity(personnel.getPersonnelDetails().getGender());
+        String martialStatus = getNameForBusinessActivityEntity(personnel.getPersonnelDetails().getMaritalStatus());
+        String language = getNameForBusinessActivityEntity(personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId());
+
+        List<ValueListElement> genders = this.customerDao.retrieveGenders();
+        List<ValueListElement> martialStatuses = this.customerDao.retrieveMaritalStatuses();
+        List<ValueListElement> languages = this.customerDao.retrieveLanguages();
+
+        int age = DateUtils.DateDiffInYears(((Date) personnel.getPersonnelDetails().getDob()));
+        if (age < 0) {
+            age = 0;
+        }
+
+        return new UserSettingsDto(gender, martialStatus, language, age, genders, martialStatuses, languages);
+    }
+
+    private String getNameForBusinessActivityEntity(Integer entityId) {
+        try {
+            String value = "";
+            if (entityId != null) {
+                 value = new MasterPersistence().retrieveMasterEntities(entityId);
+            }
+            return value;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public UserSettingsDto retrieveUserSettings(Integer genderId, Integer maritalStatusId, Integer languageId) {
+
+        String gender = getNameForBusinessActivityEntity(genderId);
+        String martialStatus = getNameForBusinessActivityEntity(maritalStatusId);
+        String language = getNameForBusinessActivityEntity(languageId);
+
+        int age = 0;
+        List<ValueListElement> empty = new ArrayList<ValueListElement>();
+        return new UserSettingsDto(gender, martialStatus, language, age, empty, empty, empty);
+    }
+
+    @Override
+    public UserDetailDto retrieveUserInformation(Short personnelId) {
+
+        PersonnelBO personnel = this.personnelDao.findPersonnelById(personnelId);
+        return personnel.toDto();
+    }
+
+    @Override
+    public void updateUserSettings(Short personnelId, String emailId, Name name, Integer maritalStatusValue, Integer genderValue,
+            AddressDto address, Short preferredLocale) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+        PersonnelBO personnel = this.personnelDao.findPersonnelById(personnelId);
+
+        try {
+            personnel.updateDetails(userContext);
+            this.transactionHelper.startTransaction();
+            this.transactionHelper.beginAuditLoggingFor(personnel);
+
+            Short localeId = Localization.getInstance().getLocaleId();
+            if (preferredLocale != null) {
+                for (SupportedLocalesEntity locale : new ApplicationConfigurationPersistence().getSupportedLocale()) {
+                    if (locale.getLanguage().getLookUpValue().getLookUpId() == preferredLocale.intValue()) {
+                        localeId = locale.getLocaleId();
+                    }
+                }
+            }
+
+            Address theAddress = null;
+            if (address != null) {
+                theAddress = new Address(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(),
+                        address.getState(), address.getCountry(), address.getZip(), address.getPhoneNumber());
+            }
+
+            personnel.update(emailId, name, maritalStatusValue, genderValue, theAddress, localeId);
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            this.transactionHelper.closeSession();
+        }
     }
 }
