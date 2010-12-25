@@ -237,10 +237,8 @@ public class MasterPersistence extends Persistence {
 
     /*
      * @param entityId - the primary key of a LookUpValueEntity
-     *
-     * @param localeId - a locale primary key which we now ignore
      */
-    public String retrieveMasterEntities(final Integer entityId, final Short localeId) throws PersistenceException {
+    public String retrieveMasterEntities(final Integer entityId) throws PersistenceException {
 
         LookUpValueEntity lookupValue = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class, entityId);
         return MessageLookup.getInstance().lookup(lookupValue);
