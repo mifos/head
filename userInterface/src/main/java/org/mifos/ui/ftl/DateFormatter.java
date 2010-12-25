@@ -51,7 +51,7 @@ public class DateFormatter implements TemplateMethodModelEx {
     @Override
     public Object exec(List args) throws TemplateModelException {
         if (args.size() != 3) {
-            throw new TemplateModelException("Wrong arguements");
+            throw new IllegalArgumentException("Wrong arguments");
         }
         Object date = DeepUnwrap.unwrap((TemplateModel) args.get(0));
         String pattern = (String) DeepUnwrap.unwrap((TemplateModel) args.get(1));

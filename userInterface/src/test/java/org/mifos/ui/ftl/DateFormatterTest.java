@@ -86,6 +86,19 @@ public class DateFormatterTest {
         }
     }
 
+    @Test
+    @SuppressWarnings("PMD.EmptyCatchBlock")
+    public void wrongNumberOfArgumentsShouldFail() throws TemplateModelException {
+        DateFormatter formatter = new DateFormatter();
+        List<Object> args = new ArrayList<Object>();
+        try {
+            formatter.exec(args);
+            fail("Incorrect number of arguments should have raised an exception");
+        } catch (IllegalArgumentException e) {
+            // this is expected
+        }
+    }
+
     private List<Object> getFormatterArgs(Object date, Locale locale) throws TemplateModelException {
         BeansWrapper wrapper = BeansWrapper.getDefaultInstance();
         List<Object> args = new ArrayList<Object>();
