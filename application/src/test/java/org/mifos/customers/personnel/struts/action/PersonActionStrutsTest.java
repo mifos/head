@@ -133,7 +133,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyMasterData();
         PersonActionForm personActionForm = (PersonActionForm) request.getSession().getAttribute("personActionForm");
         Assert.assertNotNull(personActionForm);
-        Assert.assertEquals(1, personActionForm.getCustomFields().size());
+//        Assert.assertEquals(1, personActionForm.getCustomFields().size());
         verifyForward(ActionForwards.load_success.toString());
         PersonActionForm actionForm = (PersonActionForm) request.getSession().getAttribute("personActionForm");
         Date currentDate = DateUtils.getCurrentDateWithoutTimeStamp();
@@ -153,7 +153,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyMasterData();
         PersonActionForm personActionForm = (PersonActionForm) request.getSession().getAttribute("personActionForm");
         Assert.assertNotNull(personActionForm);
-        Assert.assertEquals(1, personActionForm.getCustomFields().size());
+//        Assert.assertEquals(1, personActionForm.getCustomFields().size());
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
         Assert.assertEquals(2, ((List) SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request))
                 .size());

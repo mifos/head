@@ -20,8 +20,6 @@
 
 package org.mifos.dto.screen;
 
-import org.mifos.dto.domain.CustomFieldDto;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -42,13 +40,11 @@ public class DefinePersonnelDto implements Serializable {
     private final List<ListElement> languageList;
     @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
     private final List<ListElement> rolesList;
-    @edu.umd.cs.findbugs.annotations.SuppressWarnings(value="SE_BAD_FIELD")
-    private final List<CustomFieldDto> customFields;
 
     public DefinePersonnelDto(String officeName, List<ListElement> titleList,
             List<ListElement> personnelLevelList, List<ListElement> genderList,
             List<ListElement> maritalStatusList, List<ListElement> languageList,
-            List<ListElement> rolesList, List<CustomFieldDto> customFields) {
+            List<ListElement> rolesList) {
         super();
         this.officeName = officeName;
         this.titleList = titleList;
@@ -57,7 +53,6 @@ public class DefinePersonnelDto implements Serializable {
         this.maritalStatusList = maritalStatusList;
         this.languageList = languageList;
         this.rolesList = rolesList;
-        this.customFields = customFields;
     }
 
     public String getOfficeName() {
@@ -86,9 +81,5 @@ public class DefinePersonnelDto implements Serializable {
 
     public List<ListElement> getRolesList() {
         return this.rolesList;
-    }
-
-    public List<CustomFieldDto> getCustomFields() {
-        return this.customFields;
     }
 }

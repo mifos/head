@@ -37,7 +37,7 @@ import org.mifos.security.util.UserContext;
 
 public interface OfficeDao {
 
-    OfficeBO findOfficeById(Short officeIdValue);
+    OfficeBO findOfficeById(Short officeId);
 
     OfficeDto findOfficeDtoById(Short officeId);
 
