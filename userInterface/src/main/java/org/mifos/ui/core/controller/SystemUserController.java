@@ -20,10 +20,7 @@
 
 package org.mifos.ui.core.controller;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -47,7 +44,6 @@ import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.OnlyBranchOfficeHierarchyDto;
 import org.mifos.dto.screen.PersonnelDetailsDto;
 import org.mifos.dto.screen.PersonnelInformationDto;
-import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -132,8 +128,6 @@ public class SystemUserController {
 
         DefinePersonnelDto userRefData = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(officeId.shortValue(), Locale.getDefault());
 
-        populateCustomFields(formBean, userRefData.getCustomFields());
-
         Map<String, String> genderOptions = new LinkedHashMap<String, String>();
         for (ListElement option : userRefData.getGenderList()) {
             genderOptions.put(option.getId().toString(), option.getName());
@@ -177,44 +171,6 @@ public class SystemUserController {
         formBean.setMfiJoiningDateYear(today.getYearOfEra());
 
         return formBean;
-    }
-
-    @SuppressWarnings("PMD")
-    private void populateCustomFields(final UserFormBean formBean, List<CustomFieldDto> customFields) {
-        formBean.setCustomFields(customFields);
-        List<DateFieldBean> dateFields = new ArrayList<DateFieldBean>();
-        for(CustomFieldDto additionalField : customFields) {
-            if (additionalField.getFieldType().intValue() == 3) {
-
-                DateFieldBean bean = new DateFieldBean();
-                bean.setId(additionalField.getFieldId());
-                bean.setMandatory(additionalField.isMandatory());
-                if (StringUtils.isNotBlank(additionalField.getFieldValue())) {
-                    try {
-                        // always displayed in dd/MM/yyyy format
-                        parseAndPopulateDateAs(additionalField, bean, "dd/MM/yyyy");
-                    } catch (BusinessRuleException e) {
-                        // always persisted in yyyy-mm-dd format
-                        parseAndPopulateDateAs(additionalField, bean, "yyyy-mm-dd");
-                    }
-                }
-                dateFields.add(bean);
-            }
-        }
-        formBean.setCustomDateFields(dateFields);
-    }
-
-    private void parseAndPopulateDateAs(CustomFieldDto additionalField, DateFieldBean bean, String dateFormat) {
-        SimpleDateFormat format = new SimpleDateFormat(dateFormat, Locale.getDefault());
-        try {
-            Date d = format.parse(additionalField.getFieldValue());
-            DateTime dateValue = new DateTime(d);
-            bean.setDay(dateValue.getDayOfMonth());
-            bean.setMonth(dateValue.getMonthOfYear());
-            bean.setYear(Integer.valueOf(dateValue.getYearOfEra()).toString());
-        } catch (ParseException e) {
-            throw new BusinessRuleException("unable to parse additional field date value", e);
-        }
     }
 
     public void updateUser(final UserFormBean userFormBean) {
@@ -378,7 +334,6 @@ public class SystemUserController {
         populatedBean.setRecentNotes(personnelInformation.getRecentPersonnelNotes());
 
         populatedBean.setCustomFields(currentBeanFields);
-        populateCustomFields(formBean, currentBeanFields);
 
         populatedBean.prepareForPreview();
         populatedBean.prepateForReEdit();
