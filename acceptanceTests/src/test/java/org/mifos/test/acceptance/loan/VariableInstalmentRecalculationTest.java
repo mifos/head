@@ -102,7 +102,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
 
         createLoanProduct(maxGap, minGap, minInstalmentAmount, formParameters, warningThreshold);
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
-                enterValidData(cashFlowIncremental, 100, null, null).
+                enterValidData("100", cashFlowIncremental, 100, null, null).
                 clickContinue().
                 verifyCashFlowDefaultValues().
                 verifyInstallmentDatesOutOfCashFlowCapturedOnValidate().
@@ -114,7 +114,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyPrincipalAndInterestRecalculation() throws Exception {
         int noOfInstallments = 4;
         int loanAmount = 1000;
@@ -133,7 +133,7 @@ public class VariableInstalmentRecalculationTest extends UiTestCaseBase {
 
         createLoanProduct(maxGap, minGap, minInstalmentAmount, formParameters, warningThreshold);
         createNewLoanAccountAndNavigateToRepaymentSchedule(disbursalDate).
-                enterValidData(cashFlowIncremental, cashFlowBase, null, null).
+                enterValidData("100", cashFlowIncremental, cashFlowBase, null, null).
                 clickContinue().
                 verifyRecalculationWhenDateAndTotalChange();
     }
