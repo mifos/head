@@ -960,6 +960,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                                  @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
 
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
+        boolean isInstallmentValid = validateInstallments(request, loanAccountForm);
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
             Integer customerId = loanAccountForm.getCustomerIdValue();
@@ -1004,7 +1005,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         }
         // TODO need to figure out a way to avoid putting 'installments' onto session - required for mifostabletag in createloanpreview.jsp
         setInstallmentsOnSession(request, loanAccountForm);
-        ActionForwards forward = validateInstallmentsAndCashFlow(form, request, loanAccountForm);
+        ActionForwards forward = validateCashFlow(form, request, loanAccountForm, isInstallmentValid);
         return mapping.findForward(forward.name());
     }
 
@@ -1097,9 +1098,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 });
     }
 
-    private ActionForwards validateInstallmentsAndCashFlow(ActionForm form, HttpServletRequest request,
-                                                           LoanAccountActionForm loanAccountForm) throws Exception {
-        ActionForwards forward = validateInstallments(request, loanAccountForm) ?
+    private ActionForwards validateCashFlow(ActionForm form, HttpServletRequest request,
+                                            LoanAccountActionForm loanAccountForm, boolean isInstallmentsValid) throws Exception {
+        ActionForwards forward = isInstallmentsValid ?
                 ActionForwards.preview_success :
                 ActionForwards.preview_failure;
 
