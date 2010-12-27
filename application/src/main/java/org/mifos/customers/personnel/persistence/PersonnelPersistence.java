@@ -34,12 +34,8 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
-import org.mifos.customers.personnel.business.PersonnelTemplate;
-import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
@@ -49,7 +45,6 @@ import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.HibernateSearchException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
@@ -57,7 +52,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.security.util.UserContext;
 
 public class PersonnelPersistence extends Persistence {
 
@@ -258,33 +252,6 @@ public class PersonnelPersistence extends Persistence {
 
     public List getAvailableLanguages() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.AVAILABLE_LANGUAGES, null);
-    }
-
-    public PersonnelBO createPersonnel(UserContext userContext, PersonnelTemplate template)
-            throws PersistenceException, ValidationException, PersonnelException {
-        OfficeBO office = new OfficePersistence().getOffice(template.getOfficeId());
-        if (office == null) {
-            throw new ValidationException(PersonnelConstants.OFFICE);
-        }
-        int numberOfRoles = template.getRoleIds().size();
-        ArrayList<RoleBO> roles = new ArrayList<RoleBO>(numberOfRoles);
-        RoleBO role;
-        for (int i = 0; i < numberOfRoles; i++) {
-            role = rolesPermissionsPersistence.getRole(template.getRoleIds().get(i));
-            if (role == null) {
-                throw new ValidationException(PersonnelConstants.ROLES_LIST);
-            }
-            roles.add(role);
-        }
-
-        PersonnelBO personnelBO = new PersonnelBO(template.getPersonnelLevel(), office, template.getTitleId(), template
-                .getPreferredLocale(), template.getPassword(), template.getUserName(), template.getEmailId(), roles,
-                template.getCustomFields(), template.getName(), template.getGovernmentIdNumber(), template
-                        .getDateOfBirth(), template.getMaritalStatusId(), template.getGenderId(), template
-                        .getDateOfJoiningMFI(), template.getDateOfJoiningBranch(), template.getAddress(), userContext
-                        .getId());
-        personnelBO.save();
-        return personnelBO;
     }
 
     @SuppressWarnings("unchecked")

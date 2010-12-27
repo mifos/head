@@ -1701,9 +1701,8 @@ public class TestObjectFactory {
                 personnelRoles, customFields, name, governmentIdNumber, dob, maritalStatus, gender, dateOfJoiningMFI,
                 dateOfJoiningBranch, address, Short.valueOf("1"));
 
-        personnelBO.save();
-        StaticHibernateUtil.flushSession();
-        return personnelBO;
+        IntegrationTestObjectMother.createPersonnel(personnelBO);
+        return IntegrationTestObjectMother.findPersonnelById(personnelBO.getPersonnelId());
     }
 
     public static RoleBO createRole(final UserContext context, final String roleName,

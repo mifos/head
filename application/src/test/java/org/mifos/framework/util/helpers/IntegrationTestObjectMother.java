@@ -61,7 +61,7 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.TestUtils;
@@ -94,7 +94,7 @@ public class IntegrationTestObjectMother {
     private static final SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
     private static final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
     private static final LoanDao loanDao = DependencyInjectedServiceLocator.locateLoanDao();
-    private static final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private static final PersonnelDao personnelDao = DependencyInjectedServiceLocator.locatePersonnelDao();
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
     private static final CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
@@ -117,9 +117,8 @@ public class IntegrationTestObjectMother {
     public static PersonnelBO testUser() {
         if (testUser == null) {
             try {
-                testUser = personnelPersistence.getPersonnel(DEFAULT_INTEGRATION_TEST_USER);
-                StaticHibernateUtil.flushAndClearSession();
-            } catch (PersistenceException e) {
+                testUser = personnelDao.findPersonnelById(DEFAULT_INTEGRATION_TEST_USER);
+            } catch (Exception e) {
                 throw new IllegalStateException("PersonnelBO with id [" + DEFAULT_INTEGRATION_TEST_USER + "]. "
                         + INTEGRATION_TEST_DATA_MISSING_MESSAGE);
             }
@@ -131,8 +130,8 @@ public class IntegrationTestObjectMother {
     public static PersonnelBO systemUser() {
         if (systemUser == null) {
             try {
-                systemUser = personnelPersistence.getPersonnel(PersonnelConstants.SYSTEM_USER);
-            } catch (PersistenceException e) {
+                systemUser = personnelDao.findPersonnelById(PersonnelConstants.SYSTEM_USER);
+            } catch (Exception e) {
                 throw new IllegalStateException("PersonnelBO with id [" + PersonnelConstants.SYSTEM_USER + "]. "
                         + INTEGRATION_TEST_DATA_MISSING_MESSAGE);
             }
@@ -408,8 +407,11 @@ public class IntegrationTestObjectMother {
 
     public static void createPersonnel(PersonnelBO personnel) {
         try {
-            personnel.save();
+            StaticHibernateUtil.startTransaction();
+            personnelDao.save(personnel);
+            StaticHibernateUtil.commitTransaction();
         } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
             throw new MifosRuntimeException(e);
         }
     }
@@ -479,6 +481,10 @@ public class IntegrationTestObjectMother {
 
     public static LoanBO findLoanBySystemId(String globalAccountNum) {
         return loanDao.findByGlobalAccountNum(globalAccountNum);
+    }
+
+    public static PersonnelBO findPersonnelById(Short personnelId) {
+        return personnelDao.findPersonnelById(personnelId);
     }
 
     public static void applyAccountPayment(AccountBO loan, PaymentData paymentData) {

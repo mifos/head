@@ -67,4 +67,7 @@ public interface PersonnelServiceFacade {
     @PreAuthorize("isFullyAuthenticated()")
     void updateUserSettings(Short personnelId, String emailId, Name name, Integer maritalStatusId, Integer genderId,
             AddressDto address, Short preferredLocaleId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void unLockUserAccount(String globalAccountNum);
 }

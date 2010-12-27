@@ -29,6 +29,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
@@ -289,12 +290,13 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
             OfficeBO office = officeDao.findOfficeById(personnel.getOfficeId());
 
-            // FIXME - extract out validation for duplicate user name from model pojo
+            Name name = new Name(personnel.getFirstName(), personnel.getMiddleName(), personnel.getSecondLastName(), personnel.getLastName());
+            verifyFields(personnel.getUserName(), personnel.getGovernmentIdNumber(), personnel.getDob().toDate(), name.getDisplayName());
+
             PersonnelBO newPersonnel = new PersonnelBO(PersonnelLevel.fromInt(personnel.getPersonnelLevelId()
                     .intValue()), office, personnel.getTitle(), personnel.getPreferredLocale(),
                     personnel.getPassword(), personnel.getUserName(), personnel.getEmailId(), roles, personnel
-                            .getCustomFields(), new Name(personnel.getFirstName(), personnel.getMiddleName(), personnel
-                            .getSecondLastName(), personnel.getLastName()), personnel.getGovernmentIdNumber(),
+                            .getCustomFields(), name, personnel.getGovernmentIdNumber(),
                     personnel.getDob().toDate(), personnel.getMaritalStatus(), personnel.getGender(), personnel
                             .getDateOfJoiningMFI().toDate(), personnel.getDateOfJoiningBranch().toDate(), address,
                     Integer.valueOf(user.getUserId()).shortValue());
@@ -321,6 +323,30 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             transactionHelper.closeSession();
         }
     }
+
+    private void verifyFields(final String userName, final String governmentIdNumber, final java.util.Date dob, final String displayName)
+            throws ValidationException, PersistenceException {
+
+        PersonnelPersistence persistence = new PersonnelPersistence();
+        if (StringUtils.isBlank(userName)) {
+            throw new ValidationException(PersonnelConstants.ERRORMANDATORY);
+        }
+        if (persistence.isUserExist(userName)) {
+            throw new ValidationException(PersonnelConstants.DUPLICATE_USER, new Object[] { userName });
+
+        }
+        if (StringUtils.isNotBlank(governmentIdNumber)) {
+            if (persistence.isUserExistWithGovernmentId(governmentIdNumber)) {
+                throw new ValidationException(PersonnelConstants.DUPLICATE_GOVT_ID, new Object[] { governmentIdNumber });
+            }
+        } else {
+            if (persistence.isUserExist(displayName, dob)) {
+                throw new ValidationException(PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
+                        new Object[] { displayName });
+            }
+        }
+    }
+
 
     @Override
     public UserDetailDto updatePersonnel(CreateOrUpdatePersonnelInformation personnel) {
@@ -568,6 +594,25 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             throw new MifosRuntimeException(e);
         } finally {
             this.transactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void unLockUserAccount(String globalAccountNum) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+        PersonnelBO personnel = this.personnelDao.findByGlobalPersonnelNum(globalAccountNum);
+        personnel.updateDetails(userContext);
+        try {
+            this.transactionHelper.startTransaction();
+            personnel.unlockPersonnel();
+            this.personnelDao.save(personnel);
+            this.transactionHelper.commitTransaction();
+        } catch (Exception e) {
+            this.transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
         }
     }
 }
