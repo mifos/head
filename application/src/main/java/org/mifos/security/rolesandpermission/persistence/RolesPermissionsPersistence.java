@@ -61,13 +61,12 @@ public class RolesPermissionsPersistence extends Persistence {
         }
     }
 
-    @SuppressWarnings("unchecked")
     public List<ActivityEntity> getActivities(Session session) {
         Query query = session.getNamedQuery(NamedQueryConstants.GET_ALL_ACTIVITIES);
         return query.list();
     }
 
-    @SuppressWarnings({ "cast", "unchecked" })
+    @SuppressWarnings("cast")
     public List<RoleBO> getRoles() throws PersistenceException {
         return (List<RoleBO>) executeNamedQuery(NamedQueryConstants.GET_ALL_ROLES, null);
     }
@@ -88,4 +87,5 @@ public class RolesPermissionsPersistence extends Persistence {
         }
         return null;
     }
+
 }

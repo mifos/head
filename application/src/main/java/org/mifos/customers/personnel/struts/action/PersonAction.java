@@ -22,13 +22,17 @@ package org.mifos.customers.personnel.struts.action;
 
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
@@ -38,17 +42,22 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.business.PersonnelDetailsEntity;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
@@ -64,18 +73,22 @@ import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.UserDetailDto;
-import org.mifos.dto.domain.ValueListElement;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.dto.screen.PersonnelInformationDto;
+import org.mifos.framework.business.service.BusinessService;
+import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.tabletag.TableTagConstants;
+import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -83,7 +96,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -91,8 +103,19 @@ import org.mifos.service.BusinessRuleException;
 
 public class PersonAction extends SearchAction {
 
-    private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Personnel",
-            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", new DefaultQuestionnaireServiceFacadeLocator());
+    @Override
+    protected BusinessService getService() throws ServiceException {
+        return ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Personnel);
+    }
+
+    @Override
+    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+        return true;
+    }
+
+    private PersonnelBusinessService getPersonnelBusinessService() throws ServiceException {
+        return (PersonnelBusinessService) getService();
+    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("PersonAction");
@@ -131,83 +154,33 @@ public class PersonAction extends SearchAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-
         PersonActionForm personActionForm = (PersonActionForm) form;
-        Short officeId = getShortValue(personActionForm.getOfficeId());
-
-        OfficeBO office = this.officeDao.findOfficeById(officeId);
+        OfficeBO office = ((PersonnelBusinessService) getService()).getOffice(getShortValue(personActionForm.getOfficeId()));
         SessionUtils.setAttribute(PersonnelConstants.OFFICE, office, request);
         personActionForm.clear();
-
         //Shahid - keeping the previous session objects for the sake of existing tests, once fully converted to spring
         //then we can get rid of the session objects made redundant by the dto
         DefinePersonnelDto definePersonnelDto = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(
                                                     getShortValue(personActionForm.getOfficeId()), getUserContext(request).getPreferredLocale());
         SessionUtils.setAttribute("definePersonnelDto", definePersonnelDto, request);
-
-        List<ValueListElement> titles = this.customerDao.retrieveTitles();
-        List<ValueListElement> genders = this.customerDao.retrieveGenders();
-        List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
-        List<ValueListElement> languages = this.customerDao.retrieveLanguages();
-
-        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
-        List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
-
-        SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, personnelLevels, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST, genders, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST, maritalStatuses, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, languages, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST, roles, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.ROLEMASTERLIST, roles, request);
-
-        List<CustomFieldDefinitionEntity> customFieldDefs1 = new ArrayList<CustomFieldDefinitionEntity>();
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs1, request);
-
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        personActionForm.setCustomFields(customFields);
-
+        loadCreateMasterData(request, personActionForm);
         if (office.getOfficeLevel() != OfficeLevel.BRANCHOFFICE) {
-            for (MasterDataEntity level : personnelLevels) {
-                if (level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
-                    personnelLevels.remove(level);
-                    break;
-                }
-            }
+            updatePersonnelLevelList(request);
         }
-        personActionForm.setCustomFields(new ArrayList<CustomFieldDto>());
+        personActionForm.setCustomFields(definePersonnelDto.getCustomFields());
         personActionForm.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser());
-
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
-    @SuppressWarnings("unchecked")
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         PersonActionForm personActionForm = (PersonActionForm) form;
-        UserContext userContext = getUserContext(request);
+        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
+                .getSession());
         personActionForm.setDateOfJoiningBranch(DateUtils.getCurrentDate(userContext.getPreferredLocale()));
-        PersonActionForm personActionForm1 = (PersonActionForm) form;
-        boolean addFlag = false;
-        List<RoleBO> selectList = new ArrayList<RoleBO>();
-        if (personActionForm1.getPersonnelRoles() != null) {
-            List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST, request);
-            for (RoleBO role : masterList) {
-                for (String roleId : personActionForm1.getPersonnelRoles()) {
-                    if (roleId != null && role.getId().intValue() == Integer.valueOf(roleId).intValue()) {
-                        selectList.add(role);
-                        addFlag = true;
-                    }
-                }
-            }
-        }
-        if (addFlag) {
-            SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
-        } else {
-            SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, null, request);
-        }
+        updateRoleLists(request, (PersonActionForm) form);
 
         return createGroupQuestionnaire.fetchAppliedQuestions(mapping, personActionForm, request, ActionForwards.preview_success);
     }
@@ -243,9 +216,8 @@ public class PersonAction extends SearchAction {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private CreateOrUpdatePersonnelInformation translateFormToCreatePersonnelInformationDto(HttpServletRequest request,
-            PersonActionForm personActionForm) throws PageExpiredException, InvalidDateException {
+            PersonActionForm personActionForm) throws PageExpiredException, ServiceException, InvalidDateException {
         UserContext userContext = getUserContext(request);
         PersonnelLevel level = PersonnelLevel.fromInt(getShortValue(personActionForm.getLevel()));
 
@@ -256,22 +228,13 @@ public class PersonAction extends SearchAction {
 
         OfficeBO office = (OfficeBO) SessionUtils.getAttribute(PersonnelConstants.OFFICE, request);
         if (office == null) {
-            Short officeId = getShortValue(personActionForm.getOfficeId());
-            office = this.officeDao.findOfficeById(officeId);
+            OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(
+                    BusinessServiceName.Office);
+            office = officeService.getOffice(getShortValue(personActionForm.getOfficeId()));
         }
 
         Integer title = getIntegerValue(personActionForm.getTitle());
-
-        Short preferredLocale = Localization.getInstance().getLocaleId();
-
-        if (getPerefferedLocale(personActionForm, userContext) != null) {
-            for (SupportedLocalesEntity locale : new ApplicationConfigurationPersistence().getSupportedLocale()) {
-                if (locale.getLanguage().getLookUpValue().getLookUpId() == getPerefferedLocale(personActionForm, userContext).intValue()) {
-                    preferredLocale = getPerefferedLocale(personActionForm, userContext);
-                }
-            }
-        }
-
+        Short preferredLocale = getLocaleId(getPerefferedLocale(personActionForm, userContext));
         Date dob = null;
         if (personActionForm.getDob() != null && !personActionForm.getDob().equals("")) {
             dob = DateUtils.getDate(personActionForm.getDob());
@@ -282,30 +245,14 @@ public class PersonAction extends SearchAction {
             dateOfJoiningMFI = DateUtils.getDateAsSentFromBrowser(personActionForm.getDateOfJoiningMFI());
         }
 
-        List<RoleBO> roles = new ArrayList<RoleBO>();
-        boolean addFlag = false;
-        List<RoleBO> selectList = new ArrayList<RoleBO>();
-        List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST, request);
-        if (personActionForm.getPersonnelRoles() != null) {
-            for (RoleBO role : masterList) {
-                for (String roleId : personActionForm.getPersonnelRoles()) {
-                    if (roleId != null && role.getId().intValue() == Integer.valueOf(roleId).intValue()) {
-                        selectList.add(role);
-                        addFlag = true;
-                    }
-                }
+        List<RoleBO> roles = getRoles(request, personActionForm);
+        List<ListElement> roleList = new ArrayList<ListElement>();
+        if (roles != null) {
+            for (RoleBO element : roles) {
+                ListElement listElement = new ListElement(new Integer(element.getId()), element.getName());
+                roleList.add(listElement);
             }
         }
-        if (addFlag) {
-            roles = selectList;
-        }
-
-        List<ListElement> roleList = new ArrayList<ListElement>();
-        for (RoleBO element : roles) {
-            ListElement listElement = new ListElement(new Integer(element.getId()), element.getName());
-            roleList.add(listElement);
-        }
-
         Address address = personActionForm.getAddress();
         AddressDto addressDto = new AddressDto(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(), address.getState(),
                 address.getCountry(), address.getZip(), address.getPhoneNumber());
@@ -321,7 +268,6 @@ public class PersonAction extends SearchAction {
                 personActionForm.getSecondLastName(), personActionForm.getGovernmentIdNumber(), new DateTime(dob),
                 getIntegerValue(personActionForm.getMaritalStatus()), getIntegerValue(personActionForm.getGender()), new DateTime(dateOfJoiningMFI),
                 new DateTimeService().getCurrentDateTime(), addressDto, personnelStatus.getValue());
-
         return perosonnelInfo;
     }
 
@@ -338,113 +284,20 @@ public class PersonAction extends SearchAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PersonActionForm actionform = (PersonActionForm) form;
         actionform.clear();
-        PersonnelBO personnelInSession = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        PersonnelBO personnel = this.personnelDao.findPersonnelById(personnelInSession.getPersonnelId());
-
-        List<ValueListElement> titles = this.customerDao.retrieveTitles();
-        List<ValueListElement> genders = this.customerDao.retrieveGenders();
-        List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
-        List<ValueListElement> languages = this.customerDao.retrieveLanguages();
-
-        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
-        List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
-
-        SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, personnelLevels, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST, genders, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST, maritalStatuses, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, languages, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST, roles, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.ROLEMASTERLIST, roles, request);
-
-        List<CustomFieldDefinitionEntity> customFieldDefs = new ArrayList<CustomFieldDefinitionEntity>();
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
-
-        UserContext userContext = getUserContext(request);
-        List<PersonnelStatusEntity> statuses = getMasterEntities(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
-        SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, statuses, request);
-
-        OfficeBO loggedInOffice = this.officeDao.findOfficeById(userContext.getBranchId());
-        List<OfficeDetailsDto> officeHierarchy = new OfficePersistence().getChildOffices(loggedInOffice.getSearchId());
-        SessionUtils.setCollectionAttribute(PersonnelConstants.OFFICE_LIST, officeHierarchy, request);
-
-        actionform.setPersonnelId(personnel.getPersonnelId().toString());
-        if (personnel.getOffice() != null) {
-            actionform.setOfficeId(personnel.getOffice().getOfficeId().toString());
-        }
-        if (personnel.getTitle() != null) {
-            actionform.setTitle(personnel.getTitle().toString());
-        }
-        if (personnel.getLevel() != null) {
-            actionform.setLevel(personnel.getLevelEnum().getValue().toString());
-        }
-        if (personnel.getStatus() != null) {
-            actionform.setStatus(personnel.getStatus().getId().toString());
-        }
-        actionform.setLoginName(personnel.getUserName());
-        actionform.setGlobalPersonnelNum(personnel.getGlobalPersonnelNum());
-        actionform.setCustomFields(new ArrayList<CustomFieldDto>());
-
-        if (personnel.getPersonnelDetails() != null) {
-            PersonnelDetailsEntity personnelDetails = personnel.getPersonnelDetails();
-            actionform.setFirstName(personnelDetails.getName().getFirstName());
-            actionform.setMiddleName(personnelDetails.getName().getMiddleName());
-            actionform.setSecondLastName(personnelDetails.getName().getSecondLastName());
-            actionform.setLastName(personnelDetails.getName().getLastName());
-            if (personnelDetails.getGender() != null) {
-                actionform.setGender(personnelDetails.getGender().toString());
-            }
-            if (personnelDetails.getMaritalStatus() != null) {
-                actionform.setMaritalStatus(personnelDetails.getMaritalStatus().toString());
-            }
-            actionform.setAddress(personnelDetails.getAddress());
-            if (personnelDetails.getDateOfJoiningMFI() != null) {
-                actionform.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser(personnelDetails
-                        .getDateOfJoiningMFI()));
-            }
-            if (personnelDetails.getDob() != null) {
-                actionform.setDob(DateUtils.makeDateAsSentFromBrowser(personnelDetails.getDob()));
-            }
-
-        }
-        actionform.setEmailId(personnel.getEmailId());
-        if (personnel.getPreferredLocale() != null) {
-            actionform.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId()));
-        }
-        List<RoleBO> selectList = new ArrayList<RoleBO>();
-        for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
-            selectList.add(personnelRole.getRole());
-        }
-        SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
-
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
-
+        PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnel.getPersonnelId());
+        personnel = null;
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnelBO, request);
+        loadUpdateMasterData(request);
+        setValuesInActionForm(actionform, request);
         return mapping.findForward(ActionForwards.manage_success.toString());
     }
 
-    @SuppressWarnings("unchecked")
     @TransactionDemarcate(joinToken = true)
     public ActionForward previewManage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PersonActionForm actionForm = (PersonActionForm) form;
-        boolean addFlag = false;
-        List<RoleBO> selectList = new ArrayList<RoleBO>();
-        if (actionForm.getPersonnelRoles() != null) {
-            List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST, request);
-            for (RoleBO role : masterList) {
-                for (String roleId : actionForm.getPersonnelRoles()) {
-                    if (roleId != null && role.getId().intValue() == Integer.valueOf(roleId).intValue()) {
-                        selectList.add(role);
-                        addFlag = true;
-                    }
-                }
-            }
-        }
-        if (addFlag) {
-            SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
-        } else {
-            SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, null, request);
-        }
+        updateRoleLists(request, actionForm);
         return mapping.findForward(ActionForwards.previewManage_success.toString());
     }
 
@@ -468,7 +321,8 @@ public class PersonAction extends SearchAction {
             UserDetailDto userDetails = this.personnelServiceFacade.updatePersonnel(perosonnelInfo);
 
             String globalPersonnelNum = userDetails.getSystemId();
-            Name name = new Name(actionForm.getFirstName(), actionForm.getMiddleName(), actionForm.getSecondLastName(), actionForm.getLastName());
+            Name name = new Name(actionForm.getFirstName(), actionForm.getMiddleName(), actionForm.getSecondLastName(),
+                    actionForm.getLastName());
             request.setAttribute("displayName", name.getDisplayName());
             request.setAttribute("globalPersonnelNum", globalPersonnelNum);
 
@@ -519,36 +373,21 @@ public class PersonAction extends SearchAction {
         SessionUtils.removeThenSetAttribute("personnelInformationDto", personnelInformationDto, request);
 
         // John W - for other actions downstream (like edit) business_key set (until all actions refactored)
-        PersonnelBO personnelBO = this.personnelDao.findPersonnelById(personnelInformationDto.getPersonnelId());
+        PersonnelBO personnelBO = ((PersonnelBusinessService) getService()).getPersonnel(personnelInformationDto.getPersonnelId());
         SessionUtils.removeThenSetAttribute(Constants.BUSINESS_KEY, personnelBO, request);
-
-        String url = String.format("PersonAction.do?globalPersonnelNum=%s", personnelBO.getGlobalPersonnelNum());
-        String encodedUrl = URLEncoder.encode(url, "UTF-8");
-        SessionUtils.removeThenSetAttribute("currentPageUrl", encodedUrl, request);
-
-
-        List<ValueListElement> titles = this.customerDao.retrieveTitles();
-        List<ValueListElement> genders = this.customerDao.retrieveGenders();
-        List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
-        List<ValueListElement> languages = this.customerDao.retrieveLanguages();
-
-        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
-        List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
-
-        SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, personnelLevels, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST, genders, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST, maritalStatuses, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, languages, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST, roles, request);
-        SessionUtils.setCollectionAttribute(PersonnelConstants.ROLEMASTERLIST, roles, request);
-
-        List<CustomFieldDefinitionEntity> customFieldDefs1 = new ArrayList<CustomFieldDefinitionEntity>();
-        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs1, request);
-
-        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
-        personActionForm.setCustomFields(customFields);
+        setCurrentPageUrl(request, personnelBO);
+        loadCreateMasterData(request, personActionForm);
         return mapping.findForward(ActionForwards.get_success.toString());
+    }
+
+    private void setCurrentPageUrl(HttpServletRequest request, PersonnelBO personnelBO) throws PageExpiredException, UnsupportedEncodingException {
+        SessionUtils.removeThenSetAttribute("currentPageUrl", constructCurrentPageUrl(personnelBO), request);
+    }
+
+    private String constructCurrentPageUrl(PersonnelBO personnelBO) throws UnsupportedEncodingException {
+        String url = String.format("PersonAction.do?globalPersonnelNum=%s",
+                personnelBO.getGlobalPersonnelNum());
+        return URLEncoder.encode(url, "UTF-8");
     }
 
     @SuppressWarnings("unused")
@@ -576,7 +415,8 @@ public class PersonAction extends SearchAction {
             HttpServletResponse response) throws Exception {
         ActionForward actionForward = null;
         UserContext userContext = getUserContext(request);
-        PersonnelBO personnel = this.personnelDao.findPersonnelById(userContext.getId());
+        PersonnelBusinessService personnelBusinessService = getPersonnelBusinessService();
+        PersonnelBO personnel = personnelBusinessService.getPersonnel(userContext.getId());
         String searchString = ((PersonActionForm) form).getSearchString();
         addSeachValues(searchString, personnel.getOffice().getOfficeId().toString(), personnel.getOffice()
                 .getOfficeName(), request);
@@ -591,9 +431,239 @@ public class PersonAction extends SearchAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward loadSearch(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        cleanUpOnLoadSearch(request);
+        return mapping.findForward(ActionForwards.search_success.toString());
+    }
+
+    private void cleanUpOnLoadSearch(HttpServletRequest request) throws PageExpiredException {
         SessionUtils.setRemovableAttribute("TableCache", null, TableTagConstants.PATH, request.getSession());
         SessionUtils.removeAttribute(Constants.SEARCH_RESULTS, request);
-        return mapping.findForward(ActionForwards.search_success.toString());
+    }
+
+    private void loadMasterData(HttpServletRequest request) throws Exception {
+        UserContext userContext = getUserContext(request);
+        MasterPersistence masterPersistence = new MasterPersistence();
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, masterPersistence.retrieveMasterEntities(
+                MasterConstants.PERSONNEL_TITLE, userContext.getLocaleId()), request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, masterPersistence
+                .retrieveMasterEntities(PersonnelLevelEntity.class, userContext.getLocaleId()), request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.GENDER_LIST, masterPersistence.retrieveMasterEntities(
+                MasterConstants.GENDER, userContext.getLocaleId()), request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.MARITAL_STATUS_LIST, masterPersistence
+                .retrieveMasterEntities(MasterConstants.MARITAL_STATUS, userContext.getLocaleId()), request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.LANGUAGE_LIST, masterPersistence.retrieveMasterEntities(
+                MasterConstants.LANGUAGE, userContext.getLocaleId()), request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.ROLES_LIST, ((PersonnelBusinessService) getService())
+                .getRoles(), request);
+
+        SessionUtils.setCollectionAttribute(PersonnelConstants.ROLEMASTERLIST,
+                ((PersonnelBusinessService) getService()).getRoles(), request);
+
+        List<CustomFieldDefinitionEntity> customFieldDefs = masterPersistence
+                .retrieveCustomFieldsDefinition(EntityType.PERSONNEL);
+        SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updatePersonnelLevelList(HttpServletRequest request) throws PageExpiredException {
+        List<MasterDataEntity> levelList = (List<MasterDataEntity>) SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request);
+        for (MasterDataEntity level : levelList) {
+            if (level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())) {
+                levelList.remove(level);
+                break;
+            }
+        }
+
+    }
+
+    @SuppressWarnings("unchecked")
+    private void loadCreateMasterData(HttpServletRequest request, PersonActionForm personActionForm) throws Exception {
+        loadMasterData(request);
+        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        loadCreateCustomFields(personActionForm, customFieldDefs, getUserContext(request));
+    }
+
+
+    private void loadUpdateMasterData(HttpServletRequest request) throws Exception {
+        loadMasterData(request);
+        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
+                .getSession());
+        SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, getMasterEntities(
+                PersonnelStatusEntity.class, getUserContext(request).getLocaleId()), request);
+        OfficeBusinessService officeService = (OfficeBusinessService) ServiceFactory.getInstance().getBusinessService(BusinessServiceName.Office);
+        OfficeBO loggedInOffice = officeService.getOffice(userContext.getBranchId());
+        SessionUtils.setCollectionAttribute(PersonnelConstants.OFFICE_LIST, officeService.getChildOffices(loggedInOffice.getSearchId()), request);
+    }
+
+    private void loadCreateCustomFields(PersonActionForm actionForm, List<CustomFieldDefinitionEntity> customFieldDefs,
+            UserContext userContext) throws SystemException {
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
+        for (CustomFieldDefinitionEntity fieldDef : customFieldDefs) {
+            if (StringUtils.isNotBlank(fieldDef.getDefaultValue())
+                    && fieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), DateUtils.getUserLocaleDate(userContext
+                        .getPreferredLocale(), fieldDef.getDefaultValue()), fieldDef.getFieldType()));
+            } else {
+                customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getDefaultValue(), fieldDef
+                        .getFieldType()));
+            }
+        }
+        actionForm.setCustomFields(customFields);
+    }
+
+    private void setValuesInActionForm(PersonActionForm actionForm, HttpServletRequest request) throws Exception {
+        PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        actionForm.setPersonnelId(personnel.getPersonnelId().toString());
+        if (personnel.getOffice() != null) {
+            actionForm.setOfficeId(personnel.getOffice().getOfficeId().toString());
+        }
+        if (personnel.getTitle() != null) {
+            actionForm.setTitle(personnel.getTitle().toString());
+        }
+        if (personnel.getLevel() != null) {
+            actionForm.setLevel(personnel.getLevelEnum().getValue().toString());
+        }
+        if (personnel.getStatus() != null) {
+            actionForm.setStatus(personnel.getStatus().getId().toString());
+        }
+        actionForm.setLoginName(personnel.getUserName());
+        actionForm.setGlobalPersonnelNum(personnel.getGlobalPersonnelNum());
+        actionForm.setCustomFields(createCustomFieldViews(personnel.getCustomFields(), request));
+
+        if (personnel.getPersonnelDetails() != null) {
+            PersonnelDetailsEntity personnelDetails = personnel.getPersonnelDetails();
+            actionForm.setFirstName(personnelDetails.getName().getFirstName());
+            actionForm.setMiddleName(personnelDetails.getName().getMiddleName());
+            actionForm.setSecondLastName(personnelDetails.getName().getSecondLastName());
+            actionForm.setLastName(personnelDetails.getName().getLastName());
+            if (personnelDetails.getGender() != null) {
+                actionForm.setGender(personnelDetails.getGender().toString());
+            }
+            if (personnelDetails.getMaritalStatus() != null) {
+                actionForm.setMaritalStatus(personnelDetails.getMaritalStatus().toString());
+            }
+            actionForm.setAddress(personnelDetails.getAddress());
+            if (personnelDetails.getDateOfJoiningMFI() != null) {
+                actionForm.setDateOfJoiningMFI(DateUtils.makeDateAsSentFromBrowser(personnelDetails
+                        .getDateOfJoiningMFI()));
+            }
+            if (personnelDetails.getDob() != null) {
+                actionForm.setDob(DateUtils.makeDateAsSentFromBrowser(personnelDetails.getDob()));
+            }
+
+        }
+        actionForm.setEmailId(personnel.getEmailId());
+        if (personnel.getPreferredLocale() != null) {
+            actionForm.setPreferredLocale(getStringValue(personnel.getPreferredLocale().getLanguage().getLookUpValue().getLookUpId()));
+        }
+        List<RoleBO> selectList = new ArrayList<RoleBO>();
+        for (PersonnelRoleEntity personnelRole : personnel.getPersonnelRoles()) {
+            selectList.add(personnelRole.getRole());
+        }
+        SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<CustomFieldDto> createCustomFieldViews(Set<PersonnelCustomFieldEntity> customFieldEntities,
+            HttpServletRequest request) throws ApplicationException {
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+
+        List<CustomFieldDefinitionEntity> customFieldDefs = (List<CustomFieldDefinitionEntity>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
+        Locale locale = getUserContext(request).getPreferredLocale();
+        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
+            for (PersonnelCustomFieldEntity customFieldEntity : customFieldEntities) {
+                if (customFieldDef.getFieldId().equals(customFieldEntity.getFieldId())) {
+                    if (customFieldDef.getFieldType().equals(CustomFieldType.DATE.getValue())) {
+                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), DateUtils
+                                .getUserLocaleDate(locale, customFieldEntity.getFieldValue()), customFieldDef
+                                .getFieldType()));
+                    } else {
+                        customFields.add(new CustomFieldDto(customFieldEntity.getFieldId(), customFieldEntity
+                                .getFieldValue(), customFieldDef.getFieldType()));
+                    }
+                }
+            }
+        }
+        return customFields;
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<RoleBO> getRoles(HttpServletRequest request, PersonActionForm personActionForm)
+            throws PageExpiredException {
+        boolean addFlag = false;
+        List<RoleBO> selectList = new ArrayList<RoleBO>();
+        List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST, request);
+        if (personActionForm.getPersonnelRoles() != null) {
+            for (RoleBO role : masterList) {
+                for (String roleId : personActionForm.getPersonnelRoles()) {
+                    if (roleId != null && role.getId().intValue() == Integer.valueOf(roleId).intValue()) {
+                        selectList.add(role);
+                        addFlag = true;
+                    }
+                }
+            }
+        }
+        if (addFlag) {
+            return selectList;
+        }
+
+        return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void updateRoleLists(HttpServletRequest request, PersonActionForm personActionForm)
+            throws PageExpiredException {
+
+        boolean addFlag = false;
+        List<RoleBO> selectList = new ArrayList<RoleBO>();
+        if (personActionForm.getPersonnelRoles() != null) {
+            List<RoleBO> masterList = (List<RoleBO>) SessionUtils.getAttribute(PersonnelConstants.ROLEMASTERLIST, request);
+            for (RoleBO role : masterList) {
+                for (String roleId : personActionForm.getPersonnelRoles()) {
+                    if (roleId != null && role.getId().intValue() == Integer.valueOf(roleId).intValue()) {
+                        selectList.add(role);
+                        addFlag = true;
+                    }
+                }
+            }
+        }
+        if (addFlag) {
+            SessionUtils.setCollectionAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, selectList, request);
+        } else {
+            SessionUtils.setAttribute(PersonnelConstants.PERSONNEL_ROLES_LIST, null, request);
+        }
+    }
+
+    protected Locale getUserLocale(HttpServletRequest request) {
+        Locale locale = null;
+        HttpSession session = request.getSession();
+        if (session != null) {
+            UserContext userContext = (UserContext) session.getAttribute(LoginConstants.USERCONTEXT);
+            if (null != userContext) {
+                locale = userContext.getCurrentLocale();
+
+            }
+        }
+        return locale;
+    }
+
+    private Short getLocaleId(Short lookUpId) {
+        if (lookUpId != null) {
+            for (SupportedLocalesEntity locale : new ApplicationConfigurationPersistence().getSupportedLocale()) {
+                if (locale.getLanguage().getLookUpValue().getLookUpId() == lookUpId.intValue()) {
+                    return locale.getLocaleId();
+                }
+            }
+        }
+
+        return Localization.getInstance().getLocaleId();
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -616,4 +686,8 @@ public class PersonAction extends SearchAction {
         request.setAttribute(METHODCALLED, "editQuestionResponses");
         return createGroupQuestionnaire.editResponses(mapping, request, (PersonActionForm) form);
     }
+
+    private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Personnel",
+            ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", new DefaultQuestionnaireServiceFacadeLocator());
+
 }

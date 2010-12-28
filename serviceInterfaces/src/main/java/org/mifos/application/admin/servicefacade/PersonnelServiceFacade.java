@@ -40,19 +40,19 @@ public interface PersonnelServiceFacade {
     @Deprecated
     void searchUser(String searchString, Short userId, HttpServletRequest request);
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CREATE_USER')")
+    @PreAuthorize("isFullyAuthenticated()")
     DefinePersonnelDto retrieveInfoForNewUserDefinition(Short officeId, Locale preferredLocale);
-
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CREATE_USER')")
-    UserDetailDto createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel);
 
     @PreAuthorize("isFullyAuthenticated()")
     PersonnelInformationDto getPersonnelInformationDto(Long userId, String globalPersonnelNum);
 
     @PreAuthorize("isFullyAuthenticated()")
+    UserDetailDto createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel);
+
+    @PreAuthorize("isFullyAuthenticated()")
     SystemUserSearchResultsDto searchUser(UserSearchDto searchDto);
 
-    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_MODIFY_USER')")
+    @PreAuthorize("isFullyAuthenticated()")
     UserDetailDto updatePersonnel(CreateOrUpdatePersonnelInformation personnel);
 
     @PreAuthorize("isFullyAuthenticated()")
