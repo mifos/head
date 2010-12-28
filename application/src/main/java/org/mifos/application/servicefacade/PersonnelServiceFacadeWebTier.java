@@ -235,19 +235,8 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 new DateTime(personnelDetailsEntity.getDateOfJoiningBranch()), new DateTime(personnelDetailsEntity
                         .getDateOfLeavingBranch()), addressDto, name.getFirstName(), name.getMiddleName(), name
                         .getSecondLastName(), name.getLastName());
-
         String emailId = personnel.getEmailId();
-
         SupportedLocalesEntity preferredLocale = personnel.getPreferredLocale();
-        if (preferredLocale != null) {
-            List<SupportedLocalesEntity> supportedLocales = new ApplicationConfigurationPersistence().getSupportedLocale();
-            for (SupportedLocalesEntity supportedLocalesEntity : supportedLocales) {
-                if (supportedLocalesEntity.getId().equals(preferredLocale.getId())) {
-                    preferredLocale = supportedLocalesEntity;
-                }
-            }
-        }
-
         PersonnelLevelEntity level = personnel.getLevel();
         OfficeBO office = personnel.getOffice();
         Integer title = personnel.getTitle();
@@ -260,7 +249,12 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         Short personnelId = personnel.getPersonnelId();
         String userName = personnel.getUserName();
+        Set<PersonnelCustomFieldEntity> personnelCustomFields = personnel.getCustomFields();
         Set<CustomFieldDto> customFields = new LinkedHashSet<CustomFieldDto>();
+
+        for (PersonnelCustomFieldEntity fieldDef : personnelCustomFields) {
+            customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getFieldValue()));
+        }
 
         Set<PersonnelNotesEntity> personnelNotesEntity = personnel.getPersonnelNotes();
         Set<PersonnelNoteDto> personnelNotes = new LinkedHashSet<PersonnelNoteDto>();
