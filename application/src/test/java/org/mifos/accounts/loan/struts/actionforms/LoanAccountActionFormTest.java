@@ -116,8 +116,7 @@ public class LoanAccountActionFormTest extends TestCase {
         super.setUp();
         form = new LoanAccountActionForm();
         paymentMock = createMock(PaymentDataHtmlBean.class);
-//        expect(paymentMock.getTotalAmount()).andReturn(new Money(TestUtils.RUPEE));
-        expect(paymentMock.getTotal()).andReturn("0");
+        expect(paymentMock.getTotalAmount()).andReturn(new Money(TestUtils.RUPEE));
         actionErrors = new ActionErrors();
 
     }
