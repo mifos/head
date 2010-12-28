@@ -38,7 +38,7 @@
                     </div>
                 </td>
                 <td>
-                    <a href="editQuestionGroup#" class="topRight">[@spring.message "questionnaire.editquestiongroup"/]</a>
+                    <a href="editQuestionGroup#" class="topRight">[@spring.message "questionnaire.editQuestionGroup"/]</a>
                 </td>
             </tr>
         </table>
