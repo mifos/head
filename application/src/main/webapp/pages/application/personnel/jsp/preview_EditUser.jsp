@@ -287,6 +287,20 @@ explanation of the license and how it is applied.
 		<c:out value="${BusinessKey.userName}"/> 
 		</span><br>
       <br>
+      <c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+     <mifos:mifoslabel name="Personnel.AdditionalInfo"  bundle="PersonnelUIResources"></mifos:mifoslabel> 
+	  <br>
+		<c:forEach var="cfdef" items="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+		<c:forEach var="cf"	items="${personActionForm.customFields}">
+			<c:if test="${cfdef.fieldId==cf.fieldId}">
+			<mifos:mifoslabel name="${cfdef.lookUpEntity.entityType}" bundle="PersonnelUIResources"></mifos:mifoslabel>:
+			<span class="fontnormal"> <c:out value="${cf.fieldValue}" /></span>
+			<br>
+			</c:if>
+		</c:forEach>
+	</c:forEach> 
+	<br>
+	</c:if>
 	<span class="fontnormal">
       <br>
 	   <html-el:button styleId="preview_EditUser.button.edit" property="btn" styleClass="insidebuttn" onclick="goToEditPage()">

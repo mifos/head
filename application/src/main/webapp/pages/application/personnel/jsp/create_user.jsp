@@ -361,6 +361,46 @@ explanation of the license and how it is applied.
 								</tr>
 							</table>
 							<br>
+							<c:if test="${!empty definePersonnelDto.customFields}">
+							<table width="93%" border="0" cellpadding="3" cellspacing="0">
+							
+							<c:set var="customFieldsList" scope="request" value="${definePersonnelDto.customFields}"/> 								
+									<tr>
+										<td colspan="2" class="fontnormalbold" >
+										<mifos:mifoslabel	name="Personnel.AdditionalInfo"	/><br>
+										<br>
+										</td>
+									</tr>
+								
+								<c:forEach var="cf" items="${requestScope.customFieldsList}"
+									varStatus="loopStatus">
+									<bean:define id="ctr">
+										<c:out value="${loopStatus.index}" />
+									</bean:define>
+									<tr class="fontnormal">
+										<td width="22%" align="right"><span id="create_user.label.customField"><mifos:mifoslabel
+											name="${cf.lookUpEntityType}"
+											mandatory="${cf.mandatoryString}"
+											bundle="PersonnelUIResources"/></span>:
+										</td>
+										<td width="78%" ><c:if test="${cf.fieldType == 1}">
+											<mifos:mifosnumbertext styleId="create_user.input.customField" name="personActionForm"
+												property='customField[${ctr}].fieldValue' maxlength="200" />
+										</c:if> <c:if test="${cf.fieldType == 2}">
+											<mifos:mifosalphanumtext styleId="create_user.input.customField" name="personActionForm"
+												property='customField[${ctr}].fieldValue' maxlength="200" />
+										</c:if> <c:if test="${cf.fieldType == 3}">
+                                            <date:datetag property="customField[${ctr}].fieldValue" />
+										</c:if></td>
+									</tr>
+								</c:forEach>
+
+							</table>
+						</c:if>
+							<!--Custom Fields end  -->
+							
+							
+							
 
 							<table width="93%" border="0" cellpadding="0" cellspacing="0">
 								<tr>

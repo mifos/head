@@ -406,7 +406,47 @@ explanation of the license and how it is applied.
               </td>
           </tr>
         </table>
-		<br />
+            <br>
+	<c:if test="${!empty session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}">
+            <table width="95%" border="0" cellpadding="3" cellspacing="0">
+           <c:set var="customFieldDefns" scope="request" value="${session:getFromSession(sessionScope.flowManager,requestScope.currentFlowKey,'customFields')}"/> 
+            
+              <tr>
+                <td colspan="2" class="fontnormalbold">
+                
+				<mifos:mifoslabel name="Personnel.AdditionalInfo"  bundle="PersonnelUIResources"></mifos:mifoslabel>
+				<br>
+                  <br>
+                </td>
+              </tr>
+			        
+              
+             <c:forEach var="cf" items="${customFieldDefns}"
+									varStatus="loopStatus">
+									<bean:define id="ctr">
+										<c:out value="${loopStatus.index}" />
+									</bean:define>
+									<tr class="fontnormal">
+										<td width="22%" align="right"><span id="edit_user.label.customField"><mifos:mifoslabel
+											name="${cf.lookUpEntity.entityType}"
+											mandatory="${cf.mandatoryStringValue}"
+											bundle="PersonnelUIResources"></mifos:mifoslabel></span>: 
+										</td>
+										<td width="78%"><c:if test="${cf.fieldType == 1}">
+											<mifos:mifosnumbertext styleId="edit_user.input.customField" name="personActionForm"
+												property='customField[${ctr}].fieldValue' maxlength="200" />
+										</c:if> <c:if test="${cf.fieldType == 2}">
+											<mifos:mifosalphanumtext styleId="edit_user.input.customField" name="personActionForm"
+												property='customField[${ctr}].fieldValue' maxlength="200" />
+										</c:if> <c:if test="${cf.fieldType == 3}">
+											<date:datetag property="customField[${ctr}].fieldValue" />
+										</c:if>
+										<html-el:hidden property='customField[${ctr}].fieldId'	value="${cf.fieldId}"></html-el:hidden>
+										</td>
+									</tr>
+								</c:forEach>
+            	</table>
+		</c:if>
             <table width="95%" border="0" cellpadding="0" cellspacing="0">
               <tr>
                 <td align="center" class="blueline">&nbsp;                </td>
