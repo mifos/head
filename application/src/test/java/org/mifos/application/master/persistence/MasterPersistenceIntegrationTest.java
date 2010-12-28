@@ -121,7 +121,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
         MasterPersistence masterPersistence = new MasterPersistence();
-       Assert.assertEquals("Partial Application", masterPersistence.retrieveMasterEntities(1));
+       Assert.assertEquals("Partial Application", masterPersistence.retrieveMasterEntities(1, Short.valueOf("1")));
     }
 
     @Test

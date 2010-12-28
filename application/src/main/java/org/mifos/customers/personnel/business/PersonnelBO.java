@@ -517,7 +517,8 @@ public class PersonnelBO extends AbstractBusinessObject {
 
     }
 
-    public void update(final String emailId, final Name name, final Integer maritalStatus, final Integer gender, final Address address, final Short preferredLocale) {
+    public void update(final String emailId, final Name name, final Integer maritalStatus, final Integer gender, final Address address,
+            final Short preferredLocale, final Short updatedById) throws PersonnelException {
 
         this.emailId = emailId;
         if (preferredLocale != null && preferredLocale != 0) {
@@ -525,6 +526,12 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
         setDisplayName(name.getDisplayName());
         updatePersonnelDetails(name, maritalStatus, gender, address, null);
+        try {
+            setUpdateDetails(updatedById);
+            new PersonnelPersistence().createOrUpdate(this);
+        } catch (PersistenceException pe) {
+            throw new PersonnelException(PersonnelConstants.UPDATE_FAILED, pe);
+        }
     }
 
     public void updatePersonnelDetails(final Name name, final Integer maritalStatus, final Integer gender, final Address address,

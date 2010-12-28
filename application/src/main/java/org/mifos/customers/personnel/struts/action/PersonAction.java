@@ -20,20 +20,6 @@
 
 package org.mifos.customers.personnel.struts.action;
 
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -41,6 +27,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MasterDataEntity;
@@ -49,10 +36,10 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.Localization;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -100,8 +87,22 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class PersonAction extends SearchAction {
+
+    private final PersonnelServiceFacade personnelServiceFacade = DependencyInjectedServiceLocator.locatePersonnelServiceFacade();
 
     @Override
     protected BusinessService getService() throws ServiceException {
@@ -654,9 +655,9 @@ public class PersonAction extends SearchAction {
         return locale;
     }
 
-    private Short getLocaleId(Short lookUpId) {
+    private Short getLocaleId(Short lookUpId) throws ServiceException {
         if (lookUpId != null) {
-            for (SupportedLocalesEntity locale : new ApplicationConfigurationPersistence().getSupportedLocale()) {
+            for (SupportedLocalesEntity locale : ((PersonnelBusinessService) getService()).getAllLocales()) {
                 if (locale.getLanguage().getLookUpValue().getLookUpId() == lookUpId.intValue()) {
                     return locale.getLocaleId();
                 }

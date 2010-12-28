@@ -103,7 +103,7 @@ public class MasterDataServiceTest {
     public void testInvalidConnectionForRetrieveMasterEntities() throws PersistenceException {
         try {
             Short id = Short.valueOf("1");
-            when(masterPersistence.retrieveMasterEntities(1)).
+            when(masterPersistence.retrieveMasterEntities(1, id)).
                     thenThrow(new PersistenceException("some exception"));
             service.retrieveMasterEntities(1, id);
             junit.framework.Assert.fail("should fail because of invalid session");

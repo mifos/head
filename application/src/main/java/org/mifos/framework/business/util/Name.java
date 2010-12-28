@@ -30,18 +30,6 @@ public class Name {
     private String lastName;
     private String secondLastName;
 
-    public Name() {
-        // default constructor for hibernate
-    }
-
-    public Name(String firstName, String middleName, String secondLastName, String lastName) {
-        this.firstName = firstName;
-        this.middleName = middleName;
-        this.secondLastName = secondLastName;
-        this.lastName = lastName;
-    }
-
-
     public String getFirstName() {
         return firstName;
     }
@@ -74,19 +62,30 @@ public class Name {
         this.secondLastName = secondLastName;
     }
 
+    public Name() {
+
+    }
+
+    public Name(String firstName, String middleName, String secondLastName, String lastName) {
+        this.firstName = firstName;
+        this.middleName = middleName;
+        this.secondLastName = secondLastName;
+        this.lastName = lastName;
+    }
+
     public String getDisplayName() {
         StringBuffer displayName = new StringBuffer("");
         if (StringUtils.isNotBlank(firstName)) {
             displayName.append(firstName);
         }
         if (StringUtils.isNotBlank(middleName)) {
-            displayName.append(' ').append(middleName);
+            displayName.append(" ").append(middleName);
         }
         if (StringUtils.isNotBlank(secondLastName)) {
-            displayName.append(' ').append(secondLastName);
+            displayName.append(" ").append(secondLastName);
         }
         if (StringUtils.isNotBlank(lastName)) {
-            displayName.append(' ').append(lastName);
+            displayName.append(" ").append(lastName);
         }
         return displayName.toString();
     }

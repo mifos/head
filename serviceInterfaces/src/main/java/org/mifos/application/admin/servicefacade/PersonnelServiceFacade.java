@@ -24,15 +24,12 @@ import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.screen.DefinePersonnelDto;
 import org.mifos.dto.screen.PersonnelInformationDto;
 import org.mifos.dto.screen.SystemUserSearchResultsDto;
-import org.mifos.dto.screen.UserSettingsDto;
-import org.mifos.framework.business.util.Name;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface PersonnelServiceFacade {
@@ -54,17 +51,4 @@ public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     UserDetailDto updatePersonnel(CreateOrUpdatePersonnelInformation personnel);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    UserSettingsDto retrieveUserSettings();
-
-    @PreAuthorize("isFullyAuthenticated()")
-    UserSettingsDto retrieveUserSettings(Integer genderValue, Integer maritalStatusValue, Integer prefeeredLocaleId);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    UserDetailDto retrieveUserInformation(Short personnelId);
-
-    @PreAuthorize("isFullyAuthenticated()")
-    void updateUserSettings(Short personnelId, String emailId, Name name, Integer maritalStatusId, Integer genderId,
-            AddressDto address, Short preferredLocaleId);
 }

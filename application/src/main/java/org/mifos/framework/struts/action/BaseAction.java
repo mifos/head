@@ -49,7 +49,6 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
-import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
 import org.mifos.application.master.MessageLookup;
@@ -119,7 +118,6 @@ public abstract class BaseAction extends DispatchAction {
     protected LoanDao loanDao = DependencyInjectedServiceLocator.locateLoanDao();
     protected LoanProductDao loanProductDao = DependencyInjectedServiceLocator.locateLoanProductDao();
     protected SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
-    protected PersonnelServiceFacade personnelServiceFacade = DependencyInjectedServiceLocator.locatePersonnelServiceFacade();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
     protected CenterServiceFacade centerServiceFacade = DependencyInjectedServiceLocator.locateCenterServiceFacade();
     protected GroupServiceFacade groupServiceFacade = DependencyInjectedServiceLocator.locateGroupServiceFacade();
@@ -153,7 +151,6 @@ public abstract class BaseAction extends DispatchAction {
             this.loanDao = springAppContext.getBean(LoanDao.class);
             this.loanProductDao = springAppContext.getBean(LoanProductDao.class);
             this.savingsProductDao = springAppContext.getBean(SavingsProductDao.class);
-            this.personnelServiceFacade = springAppContext.getBean(PersonnelServiceFacade.class);
             this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
             this.centerServiceFacade = springAppContext.getBean(CenterServiceFacade.class);
             this.groupServiceFacade = springAppContext.getBean(GroupServiceFacade.class);

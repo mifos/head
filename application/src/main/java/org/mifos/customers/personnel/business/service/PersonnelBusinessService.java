@@ -25,6 +25,7 @@ import java.util.List;
 import org.apache.commons.configuration.Configuration;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.config.ConfigurationManager;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -98,6 +99,10 @@ public class PersonnelBusinessService implements BusinessService {
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
+    }
+
+    public List<SupportedLocalesEntity> getAllLocales() {
+        return new ApplicationConfigurationPersistence().getSupportedLocale();
     }
 
     public QueryResult getAllPersonnelNotes(Short personnelId) throws ServiceException {
