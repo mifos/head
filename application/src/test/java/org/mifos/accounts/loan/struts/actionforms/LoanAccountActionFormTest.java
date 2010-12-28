@@ -53,6 +53,7 @@ import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productdefinition.business.AmountRange;
@@ -71,7 +72,7 @@ import org.mifos.security.util.UserContext;
 public class LoanAccountActionFormTest extends TestCase {
 
     private LoanAccountActionForm form;
-    private PaymentDataTemplate paymentMock;
+    private PaymentDataHtmlBean paymentMock;
     private ActionErrors actionErrors;
     private static final String INTEREST_ERROR_KEY = "interest.invalid";
     private static final String AMOUNT_ERROR_KEY = "amount.invalid";
@@ -114,7 +115,7 @@ public class LoanAccountActionFormTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         form = new LoanAccountActionForm();
-        paymentMock = createMock(PaymentDataTemplate.class);
+        paymentMock = createMock(PaymentDataHtmlBean.class);
         expect(paymentMock.getTotalAmount()).andReturn(new Money(TestUtils.RUPEE));
         actionErrors = new ActionErrors();
 

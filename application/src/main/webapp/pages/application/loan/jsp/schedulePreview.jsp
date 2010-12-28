@@ -414,8 +414,15 @@ explanation of the license and how it is applied.
                                                                 <c:out value="${paymentDataBeans.installment.fees}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                            	<html-el:text styleId="paymentDataBeans.total"
-                                                            	indexed="true" name="paymentDataBeans" property="total" size="10" />
+                                                                <c:choose>
+                                                                    <c:when test="${loopStatus.index == (fn:length(loanAccountActionForm.paymentDataBeans) - 1)}">
+                                                                        <c:out value="${paymentDataBeans.total}" />
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <html-el:text styleId="paymentDataBeans.total"
+                                                                        indexed="true" name="paymentDataBeans" property="total" size="10" />
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </td>
                                                             <td class="drawtablerow" align="center">
                                                                 <html-el:text styleId="schedulePreview.input.loanAmount" name="paymentDataBeans" indexed="true" property="amount" size="10" />

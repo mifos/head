@@ -116,18 +116,10 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
 
     public void setDueDate(String dueDate) {
         this.installment.setDueDate(dueDate);
-        this.installment.setDueDateValue(DateUtils.getDate(dueDate, locale, DateUtils.getShortDateFormat(locale)));
     }
 
     public void setTotal(String total) {
         this.installment.setTotal(total);
-        if(StringUtils.isBlank(total)){
-            total = "0";
-        }
-        LocalizationConverter localizationConverter = new LocalizationConverter(installment.getCurrency());
-        DoubleConversionResult conversionResult = localizationConverter.parseDoubleForInstallmentTotalAmount(total);
-        this.installment.setTotalValue(conversionResult.getDoubleValue()) ;
-
     }
 
     public void setPaymentTypeId(Short paymentTypeId) {

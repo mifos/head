@@ -150,6 +150,7 @@ public interface LoanConstants {
     String ADDITIONAL_FEES_LIST = "additionalFeeList";
     String ERRORS_DUPLICATE_PERIODIC_FEE = "errors.loan.duplicatePeriodicFee";
     String ERRORS_MUST_BE_GREATER_THAN_ZERO = "errors.mustBeGreaterThanZero";
+    String ERRORS_HAS_INVALID_FORMAT= "errors.hasInvalidFormat";
     String ERRORS_MUST_NOT_BE_NEGATIVE = "errors.mustNotBeNegative";
     String ERRORS_SPECIFY_FEE_AMOUNT = "errors.loan.specifyFeeAmount";
     String FEE = "Fee";
