@@ -20,14 +20,7 @@
 
 package org.mifos.customers.personnel.struts.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -52,17 +45,19 @@ import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfig;
 import org.mifos.framework.exceptions.PageExpiredException;
+import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+
+import java.util.*;
 
 public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     public PersonActionStrutsTest() throws Exception {
@@ -146,7 +141,6 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    @SuppressWarnings("unchecked")
     public void testLoadWithBranchOffice() throws Exception {
         addActionAndMethod(Methods.load.toString());
         addRequestParameter("officeId", "3");
@@ -272,7 +266,6 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    @SuppressWarnings("unchecked")
     private void verifyMasterData() throws Exception {
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.TITLE_LIST, request));
         Assert.assertNotNull(SessionUtils.getAttribute(PersonnelConstants.PERSONNEL_LEVEL_LIST, request));
@@ -407,8 +400,10 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"),
                 Integer.valueOf("1"), date, date, address, userContext.getId());
-        IntegrationTestObjectMother.createPersonnel(personnel);
-        personnel = IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
+        personnel.save();
+        StaticHibernateUtil.flushSession();
+        StaticHibernateUtil.flushSession();
+        personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
     }
 
@@ -416,7 +411,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
     }
 
-    private void setRequestData() throws InvalidDateException {
+    private void setRequestData() throws PageExpiredException, ServiceException, InvalidDateException {
         addRequestParameter("firstName", "Jim");
         addRequestParameter("lastName", "khan");
         addRequestParameter("gender", "1");
@@ -429,7 +424,6 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("preferredLocale", "1");
     }
 
-    @SuppressWarnings("unchecked")
     public void testLoadChangeLog() throws Exception {
         addActionAndMethod(Methods.get.toString());
         addRequestParameter("globalPersonnelNum", "1");

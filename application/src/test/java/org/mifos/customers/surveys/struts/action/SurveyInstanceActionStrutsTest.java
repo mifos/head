@@ -716,8 +716,8 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         PersonnelBO personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"),
                 "ABCD", "testusername", "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer
                         .valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
-        IntegrationTestObjectMother.createPersonnel(personnel);
-        return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
+        personnel.save();
+        return personnel;
     }
 
     private OfficeBO getBranchOffice() {

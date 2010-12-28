@@ -20,12 +20,7 @@
 
 package org.mifos.customers.personnel.struts.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -42,7 +37,6 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
@@ -53,6 +47,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
 
@@ -245,8 +243,9 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
                         .valueOf("1"), date, date, address, userContext.getId());
-        IntegrationTestObjectMother.createPersonnel(personnel);
-        personnel = IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
+        personnel.save();
+        StaticHibernateUtil.flushSession();
+        personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, personnel, request);
     }
 

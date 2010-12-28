@@ -41,8 +41,6 @@ import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelLevelEntity;
-import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
@@ -253,11 +251,11 @@ public class CenterStatusChangeIntegrationTest extends MifosIntegrationTestCase 
 
     private void updatePersonnel(PersonnelBO loanOfficer, PersonnelLevel personnelLevel, PersonnelStatus newStatus, OfficeBO office)
             throws Exception {
-        PersonnelStatusEntity newStatusEntity = new PersonnelStatusEntity(newStatus);
-        loanOfficer.setStatus(newStatusEntity);
-
-        PersonnelLevelEntity level = new PersonnelLevelEntity(personnelLevel);
-        loanOfficer.setLevel(level);
-        IntegrationTestObjectMother.createPersonnel(loanOfficer);
+        Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
+        Name name = new Name("XYZ", null, null, "Last Name");
+        loanOfficer.update(newStatus, personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD",
+                "rajendersaini@yahoo.com", null, null, name, Integer.valueOf("1"), Integer.valueOf("1"), address, Short
+                        .valueOf("1"));
+        StaticHibernateUtil.flushAndClearSession();
     }
 }

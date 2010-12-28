@@ -36,7 +36,6 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
 
@@ -129,8 +128,10 @@ public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTes
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", null, customFieldDto, new Name("XYZ", null, null, null), "111111", date, Integer
                         .valueOf("1"), Integer.valueOf("1"), date, date, address, PersonnelConstants.SYSTEM_USER);
-        IntegrationTestObjectMother.createPersonnel(personnel);
-        return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
+        personnel.save();
+        StaticHibernateUtil.flushSession();
+        personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
+        return personnel;
     }
 
     private PersonnelBO createPersonnel() throws Exception {

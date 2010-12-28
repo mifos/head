@@ -42,7 +42,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
@@ -89,26 +88,26 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
     public void testSavingsAccountLinkWithoutSelfLink() throws Exception {
         createInitialObjectsForSavings();
         String createdLink = TagGenerator.createHeaderLinks(savings, false, randomNum);
-        Assert.assertEquals(true, createdLink.contains("custSearchAction"));
-        Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
-        Assert.assertEquals(true, createdLink.contains("centerCustAction"));
-        Assert.assertEquals(true, createdLink.contains("Center_Active_test"));
-        Assert.assertEquals(true, createdLink.contains("groupCustAction"));
-        Assert.assertEquals(true, createdLink.contains("Group_Active_test"));
-        Assert.assertEquals(true, createdLink.contains("prd1"));
+       Assert.assertEquals(true, createdLink.contains("custSearchAction"));
+       Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
+       Assert.assertEquals(true, createdLink.contains("centerCustAction"));
+       Assert.assertEquals(true, createdLink.contains("Center_Active_test"));
+       Assert.assertEquals(true, createdLink.contains("groupCustAction"));
+       Assert.assertEquals(true, createdLink.contains("Group_Active_test"));
+       Assert.assertEquals(true, createdLink.contains("prd1"));
     }
 
     @Test
     public void testSavingsAccountLinkWithSelfLink() throws Exception {
         createInitialObjectsForSavings();
         String createdLink = TagGenerator.createHeaderLinks(savings, true, randomNum);
-        Assert.assertEquals(true, createdLink.contains("custSearchAction"));
-        Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
-        Assert.assertEquals(true, createdLink.contains("centerCustAction"));
-        Assert.assertEquals(true, createdLink.contains("Center_Active_test"));
-        Assert.assertEquals(true, createdLink.contains("groupCustAction"));
-        Assert.assertEquals(true, createdLink.contains("Group_Active_test"));
-        Assert.assertEquals(true, createdLink.contains("savingsAction"));
+       Assert.assertEquals(true, createdLink.contains("custSearchAction"));
+       Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
+       Assert.assertEquals(true, createdLink.contains("centerCustAction"));
+       Assert.assertEquals(true, createdLink.contains("Center_Active_test"));
+       Assert.assertEquals(true, createdLink.contains("groupCustAction"));
+       Assert.assertEquals(true, createdLink.contains("Group_Active_test"));
+       Assert.assertEquals(true, createdLink.contains("savingsAction"));
     }
 
     @Test
@@ -116,8 +115,8 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
         String createdLink = TagGenerator.createHeaderLinks(personnel, false, randomNum);
-        Assert.assertEquals(false, createdLink.contains("PersonAction"));
-        Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
+       Assert.assertEquals(false, createdLink.contains("PersonAction"));
+       Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
     }
 
     @Test
@@ -125,8 +124,8 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
         branchOffice = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         createPersonnel(branchOffice, PersonnelLevel.LOAN_OFFICER);
         String createdLink = TagGenerator.createHeaderLinks(personnel, true, randomNum);
-        Assert.assertEquals(true, createdLink.contains("PersonAction"));
-        Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
+       Assert.assertEquals(true, createdLink.contains("PersonAction"));
+       Assert.assertEquals(true, createdLink.contains("TestBranchOffice"));
     }
 
     @Test
@@ -155,7 +154,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
             TagGeneratorFactory.getInstance().getGenerator(null);
             Assert.fail();
         } catch (PageExpiredException e) {
-            Assert.assertTrue(true);
+           Assert.assertTrue(true);
         }
     }
 
@@ -173,8 +172,7 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
     private void createInitialObjectsForSavings() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);
-        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE,
-                center);
+        group = TestObjectFactory.createWeeklyFeeGroupUnderCenter("Group_Active_test", CustomerStatus.GROUP_ACTIVE, center);
         SavingsTestHelper helper = new SavingsTestHelper();
         savingsOffering = helper.createSavingsOffering("prd1", "cdfg");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
@@ -188,10 +186,11 @@ public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
         Name name = new Name("XYZ", null, null, null);
         java.util.Date date = new java.util.Date();
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
-                "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"),
-                Integer.valueOf("1"), date, date, address, userContext.getId());
-
-        IntegrationTestObjectMother.createPersonnel(personnel);
-        return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
+                "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
+                        .valueOf("1"), date, date, address, userContext.getId());
+        personnel.save();
+        StaticHibernateUtil.flushSession();
+        personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
+        return personnel;
     }
 }

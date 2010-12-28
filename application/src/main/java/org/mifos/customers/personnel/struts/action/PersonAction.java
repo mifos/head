@@ -53,6 +53,7 @@ import org.mifos.customers.personnel.business.PersonnelDetailsEntity;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelRoleEntity;
 import org.mifos.customers.personnel.business.PersonnelStatusEntity;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.struts.actionforms.PersonActionForm;
@@ -563,10 +564,9 @@ public class PersonAction extends SearchAction {
     public ActionForward unLockUserAccount(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         PersonnelBO personnel = (PersonnelBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        UserContext userContext = getUserContext(request);
-
-        this.personnelServiceFacade.unLockUserAccount(personnel.getGlobalPersonnelNum());
-
+        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request
+                .getSession());
+        personnel.unlockPersonnel(userContext.getId());
         return mapping.findForward(ActionForwards.unLockUserAccount_success.toString());
     }
 

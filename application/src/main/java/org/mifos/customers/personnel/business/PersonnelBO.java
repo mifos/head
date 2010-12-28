@@ -20,20 +20,14 @@
 
 package org.mifos.customers.personnel.business;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -43,6 +37,7 @@ import org.mifos.customers.personnel.util.helpers.LockStatus;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
+import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -50,6 +45,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
@@ -58,8 +54,15 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 public class PersonnelBO extends AbstractBusinessObject {
 
@@ -97,10 +100,12 @@ public class PersonnelBO extends AbstractBusinessObject {
     public PersonnelBO(final PersonnelLevel level, final OfficeBO office, final Integer title, final Short preferredLocale, final String password,
             final String userName, final String emailId, final List<RoleBO> roles, final List<CustomFieldDto> customFields, final Name name,
             final String governmentIdNumber, final Date dob, final Integer maritalStatus, final Integer gender, final Date dateOfJoiningMFI,
-            final Date dateOfJoiningBranch, final Address address, final Short createdBy) {
+            final Date dateOfJoiningBranch, final Address address, final Short createdBy) throws PersistenceException,
+            ValidationException {
         super();
         setCreateDetails(createdBy, new DateTime().toDate());
         this.displayName = name.getDisplayName();
+        verifyFields(userName, governmentIdNumber, dob);
         this.level = new PersonnelLevelEntity(level);
         this.office = office;
         this.title = title;
@@ -120,6 +125,22 @@ public class PersonnelBO extends AbstractBusinessObject {
         this.personnelNotes = new HashSet<PersonnelNotesEntity>();
         this.personnelId = null;
         this.globalPersonnelNum = new Long(new DateTimeService().getCurrentDateTime().getMillis()).toString();
+        if (customFields != null) {
+            for (CustomFieldDto view : customFields) {
+                if (CustomFieldType.DATE.getValue().equals(view.getFieldType())
+                        && org.apache.commons.lang.StringUtils.isNotBlank(view.getFieldValue())) {
+                    try {
+                        SimpleDateFormat format = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.SHORT, Locale.getDefault());
+                        String userfmt = DateUtils.convertToCurrentDateFormat(format.toPattern());
+                        view.setFieldValue(DateUtils.convertUserToDbFmt(view.getFieldValue(), userfmt));
+                    } catch (InvalidDateException e) {
+                        throw new ValidationException(e.toString());
+                    }
+                }
+                this.customFields.add(new PersonnelCustomFieldEntity(view.getFieldValue(), view.getFieldId(), this));
+            }
+        }
+
         this.status = new PersonnelStatusEntity(PersonnelStatus.ACTIVE);
         this.passwordChanged = Constants.NO;
         this.locked = LockStatus.UNLOCK.getValue();
@@ -361,6 +382,22 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
     }
 
+    /**
+     * @deprecated use creational pattern from tests to for saving personnel.
+     */
+    @Deprecated
+    public void save() throws PersonnelException {
+        try {
+            PersonnelPersistence persistence = new PersonnelPersistence();
+            persistence.createOrUpdate(this);
+            this.globalPersonnelNum = generateGlobalPersonnelNum(this.office.getGlobalOfficeNum(), this.personnelId);
+            persistence.createOrUpdate(this);
+        } catch (PersistenceException e) {
+            throw new PersonnelException(e);
+
+        }
+    }
+
     public void addNotes(final Short userId, final PersonnelNotesEntity personnelNotes) {
         setUpdateDetails(userId);
         this.personnelNotes.add(personnelNotes);
@@ -389,6 +426,85 @@ public class PersonnelBO extends AbstractBusinessObject {
         byte[] encryptedPassword = null;
         encryptedPassword = EncryptionService.getInstance().createEncryptedPassword(password);
         return encryptedPassword;
+    }
+
+    private void verifyFields(final String userName, final String governmentIdNumber, final Date dob) throws ValidationException,
+            PersistenceException {
+
+        PersonnelPersistence persistence = new PersonnelPersistence();
+        if (StringUtils.isBlank(userName)) {
+            throw new ValidationException(PersonnelConstants.ERRORMANDATORY);
+        }
+        if (persistence.isUserExist(userName)) {
+            throw new ValidationException(PersonnelConstants.DUPLICATE_USER, new Object[] { userName });
+
+        }
+        if (StringUtils.isNotBlank(governmentIdNumber)) {
+            if (persistence.isUserExistWithGovernmentId(governmentIdNumber)) {
+                throw new ValidationException(PersonnelConstants.DUPLICATE_GOVT_ID, new Object[] { governmentIdNumber });
+            }
+        } else {
+            if (persistence.isUserExist(displayName, dob)) {
+                throw new ValidationException(PersonnelConstants.DUPLICATE_USER_NAME_OR_DOB,
+                        new Object[] { displayName });
+            }
+        }
+    }
+
+    public void update(final PersonnelStatus newStatus, final PersonnelLevel newLevel, final OfficeBO office, final Integer title,
+            final Short preferredLocale, final String password, final String emailId, final List<RoleBO> roles,
+            final List<CustomFieldDto> customFields, final Name name, final Integer maritalStatus, final Integer gender, final Address address,
+            final Short updatedById) throws PersonnelException {
+        logger.debug("update in personnelBO called with values: " + newLevel + office.getOfficeId() + title + " "
+                + preferredLocale + " " + updatedById);
+        MasterPersistence masterPersistence = new MasterPersistence();
+        validateForUpdate(newStatus, office, newLevel);
+        logger
+                .debug("validation successful for status, office and level: " + newStatus + " " + office + " "
+                        + newLevel);
+        Date dateOfJoiningBranch = null;
+        if (!this.office.getOfficeId().equals(office.getOfficeId())) {
+            makePersonalMovementEntries(office, updatedById);
+            dateOfJoiningBranch = new DateTimeService().getCurrentJavaDateTime();
+        }
+        try {
+            PersonnelStatusEntity personnelStatus = (PersonnelStatusEntity) masterPersistence.getPersistentObject(
+                    PersonnelStatusEntity.class, newStatus.getValue());
+            this.status = personnelStatus;
+
+            PersonnelLevelEntity personnelLevel = (PersonnelLevelEntity) masterPersistence.getPersistentObject(
+                    PersonnelLevelEntity.class, newLevel.getValue());
+            this.level = personnelLevel;
+        } catch (PersistenceException e) {
+            throw new PersonnelException(e);
+        }
+
+        this.displayName = name.getDisplayName();
+        this.preferredLocale = new SupportedLocalesEntity(preferredLocale);
+
+        if (StringUtils.isNotBlank(password)) {
+            this.encryptedPassword = getEncryptedPassword(password);
+        }
+        this.emailId = emailId;
+        if (title != null && title.intValue() == 0) {
+            this.title = null;
+        } else {
+            this.title = title;
+        }
+        updatePersonnelRoles(roles);
+        updatePersonnelDetails(name, maritalStatus, gender, address, dateOfJoiningBranch);
+        try {
+            updateCustomFields(customFields);
+        } catch (InvalidDateException e) {
+            throw new PersonnelException(e);
+        }
+        try {
+            setUpdateDetails(updatedById);
+            new PersonnelPersistence().createOrUpdate(this);
+            logger.debug("update successful");
+        } catch (PersistenceException e) {
+            throw new PersonnelException(CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+        }
     }
 
     private void updatePersonnelRoles(final List<RoleBO> roles) {
@@ -593,11 +709,20 @@ public class PersonnelBO extends AbstractBusinessObject {
         setUpdateDetails(changedByUserId);
     }
 
-    public void unlockPersonnel() {
+    public void unlockPersonnel(final Short updatedById) throws PersonnelException {
+        logger.debug("Trying to unlock Personnel");
         if (isLocked()) {
             this.unLock();
             this.noOfTries = 0;
+            try {
+                setUpdateDetails(updatedById);
+                new PersonnelPersistence().createOrUpdate(this);
+                logger.debug("update successful");
+            } catch (PersistenceException e) {
+                throw new PersonnelException(CustomerConstants.UPDATE_FAILED_EXCEPTION, e);
+            }
         }
+        logger.debug("Personnel with id: " + getPersonnelId() + " successfully unlocked");
     }
 
     private void updateNoOfTries() throws PersonnelException {
