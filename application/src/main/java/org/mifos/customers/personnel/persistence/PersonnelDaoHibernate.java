@@ -82,10 +82,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
         PersonnelBO personnel = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery("findPersonnelById", queryParameters);
         if (personnel != null) {
-            Hibernate.initialize(personnel.getPreferredLocale());
-            if (personnel.getPreferredLocale() != null) {
-                Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
-            }
+            Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
         }
         return personnel;
     }
