@@ -394,9 +394,16 @@ explanation of the license and how it is applied.
                                                                 <c:out value="${paymentDataBeans.installment.installment}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                                <html-el:text styleId="paymentDataBeans.dueDate.${loopStatus.index}"
-                                                                styleClass="date-pick-payment-data-beans" indexed="true"
-                                                                name="paymentDataBeans" property="dueDate" size="10" />
+                                                                <c:choose>
+                                                                    <c:when test="${loanAccountActionForm.variableInstallmentsAllowed}">
+                                                                        <html-el:text styleId="paymentDataBeans.dueDate.${loopStatus.index}"
+                                                                        styleClass="date-pick-payment-data-beans" indexed="true"
+                                                                        name="paymentDataBeans" property="dueDate" size="10" />
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <c:out value="${paymentDataBeans.installment.dueDate}" />
+                                                                    </c:otherwise>
+                                                                </c:choose>
                                                             </td>
                                                             <td class="drawtablerow" align="center">
                                                             	<html-el:text styleId="paymentDataBeans.date.${loopStatus.index}"

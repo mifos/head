@@ -27,9 +27,7 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.mifos.framework.util.helpers.Money;
 
 import java.util.Date;
@@ -59,7 +57,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
     }
 
     public boolean hasValidAmount() {
-        return getAmount() != null && !getAmount().equals("");
+        return StringUtils.isNotEmpty(this.amount);
     }
 
     public Money getTotalAmount() {
@@ -78,7 +76,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         return this.paymentTypeId;
     }
 
-    public Date getTransactionDate() throws InvalidDateException {
+    public Date getTransactionDate() {
         String date = getDate();
         if (date != null && !date.equals("")) {
             return DateUtils.getDate(date, locale, DateUtils.getShortDateFormat(locale));
@@ -126,5 +124,11 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         this.paymentTypeId = paymentTypeId;
     }
 
+    public boolean hasTransactionDate() {
+        return StringUtils.isNotEmpty(date);
+    }
 
+    public boolean hasTotalAmount() {
+        return StringUtils.isNotEmpty(getTotal());
+    }
 }

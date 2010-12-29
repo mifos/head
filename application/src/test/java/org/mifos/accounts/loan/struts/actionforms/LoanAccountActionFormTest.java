@@ -20,6 +20,37 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionMessage;
+import org.mifos.accounts.fees.business.AmountFeeBO;
+import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.business.FeeFormulaEntity;
+import org.mifos.accounts.fees.business.RateFeeBO;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
+import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
+import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
+import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
+import org.mifos.accounts.productdefinition.business.AmountRange;
+import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
+import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
+import org.mifos.application.admin.servicefacade.InvalidDateException;
+import org.mifos.config.AccountingRules;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
+
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
@@ -33,40 +64,6 @@ import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestCons
 import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_PURPOSE_NULL;
 import static org.mifos.accounts.loan.util.helpers.LoanAccountActionFormTestConstants.LOAN_ACCOUNT_DETAILS_WITH_VALID_PURPOSE;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Locale;
-
-import javax.servlet.http.HttpServletRequest;
-
-import junit.framework.Assert;
-import junit.framework.TestCase;
-
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.fees.business.AmountFeeBO;
-import org.mifos.accounts.fees.business.FeeFormulaEntity;
-import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.fees.business.RateFeeBO;
-import org.mifos.accounts.fees.util.helpers.FeeFormula;
-import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
-import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
-import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
-import org.mifos.accounts.productdefinition.business.AmountRange;
-import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
-import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
-import org.mifos.accounts.util.helpers.PaymentDataTemplate;
-import org.mifos.application.admin.servicefacade.InvalidDateException;
-import org.mifos.config.AccountingRules;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.security.util.UserContext;
 
 
 public class LoanAccountActionFormTest extends TestCase {
@@ -116,10 +113,8 @@ public class LoanAccountActionFormTest extends TestCase {
         super.setUp();
         form = new LoanAccountActionForm();
         paymentMock = createMock(PaymentDataHtmlBean.class);
-//        expect(paymentMock.getTotalAmount()).andReturn(new Money(TestUtils.RUPEE));
-        expect(paymentMock.getTotal()).andReturn("0");
+        expect(paymentMock.hasTotalAmount()).andReturn(true);
         actionErrors = new ActionErrors();
-
     }
 
     private void validateForNoErrorsOnDate(Date transactionDate) throws InvalidDateException {

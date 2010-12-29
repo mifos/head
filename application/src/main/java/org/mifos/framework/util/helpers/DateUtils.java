@@ -680,16 +680,16 @@ public class DateUtils {
      * returns true if the beforeDate falls before afterDate, returns false if
      * both are same dates or afterDate falls before beforeDate
      */
-    public static boolean dateFallsBeforeDate(Date beforeDate, Date afterDate) {
-        return getDateWithoutTimeStamp(beforeDate.getTime()).compareTo(getDateWithoutTimeStamp(afterDate.getTime())) < 0;
+    public static boolean dateFallsBeforeDate(Date theDate, Date referenceDate) {
+        return getDateWithoutTimeStamp(theDate.getTime()).compareTo(getDateWithoutTimeStamp(referenceDate.getTime())) < 0;
     }
 
     /**
      * returns true if the pastDate is equal to or falls before futureDate,
      * returns false if futureDate falls before pastDate
      */
-    public static boolean dateFallsOnOrBeforeDate(Date pastDate, Date futureDate) {
-        return getDateWithoutTimeStamp(pastDate.getTime()).compareTo(getDateWithoutTimeStamp(futureDate.getTime())) <= 0;
+    public static boolean dateFallsOnOrBeforeDate(Date theDate, Date referenceDate) {
+        return getDateWithoutTimeStamp(theDate.getTime()).compareTo(getDateWithoutTimeStamp(referenceDate.getTime())) <= 0;
     }
 
     public static Date addDays(Date date, int daysToAdd) {

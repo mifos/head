@@ -20,21 +20,6 @@
 
 package org.mifos.accounts.loan.struts.actionforms;
 
-import static org.apache.commons.lang.StringUtils.isBlank;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
-
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.ResourceBundle;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
@@ -79,15 +64,37 @@ import org.mifos.dto.domain.CustomerDetailDto;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.FrameworkRuntimeException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ConversionError;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.DoubleConversionResult;
+import org.mifos.framework.util.helpers.ExceptionConstants;
+import org.mifos.framework.util.helpers.FilePaths;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.ResourceBundle;
+
+import static org.apache.commons.lang.StringUtils.isBlank;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
 
 public class LoanAccountActionForm extends BaseActionForm implements QuestionResponseCapturer, CashFlowCaptor {
     public LoanAccountActionForm() {
@@ -1342,7 +1349,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             for (PaymentDataHtmlBean bean : paymentDataBeans) {
                 // No data for amount and transaction date, validation not
                 // applicable
-                if (!bean.hasValidAmount() || bean.getTransactionDate() == null) {
+                if (!bean.hasValidAmount() || !bean.hasTransactionDate()) {
                     continue;
                 }
                 // Meeting date is invalid
@@ -1354,11 +1361,14 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                 }
                 String installmentNo = bean.getInstallment().getInstallmentNumberAsString();
 //                validateTotalAmountForConversionErrors(errors,bean,locale,currency, installmentNo);
-                validateTotalAmount(errors, bean.getAmount(), locale, currency,installmentNo);
+                validateTotalAmount(errors, bean.getAmount(), locale, currency, installmentNo);
                 // User has enter a payment for future date
                 validateTransactionDate(errors, bean, getDisbursementDateValue(locale));
             }
         } catch (InvalidDateException invalidDate) {
+            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
+                    LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+        } catch (FrameworkRuntimeException invalidDate) {
             errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
                     LoanExceptionConstants.INVALIDTRANSACTIONDATE));
         } catch (MeetingException e) {
@@ -1397,20 +1407,19 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
     }
 
     void validateTransactionDate(ActionErrors errors, PaymentDataHtmlBean template, java.util.Date disbursementDate) {
-        if (template.getTotal() == null) {
-            return;
-        }
-        try {
-            if (!DateUtils.dateFallsOnOrBeforeDate(template.getTransactionDate(), DateUtils.currentDate())) {
+        if (template.hasTotalAmount()) {
+            try {
+                if (!DateUtils.dateFallsOnOrBeforeDate(template.getTransactionDate(), DateUtils.currentDate())) {
+                    errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT, new ActionMessage(
+                            LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT));
+                } else if (!DateUtils.dateFallsBeforeDate(disbursementDate, template.getTransactionDate())) {
+                    errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
+                            LoanExceptionConstants.INVALIDTRANSACTIONDATE));
+                }
+            } catch (FrameworkRuntimeException ide) {
                 errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT, new ActionMessage(
                         LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT));
-            } else if (!DateUtils.dateFallsBeforeDate(disbursementDate, template.getTransactionDate())) {
-                errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATE, new ActionMessage(
-                        LoanExceptionConstants.INVALIDTRANSACTIONDATE));
             }
-        } catch (InvalidDateException ide) {
-            errors.add(LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT, new ActionMessage(
-                    LoanExceptionConstants.INVALIDTRANSACTIONDATEFORPAYMENT));
         }
     }
 
