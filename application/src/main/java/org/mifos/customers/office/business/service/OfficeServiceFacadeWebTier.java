@@ -215,8 +215,7 @@ public class OfficeServiceFacadeWebTier implements LegacyOfficeServiceFacade, Of
     @Override
     public OfficeFormDto retrieveOfficeFormInformation(Short officeLevelId) {
 
-        List<CustomFieldDefinitionEntity> customFieldDefinitions = this.officeDao.retrieveCustomFieldsForOffice();
-        List<CustomFieldDto> customFields = CustomFieldDefinitionEntity.toDto(customFieldDefinitions, Locale.getDefault());
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         OfficeLevel officeLevel = OfficeLevel.HEADOFFICE;
         if (officeLevelId != null) {

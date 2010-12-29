@@ -22,14 +22,10 @@ package org.mifos.accounts.savings.business.service;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
-import org.mifos.accounts.savings.util.helpers.SavingsConstants;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -39,6 +35,8 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SavingsBusinessService implements BusinessService {
     private SavingsPersistence savingsPersistence = new SavingsPersistence();
@@ -55,18 +53,6 @@ public class SavingsBusinessService implements BusinessService {
         logger.debug("In SavingsBusinessService::getSavingProducts()");
         try {
             return savingsPersistence.getSavingsProducts(branch, customerLevel, accountType);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition() throws ServiceException {
-        logger.debug("In SavingsBusinessService::retrieveCustomFieldsDefinition()");
-        try {
-            List<CustomFieldDefinitionEntity> customFields = savingsPersistence
-                    .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
-            initialize(customFields);
-            return customFields;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

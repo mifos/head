@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.accounts.business.AccountBO;
@@ -41,7 +39,6 @@ import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -50,6 +47,8 @@ import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Money;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SavingsPersistence extends Persistence {
 
@@ -63,14 +62,6 @@ public class SavingsPersistence extends Persistence {
         queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
         queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO, customerLevel.getProductApplicableType());
         return executeNamedQuery(NamedQueryConstants.GET_APPLICABLE_SAVINGS_PRODUCT_OFFERINGS, queryParameters);
-    }
-
-    public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(Short entityType)
-            throws PersistenceException {
-        logger.debug("In SavingsPersistence::retrieveCustomFieldsDefinition(), entityType: " + entityType);
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(AccountConstants.ENTITY_TYPE, entityType);
-        return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
     }
 
     public SavingsBO findById(Integer accountId) throws PersistenceException {

@@ -122,7 +122,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 import java.util.*;
-import java.util.Date;
 
 import static org.apache.commons.lang.StringUtils.EMPTY;
 import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
@@ -401,7 +400,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         Double interest = loanActionForm.getInterestDoubleValue();
         Short gracePeriod = loanActionForm.getGracePeriodDurationValue();
         List<FeeDto> fees = loanActionForm.getFeesToApply();
-        List<CustomFieldDto> customFields = loanActionForm.getCustomFields();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         Double maxLoanAmount = loanActionForm.getMaxLoanAmountValue();
         Double minLoanAmount = loanActionForm.getMinLoanAmountValue();
         Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
@@ -485,7 +484,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         Double interest = loanActionForm.getInterestDoubleValue();
         Short gracePeriod = loanActionForm.getGracePeriodDurationValue();
         List<FeeDto> fees = loanActionForm.getFeesToApply();
-        List<CustomFieldDto> customFields = loanActionForm.getCustomFields();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         Double maxLoanAmount = loanActionForm.getMaxLoanAmountValue();
         Double minLoanAmount = loanActionForm.getMinLoanAmountValue();
         Short maxNumOfInstallments = loanActionForm.getMaxNoInstallmentsValue();
@@ -720,7 +719,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         Double interest = loanAccountActionForm.getInterestDoubleValue();
         Short gracePeriod = loanAccountActionForm.getGracePeriodDurationValue();
         List<FeeDto> fees = loanAccountActionForm.getFeesToApply();
-        List<CustomFieldDto> customFields = loanAccountActionForm.getCustomFields();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
         Double maxLoanAmount = loanAccountActionForm.getMaxLoanAmountValue();
         Double minLoanAmount = loanAccountActionForm.getMinLoanAmountValue();
         Short maxNumOfInstallments = loanAccountActionForm.getMaxNoInstallmentsValue();

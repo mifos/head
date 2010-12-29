@@ -40,14 +40,12 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
-import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.business.Configuration;
 import org.mifos.customers.business.CustomerBO;
@@ -137,14 +135,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         Assert.assertEquals("Offerng name for the second product do not match.", products.get(1).getPrdOfferingName(),
                 "SavingPrd2");
 
-    }
-
-    @Test
-    public void testRetrieveCustomFieldsDefinition() throws Exception {
-        List<CustomFieldDefinitionEntity> customFields = savingsPersistence
-                .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
-        Assert.assertNotNull(customFields);
-        Assert.assertEquals(SAVINGS_CUSTOMFIELDS_NUMBER, customFields.size());
     }
 
     @Test

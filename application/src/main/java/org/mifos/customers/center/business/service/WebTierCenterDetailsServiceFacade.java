@@ -20,10 +20,10 @@
 
 package org.mifos.customers.center.business.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -37,8 +37,8 @@ import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
-import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
@@ -90,7 +90,7 @@ public class WebTierCenterDetailsServiceFacade implements CenterDetailsServiceFa
 
         List<SurveyDto> customerSurveys = customerDao.getCustomerSurveyDto(centerId);
 
-        List<CustomFieldDto> customFields = customerDao.getCustomFieldViewForCustomers(centerId, EntityType.CENTER.getValue(), userContext);
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         return new CenterInformationDto(centerDisplay, customerAccountSummary, centerPerformanceHistory, centerAddress,
                 groups, recentCustomerNotes, customerPositions, savingsDetail, customerMeeting, activeSurveys,

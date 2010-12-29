@@ -20,7 +20,17 @@
 
 package org.mifos.accounts.savings.struts.action;
 
-import org.apache.commons.lang.StringUtils;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
@@ -48,7 +58,6 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
@@ -57,7 +66,6 @@ import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLoca
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ProcessFlowRules;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.business.service.BusinessService;
@@ -66,7 +74,6 @@ import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -80,16 +87,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
 
 public class SavingsAction extends AccountAppAction {
 
@@ -190,8 +187,7 @@ public class SavingsAction extends AccountAppAction {
                 SavingsTypeEntity.class, uc.getLocaleId()), request);
         SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, masterDataService
                 .retrieveMasterEntities(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService
-                .retrieveCustomFieldsDefinition(), request);
+        SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, new ArrayList<CustomFieldDto>(), request);
     }
 
     private void loadPrdoffering(SavingsActionForm savingsActionForm, HttpServletRequest request)
@@ -254,7 +250,7 @@ public class SavingsAction extends AccountAppAction {
         checkPermissionForCreate(getShortValue(savingsActionForm.getStateSelected()), uc, null, customer.getOffice()
                 .getOfficeId(), customer.getPersonnel().getPersonnelId());
 
-        List<CustomFieldDto> customFields = savingsActionForm.getAccountCustomFieldSet();
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         SavingsBO saving = new SavingsBO(uc, savingsOfferingBO, customer, AccountState
                 .fromShort(getShortValue(savingsActionForm.getStateSelected())),

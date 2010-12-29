@@ -20,12 +20,13 @@
 
 package org.mifos.customers.group.business.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.persistence.CustomerDao;
@@ -35,16 +36,15 @@ import org.mifos.customers.util.helpers.CustomerAccountSummaryDto;
 import org.mifos.customers.util.helpers.CustomerAddressDto;
 import org.mifos.customers.util.helpers.CustomerDetailDto;
 import org.mifos.customers.util.helpers.CustomerFlagDto;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerMeetingDto;
 import org.mifos.customers.util.helpers.CustomerNoteDto;
 import org.mifos.customers.util.helpers.CustomerPositionDto;
-import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.customers.util.helpers.GroupDisplayDto;
 import org.mifos.customers.util.helpers.GroupPerformanceHistoryDto;
 import org.mifos.customers.util.helpers.LoanCycleCounter;
 import org.mifos.customers.util.helpers.LoanDetailDto;
 import org.mifos.customers.util.helpers.SavingsDetailDto;
+import org.mifos.customers.util.helpers.SurveyDto;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.Money;
@@ -96,8 +96,7 @@ public class WebTierGroupDetailsServiceFacade implements GroupDetailsServiceFaca
 
         List<SurveyDto> customerSurveys = this.customerDao.getCustomerSurveyDto(groupId);
 
-        List<CustomFieldDto> customFields = this.customerDao.getCustomFieldViewForCustomers(groupId, EntityType.GROUP
-                .getValue(), userContext);
+        List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
         return new GroupInformationDto(groupDisplay, customerAccountSummary, groupPerformanceHistory, groupAddress,
                 clients, recentCustomerNotes, customerPositions, customerFlags, loanDetail, savingsDetail,

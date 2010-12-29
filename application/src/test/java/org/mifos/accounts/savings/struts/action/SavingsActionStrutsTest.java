@@ -41,12 +41,10 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PrdOfferingDto;
@@ -56,7 +54,6 @@ import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.business.AuditLogRecord;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
@@ -169,60 +166,6 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
             AccountState state) throws Exception {
         return TestObjectFactory.createSavingsAccount(globalAccountNum, group, state, new Date(), savingsOffering,
                 userContext);
-    }
-
-    public void testSuccessfulUpdate_WithCustomField() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering = TestObjectFactory.createSavingsProduct("sav prd2", "prd2", currentDate, RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = new SavingsBO(userContext, savingsOffering, group, AccountState.SAVINGS_PARTIAL_APPLICATION,
-                new Money(getCurrency(), "100"), null);
-        savings.save();
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.closeSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
-        savings.setUserContext(userContext);
-       Assert.assertEquals(0, savings.getAccountCustomFields().size());
-        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "get");
-        addRequestParameter("globalAccountNum", savings.getGlobalAccountNum());
-        actionPerform();
-
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "edit");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "editPreview");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        actionPerform();
-
-        addRequestParameter("recommendedAmount", "600.0");
-        setRequestPathInfo("/savingsAction.do");
-        addRequestParameter("method", "update");
-        addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
-        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsBusinessService()
-                .retrieveCustomFieldsDefinition();
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "12");
-            i++;
-        }
-        actionPerform();
-        verifyForward("update_success");
-
-        verifyNoActionErrors();
-        verifyNoActionMessages();
-        StaticHibernateUtil.closeSession();
-        savingsOffering = null;
-        savings = new SavingsPersistence().findById(savings.getAccountId());
-        Assert.assertNotNull(savings);
-       Assert.assertEquals(TestUtils.createMoney(600.0), savings.getRecommendedAmount());
-       Assert.assertEquals(1, savings.getAccountCustomFields().size());
-
     }
 
     public void testGetPrdOfferings() throws Exception {
@@ -390,14 +333,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recommendedAmount", "600.0");
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "update");
-        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsBusinessService()
-                .retrieveCustomFieldsDefinition();
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "12");
-            i++;
-        }
+
         actionPerform();
         verifyForward("update_success");
         String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
@@ -608,14 +544,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("recommendedAmount", "600.0");
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "update");
-        List<CustomFieldDefinitionEntity> customFieldDefs = new SavingsBusinessService()
-                .retrieveCustomFieldsDefinition();
-        int i = 0;
-        for (CustomFieldDefinitionEntity customFieldDef : customFieldDefs) {
-            addRequestParameter("customField[" + i + "].fieldId", customFieldDef.getFieldId().toString());
-            addRequestParameter("customField[" + i + "].fieldValue", "12");
-            i++;
-        }
+
         actionPerform();
         verifyForward("update_success");
         String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
@@ -635,8 +564,6 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         for (AuditLogRecord auditLogRecord : auditLogList.get(0).getAuditLogRecords()) {
             if (auditLogRecord.getFieldName().equalsIgnoreCase("Recommended Amount")) {
                 matchValues(auditLogRecord, "300.0", "600.0");
-            } else if (auditLogRecord.getFieldName().equalsIgnoreCase("Additional Information")) {
-                matchValues(auditLogRecord, "External Savings Id-custom field value", "External Savings Id-12");
             }
         }
     }

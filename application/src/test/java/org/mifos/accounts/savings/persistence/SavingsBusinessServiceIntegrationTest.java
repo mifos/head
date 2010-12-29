@@ -118,20 +118,6 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
     }
 
     @Test
-    public void testRetrieveCustomFieldsDefinitionForInvalidConnection() {
-        TestObjectFactory.simulateInvalidConnection();
-        try {
-            service.retrieveCustomFieldsDefinition();
-            Assert.fail();
-        } catch (ServiceException e) {
-            Assert.assertTrue(true);
-        } finally {
-            StaticHibernateUtil.closeSession();
-        }
-
-    }
-
-    @Test
     public void testFindById() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());

@@ -40,7 +40,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
 import org.mifos.customers.personnel.business.PersonnelDetailsEntity;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
 import org.mifos.customers.personnel.business.PersonnelNotesEntity;
@@ -243,12 +242,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         Short personnelId = personnel.getPersonnelId();
         String userName = personnel.getUserName();
-        Set<PersonnelCustomFieldEntity> personnelCustomFields = personnel.getCustomFields();
         Set<CustomFieldDto> customFields = new LinkedHashSet<CustomFieldDto>();
-
-        for (PersonnelCustomFieldEntity fieldDef : personnelCustomFields) {
-            customFields.add(new CustomFieldDto(fieldDef.getFieldId(), fieldDef.getFieldValue()));
-        }
 
         Set<PersonnelNotesEntity> personnelNotesEntity = personnel.getPersonnelNotes();
         Set<PersonnelNoteDto> personnelNotes = new LinkedHashSet<PersonnelNoteDto>();

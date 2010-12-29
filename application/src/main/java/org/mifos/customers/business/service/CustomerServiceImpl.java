@@ -30,6 +30,7 @@ import java.util.Set;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
+import org.mifos.accounts.api.CustomerDto;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.exceptions.AccountException;
@@ -41,7 +42,6 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -52,14 +52,13 @@ import org.mifos.application.servicefacade.ClientPersonalInfoUpdate;
 import org.mifos.application.servicefacade.CustomerStatusUpdate;
 import org.mifos.application.servicefacade.GroupUpdate;
 import org.mifos.application.servicefacade.MeetingUpdateRequest;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.accounts.api.CustomerDto;
 import org.mifos.customers.business.CustomerHierarchyEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
@@ -83,7 +82,6 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -91,7 +89,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -720,15 +717,9 @@ public class CustomerServiceImpl implements CustomerService {
 
                             if (savingsOffering.isActive()) {
 
-                                List<CustomFieldDefinitionEntity> customFieldDefs = client.getSavingsPersistence()
-                                        .retrieveCustomFieldsDefinition(EntityType.SAVINGS.getValue());
-
-                                List<CustomFieldDto> customerFieldsForSavings = CustomFieldDefinitionEntity.toDto(
-                                        customFieldDefs, customer.getUserContext().getPreferredLocale());
-
                                 client.addAccount(new SavingsBO(client.getUserContext(), savingsOffering, client,
                                         AccountState.SAVINGS_ACTIVE, savingsOffering.getRecommendedAmount(),
-                                        customerFieldsForSavings));
+                                        new ArrayList<CustomFieldDto>()));
                             }
                         } catch (PersistenceException pe) {
                             throw new CustomerException(pe);
