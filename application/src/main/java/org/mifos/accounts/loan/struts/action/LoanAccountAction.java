@@ -305,11 +305,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.configurationPersistence = configurationPersistence;
         this.questionGroupFilter = new QuestionGroupFilterForLoan();
         this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
-        this.createLoanQuestionnaire = getCreateLoanQuestionnaire();
-    }
-
-    QuestionnaireFlowAdapter getCreateLoanQuestionnaire() {
-        return new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success,
+        this.createLoanQuestionnaire = new QuestionnaireFlowAdapter("Create", "Loan", ActionForwards.schedulePreview_success,
                 "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator, questionGroupFilter);
     }
 
@@ -937,7 +933,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private void setPerspectiveOnRequest(HttpServletRequest request) {
         String perspective = request.getParameter(PERSPECTIVE);
-        setPerspective(request, perspective);
+        if (perspective != null) {
+            request.setAttribute(PERSPECTIVE, perspective);
+        }
     }
 
     private CustomerDetailDto getCustomer(HttpServletRequest request) throws PageExpiredException {
@@ -963,7 +961,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         boolean isInstallmentValid = validateInstallments(request, loanAccountForm);
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
-            setPerspective(request, perspective);
+            request.setAttribute(PERSPECTIVE, perspective);
             Integer customerId = loanAccountForm.getCustomerIdValue();
 
             if (perspective.equals(PERSPECTIVE_VALUE_REDO_LOAN) && isInstallmentValid) {
@@ -1007,12 +1005,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         setInstallmentsOnSession(request, loanAccountForm);
         ActionForwards forward = validateCashFlow(form, request, loanAccountForm, isInstallmentValid);
         return mapping.findForward(forward.name());
-    }
-
-    private void setPerspective(HttpServletRequest request, String perspective) {
-        if (perspective != null) {
-            request.setAttribute(PERSPECTIVE, perspective);
-        }
     }
 
     private LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate, UserContext userContext) {
@@ -1363,7 +1355,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanAccountActionForm loanAccountForm = (LoanAccountActionForm) form;
         String perspective = loanAccountForm.getPerspective();
         if (perspective != null) {
-            setPerspective(request, perspective);
+            request.setAttribute(PERSPECTIVE, perspective);
         }
         ActionForwards actionForward = null;
         String method = (String) request.getAttribute(METHODCALLED);
@@ -2112,7 +2104,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void storeRedoLoanSettingOnRequestForUseInJspIfPerspectiveParamaterOnQueryString(
             final HttpServletRequest request) {
         if (request.getParameter(PERSPECTIVE) != null) {
-            setPerspective(request, request.getParameter(PERSPECTIVE));
+            request.setAttribute(PERSPECTIVE, request.getParameter(PERSPECTIVE));
         }
     }
 
@@ -2147,18 +2139,17 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     @TransactionDemarcate(joinToken = true)
     @Override
-    public ActionForward captureQuestionResponses(final ActionMapping mapping, final ActionForm form, 
-                         final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response)
-                         throws Exception {
+    public ActionForward captureQuestionResponses(
+            final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
+            @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         request.setAttribute(METHODCALLED, "captureQuestionResponses");
-        LoanAccountActionForm actionForm = (LoanAccountActionForm) form;
-        setPerspective(request, actionForm.getPerspective());
-        ActionErrors errors = createLoanQuestionnaire.validateResponses(request, actionForm);
+        ActionErrors errors = createLoanQuestionnaire.validateResponses(request, (LoanAccountActionForm) form);
         if (errors != null && !errors.isEmpty()) {
             addErrors(request, errors);
             return mapping.findForward(ActionForwards.captureQuestionResponses.toString());
         }
-        return createLoanQuestionnaire.rejoinFlow(mapping);
+        ActionForward join = createLoanQuestionnaire.rejoinFlow(mapping);
+        return join;
     }
 
     @TransactionDemarcate(joinToken = true)

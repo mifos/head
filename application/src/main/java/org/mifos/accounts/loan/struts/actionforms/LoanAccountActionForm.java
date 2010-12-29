@@ -1353,6 +1353,7 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
                     continue;
                 }
                 String installmentNo = bean.getInstallment().getInstallmentNumberAsString();
+//                validateTotalAmountForConversionErrors(errors,bean,locale,currency, installmentNo);
                 validateTotalAmount(errors, bean.getAmount(), locale, currency,installmentNo);
                 // User has enter a payment for future date
                 validateTransactionDate(errors, bean, getDisbursementDateValue(locale));
@@ -1370,6 +1371,19 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
             errors.add(ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION, new ActionMessage(
                     ExceptionConstants.FRAMEWORKRUNTIMEEXCEPTION));
         }
+    }
+
+    private void validateTotalAmountForConversionErrors(ActionErrors errors,
+                                                        PaymentDataHtmlBean bean, Locale locale, MifosCurrency currency, String installmentNo) {
+        LocalizationConverter localizationConverter = new LocalizationConverter(currency);
+        DoubleConversionResult conversionResult = localizationConverter.parseDoubleForInstallmentTotalAmount(bean.getAmount());
+        List<ConversionError> conversionErrors = conversionResult.getErrors();
+        if (!conversionErrors.isEmpty()) {
+            addError(errors, LoanConstants.LOAN_AMOUNT_KEY, LoanConstants.ERRORS_HAS_INVALID_FORMAT,
+                    lookupLocalizedPropertyValue(LoanConstants.LOAN_AMOUNT_KEY, locale,
+                            FilePaths.LOAN_UI_RESOURCE_PROPERTYFILE), installmentNo);
+        }
+
     }
 
     protected void validateTotalAmount(ActionErrors errors, String amount, Locale locale, MifosCurrency currency, String installmentNo) {

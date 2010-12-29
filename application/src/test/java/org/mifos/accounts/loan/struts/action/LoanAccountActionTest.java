@@ -45,7 +45,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
@@ -60,7 +59,6 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.cashflow.struts.CashFlowAdaptor;
-import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -131,8 +129,6 @@ public class LoanAccountActionTest {
 
     @Mock
     private CustomerDao customerDao;
-    @Mock
-    private QuestionnaireFlowAdapter createLoanQuestionnaire;
 
     @Before
     public void setUp() throws PageExpiredException {
@@ -140,11 +136,6 @@ public class LoanAccountActionTest {
             @Override
             protected UserContext getUserContext(@SuppressWarnings("unused") HttpServletRequest request) {
                 return userContext;
-            }
-
-            @Override
-            QuestionnaireFlowAdapter getCreateLoanQuestionnaire() {
-                return createLoanQuestionnaire;
             }
         };
         loanAccountAction.setLoanServiceFacade(loanServiceFacade);
@@ -319,24 +310,6 @@ public class LoanAccountActionTest {
         loanAccountAction.showPreview(mapping, form, request, response);
         verify(request,times(1)).setAttribute(LoanConstants.METHODCALLED, "showPreview");
         verify(request,times(1)).setAttribute(PERSPECTIVE, LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
-    }
-
-    @Test
-    public void captureQuestionResponses() throws Exception {
-        String redoLoan = "redoLoan";
-        when(form.getPerspective()).thenReturn(redoLoan);
-        ActionErrors errors = mock(ActionErrors.class);
-        ActionForward forward = mock(ActionForward.class);
-
-        when(createLoanQuestionnaire.validateResponses(request, form)).thenReturn(errors);
-        when(errors.isEmpty()).thenReturn(true);
-        when(createLoanQuestionnaire.rejoinFlow(mapping)).thenReturn(forward);
-
-        loanAccountAction.captureQuestionResponses(mapping, form, request, response);
-
-        verify(request,times(1)).setAttribute(eq(LoanConstants.METHODCALLED), eq("captureQuestionResponses"));
-        verify(request,times(1)).setAttribute(PERSPECTIVE, redoLoan);
-        verify(createLoanQuestionnaire).rejoinFlow(mapping);
     }
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {
