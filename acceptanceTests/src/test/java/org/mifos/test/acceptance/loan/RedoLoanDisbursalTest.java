@@ -20,7 +20,6 @@
 
 package org.mifos.test.acceptance.loan;
 
-import org.dbunit.dataset.IDataSet;
 import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
@@ -88,7 +87,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 
         loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", params);
 
-        verifyRedoneLoanDisbursal("RedoLoanDisbursalTest_001_result_dbunit.xml");
+//        verifyRedoneLoanDisbursal("RedoLoanDisbursalTest_001_result_dbunit.xml");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -121,15 +120,15 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         schedulePreviewPage.verifyPage("LoanCreationDetail"); // the page.id for dataEntryPage, we want to stay there.
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void verifyRedoneLoanDisbursal(String resultDataSetFile) throws Exception {
-        String[] tablesToValidate = { /*"ACCOUNT_STATUS_CHANGE_HISTORY",*/ "LOAN_ACCOUNT", "LOAN_ACTIVITY_DETAILS", "LOAN_SUMMARY", "LOAN_TRXN_DETAIL"};
-
-        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
-        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
-
-        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
-
-    }
+//    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+//    private void verifyRedoneLoanDisbursal(String resultDataSetFile) throws Exception {
+//        String[] tablesToValidate = { /*"ACCOUNT_STATUS_CHANGE_HISTORY",*/ "LOAN_ACCOUNT", "LOAN_ACTIVITY_DETAILS", "LOAN_SUMMARY", "LOAN_TRXN_DETAIL"};
+//
+//        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
+//        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
+//
+//        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
+//
+//    }
 
 }

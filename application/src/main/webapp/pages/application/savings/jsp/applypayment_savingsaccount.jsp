@@ -81,10 +81,9 @@ explanation of the license and how it is applied.
 			      </td>
 			  </tr>			  
                 	<c:set var="customerLevel" value="${BusinessKey.customer.customerLevel.id}" />
+                	<!-- ${customerLevel} -->
 			  		<c:choose>
-				  		<c:when test="${customerLevel==CustomerLevel.CENTER.value or 
-				  				(customerLevel==CustomerLevel.GROUP.value and 
-				  				BusinessKey.recommendedAmntUnit.id==RecommendedAmountUnit.PERINDIVIDUAL.value)}">
+				  		<c:when test="${BusinessKey.groupModelWithIndividualAccountability == true}">
 						<tr>
 			                <td align="right" class="fontnormal">
 	            				<mifos:mifoslabel name="${ConfigurationConstants.CLIENT}" mandatory="yes"/>
