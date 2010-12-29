@@ -29,6 +29,7 @@ import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.hibernate.Hibernate;
 import org.joda.time.DateTime;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
@@ -234,8 +235,30 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 new DateTime(personnelDetailsEntity.getDateOfJoiningBranch()), new DateTime(personnelDetailsEntity
                         .getDateOfLeavingBranch()), addressDto, name.getFirstName(), name.getMiddleName(), name
                         .getSecondLastName(), name.getLastName());
+
         String emailId = personnel.getEmailId();
+
         SupportedLocalesEntity preferredLocale = personnel.getPreferredLocale();
+        SupportedLocalesEntity defaultLocale = null;
+        if (preferredLocale != null) {
+//            List<SupportedLocalesEntity> supportedLocales = new ApplicationConfigurationPersistence().getSupportedLocale();
+//            for (SupportedLocalesEntity supportedLocalesEntity : supportedLocales) {
+//                if (supportedLocalesEntity.getId().intValue() == preferredLocale.getId().intValue()) {
+//                    defaultLocale = supportedLocalesEntity;
+//                }
+//            }
+        }
+
+        String languageName = Localization.getInstance().getLanguageName();
+        Integer languageLookUpId = Integer.valueOf(601); // french
+
+        if (preferredLocale == null) {
+            // strange - locale for user doesn't exist in supported locales..
+//            defaultLocale = Localization.getInstance().getMainLocale();
+        } else {
+            languageName = preferredLocale.getLanguageName();
+            languageLookUpId = preferredLocale.getLanguage().getLookUpValue().getLookUpId();
+        }
         PersonnelLevelEntity level = personnel.getLevel();
         OfficeBO office = personnel.getOffice();
         Integer title = personnel.getTitle();
@@ -261,9 +284,9 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             personnelNotes.add(new PersonnelNoteDto(new DateTime(entity.getCommentDate()), entity.getComment(), entity
                     .getPersonnelName()));
         }
+
         return new PersonnelInformationDto(personnel.getPersonnelId().intValue(), personnel.getGlobalPersonnelNum(), displayName, status, locked,
-                personnelDetails, emailId, preferredLocale.getLanguageName(), preferredLocale.getLanguage()
-                        .getLookUpValue().getLookUpId(), level.getId(), office.getOfficeId().intValue(), office
+                personnelDetails, emailId, languageName, languageLookUpId, level.getId(), office.getOfficeId().intValue(), office
                         .getOfficeName(), title, personnelRoles, personnelId, userName, customFields, personnelNotes);
     }
 

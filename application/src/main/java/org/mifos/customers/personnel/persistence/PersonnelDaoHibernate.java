@@ -31,6 +31,7 @@ import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.FetchMode;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.LogicalExpression;
 import org.hibernate.criterion.Order;
@@ -79,7 +80,13 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("PERSONNEL_ID", id);
 
-        return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery("findPersonnelById", queryParameters);
+        PersonnelBO personnel = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery("findPersonnelById", queryParameters);
+        Hibernate.initialize(personnel.getPreferredLocale());
+        if (personnel.getPreferredLocale() != null) {
+            Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
+            Hibernate.initialize(personnel.getPreferredLocale().getLookUpValue());
+        }
+        return personnel;
     }
 
     @Override
@@ -150,7 +157,13 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalPersonnelNum", globalNumber);
 
-        return (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID, queryParameters);
+        PersonnelBO personnel = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID, queryParameters);
+        Hibernate.initialize(personnel.getPreferredLocale());
+        if (personnel.getPreferredLocale() != null) {
+            Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
+            Hibernate.initialize(personnel.getPreferredLocale().getLookUpValue());
+        }
+        return personnel;
     }
 
     private List<GrantedAuthority> getGrantedActivityAuthorities(List<Short> activityIds) {
