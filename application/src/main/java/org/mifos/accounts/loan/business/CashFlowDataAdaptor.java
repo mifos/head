@@ -11,6 +11,7 @@ import java.util.Locale;
 import org.joda.time.DateTime;
 import org.mifos.accounts.loan.util.helpers.CashFlowDataDto;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
+import org.mifos.application.cashflow.struts.CashFlowAdaptor;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 
@@ -19,17 +20,19 @@ public class CashFlowDataAdaptor {
 
     private List<MonthlyCashFlowForm> monthlyCashFlows;
     private List<RepaymentScheduleInstallment> installments;
-    private final BigDecimal loanAmount;
-    private final Date disbursementDate;
-    private final Locale locale;
+    private BigDecimal loanAmount;
+    private Date disbursementDate;
+    private Locale locale;
 
-    public CashFlowDataAdaptor(List<RepaymentScheduleInstallment> installments,
-                                                    List<MonthlyCashFlowForm> monthlyCashFlows, BigDecimal loanAmount, Date disbursementDate, Locale locale) {
+    public void initialize(List<RepaymentScheduleInstallment> installments,
+                           List<MonthlyCashFlowForm> monthlyCashFlows, BigDecimal loanAmount, Date disbursementDate, Locale locale, boolean addLoanAmountToCashFlow) {
         this.installments = installments;
         this.monthlyCashFlows = monthlyCashFlows;
         this.loanAmount = loanAmount;
         this.disbursementDate = disbursementDate;
         this.locale = locale;
+        if(addLoanAmountToCashFlow)
+            addLoanAmountToRespectiveCashFlow();
     }
 
 
@@ -37,8 +40,6 @@ public class CashFlowDataAdaptor {
         List<CashFlowDataDto> cashflowDataDtos = null;
         if (monthlyCashFlows != null && monthlyCashFlows.size() > 0) {
             cashflowDataDtos = new ArrayList<CashFlowDataDto>();
-
-            addLoanAmountToRespectiveCashFlow();
 
             for (MonthlyCashFlowForm monthlyCashflowform : monthlyCashFlows) {
                 CashFlowDataDto cashflowDataDto = getCashFlowDataDto(monthlyCashflowform);
@@ -50,7 +51,7 @@ public class CashFlowDataAdaptor {
     }
 
 
-    void addLoanAmountToRespectiveCashFlow() {
+    private void addLoanAmountToRespectiveCashFlow() {
         for (MonthlyCashFlowForm monthlyCashFlowForm : monthlyCashFlows) {
             if(DateUtils.sameMonthYear(monthlyCashFlowForm.getDate(),disbursementDate)) {
                 BigDecimal revenue = monthlyCashFlowForm.getRevenue();
@@ -90,7 +91,7 @@ public class CashFlowDataAdaptor {
 
     private String computeDiffBetweenCumulativeAndInstallmentPercent(DateTime dateOfCashFlow, BigDecimal cashflow) {
         BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
-        String value = "";
+        String value;
         if (cashflow.doubleValue() != 0) {
             value = String.valueOf(totalInstallmentForMonth.multiply(new BigDecimal(100)).divide(cashflow, 2, RoundingMode.HALF_UP));
         } else {

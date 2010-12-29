@@ -280,7 +280,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private QuestionnaireFlowAdapter createLoanQuestionnaire;
     private CashFlowAdaptor cashFlowAdaptor =
             new CashFlowAdaptor(ActionForwards.capture_cash_flow.toString(), new DefaultCashFlowServiceLocator());
-
+    private CashFlowDataAdaptor cashFlowDataAdaptor = new CashFlowDataAdaptor();
     private static final String SHOW_PREVIEW = "loanAccountAction.do?method=showPreview";
     private static final String CUSTOMER_SEARCH_URL = "custSearchAction.do?method=loadMainSearch";
 
@@ -540,16 +540,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             throws Exception {
 
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
-
         boolean validateInstallmentsPassed = validateInstallments(request, loanActionForm);
-
-        boolean cashFlowBounded = bindCashFlowIfPresent(request, loanActionForm);
+        boolean cashFlowBounded = bindCashFlowIfPresent(request, loanActionForm, false);
 
         ActionForwards forward = ActionForwards.validateInstallments_failure;
         if (validateInstallmentsPassed && cashFlowBounded) {
             forward = validateCashFlowForWarningAndErrors(loanActionForm, request, loanActionForm, ActionForwards.validateInstallments_success, ActionForwards.validateInstallments_failure);
-
         }
+        
         return mapping.findForward(forward.name());
     }
 
@@ -616,11 +614,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         setPerspectiveOnRequest(request);
         ActionForward forwardAfterCashFlowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
                 ActionForwards.schedulePreview_success.toString(), request.getSession(), mapping);
-        bindCashFlowIfPresent(request, form);
+        bindCashFlowIfPresent(request, form, true);
         return forwardAfterCashFlowBinding;
     }
 
-    private boolean bindCashFlowIfPresent(final HttpServletRequest request, final ActionForm form) throws Exception {
+    private boolean bindCashFlowIfPresent(final HttpServletRequest request, final ActionForm form, boolean addLoanAmountToCashFlow) throws Exception {
         boolean cashFlowBound = false;
 
         UserContext userContext = getUserContext(request);
@@ -628,14 +626,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         LoanOfferingBO loanOffering = getLoanOffering(loanForm.getPrdOfferingIdValue(), userContext.getLocaleId());
 
         if (loanOffering != null && isCashFlowEnabled(request, loanOffering)) {
-            CashFlowDataAdaptor cashflowUtility = new CashFlowDataAdaptor(
+            cashFlowDataAdaptor.initialize(
                     loanForm.getInstallments(),
                     loanForm.getCashFlowForm().getMonthlyCashFlows(),
                     loanForm.getLoanAmountAsBigDecimal(),
                     loanForm.getDisbursementDateValue(userContext.getPreferredLocale()),
-                    userContext.getPreferredLocale());
-
-            loanForm.setCashflowDataDtos(cashflowUtility.getCashflowDataDtos());
+                    userContext.getPreferredLocale(),
+                    addLoanAmountToCashFlow);
+            loanForm.setCashflowDataDtos(cashFlowDataAdaptor.getCashflowDataDtos());
             cashFlowBound = true;
         }
         return cashFlowBound;
@@ -1104,7 +1102,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 ActionForwards.preview_success :
                 ActionForwards.preview_failure;
 
-        boolean cashFlowBounded = bindCashFlowIfPresent(request, loanAccountForm);
+        boolean cashFlowBounded = bindCashFlowIfPresent(request, loanAccountForm, false);
         //----to display errors on second page
         if (forward.equals(ActionForwards.preview_success) && cashFlowBounded) {
             forward = validateCashFlowForWarningAndErrors(form, request, loanAccountForm, ActionForwards.preview_success, ActionForwards.preview_failure);
