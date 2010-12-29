@@ -80,7 +80,7 @@ public class PersonnelTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(groups = {"smoke"})
+    @Test(enabled=true, groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void createUserTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
@@ -90,6 +90,7 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true, groups = {"smoke"})
     public void editUserTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
@@ -110,6 +111,7 @@ public class PersonnelTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true, groups = {"smoke"})
     public void createUserWithNonAdminRoleTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
@@ -117,7 +119,7 @@ public class PersonnelTest extends UiTestCaseBase {
         userHelper.createUser(adminPage.getNonAdminUserParameters(), "MyOffice1233171674227");
     }
 
-    @Test(groups = {"smoke"})
+    @Test(enabled=true, groups = {"smoke"})
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void changePasswordTest() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);

@@ -46,7 +46,7 @@ public class CreateUserEnterDataPage extends MifosPage {
         typeTextIfNotEmpty("dobMM", parameters.getDateOfBirthMM());
         typeTextIfNotEmpty("dobYY", parameters.getDateOfBirthYYYY());
         selectValueIfNotZero("gender", parameters.getGender());
-        selectValueIfNotZero("preferredLocale", parameters.getPreferredLanguage());
+//        selectValueIfNotZero("preferredLocale", parameters.getPreferredLanguage());
         selectValueIfNotZero("level", parameters.getUserLevel());
         if (parameters.getRole() != null && parameters.getRole().equals("Admin")) {
           selenium.click("MoveRight");

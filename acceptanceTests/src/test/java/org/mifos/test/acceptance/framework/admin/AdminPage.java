@@ -147,7 +147,9 @@ public class AdminPage extends MifosPage {
         formParameters.setDateOfBirthMM("11");
         formParameters.setDateOfBirthYYYY("1980");
         formParameters.setGender(CreateUserParameters.MALE);
-        formParameters.setPreferredLanguage(CreateUserParameters.ENGLISH);
+
+//        Integer preferredSupportedLocale = 1;
+//        formParameters.setPreferredLanguage(preferredSupportedLocale);
         formParameters.setUserLevel(CreateUserParameters.LOAN_OFFICER);
         formParameters.setRole("Admin");
         formParameters.setUserName("loanofficer_blore" + StringUtil.getRandomString(3));
