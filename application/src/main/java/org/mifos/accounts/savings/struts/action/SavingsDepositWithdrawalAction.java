@@ -40,6 +40,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
+import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsDepositWithdrawalActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -106,14 +107,15 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
                 uc.getLocaleId()));
         SessionUtils.setCollectionAttribute(AccountConstants.TRXN_TYPES, trxnTypes, request);
 
-        if (savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.CENTER.getValue()
-                || savings.getCustomer().getCustomerLevel().getId().shortValue() == CustomerLevel.GROUP.getValue()
-                && savings.getRecommendedAmntUnit().getId().equals(RecommendedAmountUnit.PER_INDIVIDUAL.getValue())) {
+        savings = new SavingsPersistence().findById(savings.getAccountId());
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
+        if (savings.isGroupModelWithIndividualAccountability()) {
             SessionUtils.setCollectionAttribute(SavingsConstants.CLIENT_LIST, savings.getCustomer().getChildren(
                     CustomerLevel.CLIENT, ChildrenStateType.ACTIVE_AND_ONHOLD), request);
         } else {
             SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, null, request);
         }
+
         AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, persistence
                 .getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit.getValue()),
