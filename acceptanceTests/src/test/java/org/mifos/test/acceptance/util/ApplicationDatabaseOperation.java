@@ -47,6 +47,11 @@ public class ApplicationDatabaseOperation {
         return doesEntityExist("select * from lookup_value where lookup_name='InterestTypes-DecliningPrincipalBalance';");
     }
 
+    public boolean doesHolidayExist(String holidayName) throws SQLException {
+        return doesEntityExist("select * from holiday where holiday_name='" + holidayName + "';");
+
+    }
+
     private boolean doesEntityExist(String entityCountQuery) throws SQLException {
         ResultSet resultSet = null;
         try{

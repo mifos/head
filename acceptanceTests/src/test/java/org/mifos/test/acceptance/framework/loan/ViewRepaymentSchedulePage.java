@@ -149,4 +149,10 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         setScheduleDate("19/10/2010");
         return this;
     }
+
+    public ViewOriginalSchedulePage navigateToViewOriginalSchedulePage() {
+        selenium.click("loanRepayment.link.original_schedule");
+        waitForPageToLoad();
+        return new ViewOriginalSchedulePage(selenium);
+    }
 }

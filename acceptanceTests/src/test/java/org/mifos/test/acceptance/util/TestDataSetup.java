@@ -1,12 +1,15 @@
 package org.mifos.test.acceptance.util;
 
 import com.thoughtworks.selenium.Selenium;
+import org.joda.time.ReadableInstant;
+import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.center.MeetingParameters;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterMfiDataPage;
 import org.mifos.test.acceptance.framework.client.CreateClientEnterPersonalDataPage;
 import org.mifos.test.acceptance.framework.customer.CustomerChangeStatusPage;
+import org.mifos.test.acceptance.framework.holiday.CreateHolidayEntryPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.framework.testhelpers.OfficeHelper;
@@ -127,5 +130,38 @@ public class TestDataSetup {
             applicationDatabaseOperation.insertDecliningPrincipalBalanceInterestType();
         }
         //To change body of created methods use File | Settings | File Templates.
+    }
+
+    @SuppressWarnings("PMD.AvoidReassigningParameters")    // one of the dependent methods throws Exception
+    public void createHoliday(ReadableInstant fromDate, ReadableInstant toDate, String repaymentRule) throws SQLException {
+        if (toDate == null) {
+            toDate = fromDate;
+        }
+        String ddFrom = DateTimeFormat.forPattern("dd").print(fromDate);
+        String mmFrom = DateTimeFormat.forPattern("MM").print(fromDate);
+        String yyyyFrom = DateTimeFormat.forPattern("yyyy").print(fromDate);
+        String ddTo = DateTimeFormat.forPattern("dd").print(toDate);
+        String mmTo = DateTimeFormat.forPattern("MM").print(toDate);
+        String yyyyTo = DateTimeFormat.forPattern("yyyy").print(toDate);
+
+        CreateHolidayEntryPage.CreateHolidaySubmitParameters holidayParameters = new CreateHolidayEntryPage.CreateHolidaySubmitParameters();
+        holidayParameters.setName(ddFrom + mmFrom + yyyyFrom + ddTo + mmTo + yyyyTo);
+        holidayParameters.setFromDateDD(ddFrom);
+        holidayParameters.setFromDateMM(mmFrom);
+        holidayParameters.setFromDateYYYY(yyyyFrom);
+        holidayParameters.setThruDateDD(ddTo);
+        holidayParameters.setThruDateMM(mmTo);
+        holidayParameters.setThruDateYYYY(yyyyTo);
+        holidayParameters.setRepaymentRule(repaymentRule);
+        holidayParameters.setSelectedOfficeIds("1");
+
+        if (applicationDatabaseOperation.doesHolidayExist(holidayParameters.getName())) {
+            return;
+        }
+
+        new NavigationHelper(selenium).
+                navigateToAdminPage().
+                navigateToDefineHolidayPage().
+                submitAndNavigateToHolidayConfirmationPage(holidayParameters).submitAndNavigateToViewHolidaysPage();
     }
 }

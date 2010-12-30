@@ -1,7 +1,7 @@
 package org.mifos.test.acceptance.loan;
 
 @SuppressWarnings("PMD")
-public class ScheduleData {
+public class RepaymentScheduleData {
 
     public static final String[][] EARLY_LESS_FIRST_PAYMENT = {{"Installments paid", "", "", "", "", ""},
                 {"1", "19-Oct-2010", "12-Oct-2010", "99.3", "0.7", "0.0", "100.0"},

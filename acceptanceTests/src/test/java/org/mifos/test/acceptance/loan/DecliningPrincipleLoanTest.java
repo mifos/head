@@ -22,18 +22,13 @@ package org.mifos.test.acceptance.loan;
 
 
 import org.joda.time.DateTime;
-import org.joda.time.ReadableInstant;
-import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
 import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
-import org.mifos.test.acceptance.framework.loan.EditLoanAccountStatusParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
-import org.mifos.test.acceptance.framework.loan.PaymentParameters;
-import org.mifos.test.acceptance.framework.loan.ViewRepaymentSchedulePage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
@@ -66,7 +61,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     DateTime systemDateTime;
     NavigationHelper navigationHelper;
     String interestTypeName = "Declining Balance-Interest Recalculation";
-    int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_PRINCIPLE_BALANCE;
+    int interestType = DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION;
     DateTime disbursalDate;
     boolean isLoanProductCreatedAndVerified = false;
     private TestDataSetup dataSetup;
@@ -125,71 +120,51 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 //    private void verifyMultipleDue(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
 //        DateTime paymentDate = systemDateTime.plusDays(21);
 //        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
-//        makePaymentAndVerifyPayment(paymentDate, "725", ScheduleData.MULTIPLE_DUE_PAYMENT);//verify first the due fee is knocked
+//        makePaymentAndVerifyPayment(paymentDate, "725", RepaymentScheduleData.MULTIPLE_DUE_PAYMENT);//verify first the due fee is knocked
 //    }
 
     private void verifyLateLessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(12);
         createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
-        makePaymentAndVerifyPayment(paymentDate, "100", ScheduleData.LATE_LESS_FIRST_PAYMENT);//verify first the due fee is knocked
-        makePaymentAndVerifyPayment(paymentDate, "5.3", ScheduleData.LATE_LESS_SECOND_PAYMENT);//verify due interest is knocked next
-        makePaymentAndVerifyPayment(paymentDate, "100", ScheduleData.LATE_LESS_THIRD_PAYMENT);//verify the due principle is knocked next
+        makePaymentAndVerifyPayment(paymentDate, "100", RepaymentScheduleData.LATE_LESS_FIRST_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(paymentDate, "5.3", RepaymentScheduleData.LATE_LESS_SECOND_PAYMENT);//verify due interest is knocked next
+        makePaymentAndVerifyPayment(paymentDate, "100", RepaymentScheduleData.LATE_LESS_THIRD_PAYMENT);//verify the due principle is knocked next
     }
 
     private void verifyLateExcessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(12);
         createAndDisburseLoanAccount(noOfInstallments,systemDateTime.plusDays(1),loanProductName);
-        makePaymentAndVerifyPayment(paymentDate, "354", ScheduleData.LATE_EXCESS_PAYMENT);
-        makePaymentAndVerifyPayment(paymentDate, "2.5", ScheduleData.LATE_EXCESS_SECOND_PAYMENT);//verifying only overdue interest in knocked
-        makePaymentAndVerifyPayment(paymentDate, "100", ScheduleData.LATE_EXCESS_THIRD_PAYMENT);//verify if future interest in reduced as the future principle is paid
+        makePaymentAndVerifyPayment(paymentDate, "354", RepaymentScheduleData.LATE_EXCESS_PAYMENT);
+        makePaymentAndVerifyPayment(paymentDate, "2.5", RepaymentScheduleData.LATE_EXCESS_SECOND_PAYMENT);//verifying only overdue interest in knocked
+        makePaymentAndVerifyPayment(paymentDate, "100", RepaymentScheduleData.LATE_EXCESS_THIRD_PAYMENT);//verify if future interest in reduced as the future principle is paid
     }
 
     private void verifyEarlyLessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(1);
-        createAndDisburseLoanAccount(noOfInstallments,systemDateTime.plusDays(1),loanProductName);
-        makePaymentAndVerifyPayment(paymentDate, "100", ScheduleData.EARLY_LESS_FIRST_PAYMENT); //verifying interest till date
+        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
+        makePaymentAndVerifyPayment(paymentDate, "100", RepaymentScheduleData.EARLY_LESS_FIRST_PAYMENT); //verifying interest till date
     }
 
     @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void createLoan() throws Exception {
-        createAndDisburseLoanAccount(4,systemDateTime.plusDays(1),"productWeekly7466");
+        createAndDisburseLoanAccount(4, systemDateTime.plusDays(1), "productWeekly7466");
     }
 
     private void verifyEarlyExcessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(1);
-        createAndDisburseLoanAccount(noOfInstallments,systemDateTime.plusDays(1),loanProductName);
-        makePaymentAndVerifyPayment(paymentDate, "280", ScheduleData.EARLY_EXCESS_FIRST_PAYMENT);
+        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
+        makePaymentAndVerifyPayment(paymentDate, "280", RepaymentScheduleData.EARLY_EXCESS_FIRST_PAYMENT);
     }
 
     private void makePaymentAndVerifyPayment(DateTime paymentDate, String paymentAmount, String[][] expectedSchedule) throws UnsupportedEncodingException {
-        makePayment(paymentDate, paymentAmount).
+        loanTestHelper.makePayment(paymentDate,paymentAmount).
+                navigateToRepaymentSchedulePage().
                 verifyScheduleTable(expectedSchedule).navigateToLoanAccountPage();
     }
 
-    private ViewRepaymentSchedulePage makePayment(DateTime systemDateTime, String paymentAmount) throws UnsupportedEncodingException {
-        loanTestHelper.setApplicationTime(systemDateTime).navigateBack();
-        return new LoanAccountPage(selenium).navigateToApplyPayment().
-                submitAndNavigateToApplyPaymentConfirmationPage(setPaymentParams(paymentAmount, systemDateTime)).
-                submitAndNavigateToLoanAccountDetailsPage().
-                navigateToRepaymentSchedulePage();
-    }
-
-    private PaymentParameters setPaymentParams(String amount, ReadableInstant paymentDate) {
-        String dd = DateTimeFormat.forPattern("dd").print(paymentDate);
-        String mm = DateTimeFormat.forPattern("MM").print(paymentDate);
-        String yyyy = DateTimeFormat.forPattern("yyyy").print(paymentDate);
-
-        PaymentParameters paymentParameters = new PaymentParameters();
-        paymentParameters.setAmount(amount);
-        paymentParameters.setTransactionDateDD(dd);
-        paymentParameters.setTransactionDateMM(mm);
-        paymentParameters.setTransactionDateYYYY(yyyy);
-        paymentParameters.setPaymentType(PaymentParameters.CASH);
-        return paymentParameters;
-    }
-
     private LoanAccountPage createAndDisburseLoanAccount(int noOfInstallments, DateTime disbursalDate, String loanProductName) throws UnsupportedEncodingException {
+        DisburseLoanParameters disburseLoanParameters = loanTestHelper.setDisbursalParams(disbursalDate.minusDays(1));
         loanTestHelper.setApplicationTime(systemDateTime);
         navigationHelper.navigateToHomePage();
         return loanTestHelper.
@@ -200,10 +175,10 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 clickPreviewAndGoToReviewLoanAccountPage().
                 submit().navigateToLoanAccountDetailsPage().
                 navigateToEditAccountStatus().
-                submitAndNavigateToNextPage(setStatusParameters()).
+                submitAndNavigateToNextPage(loanTestHelper.setApprovedStatusParameters()).
                 submitAndNavigateToLoanAccountPage().
                 navigateToDisburseLoan().
-                submitAndNavigateToDisburseLoanConfirmationPage(setDisbursalParams(disbursalDate.minusDays(1)))
+                submitAndNavigateToDisburseLoanConfirmationPage(disburseLoanParameters)
                 .submitAndNavigateToLoanAccountPage().navigateToApplyCharge().applyFeeAndConfirm(setCharge());
     }
 
@@ -211,26 +186,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         ChargeParameters chargeParameters = new ChargeParameters();
         chargeParameters.setType(feeName);
         return chargeParameters;
-    }
-
-    private DisburseLoanParameters setDisbursalParams(ReadableInstant validDisbursalDate) {
-        DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
-        String dd = DateTimeFormat.forPattern("dd").print(validDisbursalDate);
-        String mm = DateTimeFormat.forPattern("MM").print(validDisbursalDate);
-        String yyyy = DateTimeFormat.forPattern("yyyy").print(validDisbursalDate);
-
-        disburseLoanParameters.setDisbursalDateDD(dd);
-        disburseLoanParameters.setDisbursalDateMM(mm);
-        disburseLoanParameters.setDisbursalDateYYYY(yyyy);
-        disburseLoanParameters.setPaymentType(DisburseLoanParameters.CASH);
-        return disburseLoanParameters;
-    }
-
-    private EditLoanAccountStatusParameters setStatusParameters() {
-        EditLoanAccountStatusParameters loanAccountStatusParameters = new EditLoanAccountStatusParameters();
-        loanAccountStatusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
-        loanAccountStatusParameters.setNote("test notes");
-        return loanAccountStatusParameters;
     }
 
     private void createLoanProduct(DefineNewLoanProductPage.SubmitFormParameters formParameters) {

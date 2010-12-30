@@ -65,7 +65,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
         public static final int FLAT = 1;
         public static final int DECLINING_BALANCE = 2;
         public static final int DECLINING_BALANCE_EPI = 4;
-        public static final int DECLINING_PRINCIPLE_BALANCE = 5;
+        public static final int DECLINING_BALANCE_INTEREST_RECALCULATION = 5;
 
         // applicable for
         public static final int CLIENTS = 1;
@@ -452,7 +452,7 @@ public class DefineNewLoanProductPage extends AbstractPage {
 
     public DefineNewLoanProductPage verifyBlockedInterestTypes() {
         verifyInterestBlockedForVariableInstallment(SubmitFormParameters.FLAT);
-        verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_PRINCIPLE_BALANCE);
+        verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_BALANCE_INTEREST_RECALCULATION);
         verifyInterestBlockedForVariableInstallment(SubmitFormParameters.DECLINING_BALANCE_EPI);
         return this;
     }

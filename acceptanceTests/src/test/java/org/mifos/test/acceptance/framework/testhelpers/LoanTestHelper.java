@@ -22,6 +22,8 @@ package org.mifos.test.acceptance.framework.testhelpers;
 
 import com.thoughtworks.selenium.Selenium;
 import org.joda.time.DateTime;
+import org.joda.time.ReadableInstant;
+import org.joda.time.format.DateTimeFormat;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
@@ -404,5 +406,68 @@ public class LoanTestHelper {
         DateTimeUpdaterRemoteTestingService dateTimeUpdaterRemoteTestingService = new DateTimeUpdaterRemoteTestingService(selenium);
         dateTimeUpdaterRemoteTestingService.setDateTime(systemDateTime);
         return new AbstractPage(selenium);
+    }
+
+    public LoanAccountPage makePayment(DateTime paymentDate, String paymentAmount) throws UnsupportedEncodingException {
+        PaymentParameters paymentParameters =setPaymentParams(paymentAmount, paymentDate);
+        setApplicationTime(paymentDate).navigateBack();
+        return new LoanAccountPage(selenium).navigateToApplyPayment().
+                submitAndNavigateToApplyPaymentConfirmationPage(paymentParameters).
+                submitAndNavigateToLoanAccountDetailsPage();
+    }
+
+    public PaymentParameters setPaymentParams(String amount, ReadableInstant paymentDate) {
+        String dd = DateTimeFormat.forPattern("dd").print(paymentDate);
+        String mm = DateTimeFormat.forPattern("MM").print(paymentDate);
+        String yyyy = DateTimeFormat.forPattern("yyyy").print(paymentDate);
+
+        PaymentParameters paymentParameters = new PaymentParameters();
+        paymentParameters.setAmount(amount);
+        paymentParameters.setTransactionDateDD(dd);
+        paymentParameters.setTransactionDateMM(mm);
+        paymentParameters.setTransactionDateYYYY(yyyy);
+        paymentParameters.setPaymentType(PaymentParameters.CASH);
+        return paymentParameters;
+    }
+
+    public DisburseLoanParameters setDisbursalParams(ReadableInstant validDisbursalDate) {
+        DisburseLoanParameters disburseLoanParameters = new DisburseLoanParameters();
+        String dd = DateTimeFormat.forPattern("dd").print(validDisbursalDate);
+        String mm = DateTimeFormat.forPattern("MM").print(validDisbursalDate);
+        String yyyy = DateTimeFormat.forPattern("yyyy").print(validDisbursalDate);
+
+        disburseLoanParameters.setDisbursalDateDD(dd);
+        disburseLoanParameters.setDisbursalDateMM(mm);
+        disburseLoanParameters.setDisbursalDateYYYY(yyyy);
+        disburseLoanParameters.setPaymentType(DisburseLoanParameters.CASH);
+        return disburseLoanParameters;
+    }
+
+    public void disburseLoan(DateTime disbursalDate) throws UnsupportedEncodingException {
+        setApplicationTime(disbursalDate).navigateBack();
+        DisburseLoanParameters disburseLoanParameters = setDisbursalParams(disbursalDate);
+        new LoanAccountPage(selenium).navigateToDisburseLoan().
+        submitAndNavigateToDisburseLoanConfirmationPage(disburseLoanParameters).submitAndNavigateToLoanAccountPage();
+    }
+
+    public EditLoanAccountStatusParameters setApprovedStatusParameters() {
+        EditLoanAccountStatusParameters loanAccountStatusParameters = new EditLoanAccountStatusParameters();
+        loanAccountStatusParameters.setStatus(EditLoanAccountStatusParameters.APPROVED);
+        loanAccountStatusParameters.setNote("test notes");
+        return loanAccountStatusParameters;
+    }
+
+    public LoanAccountPage approveLoan(){
+        return new LoanAccountPage(selenium).
+                navigateToEditAccountStatus().
+                submitAndNavigateToNextPage(setApprovedStatusParameters()).
+                submitAndNavigateToLoanAccountPage();
+    }
+
+    public LoanAccountPage applyCharges(String feeName, String amount) {
+        ChargeParameters chargeParameters = new ChargeParameters();
+        chargeParameters.setType(feeName);
+        chargeParameters.setAmount(amount);
+        return new LoanAccountPage(selenium).navigateToApplyCharge().submitAndNavigateToApplyChargeConfirmationPage(chargeParameters);
     }
 }
