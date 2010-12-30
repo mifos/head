@@ -12,7 +12,18 @@
 		<link>
 			<name>pom.xml</name>
 			<type>1</type>
-			<locationURI>PARENT-1-PROJECT_LOC/pom.xml</locationURI>
+			<locationURI>ROOT_LOC/pom.xml</locationURI>
+		</link>
+		<link>
+			<name>pom.xml.readme.txt</name>
+			<type>1</type>
+			<locationURI>PARENT-1-PROJECT_LOC/pom.xml.readme.txt</locationURI>
 		</link>
 	</linkedResources>
+	<variableList>
+		<variable>
+			<name>ROOT_LOC</name>
+			<value>$%7BPARENT-1-PROJECT_LOC%7D</value>
+		</variable>
+	</variableList>
 </projectDescription>

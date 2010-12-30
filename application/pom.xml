@@ -668,10 +668,6 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <defaultGoal>war:war</defaultGoal>
-        <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
-        <testSourceDirectory>${basedir}/src/test/java</testSourceDirectory>
-        <outputDirectory>${basedir}/target/mifos-webapp/WEB-INF/classes</outputDirectory>
-        <testOutputDirectory>${basedir}/target/test-classes</testOutputDirectory>
 
         <resources>
             <resource>

@@ -1,12 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    
     <groupId>org.mifos</groupId>
     <artifactId>mifos-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.8-SNAPSHOT</version>
     <name>Mifos - Parent</name>
     <description>Mifos is a Web application and platform for microfinance portfolio management.</description>
+    
+    <organization>
+        <name>Mifos</name>
+        <url>http://mifos.org</url>
+    </organization>
     <issueManagement>
         <system>JIRA</system>
         <url>http://mifosforge.jira.com/</url>
@@ -35,7 +41,9 @@
         <spring.sec.version>3.0.4.RELEASE</spring.sec.version>
         <spring.web.version>2.2.1.RELEASE</spring.web.version>
         <slf4j.version>1.6.1</slf4j.version>
+        <varying.target.dir>target</varying.target.dir>
     </properties>
+    
     <modules>
         <module>common</module>
         <module>domain-dto</module>
@@ -52,6 +60,61 @@
         <module>acceptanceTests</module>
     </modules>
 
+	<!-- Details about the m2e profiles
+		are documented in the pom.xml.readme.txt,
+		and http://mifosforge.jira.com/wiki/display/~vorburger/WorkspaceSettings,
+		for http://mifosforge.jira.com/browse/MIFOS-4099 -->
+	<profiles>
+		<profile>
+			<id>eclipse-folders</id>
+			<activation>
+				<property>
+					<name>m2e.version</name>
+				</property>
+			</activation>
+			<properties>
+				<!-- See pom.xml.readme.txt; override in case we're running inside Eclipse. 
+					This directory HAS TO MATCH what is in an Eclipse project's .classpath -->
+				<varying.target.dir>targetEclipse</varying.target.dir>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>m2e</id>
+			<activation>
+				<property>
+					<name>m2e.version</name>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.maven.ide.eclipse</groupId>
+						<artifactId>lifecycle-mapping</artifactId>
+						<version>0.10.0</version>
+						<configuration>
+							<mappingId>customizable</mappingId>
+							<configurators>
+								<configurator id='org.maven.ide.eclipse.jdt.javaConfigurator' />
+							</configurators>
+							<!-- Actually, no thank you very much, do not copy resources for me! 
+								(It slows down and doesn't even work well anyway...) <mojoExecutions> <mojoExecution>org.apache.maven.plugins:maven-resources-plugin::</mojoExecution> 
+								</mojoExecutions> -->
+						</configuration>
+					</plugin>
+				</plugins>
+				<pluginManagement>
+					<plugins>
+						<!-- Actually if we don't do <mojoExecution>org.apache.maven.plugins:maven-resources-plugin::</mojoExecution> 
+							above, then we also don't really have to fix the maven-resources-plugin version 
+							here... <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-resources-plugin</artifactId> 
+							<version>2.4</version> </plugin> -->
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
+    
     <!--
         Only mention our repository, following "open source" guidance at
         http://www.sonatype.com/people/2009/02/why-putting-repositories-in-your-poms-is-a-bad-idea/ "If you are exposing
@@ -407,12 +470,9 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <organization>
-        <name>Mifos</name>
-        <url>http://mifos.org</url>
-    </organization>
-
+    
     <build>
+        <directory>${basedir}/${varying.target.dir}</directory>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -436,6 +496,7 @@
             </plugins>
         </pluginManagement>
     </build>
+    
     <reporting>
         <plugins>
             <plugin>

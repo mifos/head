@@ -109,8 +109,6 @@
     </dependencies>
     <build>
         <defaultGoal>jar</defaultGoal>
-        <sourceDirectory>src/main/java</sourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
         <resources>
             <resource>
                 <directory>do-not-inherit-from-parent</directory>

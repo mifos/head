@@ -108,11 +108,6 @@
 
     <build>
         <defaultGoal>jar</defaultGoal>
-        <sourceDirectory>${modules.root.dir}/cashflow/src/main/java</sourceDirectory>
-        <scriptSourceDirectory>${modules.root.dir}/cashflow/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>${modules.root.dir}/cashflow/src/test/java</testSourceDirectory>
-        <outputDirectory>target/classes</outputDirectory>
-        <testOutputDirectory>target/test-classes</testOutputDirectory>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
