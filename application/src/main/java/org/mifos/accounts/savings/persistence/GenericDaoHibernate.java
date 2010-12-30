@@ -40,7 +40,7 @@ public class GenericDaoHibernate implements GenericDao {
             final Map<String, ?> nameQueryParameters, final Class<?> className) {
 
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
+            Session session = getSession();
             Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(className));
             query.setProperties(nameQueryParameters);
             return query.list();
@@ -54,7 +54,7 @@ public class GenericDaoHibernate implements GenericDao {
             final Map<String, ?> nameQueryParameters, final Class<?> className) {
 
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
+            Session session = getSession();
             Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(className));
             query.setProperties(nameQueryParameters);
             return query.uniqueResult();
@@ -68,7 +68,7 @@ public class GenericDaoHibernate implements GenericDao {
     public final List<? extends Object> executeNamedQuery(final String queryName, final Map<String, ?> queryParameters) {
 
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
+            Session session = getSession();
             Query query = session.getNamedQuery(queryName);
             query.setProperties(queryParameters);
             return query.list();
@@ -82,7 +82,7 @@ public class GenericDaoHibernate implements GenericDao {
     public final Iterator<? extends Object> executeNamedQueryIterator(final String queryName, final Map<String, ?> queryParameters) {
 
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
+            Session session = getSession();
             Query query = session.getNamedQuery(queryName);
             query.setProperties(queryParameters);
             return query.iterate();
@@ -96,7 +96,7 @@ public class GenericDaoHibernate implements GenericDao {
             final Map<String, ?> queryParameters) {
 
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
+            Session session = getSession();
             Query query = session.getNamedQuery(queryName);
             query.setProperties(queryParameters);
             return query.uniqueResult();
@@ -107,7 +107,7 @@ public class GenericDaoHibernate implements GenericDao {
 
     @Override
     public void delete(final Object entity) {
-        Session session = StaticHibernateUtil.getSessionTL();
+        Session session = getSession();
         try {
             session.delete(entity);
         } catch (Exception he) {
@@ -118,7 +118,7 @@ public class GenericDaoHibernate implements GenericDao {
     @Override
     public final void createOrUpdate(final Object entity) {
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
+            Session session = getSession();
             session.saveOrUpdate(entity);
             if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
                 StaticHibernateUtil.getInterceptor().createChangeValueMap(entity);
@@ -132,5 +132,10 @@ public class GenericDaoHibernate implements GenericDao {
     public final Query createQueryForUpdate(String hql) {
         Session session = StaticHibernateUtil.getSessionTL();
         return session.createQuery(hql);
+    }
+
+    @Override
+    public Session getSession() {
+        return StaticHibernateUtil.getSessionTL();
     }
 }

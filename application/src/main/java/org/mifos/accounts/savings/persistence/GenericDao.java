@@ -20,6 +20,7 @@
 package org.mifos.accounts.savings.persistence;
 
 import org.hibernate.Query;
+import org.hibernate.Session;
 
 import java.util.Iterator;
 import java.util.List;
@@ -45,6 +46,8 @@ public interface GenericDao {
     Query createQueryForUpdate(String hql);
 
     void delete(Object entity);
+
+    Session getSession();
 
     Iterator<? extends Object> executeNamedQueryIterator(String queryName, Map<String, ?> queryParameters);
 }
