@@ -41,6 +41,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -401,10 +402,8 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", getRoles(), customFieldDto, new Name("XYZ", null, null, "ABC"), "111111", date,
                 Integer.valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
-        personnel.save();
-        StaticHibernateUtil.flushSession();
-        personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
-        return personnel;
+        IntegrationTestObjectMother.createPersonnel(personnel);
+        return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
     }
 
     public List<RoleBO> getRoles() throws Exception {

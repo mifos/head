@@ -81,10 +81,13 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         queryParameters.put("PERSONNEL_ID", id);
 
         PersonnelBO personnel = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery("findPersonnelById", queryParameters);
-        Hibernate.initialize(personnel.getPreferredLocale());
-        if (personnel.getPreferredLocale() != null) {
+        if (personnel != null ) {
+            Hibernate.initialize(personnel.getPreferredLocale());
+            if (personnel.getPreferredLocale() != null) {
+                Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
+                Hibernate.initialize(personnel.getPreferredLocale().getLookUpValue());
+            }
             Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
-            Hibernate.initialize(personnel.getPreferredLocale().getLookUpValue());
         }
         return personnel;
     }
@@ -158,10 +161,13 @@ public class PersonnelDaoHibernate implements PersonnelDao {
         queryParameters.put("globalPersonnelNum", globalNumber);
 
         PersonnelBO personnel = (PersonnelBO) this.genericDao.executeUniqueResultNamedQuery(NamedQueryConstants.PERSONNEL_BY_SYSTEM_ID, queryParameters);
-        Hibernate.initialize(personnel.getPreferredLocale());
-        if (personnel.getPreferredLocale() != null) {
+        if (personnel != null ) {
+            Hibernate.initialize(personnel.getPreferredLocale());
+            if (personnel.getPreferredLocale() != null) {
+                Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
+                Hibernate.initialize(personnel.getPreferredLocale().getLookUpValue());
+            }
             Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
-            Hibernate.initialize(personnel.getPreferredLocale().getLookUpValue());
         }
         return personnel;
     }

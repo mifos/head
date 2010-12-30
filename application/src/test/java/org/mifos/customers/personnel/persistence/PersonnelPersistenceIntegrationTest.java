@@ -64,6 +64,7 @@ import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.util.UserContext;
@@ -103,35 +104,6 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         personnel = null;
         createdBranchOffice = null;
         StaticHibernateUtil.flushSession();
-    }
-
-    @Test
-    public void testCreatePersonnel() throws Exception {
-        UserContext userContext = TestUtils.makeUser();
-        OfficeTemplate officeTemplate = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
-        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
-        OfficeBO office = officePersistence.createOffice(userContext, officeTemplate);
-        PersonnelTemplate template = PersonnelTemplateImpl.createNonUniquePersonnelTemplate(office.getOfficeId());
-        PersonnelBO personnel = personnelPersistence.createPersonnel(userContext, template);
-
-        Assert.assertNotNull(personnel.getPersonnelId());
-        Assert.assertTrue(personnel.isActive());
-        Assert.assertFalse(personnel.isPasswordChanged());
-        Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
-    }
-
-    @Test
-    public void testCreatePersonnelValidationFailure() throws Exception {
-        UserContext userContext = TestUtils.makeUser();
-        PersonnelTemplate template = PersonnelTemplateImpl.createNonUniquePersonnelTemplate(new Short((short) -1));
-        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
-        try {
-            PersonnelBO personnel = personnelPersistence.createPersonnel(userContext, template);
-            Assert.fail("Should not have been able to create personnel " + personnel.getDisplayName());
-        } catch (ValidationException e) {
-            Assert.assertTrue(e.getMessage().equals(PersonnelConstants.OFFICE));
-        }
-        Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
     }
 
     @Test
@@ -326,10 +298,8 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
         personnel = new PersonnelBO(personnelLevel, office, Integer.valueOf("1"), Short.valueOf("1"), "ABCD", "XYZ",
                 "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"), Integer
                         .valueOf("1"), date, date, address, createdBy);
-        personnel.save();
-        StaticHibernateUtil.flushSession();
-        personnel = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class, personnel.getPersonnelId());
-        return personnel;
+        IntegrationTestObjectMother.createPersonnel(personnel);
+        return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
     }
 
     private void createCustomers(final CustomerStatus groupStatus, final CustomerStatus clientStatus) {

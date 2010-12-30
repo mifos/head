@@ -58,6 +58,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -66,6 +67,15 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.Money;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -126,7 +136,7 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.flushAndClearSession();
 
-        
+
     }
 
     @Test
@@ -398,22 +408,6 @@ public class CustomerBOIntegrationTest extends MifosIntegrationTestCase {
         LoanOfferingBO loanOffering = TestObjectFactory.createLoanOffering(startDate, meeting);
         return TestObjectFactory.createIndividualLoanAccount("42423142341", customer,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, startDate, loanOffering);
-
-    }
-
-    private void createPersonnel(PersonnelLevel personnelLevel) throws Exception {
-        List<CustomFieldDto> customFieldDto = new ArrayList<CustomFieldDto>();
-        customFieldDto.add(new CustomFieldDto(Short.valueOf("9"), "123456", CustomFieldType.NUMERIC.getValue()));
-        Address address = new Address("abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd", "abcd");
-        Name name = new Name("XYZ", null, null, "Last Name");
-        java.util.Date date = new java.util.Date();
-        loanOfficer = new PersonnelBO(personnelLevel, getBranchOffice(), Integer.valueOf("1"), Short.valueOf("1"),
-                "ABCD", "XYZ", "xyz@yahoo.com", null, customFieldDto, name, "111111", date, Integer.valueOf("1"),
-                Integer.valueOf("1"), date, date, address, Short.valueOf("1"));
-        loanOfficer.save();
-        StaticHibernateUtil.flushAndClearSession();
-        loanOfficer = (PersonnelBO) StaticHibernateUtil.getSessionTL().get(PersonnelBO.class,
-                loanOfficer.getPersonnelId());
 
     }
 
