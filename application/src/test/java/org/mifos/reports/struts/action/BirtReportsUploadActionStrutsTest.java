@@ -62,6 +62,10 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Autowired

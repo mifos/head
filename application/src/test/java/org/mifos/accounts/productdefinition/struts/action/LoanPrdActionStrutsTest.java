@@ -76,6 +76,17 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
+import java.io.IOException;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
 public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
 
