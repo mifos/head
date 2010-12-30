@@ -87,7 +87,6 @@ public class PersonnelDaoHibernate implements PersonnelDao {
                 Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
                 Hibernate.initialize(personnel.getPreferredLocale().getLookUpValue());
             }
-            Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
         }
         return personnel;
     }
@@ -167,7 +166,6 @@ public class PersonnelDaoHibernate implements PersonnelDao {
                 Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
                 Hibernate.initialize(personnel.getPreferredLocale().getLookUpValue());
             }
-            Hibernate.initialize(personnel.getPreferredLocale().getLanguage());
         }
         return personnel;
     }
