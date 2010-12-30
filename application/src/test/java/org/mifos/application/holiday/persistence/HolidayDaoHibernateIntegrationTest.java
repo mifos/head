@@ -25,6 +25,7 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
@@ -122,6 +123,7 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertThat(holidays.size() - initialCount, is(1));
     }
 
+    @Ignore
     @Test
     public void shouldFindAllHolidaysOrderedByFromDateAscending() throws Exception {
         DateTime secondlastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight()
@@ -163,7 +165,8 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
         assertTrue(futureHolidays.get(0).encloses(secondOfJanNextYear.toDate()));
         assertTrue(futureHolidays.get(1).encloses(thirdOfJanNextYear.toDate()));
     }
-    
+
+    @Ignore
     @Test
     public void shouldFindWhetherGivenDateIsAHoliday() {
         Short officeId = Short.valueOf("1");
