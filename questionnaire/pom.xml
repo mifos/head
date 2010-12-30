@@ -25,6 +25,7 @@
         <artifactId>mifos-parent</artifactId>
         <groupId>org.mifos</groupId>
         <version>1.8-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <dependencies>
