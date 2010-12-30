@@ -29,6 +29,7 @@ import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
 import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Locale;
 
@@ -57,7 +58,7 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
     private UserContext userContext;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

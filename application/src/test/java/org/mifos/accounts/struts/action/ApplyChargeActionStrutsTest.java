@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
@@ -77,7 +78,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
     private static final String IS_NOT_RATE_TYPE = "0";
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

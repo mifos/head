@@ -31,6 +31,7 @@ import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
 import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -162,7 +163,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     private HttpServletRequest requestMock;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

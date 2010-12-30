@@ -23,6 +23,7 @@ package org.mifos.accounts.struts.action;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
+import java.io.IOException;
 import java.sql.Date;
 import java.util.List;
 
@@ -90,7 +91,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
     private String flowKey;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

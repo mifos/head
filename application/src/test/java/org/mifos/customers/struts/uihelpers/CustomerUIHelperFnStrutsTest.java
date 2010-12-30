@@ -20,6 +20,7 @@
 
 package org.mifos.customers.struts.uihelpers;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +71,7 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
     private UserContext userContext;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }

@@ -20,6 +20,7 @@
 
 package org.mifos.customers.client.struts.action;
 
+import java.io.IOException;
 import java.util.List;
 
 import junit.framework.Assert;
@@ -61,7 +62,7 @@ public class ClientTransferActionStrutsTest extends MifosMockStrutsTestCase {
     private String flowKey;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }

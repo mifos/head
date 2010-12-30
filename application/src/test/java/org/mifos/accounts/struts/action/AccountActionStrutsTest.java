@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -65,7 +66,7 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
     private String flowKey;
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }

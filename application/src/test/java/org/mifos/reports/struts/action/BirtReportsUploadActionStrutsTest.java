@@ -20,6 +20,7 @@
 
 package org.mifos.reports.struts.action;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,7 +75,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Override
-    protected void setStrutsConfig() {
+    protected void setStrutsConfig() throws IOException {
         super.setStrutsConfig();
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
     }
