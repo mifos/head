@@ -21,8 +21,11 @@
 package org.mifos.application.servicefacade;
 
 import org.mifos.dto.domain.ChangePasswordRequest;
+import org.mifos.dto.domain.LoginDto;
 
 public interface NewLoginServiceFacade {
+
+    LoginDto login(String userName, String password);
 
     void changePassword(ChangePasswordRequest changePasswordRequest);
 

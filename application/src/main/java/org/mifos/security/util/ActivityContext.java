@@ -89,5 +89,4 @@ public class ActivityContext implements Serializable {
         this.activityId = activityId;
         this.recordOfficeId = recordOfficeId;
     }
-
 }

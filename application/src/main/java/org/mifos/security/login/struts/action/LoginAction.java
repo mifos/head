@@ -27,8 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -36,16 +34,13 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.admin.system.ShutdownManager;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.mifos.application.servicefacade.LoginActivityDto;
-import org.mifos.application.servicefacade.LegacyLoginServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.Localization;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.framework.business.service.BusinessService;
+import org.mifos.dto.domain.LoginDto;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
@@ -57,8 +52,11 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.struts.actionforms.LoginActionForm;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActionSecurity;
+import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * remove {@link LoginActionForm} and LoginFilter, LoginFilterStrutsTest when deleting {@link LoginAction}.
@@ -66,18 +64,6 @@ import org.mifos.security.util.UserContext;
 public class LoginAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginAction.class);
-
-    private final LegacyLoginServiceFacade loginServiceFacade = DependencyInjectedServiceLocator.locationLoginServiceFacade();
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
-        return true;
-    }
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return getPersonnelBizService();
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("loginAction");
@@ -116,26 +102,40 @@ public class LoginAction extends BaseAction {
         String userName = loginActionForm.getUserName();
         String password = loginActionForm.getPassword();
 
-        LoginActivityDto loginActivity = loginServiceFacade.login(userName, password);
+        LoginDto loginDto = loginServiceFacade.login(userName, password);
 
-        request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, loginActivity.getActivityContext());
+        PersonnelBO user = this.personnelDao.findPersonnelById(loginDto.getUserId());
+        ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
+        request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, activityContext);
 
-        UserContext userContext = loginActivity.getUserContext();
-        if (loginActivity.isPasswordChanged()) {
+        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
+        Short localeId = Localization.getInstance().getLocaleId();
+        UserContext userContext = new UserContext(preferredLocale, localeId);
+        userContext.setId(user.getPersonnelId());
+        userContext.setName(user.getDisplayName());
+        userContext.setLevel(user.getLevelEnum());
+        userContext.setRoles(user.getRoles());
+        userContext.setLastLogin(user.getLastLogin());
+        userContext.setPasswordChanged(user.getPasswordChanged());
+        userContext.setBranchId(user.getOffice().getOfficeId());
+        userContext.setBranchGlobalNum(user.getOffice().getGlobalOfficeNum());
+        userContext.setOfficeLevelId(user.getOffice().getLevel().getId());
+
+        if (loginDto.isPasswordChanged()) {
             setUserContextInSession(userContext, request);
         } else {
             SessionUtils.setAttribute(Constants.TEMPUSERCONTEXT, userContext, request);
         }
 
         //  set flow
-        Short passwordChanged = loginActivity.getPasswordChangedFlag();
+        Short passwordChanged = user.getPasswordChanged();
         if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
             FlowManager flowManager = (FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER);
             flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
             request.setAttribute(Constants.CURRENTFLOWKEY, null);
         }
 
-        final String loginForward = getLoginForward(loginActivity.getPasswordChangedFlag());
+        final String loginForward = getLoginForward(user.getPasswordChanged());
 
         return mapping.findForward(loginForward);
     }
@@ -181,7 +181,7 @@ public class LoginAction extends BaseAction {
         }
         String oldPassword = loginActionForm.getOldPassword();
         String newpassword = loginActionForm.getNewPassword();
-        PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(userName);
+        PersonnelBO personnelBO = this.personnelDao.findPersonnelByUsername(userName);
         if (personnelBO.isPasswordChanged()) {
             userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
         } else {
@@ -203,8 +203,12 @@ public class LoginAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward cancel(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        PersonnelBO personnelBO = getPersonnelBizService().getPersonnel(((LoginActionForm) form).getUserName());
-        return mapping.findForward(getCancelForward(personnelBO.getPasswordChanged()));
+
+        String username = ((LoginActionForm) form).getUserName();
+
+        PersonnelBO personnelBO = this.personnelDao.findPersonnelByUsername(username);
+        String actionForward = getCancelForward(personnelBO.getPasswordChanged());
+        return mapping.findForward(actionForward);
     }
 
     public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
@@ -217,10 +221,6 @@ public class LoginAction extends BaseAction {
             return mapping.findForward(ActionForwards.updatePassword_failure.toString());
         }
         return null;
-    }
-
-    private PersonnelBusinessService getPersonnelBizService() {
-        return new PersonnelBusinessService();
     }
 
     private void setUserContextInSession(UserContext userContext, HttpServletRequest request) {

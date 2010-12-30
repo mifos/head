@@ -64,6 +64,7 @@ import org.mifos.application.servicefacade.GroupServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.servicefacade.MeetingServiceFacade;
+import org.mifos.application.servicefacade.NewLoginServiceFacade;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
@@ -119,6 +120,7 @@ public abstract class BaseAction extends DispatchAction {
     protected LoanDao loanDao = DependencyInjectedServiceLocator.locateLoanDao();
     protected LoanProductDao loanProductDao = DependencyInjectedServiceLocator.locateLoanProductDao();
     protected SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
+    protected NewLoginServiceFacade loginServiceFacade = DependencyInjectedServiceLocator.locationLoginServiceFacade();
     protected PersonnelServiceFacade personnelServiceFacade = DependencyInjectedServiceLocator.locatePersonnelServiceFacade();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
     protected CenterServiceFacade centerServiceFacade = DependencyInjectedServiceLocator.locateCenterServiceFacade();
@@ -153,6 +155,7 @@ public abstract class BaseAction extends DispatchAction {
             this.loanDao = springAppContext.getBean(LoanDao.class);
             this.loanProductDao = springAppContext.getBean(LoanProductDao.class);
             this.savingsProductDao = springAppContext.getBean(SavingsProductDao.class);
+            this.loginServiceFacade = springAppContext.getBean(NewLoginServiceFacade.class);
             this.personnelServiceFacade = springAppContext.getBean(PersonnelServiceFacade.class);
             this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
             this.centerServiceFacade = springAppContext.getBean(CenterServiceFacade.class);

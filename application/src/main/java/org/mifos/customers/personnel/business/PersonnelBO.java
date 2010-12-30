@@ -26,7 +26,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,9 +33,7 @@ import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.LockStatus;
@@ -56,7 +53,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.authentication.EncryptionService;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -431,85 +427,6 @@ public class PersonnelBO extends AbstractBusinessObject {
         return notes;
     }
 
-    private void validateForUpdate(final PersonnelStatus newStatus, final OfficeBO newOffice, final PersonnelLevel newLevel)
-            throws PersonnelException {
-
-        if (!level.getId().equals(newLevel.getValue())) {
-            validateUserHierarchyChange(newLevel, newOffice);
-        }
-
-        if (!office.getOfficeId().equals(newOffice.getOfficeId())) {
-            validateOfficeTransfer(newOffice, newLevel);
-        }
-
-        if (getStatusAsEnum() != newStatus) {
-            validateStatusChange(newStatus, newLevel, newOffice);
-        }
-    }
-
-    private void validateStatusChange(final PersonnelStatus newStatus, final PersonnelLevel newLevel, final OfficeBO newOffice)
-            throws PersonnelException {
-
-        try {
-            if (getStatusAsEnum() == PersonnelStatus.ACTIVE && newStatus.equals(PersonnelStatus.INACTIVE)
-                    && newLevel.equals(PersonnelLevel.LOAN_OFFICER)) {
-                if (new PersonnelPersistence().getActiveChildrenForLoanOfficer(personnelId, office.getOfficeId())) {
-                    throw new PersonnelException(PersonnelConstants.STATUS_CHANGE_EXCEPTION);
-                }
-            } else if (getStatusAsEnum() == PersonnelStatus.INACTIVE && newStatus.equals(PersonnelStatus.ACTIVE)
-                    && !newOffice.isActive()) {
-                Object values[] = new Object[1];
-                values[0] = newOffice.getOfficeId();
-                throw new PersonnelException(PersonnelConstants.INACTIVE_BRANCH, values);
-            }
-        } catch (PersistenceException e) {
-            throw new PersonnelException(e);
-
-        }
-    }
-
-    private void validateOfficeTransfer(final OfficeBO newOffice, final PersonnelLevel newLevel) throws PersonnelException {
-        try {
-
-            if (newLevel.equals(PersonnelLevel.LOAN_OFFICER)) {
-                if (!newOffice.getLevel().getId().equals(OfficeLevel.BRANCHOFFICE.getValue())) {
-                    Object values[] = new Object[1];
-                    values[0] = globalPersonnelNum;
-                    throw new PersonnelException(PersonnelConstants.LO_ONLY_IN_BRANCHES, values);
-                }
-            }
-            if (new PersonnelPersistence().getActiveChildrenForLoanOfficer(personnelId, office.getOfficeId())) {
-                Object values[] = new Object[1];
-                values[0] = globalPersonnelNum;
-                throw new PersonnelException(PersonnelConstants.TRANSFER_NOT_POSSIBLE_EXCEPTION, values);
-            }
-        } catch (PersistenceException e) {
-            throw new PersonnelException(e);
-        }
-
-    }
-
-    private void validateUserHierarchyChange(final PersonnelLevel newLevel, final OfficeBO officeId) throws PersonnelException {
-        try {
-            if (level.getId().equals(PersonnelLevel.LOAN_OFFICER.getValue())
-                    && newLevel.equals(PersonnelLevel.NON_LOAN_OFFICER)) {
-                if (new PersonnelPersistence().getAllChildrenForLoanOfficer(personnelId, getOffice().getOfficeId())) {
-                    throw new PersonnelException(PersonnelConstants.HIERARCHY_CHANGE_EXCEPTION);
-                }
-            } else if (level.getId().equals(PersonnelLevel.NON_LOAN_OFFICER.getValue())
-                    && newLevel.equals(PersonnelLevel.LOAN_OFFICER)
-                    && !officeId.getLevel().getId().equals(OfficeLevel.BRANCHOFFICE.getValue())) {
-                Object values[] = new Object[1];
-                values[0] = globalPersonnelNum;
-                throw new PersonnelException(PersonnelConstants.LO_ONLY_IN_BRANCHES, values);
-
-            }
-        } catch (PersistenceException e) {
-            throw new PersonnelException(e);
-        }
-
-    }
-
     public PersonnelMovementEntity getActiveCustomerMovement() {
         PersonnelMovementEntity movement = null;
         for (PersonnelMovementEntity personnelMovementEntity : personnelMovements) {
@@ -521,20 +438,6 @@ public class PersonnelBO extends AbstractBusinessObject {
         return movement;
     }
 
-    private void makePersonalMovementEntries(final OfficeBO newOffice, final Short updatedById) {
-        PersonnelMovementEntity currentPersonnelMovement = getActiveCustomerMovement();
-        if (currentPersonnelMovement == null) {
-            currentPersonnelMovement = new PersonnelMovementEntity(this, getCreatedDate());
-            this.addPersonnelMovement(currentPersonnelMovement);
-        }
-
-        currentPersonnelMovement.makeInActive(updatedById);
-        this.office = newOffice;
-        PersonnelMovementEntity newPersonnelMovement = new PersonnelMovementEntity(this, new DateTimeService()
-                .getCurrentJavaDateTime());
-        this.addPersonnelMovement(newPersonnelMovement);
-    }
-
     public boolean isActive() {
         return getStatusAsEnum() == PersonnelStatus.ACTIVE;
     }
@@ -543,9 +446,8 @@ public class PersonnelBO extends AbstractBusinessObject {
         return getLevelEnum() == PersonnelLevel.LOAN_OFFICER;
     }
 
-    public UserContext login(final String password) throws PersonnelException {
+    public void login(final String password) throws PersonnelException {
         logger.debug("Trying to login");
-        UserContext userContext = null;
         if (!isActive()) {
             throw new PersonnelException(LoginConstants.KEYUSERINACTIVE);
         }
@@ -557,9 +459,7 @@ public class PersonnelBO extends AbstractBusinessObject {
             throw new PersonnelException(LoginConstants.INVALIDOLDPASSWORD);
         }
         resetNoOfTries();
-        userContext = setUserContext();
-        logger.info("Login successful for user=" + userContext.getName() + ", branchID=" + userContext.getBranchId());
-        return userContext;
+        logger.info("Login successful for user=" + this.userName + ", branchID=" + this.office.getGlobalOfficeNum());
     }
 
     /**
@@ -639,7 +539,7 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
     }
 
-    private void updateLastPersonnelLoggedin() throws PersonnelException {
+    public void updateLastPersonnelLoggedin() throws PersonnelException {
         logger.debug("Updating lastLogin");
         try {
             this.lastLogin = new DateTimeService().getCurrentJavaDateTime();
@@ -649,36 +549,11 @@ public class PersonnelBO extends AbstractBusinessObject {
         }
     }
 
-    private UserContext setUserContext() throws PersonnelException {
-        logger.debug("Setting  usercontext");
-        // the locales will be set when the UserContext is instantiated
-        // and if the user chooses a locale UserContext will be instantiated
-        // with his locale
-        Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
-        Short localeId = Localization.getInstance().getLocaleId();
-        UserContext userContext = new UserContext(preferredLocale, localeId);
-        userContext.setId(getPersonnelId());
-        userContext.setName(getDisplayName());
-        userContext.setLevel(getLevelEnum());
-        userContext.setRoles(getRoles());
-        userContext.setLastLogin(getLastLogin());
-        userContext.setPasswordChanged(getPasswordChanged());
-        if (LoginConstants.PASSWORDCHANGEDFLAG.equals(getPasswordChanged())) {
-            updateLastPersonnelLoggedin();
-        }
-
-        userContext.setBranchId(getOffice().getOfficeId());
-        userContext.setBranchGlobalNum(getOffice().getGlobalOfficeNum());
-        userContext.setOfficeLevelId(getOffice().getLevel().getId());
-        logger.debug("got usercontext");
-        return userContext;
-    }
-
     public Short getLocaleId() {
         return getPreferredLocale().getLocaleId();
     }
 
-    private Set<Short> getRoles() {
+    public Set<Short> getRoles() {
         Set<Short> roles = new HashSet<Short>();
         for (PersonnelRoleEntity personnelRole : getPersonnelRoles()) {
             roles.add(personnelRole.getRole().getId());

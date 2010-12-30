@@ -22,8 +22,8 @@ package org.mifos.security.authentication;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.mifos.application.servicefacade.LoginActivityDto;
-import org.mifos.security.login.util.helpers.LoginConstants;
+
+import org.mifos.dto.domain.LoginDto;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 /**
@@ -36,10 +36,9 @@ public class MifosAuthenticationSuccessHandler extends SavedRequestAwareAuthenti
 
         String targetUrl = super.determineTargetUrl(request, response);
 
-        LoginActivityDto loginActivity = (LoginActivityDto) request.getAttribute("activityDto");
+        LoginDto loginActivity = (LoginDto) request.getAttribute("activityDto");
 
-        Short passwordChanged = loginActivity.getPasswordChangedFlag();
-        if (null != passwordChanged && LoginConstants.FIRSTTIMEUSER.equals(passwordChanged)) {
+        if (!loginActivity.isPasswordChanged()) {
             targetUrl = "/changePassword.ftl?username=" + request.getAttribute("username");
         }
 

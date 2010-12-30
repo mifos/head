@@ -21,7 +21,9 @@
 package org.mifos.security.authentication;
 
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Random;
+
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -31,10 +33,12 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.mifos.application.admin.system.ShutdownManager;
-import org.mifos.application.servicefacade.LoginActivityDto;
-import org.mifos.application.servicefacade.LegacyLoginServiceFacade;
+import org.mifos.application.servicefacade.NewLoginServiceFacade;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
+import org.mifos.dto.domain.LoginDto;
 import org.mifos.framework.components.batchjobs.MifosBatchJob;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.DateTimeService;
@@ -43,6 +47,7 @@ import org.mifos.framework.util.helpers.Flow;
 import org.mifos.framework.util.helpers.FlowManager;
 import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationServiceException;
@@ -59,9 +64,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  */
 public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-    final LegacyLoginServiceFacade loginServiceFacade;
+    final NewLoginServiceFacade loginServiceFacade;
 
-    public MifosLegacyUsernamePasswordAuthenticationFilter(final LegacyLoginServiceFacade loginServiceFacade) {
+    public MifosLegacyUsernamePasswordAuthenticationFilter(final NewLoginServiceFacade loginServiceFacade) {
         super();
         this.loginServiceFacade = loginServiceFacade;
     }
@@ -129,12 +134,27 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
             request.getSession(false).setAttribute(Constants.FLOWMANAGER, flowManager);
             request.getSession(false).setAttribute(Constants.RANDOMNUM, new Random().nextLong());
 
-            LoginActivityDto loginActivity = loginServiceFacade.login(username, password);
+            LoginDto loginActivity = loginServiceFacade.login(username, password);
 
-            request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, loginActivity.getActivityContext());
+            PersonnelBO user =  new PersonnelPersistence().findPersonnelById(loginActivity.getUserId());
+
+            ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
+            request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, activityContext);
             request.setAttribute("activityDto", loginActivity);
 
-            UserContext userContext = loginActivity.getUserContext();
+            Locale preferredLocale = Localization.getInstance().getConfiguredLocale();
+            Short localeId = Localization.getInstance().getLocaleId();
+            UserContext userContext = new UserContext(preferredLocale, localeId);
+            userContext.setId(user.getPersonnelId());
+            userContext.setName(user.getDisplayName());
+            userContext.setLevel(user.getLevelEnum());
+            userContext.setRoles(user.getRoles());
+            userContext.setLastLogin(user.getLastLogin());
+            userContext.setPasswordChanged(user.getPasswordChanged());
+            userContext.setBranchId(user.getOffice().getOfficeId());
+            userContext.setBranchGlobalNum(user.getOffice().getGlobalOfficeNum());
+            userContext.setOfficeLevelId(user.getOffice().getLevel().getId());
+
             request.setAttribute(Constants.USERCONTEXT, userContext);
             request.getSession(false).setAttribute(Constants.USERCONTEXT, userContext);
 
@@ -146,8 +166,7 @@ public class MifosLegacyUsernamePasswordAuthenticationFilter extends UsernamePas
                 flowManager.addObjectToFlow(flowKey, Constants.TEMPUSERCONTEXT, userContext);
             }
 
-            Short passwordChanged = loginActivity.getPasswordChangedFlag();
-            if (null != passwordChanged && LoginConstants.PASSWORDCHANGEDFLAG.equals(passwordChanged)) {
+            if (loginActivity.isPasswordChanged()) {
                 flowManager.removeFlow((String) request.getAttribute(Constants.CURRENTFLOWKEY));
                 request.setAttribute(Constants.CURRENTFLOWKEY, null);
             }

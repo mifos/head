@@ -122,7 +122,7 @@ public class DependencyInjectedServiceLocator {
     private static CenterServiceFacade centerServiceFacade;
     private static GroupServiceFacade groupServiceFacade;
     private static ClientServiceFacade clientServiceFacade;
-    private static LegacyLoginServiceFacade loginServiceFacade;
+    private static NewLoginServiceFacade loginServiceFacade;
     private static MeetingServiceFacade meetingServiceFacade;
 
     private static HolidayServiceFacade holidayServiceFacade;
@@ -380,7 +380,7 @@ public class DependencyInjectedServiceLocator {
         return configurationBusinessService;
     }
 
-    public static LegacyLoginServiceFacade locationLoginServiceFacade() {
+    public static NewLoginServiceFacade locationLoginServiceFacade() {
         if (loginServiceFacade == null) {
             if (personnelService == null) {
                 personnelService = new PersonnelServiceImpl(personnelDao);

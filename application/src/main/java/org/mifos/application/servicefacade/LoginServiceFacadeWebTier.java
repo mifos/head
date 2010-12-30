@@ -25,15 +25,15 @@ import org.mifos.customers.personnel.business.service.PersonnelService;
 import org.mifos.customers.personnel.exceptions.PersonnelException;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.domain.ChangePasswordRequest;
-import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.dto.domain.LoginDto;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 /**
  *
  */
-public class LoginServiceFacadeWebTier implements LegacyLoginServiceFacade, NewLoginServiceFacade {
+public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
 
     private final PersonnelService personnelService;
     private final PersonnelDao personnelDao;
@@ -44,20 +44,24 @@ public class LoginServiceFacadeWebTier implements LegacyLoginServiceFacade, NewL
     }
 
     @Override
-    public LoginActivityDto login(String username, String password) throws ApplicationException {
+    public LoginDto login(String username, String password) {
 
         PersonnelBO user = this.personnelDao.findPersonnelByUsername(username);
         if (user == null) {
-            throw new ApplicationException(LoginConstants.KEYINVALIDUSER);
+            throw new BusinessRuleException(LoginConstants.KEYINVALIDUSER);
         }
 
         try {
-            UserContext userContext = user.login(password);
-            ActivityContext activityContext = new ActivityContext(Short.valueOf("0"), user.getOffice().getOfficeId(), user.getPersonnelId());
+            user.login(password);
 
-            return new LoginActivityDto(userContext, activityContext, user.getPasswordChanged());
+            boolean isPasswordChanged = user.getPasswordChanged() == Constants.YES ? true : false;
+            if (isPasswordChanged) {
+                user.updateLastPersonnelLoggedin();
+            }
+
+            return new LoginDto(user.getPersonnelId(), user.getOffice().getOfficeId(), isPasswordChanged);
         } catch (PersonnelException e) {
-            throw new ApplicationException(e.getKey());
+            throw new BusinessRuleException(e.getKey(), e);
         }
     }
 

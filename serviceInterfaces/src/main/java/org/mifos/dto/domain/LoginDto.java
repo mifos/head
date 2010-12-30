@@ -18,14 +18,29 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.dto.domain;
 
-import org.mifos.framework.exceptions.ApplicationException;
+public class LoginDto {
 
-/**
- *
- */
-public interface LegacyLoginServiceFacade {
+    private final Short userId;
+    private final Short officeId;
+    private final boolean passwordChanged;
 
-    LoginActivityDto login(String userName, String password) throws ApplicationException;
+    public LoginDto(Short userId, Short officeId, boolean isPasswordChanged) {
+        this.userId = userId;
+        this.officeId = officeId;
+        this.passwordChanged = isPasswordChanged;
+    }
+
+    public Short getUserId() {
+        return this.userId;
+    }
+
+    public Short getOfficeId() {
+        return this.officeId;
+    }
+
+    public boolean isPasswordChanged() {
+        return this.passwordChanged;
+    }
 }
