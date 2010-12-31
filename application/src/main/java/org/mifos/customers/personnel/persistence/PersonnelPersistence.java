@@ -51,12 +51,8 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 
 public class PersonnelPersistence extends Persistence {
-
-    // TODO : Move to PersonnelRoleEntity
-    private final RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
 
     /**
      * @deprecated - {@link PersonnelDao#findActiveLoanOfficersForOffice}
