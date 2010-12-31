@@ -27,7 +27,7 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
 
 /**
- * This obect has values for extra fields of a personnel.
+ * I represent extra details related to PersonnelBO.
  */
 public class PersonnelDetailsEntity extends AbstractEntity {
 
@@ -147,18 +147,6 @@ public class PersonnelDetailsEntity extends AbstractEntity {
 
     public String getDisplayName() {
         return name.getDisplayName();
-    }
-
-    @Deprecated
-    public void updateDetails(Name name, Integer maritalStatus, Integer gender, Address address,
-            Date dateOfJoiningBranch) {
-        setName(name);
-        setMaritalStatus(maritalStatus);
-        setGender(gender);
-        setAddress(address);
-        if (dateOfJoiningBranch != null) {
-            setDateOfJoiningBranch(dateOfJoiningBranch);
-        }
     }
 
     public void updateNameDetails(String firstName, String middleName, String secondLastName, String lastName) {

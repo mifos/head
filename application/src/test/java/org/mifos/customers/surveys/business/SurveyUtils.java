@@ -20,6 +20,13 @@
 
 package org.mifos.customers.surveys.business;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -37,17 +44,9 @@ import org.mifos.customers.surveys.helpers.AnswerType;
 import org.mifos.customers.surveys.helpers.InstanceStatus;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
-import org.mifos.domain.builders.PersonnelBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.util.helpers.Money;
-
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 public class SurveyUtils {
     private static final Calendar calendar = Calendar.getInstance();
@@ -135,13 +134,6 @@ public class SurveyUtils {
         SavingsBO savingsBO = builder.buildForUnitTests();
         savingsBO.setAccountId(savingsId);
         return savingsBO;
-    }
-
-    public static PersonnelBO getPersonnelBO(Integer personnelId) {
-        Money.setDefaultCurrency(TestUtils.RUPEE);
-        PersonnelBO personnelBO = new PersonnelBuilder().build();
-        personnelBO.setPersonnelId(personnelId.shortValue());
-        return personnelBO;
     }
 
     public static OfficeBO getOfficeBO(Integer officeId) {

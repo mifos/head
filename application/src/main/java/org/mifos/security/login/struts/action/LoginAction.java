@@ -38,7 +38,6 @@ import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.Localization;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.dto.domain.LoginDto;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -181,22 +180,16 @@ public class LoginAction extends BaseAction {
         }
         String oldPassword = loginActionForm.getOldPassword();
         String newpassword = loginActionForm.getNewPassword();
-        PersonnelBO personnelBO = this.personnelDao.findPersonnelByUsername(userName);
-        if (personnelBO.isPasswordChanged()) {
+
+        boolean passwordWasPreviouslyChanged = this.loginServiceFacade.updatePassword(userName, oldPassword, newpassword);
+
+        if (passwordWasPreviouslyChanged) {
             userContext = (UserContext) SessionUtils.getAttribute(Constants.USERCONTEXT, request.getSession());
         } else {
             userContext = (UserContext) SessionUtils.getAttribute(Constants.TEMPUSERCONTEXT, request);
         }
-        PersonnelBO personnelInit = ((PersonnelBusinessService) getService()).getPersonnel(Short.valueOf(personnelBO
-                .getPersonnelId()));
-        checkVersionMismatch(personnelBO.getVersionNo(), personnelInit.getVersionNo());
-        personnelInit.setVersionNo(personnelBO.getVersionNo());
-        personnelInit.setUserContext(userContext);
-        setInitialObjectForAuditLogging(personnelInit);
-        personnelInit.updatePassword(oldPassword, newpassword, userContext.getId());
+
         setUserContextInSession(userContext, request);
-        personnelBO = null;
-        personnelInit = null;
         return mapping.findForward(ActionForwards.updatePassword_success.toString());
     }
 

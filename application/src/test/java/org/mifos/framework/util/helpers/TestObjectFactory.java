@@ -182,7 +182,6 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.authentication.EncryptionService;
-import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActivityContext;
@@ -1433,10 +1432,6 @@ public class TestObjectFactory {
         userContext.setRoles(user.getRoles());
         userContext.setLastLogin(user.getLastLogin());
         userContext.setPasswordChanged(user.getPasswordChanged());
-        if (LoginConstants.PASSWORDCHANGEDFLAG.equals(user.getPasswordChanged())) {
-            user.updateLastPersonnelLoggedin();
-        }
-
         userContext.setBranchId(user.getOffice().getOfficeId());
         userContext.setBranchGlobalNum(user.getOffice().getGlobalOfficeNum());
         userContext.setOfficeLevelId(user.getOffice().getLevel().getId());

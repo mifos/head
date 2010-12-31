@@ -1,6 +1,6 @@
 $(document).ready(function() {
 
-    $(":regex(id, .*\\.[0-9]+)").datepicker({
+    $(":regex(id, dueDate.[0-9]+)").datepicker({
         dateFormat: 'dd-M-yy',
         showOn: "button",
         buttonImage: "pages/framework/images/mainbox/calendaricon.gif",

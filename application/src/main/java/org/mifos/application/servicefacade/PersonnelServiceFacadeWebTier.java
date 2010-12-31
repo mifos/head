@@ -239,16 +239,6 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         String emailId = personnel.getEmailId();
 
         SupportedLocalesEntity preferredLocale = personnel.getPreferredLocale();
-        SupportedLocalesEntity defaultLocale = null;
-        if (preferredLocale != null) {
-//            List<SupportedLocalesEntity> supportedLocales = new ApplicationConfigurationPersistence().getSupportedLocale();
-//            for (SupportedLocalesEntity supportedLocalesEntity : supportedLocales) {
-//                if (supportedLocalesEntity.getId().intValue() == preferredLocale.getId().intValue()) {
-//                    defaultLocale = supportedLocalesEntity;
-//                }
-//            }
-        }
-
         String languageName = Localization.getInstance().getLanguageName();
         Integer languageLookUpId = Integer.valueOf(601); // french
 
@@ -422,7 +412,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             userForUpdate.updateUserDetails(personnel.getFirstName(), personnel.getMiddleName(), personnel
                     .getSecondLastName(), personnel.getLastName(), personnel.getEmailId(), personnel.getGender(),
                     personnel.getMaritalStatus(), preferredLocaleId, personnelStatus, address, personnel.getTitle(),
-                    personnelLevel, selectedRoles, personnel.getPassword(), personnel.getCustomFields());
+                    personnelLevel, selectedRoles, personnel.getPassword());
 
             this.personnelDao.save(userForUpdate);
             transactionHelper.commitTransaction();
