@@ -1381,7 +1381,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         });
     }
 
-    // TODO: Make this method non-private and write a unit test
     void validatePaymentDatesOrdering(List<PaymentDataHtmlBean> validPaymentBeans, ActionErrors errors) {
         List<java.util.Date> transactionDates = collect(validPaymentBeans, new Transformer<PaymentDataHtmlBean, java.util.Date>() {
             @Override

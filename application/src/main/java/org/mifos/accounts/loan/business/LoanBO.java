@@ -3042,40 +3042,24 @@ public class LoanBO extends AccountBO {
 
     private List<EMIInstallment> generateEMI_v2(final Money loanInterest) throws AccountException {
         if (isInterestDeductedAtDisbursement()) {
-            /*
-             * Interest deducted at disbursement has been cut from r1.1 so throw an exception if we reach this code.
-             */
+            // Interest deducted at disbursement has been cut from r1.1 so throw an exception if we reach this code.
             throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
-            /*
-             * if (getLoanOffering().isPrinDueLastInst()) { return interestDeductedFirstPrincipalLast_v2(loanInterest);
-             * } else { return interestDeductedAtDisbursement_v2(loanInterest); }
-             */
         } else {
-
             if (getLoanOffering().isPrinDueLastInst()) {
-                /*
-                 * Principal due on last installment has been cut, so throw an exception if we reach this code.
-                 */
+                // Principal due on last installment has been cut, so throw an exception if we reach this code.
                 throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
-                /*
-                 * if (getLoanOffering().getInterestTypes().getId().equals( InterestType.FLAT.getValue())) { return
-                 * principalInLastPayment_v2(loanInterest); } else if
-                 * ((getLoanOffering().getInterestTypes().getId().equals( InterestType.DECLINING.getValue())) ||
-                 * (getLoanOffering().getInterestTypes().getId().equals( InterestType.DECLINING_EPI.getValue()))) {
-                 * return principalInLastPaymentDecliningInterest_v2(loanInterest); }
-                 */
             } else {
                 Short interestTypeId = getLoanOffering().getInterestTypes().getId();
                 if (interestTypeId.equals(InterestType.FLAT.getValue())) {
                     return allFlatInstallments_v2(loanInterest);
-                } else if (interestTypeId.equals(InterestType.DECLINING.getValue())||interestTypeId.equals(InterestType.DECLINING_PB.getValue())) {
+                } else if (interestTypeId.equals(InterestType.DECLINING.getValue()) ||
+                        interestTypeId.equals(InterestType.DECLINING_PB.getValue())) {
                     return allDecliningInstallments_v2();
                 } else if (interestTypeId.equals(InterestType.DECLINING_EPI.getValue())) {
                     return allDecliningEPIInstallments_v2();
                 }
             }
         }
-
         throw new AccountException(AccountConstants.NOT_SUPPORTED_EMI_GENERATION);
     }
 
@@ -3293,8 +3277,7 @@ public class LoanBO extends AccountBO {
     }
 
     private double getInterestFractionalRatePerInstallment_v2() {
-        double f = interestRate / getDecliningInterestAnnualPeriods_v2() / 100;
-        return f;
+        return interestRate / getDecliningInterestAnnualPeriods_v2() / 100;
     }
 
     /**
@@ -3306,7 +3289,7 @@ public class LoanBO extends AccountBO {
      * </ul>
      */
     private List<EMIInstallment> allDecliningInstallments_v2() throws AccountException {
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+        List<EMIInstallment> emiInstallments;
 
         if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
             emiInstallments = generateDecliningInstallmentsNoGrace_v2(getNoOfInstallments());
@@ -3328,7 +3311,7 @@ public class LoanBO extends AccountBO {
 
     private List<EMIInstallment> allDecliningEPIInstallments_v2() throws AccountException {
 
-        List<EMIInstallment> emiInstallments = new ArrayList<EMIInstallment>();
+        List<EMIInstallment> emiInstallments;
         if (getGraceType() == GraceType.NONE || getGraceType() == GraceType.GRACEONALLREPAYMENTS) {
             emiInstallments = generateDecliningEPIInstallmentsNoGrace_v2(getNoOfInstallments());
         } else {
