@@ -75,7 +75,7 @@ public class InstallmentsValidatorTest {
         verify(listOfInstallmentsValidator).validateOrderingOfDueDates(installments);
 
         verify(installmentRulesValidator).validateForDisbursementDate(eq(installments), any(Date.class));
-        verify(installmentRulesValidator).validateDueDatesForVariableInstallments(eq(installments), any(VariableInstallmentDetailsBO.class));
+        verify(installmentRulesValidator).validateDueDatesForVariableInstallments(eq(installments), any(VariableInstallmentDetailsBO.class), any(Date.class));
         verify(installmentRulesValidator).validateForHolidays(eq(installments), any(HolidayServiceFacade.class), eq(officeId));
         assertThat(errors.hasErrors(), is(false));
     }

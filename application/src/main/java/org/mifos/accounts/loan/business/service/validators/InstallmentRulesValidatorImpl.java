@@ -31,16 +31,21 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
     }
 
     @Override
-    public List<ErrorEntry> validateDueDatesForVariableInstallments(List<RepaymentScheduleInstallment> installments, VariableInstallmentDetailsBO variableInstallmentDetailsBO) {
+    public List<ErrorEntry> validateDueDatesForVariableInstallments(List<RepaymentScheduleInstallment> installments,
+                                    VariableInstallmentDetailsBO variableInstallmentDetailsBO, Date disbursementDate) {
         List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
         if (CollectionUtils.isNotEmpty(installments)) {
-            for (int i = 1, installmentsSize = installments.size(); i < installmentsSize; i++) {
-                Date previousDueDate = installments.get(i - 1).getDueDateValue();
+            for (int i = 0, installmentsSize = installments.size(); i < installmentsSize; i++) {
+                Date previousDueDate = getPreviousDueDate(installments, i, disbursementDate);
                 RepaymentScheduleInstallment installment = installments.get(i);
                 validateForDifferenceInDays(installment, previousDueDate, variableInstallmentDetailsBO, errorEntries);
             }
         }
         return errorEntries;
+    }
+
+    private Date getPreviousDueDate(List<RepaymentScheduleInstallment> installments, int index, Date disbursementDate) {
+        return index > 0? installments.get(index - 1).getDueDateValue() : disbursementDate;
     }
 
     @Override

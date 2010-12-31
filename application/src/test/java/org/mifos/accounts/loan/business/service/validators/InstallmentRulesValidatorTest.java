@@ -90,9 +90,22 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment7 = installmentBuilder.reset(locale).withInstallment(7).withDueDateValue("01-Dec-2010").build();
         VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(5, null, 100, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments, variableInstallmentDetails);
+        Date disbursementDate = getDate(installment1, "27-Oct-2010");
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments,
+                                    variableInstallmentDetails, disbursementDate);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, "3");
         assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, "7");
+    }
+    
+    @Test
+    public void shouldValidateMinimumGapOfFiveDaysForFirstInstallmentAndDisbursementDate() {
+        RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();
+        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(5, null, 100, rupee);
+        List<RepaymentScheduleInstallment> installments = asList(installment1);
+        Date disbursementDate = getDate(installment1, "30-Nov-2010");
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments,
+                variableInstallmentDetails, disbursementDate);
+        assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_LESS_THAN_MIN_GAP, "1");
     }
 
     @Test
@@ -106,10 +119,23 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment7 = installmentBuilder.reset(locale).withInstallment(7).withDueDateValue("01-Dec-2010").build();
         VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, 5, 100, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3, installment4, installment5, installment6, installment7);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments, variableInstallmentDetails);
+        Date disbursementDate = getDate(installment1, "27-Oct-2010");
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments,
+                variableInstallmentDetails, disbursementDate);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "4");
         assertErrorEntry(errorEntries.get(1), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "5");
         assertErrorEntry(errorEntries.get(2), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "6");
+    }
+    
+    @Test
+    public void shouldValidateMaximumGapOfFiveDaysForFirstInstallmentAndDisbursementDate() {
+        RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();
+        VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(null, 5, 100, rupee);
+        List<RepaymentScheduleInstallment> installments = asList(installment1);
+        Date disbursementDate = getDate(installment1, "25-Oct-2010");
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments,
+                variableInstallmentDetails, disbursementDate);
+        assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_MORE_THAN_MAX_GAP, "1");
     }
 
     @Test
@@ -131,7 +157,9 @@ public class InstallmentRulesValidatorTest {
                 withPrincipal(new Money(rupee, "49")).withTotalValue("50").withDueDateValue("06-Nov-2010").build();
         VariableInstallmentDetailsBO variableInstallmentDetails = getVariableInstallmentDetails(2, 5, 50, rupee);
         List<RepaymentScheduleInstallment> installments = asList(installment1, installment2, installment3);
-        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments, variableInstallmentDetails);
+        Date disbursementDate = getDate(installment1, "27-Oct-2010");
+        List<ErrorEntry> errorEntries = installmentRulesValidator.validateDueDatesForVariableInstallments(installments,
+                variableInstallmentDetails, disbursementDate);
         assertThat(errorEntries.isEmpty(), is(true));
     }
 
