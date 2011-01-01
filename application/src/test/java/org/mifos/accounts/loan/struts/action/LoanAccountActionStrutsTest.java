@@ -174,7 +174,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         super.tearDown();
     }
 
-    public void testLoadWithFeeForToday() throws Exception {
+    public void xtestLoadWithFeeForToday() throws Exception {
         tearDown();
         new DateTimeService().setCurrentDateTime(new DateMidnight(2010,1,6).toDateTime());
         setUp();

@@ -22,6 +22,8 @@ package org.mifos.framework;
 
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionServlet;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.master.business.MifosCurrency;
@@ -38,9 +40,12 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-
+import servletunit.HttpServletRequestSimulator;
+import servletunit.HttpServletResponseSimulator;
+import servletunit.ServletContextSimulator;
 import servletunit.struts.MockStrutsTestCase;
 
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.File;
@@ -49,17 +54,26 @@ import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
 /**
  * All classes extending this class must be names as <b>*StrutsTest.java</b> to support maven-surefire-plugin autofind
  * feature.
  * <br />
  * <br />
  */
-public class MifosMockStrutsTestCase extends MockStrutsTestCase {
+public class MifosMockStrutsTestCase extends TestCase {
 
     private static boolean isTestingModeSet = false;
 
     private static String savedFiscalCalendarRulesWorkingDays;
+
+    protected MockStruts mockSturts = new MockStruts();
+
+    protected HttpServletRequest request;
+
+    protected ServletContextSimulator context;
 
     protected MifosMockStrutsTestCase() throws Exception {
         super();
@@ -82,11 +96,17 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         setContextDirectory(new File("application/target/test-classes"));
 
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
+
+        request = mockSturts.getMockRequest();
+        context = mockSturts.getMockContext();
     }
 
-    @Override
+    protected void setConfigFile(String pathname) {
+        mockSturts.setConfigFile(pathname);
+    }
+
     protected void setUp() throws Exception {
-        super.setUp();
+        mockSturts.setUp();
         if (!strutsConfigSet) {
             setStrutsConfig();
             strutsConfigSet = true;
@@ -128,18 +148,17 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
     }
 
     protected void matchValues(AuditLogRecord auditLogRecord, String oldValue, String newValue) {
-        assertEquals(oldValue, auditLogRecord.getOldValue());
-        assertEquals(newValue, auditLogRecord.getNewValue());
+        Assert.assertEquals(oldValue, auditLogRecord.getOldValue());
+        Assert.assertEquals(newValue, auditLogRecord.getNewValue());
     }
 
-    @Override
     protected void tearDown() throws Exception {
         getActionServlet().getServletContext().removeAttribute(ShutdownManager.class.getName());
         doCleanUp(request);
         doCleanUp(request.getSession());
         diableCustomWorkingDays();
         DatabaseDependentTest.after();
-        super.tearDown();
+        mockSturts.tearDown();
         TestUtils.dereferenceObjects(this);
     }
 
@@ -200,6 +219,77 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    protected void verifyNoActionMessages() {
+        mockSturts.verifyNoActionMessages();
+    }
+
+    protected void verifyNoActionErrors() {
+        mockSturts.verifyNoActionErrors();
+    }
+
+    protected void actionPerform() {
+        mockSturts.actionPerform();
+    }
+
+    protected void setRequestPathInfo(String pathInfo) {
+        mockSturts.setRequestPathInfo(pathInfo);
+    }
+
+    protected void verifyForward(String forwardName) {
+        mockSturts.verifyForward(forwardName);
+    }
+
+    protected void verifyInputForward() {
+        mockSturts.verifyInputForward();
+    }
+
+    protected void verifyActionErrors(String[] errorNames) {
+        mockSturts.verifyActionErrors(errorNames);
+    }
+
+    protected HttpSession getSession() {
+        return mockSturts.getSession();
+    }
+
+    protected void setActionForm(ActionForm form) {
+        mockSturts.setActionForm(form);
+    }
+
+    protected HttpServletRequest getRequest() {
+        return mockSturts.getRequest();
+    }
+
+    protected ActionServlet getActionServlet() {
+        return mockSturts.getActionServlet();
+    }
+
+    protected void verifyForwardPath(String forwardPath) {
+        mockSturts.verifyForwardPath(forwardPath);
+    }
+
+    protected ActionForm getActionForm() {
+        return mockSturts.getActionForm();
+    }
+
+    protected HttpServletResponseSimulator getMockResponse() {
+        return mockSturts.getMockResponse();
+    }
+
+    protected HttpServletRequestSimulator getMockRequest() {
+        return mockSturts.getMockRequest();
+    }
+
+    protected void addRequestParameter(String parameterName, String parameterValue) {
+        mockSturts.addRequestParameter(parameterName, parameterValue);
+    }
+
+    protected void addRequestParameter(String parameterName, String[] parameterValues) {
+        mockSturts.addRequestParameter(parameterName, parameterValues);
+    }
+
+    protected void clearRequestParameters() {
+        mockSturts.clearRequestParameters();
+    }
     /**
      * see MIFOS-2659 <br><br>
      * This will be disabled automatically at the end of a test case
@@ -223,5 +313,25 @@ public class MifosMockStrutsTestCase extends MockStrutsTestCase {
     public MifosCurrency getCurrency() {
         // TODO: will be replaced by a way to get currency for mock struts tests
         return Money.getDefaultCurrency();
+    }
+
+    class MockStruts extends MockStrutsTestCase {
+        public MockStruts() {
+            super();
+        }
+
+        protected ServletContextSimulator getMockContext() {
+            return context;
+        }
+
+        @Override
+        public void setUp() throws Exception {
+            super.setUp();
+        }
+
+        @Override
+        public void tearDown() throws Exception {
+            super.tearDown();
+        }
     }
 }
