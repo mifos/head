@@ -184,7 +184,7 @@ public class BatchJobCatchUpIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertEquals(4, jobInstances.size());
         JobInstance jobInstance = jobInstances.get(0);
         JobExecution jobExecution = explorer.getJobExecutions(jobInstance).get(0);
-        Assert.assertEquals(BatchStatus.FAILED, jobExecution.getStatus());
+        Assert.assertEquals(BatchStatus.COMPLETED, jobExecution.getStatus());
         Assert.assertEquals(ExitStatus.COMPLETED, jobExecution.getExitStatus());
         jobInstance = jobInstances.get(1);
         jobExecution = explorer.getJobExecutions(jobInstance).get(0);
