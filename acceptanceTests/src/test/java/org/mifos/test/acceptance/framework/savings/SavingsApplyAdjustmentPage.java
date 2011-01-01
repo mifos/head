@@ -41,5 +41,8 @@ public class SavingsApplyAdjustmentPage extends AbstractPage {
         selenium.type("applyadjustment.input.notes", notes);
         selenium.click("applyadjustment.button.submit");
         waitForPageToLoad();
+        selenium.click("//input[@value='Submit']");
+        waitForPageToLoad();
+
     }
 }
