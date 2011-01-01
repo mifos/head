@@ -137,7 +137,7 @@ public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
         loginFilter.doFilter(req, res, chain);
 
         Object testExecute = req.getAttribute(TEST_ATTRIBUTE);
-        this.assertNotNull(testExecute);
+        Assert.assertNotNull(testExecute);
         return ((Boolean) testExecute).booleanValue();
     }
 }

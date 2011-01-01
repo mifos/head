@@ -139,7 +139,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
         createAndSetClientInSession();
         createParentGroup();
        Assert.assertEquals(false, client.isClientUnderGroup());
-        assertNotSame(group.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting().getMeeting()
+       Assert.assertNotSame(group.getCustomerMeeting().getMeeting().getMeetingId(), client.getCustomerMeeting().getMeeting()
                 .getMeetingId());
 
         setRequestPathInfo("/addGroupMembershipAction.do");

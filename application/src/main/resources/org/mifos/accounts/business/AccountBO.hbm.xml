@@ -256,8 +256,9 @@
 	</query>
 
 	<query name="accounts.getApplicableSavingsProductOfferings">
-		<![CDATA[select new org.mifos.dto.domain.PrdOfferingDto(
-			prdOffering.prdOfferingId,prdOffering.prdOfferingName,prdOffering.globalPrdOfferingNum) 
+		<![CDATA[select prdOffering.prdOfferingId as prdOfferingId,
+		    prdOffering.prdOfferingName as prdOfferingName,
+		    prdOffering.globalPrdOfferingNum as globalPrdOfferingNum
 			from org.mifos.accounts.productdefinition.business.PrdOfferingBO prdOffering
 			where prdOffering.prdType.productTypeID = :prdTypeId and prdOffering.prdStatus.offeringStatusId = :prdStatus
 			and prdOffering.prdApplicableMaster.id = :prdApplicableMaster 

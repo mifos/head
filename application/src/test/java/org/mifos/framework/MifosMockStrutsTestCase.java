@@ -93,7 +93,7 @@ public class MifosMockStrutsTestCase extends TestCase {
          * be located when running test cases using the junit plugin inside
          * eclipse.
          */
-        setContextDirectory(new File("application/target/test-classes"));
+        mockSturts.setContextDirectory(new File("application/target/test-classes"));
 
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/other-struts-config.xml");
 

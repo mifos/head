@@ -54,15 +54,6 @@ public class SavingsPersistence extends Persistence {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsPersistence.class);
 
-    @SuppressWarnings("unchecked")
-    public List<PrdOfferingDto> getSavingsProducts(CustomerLevelEntity customerLevel) throws PersistenceException {
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(AccountConstants.PRDTYPEID, ProductType.SAVINGS.getValue());
-        queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
-        queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO, customerLevel.getProductApplicableType());
-        return executeNamedQuery("accounts.getApplicableSavingsProductOfferings", queryParameters);
-    }
-
     public List<CustomFieldDefinitionEntity> retrieveCustomFieldsDefinition(Short entityType)
             throws PersistenceException {
         logger.debug("In SavingsPersistence::retrieveCustomFieldsDefinition(), entityType: " + entityType);

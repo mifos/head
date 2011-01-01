@@ -633,17 +633,13 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     @Override
     public List<PrdOfferingDto> retrieveApplicableSavingsProductsForCustomer(Integer customerId) {
 
-        try {
             List<PrdOfferingDto> applicableSavingsProducts = new ArrayList<PrdOfferingDto>();
 
             CustomerBO customer = this.customerDao.findCustomerById(customerId);
 
-            applicableSavingsProducts = new SavingsPersistence().getSavingsProducts(customer.getCustomerLevel());
+            applicableSavingsProducts = this.savingsProductDao.findSavingsProductByCustomerLevel(customer.getCustomerLevel());
 
             return applicableSavingsProducts;
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
-        }
     }
 
     @Override

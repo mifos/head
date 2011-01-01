@@ -26,6 +26,8 @@ import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.dto.domain.PrdOfferingDto;
 
 public interface SavingsProductDao {
 
@@ -40,6 +42,8 @@ public interface SavingsProductDao {
     InterestCalcTypeEntity retrieveInterestCalcType(InterestCalcType interestCalcType);
 
     List<InterestCalcTypeEntity> retrieveInterestCalculationTypes();
+
+    List<PrdOfferingDto> findSavingsProductByCustomerLevel(CustomerLevelEntity customerLevel);
 
     void save(SavingsOfferingBO savingsProduct);
 

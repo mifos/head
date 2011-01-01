@@ -8,14 +8,19 @@ import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
+import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
 
@@ -25,6 +30,18 @@ public class SavingsProductDaoHibernate implements SavingsProductDao {
 
     public SavingsProductDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
+    }
+
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<PrdOfferingDto> findSavingsProductByCustomerLevel(CustomerLevelEntity customerLevel) {
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
+        queryParameters.put(AccountConstants.PRDTYPEID, ProductType.SAVINGS.getValue());
+        queryParameters.put(AccountConstants.PRDSTATUS, PrdStatus.SAVINGS_ACTIVE.getValue());
+        queryParameters.put(AccountConstants.PRODUCT_APPLICABLE_TO, customerLevel.getProductApplicableType());
+        return (List<PrdOfferingDto>) genericDao.executeNamedQueryWithResultTransformer(
+                "accounts.getApplicableSavingsProductOfferings", queryParameters, PrdOfferingDto.class);
     }
 
     @Override
