@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010 Michael Vorburger
+ * Copyright (c) 2011 Grameen Foundation USA
  * All rights reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
+
 package org.mifos.server;
 
 import java.io.File;
@@ -47,7 +48,6 @@ import org.eclipse.jetty.webapp.WebInfConfiguration;
 public class ServerLauncher {
 	
 	private static final String WEB_INF_WEB_XML = "WEB-INF/web.xml";
-	private static final String WEB_TAG_FILE = ".web"; // TODO Remove, now?
 
 	private final int port;
 	private final String context;
@@ -99,7 +99,7 @@ public class ServerLauncher {
 		webAppContext.replaceConfiguration(FragmentConfiguration.class, new FragmentFolderConfiguration());
 		webAppContext.replaceConfiguration(WebInfConfiguration.class, new WebInfFolderExtendedConfiguration());
 		
-		// TODO Review - this will make EVERYTHING on the classpath be
+		// This will make EVERYTHING on the classpath be
 		// scanned for META-INF/resources and web-fragment.xml - great for dev!
 		// NOTE: Several patterns can be listed, separate by comma
 		webAppContext.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*");
@@ -138,11 +138,6 @@ public class ServerLauncher {
 		final URL webXml = webXmlUrl();
 		if (webXml != null) {
 			webResourceModules.add(Util.chop(webXml, WEB_INF_WEB_XML));
-		}
-		// TODO Remove ".web" idea, now?
-		final Collection<URL> webTagURLs = getResources(WEB_TAG_FILE);
-		for (final URL webTagFileURL : webTagURLs) {
-			webResourceModules.add(Util.chop(webTagFileURL, WEB_TAG_FILE));
 		}
 		if (!webResourceModules.isEmpty()) {
 			return new ResourceCollection(webResourceModules.toArray(new Resource[webResourceModules.size()]));

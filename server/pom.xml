@@ -31,7 +31,6 @@ but could technically be used for running acceptanceTests, Demo/Test instances, 
 		
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
-			<!-- Alternative to jetty-webapp is jetty-plus, which comes with JTA & JNDI -->
 			<artifactId>jetty-webapp</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>
@@ -40,10 +39,6 @@ but could technically be used for running acceptanceTests, Demo/Test instances, 
 			<artifactId>jetty-util</artifactId>
 			<version>${jetty.version}</version>
 		</dependency>
-		<!-- NOTE: JSP support in an embedded Eclipse Jetty is not well documented, 
-			but this version appears to be the latest (research done by Michael Vorburger 
-			on April 24 2010), see e.g. http://blogs.webtide.com/janb/2006/08/15/1155672985940.html 
-			and others, and it works. -->
 		<dependency>
 			<groupId>org.mortbay.jetty</groupId>
 			<artifactId>jsp-2.1-glassfish</artifactId>

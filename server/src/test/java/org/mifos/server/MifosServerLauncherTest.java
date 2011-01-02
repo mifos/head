@@ -20,25 +20,24 @@
 
 package org.mifos.server;
 
+import org.junit.Test;
+
+
 /**
- * Main class.
- * 
- * This is simple, and useful e.g. within Eclipse.
- * 
- * @see ch.vorburger.modudemo.server.launcher.Launcher
+ * Tests launching of Mifos through simple embedded Servlet Container Web Server.
  * 
  * @author Michael Vorburger
  */
-public class Main {
-	
-	// TODO Read a conf/server.properties, set to tmp/, configure a logs/ etc.
-	
-	public static void main(String[] args) throws Exception {
-		main();
-	}
-	
-	public static void main() throws Exception {
+public class MifosServerLauncherTest {
+
+	@Test
+	public void testMifosStartupAndAssertLoginPageSeen() throws Exception {
 		final ServerLauncher serverLauncher = new ServerLauncher();
 		serverLauncher.startServer();
+		
+		// TODO Assert the Login Page is accessible. Use WebDriver / Selenium 2.0, share code in testFramework?
+		
+		serverLauncher.stopServer();
 	}
+
 }
