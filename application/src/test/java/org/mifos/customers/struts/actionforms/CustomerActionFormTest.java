@@ -20,6 +20,11 @@
 
 package org.mifos.customers.struts.actionforms;
 
+import static junit.framework.Assert.assertNull;
+import static junit.framework.Assert.fail;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.struts.action.ActionErrors;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,11 +32,6 @@ import org.mifos.customers.group.struts.actionforms.GroupCustActionForm;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import javax.servlet.http.HttpServletRequest;
-
-import static junit.framework.Assert.assertNull;
-import static junit.framework.Assert.fail;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomerActionFormTest {

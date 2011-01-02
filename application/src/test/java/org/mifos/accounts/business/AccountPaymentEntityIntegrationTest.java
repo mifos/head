@@ -20,7 +20,11 @@
 
 package org.mifos.accounts.business;
 
+import java.sql.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,7 +33,12 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.customers.business.*;
+import org.mifos.customers.business.CustomerAccountBO;
+import org.mifos.customers.business.CustomerAccountBOTestUtils;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerBOTestUtils;
+import org.mifos.customers.business.CustomerScheduleEntity;
+import org.mifos.customers.business.CustomerTrxnDetailEntity;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -38,9 +47,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.sql.Date;
-import java.util.List;
 
 public class AccountPaymentEntityIntegrationTest extends MifosIntegrationTestCase {
 

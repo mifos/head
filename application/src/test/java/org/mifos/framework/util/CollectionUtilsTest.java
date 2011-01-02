@@ -20,9 +20,8 @@
 
 package org.mifos.framework.util;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import org.mifos.framework.util.helpers.Transformer;
+import static org.mifos.framework.util.CollectionUtils.asList;
+import static org.mifos.framework.util.CollectionUtils.splitListIntoParts;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +29,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import static org.mifos.framework.util.CollectionUtils.asList;
-import static org.mifos.framework.util.CollectionUtils.splitListIntoParts;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+import org.mifos.framework.util.helpers.Transformer;
 
 public class CollectionUtilsTest extends TestCase {
 

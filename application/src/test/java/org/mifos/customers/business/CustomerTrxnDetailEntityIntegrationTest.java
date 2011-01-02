@@ -20,11 +20,19 @@
 
 package org.mifos.customers.business;
 
+import java.sql.Date;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.accounts.business.*;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.collectionsheet.persistence.CenterBuilder;
@@ -45,8 +53,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.sql.Date;
 
 public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 

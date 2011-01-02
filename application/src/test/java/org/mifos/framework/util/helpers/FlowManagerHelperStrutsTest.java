@@ -22,6 +22,9 @@ package org.mifos.framework.util.helpers;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.security.util.ActivityContext;
@@ -29,17 +32,14 @@ import org.mifos.security.util.UserContext;
 
 public class FlowManagerHelperStrutsTest extends MifosMockStrutsTestCase {
 
-    public FlowManagerHelperStrutsTest() throws Exception {
-        super();
-    }
+
 
     private FlowManagerHelper flowManagerHelper = null;
 
     private String flowKey = "";
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestUtils.makeUserWithLocales();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -54,17 +54,18 @@ public class FlowManagerHelperStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute("test", "test", request);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
+    @Test
     public void testGetFlow() {
         FlowManager manager = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
         Flow flow = (Flow) flowManagerHelper.getFlow(manager, flowKey);
        Assert.assertEquals("test", (String) flow.getObjectFromSession("test"));
     }
 
+    @Test
     public void testGetFlowFlowManagerString() {
         FlowManager manager = (FlowManager) SessionUtils.getAttribute(Constants.FLOWMANAGER, request.getSession());
        Assert.assertEquals("test", (String) flowManagerHelper.getFromSession(manager, flowKey, "test"));

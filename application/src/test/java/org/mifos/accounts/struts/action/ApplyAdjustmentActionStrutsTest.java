@@ -20,8 +20,20 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
-import org.mifos.accounts.business.*;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
+import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -42,17 +54,11 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 /**
  * This class tests methods of ApplyAdjustment action class.
  */
 public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
-    public ApplyAdjustmentActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private CenterBO center;
     private GroupBO group;
@@ -70,9 +76,8 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
      * This sets the web.xml,struts-config.xml and prepares the userContext and
      * activityContext and sets them in the session.
      */
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -106,6 +111,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         TestObjectFactory.updateObject(loan);
     }
 
+    @Test
     public void testLoadAdjustmentWhenObligationMet() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
@@ -122,6 +128,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("loadadjustment_success");
     }
 
+    @Test
     public void testLoadAdjustment() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
@@ -138,6 +145,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("loadadjustment_success");
     }
 
+    @Test
     public void testPreviewAdjustment() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
@@ -153,6 +161,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("previewadj_success");
     }
 
+    @Test
     public void testPreviewAdjustment_failure() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
@@ -166,6 +175,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("previewAdjustment_failure");
     }
 
+    @Test
     public void testApplyAdjustment() throws Exception {
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -207,6 +217,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("applyadj_success");
     }
 
+    @Test
     public void testApplyAdjustmentWhenAccountsSecondLastStateWasBadStanding() throws Exception {
         PersonnelBO personnel = new PersonnelPersistence().getPersonnel(PersonnelConstants.SYSTEM_USER);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -243,6 +254,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("applyadj_success");
     }
 
+    @Test
     public void testCancelAdjustment() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/applyAdjustment");
@@ -252,6 +264,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("canceladj_success");
     }
 
+    @Test
     public void testLoadAdjustmentWithNoPmnts() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
@@ -267,6 +280,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testAdjustmentForZeroPmnt() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) getLoanAccount();
@@ -285,6 +299,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testValidation() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) createLoanAccount();
@@ -298,6 +313,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(new String[] { "errors.mandatorytextarea" });
     }
 
+    @Test
     public void testValidationAdjustmentNoteSize() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         loan = (LoanBO) createLoanAccount();
@@ -323,12 +339,11 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
                 startDate, loanOffering);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         loan = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
 }

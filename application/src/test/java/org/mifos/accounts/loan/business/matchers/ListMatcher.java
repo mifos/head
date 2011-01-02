@@ -19,10 +19,10 @@
  */
 package org.mifos.accounts.loan.business.matchers;
 
+import java.util.List;
+
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
-
-import java.util.List;
 
 public class ListMatcher<T> extends TypeSafeMatcher<List<T>> {
     private List<T> obj;

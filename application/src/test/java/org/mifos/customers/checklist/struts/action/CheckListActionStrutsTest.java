@@ -20,10 +20,17 @@
 
 package org.mifos.customers.checklist.struts.action;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
@@ -31,7 +38,6 @@ import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -42,19 +48,14 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.util.List;
-
 public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CheckListActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private String flowKey;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -64,11 +65,11 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, ChkListAction.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
+    @Test
     public void testLoadAllChecklist() throws Exception {
         CheckListBO checkList1 = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
@@ -92,6 +93,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(0, ((List) SessionUtils.getAttribute(CheckListConstants.CLIENT_CHECKLIST, request)).size());
     }
 
+    @Test
     public void testGetForCustomerChecklist() throws Exception {
 
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
@@ -110,6 +112,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testGetForAccountChecklist() throws Exception {
         CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
@@ -128,6 +131,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testLoad() throws Exception {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "load");
@@ -137,6 +141,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(CheckListConstants.CHECKLIST_MASTERDATA, request));
     }
 
+    @Test
     public void testGetStates() throws Exception {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "getStates");
@@ -151,6 +156,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
                 .size());
     }
 
+    @Test
     public void testPreviewNoChecklistName() {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "preview");
@@ -159,6 +165,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreview() {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "preview");
@@ -174,6 +181,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testPrevious() throws Exception {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "previous");
@@ -184,6 +192,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testCreate_customer() throws Exception {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "create");
@@ -212,6 +221,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @Test
     public void testCreate_product() throws Exception {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "create");
@@ -236,6 +246,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @Test
     public void testCancelCreate() throws Exception {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "cancelCreate");
@@ -245,6 +256,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testManage_customerCenter() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
@@ -263,6 +275,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         checkList = null;
     }
 
+    @Test
     public void testManage_customerGroup() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.GROUP.getValue(),
                 CustomerStatus.GROUP_ACTIVE.getValue(), (short) 1);
@@ -281,6 +294,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         checkList = null;
     }
 
+    @Test
     public void testManage_customerClient() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CLIENT.getValue(),
                 CustomerStatus.CLIENT_ACTIVE.getValue(), (short) 1);
@@ -299,6 +313,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         checkList = null;
     }
 
+    @Test
     public void testManage_accountLoan() throws Exception {
         CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
@@ -317,6 +332,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         checkList = null;
     }
 
+    @Test
     public void testManage_accountSaving() throws Exception {
         CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.SAVINGS.getValue(),
                 AccountState.SAVINGS_ACTIVE, (short) 1);
@@ -335,6 +351,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         checkList = null;
     }
 
+    @Test
     public void testGetEditStates() throws Exception {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "getEditStates");
@@ -350,6 +367,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
                 .size());
     }
 
+    @Test
     public void testManagePreviewValidate() {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "managePreview");
@@ -363,6 +381,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testManagePreview() {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "managePreview");
@@ -379,6 +398,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testManagePrevious() {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "managePrevious");
@@ -389,6 +409,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testUpdate_customer() throws Exception {
         CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
@@ -417,6 +438,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         checkList = null;
     }
 
+    @Test
     public void testUpdate_product() throws Exception {
         CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
@@ -446,6 +468,7 @@ public class CheckListActionStrutsTest extends MifosMockStrutsTestCase {
         checkList = null;
     }
 
+    @Test
     public void testCancelManage() {
         setRequestPathInfo("/chkListAction");
         addRequestParameter("method", "cancelManage");

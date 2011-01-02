@@ -20,15 +20,41 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.productdefinition.business.*;
+import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
+import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
+import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
-import org.mifos.accounts.productdefinition.util.helpers.*;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.GraceType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -40,25 +66,18 @@ import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.*;
+import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.FlowManager;
+import org.mifos.framework.util.helpers.SessionUtils;
+import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
+import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.sql.Date;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public LoanPrdActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private LoanOfferingBO loanOffering;
 
@@ -74,15 +93,13 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/productdefinition-struts-config.xml");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         fee = null;
-        super.tearDown();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -92,6 +109,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, LoanPrdAction.class);
     }
 
+    @Test
     public void testLoad() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "load");
@@ -136,6 +154,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(0, (selectedFunds).size());
     }
 
+    @Test
     public void testPreviewWithOutData() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -151,6 +170,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewWithImproperMinMaxDefAmount() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -186,6 +206,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewWithImproperMinMaxDefInterestRates() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -219,6 +240,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewWithImproperMinMaxInterestRates() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -252,6 +274,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewWithImproperMinMaxDefInstallments() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -289,6 +312,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
      * The user must get a validation error if he enters a number of installments greater than Short range.
      * (see MIFOS-3365)
      */
+    @Test
     public void testPreviewWithOutOfRangeMinMaxDefInstallments() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -323,6 +347,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewWithGraceTypeNotNoneAndNoGraceDuration() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -357,6 +382,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewWithStartDateLessThanCurrentDate() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -390,6 +416,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewWithEndDateLessThanStartDate() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -424,6 +451,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewWithFeeNotMatchingFeeFrequency() throws Exception {
         FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
                 RecurrenceType.MONTHLY, (short) 1);
@@ -472,6 +500,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         fee = null;
     }
 
+    @Test
     public void testPreview() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -507,6 +536,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testPreviewForPricDueOnLastInstAndPrincGrace() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -543,6 +573,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewForPageExpiration() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "preview");
@@ -574,6 +605,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForwardPath("/pages/framework/jsp/pageexpirederror.jsp");
     }
 
+    @Test
     public void testCancelCreate() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "cancelCreate");
@@ -585,6 +617,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }
 
+    @Test
     public void testPrevious() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "previous");
@@ -595,6 +628,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.previous_success.toString());
     }
 
+    @Test
     public void testValidate() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "validate");
@@ -604,6 +638,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_failure.toString());
     }
 
+    @Test
     public void testValidateForPreview() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "validate");
@@ -615,6 +650,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_failure.toString());
     }
 
+    @Test
     public void testVaildateForCreate() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "validate");
@@ -626,6 +662,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_failure.toString());
     }
 
+    @Test
     public void testCreate() throws Exception {
         FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
                 RecurrenceType.MONTHLY, (short) 1);
@@ -682,6 +719,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         fee = null;
     }
 
+    @Test
     public void testManage() throws Exception {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         setRequestPathInfo("/loanproductaction.do");
@@ -769,6 +807,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(loanOffering.getLoanOfferingFunds().size(), (selectedFunds).size());
     }
 
+    @Test
     public void testEditPreviewWithOutData() throws Exception {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         setRequestPathInfo("/loanproductaction.do");
@@ -786,6 +825,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testEditPreviewWithoutStatus() throws Exception {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         setRequestPathInfo("/loanproductaction.do");
@@ -823,6 +863,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testEditPreview() throws Exception {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         setRequestPathInfo("/loanproductaction.do");
@@ -861,6 +902,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editPreview_success.toString());
     }
 
+    @Test
     public void testEditPreviewForPricDueOnLastInstAndPrincGrace() throws Exception {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         setRequestPathInfo("/loanproductaction.do");
@@ -901,6 +943,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testEditPrevious() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "editPrevious");
@@ -911,6 +954,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editPrevious_success.toString());
     }
 
+    @Test
     public void testEditCancel() throws Exception {
         setRequestPathInfo("/loanproductaction.do");
         addRequestParameter("method", "editCancel");
@@ -922,6 +966,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(((FlowManager) request.getSession().getAttribute(Constants.FLOWMANAGER)).getFlow(flowKey));
     }
 
+    @Test
     public void testUpdate() throws Exception {
         FeeBO fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
                 RecurrenceType.MONTHLY, (short) 1);
@@ -991,6 +1036,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         fee = null;
     }
 
+    @Test
     public void testGet() throws PageExpiredException {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         StaticHibernateUtil.flushAndClearSession();
@@ -1054,6 +1100,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.flushSession();
     }
 
+    @Test
     public void testViewAllLoanProducts() throws PageExpiredException {
         loanOffering = createLoanOfferingBO("Loan Offering", "LOAN");
         LoanOfferingBO loanOffering1 = createLoanOfferingBO("Loan Offering1", "LOA1");
@@ -1082,6 +1129,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCreateDecliningInterestDisbursementFail() throws Exception {
         fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
                 RecurrenceType.MONTHLY, (short) 1);
@@ -1129,6 +1177,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCreateDecliningInterestDisbursementSuccess() throws Exception {
         fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
                 RecurrenceType.MONTHLY, (short) 1);
@@ -1186,6 +1235,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
                 (Short) request.getAttribute(ProductDefinitionConstants.LOANPRODUCTID)));
     }
 
+    @Test
     public void testCreateDecliningInterestEqualPrincipalDisbursementFail() throws Exception {
         fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
                 RecurrenceType.MONTHLY, (short) 1);
@@ -1233,6 +1283,7 @@ public class LoanPrdActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCreateDecliningInterestEqualPrincipalDisbursementSuccess() throws Exception {
         fee = TestObjectFactory.createPeriodicAmountFee("Loan Periodic", FeeCategory.LOAN, "100.0",
                 RecurrenceType.MONTHLY, (short) 1);

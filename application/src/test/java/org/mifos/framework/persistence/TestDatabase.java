@@ -20,9 +20,8 @@
 
 package org.mifos.framework.persistence;
 
-import org.springframework.beans.factory.FactoryBean;
+import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
-import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -30,7 +29,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
+import javax.sql.DataSource;
+
+import org.springframework.beans.factory.FactoryBean;
 
 public class TestDatabase implements FactoryBean<TestDatabase> {
 

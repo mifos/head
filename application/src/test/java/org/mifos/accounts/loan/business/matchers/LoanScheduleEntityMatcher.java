@@ -19,12 +19,12 @@
  */
 package org.mifos.accounts.loan.business.matchers;
 
+import static junit.framework.Assert.assertEquals;
+
 import org.apache.commons.lang.ObjectUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-
-import static junitx.framework.Assert.assertEquals;
 
 public class LoanScheduleEntityMatcher extends TypeSafeMatcher<LoanScheduleEntity> {
     private LoanScheduleEntity loanScheduleEntity;

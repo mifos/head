@@ -20,8 +20,15 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.hibernate.Session;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -39,14 +46,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.List;
-
 public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CloseLoanActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     protected UserContext userContext = null;
 
@@ -66,9 +68,8 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -79,12 +80,11 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
         currentDate = new Date(System.currentTimeMillis());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         loanBO = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
     private LoanBO getLoanAccount() {
@@ -97,6 +97,7 @@ public class CloseLoanActionStrutsTest extends MifosMockStrutsTestCase {
                 startDate, loanOffering);
     }
 
+    @Test
     public void testRescheduleLoan() throws Exception {
         loanBO = getLoanAccount();
         addRequestParameter("recordLoanOfficerId", "1");

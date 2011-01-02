@@ -1,5 +1,12 @@
 package org.mifos.accounts.loan.business.service.validators;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+import java.util.Locale;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,13 +15,6 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.List;
-import java.util.Locale;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ListOfInstallmentsValidatorTest {

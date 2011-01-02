@@ -20,10 +20,10 @@
 
 package org.mifos.framework.util.helpers;
 
+import java.math.BigDecimal;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
-
-import java.math.BigDecimal;
 
 public class NumberUtilsTest extends TestCase {
     public void testPercentageReturnsZeroIfFullValueIsZero() throws Exception {

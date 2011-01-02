@@ -20,12 +20,13 @@
 
 package org.mifos.customers;
 
-import static org.mockito.Matchers.anyShort;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyShort;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

@@ -22,6 +22,7 @@ package org.mifos.reports.struts.action;
 
 import junit.framework.Assert;
 
+import org.junit.Test;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
@@ -29,9 +30,7 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
 
 public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
-    public ReportsCategoryActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     @Override
     protected void setStrutsConfig() {
@@ -39,6 +38,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
     }
 
+    @Test
     public void testShouldForwardToDefineNewCategoryPage() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "loadDefineNewCategoryPage");
@@ -48,6 +48,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testShouldPreviewSuccessIfCategoryNameIsNotNull() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "preview");
@@ -58,6 +59,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testShouldPreviewFailureIfReportCategoryNameIsNull() {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "preview");
@@ -68,6 +70,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(errors);
     }
 
+    @Test
     public void testCategoryNameShouldEqualsToInputValueWhenDoPreivewAction() throws Exception {
         String categoryName = "hahaCategoryName";
         setRequestPathInfo("/reportsCategoryAction.do");
@@ -77,6 +80,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(categoryName, ((ReportsCategoryActionForm) getActionForm()).getCategoryName());
     }
 
+    @Test
     public void testShouldSubmitSuccess() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "addNewCategory");
@@ -103,6 +107,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCategoryNameShouldBeNullBeforeDefineNewCategory() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
 
@@ -118,6 +123,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(((ReportsCategoryActionForm) getActionForm()).getCategoryName());
     }
 
+    @Test
     public void testShouldForwardToViewReportsCategoryPage() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "viewReportsCategory");
@@ -126,6 +132,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testShouldForwardToEditReportsCategoryPages() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "edit");
@@ -136,6 +143,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testShouldHaveReportCategoriesBOWhenViewReportsCategoryPage() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "viewReportsCategory");
@@ -143,6 +151,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(getSession().getAttribute(ReportsConstants.LISTOFREPORTCATEGORIES));
     }
 
+    @Test
     public void testCategoryNameShouldEqualsToInputValueWhenDoEditPreivewAction() throws Exception {
         String categoryName = "hahaCategoryName";
         setRequestPathInfo("/reportsCategoryAction.do");
@@ -153,6 +162,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(categoryName, ((ReportsCategoryActionForm) getActionForm()).getCategoryName());
     }
 
+    @Test
     public void testShouldSubmitSuccessAfterEdit() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
 
@@ -168,6 +178,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testShouldForwardToConfirmDeleteReportsCategoryPage() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "confirmDeleteReportsCategory");
@@ -177,6 +188,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForwardPath("/pages/application/reports/jsp/confirmDeleteCategory.jsp");
     }
 
+    @Test
     public void testShouldForwardToConfirmDeleteReportsCategoryPageWhenDeleteReportCategoryHasReports()
             throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
@@ -187,6 +199,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForwardPath("/pages/application/reports/jsp/confirmDeleteCategory.jsp");
     }
 
+    @Test
     public void testShouldEditPreviewSuccessIfCategoryNameIsNotNull() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "editPreview");
@@ -198,6 +211,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testShouldEditPreviewFailureIfReportCategoryNameIsNull() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "editPreview");
@@ -208,6 +222,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(errors);
     }
 
+    @Test
     public void testShouldEditPreviewFailureIfReportCategoryNotEdit() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         ReportsCategoryActionForm form = new ReportsCategoryActionForm();
@@ -228,6 +243,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(errors);
     }
 
+    @Test
     public void testShouldEditPreviewFailureIfReportCategoryAlreadyExist() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "addNewCategory");
@@ -243,6 +259,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(errors);
     }
 
+    @Test
     public void testShouldPreviewSuccessAfterEdit() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
 
@@ -259,6 +276,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testShouldEditFailureIfReportCategoryAlreadyExist() throws Exception {
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "addNewCategory");
@@ -278,6 +296,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(errors);
     }
 
+    @Test
     public void testShouldCreateFailureWhenActivityIdOutOfRange() throws Exception {
         ActivityEntity activity = ActivityTestUtil.insertActivityForTest(Short.MIN_VALUE);
         setRequestPathInfo("/reportsCategoryAction.do");

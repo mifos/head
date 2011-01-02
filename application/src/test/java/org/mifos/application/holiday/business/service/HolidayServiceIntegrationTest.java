@@ -20,6 +20,10 @@
 
 package org.mifos.application.holiday.business.service;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -43,10 +47,6 @@ import org.mifos.service.BusinessRuleException;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
 
 public class HolidayServiceIntegrationTest extends MifosIntegrationTestCase {
 

@@ -29,6 +29,9 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.joda.time.DateTime;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.Ignore;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -73,9 +76,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
-    public EditStatusActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private AccountBO accountBO;
 
@@ -94,9 +95,8 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -111,14 +111,13 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         accountBO = null;
         client = null;
         group = null;
         center = null;
 
-        super.tearDown();
     }
 
     @Ignore("Convert to unit test")
@@ -209,6 +208,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(new String[] { LoanConstants.MANDATORY_TEXTBOX });
     }
 
+    @Test
     public void testPrevious() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 //        createInitialObjects();
@@ -225,6 +225,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCancel() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/editStatusAction.do");
@@ -296,6 +297,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdateStatusForLoanToCancel() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 //        createInitialObjects();
@@ -317,6 +319,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testUpdateSuccessForSavings() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 //        createInitialObjects();
@@ -359,6 +362,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testUpdateStatusForSavingsToCancel() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 //        createInitialObjects();
@@ -381,6 +385,7 @@ public class EditStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testUpdateStatusFailureNoPermission() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 //        createInitialObjects();

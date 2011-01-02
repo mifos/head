@@ -20,6 +20,16 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.junit.Before;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -41,19 +51,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase {
-    public AbstractLoanActionTestCase() throws Exception {
-        super();
-    }
 
     protected UserContext userContext;
     protected CustomerBO center = null;
@@ -65,13 +63,8 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
     protected LoanOfferingBO loanOffering;
     protected AccountBO accountBO;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-        setup();
-    }
-
-    protected void setup() {
+    @Before
+    public void setup() {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
@@ -120,12 +113,7 @@ public abstract class AbstractLoanActionTestCase extends MifosMockStrutsTestCase
     }
 
 
-
-
-
-    @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
         clearRequestParameters();
         TestObjectFactory.removeObject((LoanOfferingBO) TestObjectFactory.getObject(LoanOfferingBO.class, loanOffering
                 .getPrdOfferingId()));

@@ -22,6 +22,9 @@ package org.mifos.reports.struts.action;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;
@@ -32,10 +35,6 @@ import org.mifos.security.util.UserContext;
 
 public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public ReportsUserParamsActionStrutsTest() throws Exception {
-        super();
-    }
-
     private UserContext userContext;
 
     @Override
@@ -44,9 +43,8 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
@@ -54,11 +52,11 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
         request.getSession(false).setAttribute("ActivityContext", ac);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
+    @Test
     public void testLoadAddListShouldGoToBirtReport() throws Exception {
         setRequestPathInfo("/reportsUserParamsAction.do");
         addRequestParameter("method", "loadAddList");
@@ -69,6 +67,7 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testGetSecurityShouldGetReportSecurityConstantsCorrespondingReportId() {
         ActionSecurity security = ReportsUserParamsAction.getSecurity();
         Assert.assertEquals(SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT, security.get("loadAddList-1").shortValue());

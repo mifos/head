@@ -31,6 +31,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -84,9 +87,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
-    public GroupActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private CenterBO center;
 
@@ -115,9 +116,8 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -137,20 +137,20 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         loanBO = null;
         savingsBO = null;
         client = null;
         group = null;
         center = null;
         userContext = null;
-        super.tearDown();
     }
 
     /**
      * If the user does not have right to create a group, the application must show a permission error (see MIFOS-3499)
      */
+    @Test
     public void testFailureCreate_WithoutPermissions() throws Exception {
         SecurityContext securityContext = new SecurityContextImpl();
         MifosUser principal = new MifosUserBuilder().build();
@@ -194,6 +194,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
 
+    @Test
     public void testChooseOffice() throws Exception {
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "chooseOffice");
@@ -203,6 +204,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.chooseOffice_success.toString());
     }
 
+    @Test
     public void testHierarchyCheck() throws Exception {
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "hierarchyCheck");
@@ -218,6 +220,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @Test
     public void testLoad_FeeDifferentFrequecny() throws Exception {
         createCenterWithoutFee();
         List<FeeDto> fees = getFees(RecurrenceType.MONTHLY);
@@ -244,6 +247,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(fees);
     }
 
+    @Test
     public void testLoad_FeeSameFrequecny() throws Exception {
         createCenterWithoutFee();
         StaticHibernateUtil.flushAndClearSession();
@@ -270,6 +274,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(fees);
     }
 
+    @Test
     public void testLoadMeeting() throws Exception {
         createParentCustomer();
         StaticHibernateUtil.flushAndClearSession();
@@ -288,6 +293,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
+    @Test
     public void testPreviewFailure_With_Name_Null() throws Exception {
         createParentCustomer();
         StaticHibernateUtil.flushAndClearSession();
@@ -304,6 +310,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
+    @Test
     public void testPreviewFailure_TrainedWithoutTrainedDate() throws Exception {
         createParentCustomer();
         StaticHibernateUtil.flushAndClearSession();
@@ -339,6 +346,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         return (List<CustomFieldDto>) SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request);
     }
 
+    @Test
     public void testFailurePreview_WithoutMandatoryCustomField_IfAny() throws Exception {
         createParentCustomer();
         StaticHibernateUtil.flushAndClearSession();
@@ -379,6 +387,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
+    @Test
     public void testFailurePreview_WithDuplicateFee() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         createParentCustomer();
@@ -404,6 +413,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
+    @Test
     public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         createParentCustomer();
@@ -427,6 +437,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
+    @Test
     public void testSuccessfulPreview() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         createParentCustomer();
@@ -472,6 +483,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         return (List<ApplicableAccountFeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
     }
 
+    @Test
     public void testSuccessfulPrevious() throws Exception {
         setRequestPathInfo("/groupCustAction.do");
         addRequestParameter("method", "previous");
@@ -482,6 +494,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessfulCreate_UnderCenter() throws Exception {
         createParentCustomer();
         StaticHibernateUtil.flushAndClearSession();
@@ -522,6 +535,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         actionForm.setParentCustomer(null);
     }
 
+    @Test
     public void testSuccessfulCreate_UnderBranch() throws Exception {
         createParentCustomer();
         StaticHibernateUtil.flushAndClearSession();
@@ -564,6 +578,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         actionForm.setParentCustomer(null);
     }
 
+    @Test
     public void testFailureCreate_DuplicateName() throws Exception {
         createGroupWithCenter();
         setRequestPathInfo("/groupCustAction.do");
@@ -601,6 +616,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         actionForm.setParentCustomer(null);
     }
 
+    @Test
     public void testGet() throws Exception {
         createCustomers();
         CustomerPositionEntity customerPositionEntity = new CustomerPositionEntity(new PositionEntity((short) 1),
@@ -648,6 +664,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         savingsBO = (SavingsBO) new AccountPersistence().getAccount(savingsBO.getAccountId());
     }
 
+    @Test
     public void testManage() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createGroupWithCenterAndSetInSession();
@@ -664,6 +681,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.POSITIONS, request));
     }
 
+    @Test
     public void testManageWithoutCenterHierarchy() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createGroupWithCenterAndSetInSession();
@@ -680,6 +698,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.POSITIONS, request));
     }
 
+    @Test
     public void testPreviewManageFailureForName() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createGroupWithCenterAndSetInSession();
@@ -708,6 +727,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreviewManageFailureForTrainedDate() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createGroupWithCenterAndSetInSession();
@@ -737,6 +757,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreviewManageFailureForTrained() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createGroupWithCenterAndSetInSession();
@@ -764,6 +785,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreviewManageSuccess() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createGroupWithCenterAndSetInSession();
@@ -797,6 +819,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
      * This test asserts that when a group name for a trained group is edited, there are no errors and the trained date
      * is present in the action form.
      */
+    @Test
     public void testPreviewManageSuccessForNameChange_AfterTrainedSet() throws Exception {
 
         Calendar cal = new GregorianCalendar();
@@ -834,6 +857,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(0, getErrorSize());
     }
 
+    @Test
     public void testUpdateSuccess() throws Exception {
         String newDisplayName = "group_01";
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -873,6 +897,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(newDisplayName, group.getDisplayName());
     }
 
+    @Test
     public void testUpdateSuccessForLogging() throws Exception {
         String newDisplayName = "group_01";
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -915,6 +940,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdateSuccessWithoutTrained() throws Exception {
         String newDisplayName = "group_01";
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -955,6 +981,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCancelSuccess() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/groupCustAction.do");
@@ -967,6 +994,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.cancelEdit_success.toString());
     }
 
+    @Test
     public void testCancelSuccessForCreateGroup() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/groupCustAction.do");
@@ -979,6 +1007,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.cancelCreate_success.toString());
     }
 
+    @Test
     public void testLoadSearch() throws Exception {
         addActionAndMethod(Methods.loadSearch.toString());
         addCurrentFlowKey();
@@ -988,6 +1017,7 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.loadSearch_success.toString());
     }
 
+    @Test
     public void testSearch() throws Exception {
         createGroupWithCenter();
         addRequestParameter("searchString", "gr");

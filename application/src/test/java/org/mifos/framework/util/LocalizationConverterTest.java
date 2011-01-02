@@ -20,8 +20,17 @@
 
 package org.mifos.framework.util;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.math.BigDecimal;
+import java.text.DateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
 import org.junit.Ignore;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
@@ -30,14 +39,6 @@ import org.mifos.framework.util.helpers.ConversionError;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.DoubleConversionResult;
 import org.testng.annotations.Test;
-
-import java.math.BigDecimal;
-import java.text.DateFormat;
-import java.util.Calendar;
-import java.util.Locale;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
 public class LocalizationConverterTest extends TestCase {

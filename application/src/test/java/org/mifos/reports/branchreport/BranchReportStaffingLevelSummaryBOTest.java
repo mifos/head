@@ -20,8 +20,8 @@
 
 package org.mifos.reports.branchreport;
 
-import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
 import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_NOT_TOTAL;
+import static org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO.IS_TOTAL;
 
 import java.util.ArrayList;
 import java.util.Collections;

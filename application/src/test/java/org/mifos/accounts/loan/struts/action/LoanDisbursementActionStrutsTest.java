@@ -20,7 +20,16 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.Ignore;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
@@ -37,17 +46,10 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 @Ignore
 public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public LoanDisbursementActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     protected UserContext userContext = null;
 
@@ -72,10 +74,9 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
 
-        super.setUp();
 
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
@@ -87,15 +88,14 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
         currentDate = new Date(System.currentTimeMillis());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         loanBO = null;
         group = null;
         center = null;
         secondLoanBO = null;
         group2 = null;
         center2 = null;
-        super.tearDown();
     }
 
     private LoanBO getLoanAccount(AccountState state, Date startDate, int disbursalType) {
@@ -118,6 +118,7 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testLoad() throws Exception {
         createInitialObjects(2);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -133,6 +134,7 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(actionForm.getLoanAmount(), loanBO.getLoanAmount());
     }
 
+    @Test
     public void testPreviewFailure_NomaadatoryFieds() {
         createInitialObjects(2);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -146,6 +148,7 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreviewFailure_futureTxnDate() {
         createInitialObjects(2);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -166,6 +169,7 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreviewSucess() {
         createInitialObjects(2);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -182,6 +186,7 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreviuos() {
         createInitialObjects(2);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -192,6 +197,7 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdate() throws Exception {
         createInitialObjects(2);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -210,6 +216,7 @@ public class LoanDisbursementActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdateNopaymentAtDisbursal() throws Exception {
         createInitialObjects(3);
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);

@@ -20,9 +20,10 @@
 
 package org.mifos.customers.client.business;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

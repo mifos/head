@@ -42,15 +42,11 @@ import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeTemplate;
-import org.mifos.customers.office.business.OfficeTemplateImpl;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.PersonnelNotesEntity;
-import org.mifos.customers.personnel.business.PersonnelTemplate;
-import org.mifos.customers.personnel.business.PersonnelTemplateImpl;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
@@ -58,16 +54,13 @@ import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.util.Address;
 import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.security.util.UserContext;
 
 public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCase {
 

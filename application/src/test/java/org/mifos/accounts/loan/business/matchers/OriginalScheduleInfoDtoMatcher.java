@@ -23,8 +23,6 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
 
-import static org.junit.Assert.assertThat;
-
 public class OriginalScheduleInfoDtoMatcher extends TypeSafeMatcher<OriginalScheduleInfoDto> {
     private OriginalScheduleInfoDto obj;
 

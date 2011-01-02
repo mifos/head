@@ -20,10 +20,19 @@
 
 package org.mifos.accounts.financial.business.service;
 
+import java.sql.Date;
+import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Test;
-import org.mifos.accounts.business.*;
+import org.mifos.accounts.business.AccountActionDateEntity;
+import org.mifos.accounts.business.AccountFeesActionDetailEntity;
+import org.mifos.accounts.business.AccountPaymentEntity;
+import org.mifos.accounts.business.AccountTestUtils;
+import org.mifos.accounts.business.AccountTrxnEntity;
+import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
@@ -46,9 +55,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.sql.Date;
-import java.util.Set;
 
 public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 

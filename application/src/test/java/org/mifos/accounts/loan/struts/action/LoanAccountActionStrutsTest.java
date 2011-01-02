@@ -42,8 +42,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -51,6 +51,8 @@ import junit.framework.Assert;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.LocalDate;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountNotesEntity;
@@ -140,9 +142,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 @SuppressWarnings("unchecked")
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
-    public LoanAccountActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private static final double DELTA = 0.00000001;
     private String flowKey1;
@@ -159,19 +159,13 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         enableCustomWorkingDays();
         prdOfferingPageParams = new HashMap<String, String>();
         initPageParams();
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("recordOfficeId", "1");
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
     }
 
     public void xtestLoadWithFeeForToday() throws Exception {
@@ -201,6 +195,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
+    @Test
     public void testCreateWithoutPermission() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         UserContext userContext = TestUtils.makeUser();
@@ -220,6 +215,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.create_failure.toString());
     }
 
+    @Test
     public void testUpdateSuccessWithRegeneratingNewRepaymentSchedule() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date startDate = new Date(System.currentTimeMillis());
@@ -275,6 +271,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     }
 
+    @Test
     public void testSchedulePreviewFailureWhenLoanProductFrequencyChanges() throws Exception {
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
         LoanPrdActionForm loanPrdActionForm = new LoanPrdActionForm();
@@ -323,6 +320,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
+    @Test
     public void testGetForCancelledLoanAccount() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date startDate = new Date(System.currentTimeMillis());
@@ -349,6 +347,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals("Total no. of flags should be 1", 1, accountBO.getAccountFlags().size());
     }
 
+    @Test
     public void testPrevious() {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -358,6 +357,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testPreview() throws PageExpiredException, InvalidDateException {
         MeetingBO meeting = new MeetingBuilder().weekly().every(1).occuringOnA(WeekDay.MONDAY).build();
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -396,6 +396,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 getLocale());
     }
 
+    @Test
     public void testforwardWaiveCharge() {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -406,6 +407,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testLoadChangeLog() {
         accountBO = getLoanAccount();
         AuditLog auditLog = new AuditLog(accountBO.getAccountId(), EntityType.LOAN.getValue(), "Mifos",
@@ -426,6 +428,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
     }
 
+    @Test
     public void testCancelChangeLog() {
         accountBO = getLoanAccount();
         setRequestPathInfo("/loanAccountAction.do");
@@ -436,6 +439,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward("cancelLoanChangeLog");
     }
 
+    @Test
     public void testGetAllActivity() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date startDate = new Date(System.currentTimeMillis());
@@ -451,6 +455,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 LoanConstants.LOAN_ALL_ACTIVITY_VIEW, request)).size());
     }
 
+    @Test
     public void testGetInstallmentDetails() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date startDate = new Date(System.currentTimeMillis());
@@ -483,6 +488,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals("100.0", view.getPrincipal());
     }
 
+    @Test
     public void testGet() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
@@ -507,6 +513,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         return (LoanInformationDto) SessionUtils.getAttribute("loanInformationDto", request);
     }
 
+    @Test
     public void testGetWithPayment() throws Exception {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
@@ -530,6 +537,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         center = (CustomerBO) StaticHibernateUtil.getSessionTL().get(CustomerBO.class, center.getCustomerId());
     }
 
+    @Test
     public void testGetLoanRepaymentSchedule() {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
@@ -542,6 +550,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.getLoanRepaymentSchedule.toString());
     }
 
+    @Test
     public void testViewStatusHistory() {
         Date startDate = new Date(System.currentTimeMillis());
         accountBO = getLoanAccount(AccountState.LOAN_APPROVED, startDate, 1);
@@ -558,6 +567,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.viewStatusHistory.toString());
     }
 
+    @Test
     public void testGetPrdOfferingsWithoutCustomer() throws Exception {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "getPrdOfferings");
@@ -566,6 +576,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testGetPrdOfferings() throws Exception {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "getPrdOfferings");
@@ -575,6 +586,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals("Group", (getLoanAccountOwnerFromSession()).getDisplayName());
     }
 
+    @Test
     public void testGetPrdOfferingsApplicableForCustomer() throws Exception {
         LoanOfferingBO loanOffering2 = getLoanOffering("rwrfdb", "1qsd", ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
         LoanOfferingBO loanOffering3 = getLoanOffering("mksgfgfd", "9u78", ApplicableTo.CLIENTS, WEEKLY, EVERY_WEEK);
@@ -592,6 +604,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         TestObjectFactory.removeObject(loanOffering3);
     }
 
+    @Test
     public void testGetPrdOfferingsApplicableForCustomersWithMeeting() throws Exception {
         LoanOfferingBO loanOffering1 = getLoanOffering("vcxvxc", "a123", ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
         LoanOfferingBO loanOffering2 = getLoanOffering("fgdsghdh", "4fdh", ApplicableTo.GROUPS, WEEKLY, EVERY_WEEK);
@@ -621,6 +634,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         return (CustomerDetailDto) SessionUtils.getAttribute(LoanConstants.LOANACCOUNTOWNER, request);
     }
 
+    @Test
     public void testLoadWithoutCustomerAndPrdOfferingId() throws Exception {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "load");
@@ -630,6 +644,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testLoadWithoutCustomer() throws Exception {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "load");
@@ -639,6 +654,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testLoadWithoutPrdOfferingId() throws Exception {
         setRequestPathInfo("/loanAccountAction.do");
         addRequestParameter("method", "load");
@@ -649,6 +665,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testLoad() throws Exception {
         goToPrdOfferingPage();
         actionPerform();
@@ -664,6 +681,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 //        Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.CUSTOM_FIELDS, request));
     }
 
+    @Test
     public void testLoadForMasterData() throws Exception {
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
         LoanOfferingBO loanOffering = getCompleteLoanOfferingObject();
@@ -750,6 +768,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         group = TestObjectFactory.getGroup(group.getCustomerId());
     }
 
+    @Test
     public void testSchedulePreview() throws Exception {
 
         //The disbursement date must be on a working day, and, assuming loan schedule is not independent
@@ -788,6 +807,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         Assert.assertEquals(3, installmentsFromSession.size());
     }
 
+    @Test
     public void testValidateInstallmentsForInstallmentAmountValidation() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
                                             EVERY_WEEK, getVariableInstallmentDetails(2, 15, 100));
@@ -844,6 +864,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         return ((UserContext) request.getSession().getAttribute("UserContext")).getPreferredLocale();
     }
 
+    @Test
     public void testValidateInstallments() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
                                             EVERY_WEEK, getVariableInstallmentDetails(2, 5, 100));
@@ -899,6 +920,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         }
     }
 
+    @Test
     public void testSchedulePreviewForVariableInstallments() throws Exception {
         LoanOfferingBO loanOfferingWithVariableInstallments = getLoanOffering("VarInstLoanPrd", "VILP", ApplicableTo.GROUPS, WEEKLY,
                                             EVERY_WEEK, getVariableInstallmentDetails(10, 100, 1000));
@@ -945,6 +967,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         return variableInstallmentDetailsBO;
     }
 
+    @Test
     public void testSchedulePreviewWithoutData() throws Exception {
         // make sure that everything needed to resolve hidden/mandatory fields is loaded
         EntityMasterData.getInstance().init();
@@ -967,6 +990,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSchedulePreviewWithDataWithNoGracePer() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
@@ -994,6 +1018,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         goToSchedulePreviewPage();
     }
 
+    @Test
     public void testSchedulePreviewWithData() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
@@ -1002,6 +1027,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.schedulePreview_success.toString());
     }
 
+    @Test
     public void testSchedulePreviewWithLoanOfferingFundsData() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         request.getSession().setAttribute(Constants.BUSINESS_KEY, group);
@@ -1014,6 +1040,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
                 .getPrdOfferingId()));
     }
 
+    @Test
     public void testCreate() throws Exception {
 
         SecurityContext securityContext = new SecurityContextImpl();
@@ -1051,6 +1078,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         loan = null;
     }
 
+    @Test
     public void testManage() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date startDate = new Date(System.currentTimeMillis());
@@ -1077,6 +1105,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
      * "page expired" exception, but the catch() block doesn't appear to be
      * reached.
      */
+    @Test
     public void testManageWithoutFlow() throws Exception {
         try {
             request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -1149,6 +1178,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     // actionPerform();
     // verifyForward(ActionForwards.manageprevious_success.toString());
     // }
+    @Test
     public void testCancel() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/loanAccountAction.do");
@@ -1158,6 +1188,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verifyForward(ActionForwards.loan_detail_page.toString());
     }
 
+    @Test
     public void testUpdateSuccessWithoutRegeneratingNewRepaymentSchedule() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = getLoanAccount();
@@ -1455,6 +1486,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         prdOfferingPageParams.put("prdOfferingId", loanOffering.getPrdOfferingId().toString());
     }
 
+    @Test
     public void testShouldNotSetAnyGlimSpecificAttributesIfGlimDisabled() throws Exception {
         loanBusinessServiceMock = createMock(LoanBusinessService.class);
         customerMock = createMock(CustomerBO.class);
@@ -1472,6 +1504,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verify(loanBusinessServiceMock, configurationBusinessServiceMock, customerMock, requestMock);
     }
 
+    @Test
     public void testShouldPopulateClientDetailsFromLoan() throws Exception {
 
         ClientBO clientMock1 = createMock(ClientBO.class);
@@ -1505,6 +1538,7 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
         verify(clientMock1, clientMock2, loanMock);
     }
 
+    @Test
     public void testSchedulePreviewWithDataWithGracePerTooLong() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 

@@ -23,7 +23,11 @@ package org.mifos.accounts.savings.struts.action;
 import java.util.Date;
 
 import junit.framework.Assert;
+
 import org.hibernate.Hibernate;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -66,9 +70,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 
 public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
-    public SavingsClosureActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
     private CustomerBO group;
@@ -88,9 +90,8 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         addRequestParameter("recordLoanOfficerId", "1");
         addRequestParameter("recordOfficeId", "1");
@@ -107,7 +108,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         SecurityContext securityContext = new SecurityContextImpl();
         SecurityContextHolder.setContext(securityContext);
@@ -118,9 +119,9 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         client4 = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testSuccessfulLoad_Client() throws Exception {
         createInitialObjects();
         createClients();
@@ -149,6 +150,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         client4 = new CustomerPersistence().getCustomer(client4.getCustomerId());
     }
 
+    @Test
     public void testSuccessfullLoad() throws Exception {
         createInitialObjects();
         createClients();
@@ -175,6 +177,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         client4 = new CustomerPersistence().getCustomer(client4.getCustomerId());
     }
 
+    @Test
     public void testSuccessfullPreview() throws Exception {
         AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
                 .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
@@ -191,6 +194,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("preview_success");
     }
 
+    @Test
     public void testSuccessfullPreviewWithBlankPaymentId() throws Exception {
         AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
                 .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
@@ -207,6 +211,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("preview_success");
     }
 
+    @Test
     public void testSuccessfullPreviewWithNullPaymentId() throws Exception {
         AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
                 .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
@@ -225,6 +230,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("preview_success");
     }
 
+    @Test
     public void testPreviewDateValidation() throws Exception {
         AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
                 .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
@@ -241,6 +247,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(new String[] { AccountConstants.ERROR_INVALIDDATE });
     }
 
+    @Test
     public void testSuccessfullPreview_withoutReceipt() throws Exception {
         AccountPaymentEntity payment = new AccountPaymentEntity(null, new Money(Configuration.getInstance()
                 .getSystemConfig().getCurrency(), "500"), null, null, null, new Date(System.currentTimeMillis()));
@@ -256,6 +263,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("preview_success");
     }
 
+    @Test
     public void testSuccessfullPrevious() {
         setRequestPathInfo("/savingsClosureAction.do");
         addRequestParameter("method", "previous");
@@ -263,6 +271,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("previous_success");
     }
 
+    @Test
     public void testSuccessfullCancel() throws Exception {
         setRequestPathInfo("/savingsClosureAction.do");
         addRequestParameter("method", "cancel");
@@ -270,6 +279,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("close_success");
     }
 
+    @Test
     public void testSuccessfullCloseAccount() throws Exception {
         createInitialObjects();
         createClients();

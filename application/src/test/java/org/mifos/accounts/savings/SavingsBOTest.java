@@ -25,8 +25,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.config.FiscalCalendarRules;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -63,6 +61,8 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.calendar.DayOfWeek;
+import org.mifos.config.FiscalCalendarRules;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerMeetingEntity;

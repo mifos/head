@@ -20,7 +20,10 @@
 
 package org.mifos.application.master.persistence;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -36,8 +39,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
-
-import java.util.List;
 
 public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 

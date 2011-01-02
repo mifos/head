@@ -21,6 +21,7 @@
 package org.mifos.customers.surveys.struts.tag;
 
 import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;

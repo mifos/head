@@ -20,7 +20,14 @@
 
 package org.mifos.customers.struts.action;
 
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -46,14 +53,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.List;
-
 public class CustActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private CenterBO center;
 
@@ -89,9 +91,8 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -101,8 +102,8 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, CustAction.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         loan1 = null;
         loan2 = null;
         loan3 = null;
@@ -113,9 +114,9 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
         group = null;
         center = null;
         userContext = null;
-        super.tearDown();
     }
 
+    @Test
     public void testGetClosedAccounts() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createCustomers();
@@ -136,6 +137,7 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
                 .getAttribute(AccountConstants.CLOSEDLOANACCOUNTSLIST, request)).size());
     }
 
+    @Test
     public void testGetBackToGroupDetailsPage() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createCustomers();
@@ -149,6 +151,7 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.group_detail_page.toString());
     }
 
+    @Test
     public void testGetBackToCenterDetailsPage() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createCustomers();
@@ -162,6 +165,7 @@ public class CustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.center_detail_page.toString());
     }
 
+    @Test
     public void testGetBackToClientDetailsPage() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createCustomers();

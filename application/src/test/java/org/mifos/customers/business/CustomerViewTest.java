@@ -20,10 +20,10 @@
 
 package org.mifos.customers.business;
 
-import org.mifos.dto.domain.CustomerDto;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
+import org.mifos.dto.domain.CustomerDto;
 
 public class CustomerViewTest extends TestCase {
 

@@ -19,7 +19,9 @@
  */
 
 package org.mifos.application.admin.struts.action;
-
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;
@@ -27,15 +29,12 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
 public class AdminActionStrutsTest extends MifosMockStrutsTestCase {
-    public AdminActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -46,11 +45,11 @@ public class AdminActionStrutsTest extends MifosMockStrutsTestCase {
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
+    @Test
     public void testVerifyAdminForward() {
         setRequestPathInfo("/AdminAction.do");
         addRequestParameter("method", "load");

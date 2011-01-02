@@ -1,14 +1,14 @@
 package org.mifos.accounts.productdefinition.business;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import junit.framework.Assert;
+
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.exceptions.ProductDefinitionException;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class SavingsOfferingBOTest {
     

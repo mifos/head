@@ -20,7 +20,16 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -41,16 +50,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
-
 public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public AccountActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     protected AccountBO accountBO = null;
 
@@ -68,9 +70,8 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -80,12 +81,11 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO = getLoanAccount();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         accountBO = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
     public void ignore_testSuccessfulRemoveFees() {
@@ -117,6 +117,7 @@ public class AccountActionStrutsTest extends MifosMockStrutsTestCase {
                 startDate, loanOffering);
     }
 
+    @Test
     public void testGetTrxnHistorySucess() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         Date currentDate = new Date(System.currentTimeMillis());

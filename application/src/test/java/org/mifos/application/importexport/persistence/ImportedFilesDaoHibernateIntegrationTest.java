@@ -20,7 +20,10 @@
 
 package org.mifos.application.importexport.persistence;
 
+import java.sql.Timestamp;
+
 import junit.framework.Assert;
+
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -31,8 +34,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.sql.Timestamp;
 
 public class ImportedFilesDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 

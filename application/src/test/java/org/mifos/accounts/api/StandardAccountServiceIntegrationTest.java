@@ -20,7 +20,11 @@
 
 package org.mifos.accounts.api;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,9 +53,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 public class StandardAccountServiceIntegrationTest extends AccountIntegrationTestCase {
 

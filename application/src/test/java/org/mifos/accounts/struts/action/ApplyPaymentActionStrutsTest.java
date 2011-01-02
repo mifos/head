@@ -28,6 +28,9 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -53,9 +56,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
-    public ApplyPaymentActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     protected AccountBO accountBO;
     private CustomerBO center;
@@ -69,9 +70,8 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -80,14 +80,14 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, AccountApplyPaymentAction.class);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         accountBO = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testApplyPaymentLoad_Loan() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = createLoanAccount();
@@ -106,6 +106,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     // added for defect 1590 [start]
+    @Test
     public void testApplyPaymentLoad_Fees() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = createLoanAccount();
@@ -125,6 +126,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
 
     // added for defect 1590 [end]
 
+    @Test
     public void testApplyPaymentPreview() throws InvalidDateException {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/applyPaymentAction");
@@ -139,6 +141,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(Constants.PREVIEW_SUCCESS);
     }
 
+    @Test
     public void testNewStyleApplyPaymentPreview() throws InvalidDateException {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/applyPaymentAction");
@@ -189,6 +192,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
     }
 
+    @Test
     public void testApplyPaymentPreviewDateValidation() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         accountBO = createLoanAccount();
@@ -302,6 +306,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(AccountStates.LOANACC_ACTIVEINGOODSTANDING, accountBO.getAccountState().getId().shortValue());
     }
 
+    @Test
     public void testApplyPaymentPrevious() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/applyPaymentAction");
@@ -311,6 +316,7 @@ public class ApplyPaymentActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(Constants.PREVIOUS_SUCCESS);
     }
 
+    @Test
     public void testApplyPaymentCancel() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/applyPaymentAction");

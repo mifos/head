@@ -20,8 +20,13 @@
 
 package org.mifos.customers.surveys.struts.action;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.apache.struts.action.ActionMapping;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.business.Question;
 import org.mifos.customers.surveys.business.Survey;
@@ -35,32 +40,21 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.util.List;
-
 public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public SurveysActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     ActionMapping moduleMapping;
     private Question question;
     private Question question2;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
                 .shortValue());
         request.getSession(false).setAttribute("ActivityContext", ac);
-    }
-
-    @Override
-    public void tearDown() throws Exception {
-        super.tearDown();
     }
 
     private Survey makeTestSurvey(String surveyName, String questionText) throws Exception {
@@ -72,6 +66,7 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         return survey;
     }
 
+    @Test
     public void testPreviewFailureNoName() throws Exception {
         setRequestPathInfo("/surveysAction");
         addRequestParameter("method", "create_entry");
@@ -84,6 +79,7 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(new String[] { "errors.NotNullEmptyValidator.MISSING_FIELD" });
     }
 
+    @Test
     public void testMainpage() throws Exception {
         String testName = "Test Survey 1";
         String questionText = "A question";
@@ -97,6 +93,7 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(1, surveys.get(0).getQuestions().size());
     }
 
+    @Test
     public void testGetAndPrint() throws Exception {
         String testName = "Test Survey 2";
         String questionText = "Some question here";
@@ -119,6 +116,7 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testCreateEntry() throws Exception {
         String name = "test";
         String appliesTo = "client";
@@ -162,6 +160,7 @@ public class SurveysActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(name, surveysPersistence.retrieveAllSurveys().get(0).getName());
     }
 
+    @Test
     public void testEditEntry() throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         String questionText = "testCreateEntry question 1";

@@ -20,7 +20,12 @@
 
 package org.mifos.framework.components.taggenerator;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,10 +50,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class TagGeneratorIntegrationTest extends MifosIntegrationTestCase {
 

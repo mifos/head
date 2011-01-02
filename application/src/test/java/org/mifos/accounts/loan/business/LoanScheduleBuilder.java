@@ -1,9 +1,9 @@
 package org.mifos.accounts.loan.business;
 
+import java.util.Date;
+
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.framework.util.helpers.Money;
-
-import java.util.Date;
 
 public class LoanScheduleBuilder {
     private LoanScheduleEntity loanScheduleEntity;

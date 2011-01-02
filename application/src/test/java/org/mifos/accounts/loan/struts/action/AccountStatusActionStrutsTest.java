@@ -20,7 +20,14 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -42,14 +49,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.List;
-
 public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public AccountStatusActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
 
@@ -72,9 +74,8 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -83,16 +84,16 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, AccountStatusAction.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         account = null;
         client = null;
         group = null;
         center = null;
         account = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoad() {
         setRequestPathInfo("/ChangeAccountStatus.do");
         addRequestParameter("method", Methods.load.toString());
@@ -101,6 +102,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testSearchResults() throws Exception {
         createCustomers();
         account = getLoanAccount(group);
@@ -117,6 +119,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(1, ((List<PersonnelDto>) SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request)).size());
     }
 
+    @Test
     public void testSearchResults_noresults_forvalidate() throws Exception {
         createCustomers();
         account = getLoanAccount(group);
@@ -129,6 +132,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSearchResults_noresults() throws Exception {
         createCustomers();
         account = getLoanAccount(group);
@@ -144,6 +148,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(SessionUtils.getAttribute(LoanConstants.SEARCH_RESULTS, request));
     }
 
+    @Test
     public void testSearchResults_exception() {
         createCustomers();
         account = getLoanAccount(group);
@@ -154,6 +159,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testUpdate() throws Exception {
         createCustomers();
         account = getLoanAccount(group);
@@ -167,6 +173,7 @@ public class AccountStatusActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.changeAccountStatusConfirmation_success.toString());
     }
 
+    @Test
     public void testUpdate_validation() throws Exception {
         createCustomers();
         account = getLoanAccount(group);

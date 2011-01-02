@@ -20,10 +20,26 @@
 
 package org.mifos.accounts;
 
+import static org.joda.time.DateTimeConstants.APRIL;
+import static org.joda.time.DateTimeConstants.AUGUST;
+import static org.joda.time.DateTimeConstants.DECEMBER;
+import static org.joda.time.DateTimeConstants.FEBRUARY;
+import static org.joda.time.DateTimeConstants.JANUARY;
+import static org.joda.time.DateTimeConstants.JULY;
+import static org.joda.time.DateTimeConstants.JUNE;
+import static org.joda.time.DateTimeConstants.MARCH;
+import static org.joda.time.DateTimeConstants.MAY;
+import static org.joda.time.DateTimeConstants.NOVEMBER;
+import static org.joda.time.DateTimeConstants.SEPTEMBER;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
@@ -35,7 +51,12 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.*;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.InterestType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
@@ -55,7 +76,6 @@ import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.domain.builders.MeetingUpdateRequestBuilder;
 import org.mifos.dto.domain.MeetingUpdateRequest;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -64,14 +84,8 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.joda.time.DateTimeConstants.*;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrationTestCase {
 

@@ -20,7 +20,13 @@
 
 package org.mifos.accounts.fees.struts.action;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.RateFeeBO;
@@ -49,13 +55,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.util.List;
-
 public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public FeeActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private static final double DELTA = 0.00000001;
 
@@ -71,9 +73,8 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
     private String flowKey;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -84,15 +85,15 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, FeeAction.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         fee = null;
         fee1 = null;
         fee2 = null;
         fee3 = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoad() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "load");
@@ -112,6 +113,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("The size of master data for GLCodes of fees : ", feeParameters.getGlCodes().size(), 7);
     }
 
+    @Test
     public void testFailurePreviewWithAllValuesNull() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
@@ -126,6 +128,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithFeeNameNotNull() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
@@ -142,6 +145,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithFeeCategoryNotNull() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
@@ -157,6 +161,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWith_FeeFrequencyOneTime() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
@@ -173,6 +178,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWith_FeeFrequencyPeriodic() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
@@ -190,6 +196,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWith_RateEnteredWithoutFormula() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
@@ -208,6 +215,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWith_RateAndAmountEnteredWithoutFormula() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
@@ -227,6 +235,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWith_AmountNotNull() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "preview");
@@ -244,6 +253,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessfulPreview() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "load");
@@ -269,6 +279,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessfulCreateOneTimeFee() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "load");
@@ -304,6 +315,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertTrue(fee.isActive());
     }
 
+    @Test
     public void testSuccessfulCreateOneTimeAdminFee() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "load");
@@ -343,6 +355,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertTrue(fee.isActive());
     }
 
+    @Test
     public void testSuccessfulCreatePeriodicFee() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "load");
@@ -385,6 +398,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertTrue(fee.isActive());
     }
 
+    @Test
     public void testSuccessfulCreatePeriodicFeeWithFormula() throws Exception {
         setRequestPathInfo("/feeaction.do");
         addRequestParameter("method", "load");
@@ -429,6 +443,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertTrue(fee.isActive());
     }
 
+    @Test
     public void testSuccessfulManage_AmountFee() throws Exception {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
@@ -456,6 +471,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
                 .getAttribute(FeeConstants.STATUSLIST, request)).size());
     }
 
+    @Test
     public void testFailureEditPreviewForAmount() throws PageExpiredException {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
@@ -480,6 +496,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailureEditPreviewForZeroAmount() throws PageExpiredException {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
@@ -504,6 +521,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessfulManage_RateFee() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 12.34, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT, null);
@@ -533,6 +551,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
                 .getAttribute(FeeConstants.STATUSLIST, request)).size());
     }
 
+    @Test
     public void testFailureEditPreviewForRate() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 12.34, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT, null);
@@ -558,6 +577,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessfulEditPreview() throws Exception {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
@@ -589,6 +609,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(actionForm.getFeeFormula());
     }
 
+    @Test
     public void testSuccessfulUpdate_AmountFee() throws Exception {
         fee = TestObjectFactory.createOneTimeAmountFee("One Time Fee", FeeCategory.ALLCUSTOMERS, "12.34",
                 FeePayment.UPFRONT);
@@ -625,6 +646,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(new Money(getCurrency(), "200.0"), ((AmountFeeBO) fee).getFeeAmount());
     }
 
+    @Test
     public void testSuccessfulGetFee() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT, "non null lookup value");
@@ -646,6 +668,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(24.0, feeDto.getRate());
     }
 
+    @Test
     public void testSuccessfulUpdate_RateFee() throws Exception {
         fee = TestObjectFactory.createOneTimeRateFee("One Time Fee", FeeCategory.ALLCUSTOMERS, 24.0, FeeFormula.AMOUNT,
                 FeePayment.UPFRONT, null);
@@ -680,6 +703,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(30.0, ((RateFeeBO) fee).getRate(), DELTA);
     }
 
+    @Test
     public void testSuccessfulViewAllFees() throws Exception {
         StaticHibernateUtil.startTransaction();
         fee = TestObjectFactory.createOneTimeRateFee("Group_Fee", FeeCategory.GROUP, 10.0, FeeFormula.AMOUNT,
@@ -722,6 +746,7 @@ public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
         fee3 = (FeeBO) TestObjectFactory.getObject(FeeBO.class, fee3.getFeeId());
     }
 
+    @Test
     public void testFeeCategory() throws Exception {
         try {
             FeeCategory.getFeeCategory(Short.valueOf((short) 999));

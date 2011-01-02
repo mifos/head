@@ -20,10 +20,16 @@
 
 package org.mifos.reports.struts.action;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.upload.FormFile;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -50,18 +56,12 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public BirtReportsUploadActionStrutsTest() throws Exception {
-        super();
-    }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+
+    @Before
+    public void setUp() throws Exception {
     }
 
     @Override
@@ -70,6 +70,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
     }
 
+    @Test
     public void testGetBirtReportsUploadPage() {
         setRequestPathInfo("/birtReportsUploadAction.do");
         addRequestParameter("method", "getBirtReportsUploadPage");
@@ -79,6 +80,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testEdit() {
         setRequestPathInfo("/birtReportsUploadAction.do");
         addRequestParameter("method", "edit");
@@ -90,6 +92,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.edit_success.toString());
     }
 
+    @Test
     public void testShouldEditPreviewFailureWhenReportTitleIsEmpty() {
         setRequestPathInfo("/birtReportsUploadAction.do");
         addRequestParameter("method", "editpreview");
@@ -100,6 +103,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForwardPath("/birtReportsUploadAction.do?method=validate");
     }
 
+    @Test
     public void testShouldEditPreviewFailureWhenReportCategoryIdIsEmpty() {
         setRequestPathInfo("/birtReportsUploadAction.do");
         addRequestParameter("method", "editpreview");
@@ -110,6 +114,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForwardPath("/birtReportsUploadAction.do?method=validate");
     }
 
+    @Test
     public void testShouldEditPreviewFailureWhenIsActiveIsEmpty() {
         setRequestPathInfo("/birtReportsUploadAction.do");
         addRequestParameter("method", "editpreview");
@@ -120,6 +125,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForwardPath("/birtReportsUploadAction.do?method=validate");
     }
 
+    @Test
     public void testUpgradePathNotRuined() throws Exception {
         // TODO Temporary solution to avoid unsuccessful test on some machines
 
@@ -160,6 +166,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         removeReport(report.getReportId());
     }
 
+    @Test
     public void testShouldCreateFailureWhenActivityIdOutOfRange() throws Exception {
         ActivityEntity activityEntity = ActivityTestUtil.insertActivityForTest(Short.MIN_VALUE);
 
@@ -181,6 +188,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         ActivityTestUtil.deleteActivityForTest(activityEntity);
     }
 
+    @Test
     public void testShouldPreviewSuccessWithReportTemplate() throws Exception {
         setRequestPathInfo("/birtReportsUploadAction.do");
 
@@ -198,6 +206,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("preview_success");
     }
 
+    @Test
     public void testShouldPreviewFailureWithOutReportTemplate() throws Exception {
         setRequestPathInfo("/birtReportsUploadAction.do");
 
@@ -214,6 +223,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(errors);
     }
 
+    @Test
     public void testShouldSubmitSucessWhenUploadNewReport() throws Exception {
         // TODO Temporary solution to avoid unsuccessful test on some machines
 
@@ -244,6 +254,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testShouldSubmitSuccessAfterEdit() throws Exception {
         setRequestPathInfo("/birtReportsUploadAction.do");
 
@@ -287,12 +298,14 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testEditWithPermissionIsAllowed() throws Exception {
         setupReportEditPermission(true);
         actionPerform();
         verifyForward(ActionForwards.edit_success.toString());
     }
 
+    @Test
     public void testEditWithoutPermissionIsDenied() throws Exception {
         setupReportEditPermission(false);
         actionPerform();

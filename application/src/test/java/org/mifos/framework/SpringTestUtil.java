@@ -20,15 +20,9 @@
 
 package org.mifos.framework;
 
-import org.mifos.framework.util.ConfigurationLocator;
-import org.mifos.framework.util.helpers.FilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * A (hopefully) temporary class to encapsulate Spring/Mifos integration. (-Adam
@@ -43,44 +37,6 @@ public class SpringTestUtil {
      * good choice.
      */
     private static final Logger logger = LoggerFactory.getLogger(SpringTestUtil.class);
-
-    /**
-     * Dynamically fetches config files since an exception is thrown if a nonexistant file is passed into
-     * {@link ClassPathXmlApplicationContext#ClassPathXmlApplicationContext(String[])} .
-     */
-    public static void initializeSpring() {
-        String[] configFiles = getConfigFiles();
-        appContext = new ClassPathXmlApplicationContext(configFiles);
-    }
-
-    /**
-     * Provides an array of config files based on what is found by
-     * {@link ConfigurationLocator}. Hopefully this coincides with the class loader
-     * used by {@link ClassPathXmlApplicationContext}...
-     * @return array of config files
-     */
-    private static String[] getConfigFiles() {
-        ArrayList<String> configFiles = new ArrayList<String>();
-
-        // required config file. exception thrown if not found.
-        configFiles.add(FilePaths.SPRING_CONFIG_CORE);
-        configFiles.add("integration-test-context.xml");
-
-        String customMbcPath;
-        try {
-            customMbcPath = new ConfigurationLocator().getFilePath(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN);
-        } catch (IOException e) {
-            customMbcPath = null;
-        }
-        if (customMbcPath != null) {
-            logger.info("using " + customMbcPath + " for custom bean configuration");
-            configFiles.add("file:" + customMbcPath);
-        } else {
-            logger.debug(FilePaths.FINANCIAL_ACTION_MAPPING_CONFIG_CUSTOM_BEAN + " not found in application classpath. Ignoring.");
-        }
-
-        return configFiles.toArray(new String[configFiles.size()]);
-    }
 
     public static ApplicationContext getAppContext() {
         return appContext;

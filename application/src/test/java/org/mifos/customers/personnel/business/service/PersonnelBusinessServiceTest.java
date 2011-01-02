@@ -1,5 +1,8 @@
 package org.mifos.customers.personnel.business.service;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.exceptions.CustomerException;
@@ -10,9 +13,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonnelBusinessServiceTest {

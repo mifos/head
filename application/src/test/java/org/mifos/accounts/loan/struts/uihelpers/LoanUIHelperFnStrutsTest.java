@@ -20,7 +20,23 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+
+import java.util.Date;
+import java.util.Locale;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.struts.action.LoanAccountAction;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -34,23 +50,9 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.Locale;
-
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
-
 public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
-    public LoanUIHelperFnStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
 
@@ -60,14 +62,12 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -76,22 +76,26 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         createFlow(request, LoanAccountAction.class);
     }
 
+    @Test
     public void testGetCurrrentDate() throws InvalidDateException {
         Locale locale = new Locale("EN");
        Assert.assertEquals(DateUtils.getCurrentDate(locale), LoanUIHelperFn.getCurrrentDate(locale));
     }
 
+    @Test
     public void testGetMeetingRecurrence() throws Exception {
         UserContext userContext = TestObjectFactory.getContext();
         MeetingBO meeting = TestObjectFactory.getNewMeeting(MONTHLY, EVERY_SECOND_MONTH, CUSTOMER_MEETING, MONDAY);
        Assert.assertEquals("2 month(s)", LoanUIHelperFn.getMeetingRecurrence(meeting, userContext));
     }
 
+    @Test
     public void testGetDoubleValue() {
        Assert.assertEquals("2.2", LoanUIHelperFn.getDoubleValue(new Double(2.2)));
        Assert.assertEquals("0.0", LoanUIHelperFn.getDoubleValue(null));
     }
 
+    @Test
     public void testRepaymentScheduleInstallment() {
         long l = System.currentTimeMillis();
         RepaymentScheduleInstallment repaymentScheduleInstallment = new RepaymentScheduleInstallment(
@@ -114,6 +118,7 @@ public class LoanUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals("principal", m, repaymentScheduleInstallment.getPrincipal());
     }
 
+    @Test
     public void testShouldDisableEditAmountForGlimAccountInDifferentAccountStates() throws Exception {
         ConfigurationBusinessService configServiceMock = createMock(ConfigurationBusinessService.class);
         expect(configServiceMock.isGlimEnabled()).andReturn(true).anyTimes();

@@ -20,7 +20,15 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -42,15 +50,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-
 public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public RepayLoanActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     protected AccountBO accountBO = null;
 
@@ -66,9 +68,8 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -80,14 +81,14 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         accountBO = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoadRepayment() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/repayLoanAction");
@@ -100,6 +101,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(amount, ((LoanBO) accountBO).getEarlyRepayAmount());
     }
 
+    @Test
     public void testRepaymentPreview() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/repayLoanAction");
@@ -108,6 +110,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         actionPerform();
     }
 
+    @Test
     public void testRepaymentPrevious() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/repayLoanAction");
@@ -117,6 +120,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(Constants.PREVIOUS_SUCCESS);
     }
 
+    @Test
     public void testMakeRepaymentForCurrentDateSameAsInstallmentDate() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
@@ -142,6 +146,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
     
+    @Test
     public void testMakeRepaymentForCurrentDateSameAsInstallmentDateWithInterestWaiver() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, accountBO, request);
@@ -168,6 +173,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDates() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         changeFirstInstallmentDate(accountBO);
@@ -195,6 +201,7 @@ public class RepayLoanActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testMakeRepaymentForCurrentDateLiesBetweenInstallmentDatesWithInterestWaiver() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         changeFirstInstallmentDate(accountBO);

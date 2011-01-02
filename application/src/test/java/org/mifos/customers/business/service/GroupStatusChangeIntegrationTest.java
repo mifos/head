@@ -20,6 +20,12 @@
 
 package org.mifos.customers.business.service;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+import java.util.Locale;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -55,12 +61,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-import java.util.Locale;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 public class GroupStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 

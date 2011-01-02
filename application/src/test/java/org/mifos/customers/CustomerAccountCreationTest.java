@@ -20,9 +20,9 @@
 
 package org.mifos.customers;
 
-import static org.junit.matchers.JUnitMatchers.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
 
 import java.util.ArrayList;
 import java.util.List;

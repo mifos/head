@@ -20,16 +20,17 @@
 
 package org.mifos.accounts.productdefinition.business;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import org.testng.annotations.Test;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+import org.testng.annotations.Test;
 
 @Test(groups = { "unit", "fastTestsSuite" }, dependsOnGroups = { "productMixTestSuite" })
 public class PrdOfferingBOTest extends TestCase {

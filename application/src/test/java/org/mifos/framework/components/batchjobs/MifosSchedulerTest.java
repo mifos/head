@@ -21,9 +21,9 @@
 package org.mifos.framework.components.batchjobs;
 
 import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.EasyMock.expectLastCall;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

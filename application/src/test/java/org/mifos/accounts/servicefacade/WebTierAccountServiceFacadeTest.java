@@ -19,6 +19,15 @@
  */
 package org.mifos.accounts.servicefacade;
 
+import static java.util.Collections.EMPTY_LIST;
+import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,13 +44,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.math.BigDecimal;
-import java.util.Date;
-
-import static java.util.Collections.EMPTY_LIST;
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WebTierAccountServiceFacadeTest {

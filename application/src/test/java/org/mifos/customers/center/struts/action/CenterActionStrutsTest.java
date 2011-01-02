@@ -30,6 +30,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -68,9 +71,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
 public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
-    public CenterActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private CenterBO center;
     private GroupBO group;
@@ -86,9 +87,8 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
 
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
@@ -107,14 +107,14 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
                 fieldConfig.getEntityMandatoryFieldMap());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         savingsBO = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoad() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "load");
@@ -139,6 +139,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(curDate, retrievedDate);
     }
 
+    @Test
     public void testFailurePreviewWithAllValuesNull() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "preview");
@@ -151,6 +152,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithNameNotNull() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "preview");
@@ -164,6 +166,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithLoanOfficerNotNull() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "preview");
@@ -178,6 +181,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithMeetingNull() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "load");
@@ -195,6 +199,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreview_WithDuplicateFee() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
         setRequestPathInfo("/centerCustAction.do");
@@ -215,6 +220,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
     }
 
+    @Test
     public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
         setRequestPathInfo("/centerCustAction.do");
@@ -233,6 +239,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.FEE));
     }
 
+    @Test
     public void testFailurePreview_FeeFrequencyMismatch() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/centerCustAction.do");
@@ -250,6 +257,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("Fee", 1, getErrorSize(CustomerConstants.ERRORS_FEE_FREQUENCY_MISMATCH));
     }
 
+    @Test
     public void testSuccessfulPreview() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
         setRequestPathInfo("/centerCustAction.do");
@@ -278,6 +286,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessfulPrevious() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "previous");
@@ -288,6 +297,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessfulCreate() throws Exception {
 
         MeetingBO weeklyMeeting = new MeetingBuilder().customerMeeting().weekly().every(1).startingToday().build();
@@ -334,6 +344,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         return (List<ApplicableAccountFeeDto>) SessionUtils.getAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, request);
     }
 
+    @Test
     public void testManage() throws Exception {
         createAndSetCenterInSession();
         setRequestPathInfo("/centerCustAction.do");
@@ -354,6 +365,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(center.getPersonnel().getPersonnelId(), actionForm.getLoanOfficerIdValue());
     }
 
+    @Test
     public void testFailureEditPreviewWithLoanOfficerNull() throws Exception {
         createAndSetCenterInSession();
         setRequestPathInfo("/centerCustAction.do");
@@ -372,6 +384,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
 
+    @Test
     public void testSuccessfulEditPreview() throws Exception {
         createAndSetCenterInSession();
         setRequestPathInfo("/centerCustAction.do");
@@ -406,6 +419,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, center, request);
     }
 
+    @Test
     public void testSuccessfulEditPrevious() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "editPrevious");
@@ -416,6 +430,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testGet() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -447,6 +462,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         savingsBO = TestObjectFactory.getObject(SavingsBO.class, savingsBO.getAccountId());
     }
 
+    @Test
     public void testLoadSearch() throws Exception {
         addActionAndMethod(Methods.loadSearch.toString());
         addRequestParameter("input", "search");
@@ -455,6 +471,7 @@ public class CenterActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.loadSearch_success.toString());
     }
 
+    @Test
     public void testSearch() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("SearchCenter", meeting);

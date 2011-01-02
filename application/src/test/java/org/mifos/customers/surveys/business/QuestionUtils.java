@@ -20,11 +20,11 @@
 
 package org.mifos.customers.surveys.business;
 
-import org.mifos.customers.surveys.helpers.AnswerType;
-import org.mifos.customers.surveys.helpers.QuestionState;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.mifos.customers.surveys.helpers.AnswerType;
+import org.mifos.customers.surveys.helpers.QuestionState;
 
 public class QuestionUtils {
     public static Question getNumericQuestion(String title, int min, int max) {

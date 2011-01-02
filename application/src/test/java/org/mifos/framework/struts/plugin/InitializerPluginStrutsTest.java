@@ -24,6 +24,9 @@ import java.util.Date;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
@@ -36,15 +39,12 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class InitializerPluginStrutsTest extends MifosMockStrutsTestCase {
 
-    public InitializerPluginStrutsTest() throws Exception {
-        super();
-    }
+
 
     private SavingsOfferingBO product;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
 
         request.getSession(true);
         createFlowAndAddToRequest(SavingsAction.class);
@@ -55,12 +55,12 @@ public class InitializerPluginStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedPrdOfferingId", product.getPrdOfferingId().toString());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(product);
-        super.tearDown();
     }
 
+    @Test
     public void testLabelConstants() throws Exception {
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "load");

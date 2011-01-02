@@ -19,10 +19,10 @@
  */
 package org.mifos.framework.hibernate.helper;
 
+import javax.transaction.Synchronization;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Transaction;
-
-import javax.transaction.Synchronization;
 
 public class AuditTransactionForTests implements Transaction {
     public void begin() throws HibernateException {

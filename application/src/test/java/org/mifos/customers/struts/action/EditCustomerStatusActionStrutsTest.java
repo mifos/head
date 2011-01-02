@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -71,9 +74,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public EditCustomerStatusActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private CustomerBO client;
     private CustomerBO group;
@@ -93,9 +94,8 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -112,12 +112,12 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
-        super.tearDown();
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testLoad() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -134,6 +134,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
 
     }
 
+    @Test
     public void testFailurePreviewWithAllValuesNull() throws Exception {
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
@@ -144,6 +145,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithFlagValueNull() throws Exception {
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
@@ -155,6 +157,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueNull() throws Exception {
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
@@ -166,6 +169,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueExceedingMaxLength() throws Exception {
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
@@ -189,6 +193,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testPreviewSuccess() throws PageExpiredException {
         cleanInitialObjects();
         createInitialObjects();
@@ -218,6 +223,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testUpdateCenterStatus() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center", meeting);
@@ -254,6 +260,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testLoadForClient() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -269,6 +276,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testFailurePreviewWithAllValuesNullForClient() throws Exception {
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
@@ -279,6 +287,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithFlagValueNullForCLient() throws Exception {
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
@@ -290,6 +299,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueNullForClient() throws Exception {
         setRequestPathInfo("/editCustomerStatusAction.do");
         addRequestParameter("method", Methods.previewStatus.toString());
@@ -302,6 +312,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testPreviewSuccessForClient() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -329,6 +340,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testPrevious() {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -343,6 +355,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         center = null;
     }
 
+    @Test
     public void testCancel() {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -356,6 +369,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testUpdateStatusForClient() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -431,6 +445,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testUpdateStatusForClientForActiveLoanOfficer() throws CustomerException, PageExpiredException {
         createInitialObjects();
         CustomerBOTestUtils.setCustomerStatus(client,
@@ -507,6 +522,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testUpdateStatusForClientWhenClientHasActiveAccounts() throws CustomerException, PageExpiredException {
         createInitialObjects();
         loanBO = getLoanAccount(client, "dsafdsfds", "12ed");
@@ -550,6 +566,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testUpdateStatusForClientWhenClientIsAssignedPosition() throws CustomerException,
             PageExpiredException {
         createInitialObjects();
@@ -605,6 +622,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testChangeStatusToActiveForClient() throws Exception {
         createObjectsForClient("Client");
         CustomerBOTestUtils.setPersonnel(client, null);
@@ -640,6 +658,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testChangeStatusToActiveForClientForMeetingNull() throws Exception {
         createClientWithoutMeeting("Client");
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -670,6 +689,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testLoadSuccessForGroup() throws PageExpiredException {
         createInitialObjects();
         setRequestPathInfo("/editCustomerStatusAction.do");
@@ -685,6 +705,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testPreviewSuccessForGroup() throws PageExpiredException {
         createInitialObjects();
         invokeLoadSuccessfully();
@@ -705,6 +726,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testPreviewStatusFailureWithAllValuesNullForGroup() throws Exception {
         createInitialObjects();
         invokeLoadSuccessfully();
@@ -720,6 +742,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testPreviewStatusFailureWithFlagValueNullForGroup() throws Exception {
         createInitialObjects();
         invokeLoadSuccessfully();
@@ -735,6 +758,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testPreviewStatusFailureWhenStatusIsNull() {
         createInitialObjects();
         invokeLoadSuccessfully();
@@ -750,6 +774,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testPreviewStatusFailureWhenNotesIsNull() {
         createInitialObjects();
         invokeLoadSuccessfully();
@@ -765,6 +790,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testPreviousStatus() {
         createInitialObjects();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -778,6 +804,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testCancelStatus() {
         createInitialObjects();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -791,6 +818,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testUpdateStatusSuccess() {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_PARTIAL, CustomerStatus.CLIENT_CLOSED);
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_BLACKLISTED);
@@ -807,6 +835,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testUpdateStatusSuccessWhileChangingStatusToActive() {
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_PARTIAL, CustomerStatus.CLIENT_CLOSED);
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_ACTIVE, null);
@@ -825,6 +854,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testUpdateStatusFailureWhenGroupHasActiveAccounts() throws CustomerException {
         createInitialObjects();
         loanBO = getLoanAccount(group, "dsafdsfsdgfdg", "23vf");
@@ -846,6 +876,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testUpdateStatusFailureWhenGroupHasActiveClients() {
         createInitialObjects();
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_CLOSED, CustomerStatusFlag.GROUP_CLOSED_OTHER);
@@ -858,6 +889,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testUpdateStatusFailureWhenGroupHasActiveClientsWhenCenterIsInactiveWhileChangingStatusCancelToPartial() throws Exception {
 
         // setup
@@ -884,6 +916,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjects();
     }
 
+    @Test
     public void testUpdateStatusFailureWhenGroupIsUnderBranchWhileChangingStatusCancelToPartial() {
         createInitialObjectsWhenCenterHierarchyNotExist(CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
         invokeLoadAndPreviewSuccessfully(CustomerStatus.GROUP_PARTIAL, null);
@@ -896,6 +929,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjectsWhenCenterHierarchyNotExist();
     }
 
+    @Test
     public void testChangeStatusToActiveForGroupUnderBranchWithNoLO() {
         createInitialObjectsWhenCenterHierarchyNotExistWithNoLO(CustomerStatus.GROUP_PARTIAL,
                 CustomerStatus.CLIENT_CLOSED);
@@ -909,6 +943,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         cleanInitialObjectsWhenCenterHierarchyNotExist();
     }
 
+    @Test
     public void testUpdateStatusFailureWhenGroupIsUnderBranchWitnNoMeetingsWhileChangingStatusToActive() {
         createInitialObjectsWhenCenterHierarchyNotExistWithNoMeeting(CustomerStatus.GROUP_PARTIAL,
                 CustomerStatus.CLIENT_CLOSED);

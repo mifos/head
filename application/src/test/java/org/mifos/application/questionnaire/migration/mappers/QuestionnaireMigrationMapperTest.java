@@ -20,46 +20,6 @@
 
 package org.mifos.application.questionnaire.migration.mappers;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mifos.accounts.business.AccountCustomFieldEntity;
-import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.business.CustomFieldType;
-import org.mifos.application.util.helpers.EntityType;
-import org.mifos.application.util.helpers.YesNoFlag;
-import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
-import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerBO;
-import org.mifos.customers.client.business.ClientBO;
-import org.mifos.customers.persistence.CustomerDao;
-import org.mifos.customers.surveys.business.CustomFieldUtils;
-import org.mifos.customers.surveys.business.Question;
-import org.mifos.customers.surveys.business.QuestionChoice;
-import org.mifos.customers.surveys.business.QuestionUtils;
-import org.mifos.customers.surveys.business.Survey;
-import org.mifos.customers.surveys.business.SurveyInstance;
-import org.mifos.customers.surveys.helpers.AnswerType;
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.platform.questionnaire.service.QuestionType;
-import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
-import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
-import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
-import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
-import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
-import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
-import org.mifos.platform.questionnaire.service.dtos.SectionDto;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -73,6 +33,46 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountCustomFieldEntity;
+import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.questionnaire.migration.CustomFieldForMigrationDto;
+import org.mifos.application.util.helpers.EntityType;
+import org.mifos.application.util.helpers.YesNoFlag;
+import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerCustomFieldEntity;
+import org.mifos.customers.client.business.ClientBO;
+import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.customers.surveys.business.CustomFieldUtils;
+import org.mifos.customers.surveys.business.Question;
+import org.mifos.customers.surveys.business.QuestionChoice;
+import org.mifos.customers.surveys.business.QuestionUtils;
+import org.mifos.customers.surveys.business.Survey;
+import org.mifos.customers.surveys.business.SurveyInstance;
+import org.mifos.customers.surveys.helpers.AnswerType;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.platform.questionnaire.service.QuestionType;
+import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
+import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupInstanceDto;
+import org.mifos.platform.questionnaire.service.dtos.QuestionGroupResponseDto;
+import org.mifos.platform.questionnaire.service.dtos.SectionDto;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionnaireMigrationMapperTest {

@@ -20,7 +20,13 @@
 
 package org.mifos.customers.struts.action;
 
+import java.sql.Date;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -46,12 +52,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.sql.Date;
-
 public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
-    public CustomerApplyAdjustmentActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private AccountBO accountBO = null;
 
@@ -71,9 +73,8 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -83,15 +84,15 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         client = null;
         group = null;
         center = null;
 
-        super.tearDown();
     }
 
+    @Test
     public void testLoadAdjustment() throws Exception {
         applyPayment();
         setRequestPathInfo("/custApplyAdjustment.do");
@@ -108,6 +109,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testPreviewAdjustment() throws Exception {
         applyPayment();
         setRequestPathInfo("/custApplyAdjustment.do");
@@ -143,6 +145,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testCancelAdjustment() throws Exception {
         setRequestPathInfo("/custApplyAdjustment.do");
         addRequestParameter("method", "cancelAdjustment");
@@ -154,6 +157,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testValidation_AdjustmentCheckbox() throws Exception {
         applyPayment();
         addRequestParameter("globalCustNum", "Client_Active_test_3");
@@ -169,6 +173,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testValidation_AdjustmentNoteSize() throws Exception {
         applyPayment();
         addRequestParameter("globalCustNum", "Client_Active_test_3");
@@ -186,6 +191,7 @@ public class CustomerApplyAdjustmentActionStrutsTest extends MifosMockStrutsTest
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testValidation_AdjustmentNoteMandatory() throws Exception {
         applyPayment();
         addRequestParameter("globalCustNum", "Client_Active_test_3");

@@ -20,7 +20,13 @@
 
 package org.mifos.security.rolesandpermission.struts;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -38,13 +44,9 @@ import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionCons
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.util.List;
-
 public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public RolesPermissionsActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     UserContext userContext = null;
 
@@ -52,9 +54,8 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private RoleBO role = null;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -65,12 +66,12 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, RolesPermissionsAction.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         role = null;
-        super.tearDown();
     }
 
+    @Test
     public void testViewRoles() throws Exception {
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "viewRoles");
@@ -83,6 +84,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testLoad() throws Exception {
 
         setRequestPathInfo("/rolesPermission.do");
@@ -99,6 +101,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testCreate() throws Exception {
 
         setRequestPathInfo("/rolesPermission.do");
@@ -135,6 +138,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCreateFailureWhenNameIsNull() throws Exception {
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "load");
@@ -154,6 +158,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_failure.toString());
     }
 
+    @Test
     public void testCreateFailureWhenNameIsEmpty() throws Exception {
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "load");
@@ -174,6 +179,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_failure.toString());
     }
 
+    @Test
     public void testCreateFailureActivitiesAreNull() throws Exception {
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "load");
@@ -191,6 +197,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_failure.toString());
     }
 
+    @Test
     public void testCreateFailureActivitiesAreEmpty() throws Exception {
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "load");
@@ -211,6 +218,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.create_failure.toString());
     }
 
+    @Test
     public void testManage() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
@@ -227,6 +235,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testUpdateSuccess() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
@@ -265,6 +274,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertFalse(AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext));
     }
 
+    @Test
     public void testUpdateFailureWhenNameIsNull() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
@@ -291,6 +301,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testUpdateFailureWhenNameIsEmpty() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
@@ -317,6 +328,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testUpdateFailureForDuplicateName() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
@@ -343,6 +355,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testUpdateFailureWhenActivitiesAreNull() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
@@ -366,6 +379,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testUpdateFailureWhenActivitiesAreEmpty() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
@@ -392,6 +406,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testPreview() throws Exception {
         RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
         role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
@@ -406,6 +421,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testDelete() throws Exception {
         Short roleId = null;
         RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
@@ -453,6 +469,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testDeleteFailure() throws Exception {
         RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
         RoleBO roleBO = rolesPermissionsPersistence.getRole("Admin");
@@ -476,6 +493,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCancel() {
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "cancel");

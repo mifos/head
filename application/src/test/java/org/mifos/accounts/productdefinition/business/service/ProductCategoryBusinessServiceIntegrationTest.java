@@ -20,7 +20,10 @@
 
 package org.mifos.accounts.productdefinition.business.service;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.junit.After;
@@ -33,8 +36,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.util.UserContext;
-
-import java.util.List;
 
 public class ProductCategoryBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 

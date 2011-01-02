@@ -20,6 +20,16 @@
 
 package org.mifos.customers.business.service;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -54,16 +64,6 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 /**
  * I test the update of {@link CenterBO}'s using the {@link CustomerService} implementation.

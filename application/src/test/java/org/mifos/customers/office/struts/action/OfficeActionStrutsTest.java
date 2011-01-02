@@ -20,7 +20,13 @@
 
 package org.mifos.customers.office.struts.action;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
@@ -37,21 +43,16 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.List;
-
 public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public OfficeActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
 
     private String flowKey;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -60,11 +61,11 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, OffAction.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
+    @Test
     public void testGetAllOffices() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", "getAllOffices");
@@ -78,6 +79,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(1, ((List) SessionUtils.getAttribute(OfficeConstants.GET_AREAOFFICE, request)).size());
     }
 
+    @Test
     public void testLoad() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -92,6 +94,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(4, levels.size());
     }
 
+    @Test
     public void testLoadLevel() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.load.toString());
@@ -110,6 +113,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("5", offActionForm.getOfficeLevel());
     }
 
+    @Test
     public void testLoadParent() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.loadParent.toString());
@@ -122,6 +126,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(1, parents.size());
     }
 
+    @Test
     public void testPreview() {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.preview.toString());
@@ -134,6 +139,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testPreview_failure() {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.preview.toString());
@@ -146,6 +152,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPrevious() {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.previous.toString());
@@ -154,6 +161,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.previous_success.toString());
     }
 
+    @Test
     public void testCreate() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.create.toString());
@@ -171,6 +179,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("123", offActionForm.getAddress().getLine1());
     }
 
+    @Test
     public void testGet() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.get.toString());
@@ -183,6 +192,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testEdit() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.edit.toString());
@@ -193,6 +203,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.edit_success.toString());
     }
 
+    @Test
     public void testEditPreview() {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.editpreview.toString());
@@ -201,6 +212,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testEditPrevious() {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.editprevious.toString());
@@ -209,6 +221,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editprevious_success.toString());
     }
 
+    @Test
     public void testUpdate() throws Exception {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.update.toString());
@@ -229,6 +242,7 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("OFFI", officeBO.getShortName());
     }
 
+    @Test
     public void testEditPreviewHO() throws Exception {
 
         addActionMethod(Methods.editpreview.toString());

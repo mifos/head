@@ -20,6 +20,10 @@
 
 package org.mifos.accounts;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.Before;
@@ -44,10 +48,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCase {
 

@@ -25,6 +25,9 @@ import junit.framework.Assert;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionMessage;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;
@@ -33,9 +36,7 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class ReportsActionStrutsTest extends MifosMockStrutsTestCase {
-    public ReportsActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
 
@@ -45,9 +46,8 @@ public class ReportsActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/reports-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -57,11 +57,11 @@ public class ReportsActionStrutsTest extends MifosMockStrutsTestCase {
         request.getSession(false).setAttribute("ActivityContext", ac);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
+    @Test
     public void testVerifyForwardOfNonExistentReportThrowsSecurityError() {
         addRequestParameter("viewPath", "report_designer");
         setRequestPathInfo("/reportsAction.do");
@@ -74,6 +74,7 @@ public class ReportsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(expectedErrorMessage.toString(), retrievedMessage.toString());
     }
 
+    @Test
     public void testSkipConvertFormObjectToBusinessObjectReturnsTrueForAnyMethod() throws Exception {
        Assert.assertTrue(new ReportsAction().skipActionFormToBusinessObjectConversion(null));
     }

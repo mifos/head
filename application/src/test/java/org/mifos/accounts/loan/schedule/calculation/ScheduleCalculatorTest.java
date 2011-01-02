@@ -19,18 +19,18 @@
  */
 package org.mifos.accounts.loan.schedule.calculation;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mifos.accounts.loan.schedule.domain.Installment;
-import org.mifos.accounts.loan.schedule.domain.Schedule;
-
-import java.math.BigDecimal;
-import java.util.Date;
-
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.getDate;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mifos.accounts.loan.schedule.domain.Installment;
+import org.mifos.accounts.loan.schedule.domain.Schedule;
 
 public class ScheduleCalculatorTest {
     private ScheduleCalculator scheduleCalculator;

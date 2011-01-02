@@ -20,7 +20,13 @@
 
 package org.mifos.accounts.struts.action;
 
+import java.sql.Date;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
@@ -41,13 +47,9 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.sql.Date;
-
 public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public NotesActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private SavingsBO savingsBO;
 
@@ -75,9 +77,8 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -93,16 +94,16 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         savingsBO = null;
         loanBO = null;
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoad_Savings() throws Exception {
         savingsBO = getSavingsAccount("fsaf1", "ads1");
         setRequestPathInfo("/notesAction.do");
@@ -116,6 +117,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPreview_Savings() throws Exception {
         savingsBO = getSavingsAccount("fsaf2", "ads2");
         setRequestPathInfo("/notesAction.do");
@@ -129,6 +131,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPrevious_Savings() throws Exception {
         savingsBO = getSavingsAccount("fsaf3", "ads3");
         setRequestPathInfo("/notesAction.do");
@@ -140,6 +143,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCancel_Savings() throws Exception {
         savingsBO = getSavingsAccount("fsaf4", "ads4");
         setRequestPathInfo("/notesAction.do");
@@ -152,6 +156,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCreate_Savings() throws Exception {
         savingsBO = getSavingsAccount("fsaf5", "ads5");
 
@@ -179,6 +184,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSearch_Savings() throws Exception {
         savingsBO = getSavingsAccount("fsaf6", "ads6");
 
@@ -231,6 +237,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testLoad_Loan() {
         loanBO = getLoanAccount();
         setRequestPathInfo("/notesAction.do");
@@ -244,6 +251,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPreview_Loan() {
         loanBO = getLoanAccount();
         setRequestPathInfo("/notesAction.do");
@@ -257,6 +265,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPrevious_Loan() {
         loanBO = getLoanAccount();
         setRequestPathInfo("/notesAction.do");
@@ -268,6 +277,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCancel_Loan() {
         loanBO = getLoanAccount();
         setRequestPathInfo("/notesAction.do");
@@ -280,6 +290,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCreate_Loan() {
         loanBO = getLoanAccount();
 
@@ -307,6 +318,7 @@ public class NotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSearch_Loan() throws Exception {
         loanBO = getLoanAccount();
 

@@ -26,6 +26,9 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
@@ -38,15 +41,12 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class EnumPluginStrutsTest extends MifosMockStrutsTestCase {
 
-    public EnumPluginStrutsTest() throws Exception {
-        super();
-    }
+
 
     private SavingsOfferingBO product;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
         request.getSession(true);
         createFlowAndAddToRequest(SavingsAction.class);
         request.getSession().setAttribute(Constants.USERCONTEXT, TestUtils.makeUser());
@@ -56,12 +56,12 @@ public class EnumPluginStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedPrdOfferingId", product.getPrdOfferingId().toString());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(product);
-        super.tearDown();
     }
 
+    @Test
     public void testCustomFieldType() throws Exception {
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "load");
@@ -73,6 +73,7 @@ public class EnumPluginStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals("NUMERIC", constantMap.get("NUMERIC").toString());
     }
 
+    @Test
     public void testIfAllConstantFilesAreLoaded() {
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "load");
@@ -96,6 +97,7 @@ public class EnumPluginStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(context.getAttribute("RecommendedAmountUnit"));
     }
 
+    @Test
     public void testEnumPluginException() throws Exception {
         EnumPlugin enumPlugin = new EnumPlugin();
         ArrayList<String> enumPluginClasses = new ArrayList<String>();

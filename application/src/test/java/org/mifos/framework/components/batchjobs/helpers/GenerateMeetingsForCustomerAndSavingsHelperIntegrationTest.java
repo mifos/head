@@ -20,14 +20,23 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
-import org.mifos.accounts.productdefinition.util.helpers.*;
+import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
+import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
+import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
+import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
+import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -44,10 +53,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends MifosIntegrationTestCase {
 

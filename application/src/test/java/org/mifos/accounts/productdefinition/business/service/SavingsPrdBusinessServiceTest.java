@@ -1,5 +1,8 @@
 package org.mifos.accounts.productdefinition.business.service;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.persistence.SavingsPrdPersistence;
@@ -8,9 +11,6 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class SavingsPrdBusinessServiceTest {
     final PrdOfferingPersistence prdOfferingPersistence = mock(PrdOfferingPersistence.class);

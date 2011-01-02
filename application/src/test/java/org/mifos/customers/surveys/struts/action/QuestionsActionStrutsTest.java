@@ -20,7 +20,15 @@
 
 package org.mifos.customers.surveys.struts.action;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.customers.ppi.business.PPIChoice;
 import org.mifos.customers.surveys.SurveysConstants;
 import org.mifos.customers.surveys.business.Question;
@@ -33,31 +41,18 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public QuestionsActionStrutsTest() throws Exception {
-        super();
-    }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
                 .shortValue());
         request.getSession(false).setAttribute("ActivityContext", ac);
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
-    }
-
-    @Override
-    protected void tearDown() throws Exception {
-       super.tearDown();
     }
 
     private Question makeTestSelectQuestion(String name, int choiceNumber) throws Exception {
@@ -99,6 +94,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         return question;
     }
 
+    @Test
     public void testDefineQuestion() throws Exception {
         String questionText1 = "testDefineQuestion sample text one";
         String shortName1 = "testDefineQuestion 1";
@@ -177,6 +173,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testViewQuestions() throws Exception {
 
         // Set up test cases
@@ -205,6 +202,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @Test
     public void testEdit() throws Exception {
         setRequestPathInfo("/questionsAction");
         addRequestParameter("method", "defineQuestions");
@@ -247,6 +245,7 @@ public class QuestionsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(newQuestion.getQuestionText(), questionText);
     }
 
+    @Test
     public void testEditPPI() throws Exception {
         Question question = new Question("What's the q?", AnswerType.CHOICE);
         question.setNickname("New Q");

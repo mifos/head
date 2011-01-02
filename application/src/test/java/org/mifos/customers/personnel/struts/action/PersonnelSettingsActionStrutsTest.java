@@ -20,7 +20,15 @@
 
 package org.mifos.customers.personnel.struts.action;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -48,14 +56,8 @@ import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
-    public PersonnelSettingsActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private String flowKey;
 
@@ -63,9 +65,8 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     PersonnelBO personnel;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -94,15 +95,15 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         userContext = null;
         personnel = null;
-        super.tearDown();
     }
 
+    @Test
     public void testGet() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
@@ -111,8 +112,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.get_success.toString());
     }
 
+    @Test
     public void testManage() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
@@ -125,8 +127,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.manage_success.toString());
     }
 
+    @Test
     public void testFailurePreview() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter("middleName", personnel.getPersonnelDetails().getName().getMiddleName());
@@ -142,8 +145,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewNoFirstName() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter("middleName", personnel.getPersonnelDetails().getName().getMiddleName());
@@ -158,8 +162,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewFirstNameLengthExceedsLimit() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter("firstName", "Testing for firstName length exceeding by 100 characters"
@@ -181,8 +186,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewLastNameLengthExceedsLimit() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter("lastName", "Testing for lastName length exceeding by 100 characters"
@@ -204,8 +210,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewNoLastName() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter("firstName", personnel.getPersonnelDetails().getName().getFirstName());
@@ -220,8 +227,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewNoGenderSelected() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter("firstName", personnel.getPersonnelDetails().getName().getFirstName());
@@ -236,8 +244,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewDisplayLengthExceedsMaxLimit() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         userContext.setId(personnel.getPersonnelId());
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         setRequestPathInfo("/yourSettings.do");
@@ -271,8 +280,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessPreview() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.preview.toString());
         addRequestParameter("firstName", personnel.getPersonnelDetails().getName().getFirstName());
@@ -287,6 +297,7 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testPrevious() throws Exception {
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.previous.toString());
@@ -295,8 +306,9 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.previous_success.toString());
     }
 
+    @Test
     public void testSuccessUpdate() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         userContext.setId(personnel.getPersonnelId());
         request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
         setRequestPathInfo("/yourSettings.do");
@@ -343,18 +355,20 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(2, personnel.getPersonnelDetails().getMaritalStatus().intValue());
     }
 
+    @Test
     public void testLoadChangePassword() throws Exception {
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.loadChangePassword.toString());
         performNoErrors();
         verifyForward(ActionForwards.loadChangePassword_success.toString());
     }
 
+    @Test
     public void testGet_batchJobNotRunningThatRequiresExclusiveAccess() throws Exception {
         MifosBatchJob.batchJobFinished();
         Assert.assertEquals(false, MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess());
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
@@ -363,11 +377,12 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.get_success.toString());
     }
 
+    @Test
     public void testGet_batchJobRunningThatDoesntRequireExclusiveAccess() throws Exception {
         MifosBatchJob.batchJobStarted();
         MifosBatchJob.batchJobRequiresExclusiveAccess(false);
         Assert.assertEquals(false, MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess());
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
@@ -376,10 +391,11 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.get_success.toString());
     }
 
+    @Test
     public void testGet_batchJobRunningThatRequiresExclusiveAccess() throws Exception {
         MifosBatchJob.batchJobStarted(); /*should default to requiring exclusive access */
         Assert.assertEquals(true, MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess());
-        createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
+        createPersonnel(getHeadOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/yourSettings.do");
         addRequestParameter("method", Methods.get.toString());
         addRequestParameter("globalPersonnelNum", personnel.getGlobalPersonnelNum());
@@ -409,10 +425,5 @@ public class PersonnelSettingsActionStrutsTest extends MifosMockStrutsTestCase {
     public List<RoleBO> getRoles() throws Exception {
         return ((PersonnelBusinessService) ServiceFactory.getInstance().getBusinessService(
                 BusinessServiceName.Personnel)).getRoles();
-    }
-
-    private OfficeBO getBranchOffice() {
-        return TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-
     }
 }

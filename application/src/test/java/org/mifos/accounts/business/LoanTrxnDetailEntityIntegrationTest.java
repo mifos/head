@@ -20,7 +20,12 @@
 
 package org.mifos.accounts.business;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,10 +43,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 

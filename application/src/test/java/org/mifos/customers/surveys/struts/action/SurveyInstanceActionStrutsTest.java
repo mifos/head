@@ -20,7 +20,24 @@
 
 package org.mifos.customers.surveys.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -68,33 +85,14 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public SurveyInstanceActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private static final double DELTA = 0.00000001;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
-
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId()
@@ -105,6 +103,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
     /**
      * this test is disabled because of this issue http://mifosforge.jira.com/browse/MIFOS-2753
      */
+    @Test
     public void testCreate() throws Exception {
         UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
         PersonnelBO personnel = createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER, userContext);
@@ -211,6 +210,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
 
+    @Test
     public void testGet() throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         String testName = "testGet survey name";
@@ -254,6 +254,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(expectedUrl, request.getAttribute(SurveysConstants.KEY_REDIRECT_URL));
     }
 
+    @Test
     public void testDeleteInstance() throws Exception {
         SurveyInstance instance = SurveyIntegrationTest.makeSurveyInstance("testDeleteInstance survey name");
         SurveysPersistence persistence = new SurveysPersistence();
@@ -268,6 +269,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(0, persistence.retrieveResponsesByInstance(instance).size());
     }
 
+    @Test
     public void testSurveyValidation() throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         SurveyInstance sampleInstance = SurveyIntegrationTest.makeSurveyInstance("testCreate survey name");
@@ -348,6 +350,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(expectedErrors);
     }
 
+    @Test
     public void testCreateWithOfficerDisplayName() throws Exception {
         UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
         PersonnelBO personnel = createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER, userContext);
@@ -389,6 +392,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testCreateWithOfficerGlobalPersonnelNumber() throws Exception {
         UserContext userContext = (UserContext) request.getSession().getAttribute(Constants.USERCONTEXT);
         PersonnelBO personnel = createPersonnel(getBranchOffice(), PersonnelLevel.LOAN_OFFICER, userContext);
@@ -430,6 +434,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
     }
 
+    @Test
     public void testCreateFailureBadOfficerValue() throws Exception {
         SurveysPersistence surveysPersistence = new SurveysPersistence();
         SurveyInstance sampleInstance = SurveyIntegrationTest.makeSurveyInstance("testCreate survey name");
@@ -464,6 +469,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(new String[] { SurveysConstants.INVALID_OFFICER });
     }
 
+    @Test
     public void testGetPPISurvey() throws Exception {
         setRequestPathInfo("/ppiAction");
         addRequestParameter("method", "configure");
@@ -579,6 +585,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         return id;
     }
 
+    @Test
     public void testChooseSurveyForClient() throws Exception {
         request.getAttribute(SurveysConstants.KEY_SURVEYS_LIST);
         MeetingBO weeklyMeeting = null;
@@ -641,6 +648,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @Test
     public void testChooseSurveyForLoan() throws Exception {
         String nameBase = "testChooseSurveyForLoan survey";
         Survey survey1 = new Survey(nameBase + "1", SurveyState.ACTIVE, SurveyType.CLIENT);
@@ -692,6 +700,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
                 loanOffering);
     }
 
+    @Test
     public void testRedirectUrl() throws Exception {
         String globalNum = "12345";
         Assert.assertEquals("clientCustAction.do?method=get&globalCustNum=12345", SurveyInstanceAction.getRedirectUrl(
@@ -718,10 +727,6 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
                         .valueOf("1"), Integer.valueOf("1"), date, date, address, userContext.getId());
         IntegrationTestObjectMother.createPersonnel(personnel);
         return IntegrationTestObjectMother.findPersonnelById(personnel.getPersonnelId());
-    }
-
-    private OfficeBO getBranchOffice() {
-        return TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
     }
 
 }

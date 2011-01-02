@@ -66,6 +66,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import edu.emory.mathcs.backport.java.util.Collections;
 
 /**

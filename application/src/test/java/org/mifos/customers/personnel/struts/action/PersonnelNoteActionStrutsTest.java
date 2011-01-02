@@ -26,6 +26,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -56,9 +59,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public PersonnelNoteActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private String flowKey;
 
@@ -68,9 +69,8 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
 
     PersonnelBO personnel;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -82,14 +82,14 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         userContext = null;
         personnel = null;
         createdBranchOffice = null;
-        super.tearDown();
     }
 
+    @Test
     public void testSuccessLoadPersonnelNote() throws Exception {
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         setRequestPathInfo("/personnelNoteAction.do");
@@ -102,6 +102,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.load_success.toString());
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueNull() throws Exception {
         setRequestPathInfo("/personnelNoteAction.do");
         addRequestParameter("method", Methods.preview.toString());
@@ -112,6 +113,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueExceedingMaxLength() throws Exception {
         setRequestPathInfo("/personnelNoteAction.do");
         addRequestParameter("comment", "Testing for comment length exceeding by 500 characters"
@@ -133,6 +135,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessPreviewPersonnelNote() throws Exception {
         setRequestPathInfo("/personnelNoteAction.do");
         addRequestParameter("method", Methods.preview.toString());
@@ -144,6 +147,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testSuccessPreviousPersonnelNote() {
         setRequestPathInfo("/personnelNoteAction.do");
         addRequestParameter("method", Methods.previous.toString());
@@ -155,6 +159,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessCancelPersonnelNote() {
         setRequestPathInfo("/personnelNoteAction.do");
         addRequestParameter("method", Methods.cancel.toString());
@@ -166,6 +171,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessCreatePersonnelNote() throws Exception {
 
         SecurityContext securityContext = new SecurityContextImpl();
@@ -186,6 +192,7 @@ public class PersonnelNoteActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessSearch() throws Exception {
         SecurityContext securityContext = new SecurityContextImpl();
         MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();

@@ -20,6 +20,19 @@
 
 package org.mifos.accounts.loan.business;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
+import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
+
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.joda.time.DateTime;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -57,19 +70,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
-import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
 public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 

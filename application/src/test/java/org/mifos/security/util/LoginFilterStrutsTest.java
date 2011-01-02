@@ -29,6 +29,8 @@ import javax.servlet.ServletResponse;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;
@@ -38,15 +40,12 @@ import servletunit.HttpServletResponseSimulator;
 
 public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
 
-    public LoginFilterStrutsTest() throws Exception {
-        super();
-    }
+
 
     private static final String TEST_ATTRIBUTE = "executedFilterChain";
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
     }
 
     /**
@@ -54,6 +53,7 @@ public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
      * this case, the filter should do nothing since we have a valid
      * UserContext.
      */
+    @Test
     public void testNoLoginNeeded() throws Exception {
         // Create a mock request and response object
         HttpServletRequestSimulator req = this.getMockRequest();
@@ -68,6 +68,7 @@ public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertTrue(isFilterChainExecuted(req, res));
     }
 
+    @Test
     public void testLoginPageItself() throws Exception {
         HttpServletRequestSimulator request = this.getMockRequest();
         HttpServletResponseSimulator response = this.getMockResponse();
@@ -76,6 +77,7 @@ public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertTrue(isFilterChainExecuted(request, response));
     }
 
+    @Test
     public void testLoginActionItself() throws Exception {
         HttpServletRequestSimulator request = this.getMockRequest();
         HttpServletResponseSimulator response = this.getMockResponse();
@@ -83,6 +85,7 @@ public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertTrue(isFilterChainExecuted(request, response));
     }
 
+    @Test
     public void testWithContextPath() throws Exception {
         HttpServletRequestSimulator request = this.getMockRequest();
         HttpServletResponseSimulator response = this.getMockResponse();
@@ -90,6 +93,7 @@ public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertTrue(isFilterChainExecuted(request, response));
     }
 
+    @Test
     public void testNoSession() throws Exception {
         // Create a mock request and response object
         HttpServletRequestSimulator req = this.getMockRequest();
@@ -104,6 +108,7 @@ public class LoginFilterStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertFalse(isFilterChainExecuted(req, res));
     }
 
+    @Test
     public void testNoUserContextLoginFilter() throws Exception {
         // Create a mock request and response object
         HttpServletRequestSimulator req = this.getMockRequest();

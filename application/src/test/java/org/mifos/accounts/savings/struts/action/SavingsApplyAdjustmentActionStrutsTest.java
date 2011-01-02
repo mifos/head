@@ -25,6 +25,9 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -56,9 +59,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public SavingsApplyAdjustmentActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
     private CustomerBO group;
@@ -73,9 +74,8 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         userContext.setPreferredLocale(new Locale("en", "GB"));
         addRequestParameter("recordLoanOfficerId", "1");
@@ -93,7 +93,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         savings = null;
         savings = null;
@@ -101,9 +101,9 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         group = null;
         center = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testSuccessfullLoad_WithoutValidLastPayment() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOffering();
@@ -123,6 +123,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
        Assert.assertEquals(Short.valueOf("0"), SessionUtils.getAttribute(SavingsConstants.IS_LAST_PAYMENT_VALID, request));
     }
 
+    @Test
     public void testSuccessfullPreviewSuccess() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOffering();
@@ -148,6 +149,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         // savings = new SavingsPersistence().findById(savings.getAccountId());
     }
 
+    @Test
     public void testSuccessfullPreviewFailure_NoLastPayment() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOffering();
@@ -160,6 +162,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyActionErrors(new String[] { SavingsConstants.INVALID_LAST_PAYMENT });
     }
 
+    @Test
     public void testSuccessfullPreviewFailure_LongNotes() throws Exception {
         createInitialObjects();
         savingsOffering = createSavingsOffering();
@@ -192,6 +195,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         // savings = new SavingsPersistence().findById(savings.getAccountId());
     }
 
+    @Test
     public void testSuccessfullPrevious() {
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "previous");
@@ -199,6 +203,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         verifyForward("previous_success");
     }
 
+    @Test
     public void testSuccessfullCancel() throws Exception {
         setRequestPathInfo("/savingsApplyAdjustmentAction.do");
         addRequestParameter("method", "cancel");
@@ -207,6 +212,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testSuccessfullPreviewSuccessWithZeroAmountAdjustment() throws Exception {
         //Introduced for [MIFOS-2958]
         createInitialObjects();

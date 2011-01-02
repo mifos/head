@@ -22,6 +22,9 @@ package org.mifos.customers.struts.action;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.business.CustomerBO;
@@ -33,9 +36,7 @@ import org.mifos.security.util.UserContext;
 
 public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustomerActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
     private CustomerBO client;
@@ -49,9 +50,8 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -63,12 +63,11 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
     public void ignore_testForwardWaiveChargeDue() {
@@ -103,6 +102,7 @@ public class CustomerActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testGetAllActivity() {
         createInitialObjects();
         setRequestPathInfo("/customerAction.do");

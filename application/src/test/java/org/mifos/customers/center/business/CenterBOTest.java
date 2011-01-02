@@ -1,20 +1,20 @@
 package org.mifos.customers.center.business;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.security.util.UserContext;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CenterBOTest {

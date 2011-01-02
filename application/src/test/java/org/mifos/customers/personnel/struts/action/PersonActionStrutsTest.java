@@ -28,6 +28,9 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -65,9 +68,7 @@ import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
 public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
-    public PersonActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private String flowKey;
 
@@ -77,9 +78,8 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
 
     PersonnelBO personnel;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -110,14 +110,14 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         userContext = null;
         personnel = null;
         createdBranchOffice = null;
-        super.tearDown();
     }
 
+    @Test
     public void testChooseOffice() {
         addActionAndMethod(Methods.chooseOffice.toString());
         actionPerform();
@@ -126,6 +126,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.chooseOffice_success.toString());
     }
 
+    @Test
     public void testLoad() throws Exception {
         addActionAndMethod(Methods.load.toString());
         addRequestParameter("officeId", "1");
@@ -147,6 +148,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testLoadWithBranchOffice() throws Exception {
         addActionAndMethod(Methods.load.toString());
         addRequestParameter("officeId", "3");
@@ -166,6 +168,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.load_success.toString());
     }
 
+    @Test
     public void testPreviewFailure() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         actionPerform();
@@ -179,6 +182,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewFailureWrongPasswordLength() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         setRequestData();
@@ -188,6 +192,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewFailureWrongPasswordAndReaptPassword() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         setRequestData();
@@ -198,6 +203,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewSucess() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         addRequestParameter("userPassword", "XXXXXXXX");
@@ -210,6 +216,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testPreviousSucess() throws Exception {
         addActionAndMethod(Methods.previous.toString());
         actionPerform();
@@ -218,6 +225,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.previous_success.toString());
     }
 
+    @Test
     public void testGetSucess() throws Exception {
         addActionAndMethod(Methods.get.toString());
         addRequestParameter("globalPersonnelNum", "1");
@@ -228,6 +236,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.get_success.toString());
     }
 
+    @Test
     public void testSearchSucess() throws Exception {
         addActionAndMethod(Methods.search.toString());
         addRequestParameter("searchString", "Mi");
@@ -241,6 +250,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.search_success.toString());
     }
 
+    @Test
     public void testSearchwithNoinput() throws Exception {
         cleanRequest();
         addActionAndMethod(Methods.search.toString());
@@ -250,6 +260,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testLoadSearchSucess() throws Exception {
         addActionAndMethod(Methods.search.toString());
         addRequestParameter("searchString", "Mi");
@@ -285,6 +296,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
     }
 
+    @Test
     public void testManage() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
@@ -304,6 +316,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(SessionUtils.getAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, request));
     }
 
+    @Test
     public void testPreviewManage() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
@@ -332,6 +345,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.previewManage_success.toString());
     }
 
+    @Test
     public void testManagePreviewFailure() throws Exception {
         addActionAndMethod(Methods.previewManage.toString());
         actionPerform();
@@ -347,6 +361,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testManagePreviewFailureWrongPasswordLength() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         setRequestData();
@@ -356,6 +371,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testManagePreviewFailureLoginNameWithSpace() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         setRequestData();
@@ -365,6 +381,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testManagePreviewFailureWrongPasswordAndReaptPassword() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         setRequestData();
@@ -375,6 +392,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testLoadUnLockUser() throws Exception {
         addActionAndMethod(Methods.loadUnLockUser.toString());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
@@ -386,6 +404,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
                 request));
     }
 
+    @Test
     public void testUnLockUser() throws Exception {
         createPersonnelAndSetInSession(getBranchOffice(), PersonnelLevel.LOAN_OFFICER);
         addActionAndMethod(Methods.unLockUserAccount.toString());
@@ -430,6 +449,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testLoadChangeLog() throws Exception {
         addActionAndMethod(Methods.get.toString());
         addRequestParameter("globalPersonnelNum", "1");
@@ -459,6 +479,7 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCancelChangeLog() {
         setRequestPathInfo("/PersonAction.do");
         addRequestParameter("method", "cancelChangeLog");

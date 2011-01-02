@@ -19,16 +19,16 @@
  */
 package org.mifos.accounts.loan.business.matchers;
 
+import static org.junit.Assert.assertThat;
+
+import java.util.Collection;
+import java.util.Map;
+
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
 import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Transformer;
-
-import java.util.Collection;
-import java.util.Map;
-
-import static org.junit.Assert.assertThat;
 
 public class LoanScheduleEntitiesMatcher extends TypeSafeMatcher<Collection<LoanScheduleEntity>> {
     private Map<Short, LoanScheduleEntity> loanScheduleEntityMap;

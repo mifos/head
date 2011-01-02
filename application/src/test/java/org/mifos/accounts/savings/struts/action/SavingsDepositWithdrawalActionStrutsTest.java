@@ -20,8 +20,15 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
@@ -54,15 +61,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public SavingsDepositWithdrawalActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
     private CustomerBO group;
@@ -82,9 +83,8 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         userContext.setPreferredLocale(new Locale("en", "GB"));
         addRequestParameter("recordLoanOfficerId", "1");
@@ -102,7 +102,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         savings = null;
         client1 = null;
@@ -112,9 +112,9 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         group = null;
         center = null;
 
-        super.tearDown();
     }
 
+    @Test
     public void testSuccessfullLoad_ForClientAccount() throws Exception {
         createCenterAndGroup();
         createClients();
@@ -152,6 +152,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         client4 = new CustomerPersistence().getCustomer(client4.getCustomerId());
     }
 
+    @Test
     public void testSuccessfullLoad() throws Exception {
         createCenterAndGroup();
         createClients();
@@ -182,6 +183,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         Assert.assertNotNull(SessionUtils.getAttribute(MasterConstants.PAYMENT_TYPE, request));
     }
 
+    @Test
     public void testSuccessfullReLoad() throws Exception {
         createCenterAndGroup();
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
@@ -198,6 +200,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyForward("load_success");
     }
 
+    @Test
     public void testSuccessfullReLoad_Deposit() throws Exception {
         createCenterAndGroup();
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
@@ -214,6 +217,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyForward("load_success");
     }
 
+    @Test
     public void testSuccessfullReLoad_Withdrawal() throws Exception {
         createCenterAndGroup();
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
@@ -230,6 +234,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyForward("load_success");
     }
 
+    @Test
     public void testFailurePreview() throws Exception {
         createCenterAndGroup();
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
@@ -250,6 +255,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
        Assert.assertEquals(3, getErrorSize(AccountConstants.ERROR_MANDATORY));
     }
 
+    @Test
     public void testPreviewDateValidation() throws Exception {
         createCenterAndGroup();
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
@@ -269,6 +275,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyActionErrors(new String[] { AccountConstants.ERROR_INVALIDDATE });
     }
 
+    @Test
     public void testSuccessfulPreview() throws Exception {
         createCenterAndGroup();
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
@@ -290,6 +297,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
 
 /*
     buddy: Ignoring this failing integration test. Filed an issue for it: MIFOS-4151 
+    @Test
     public void testSuccessfulMakePayment_Withdrawal() throws Exception {
         createCenterAndGroup();
 
@@ -329,6 +337,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
     }
 */
 
+    @Test
     public void testSuccessfullPrevious() throws Exception {
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "previous");
@@ -336,6 +345,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         verifyForward("previous_success");
     }
 
+    @Test
     public void testSuccessfullCancel() throws Exception {
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "cancel");

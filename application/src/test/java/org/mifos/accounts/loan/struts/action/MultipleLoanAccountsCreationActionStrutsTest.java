@@ -20,7 +20,21 @@
 
 package org.mifos.accounts.loan.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
@@ -57,21 +71,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public MultipleLoanAccountsCreationActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
 
@@ -92,9 +94,8 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -103,15 +104,15 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         flowKey = createFlow(request, MultipleLoanAccountsCreationAction.class);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         accountBO = null;
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoad() throws Exception {
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "load");
@@ -121,6 +122,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.IS_CENTER_HIERARCHY_EXISTS, request));
     }
 
+    @Test
     public void testGetLoanOfficersWithoutOffice() throws Exception {
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "getLoanOfficers");
@@ -129,6 +131,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyInputForward();
     }
 
+    @Test
     public void testGetLoanOfficers() throws Exception {
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "load");
@@ -144,6 +147,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_LOAN_OFFICERS_LIST, request));
     }
 
+    @Test
     public void testGetCentersWithoutOfficeAndLoanOfficer() throws Exception {
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "getCenters");
@@ -152,6 +156,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyInputForward();
     }
 
+    @Test
     public void testGetCenters() throws Exception {
         createInitialCustomers();
         setRequestPathInfo("/multipleloansaction.do");
@@ -175,6 +180,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         Assert.assertNotNull(SessionUtils.getAttribute(LoanConstants.MULTIPLE_LOANS_CENTERS_LIST, request));
     }
 
+    @Test
     public void testGetPrdOfferingsWithoutOfficeAndLoanOfficerAndCenter() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/multipleloansaction.do");
@@ -187,6 +193,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyInputForward();
     }
 
+    @Test
     public void testGetPrdOfferings() throws Exception {
         createInitialCustomers();
         LoanOfferingBO loanOffering1 = getLoanOffering("Loan Offering123", "LOOF", ApplicableTo.CLIENTS, WEEKLY,
@@ -222,6 +229,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testGetPrdOfferingsApplicableForCustomer() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialCustomers();
@@ -247,6 +255,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testGetPrdOfferingsApplicableForCustomersWithMeeting() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialCustomers();
@@ -280,6 +289,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         TestObjectFactory.removeObject(loanOffering5);
     }
 
+    @Test
     public void testGetWithoutData() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/multipleloansaction.do");
@@ -292,6 +302,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyInputForward();
     }
 
+    @Test
     public void testGetWithoutClients() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -312,6 +323,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testGet() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialCustomers();
@@ -337,6 +349,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         TestObjectFactory.removeObject(loanOffering);
     }
 
+    @Test
     public void testCreateWithouSelectingClient() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialCustomers();
@@ -368,6 +381,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testCreate() throws Exception {
 
         SecurityContext securityContext = new SecurityContextImpl();
@@ -423,6 +437,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testCreateWithoutPermission() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         UserContext userContext = TestUtils.makeUser();
@@ -453,6 +468,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         TestObjectFactory.removeObject(loanOffering);
     }
 
+    @Test
     public void testCancel() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/multipleloansaction.do");
@@ -462,6 +478,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyForward(ActionForwards.cancel_success.toString());
     }
 
+    @Test
     public void testValidate() throws Exception {
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "validate");
@@ -471,6 +488,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyForward(ActionForwards.load_success.toString());
     }
 
+    @Test
     public void testValidateForPreview() throws Exception {
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "validate");
@@ -482,6 +500,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
         verifyForward(ActionForwards.load_success.toString());
     }
 
+    @Test
     public void testVaildateForCreate() throws Exception {
         setRequestPathInfo("/multipleloansaction.do");
         addRequestParameter("method", "validate");

@@ -20,7 +20,11 @@
 
 package org.mifos.accounts.productdefinition.persistence;
 
+import java.sql.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -32,9 +36,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.sql.Date;
-import java.util.List;
 
 public class LoanPrdPersistenceIntegrationTest extends MifosIntegrationTestCase {
 

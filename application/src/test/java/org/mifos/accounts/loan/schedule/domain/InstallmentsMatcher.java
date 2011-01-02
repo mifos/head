@@ -19,11 +19,11 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
+import java.util.Map;
+
 import org.hamcrest.Description;
 import org.junit.Assert;
 import org.junit.internal.matchers.TypeSafeMatcher;
-
-import java.util.Map;
 
 public class InstallmentsMatcher extends TypeSafeMatcher<Map<Integer, Installment>> {
     private Map<Integer, Installment> installments;

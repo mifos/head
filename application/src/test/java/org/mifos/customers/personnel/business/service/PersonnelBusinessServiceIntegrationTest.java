@@ -20,7 +20,12 @@
 
 package org.mifos.customers.personnel.business.service;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -39,10 +44,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.login.util.helpers.LoginConstants;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class PersonnelBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 

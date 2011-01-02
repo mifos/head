@@ -29,6 +29,9 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
@@ -97,9 +100,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
-    public ClientCustActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private static final double DELTA = 0.00000001;
 
@@ -124,9 +125,8 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         userContext.setPreferredLocale(new Locale("en", "GB"));
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
@@ -145,16 +145,16 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
                 fieldConfig.getEntityMandatoryFieldMap());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         accountBO = null;
         client = null;
         group = null;
         center = null;
         savingsOffering1 = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoad() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("savingsoffering1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
@@ -195,6 +195,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         return (List<SavingsDetailDto>) SessionUtils.getAttribute(ClientConstants.SAVINGS_OFFERING_LIST, request);
     }
 
+    @Test
     public void testLoadWithGroupHavingNoLoanOfficer() throws Exception {
         createParentGroup(CustomerStatus.GROUP_PARTIAL, null);
         savingsOffering1 = TestObjectFactory.createSavingsProduct("savingsoffering1", "s1", SavingsType.MANDATORY,
@@ -233,6 +234,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         StaticHibernateUtil.flushAndClearSession();
     }
 
+    @Test
     public void testLoadClientUnderGroup_FeeDifferentFrequecny() throws Exception {
         createGroupWithoutFee();
         List<FeeDto> fees = getFees(RecurrenceType.MONTHLY);
@@ -260,6 +262,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(fees);
     }
 
+    @Test
     public void testLoadClientUnderGroup_FeeSameFrequecny() throws Exception {
         createGroupWithoutFee();
         List<FeeDto> fees = getFees(RecurrenceType.WEEKLY);
@@ -287,6 +290,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(fees);
     }
 
+    @Test
     public void testFailureNextWithAllValuesNull() throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
@@ -312,6 +316,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailureNext_WithoutMandatoryCustomField_IfAny() throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
@@ -358,6 +363,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testNextSuccess() throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
@@ -392,6 +398,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.next_success.toString());
     }
 
+    @Test
     public void testPreviewFailureForTrainedDate() throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
@@ -433,6 +440,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreviewFailureFormedByPersonnelNotPresent() throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "load");
@@ -472,6 +480,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testFailurePreview_WithDuplicateFee() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/clientCustAction.do");
@@ -510,6 +519,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(feesToRemove);
     }
 
+    @Test
     public void testFailurePreview_WithFee_WithoutFeeAmount() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.WEEKLY);
         setRequestPathInfo("/clientCustAction.do");
@@ -545,6 +555,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(feesToRemove);
     }
 
+    @Test
     public void testPreviewFailure_DuplicateOfferingsSelected() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("savingsPrd1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
@@ -597,6 +608,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("Duplicate Offerings", 1, getErrorSize(ClientConstants.ERRORS_DUPLICATE_OFFERING_SELECTED));
     }
 
+    @Test
     public void testFailurePreview_FeeFrequencyMismatch() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
 
@@ -653,6 +665,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(feesToRemove);
     }
 
+    @Test
     public void testPreviewSuccess() throws Exception {
         List<FeeDto> feesToRemove = getFees(RecurrenceType.MONTHLY);
         setRequestPathInfo("/clientCustAction.do");
@@ -706,6 +719,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         removeFees(feesToRemove);
     }
 
+    @Test
     public void testSuccessfulPreviewWithSavingsOfferingsSelected() throws Exception {
         savingsOffering1 = TestObjectFactory.createSavingsProduct("savingsPrd1", "s1", SavingsType.MANDATORY,
                 ApplicableTo.CLIENTS, new Date(System.currentTimeMillis()));
@@ -757,6 +771,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testSuccessfulPrevPersonalInfo() throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "prevPersonalInfo");
@@ -767,6 +782,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessfulPrevMfiInfo() throws Exception {
         setRequestPathInfo("/clientCustAction.do");
         addRequestParameter("method", "prevMFIInfo");
@@ -777,6 +793,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCreateSuccessWithAssociatedSavingsOfferings() throws Exception {
 
         SecurityContext securityContext = new SecurityContextImpl();
@@ -862,6 +879,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         savingsOffering1 = (SavingsOfferingBO) TestObjectFactory.getObject(SavingsOfferingBO.class, savingsOffering.getPrdOfferingId());
     }
 
+    @Test
     public void testCreateSuccessWithoutGroup() throws Exception {
 
         SecurityContext securityContext = new SecurityContextImpl();
@@ -930,6 +948,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 //        removeFees(feesToRemove);
     }
 
+    @Test
     public void testCreateSuccessUnderGroup() throws Exception {
         createParentCustomer();
         setRequestPathInfo("/clientCustAction.do");
@@ -993,6 +1012,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         client = TestObjectFactory.getClient(actionForm.getCustomerIdAsInt());
     }
 
+    @Test
     public void testGet() throws Exception {
         createInitialCustomers();
         accountBO = getLoanAccount(client, meeting);
@@ -1030,6 +1050,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertTrue("currentPageUrl must contain recordLoanOfficerId", currentPageUrl.contains("recordLoanOfficerId%3D" + loanOfficerId));
     }
 
+    @Test
     public void testEditPersonalInfo() throws Exception {
 
         createAndSetClientInSession();
@@ -1058,6 +1079,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testEditPersonalInfoPreviewFailure() throws Exception {
 
         createAndSetClientInSession();
@@ -1095,6 +1117,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessfulEditPreview() throws Exception {
         createAndSetClientInSession();
         setRequestPathInfo("/clientCustAction.do");
@@ -1119,6 +1142,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessfulUpdatePersonalInfo() throws Exception {
         createAndSetClientInSession();
         setRequestPathInfo("/clientCustAction.do");
@@ -1154,6 +1178,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testSuccessfulUpdatePersonalInfo_AuditLog() throws Exception {
         createClientForAuditLog();
         setRequestPathInfo("/clientCustAction.do");
@@ -1272,6 +1297,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, client, request);
     }
 
+    @Test
     public void testEditMfiInfoForClientInBranch() throws Exception {
 
         createAndSetClientInSession();
@@ -1287,6 +1313,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testEditMfiInfoForClientUnderGroup() throws Exception {
 
         createClientWithGroupAndSetInSession();
@@ -1300,6 +1327,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editMfiInfo_success.toString());
     }
 
+    @Test
     public void testPreviewEditMfiInfo() throws Exception {
 
         createClientWithGroupAndSetInSession();
@@ -1314,6 +1342,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPrevEditMfiInfo() throws Exception {
 
         createClientWithGroupAndSetInSession();
@@ -1328,6 +1357,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdateMfiInfoWithoutTrained_ClientInBranch() throws Exception {
         createAndSetClientInSession();
         setRequestPathInfo("/clientCustAction.do");
@@ -1353,6 +1383,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertFalse(client.isTrained());
     }
 
+    @Test
     public void testUpdateMfiInfoWithTrainedDateValidation() throws Exception {
 
         createClientWithGroupAndSetInSession();
@@ -1379,6 +1410,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdateMfiInfoWithLoanOfficer() throws Exception {
 
         createAndSetClientInSession();
@@ -1407,6 +1439,7 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(3, client.getPersonnel().getPersonnelId().shortValue());
     }
 
+    @Test
     public void testCreateSuccessUnderGroupInBranch() throws Exception {
         try {
             createParentGroup();

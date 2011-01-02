@@ -20,11 +20,10 @@
 
 package org.mifos.framework.util.helpers;
 
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Locale;
 
 import junit.framework.Assert;

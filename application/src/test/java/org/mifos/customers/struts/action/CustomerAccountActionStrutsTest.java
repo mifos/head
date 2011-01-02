@@ -22,6 +22,9 @@ package org.mifos.customers.struts.action;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.center.business.CenterBO;
@@ -35,9 +38,7 @@ import org.mifos.security.util.UserContext;
 
 public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustomerAccountActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private ClientBO client;
 
@@ -57,9 +58,8 @@ public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -70,14 +70,14 @@ public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoadClientChargesDetails_client() {
         initialization("Client");
         addRequestParameter("globalCustNum", client.getGlobalCustNum());
@@ -88,6 +88,7 @@ public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testLoadClientChargesDetails_group() {
         initialization("Group");
         addRequestParameter("globalCustNum", group.getGlobalCustNum());
@@ -98,6 +99,7 @@ public class CustomerAccountActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testLoadClientChargesDetails_center() {
         initialization("Center");
         addRequestParameter("globalCustNum", center.getGlobalCustNum());

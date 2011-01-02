@@ -21,6 +21,7 @@
 package org.mifos.config.business;
 
 import junit.framework.Assert;
+
 import org.junit.Test;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;

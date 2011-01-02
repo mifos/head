@@ -21,6 +21,7 @@
 package org.mifos.customers.office.persistence;
 
 import java.util.List;
+
 import junit.framework.Assert;
 
 import org.junit.After;

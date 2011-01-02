@@ -20,7 +20,14 @@
 
 package org.mifos.config.struts.action;
 
+import java.util.List;
+import java.util.ResourceBundle;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -42,14 +49,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.List;
-import java.util.ResourceBundle;
-
 public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public LookupOptionsActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
     private String flowKey;
@@ -86,14 +88,12 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     };
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -111,6 +111,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
         return true;
     }
 
+    @Test
     public void testLoad() throws Exception {
         // Required for resetting the label cache
         MifosConfiguration.getInstance().init();
@@ -158,6 +159,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertTrue(compareLists(lookupOptionsActionForm.getOfficerTitles(), EXPECTED_OFFICER_TITLES, 2));
     }
 
+    @Test
     public void testCancel() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/lookupOptionsAction.do");
@@ -269,6 +271,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
         return originalName;
     }
 
+    @Test
     public void testAddEditLookupOption() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/lookupOptionsAction.do");
@@ -290,6 +293,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @Test
     public void testUpdate() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
@@ -327,6 +331,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testBadStringUpdate() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/lookupOptionsAction.do");
@@ -369,6 +374,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testNoSelectionToEdit() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         setRequestPathInfo("/lookupOptionsAction.do");

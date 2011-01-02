@@ -19,6 +19,13 @@
  */
 package org.mifos.accounts.productdefinition.persistence;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.junit.matchers.JUnitMatchers.hasItem;
+
+import java.util.List;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -29,8 +36,8 @@ import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -40,13 +47,6 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.junit.matchers.JUnitMatchers.hasItem;
 
 public class LoanProductDaoHibernateIntegrationTest extends MifosIntegrationTestCase {
 

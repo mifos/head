@@ -22,6 +22,9 @@ package org.mifos.customers.struts.action;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerBO;
@@ -40,9 +43,7 @@ import org.mifos.security.util.UserContext;
 
 public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustomerNotesActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
 
@@ -60,9 +61,8 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -74,14 +74,14 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoad() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -95,6 +95,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueNull() throws Exception {
         setRequestPathInfo("/customerNotesAction.do");
         addRequestParameter("method", "preview");
@@ -106,6 +107,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueExceedingMaxLength() throws Exception {
         setRequestPathInfo("/customerNotesAction.do");
         addRequestParameter("method", "preview");
@@ -128,6 +130,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewSuccess() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -141,6 +144,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPreviousSuccess() {
         setRequestPathInfo("/customerNotesAction.do");
         addRequestParameter("method", "previous");
@@ -153,6 +157,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCancelSuccess() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -173,6 +178,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
 
 
 
+    @Test
     public void testLoadForClient() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -186,6 +192,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueNullForClient() throws Exception {
         setRequestPathInfo("/customerNotesAction.do");
         addRequestParameter("method", "preview");
@@ -197,6 +204,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewSuccessForClient() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -210,6 +218,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPreviousSuccessForClient() {
         setRequestPathInfo("/customerNotesAction.do");
         addRequestParameter("method", "previous");
@@ -222,6 +231,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCancelSuccessForClient() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -240,6 +250,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCreateNotesForClient() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -270,6 +281,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(1, client.getCustomerNotes().size());
     }
 
+    @Test
     public void testSearch() throws Exception {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
@@ -321,6 +333,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCustomer(center.getCustomerId());
     }
 
+    @Test
     public void testLoadForGroup() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -334,6 +347,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testFailurePreviewWithNotesValueNullForGroup() throws Exception {
         setRequestPathInfo("/customerNotesAction.do");
         addRequestParameter("method", "preview");
@@ -345,6 +359,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testPreviewSuccessForGroup() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -358,6 +373,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPreviousSuccessForGroup() {
         setRequestPathInfo("/customerNotesAction.do");
         addRequestParameter("method", "previous");
@@ -370,6 +386,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCancelSuccessForGroup() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -388,6 +405,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCreateNotesForGroup() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -417,6 +435,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(1, group.getCustomerNotes().size());
     }
 
+    @Test
     public void testSearchForGroup() throws Exception {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");
@@ -460,6 +479,7 @@ public class CustomerNotesActionStrutsTest extends MifosMockStrutsTestCase {
         getobjects();
     }
 
+    @Test
     public void testCreate_CenterNotes() {
         createInitialObjects();
         setRequestPathInfo("/customerNotesAction.do");

@@ -1,6 +1,9 @@
 package org.mifos.accounts.fees.business;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import junit.framework.Assert;
+
 import org.junit.Test;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.persistence.FeePersistence;
@@ -10,9 +13,6 @@ import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class FeeBOTest {
     

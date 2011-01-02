@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -56,9 +59,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustomerUIHelperFnStrutsTest() throws Exception {
-        super();
-    }
+
 
     private CustomerBO center;
     private CustomerBO group;
@@ -74,9 +75,8 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USER_CONTEXT_KEY, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -93,14 +93,14 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testUIHelperWhenClientIsAssignedPosition() throws CustomerException, PageExpiredException {
         createInitialObjects();
         PositionEntity positionEntity = (PositionEntity) TestObjectFactory.getObject(PositionEntity.class, Short
@@ -173,6 +173,7 @@ public class CustomerUIHelperFnStrutsTest extends MifosMockStrutsTestCase {
         }
     }
 
+    @Test
     public void testUIHelperWhenClientIsNotAssignedPosition() throws CustomerException, PageExpiredException {
         createInitialObjects();
         PositionEntity positionEntity = (PositionEntity) TestObjectFactory.getObject(PositionEntity.class, Short

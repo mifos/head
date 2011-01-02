@@ -20,7 +20,14 @@
 
 package org.mifos.customers.struts.action;
 
+import java.util.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -45,14 +52,9 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-import java.util.List;
-
 public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustSearchActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
     private String flowKey;
@@ -66,9 +68,8 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -79,15 +80,15 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         addCurrentFlowKey();
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         account = null;
         group = null;
         center = null;
         userContext = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoadSearch() {
 
         addActionAndMethod(Methods.loadSearch.toString());
@@ -98,6 +99,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testSearch() throws Exception {
         createGroupWithCenter();
         addActionAndMethod(Methods.search.toString());
@@ -111,6 +113,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testLoadMainSearchHoUser() throws Exception {
         addActionAndMethod(Methods.loadMainSearch.toString());
         actionPerform();
@@ -125,6 +128,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
                 .getAttribute(CustomerSearchConstants.OFFICE, request));
     }
 
+    @Test
     public void testLoadMainSearchNonLoBoUser() throws Exception {
 
         OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
@@ -145,6 +149,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testLoadMainSearchLoBoUser() throws Exception {
         OfficeBO officeBO = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         userContext.setId(Short.valueOf("3"));
@@ -162,6 +167,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testMainSearch() throws Exception {
         createGroupWithCenter();
         userContext.setId(PersonnelConstants.SYSTEM_USER);
@@ -176,6 +182,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testMainSearchFailure() throws Exception {
         // createGroupWithCenter();
         userContext.setId(PersonnelConstants.SYSTEM_USER);
@@ -187,6 +194,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.mainSearch_success.toString());
     }
 
+    @Test
     public void testMainIdSearch() throws Exception {
         createGroupWithCenter();
         userContext.setId(PersonnelConstants.SYSTEM_USER);
@@ -200,6 +208,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         veryfyResults();
     }
 
+    @Test
     public void testMainAccountIdSearch() throws Exception {
         userContext.setId(PersonnelConstants.SYSTEM_USER);
         addActionAndMethod(Methods.mainSearch.toString());
@@ -213,6 +222,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
         veryfyResults();
     }
 
+    @Test
     public void testGet() throws Exception {
         addActionAndMethod(Methods.get.toString());
         // createGroupWithCenter();
@@ -231,6 +241,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreview() throws Exception {
         addActionAndMethod(Methods.preview.toString());
         // createGroupWithCenter();
@@ -249,6 +260,7 @@ public class CustSearchActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testLoadAllBranches() throws Exception {
         addActionAndMethod("loadAllBranches");
         addRequestParameter("searchString", "gr");

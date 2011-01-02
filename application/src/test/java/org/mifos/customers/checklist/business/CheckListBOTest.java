@@ -1,5 +1,8 @@
 package org.mifos.customers.checklist.business;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.checklist.exceptions.CheckListException;
@@ -10,9 +13,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CheckListBOTest {

@@ -20,7 +20,17 @@
 
 package org.mifos.framework.persistence;
 
+import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import junit.framework.Assert;
+
 import org.dbunit.Assertion;
 import org.dbunit.database.DatabaseConnection;
 import org.dbunit.dataset.IDataSet;
@@ -30,15 +40,6 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
-import static org.mifos.framework.util.helpers.DatabaseSetup.executeScript;
 
 /**
  * This class runs tests on database upgrade scripts (both SQL based and java based). It uses a version of the database

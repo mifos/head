@@ -20,15 +20,16 @@
 
 package org.mifos.accounts.loan.business;
 
+import java.util.Date;
+import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
-
-import java.util.Date;
-import java.util.Set;
 
 public class LoanTestUtils {
 

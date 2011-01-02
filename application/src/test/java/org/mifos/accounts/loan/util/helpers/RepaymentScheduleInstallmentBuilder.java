@@ -1,10 +1,10 @@
 package org.mifos.accounts.loan.util.helpers;
 
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-
 import java.util.Date;
 import java.util.Locale;
+
+import org.mifos.framework.util.helpers.DateUtils;
+import org.mifos.framework.util.helpers.Money;
 
 public class RepaymentScheduleInstallmentBuilder {
     private RepaymentScheduleInstallment repaymentScheduleInstallment;

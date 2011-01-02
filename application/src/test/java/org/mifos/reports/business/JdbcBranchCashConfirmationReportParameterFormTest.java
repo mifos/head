@@ -20,15 +20,15 @@
 
 package org.mifos.reports.business;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
-import org.junit.Ignore;
-import org.mifos.platform.validations.Errors;
-import org.mifos.reports.util.helpers.ReportValidationConstants;
-
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import junit.framework.Assert;
+import junit.framework.TestCase;
+
+import org.junit.Ignore;
+import org.mifos.platform.validations.Errors;
+import org.mifos.reports.util.helpers.ReportValidationConstants;
 
 @Ignore
 public class JdbcBranchCashConfirmationReportParameterFormTest extends TestCase {

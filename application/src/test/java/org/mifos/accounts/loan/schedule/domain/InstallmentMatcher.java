@@ -19,10 +19,10 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
+import static org.junit.Assert.assertEquals;
+
 import org.hamcrest.Description;
 import org.junit.internal.matchers.TypeSafeMatcher;
-
-import static org.junit.Assert.assertEquals;
 
 public class InstallmentMatcher extends TypeSafeMatcher<Installment> {
     private Installment installment;

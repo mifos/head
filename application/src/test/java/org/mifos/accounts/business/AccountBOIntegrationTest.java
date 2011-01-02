@@ -20,7 +20,16 @@
 
 package org.mifos.accounts.business;
 
+import java.sql.Date;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
@@ -53,9 +62,6 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
-
-import java.sql.Date;
-import java.util.*;
 
 
 public class AccountBOIntegrationTest extends AccountIntegrationTestCase {

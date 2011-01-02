@@ -26,7 +26,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+import java.util.ArrayList;
+
 import junit.framework.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.exceptions.AccountException;
@@ -36,8 +39,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mockito;
 import org.springframework.test.annotation.ExpectedException;
-
-import java.util.ArrayList;
 
 /**
  * In memory unit tests for AccountBO.

@@ -20,7 +20,16 @@
 
 package org.mifos.accounts.savings.struts.action;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
@@ -65,16 +74,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
 public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public SavingsActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
 
@@ -98,9 +100,8 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         userContext.setPreferredLocale(new Locale("en", "GB"));
         addRequestParameter("recordLoanOfficerId", "1");
@@ -116,7 +117,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         SecurityContextHolder.setContext(securityContext);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         savings = null;
         savings3 = null;
@@ -126,7 +127,6 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         savingsOffering1 = null;
         TestObjectFactory.removeObject(savingsOffering2);
 
-        super.tearDown();
     }
 
     private void createAndAddObjects() throws Exception {
@@ -182,6 +182,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
                 userContext);
     }
 
+    @Test
     public void testSuccessfulUpdate_WithCustomField() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -236,6 +237,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testGetPrdOfferings() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -256,6 +258,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testSuccessfullLoad() throws Exception {
 
         createAndAddObjects();
@@ -271,6 +274,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testScuccessfulReLoad() throws Exception {
         createAndAddObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -286,6 +290,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testSuccessfulPreview() throws Exception {
         createAndAddObjectsForCreate();
         setRequestPathInfo("/savingsAction.do");
@@ -295,6 +300,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testPreview_WithMandatoryCustomField_IfAny() throws Exception {
         createAndAddObjectsForCreate();
         setRequestPathInfo("/savingsAction.do");
@@ -330,6 +336,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testSuccessfulEditPreview() throws Exception {
         createAndAddObjectsForCreate();
         setRequestPathInfo("/savingsAction.do");
@@ -339,6 +346,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testSuccessfulPrevious() throws Exception {
         createAndAddObjects();
         setRequestPathInfo("/savingsAction.do");
@@ -347,6 +355,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("previous_success");
     }
 
+    @Test
     public void testSuccessfulCreateWithCustomFields() throws Exception {
         createAndAddObjectsForCreate();
         setRequestPathInfo("/savingsAction.do");
@@ -379,6 +388,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         savings = new SavingsPersistence().findBySystemId(globalAccountNum);
     }
 
+    @Test
     public void testSuccessfulGetBySystemId() throws Exception {
 
         createAndAddObjects(AccountState.SAVINGS_PARTIAL_APPLICATION);
@@ -399,6 +409,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testSuccessfulEdit() throws Exception {
         createAndAddObjects(AccountState.SAVINGS_PARTIAL_APPLICATION);
         savingsOffering = null;
@@ -415,6 +426,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals("300.0", actionForm.getRecommendedAmount());
     }
 
+    @Test
     public void testSuccessfulEditPrevious() throws Exception {
         createAndAddObjects(AccountState.SAVINGS_PARTIAL_APPLICATION);
         savingsOffering = null;
@@ -424,6 +436,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("editPrevious_success");
     }
 
+    @Test
     public void testSuccessfulUpdate() throws Exception {
         createAndAddObjects(AccountState.SAVINGS_PARTIAL_APPLICATION);
         savingsOffering = null;
@@ -450,6 +463,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testSuccessfulUpdateInActiveState() throws Exception {
 
         createAndAddObjects(AccountState.SAVINGS_ACTIVE);
@@ -471,6 +485,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testSuccessfulGetRecentActivity() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -517,6 +532,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testWaiveAmountDue() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -540,6 +556,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
+    @Test
     public void testWaiveAmountOverDue() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
@@ -593,6 +610,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
                 SavingsConstants.STATUS_CHANGE_HISTORY_LIST, request)).size());
     }
 
+    @Test
     public void testSuccessful_Update_AuditLog() throws Exception {
         createAndAddObjects(AccountState.SAVINGS_PARTIAL_APPLICATION);
         savingsOffering = null;

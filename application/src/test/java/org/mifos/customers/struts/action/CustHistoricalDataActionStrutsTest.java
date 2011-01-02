@@ -26,6 +26,9 @@ import java.util.GregorianCalendar;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.business.CustomerHistoricalDataEntity;
@@ -52,9 +55,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustHistoricalDataActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private ClientBO client;
 
@@ -72,9 +73,8 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -85,14 +85,14 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         flowKey = createFlow(request, CustHistoricalDataAction.class);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testGetHistoricalDataWhenCustHistoricalDataIsNull() throws Exception {
         createInitialObjects();
         setRequestPathInfo("/custHistoricalDataAction.do");
@@ -107,6 +107,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
                 .getAttribute(CustomerConstants.MFIJOININGDATE, request).toString());
     }
 
+    @Test
     public void testGetHistoricalDataWhenCustHistoricalDataIsNotNull() throws Exception {
         createInitialObjects();
         CustomerHistoricalDataEntity customerHistoricalDataEntity = new CustomerHistoricalDataEntity(group);
@@ -128,6 +129,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
                 SessionUtils.getAttribute(CustomerConstants.MFIJOININGDATE, request).toString());
     }
 
+    @Test
     public void testLoadHistoricalDataWhenCustHistoricalDataIsNull() {
         createInitialObjects();
         setRequestPathInfo("/custHistoricalDataAction.do");
@@ -149,6 +151,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPreviewHistoricalData() {
         createInitialObjects();
         setRequestPathInfo("/custHistoricalDataAction.do");
@@ -160,6 +163,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionMessages();
     }
 
+    @Test
     public void testPreviewHistoricalDataLargeNotes() {
         createInitialObjects();
         setRequestPathInfo("/custHistoricalDataAction.do");
@@ -179,6 +183,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyActionErrors(new String[] { CustomerConstants.MAXIMUM_LENGTH });
     }
 
+    @Test
     public void testPreviousHistoricalData() {
         createInitialObjects();
         setRequestPathInfo("/custHistoricalDataAction.do");
@@ -190,6 +195,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionMessages();
     }
 
+    @Test
     public void testCancelHistoricalData() {
         createInitialObjects();
         setRequestPathInfo("/custHistoricalDataAction.do");
@@ -202,6 +208,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
         verifyNoActionMessages();
     }
 
+    @Test
     public void testUpdateHistoricalDataWhenCustHistoricalDataIsNull() throws Exception {
 
         SecurityContext securityContext = new SecurityContextImpl();
@@ -242,6 +249,7 @@ public class CustHistoricalDataActionStrutsTest extends MifosMockStrutsTestCase 
        Assert.assertEquals(1, group.getHistoricalData().getLoanCycleNumber().intValue());
     }
 
+    @Test
     public void testUpdateHistoricalDataWhenCustHistoricalDataIsNotNull() throws Exception {
         SecurityContext securityContext = new SecurityContextImpl();
         MifosUser principal = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();

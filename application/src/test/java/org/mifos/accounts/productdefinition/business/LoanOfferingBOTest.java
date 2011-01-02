@@ -1,10 +1,10 @@
 package org.mifos.accounts.productdefinition.business;
 
-import junit.framework.Assert;
-import org.junit.Test;
-
 import static junit.framework.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import junit.framework.Assert;
+
+import org.junit.Test;
 
 public class LoanOfferingBOTest {
 

@@ -20,7 +20,10 @@
 
 package org.mifos.accounts.business;
 
+import java.util.Date;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,8 +43,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.util.Date;
 
 public class AccountFeesActionDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 

@@ -22,7 +22,9 @@ package org.mifos.reports.admindocuments.struts.action;
 
 import junit.framework.Assert;
 
+import org.junit.Before;
 import org.junit.Ignore;
+import org.junit.Test;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -42,9 +44,7 @@ import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersist
 @Ignore
 public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public BirtAdminDocumentUploadActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     @Override
     protected void setStrutsConfig() {
@@ -52,12 +52,12 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/admindocument-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
+    @Before
+    public void setUp() throws Exception {
 
-        super.setUp();
     }
 
+    @Test
     public void testGetBirtAdminDocumentUploadPage() {
         setRequestPathInfo("/birtAdminDocumentUploadAction.do");
         addRequestParameter("method", "getBirtAdminDocumentUploadPage");
@@ -65,6 +65,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         verifyNoActionErrors();
     }
 
+    @Test
     public void testShouldSubmitSucessWhenUploadNewAdminDocument() throws Exception {
         setRequestPathInfo("/birtAdminDocumentUploadAction.do");
 
@@ -111,6 +112,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         StaticHibernateUtil.flushSession();
     }
 
+    @Test
     public void testLoadProductInstance() {
         setRequestPathInfo("/birtAdminDocumentUploadAction.do");
         addRequestParameter("method", "loadProductInstance");
@@ -118,6 +120,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         verifyNoActionErrors();
     }
 
+    @Test
     public void testGetViewBirtAdminDocumentPage() {
         setRequestPathInfo("/birtAdminDocumentUploadAction.do");
         addRequestParameter("method", "loadProductInstance");
@@ -125,6 +128,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         verifyNoActionErrors();
     }
 
+    @Test
     public void testUpload() {
         setRequestPathInfo("/birtAdminDocumentUploadAction.do");
         addRequestParameter("method", "upload");
@@ -132,6 +136,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         verifyNoActionErrors();
     }
 
+    @Test
     public void testEdit() {
         setRequestPathInfo("/birtAdminDocumentUploadAction.do");
         addRequestParameter("method", "edit");
@@ -144,6 +149,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
 
     }
 
+    @Test
     public void testEditThenUpload() {
         setRequestPathInfo("/birtAdminDocumentUploadAction.do");
         addRequestParameter("method", "editThenUpload");
@@ -151,6 +157,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         verifyNoActionErrors();
     }
 
+    @Test
     public void testDownloadAdminDocument() {
         setRequestPathInfo("/birtAdminDocumentUploadAction.do");
         addRequestParameter("method", "downloadAdminDocument");

@@ -20,6 +20,14 @@
 
 package org.mifos.customers.business.service;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -51,8 +59,6 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.customers.util.helpers.CustomerStatusFlag;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.util.Address;
-import org.mifos.framework.business.util.Name;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.AuditTransactionForTests;
@@ -64,14 +70,6 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.service.test.TestMode;
 import org.mifos.test.framework.util.DatabaseCleaner;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 
 public class CenterStatusChangeIntegrationTest extends MifosIntegrationTestCase {
 

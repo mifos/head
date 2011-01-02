@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -56,9 +59,7 @@ import org.mifos.security.util.UserContext;
 
 public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public AddGroupMembershipActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private CenterBO center;
     private GroupBO group;
@@ -74,9 +75,8 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/customer-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         request.getSession(false).setAttribute("ActivityContext", TestObjectFactory.getActivityContext());
@@ -90,15 +90,15 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         client = null;
         group = null;
         center = null;
         office = null;
-        super.tearDown();
     }
 
+    @Test
     public void testSuccessfulPrevious() throws Exception {
         setRequestPathInfo("/addGroupMembershipAction.do");
         addRequestParameter("method", "loadSearch");
@@ -110,6 +110,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
 
     }
 
+    @Test
     public void testCancel() throws Exception {
 
         setRequestPathInfo("/addGroupMembershipAction.do");
@@ -122,6 +123,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
 
     }
 
+    @Test
     public void testPreviewParentAddClient() throws Exception {
 
         setRequestPathInfo("/addGroupMembershipAction.do");
@@ -135,6 +137,7 @@ public class AddGroupMembershipActionStrutsTest extends MifosMockStrutsTestCase 
 
     }
 
+    @Test
     public void testSuccessfulUpdateParent() throws Exception {
         createAndSetClientInSession();
         createParentGroup();

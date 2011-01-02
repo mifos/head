@@ -27,6 +27,9 @@ import java.util.Map;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
@@ -39,15 +42,12 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 
 public class ConstPluginStrutsTest extends MifosMockStrutsTestCase {
 
-    public ConstPluginStrutsTest() throws Exception {
-        super();
-    }
+
 
     private SavingsOfferingBO product;
 
-    @Override
+    @Before
     public void setUp() throws Exception {
-        super.setUp();
 
         request.getSession(true);
         createFlowAndAddToRequest(SavingsAction.class);
@@ -58,16 +58,16 @@ public class ConstPluginStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("selectedPrdOfferingId", product.getPrdOfferingId().toString());
     }
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         TestObjectFactory.removeObject(product);
-        super.tearDown();
     }
 
     /**
      *This method performs an action to load Plugins defined in
      * struts-config.xml.
      */
+    @Test
     public void testMasterConstants() throws Exception {
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "load");
@@ -80,6 +80,7 @@ public class ConstPluginStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertEquals(Short.valueOf("1"), constantMap.get("CUSTOMFIELD_NUMBER"));
     }
 
+    @Test
     public void testIfAllConstantFilesAreLoaded() {
         setRequestPathInfo("/savingsAction.do");
         addRequestParameter("method", "load");
@@ -93,6 +94,7 @@ public class ConstPluginStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(context.getAttribute("SavingsConstants"));
     }
 
+    @Test
     public void testConstantsPluginException() throws Exception {
         ConstPlugin constPlugin = new ConstPlugin();
         ArrayList<String> constPluginClasses = new ArrayList<String>();

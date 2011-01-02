@@ -1,13 +1,13 @@
 package org.mifos.framework.hibernate.helper;
 
+import java.sql.Connection;
+import java.util.Properties;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.audit.util.helpers.AuditInterceptor;
-
-import java.sql.Connection;
-import java.util.Properties;
 
 public class TestHibernateUtil extends HibernateUtil {
     private HibernateUtil hibernateUtil;

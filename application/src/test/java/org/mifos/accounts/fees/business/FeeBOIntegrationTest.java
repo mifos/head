@@ -20,11 +20,22 @@
 
 package org.mifos.accounts.fees.business;
 
+import java.util.Date;
+import java.util.Set;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Test;
 import org.mifos.accounts.fees.exceptions.FeeException;
-import org.mifos.accounts.fees.util.helpers.*;
+import org.mifos.accounts.fees.util.helpers.FeeCategory;
+import org.mifos.accounts.fees.util.helpers.FeeChangeType;
+import org.mifos.accounts.fees.util.helpers.FeeConstants;
+import org.mifos.accounts.fees.util.helpers.FeeFormula;
+import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
+import org.mifos.accounts.fees.util.helpers.FeeLevel;
+import org.mifos.accounts.fees.util.helpers.FeePayment;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
@@ -35,8 +46,6 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import java.util.Date;
-import java.util.Set;
 
 public class FeeBOIntegrationTest extends MifosIntegrationTestCase {
 

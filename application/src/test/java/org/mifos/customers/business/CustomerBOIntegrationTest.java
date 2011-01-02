@@ -20,7 +20,13 @@
 
 package org.mifos.customers.business;
 
+import java.sql.Date;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +42,6 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -47,26 +52,6 @@ import org.mifos.customers.group.business.GroupPerformanceHistoryEntity;
 import org.mifos.customers.group.business.GroupTestUtils;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
-import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.business.util.Address;
-import org.mifos.framework.business.util.Name;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.List;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;

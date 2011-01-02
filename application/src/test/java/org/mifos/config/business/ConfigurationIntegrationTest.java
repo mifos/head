@@ -20,7 +20,10 @@
 
 package org.mifos.config.business;
 
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,8 +34,6 @@ import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-
-import java.util.List;
 
 /**
  * Most of this class is a remnant of per-office configuration, which <a

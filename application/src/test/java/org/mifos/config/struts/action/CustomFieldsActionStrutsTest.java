@@ -28,6 +28,9 @@ import javax.servlet.http.HttpSession;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
@@ -46,9 +49,7 @@ import org.mifos.security.util.UserContext;
 
 public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public CustomFieldsActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private UserContext userContext;
     private final Short DEFAULT_LOCALE = 1;
@@ -56,14 +57,12 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
             + "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789"
             + "0";
 
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
+    @After
+    public void tearDown() throws Exception {
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -114,6 +113,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         return category.mapToEntityType().getValue().toString();
     }
 
+    @Test
     public void testLoadDefineCustomFields() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "loadDefineCustomFields");
@@ -136,6 +136,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testFailurePreviewWithAllValuesNull() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "preview");
@@ -148,6 +149,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailurePreviewWithDataTypeNumericAndDefaultValueNotMatched() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "preview");
@@ -160,6 +162,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessfulPreviewWithDataTypeNumericAndDefaultValueMatched() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "preview");
@@ -171,6 +174,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testFailurePreviewWithDataTypeDateAndDefaultValueNotMatched() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "preview");
@@ -183,6 +187,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessfulPreviewWithDataTypeDateAndDefaultValueMatched() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "preview");
@@ -194,6 +199,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testPreviewSuccessful() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "preview");
@@ -205,6 +211,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.preview_success.toString());
     }
 
+    @Test
     public void testFailureEditPreviewWithLabelNull() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "editPreview");
@@ -216,6 +223,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailureEditPreviewWithTooLongLabel() throws Exception {
 
         setRequestPathInfo("/customFieldsAction.do");
@@ -228,6 +236,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testFailureEditPreviewWithTooLongDefaultValue() throws Exception {
 
         setRequestPathInfo("/customFieldsAction.do");
@@ -241,6 +250,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessfulEditPreviewWithDataTypeNumericAndDefaultValueMatched() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "editPreview");
@@ -253,6 +263,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editPreview_success.toString());
     }
 
+    @Test
     public void testFailureEditPreviewWithDataTypeDateAndDefaultValueNotMatched() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "editPreview");
@@ -266,6 +277,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyInputForward();
     }
 
+    @Test
     public void testSuccessfulEditPreviewWithDataTypeDateAndDefaultValueMatched() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "editPreview");
@@ -277,6 +289,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editPreview_success.toString());
     }
 
+    @Test
     public void testEditPreviewSuccessful() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "editPreview");
@@ -289,6 +302,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editPreview_success.toString());
     }
 
+    @Test
     public void testLoad() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "load");
@@ -296,6 +310,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.load_success.toString());
     }
 
+    @Test
     public void testCancel() {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "cancel");
@@ -305,6 +320,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.cancel_success.toString());
     }
 
+    @Test
     public void testCancelEdit() {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "cancelEdit");
@@ -314,6 +330,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.cancelEdit_success.toString());
     }
 
+    @Test
     public void testCancelCreate() {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "cancelCreate");
@@ -323,6 +340,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.cancelCreate_success.toString());
     }
 
+    @Test
     public void testPrevious() {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "previous");
@@ -337,6 +355,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.previous_success.toString());
     }
 
+    @Test
     public void testEditPrevious() {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "editPrevious");
@@ -351,6 +370,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.editprevious_success.toString());
     }
 
+    @Test
     public void testViewCategory() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "viewCategory");
@@ -361,6 +381,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdate() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "update");
@@ -387,6 +408,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
        Assert.assertTrue(customField.getLabel().equals(newLabelName));
     }
 
+    @Test
     public void testCreateForClientCategory() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "create");
@@ -404,6 +426,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCreateForGroupCategory() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "create");
@@ -421,6 +444,7 @@ public class CustomFieldsActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testCreateForCenterCategory() throws Exception {
         setRequestPathInfo("/customFieldsAction.do");
         addRequestParameter("method", "create");

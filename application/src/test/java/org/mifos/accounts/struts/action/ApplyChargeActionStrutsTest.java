@@ -25,6 +25,9 @@ import java.util.List;
 
 import junit.framework.Assert;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -52,9 +55,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public ApplyChargeActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private AccountBO accountBO;
 
@@ -81,9 +82,8 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         setConfigFile("/WEB-INF/struts-config.xml,/WEB-INF/accounts-struts-config.xml");
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -92,15 +92,15 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, ApplyChargeAction.class);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         accountBO = null;
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoad() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
@@ -119,6 +119,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
                 AccountConstants.APPLICABLE_CHARGE_LIST, request)).size());
     }
 
+    @Test
     public void testCancel() throws Exception {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
@@ -137,6 +138,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
     }
 
+    @Test
     public void testUpdateSuccess() {
 
         SecurityContext securityContext = new SecurityContextImpl();
@@ -161,6 +163,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdateFailureDueToInvalidChargeAmount() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
@@ -178,6 +181,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testUpdateFailureWith_Rate_GreaterThan999() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
         createInitialObjects();
@@ -195,6 +199,7 @@ public class ApplyChargeActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testValidate() throws Exception {
         setRequestPathInfo("/applyChargeAction.do");
         addRequestParameter("method", "validate");

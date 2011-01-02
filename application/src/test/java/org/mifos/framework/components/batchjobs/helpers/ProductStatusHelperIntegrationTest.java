@@ -20,7 +20,22 @@
 
 package org.mifos.framework.components.batchjobs.helpers;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.sql.Date;
+import java.util.List;
+
 import junit.framework.Assert;
+
 import org.hibernate.SessionException;
 import org.junit.After;
 import org.junit.Before;
@@ -46,20 +61,6 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.explore.JobExplorer;
 import org.springframework.core.io.ClassPathResource;
-
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.Date;
-import java.util.List;
-
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.mifos.application.meeting.util.helpers.MeetingType.LOAN_INSTALLMENT;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 public class ProductStatusHelperIntegrationTest extends MifosIntegrationTestCase {
 
     MifosScheduler mifosScheduler;

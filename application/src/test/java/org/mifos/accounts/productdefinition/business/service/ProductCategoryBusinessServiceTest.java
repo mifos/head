@@ -1,13 +1,13 @@
 package org.mifos.accounts.productdefinition.business.service;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.persistence.ProductCategoryPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class ProductCategoryBusinessServiceTest {
     final ProductCategoryPersistence productCategoryPersistence = mock(ProductCategoryPersistence.class);

@@ -1,5 +1,8 @@
 package org.mifos.customers.checklist.business.service;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
@@ -9,9 +12,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.util.UserContext;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
-
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 

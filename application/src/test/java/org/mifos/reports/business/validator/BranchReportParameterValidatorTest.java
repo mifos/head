@@ -20,21 +20,22 @@
 
 package org.mifos.reports.business.validator;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
+
+import java.util.ArrayList;
+
 import junit.framework.Assert;
 import junit.framework.TestCase;
+
 import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.platform.validations.Errors;
 import org.mifos.reports.business.BranchReportParameterForm;
 import org.mifos.reports.business.service.BranchReportService;
 import org.mifos.reports.business.service.IBranchReportService;
 import org.mifos.reports.util.helpers.ReportValidationConstants;
-
-import java.util.ArrayList;
-
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
 
 public class BranchReportParameterValidatorTest extends TestCase {
     private static final String BRANCH_ID = "2";

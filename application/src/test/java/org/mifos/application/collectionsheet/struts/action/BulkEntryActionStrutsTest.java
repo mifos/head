@@ -20,7 +20,27 @@
 
 package org.mifos.application.collectionsheet.struts.action;
 
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -49,6 +69,7 @@ import org.mifos.application.servicefacade.ProductDto;
 import org.mifos.application.servicefacade.TestCollectionSheetRetrieveSavingsAccountsUtils;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.AttendanceType;
 import org.mifos.customers.client.business.ClientBO;
@@ -58,7 +79,6 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.util.helpers.CustomerAccountDto;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomerDto;
 import org.mifos.dto.domain.OfficeDetailsDto;
@@ -75,29 +95,12 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
 /**
  * I test {@link CollectionSheetEntryAction}.
  */
 public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
-    public BulkEntryActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     /*
      * Setting this to true fixes the printing of stack traces to standard out, but seems to cause failures (MySQL threw
@@ -119,8 +122,8 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     private SavingsBO clientSavingsAccount;
     private String flowKey;
 
-    @Override
-    protected void tearDown() throws Exception {
+    @After
+    public void tearDown() throws Exception {
         centerSavingsAccount = null;
         groupSavingsAccount = null;
         clientSavingsAccount = null;
@@ -130,12 +133,10 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         client = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         enableCustomWorkingDays();
         userContext = TestUtils.makeUser();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
@@ -147,6 +148,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, CollectionSheetEntryAction.class);
     }
 
+    @Test
     public void testSuccessfulCreate() throws Exception {
         CollectionSheetEntryGridDto bulkEntry = getSuccessfulBulkEntry();
         Calendar meetingDateCalendar = new GregorianCalendar();
@@ -205,6 +207,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 new java.sql.Date(meetingDateCalendar.getTimeInMillis())).getAttendanceAsEnum());
     }
 
+    @Test
     public void testSuccessfulPreview() throws Exception {
         CollectionSheetEntryGridDto bulkEntry = getSuccessfulBulkEntry();
         Calendar meetinDateCalendar = new GregorianCalendar();
@@ -242,6 +245,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testFailurePreview() throws Exception {
         CollectionSheetEntryGridDto bulkEntry = getFailureBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -257,6 +261,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testLoad() throws PageExpiredException {
         setRequestPathInfo("/collectionsheetaction.do");
         addRequestParameter("method", "load");
@@ -270,6 +275,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testLoadPersonnel() throws PageExpiredException {
         setRequestPathInfo("/collectionsheetaction.do");
         addRequestParameter("method", "loadLoanOfficers");
@@ -287,6 +293,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testLoadCustomers() throws PageExpiredException {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -312,6 +319,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 CollectionSheetEntryConstants.ISCENTERHIERARCHYEXISTS, request), Constants.YES);
     }
 
+    @Test
     public void testGetLastMeetingDateForCustomer() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
                 CUSTOMER_MEETING));
@@ -355,6 +363,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @SuppressWarnings("unchecked")
+    @Test
     public void testSuccessfulGet() throws Exception {
 
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getNewMeetingForToday(WEEKLY, EVERY_WEEK,
@@ -416,6 +425,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("get_success");
     }
 
+    @Test
     public void testFailureGet() throws Exception {
         CollectionSheetEntryGridDto bulkEntry = getSuccessfulBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -430,6 +440,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
                 "errors.mandatoryselect", "errors.mandatoryselect"});
     }
 
+    @Test
     public void testFailurePreviewForEmptyAmount() throws Exception {
         CollectionSheetEntryGridDto bulkEntry = getFailureBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -443,6 +454,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(new String[]{"errors.invalidaccollections", "errors.invalidaccollections"});
     }
 
+    @Test
     public void testFailurePreviewForCharAmount() throws Exception {
         CollectionSheetEntryGridDto bulkEntry = getFailureBulkEntry();
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
@@ -456,6 +468,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
         verifyActionErrors(new String[]{"errors.invalidaccollections", "errors.invalidaccollections"});
     }
 
+    @Test
     public void testValidateForLoadMethod() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
@@ -470,6 +483,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testValidateForGetMethod() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 
@@ -484,6 +498,7 @@ public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
     }
 
+    @Test
     public void testValidateForPreviewMethod() {
         request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
 

@@ -20,11 +20,14 @@
 
 package org.mifos.customers;
 
-import static org.mifos.domain.builders.PersonnelBuilder.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
+import static org.mifos.domain.builders.PersonnelBuilder.anyLoanOfficer;
+import static org.mockito.Matchers.anyShort;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;

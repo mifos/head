@@ -19,7 +19,9 @@
  */
 package org.mifos.accounts.savings.persistence;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.sampleBranchOffice;
 import static org.mifos.framework.util.helpers.IntegrationTestObjectMother.testUser;
 
@@ -52,8 +54,6 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
-
-import static org.hamcrest.CoreMatchers.is;
 
 /**
  * I test integration of {@link SavingsDaoHibernate}, hibernate mapping

@@ -20,17 +20,27 @@
 
 package org.mifos.application.meeting.struts.action;
 
+import java.util.Date;
+
 import junit.framework.Assert;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;
-import org.mifos.application.meeting.util.helpers.*;
+import org.mifos.application.meeting.util.helpers.MeetingConstants;
+import org.mifos.application.meeting.util.helpers.MeetingType;
+import org.mifos.application.meeting.util.helpers.RankOfDay;
+import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
@@ -38,12 +48,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
 
-import java.util.Date;
-
 public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
-    public MeetingActionStrutsTest() throws Exception {
-        super();
-    }
+
 
     private String flowKey;
     private CenterBO center;
@@ -51,9 +57,8 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
     private ClientBO client1;
     private ClientBO client2;
 
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
+    @Before
+    public void setUp() throws Exception {
         UserContext userContext = TestObjectFactory.getContext();
         request.getSession().setAttribute(Constants.USERCONTEXT, userContext);
         addRequestParameter("recordLoanOfficerId", "1");
@@ -63,15 +68,15 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         flowKey = createFlow(request, MeetingAction.class);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         client1 = null;
         client2 = null;
         group = null;
         center = null;
-        super.tearDown();
     }
 
+    @Test
     public void testLoadForCenter() throws Exception {
         setRequestPathInfo("/meetingAction.do");
         addRequestParameter("method", "load");
@@ -88,6 +93,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(CustomerLevel.CENTER, actionForm.getCustomerLevelValue());
     }
 
+    @Test
     public void testLoadForGroup() throws Exception {
         setRequestPathInfo("/meetingAction.do");
         addRequestParameter("method", "load");
@@ -105,6 +111,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(CustomerLevel.GROUP, actionForm.getCustomerLevelValue());
     }
 
+    @Test
     public void testLoadForClient() throws Exception {
         setRequestPathInfo("/meetingAction.do");
         addRequestParameter("method", "load");
@@ -122,6 +129,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(CustomerLevel.CLIENT, actionForm.getCustomerLevelValue());
     }
 
+    @Test
     public void testLoad_WeeklyMeetingExists() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "load");
@@ -152,6 +160,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(RecurrenceType.WEEKLY, actionForm.getRecurrenceType());
     }
 
+    @Test
     public void testLoad_MonthlyOnDateMeetingExists() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "load");
@@ -184,6 +193,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(RecurrenceType.MONTHLY, actionForm.getRecurrenceType());
     }
 
+    @Test
     public void testLoad_MonthlyOnWeekMeetingExists() throws Exception {
         setRequestPathInfo("/centerCustAction.do");
         addRequestParameter("method", "load");
@@ -217,6 +227,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(RecurrenceType.MONTHLY, actionForm.getRecurrenceType());
     }
 
+    @Test
     public void testFailureCreateMeeting_RecurrenceIsNull() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -233,6 +244,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testFailureCreateWeeklyMeeting_WeekDayAndRecurAfterIsNull() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -252,6 +264,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testFailureCreateWeeklyMeeting_WeekDayIsNull() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -271,6 +284,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testFailureCreateWeeklyMeeting_MeetingPlaceIsNull() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -289,6 +303,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testSuccessfulCreateWeeklyMeeting() throws Exception {
         loadMeetingPage();
         String meetingPlace = "Delhi";
@@ -312,6 +327,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());
     }
 
+    @Test
     public void testFailureCreateMonthlyMeetingOnDate_DayNumAndRecurAfterIsNull() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -332,6 +348,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testFailureCreateMonthlyMeetingOnDate_RecurAfterIsNull() throws Exception {
         loadMeetingPage();
         Short dayNumber = Short.valueOf("1");
@@ -353,6 +370,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testFailureCreateMonthlyMeetingOnDate_MeetingPlaceIsNull() throws Exception {
         loadMeetingPage();
         Short dayNumber = Short.valueOf("5");
@@ -372,6 +390,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testSuccessfulCreateMonthlyMeetingOnDate() throws Exception {
         loadMeetingPage();
         String meetingPlace = "Delhi";
@@ -399,6 +418,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(dayNumber, meeting.getMeetingDetails().getDayNumber());
     }
 
+    @Test
     public void testFailureCreateMonthlyMeetingOnWeekDay_AllNull() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -420,6 +440,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testFailureCreateMonthlyMeetingOnWeekDay_RankANdRecurAfterNull() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -441,6 +462,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testFailureCreateMonthlyMeetingOnWeekDay_RecurAfterNull() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -463,6 +485,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testSuccessfulCreateMonthlyMeetingOnWeekDay() throws Exception {
         loadMeetingPage();
         String meetingPlace = "Delhi";
@@ -491,6 +514,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(RankOfDay.FOURTH, meeting.getMeetingDetails().getWeekRank());
     }
 
+    @Test
     public void testSuccessfulCancelCreate() throws Exception {
         loadMeetingPage();
         setRequestPathInfo("/meetingAction.do");
@@ -501,6 +525,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNull(meeting);
     }
 
+    @Test
     public void testSuccessfulCancelCreate_WithMeetingInSession() throws Exception {
         loadMeetingPage();
         MeetingBO meeting = createWeeklyMeeting(WeekDay.MONDAY, Short.valueOf("5"), new Date());
@@ -513,6 +538,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertNotNull(meeting);
     }
 
+    @Test
     public void testEditForCenter() throws Exception {
         MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new Date());
         center = createCenter(meeting);
@@ -538,6 +564,7 @@ public class MeetingActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
     }
 
+    @Test
     public void testSuccessfulEditCancel() throws Exception {
         MeetingBO meeting = createWeeklyMeeting(WeekDay.WEDNESDAY, Short.valueOf("5"), new Date());
         center = createCenter(meeting);

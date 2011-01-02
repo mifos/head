@@ -1,5 +1,16 @@
 package org.mifos.accounts.loan.business.service;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.util.CollectionUtils.asList;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,17 +27,6 @@ import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.platform.validations.Errors;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mifos.framework.util.CollectionUtils.asList;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class InstallmentsValidatorTest {
