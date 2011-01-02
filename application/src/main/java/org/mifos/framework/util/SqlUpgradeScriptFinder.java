@@ -20,13 +20,14 @@
 
 package org.mifos.framework.util;
 
+import java.io.IOException;
 import java.net.URL;
 
 import org.mifos.framework.persistence.SqlResource;
 import org.mifos.framework.persistence.SqlUpgrade;
 
 public class SqlUpgradeScriptFinder {
-    public static SqlUpgrade findUpgradeScript(String scriptName) {
+    public static SqlUpgrade findUpgradeScript(String scriptName) throws IOException {
         // Currently, SQL files are located in the same package as
         // SqlUpgradeScriptFinder so we need to load the file from this
         // class
@@ -41,7 +42,7 @@ public class SqlUpgradeScriptFinder {
 
     }
 
-    static URL getSqlResourceLocation(String name) {
+    static URL getSqlResourceLocation(String name) throws IOException {
         return SqlResource.getInstance().getUrl(name);
     }
 }

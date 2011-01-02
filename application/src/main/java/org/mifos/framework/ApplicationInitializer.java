@@ -368,7 +368,9 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         final MifosScheduler mifosScheduler = (MifosScheduler) ctx.getAttribute(MifosScheduler.class.getName());
         ctx.removeAttribute(MifosScheduler.class.getName());
         try {
-            mifosScheduler.shutdown();
+            if (mifosScheduler != null) {
+                mifosScheduler.shutdown();
+            }
         } catch (Exception e) {
             logger.error("error while shutting down scheduler", e);
         }
