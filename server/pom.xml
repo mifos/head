@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.mifos</groupId>
+	<artifactId>mifos-server</artifactId>
+	<version>1.8-SNAPSHOT</version>
+
+	<name>Mifos - Server</name>
+	<description>Embedded Servlet Container Web Server. 
+Principally for Mifos Eclipse (or other IDE) and Maven-based Development Environment,
+but could technically be used for running acceptanceTests, Demo/Test instances, or even &quot;all-in-one&quot; real deployment scenarios.</description>
+	<url>http://www.mifos.org</url>
+
+	<parent>
+		<groupId>org.mifos</groupId>
+		<artifactId>mifos-parent</artifactId>
+		<version>1.8-SNAPSHOT</version>
+		<relativePath>../pom.xml</relativePath>
+	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.mifos</groupId>
+			<artifactId>mifos-webapp</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>

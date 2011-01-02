@@ -195,7 +195,7 @@
     <dependencies>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>mifos-webapp</artifactId>
+            <artifactId>mifos-war</artifactId>
             <version>1.8-SNAPSHOT</version>
             <type>war</type>
         </dependency>
@@ -467,7 +467,7 @@
                         <deployables>
                             <deployable>
                                 <groupId>org.mifos</groupId>
-                                <artifactId>mifos-webapp</artifactId>
+                                <artifactId>mifos-war</artifactId>
                                 <type>war</type>
                                 <properties>
                                     <context>mifos</context>
