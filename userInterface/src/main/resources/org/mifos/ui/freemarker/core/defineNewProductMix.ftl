@@ -29,7 +29,7 @@
     <div class="borders span-22">
       <div class="borderbtm span-22">
         <p class="span-15 arrowIMG orangeheading">[@spring.message "manageProducts.defineProductmix.productmixinformation"/]</p>
-        <p class="span-3 arrowIMG1 orangeheading last">[@spring.message "reviewAndSubmit"/]</p>
+        <p class="span-3 arrowIMG1 orangeheading last width130px">[@spring.message "reviewAndSubmit"/]</p>
       </div>
       <div class="subcontent ">
         <form method="" action="" name="formname">

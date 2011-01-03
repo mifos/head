@@ -51,7 +51,7 @@
 [#macro topNavigationNoSecurity currentTab]
 <div id="header">
 	<div class="site_logo">
-		<span class="logo">Mifos</span>
+		<span class="logo"></span>
 		<a href="yourSettings.do?method=get" title="[@spring.message "yourSettings"/]">[@spring.message "yourSettings"/]</a>&nbsp;|&nbsp;
 		<a id="logout_link" href="j_spring_security_logout" title="[@spring.message "logout"/]">[@spring.message "logout"/]</a>
 	</div>
@@ -81,7 +81,7 @@
 <div class="breadcrumb">
 	    [#list breadcrumbs?keys as text]
   			[#if text_has_next || lastEntryIsText=="false"]
-    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/&nbsp;
+    			<a href="${breadcrumbs[text]}">[@spring.messageText text, text/]</a>&nbsp;/
             [#else]
                 <span class="fontBold">[@spring.messageText text, text/]</span>
    			[/#if]
@@ -153,3 +153,7 @@
 [#-- Useful (and very specific) for parsing i18n messages containing links. --]
 [#-- usage [@mifos.mlink dest="viewQuestions.ftl"][@spring.message "view.questions.mlink"][/@mifos.mlink] --]
 [#assign mlink="org.mifos.ui.ftl.MarkdownLinker"?new()]
+
+[#-- Template method for localized formatting of Java or Joda dates --]
+[#-- usage: ${mifos.date_formatter(monthlyCashFlow.dateTime, "MMMM", Application.ConfigLocale.locale)} --]
+[#assign date_formatter="org.mifos.ui.ftl.DateFormatter"?new()]

@@ -31,7 +31,7 @@
             <p class="span-17 silverheading completeIMG padding20left"
                style="width:50%">[@spring.message "manageProducts.defineNewCategory.productcategoryinformation"/]</p>
 
-            <p class="span-3 timelineboldorange arrowIMG1 last padding20left10right"
+            <p class="span-3 timelineboldorange arrowIMG last padding20left10right width130px"
                style="float:right">[@spring.message "reviewAndSubmit" /]</p>
         </div>
         <div class="margin20lefttop">
@@ -42,9 +42,9 @@
           <div class="fontBold margin10bottom">[@spring.message "manageProducts.editCategory.categoryDetails"/] </div>
           [@mifos.showAllErrors "formBean.*"/]
           <p class="margin10bottom"">
-          	<span class="fontBold">[@spring.message "manageProducts.defineNewCategory.productType"/] </span><span>:&nbsp;[#switch formBean.productTypeId]
+          	<span class="fontBold">[@spring.message "manageProducts.defineNewCategory.productType"/]</span><span>:&nbsp;[#switch formBean.productTypeId]
                 	[#case "1"]
-                		<span></span>&nbsp;<span>
+                		<span>
                             [#assign loan][@mifostag.mifoslabel name="Loan" /][/#assign]
                             [@spring.messageArgs "ftlDefinedLabels.manageProducts.editCategory.loan" , [loan]  /]
                         </span>
@@ -57,9 +57,9 @@
                 	[#break]
                 [/#switch] [@spring.bind "formBean.productTypeId"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/></span><br />
             <span class="fontBold">
-            	[@spring.message "manageProducts.editCategory.categoryName"/]
+            	[@spring.message "manageProducts.editCategory.categoryName"/]:&nbsp;
             </span>
-            <span>:&nbsp;${formBean.productCategoryName}
+            <span>${formBean.productCategoryName}
             	[@spring.bind "formBean.productCategoryName"/]<input type="hidden" name="${spring.status.expression}" value="${spring.status.value?default("")}"/>
             </span><br />
           </p>
