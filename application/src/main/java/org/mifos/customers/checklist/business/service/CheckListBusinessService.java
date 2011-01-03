@@ -38,7 +38,7 @@ import org.mifos.security.util.UserContext;
 public class CheckListBusinessService implements BusinessService {
 
     @Override
-    public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
+    public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
     }
 
