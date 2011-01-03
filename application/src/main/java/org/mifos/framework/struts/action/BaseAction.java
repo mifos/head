@@ -46,6 +46,7 @@ import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.servicefacade.AccountServiceFacade;
+import org.mifos.application.admin.servicefacade.CheckListServiceFacade;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
@@ -137,6 +138,7 @@ public abstract class BaseAction extends DispatchAction {
     protected FundServiceFacade fundServiceFacade = DependencyInjectedServiceLocator.locateFundServiceFacade();
     protected AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade = DependencyInjectedServiceLocator.locateAuthenticationAuthorizationServiceFacade();
     protected ImportTransactionsServiceFacade importTransactionsServiceFacade = DependencyInjectedServiceLocator.locateImportTransactionsServiceFacade();
+    protected CheckListServiceFacade checkListServiceFacade = DependencyInjectedServiceLocator.locateCheckListServiceFacade();
 
     protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
@@ -172,6 +174,7 @@ public abstract class BaseAction extends DispatchAction {
             this.savingsServiceFacade = springAppContext.getBean(SavingsServiceFacade.class);
             this.authenticationAuthorizationServiceFacade = springAppContext.getBean(AuthenticationAuthorizationServiceFacade.class);
             this.importTransactionsServiceFacade = springAppContext.getBean(ImportTransactionsServiceFacade.class);
+            this.checkListServiceFacade = springAppContext.getBean(CheckListServiceFacade.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }
