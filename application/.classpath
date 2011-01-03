@@ -6,7 +6,6 @@
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="lib" path="src/test/resources"/>
 	<classpathentry exported="true" kind="lib" path="src/main/resources"/>
-	<classpathentry exported="true" kind="lib" path="src/main/sql"/>
 	<classpathentry exported="true" kind="lib" path="src/main/webapp"/>
 	<classpathentry kind="output" path="targetEclipse/classes"/>
 </classpath>
