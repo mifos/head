@@ -21,6 +21,7 @@
 package org.mifos.server;
 
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
@@ -59,7 +60,8 @@ public class MifosServerLauncherTest {
 		WebDriver wd = new HtmlUnitDriver(true);
 		wd.get(getAppURL());
 		
-		// TODO Assert something is on the Login Page!
+		// TODO Better assert that the correct thing is on the Login Page, e.g. by ID
+		Assert.assertTrue("Not on Login page", wd.getPageSource().contains("Login"));
 	}
 	
 	protected String getAppURL() {
