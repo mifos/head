@@ -20,7 +20,11 @@
 
 package org.mifos.server;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 
 /**
@@ -30,14 +34,37 @@ import org.junit.Test;
  */
 public class MifosServerLauncherTest {
 
-	@Test
-	public void testMifosStartupAndAssertLoginPageSeen() throws Exception {
-		final ServerLauncher serverLauncher = new ServerLauncher();
+	private static ServerLauncher serverLauncher;
+
+	@BeforeClass
+	public static void beforeClass() throws Exception {
+		serverLauncher = new ServerLauncher();
 		serverLauncher.startServer();
-		
-		// TODO Assert the Login Page is accessible. Use WebDriver / Selenium 2.0, share code in testFramework?
-		
-		serverLauncher.stopServer();
 	}
+	
+	@AfterClass
+	public static void afterClass() throws Exception {
+		serverLauncher.stopServer();
+		serverLauncher = null;
+	}
+	
+	@Test
+	public void testStartup() throws Exception {
+		// Do nothing here... just ensure that the beforeClass
+		// did not actually fail already.
+	}
+
+	@Test
+	public void testAndAssertLoginPageSeen() throws Exception {
+		WebDriver wd = new HtmlUnitDriver(true);
+		wd.get(getAppURL());
+		
+		// TODO Assert something is on the Login Page!
+	}
+	
+	protected String getAppURL() {
+		return "http://localhost:" + serverLauncher.getPort() + "/" + serverLauncher.getContext() + "/";
+	}
+
 
 }

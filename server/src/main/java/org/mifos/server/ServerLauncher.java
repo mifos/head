@@ -57,10 +57,17 @@ public class ServerLauncher {
 
 	
 	public ServerLauncher() {
-		this.port = 8080;
-		this.context = "theapp";
+		this(8080);
 	}
 
+	public ServerLauncher(int httpPort) {
+		this(8080, "mifos");
+	}
+
+	public ServerLauncher(int httpPort, String urlContext) {
+		this.port = httpPort;
+		this.context = urlContext;
+	}
 
 	public void startServer() throws Exception {
 		if (server != null) {
@@ -170,5 +177,13 @@ public class ServerLauncher {
 			list.add(urls.nextElement());
 		}
 		return list;
+	}
+	
+	public int getPort() {
+		return this.port;
+	}
+
+	public String getContext() {
+		return this.context;
 	}
 }
