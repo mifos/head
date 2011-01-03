@@ -6,7 +6,7 @@
     <fileSets>
         <fileSet>
             <outputDirectory>sql</outputDirectory>
-            <directory>src/main/sql</directory>
+            <directory>src/main/resources/sql</directory>
             <includes>
                 <include>create_mifos_db.sql</include>
                 <include>latest-schema.sql</include>

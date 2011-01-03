@@ -107,7 +107,7 @@ public class LatestTestAfterCheckpointIntegrationTest extends MifosIntegrationTe
         FlatXmlDataSet.write(upgradeDataDump, new FileOutputStream(tmpDir + "upgradeDataDump.xml"));
         upgradeDataDump = new FlatXmlDataSet(new File(tmpDir + "upgradeDataDump.xml"));
 
-        Assert.assertEquals(latestSchemaDump, upgradeSchemaDump);
+        Assert.assertEquals("DB Schema (latest & upgraded) do not match", latestSchemaDump, upgradeSchemaDump);
         Assertion.assertEquals(latestDataDump, upgradeDataDump);
 
 
