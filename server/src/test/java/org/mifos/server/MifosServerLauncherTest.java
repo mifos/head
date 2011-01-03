@@ -25,7 +25,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 
 /**
@@ -57,7 +57,7 @@ public class MifosServerLauncherTest {
 
 	@Test
 	public void testAndAssertLoginPageSeen() throws Exception {
-		WebDriver wd = new HtmlUnitDriver(true);
+		WebDriver wd = new FirefoxDriver();
 		wd.get(getAppURL());
 		
 		// TODO Better assert that the correct thing is on the Login Page, e.g. by ID

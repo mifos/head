@@ -485,6 +485,16 @@
             	<groupId>org.seleniumhq.selenium</groupId>
             	<artifactId>selenium</artifactId>
             	<version>2.0b1</version>
+            	<exclusions>
+					<!-- htmlunit drags along a Xalan & Xerces, on the same classpath as 
+						main Mifos in the misof-server setup, which causes Mifos to have issues (e.g. 
+						failing to validate mifosChartOfAccounts.xml). So for now, in this 'everything-in-process' 
+						set-up, no selenium-htmlunit-driver... -->
+					<exclusion>
+						<groupId>org.seleniumhq.selenium</groupId>
+						<artifactId>selenium-htmlunit-driver</artifactId>
+					</exclusion>
+				</exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
