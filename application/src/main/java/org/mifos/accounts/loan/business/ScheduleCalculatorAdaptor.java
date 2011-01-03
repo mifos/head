@@ -52,7 +52,7 @@ public class ScheduleCalculatorAdaptor {
             Schedule schedule = scheduleMapper.mapToSchedule(new ArrayList<LoanScheduleEntity>(loan.getLoanScheduleEntities()),
                     loan.getDisbursementDate(), getDailyInterest(loan.getInterestRate()), loan.getLoanAmount().getAmount());
             scheduleCalculator.computeExtraInterest(schedule, asOfDate);
-            scheduleMapper.populateExtraInterestInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
+            populateExtraInterestInLoanScheduleEntities(schedule, loan.getLoanScheduleEntityMap());
         }
     }
 

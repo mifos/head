@@ -786,10 +786,8 @@ public class AccountBO extends AbstractBusinessObject {
         AccountActionDateEntity nextInstallment = getDetailsOfNextInstallment();
         if (nextInstallment != null) {
             for (AccountActionDateEntity accountActionDate : getAccountActionDates()) {
-                if (!accountActionDate.isPaid()) {
-                    if (accountActionDate.getInstallmentId() > nextInstallment.getInstallmentId()) {
-                        futureActionDateList.add(accountActionDate);
-                    }
+                if (!accountActionDate.isPaid() && accountActionDate.getInstallmentId() > nextInstallment.getInstallmentId()) {
+                    futureActionDateList.add(accountActionDate);
                 }
             }
         }

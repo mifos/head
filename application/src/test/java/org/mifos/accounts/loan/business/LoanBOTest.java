@@ -19,17 +19,7 @@
  */
 package org.mifos.accounts.loan.business;
 
-import static org.mifos.framework.TestUtils.getDate;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
+import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,11 +33,26 @@ import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.TestUtils.getDate;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LoanBOTest {
@@ -115,9 +120,9 @@ public class LoanBOTest {
     @Test
     public void testCopyInstallmentSchedule() {
         LoanBO loanBO = new LoanBO();
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "1"));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "2"));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 12, 2010), "100", "10", "3"));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "1", Money.zero(rupee)));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "2", Money.zero(rupee)));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 12, 2010), "100", "10", "3", Money.zero(rupee)));
         List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
         installments.add(getRepaymentScheduleInstallment("24-Oct-2010", 1, "123", "12"));
         installments.add(getRepaymentScheduleInstallment("24-Nov-2010", 2, "231", "23"));
@@ -155,12 +160,36 @@ public class LoanBOTest {
         }
     }
 
-    private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest, String installmentId) {
+    // DIPB -> Declining Interest Principal Balance Interest Type
+    @Test
+    public void shouldCalculateRepaymentAmountForDIPBTypeLoans() {
+        new DateTimeService().setCurrentDateTime(new DateTime(2010, 10, 30, 0, 0, 0, 0));
+         LoanBO loanBO = new LoanBO() {
+            @Override
+            public LoanOfferingBO getLoanOffering() {
+                return loanOfferingBO;
+            }
+        };
+        Mockito.when(loanOfferingBO.getCurrency()).thenReturn(rupee);
+        Money extraInterest = new Money(rupee, "25");
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(25, 9, 2010), "100", "10", "1", Money.zero(rupee)));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(25, 10, 2010), "100", "10", "2", extraInterest));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(25, 11, 2010), "100", "10", "3", extraInterest));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(25, 12, 2010), "100", "10", "4", Money.zero(rupee)));
+        loanBO.setDisbursementDate(getDate(25, 8, 2010));
+        Money earlyRepayAmount = loanBO.getEarlyRepayAmount();
+        assertThat(earlyRepayAmount, is(new Money(rupee,"480")));
+        Mockito.verify(loanOfferingBO,times(2)).getCurrency();
+    }
+
+    private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest, String installmentId, Money extraInterest) {
         LoanBO loanBO = mock(LoanBO.class);
         when(loanBO.getCurrency()).thenReturn(currency);
-        return new LoanScheduleEntity(loanBO, mock(CustomerBO.class), Short
+        LoanScheduleEntity loanScheduleEntity = new LoanScheduleEntity(loanBO, mock(CustomerBO.class), Short
                 .valueOf(installmentId), new java.sql.Date(date.getTime()), PaymentStatus.UNPAID, new Money(currency, principal),
                 new Money(currency, interest));
+        loanScheduleEntity.setExtraInterest(extraInterest);
+        return loanScheduleEntity;
 
     }
 

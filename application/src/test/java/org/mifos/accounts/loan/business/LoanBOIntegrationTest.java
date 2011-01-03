@@ -20,37 +20,7 @@
 
 package org.mifos.accounts.loan.business;
 
-import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
-import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
-import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
-import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
-import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
-import static org.mifos.framework.util.helpers.DateUtils.currentDate;
-import static org.mifos.framework.util.helpers.DateUtils.getCurrentDateWithoutTimeStamp;
-import static org.mifos.framework.util.helpers.DateUtils.getDateFromToday;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
-import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
-
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.hibernate.Session;
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
@@ -149,6 +119,35 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static org.apache.commons.lang.math.NumberUtils.DOUBLE_ZERO;
+import static org.apache.commons.lang.math.NumberUtils.SHORT_ZERO;
+import static org.mifos.application.meeting.util.helpers.MeetingType.CUSTOMER_MEETING;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.MONTHLY;
+import static org.mifos.application.meeting.util.helpers.RecurrenceType.WEEKLY;
+import static org.mifos.application.meeting.util.helpers.WeekDay.MONDAY;
+import static org.mifos.framework.util.helpers.DateUtils.currentDate;
+import static org.mifos.framework.util.helpers.DateUtils.getCurrentDateWithoutTimeStamp;
+import static org.mifos.framework.util.helpers.DateUtils.getDateFromToday;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_MONTH;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_SECOND_WEEK;
+import static org.mifos.framework.util.helpers.TestObjectFactory.EVERY_WEEK;
 
 public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -807,8 +806,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
             fees2.put("Mainatnence Fee", "100.0");
             fees2.put("Periodic Fee", "25.0");
 
-            LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(loanBO
-                    .getAccountActionDates());
+            LoanScheduleEntity[] paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(loanBO.getAccountActionDates());
 
             List<Date> installmentDates = new ArrayList<Date>();
             List<Date> feeDates = new ArrayList<Date>();
@@ -1259,7 +1257,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = getLoanAccount();
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        changeFirstInstallmentDate(accountBO);
+        changeFirstInstallmentDateToYesterday(accountBO);
         Money totalRepaymentAmount = zeroMoney;
         for (AccountActionDateEntity accountAction : accountBO.getAccountActionDates()) {
             LoanScheduleEntity accountActionDateEntity = (LoanScheduleEntity) accountAction;
@@ -1278,7 +1276,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = getLoanAccount();
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        changeFirstInstallmentDate(accountBO);
+        changeFirstInstallmentDateToYesterday(accountBO);
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
@@ -1333,7 +1331,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         accountBO = getLoanAccount();
         StaticHibernateUtil.flushAndClearSession();
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
-        changeFirstInstallmentDate(accountBO);
+        changeFirstInstallmentDateToYesterday(accountBO);
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount().subtract(loanBO.waiverAmount());
@@ -2704,7 +2702,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     public void ignore_testHasPortfolioAtRisk() {
         accountBO = getLoanAccount();
         Assert.assertFalse(((LoanBO) accountBO).hasPortfolioAtRisk());
-        changeFirstInstallmentDate(accountBO, 31);
+        changeFirstInstallmentDate(accountBO, -31);
         Assert.assertTrue(((LoanBO) accountBO).hasPortfolioAtRisk());
     }
 
@@ -2791,7 +2789,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 
-        changeFirstInstallmentDate(accountBO);
+        changeFirstInstallmentDateToYesterday(accountBO);
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
@@ -2838,7 +2836,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         client = TestObjectFactory.getCustomer(client.getCustomerId());
         accountBO = (AccountBO) StaticHibernateUtil.getSessionTL().get(AccountBO.class, accountBO.getAccountId());
 
-        changeFirstInstallmentDate(accountBO);
+        changeFirstInstallmentDateToYesterday(accountBO);
         LoanBO loanBO = (LoanBO) accountBO;
         UserContext uc = TestUtils.makeUser();
         Money totalRepaymentAmount = loanBO.getEarlyRepayAmount();
@@ -5743,19 +5741,12 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         center = TestObjectFactory.createWeeklyFeeCenter(this.getClass().getSimpleName() + " Center", meeting);
         group = TestObjectFactory.createWeeklyFeeGroupUnderCenter(this.getClass().getSimpleName() + " Group",
                 CustomerStatus.GROUP_ACTIVE, center);
+        client = TestObjectFactory.createClient(this.getClass().getSimpleName() + " Client",
+                CustomerStatus.CLIENT_ACTIVE, group);
     }
 
     private void changeFirstInstallmentDateToNextDate(final AccountBO accountBO) {
-        Calendar currentDateCalendar = new GregorianCalendar();
-        int year = currentDateCalendar.get(Calendar.YEAR);
-        int month = currentDateCalendar.get(Calendar.MONTH);
-        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-        currentDateCalendar = new GregorianCalendar(year, month, day + 1);
-        for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            ((LoanScheduleEntity) accountActionDateEntity).setActionDate(new java.sql.Date(currentDateCalendar
-                    .getTimeInMillis()));
-            break;
-        }
+        changeFirstInstallmentDate(accountBO, 1);
     }
 
     private AccountBO applyPaymentandRetrieveAccount() throws AccountException, SystemException {
@@ -5873,30 +5864,23 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         return nextAccountAction;
     }
 
+    private void changeFirstInstallmentDateToYesterday(final AccountBO accountBO) {
+        changeFirstInstallmentDate(accountBO, -1);
+    }
+
     private void changeFirstInstallmentDate(final AccountBO accountBO, final int numberOfDays) {
         Calendar currentDateCalendar = new GregorianCalendar();
         int year = currentDateCalendar.get(Calendar.YEAR);
         int month = currentDateCalendar.get(Calendar.MONTH);
         int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-        currentDateCalendar = new GregorianCalendar(year, month, day - numberOfDays);
-        for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            ((LoanScheduleEntity) accountActionDateEntity).setActionDate(new java.sql.Date(currentDateCalendar
-                    .getTimeInMillis()));
-            break;
-        }
+        currentDateCalendar = new GregorianCalendar(year, month, day + numberOfDays);
+        changeActionDateOfFirstInstallment(currentDateCalendar, accountBO.getAccountActionDates());
     }
 
-    private void changeFirstInstallmentDate(final AccountBO accountBO) {
-        Calendar currentDateCalendar = new GregorianCalendar();
-        int year = currentDateCalendar.get(Calendar.YEAR);
-        int month = currentDateCalendar.get(Calendar.MONTH);
-        int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
-        currentDateCalendar = new GregorianCalendar(year, month, day - 1);
-        for (AccountActionDateEntity accountActionDateEntity : accountBO.getAccountActionDates()) {
-            ((LoanScheduleEntity) accountActionDateEntity).setActionDate(new java.sql.Date(currentDateCalendar
-                    .getTimeInMillis()));
-            break;
-        }
+    private void changeActionDateOfFirstInstallment(Calendar currentDateCalendar, Set<AccountActionDateEntity> accountActionDates) {
+        if (accountActionDates.isEmpty()) return;
+        java.sql.Date actionDate = new java.sql.Date(currentDateCalendar.getTimeInMillis());
+        accountActionDates.toArray(new AccountActionDateEntity[accountActionDates.size()])[0].setActionDate(actionDate);
     }
 
     private AccountBO saveAndFetch(final AccountBO account) throws Exception {

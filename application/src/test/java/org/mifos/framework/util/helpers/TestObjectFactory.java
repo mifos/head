@@ -627,6 +627,11 @@ public class TestObjectFactory {
         return TestObjectFactory.createLoanOffering("Loan", "L", currentTime, meeting);
     }
 
+    public static LoanOfferingBO createLoanOffering(final Date currentTime, final MeetingBO meeting, final InterestType interestType) {
+        return TestObjectFactory.createLoanOffering("Loan", "L", ApplicableTo.CLIENTS, currentTime,
+                PrdStatus.LOAN_ACTIVE, 300.0, 1.2, 3, interestType, meeting, "1", "1", TestUtils.RUPEE);
+    }
+
     public static LoanOfferingBO createLoanOffering(final String name, final String shortName, final Date currentTime,
                                                     final MeetingBO meeting) {
         return TestObjectFactory.createLoanOffering(name, shortName, ApplicableTo.GROUPS, currentTime,
