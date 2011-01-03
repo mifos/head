@@ -14,6 +14,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.application.cashflow.struts.CashFlowAdaptor;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
+import org.mifos.platform.util.CollectionUtils;
 
 // TODO: Move this mapping logic to an appropriate layer - buddy/srikanth
 public class CashFlowDataAdaptor {
@@ -38,9 +39,8 @@ public class CashFlowDataAdaptor {
 
     public List<CashFlowDataDto> getCashflowDataDtos() {
         List<CashFlowDataDto> cashflowDataDtos = null;
-        if (monthlyCashFlows != null && monthlyCashFlows.size() > 0) {
+        if (hasMonthlyCashFlows()) {
             cashflowDataDtos = new ArrayList<CashFlowDataDto>();
-
             for (MonthlyCashFlowForm monthlyCashflowform : monthlyCashFlows) {
                 CashFlowDataDto cashflowDataDto = getCashFlowDataDto(monthlyCashflowform);
                 cashflowDataDtos.add(cashflowDataDto);
@@ -50,17 +50,17 @@ public class CashFlowDataAdaptor {
         return cashflowDataDtos;
     }
 
+    private boolean hasMonthlyCashFlows() {
+        return CollectionUtils.isNotEmpty(monthlyCashFlows);
+    }
+
 
     private void addLoanAmountToRespectiveCashFlow() {
         for (MonthlyCashFlowForm monthlyCashFlowForm : monthlyCashFlows) {
             if(DateUtils.sameMonthYear(monthlyCashFlowForm.getDate(),disbursementDate)) {
                 BigDecimal revenue = monthlyCashFlowForm.getRevenue();
-                if(revenue !=null) {
-                    monthlyCashFlowForm.setRevenue(revenue.add(loanAmount));
-                }else {
-                    monthlyCashFlowForm.setRevenue(loanAmount);
-                    break;
-                }
+                monthlyCashFlowForm.setRevenue((revenue == null)? loanAmount : loanAmount.add(revenue));
+                break;
             }
         }
     }
@@ -93,7 +93,7 @@ public class CashFlowDataAdaptor {
         BigDecimal totalInstallmentForMonth = cumulativeTotalForMonth(dateOfCashFlow);
         String value;
         if (cashflow.doubleValue() != 0) {
-            value = String.valueOf(totalInstallmentForMonth.multiply(new BigDecimal(100)).divide(cashflow, 2, RoundingMode.HALF_UP));
+            value = String.valueOf(totalInstallmentForMonth.multiply(BigDecimal.valueOf(100)).divide(cashflow, 2, RoundingMode.HALF_UP));
         } else {
             value = "Infinity";
         }

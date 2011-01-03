@@ -235,7 +235,6 @@ public class LoanAccountActionForm extends BaseActionForm implements QuestionRes
         this.cashflowDataDtos = cashflowDataDtos;
     }
 
-
     public Date getOriginalDisbursementDate() {
         return this.originalDisbursementDate;
     }
