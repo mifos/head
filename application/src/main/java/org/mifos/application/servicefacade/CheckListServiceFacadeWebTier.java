@@ -12,6 +12,7 @@ import org.mifos.customers.checklist.business.service.CheckListBusinessService;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.dto.screen.AccountCheckBoxItemDto;
+import org.mifos.dto.screen.CheckListStatesView;
 import org.mifos.dto.screen.CustomerCheckBoxItemDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -83,6 +84,26 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
                 }
             }
             return masterData;
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<CheckListStatesView> retrieveAllAccountStates(Short prdTypeId) {
+        Short localeIdNotUsed = null;
+        try {
+            return new CheckListPersistence().retrieveAllAccountStateList(prdTypeId, localeIdNotUsed);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<CheckListStatesView> retrieveAllCustomerStates(Short levelId) {
+        Short localeIdNotUsed = null;
+        try {
+            return new CheckListPersistence().retrieveAllCustomerStatusList(levelId, localeIdNotUsed);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }

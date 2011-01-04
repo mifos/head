@@ -9,7 +9,6 @@ import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.util.UserContext;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
 
@@ -28,32 +27,10 @@ public class CheckListBusinessServiceTest {
 
     @Test
     @ExpectedException(value = CustomerException.class)
-    public void testInvalidConnectionInGetAccountStates() throws PersistenceException {
-        try {
-            when(checkListPersistence.retrieveAllAccountStateList(id, id)).thenThrow(new PersistenceException("some exception"));
-            service.getAccountStates(id, id);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = CustomerException.class)
     public void testInvalidConnectionInGetCheckList() throws PersistenceException {
         try {
             when(checkListPersistence.getCheckList(id)).thenThrow(new PersistenceException("some exception"));
             service.getCheckList(id);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = CustomerException.class)
-    public void testInvalidConnectionInGetCustomerStates() throws PersistenceException {
-        try {
-            when(checkListPersistence.retrieveAllCustomerStatusList(id, id)).thenThrow(new PersistenceException("some exception"));
-            service.getCustomerStates(id, id);
             junit.framework.Assert.fail("should fail because of invalid session");
         } catch (ServiceException e) {
         }
@@ -91,18 +68,4 @@ public class CheckListBusinessServiceTest {
         } catch (ServiceException e) {
         }
     }
-
-    @Test
-    @ExpectedException(value = CustomerException.class)
-    public void testInvalidConnectionInGetCheckListMasterData() throws PersistenceException {
-        try {
-            UserContext context = mock(UserContext.class);
-            when(context.getLocaleId()).thenReturn(id);
-            when(checkListPersistence.getCheckListMasterData(id)).thenThrow(new PersistenceException("some exception"));
-            service.getCheckListMasterData(context);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
 }

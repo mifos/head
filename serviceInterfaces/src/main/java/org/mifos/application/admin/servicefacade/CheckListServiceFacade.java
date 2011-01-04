@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.dto.screen.AccountCheckBoxItemDto;
+import org.mifos.dto.screen.CheckListStatesView;
 import org.mifos.dto.screen.CustomerCheckBoxItemDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -35,4 +36,10 @@ public interface CheckListServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<CheckListMasterDto> retrieveChecklistMasterData();
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CheckListStatesView> retrieveAllCustomerStates(Short levelId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    List<CheckListStatesView> retrieveAllAccountStates(Short prdTypeId);
 }

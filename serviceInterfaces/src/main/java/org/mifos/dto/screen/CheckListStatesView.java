@@ -18,16 +18,16 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.checklist.util.helpers;
+package org.mifos.dto.screen;
 
 import java.io.Serializable;
 
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID"}, justification="should disable at filter level and also for pmd - not important for us")
 public class CheckListStatesView implements Serializable {
 
     private String stateName;
-
     private Short stateId;
-
     private Short id;
 
     public CheckListStatesView(Short stateId, String stateName, Short id) {

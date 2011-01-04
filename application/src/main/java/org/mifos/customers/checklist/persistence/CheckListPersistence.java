@@ -32,8 +32,8 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.dto.domain.CheckListMasterDto;
+import org.mifos.dto.screen.CheckListStatesView;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class CheckListPersistence extends MasterPersistence {

@@ -27,8 +27,6 @@ import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
-import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -40,34 +38,6 @@ public class CheckListBusinessService implements BusinessService {
     @Override
     public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") UserContext userContext) {
         return null;
-    }
-
-    /**
-     * see service facade.
-     */
-    @Deprecated
-    public List<CheckListMasterDto> getCheckListMasterData(UserContext userContext) throws ServiceException {
-        try {
-            return getCheckListPersistence().getCheckListMasterData(userContext.getLocaleId());
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<CheckListStatesView> getCustomerStates(Short levelId, Short localeId) throws ServiceException {
-        try {
-            return getCheckListPersistence().retrieveAllCustomerStatusList(levelId, localeId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public List<CheckListStatesView> getAccountStates(Short prdTypeId, Short localeId) throws ServiceException {
-        try {
-            return getCheckListPersistence().retrieveAllAccountStateList(prdTypeId, localeId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
     }
 
     protected CheckListPersistence getCheckListPersistence() {

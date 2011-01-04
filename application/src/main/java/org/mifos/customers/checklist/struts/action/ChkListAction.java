@@ -47,11 +47,11 @@ import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.business.service.CheckListBusinessService;
 import org.mifos.customers.checklist.struts.actionforms.ChkListActionForm;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.dto.screen.AccountCheckBoxItemDto;
+import org.mifos.dto.screen.CheckListStatesView;
 import org.mifos.dto.screen.CustomerCheckBoxItemDto;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
@@ -99,7 +99,6 @@ public class ChkListAction extends BaseAction {
         request.getSession().setAttribute("ChkListActionForm", null);
 
         List<CheckListMasterDto> masterData = this.checkListServiceFacade.retrieveChecklistMasterData();
-//        List<CheckListMasterDto> masterData = new CheckListBusinessService().getCheckListMasterData(getUserContext(request));
 
         SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
         SessionUtils.setCollectionAttribute(CheckListConstants.STATES, statesData, request);
@@ -113,7 +112,7 @@ public class ChkListAction extends BaseAction {
 
         ChkListActionForm chkListActionForm = (ChkListActionForm) form;
         List<String> details = chkListActionForm.getValidCheckListDetails();
-        List<CheckListStatesView> states = getStates(chkListActionForm, request);
+        List<CheckListStatesView> states = retrieveStates(chkListActionForm.getIsCustomer(), chkListActionForm.getMasterTypeId());
 
         SessionUtils.setCollectionAttribute(CheckListConstants.STATES, states, request);
         SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
@@ -126,8 +125,9 @@ public class ChkListAction extends BaseAction {
         ChkListActionForm chkListActionForm = (ChkListActionForm) form;
         List<String> details = chkListActionForm.getValidCheckListDetails();
         SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
-        isValidCheckListState(getShortValue(chkListActionForm.getMasterTypeId()), getShortValue(chkListActionForm
-                .getStateId()), chkListActionForm.getIsCustomer());
+
+        ((CheckListBusinessService) getService()).isValidCheckListState(getShortValue(chkListActionForm.getMasterTypeId()), getShortValue(chkListActionForm
+        .getStateId()), chkListActionForm.getIsCustomer());
 
         return mapping.findForward(ActionForwards.preview_success.toString());
 
@@ -187,23 +187,16 @@ public class ChkListAction extends BaseAction {
     public ActionForward loadAllChecklist(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute("ChkListActionForm", null);
-//        List<CustomerCheckListBO> customerCheckLists = ((CheckListBusinessService) getService())
-//                .retreiveAllCustomerCheckLists();
-//        List<AccountCheckListBO> accountCheckLists = ((CheckListBusinessService) getService())
-//                .retreiveAllAccountCheckLists();
+
         List<CustomerCheckBoxItemDto> customerCheckLists = checkListServiceFacade.retreiveAllCustomerCheckLists();
         List<AccountCheckBoxItemDto> accountCheckLists = checkListServiceFacade.retreiveAllAccountCheckLists();
 
-        Short localeId = getUserContext(request).getLocaleId();
-        SessionUtils.setCollectionAttribute(CheckListConstants.CENTER_CHECKLIST, getCustomerCheckLists(
-                customerCheckLists, CustomerLevel.CENTER), request);
-        SessionUtils.setCollectionAttribute(CheckListConstants.GROUP_CHECKLIST, getCustomerCheckLists(
-                customerCheckLists, CustomerLevel.GROUP), request);
-        SessionUtils.setCollectionAttribute(CheckListConstants.CLIENT_CHECKLIST, getCustomerCheckLists(
-                customerCheckLists, CustomerLevel.CLIENT), request);
+        SessionUtils.setCollectionAttribute(CheckListConstants.CENTER_CHECKLIST, filterCustomerCheckListsByLevel(customerCheckLists, CustomerLevel.CENTER), request);
+        SessionUtils.setCollectionAttribute(CheckListConstants.GROUP_CHECKLIST, filterCustomerCheckListsByLevel(customerCheckLists, CustomerLevel.GROUP), request);
+        SessionUtils.setCollectionAttribute(CheckListConstants.CLIENT_CHECKLIST, filterCustomerCheckListsByLevel(customerCheckLists, CustomerLevel.CLIENT), request);
 
-        SessionUtils.setCollectionAttribute(CheckListConstants.LOAN_CHECKLIST, getAccountCheckLists(accountCheckLists,ProductType.LOAN), request);
-        SessionUtils.setCollectionAttribute(CheckListConstants.SAVINGS_CHECKLIST, getAccountCheckLists( accountCheckLists, ProductType.SAVINGS), request);
+        SessionUtils.setCollectionAttribute(CheckListConstants.LOAN_CHECKLIST, filterAccountCheckListsByProductType(accountCheckLists,ProductType.LOAN), request);
+        SessionUtils.setCollectionAttribute(CheckListConstants.SAVINGS_CHECKLIST, filterAccountCheckListsByProductType( accountCheckLists, ProductType.SAVINGS), request);
         return mapping.findForward(ActionForwards.loadAllChecklist_success.toString());
     }
 
@@ -248,10 +241,11 @@ public class ChkListAction extends BaseAction {
             SessionUtils.setAttribute(CheckListConstants.TYPE, CheckListType.ACCOUNT_CHECKLIST.getValue(), request);
         }
 
-        List<CheckListMasterDto> masterData = ((CheckListBusinessService) getService())
-                .getCheckListMasterData(getUserContext(request));
+        List<CheckListMasterDto> masterData = this.checkListServiceFacade.retrieveChecklistMasterData();
         SessionUtils.setCollectionAttribute(CheckListConstants.CHECKLIST_MASTERDATA, masterData, request);
-        List<CheckListStatesView> states = getStates(chkListActionForm, request);
+
+        List<CheckListStatesView> states = retrieveStates(chkListActionForm.getIsCustomer(), chkListActionForm.getMasterTypeId());
+
         SessionUtils.setCollectionAttribute(CheckListConstants.STATES, states, request);
         List<String> details = chkListActionForm.getValidCheckListDetails();
         SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
@@ -265,7 +259,8 @@ public class ChkListAction extends BaseAction {
         ChkListActionForm chkListActionForm = (ChkListActionForm) form;
 
         List<String> details = chkListActionForm.getValidCheckListDetails();
-        List<CheckListStatesView> states = getStates(chkListActionForm, request);
+        List<CheckListStatesView> states = retrieveStates(chkListActionForm.getIsCustomer(), chkListActionForm.getMasterTypeId());
+
         SessionUtils.setCollectionAttribute(CheckListConstants.STATES, states, request);
         SessionUtils.setCollectionAttribute(CheckListConstants.DETAILS, details, request);
         return mapping.findForward(ActionForwards.manage_success.toString());
@@ -349,15 +344,11 @@ public class ChkListAction extends BaseAction {
         return null;
     }
 
-    private List<CustomerCheckBoxItemDto> getCustomerCheckLists(List<CustomerCheckBoxItemDto> checkLists, CustomerLevel level) {
+    private List<CustomerCheckBoxItemDto> filterCustomerCheckListsByLevel(List<CustomerCheckBoxItemDto> checkLists, CustomerLevel level) {
         List<CustomerCheckBoxItemDto> customerCheckLists = new ArrayList<CustomerCheckBoxItemDto>();
         if (checkLists != null && checkLists.size() > 0) {
             for (CustomerCheckBoxItemDto checkList : checkLists) {
                 if (checkList.getCustomerLevelId().equals(level.getValue())) {
-//                    CustomerStatusEntity entity = new CustomerStatusEntity(CustomerStatus.fromInt(checkList.getCustomerStatusId()));
-//                    entity.setLocaleId(localeId);
-//                    checkList.setLookUpName(entity.getLookUpValue().getLookUpName());
-//                    checkList.setName(MessageLookup.getInstance().lookup(checkList.getLookUpName()));
                     customerCheckLists.add(checkList);
                 }
             }
@@ -365,24 +356,16 @@ public class ChkListAction extends BaseAction {
         return customerCheckLists;
     }
 
-    private List<AccountCheckBoxItemDto> getAccountCheckLists(List<AccountCheckBoxItemDto> checkLists, ProductType productType) {
+    private List<AccountCheckBoxItemDto> filterAccountCheckListsByProductType(List<AccountCheckBoxItemDto> checkLists, ProductType productType) {
         List<AccountCheckBoxItemDto> accountCheckLists = new ArrayList<AccountCheckBoxItemDto>();
         if (checkLists != null && checkLists.size() > 0) {
             for (AccountCheckBoxItemDto checkList : checkLists) {
                 if (checkList.getProductTypeId().equals(productType.getValue())) {
-//                    AccountStateEntity entity = new AccountStateEntity(AccountState.fromShort(checkList.getAccountStateId()));
-//                    entity.setLocaleId(localeId);
-//                    checkList.setLookUpName(entity.getLookUpValue().getLookUpName());
-//                    checkList.setName(entity.getName());
                     accountCheckLists.add(checkList);
                 }
             }
         }
         return accountCheckLists;
-    }
-
-    private void isValidCheckListState(Short levelId, Short customerState, boolean isCustomer) throws Exception {
-        ((CheckListBusinessService) getService()).isValidCheckListState(levelId, customerState, isCustomer);
     }
 
     private void setValuesInForm(ChkListActionForm form, CheckListBO checkList, HttpServletRequest request) {
@@ -431,17 +414,18 @@ public class ChkListAction extends BaseAction {
         form.setDetailsList(details);
     }
 
-    private List<CheckListStatesView> getStates(ChkListActionForm chkListActionForm, HttpServletRequest request)
-            throws Exception {
+    private List<CheckListStatesView> retrieveStates(boolean isCustomer, String masterTypeId) {
+
         List<CheckListStatesView> states = new ArrayList<CheckListStatesView>();
-        if (chkListActionForm.getIsCustomer()) {
-            states = ((CheckListBusinessService) getService()).getCustomerStates(getShortValue(chkListActionForm
-                    .getMasterTypeId()), getUserContext(request).getLocaleId());
+
+        if (isCustomer) {
+            Short levelId = getShortValue(masterTypeId);
+            states = this.checkListServiceFacade.retrieveAllCustomerStates(levelId);
         } else {
-            states = ((CheckListBusinessService) getService()).getAccountStates(getShortValue(chkListActionForm
-                    .getMasterTypeId()), getUserContext(request).getLocaleId());
+            Short prdTypeId = getShortValue(masterTypeId);
+            states = this.checkListServiceFacade.retrieveAllAccountStates(prdTypeId);
         }
+
         return states;
     }
-
 }

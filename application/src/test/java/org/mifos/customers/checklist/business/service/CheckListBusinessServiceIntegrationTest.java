@@ -33,9 +33,7 @@ import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.util.helpers.CustomerStatus;
-import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -49,54 +47,25 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
     }
 
     @Test
-    public void testGetCheckListMasterData() throws Exception {
-        List<CheckListMasterDto> checkListMasterDataView = new CheckListBusinessService()
-                .getCheckListMasterData(TestObjectFactory.getContext());
-        Assert.assertNotNull(checkListMasterDataView);
-        Assert.assertEquals(checkListMasterDataView.size(), 5);
-        for (CheckListMasterDto view : checkListMasterDataView) {
-            if (view.getMasterTypeId().equals(CustomerLevel.CENTER)) {
-                Assert.assertEquals(true, view.isCustomer());
-            }
-            if (view.getMasterTypeId().equals(CustomerLevel.GROUP)) {
-                Assert.assertEquals(true, view.isCustomer());
-            }
-            if (view.getMasterTypeId().equals(CustomerLevel.CLIENT)) {
-                Assert.assertEquals(true, view.isCustomer());
-            }
-            if (view.getMasterTypeId().equals(ProductType.LOAN)) {
-                Assert.assertEquals(false, view.isCustomer());
-            }
-            if (view.getMasterTypeId().equals(ProductType.SAVINGS)) {
-                Assert.assertEquals(false, view.isCustomer());
-            }
-        }
-    }
-
-    @Test
     public void testRetreiveAllAccountCheckLists() throws Exception {
-        CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
+        TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
-        CheckListBO checkList1 = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
+        TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
         List<AccountCheckListBO> checkLists = new CheckListBusinessService().retreiveAllAccountCheckLists();
         Assert.assertNotNull(checkLists);
         Assert.assertEquals(1, checkLists.size());
-        checkList = null;
-        checkList1 = null;
     }
 
     @Test
     public void testRetreiveAllCustomerCheckLists() throws Exception {
-        CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
+        TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
-        CheckListBO checkList1 = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
+        TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
         List<CustomerCheckListBO> checkLists = new CheckListBusinessService().retreiveAllCustomerCheckLists();
         Assert.assertNotNull(checkLists);
         Assert.assertEquals(1, checkLists.size());
-        checkList = null;
-        checkList1 = null;
     }
 
     @Test
@@ -135,31 +104,4 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         Assert.assertEquals(1, checkList.getChecklistDetails().size());
         checkList = null;
     }
-
-    @Test
-    public void testGetCustomerStates() throws Exception {
-        List<CheckListStatesView> statesView = new CheckListBusinessService().getCustomerStates(Short.valueOf("3"),
-                Short.valueOf("1"));
-        Assert.assertNotNull(statesView);
-        Assert.assertEquals(2, statesView.size());
-        for (CheckListStatesView state : statesView) {
-            if (state.getStateId().equals(CustomerStatus.CENTER_ACTIVE.getValue())) {
-                Assert.assertEquals(state.getStateName(), "Active");
-            }
-        }
-    }
-
-    @Test
-    public void testGetAccountStates() throws Exception {
-        List<CheckListStatesView> accountStates = new CheckListBusinessService().getAccountStates(Short.valueOf("2"),
-                Short.valueOf("1"));
-        Assert.assertNotNull(accountStates);
-        Assert.assertEquals(4, accountStates.size());
-        for (CheckListStatesView state : accountStates) {
-            if (state.getStateId().equals("2")) {
-                Assert.assertEquals(state.getStateName(), "Active");
-            }
-        }
-    }
-
 }
