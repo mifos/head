@@ -42,6 +42,7 @@ import org.eclipse.jetty.util.resource.Resource;
  * Freemarker's TaglibFactory does this to find *.tld definitions.  If Freemarker
  * used the new Servlet 3.0 ServletContext.getJspConfigDescriptor()'s TaglibDescriptor
  * getTaglibLocation() & getTaglibURI(), then this would not be necessary.
+ * @see https://sourceforge.net/tracker/?func=detail&aid=3151460&group_id=794&atid=100794
  * 
  * @author Michael Vorburger
  */
