@@ -33,6 +33,7 @@ import static org.testng.Assert.assertEquals;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,7 @@ import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
+import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
@@ -54,6 +56,8 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.dto.screen.RepayLoanDto;
 import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
 import org.mockito.Mock;
@@ -110,7 +114,7 @@ public class LoanAccountServiceFacadeWebTierTest {
     @Before
     public void setupAndInjectDependencies() {
         loanAccountServiceFacade = new LoanAccountServiceFacadeWebTier(officeDao, loanProductDao, customerDao, personnelDao,
-                fundDao, loanDao, accountService, installmentsValidator, scheduleCalculatorAdaptor,loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
+                fundDao, loanDao, accountService, installmentsValidator, scheduleCalculatorAdaptor, loanBusinessService, holidayServiceFacade, loanPrdBusinessService);
     }
 
     @Test
@@ -155,8 +159,8 @@ public class LoanAccountServiceFacadeWebTierTest {
             loanAccountServiceFacade.makeEarlyRepayment("1", "100", "001", mock(java.sql.Date.class),
                     "Cash", (short) 1, true);
         } catch (BusinessRuleException e) {
-            verify(loanBO,never()).makeEarlyRepayment((Money) anyObject(), anyString(), (Date)anyObject(), anyString(), (Short)anyObject(),anyBoolean());
-            verify(loanBO,never()).getCurrency();
+            verify(loanBO, never()).makeEarlyRepayment((Money) anyObject(), anyString(), (Date) anyObject(), anyString(), (Short) anyObject(), anyBoolean());
+            verify(loanBO, never()).getCurrency();
             assertThat(e.getMessageKey(), is(LoanConstants.WAIVER_INTEREST_NOT_CONFIGURED));
         }
     }
@@ -172,12 +176,50 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanDao.findByGlobalAccountNum(accountNumber)).thenReturn(loanBO);
         when(loanBO.getEarlyRepayAmount()).thenReturn(repaymentAmount);
         when(loanBO.waiverAmount()).thenReturn(interest);
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
 
         Money waivedAmount = repaymentAmount.subtract(interest);
 
         RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(accountNumber);
 
+        verify(loanDao).findByGlobalAccountNum(accountNumber);
+        verify(loanBO).waiverAmount();
+        verify(loanBO).getEarlyRepayAmount();
+        verify(loanBO).isDecliningBalanceInterestRecalculation();
+
         assertEquals(repayLoanDto.getEarlyRepaymentMoney(), repaymentAmount.toString());
         assertEquals(repayLoanDto.getWaivedRepaymentMoney(), waivedAmount.toString());
+    }
+
+    @Test
+    public void shouldReturnRepayLoanDtoWithAllDataPopulatedForDIPB() {
+
+        String accountNumber = "1234";
+        LoanBO loanBO = mock(LoanBO.class);
+        Money repaymentAmount = TestUtils.createMoney("1234");
+        Money interest = TestUtils.createMoney("100");
+        DateTime currentDate = new DateTime(2010, 10, 30, 0, 0, 0, 0);
+        new DateTimeService().setCurrentDateTime(currentDate);
+
+        RepaymentResultsHolder repaymentResultsHolder = new RepaymentResultsHolder();
+        repaymentResultsHolder.setTotalRepaymentAmount(repaymentAmount.getAmount());
+        repaymentResultsHolder.setWaiverAmount(interest.getAmount());
+
+        when(loanDao.findByGlobalAccountNum(accountNumber)).thenReturn(loanBO);
+        when(scheduleCalculatorAdaptor.computeRepaymentAmount(loanBO, currentDate.toDate())).thenReturn(repaymentResultsHolder);
+        when(loanBO.getCurrency()).thenReturn(repaymentAmount.getCurrency());
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+
+
+        RepayLoanDto repayLoanDto = this.loanAccountServiceFacade.retrieveLoanRepaymentDetails(accountNumber);
+
+        verify(loanDao).findByGlobalAccountNum(accountNumber);
+        verify(scheduleCalculatorAdaptor).computeRepaymentAmount(loanBO, currentDate.toDate());
+        verify(loanBO,never()).waiverAmount();
+        verify(loanBO,never()).getEarlyRepayAmount();
+        verify(loanBO).isDecliningBalanceInterestRecalculation();
+
+        assertEquals(repayLoanDto.getEarlyRepaymentMoney(), repaymentAmount.toString());
+        assertEquals(repayLoanDto.getWaivedRepaymentMoney(), repaymentAmount.subtract(interest).toString());
     }
 }

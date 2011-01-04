@@ -19,6 +19,7 @@
  */
 package org.mifos.accounts.loan.schedule.domain;
 
+import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.schedule.utils.Utilities;
 
 import java.math.BigDecimal;
@@ -59,7 +60,7 @@ public class Schedule {
         return loanAmount;
     }
 
-    public BigDecimal payInstallmentsOnOrBefore(Date transactionDate, BigDecimal amount) {
+    public BigDecimal payDueInstallments(Date transactionDate, BigDecimal amount) {
         for (Installment dueInstallment : getInstallmentsOnOrBefore(transactionDate)) {
             amount = dueInstallment.pay(amount, transactionDate);
         }
@@ -119,13 +120,7 @@ public class Schedule {
         long duration = getDurationForAdjustment(installment, transactionDate);
         if (duration <= 0) return BigDecimal.ZERO;
         BigDecimal principalForInterest = computePrincipalForInterest(principalOutstanding, installment);
-        BigDecimal computedInterest = computeInterest(principalForInterest, duration);
-        BigDecimal interestPaid = installment.getInterestPaid();
-        BigDecimal difference = computedInterest.subtract(interestPaid);
-        if (difference.compareTo(BigDecimal.ZERO) > 0) {
-            return difference;
-        }
-        return computedInterest;
+        return computeAndAdjustInterest(installment, duration, principalForInterest);
     }
 
     private BigDecimal computePrincipalForInterest(BigDecimal principalOutstanding, Installment installment) {
@@ -150,6 +145,13 @@ public class Schedule {
             if (dueDate.compareTo(date) > 0) result.add(installment);
         }
         return result;
+    }
+
+    private BigDecimal computeAndAdjustInterest(Installment installment, long duration, BigDecimal principalForInterest) {
+        if (duration <= 0) return BigDecimal.ZERO;
+        BigDecimal computedInterest = computeInterest(principalForInterest, duration);
+        BigDecimal interestPaid = installment.getInterestPaid();
+        return computedInterest.compareTo(interestPaid) > 0 ? computedInterest.subtract(interestPaid) : computedInterest;
     }
 
     private BigDecimal computeInterest(BigDecimal principalOutstanding, long duration) {
@@ -216,5 +218,40 @@ public class Schedule {
         for (Installment installment : installments.values()) {
             installment.resetCurrentPayment();
         }
+    }
+
+    public BigDecimal computePayableAmountForDueInstallments(Date asOfDate) {
+        BigDecimal repaymentAmount = BigDecimal.ZERO;
+        for (Installment installment : getInstallmentsOnOrBefore(asOfDate)) {
+            repaymentAmount = repaymentAmount.add(installment.getTotalDue());
+        }
+        return repaymentAmount;
+    }
+
+    public RepaymentResultsHolder computePayableAmountForFutureInstallments(Date asOfDate) {
+        List<Installment> futureInstallments = getInstallmentsAfter(asOfDate);
+        RepaymentResultsHolder repaymentResultsHolder = new RepaymentResultsHolder();
+        BigDecimal payableAmount = BigDecimal.ZERO;
+        if(!futureInstallments.isEmpty()){
+            BigDecimal outstandingPrincipal = getOutstandingPrincipal(asOfDate);
+            Installment firstFutureInstallment = futureInstallments.get(0);
+            BigDecimal interestDue = computeAndAdjustInterest(firstFutureInstallment,
+                    getDurationForAdjustment(firstFutureInstallment, asOfDate), outstandingPrincipal);
+            repaymentResultsHolder.setWaiverAmount(interestDue);
+            payableAmount = payableAmount.add(interestDue).add(firstFutureInstallment.getExtraInterestDue());
+            for (Installment futureInstallment : futureInstallments) {
+                payableAmount = payableAmount.add(futureInstallment.getPrincipalDue());
+            }
+        }
+        repaymentResultsHolder.setTotalRepaymentAmount(payableAmount);
+        return repaymentResultsHolder;
+    }
+
+    private BigDecimal getOutstandingPrincipal(Date asOfDate) {
+        BigDecimal outstandingPrincipal = BigDecimal.ZERO;
+        for (Installment pastInstallment : getInstallmentsOnOrBefore(asOfDate)) {
+            outstandingPrincipal = outstandingPrincipal.add(pastInstallment.getPrincipal());
+        }
+        return loanAmount.subtract(outstandingPrincipal);
     }
 }

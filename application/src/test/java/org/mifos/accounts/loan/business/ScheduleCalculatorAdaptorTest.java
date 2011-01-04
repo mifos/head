@@ -226,6 +226,22 @@ public class ScheduleCalculatorAdaptorTest {
         }
     }
 
+    @Test
+    public void shouldComputeRepaymentAmount() {
+        Set<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
+        when(loanBO.getDisbursementDate()).thenReturn(DISBURSEMENT_DATE);
+        when(loanBO.getLoanAmount()).thenReturn(new Money(rupee, LOAN_AMOUNT));
+        when(loanBO.getInterestRate()).thenReturn(ANNUAL_INTEREST_RATE);
+        Date asOfDate = getDate(30, 10, 2010);
+        scheduleCalculatorAdaptor.computeRepaymentAmount(loanBO, asOfDate);
+        verify(scheduleMapper, times(1)).mapToSchedule(Mockito.<Collection<LoanScheduleEntity>>any(), Mockito.<Date>any(), Mockito.<Double>any(), Mockito.<BigDecimal>any());
+        verify(scheduleCalculator).computeRepaymentAmount(Mockito.<Schedule>any(), eq(asOfDate));
+        verify(loanBO).getLoanScheduleEntities();
+        verify(loanBO).getDisbursementDate();
+        verify(loanBO).getInterestRate();
+    }
+
     private Schedule getSchedule(Date disbursementDate, BigDecimal loanAmount, List<Installment> installments) {
         return new Schedule(disbursementDate, DAILY_INTEREST_RATE, loanAmount, installments);
     }

@@ -26,6 +26,7 @@ import org.mifos.config.AccountingRules;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
@@ -62,5 +63,11 @@ public class ScheduleCalculatorAdaptor {
 
     void populateExtraInterestInLoanScheduleEntities(Schedule schedule, Map<Integer, LoanScheduleEntity> loanScheduleEntities) {
         scheduleMapper.populateExtraInterestInLoanScheduleEntities(schedule, loanScheduleEntities);
+    }
+
+    public RepaymentResultsHolder computeRepaymentAmount(LoanBO loanBO, Date asOfDate) {
+        Schedule schedule = scheduleMapper.mapToSchedule(loanBO.getLoanScheduleEntities(), loanBO.getDisbursementDate(),
+                        getDailyInterest(loanBO.getInterestRate()), loanBO.getLoanAmount().getAmount());
+        return scheduleCalculator.computeRepaymentAmount(schedule, asOfDate);
     }
 }

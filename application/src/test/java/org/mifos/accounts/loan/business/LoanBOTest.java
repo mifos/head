@@ -160,28 +160,6 @@ public class LoanBOTest {
         }
     }
 
-    // DIPB -> Declining Interest Principal Balance Interest Type
-    @Test
-    public void shouldCalculateRepaymentAmountForDIPBTypeLoans() {
-        new DateTimeService().setCurrentDateTime(new DateTime(2010, 10, 30, 0, 0, 0, 0));
-         LoanBO loanBO = new LoanBO() {
-            @Override
-            public LoanOfferingBO getLoanOffering() {
-                return loanOfferingBO;
-            }
-        };
-        Mockito.when(loanOfferingBO.getCurrency()).thenReturn(rupee);
-        Money extraInterest = new Money(rupee, "25");
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(25, 9, 2010), "100", "10", "1", Money.zero(rupee)));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(25, 10, 2010), "100", "10", "2", extraInterest));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(25, 11, 2010), "100", "10", "3", extraInterest));
-        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(25, 12, 2010), "100", "10", "4", Money.zero(rupee)));
-        loanBO.setDisbursementDate(getDate(25, 8, 2010));
-        Money earlyRepayAmount = loanBO.getEarlyRepayAmount();
-        assertThat(earlyRepayAmount, is(new Money(rupee,"480")));
-        Mockito.verify(loanOfferingBO,times(2)).getCurrency();
-    }
-
     private LoanScheduleEntity getLoanScheduleEntity(MifosCurrency currency, Date date, String principal, String interest, String installmentId, Money extraInterest) {
         LoanBO loanBO = mock(LoanBO.class);
         when(loanBO.getCurrency()).thenReturn(currency);

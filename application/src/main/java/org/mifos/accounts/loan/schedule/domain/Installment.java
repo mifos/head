@@ -113,11 +113,9 @@ public class Installment implements Comparable<Installment> {
         return actualAmounts.get(InstallmentComponent.FEES);
     }
 
-    public boolean isDue() {
-        return isMiscPenaltyDue() || isPenaltyDue() ||
-                isMiscFeesDue() || isFeesDue() ||
-                isExtraInterestDue() ||isInterestDue() ||
-                isPrincipalDue();
+    public BigDecimal getTotalDue() {
+        return getMiscPenaltyDue().add(getPenaltyDue()).add(getMiscPenaltyDue()).add(getFeesDue()).
+                add(getExtraInterestDue()).add(getInterestDue()).add(getPrincipalDue());
     }
 
     public int compareTo(Installment installment) {

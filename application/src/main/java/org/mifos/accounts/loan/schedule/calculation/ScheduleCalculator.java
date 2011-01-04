@@ -19,6 +19,7 @@
  */
 package org.mifos.accounts.loan.schedule.calculation;
 
+import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 
 import java.math.BigDecimal;
@@ -28,11 +29,20 @@ public class ScheduleCalculator {
     public void applyPayment(Schedule schedule, BigDecimal amount, Date transactionDate) {
         schedule.resetCurrentPayment();
         computeExtraInterest(schedule, transactionDate);
-        BigDecimal balance = schedule.payInstallmentsOnOrBefore(transactionDate, amount);
+        BigDecimal balance = schedule.payDueInstallments(transactionDate, amount);
         schedule.adjustFutureInstallments(balance, transactionDate);
     }
 
     public void computeExtraInterest(Schedule schedule, Date transactionDate) {
         schedule.computeExtraInterest(transactionDate);
+    }
+
+    public RepaymentResultsHolder computeRepaymentAmount(Schedule schedule, Date asOfDate) {
+        computeExtraInterest(schedule, asOfDate);
+        BigDecimal payableAmountForDueInstallments = schedule.computePayableAmountForDueInstallments(asOfDate);
+        RepaymentResultsHolder repaymentResultsHolder = schedule.computePayableAmountForFutureInstallments(asOfDate);
+        BigDecimal totalRepaymentAmount = payableAmountForDueInstallments.add(repaymentResultsHolder.getTotalRepaymentAmount());
+        repaymentResultsHolder.setTotalRepaymentAmount(totalRepaymentAmount);
+        return repaymentResultsHolder;
     }
 }

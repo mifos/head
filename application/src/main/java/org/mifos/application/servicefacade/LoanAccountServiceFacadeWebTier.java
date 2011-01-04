@@ -37,11 +37,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
-import org.mifos.accounts.loan.business.LoanActivityEntity;
-import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.business.LoanPerformanceHistoryEntity;
-import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.loan.business.*;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.validators.InstallmentsValidator;
 import org.mifos.accounts.loan.persistance.LoanDao;
@@ -157,6 +153,7 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -728,7 +725,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             // We're assuming cash disbursal for this situation right now
             redoLoan.disburseLoan(user, PaymentTypes.CASH.getValue(), false);
-            
+
             copyInstallmentSchedule(installmentDtos, userContext, redoLoan);
 
             for (LoanPaymentDto payment : existingLoanPayments) {
@@ -1063,11 +1060,18 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     @Override
     public RepayLoanDto retrieveLoanRepaymentDetails(String globalAccountNumber) {
-
         LoanBO loan = loanDao.findByGlobalAccountNum(globalAccountNumber);
-        Money repaymentAmount = loan.getEarlyRepayAmount();
-        Money waivedRepaymentAmount = repaymentAmount.subtract(loan.waiverAmount());
-
+        Money repaymentAmount;
+        Money waiverAmount;
+        if (loan.isDecliningBalanceInterestRecalculation()) {
+            RepaymentResultsHolder repaymentResultsHolder = scheduleCalculatorAdaptor.computeRepaymentAmount(loan, DateUtils.getCurrentDateWithoutTimeStamp());
+            repaymentAmount = new Money(loan.getCurrency(), repaymentResultsHolder.getTotalRepaymentAmount());
+            waiverAmount = new Money(loan.getCurrency(), repaymentResultsHolder.getWaiverAmount());
+        } else {
+            repaymentAmount = loan.getEarlyRepayAmount();
+            waiverAmount = loan.waiverAmount();
+        }
+        Money waivedRepaymentAmount = repaymentAmount.subtract(waiverAmount);
         return new RepayLoanDto(repaymentAmount.toString(), waivedRepaymentAmount.toString(), loan.isInterestWaived());
     }
 

@@ -29,6 +29,7 @@ import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.accounts.loan.business.RepaymentResultsHolder;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
 
@@ -543,6 +544,61 @@ public class ScheduleCalculatorTest {
         assertThat(installment2.getExtraInterest().doubleValue(), is(13.17));
     }
 
+    @Test
+    public void shouldComputeRepaymentAmountWhenNoPastPaymentsMade() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
+                asList(installment1, installment2, installment3, installment4));
+        RepaymentResultsHolder repaymentResultsHolder = scheduleCalculator.computeRepaymentAmount(schedule, getDate(30, 11, 2010));
+        assertThat(repaymentResultsHolder.getTotalRepaymentAmount().doubleValue(),is(1063.83));
+        assertThat(repaymentResultsHolder.getWaiverAmount().doubleValue(),is(0.85));
+    }
+    
+    @Test
+    public void shouldComputeRepaymentAmountWhenLateExcessPaymentMade() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
+                asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(500d), getDate(30, 10, 2010));
+        RepaymentResultsHolder repaymentResultsHolder = scheduleCalculator.computeRepaymentAmount(schedule, getDate(30, 11, 2010));
+        assertThat(repaymentResultsHolder.getTotalRepaymentAmount().doubleValue(),is(554.46));
+        assertThat(repaymentResultsHolder.getWaiverAmount().doubleValue(),is(0.85));
+    }
+
+    @Test
+    public void shouldComputeRepaymentAmountWhenOnDateExcessPaymentMade() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
+                asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(500d), getDate(30, 10, 2010));
+        RepaymentResultsHolder repaymentResultsHolder = scheduleCalculator.computeRepaymentAmount(schedule, getDate(25, 12, 2010));
+        assertThat(repaymentResultsHolder.getTotalRepaymentAmount().doubleValue(),is(563.36));
+        assertThat(repaymentResultsHolder.getWaiverAmount().doubleValue(),is(0.0));
+    }
+
+    @Test
+    public void shouldComputeRepaymentAmountForOnTimePaymentsAndRepaymentDoneOnInstallmentDueDate() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0);
+        schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
+                asList(installment1, installment2, installment3, installment4));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(262.64), getDate(25, 9, 2010));
+        scheduleCalculator.applyPayment(schedule, BigDecimal.valueOf(262.63), getDate(25, 10, 2010));
+        BigDecimal repaymentAmount = scheduleCalculator.computeRepaymentAmount(schedule, getDate(25, 11, 2010)).getTotalRepaymentAmount();
+        assertThat(repaymentAmount.doubleValue(),is(520.49));
+    }
+
     private void assertInstallmentPrincipals(Installment installment, double principal, double principalDue, double principalPaid) {
         assertThat(installment.getPrincipal().doubleValue(), is(principal));
         assertThat(installment.getPrincipalDue().doubleValue(), is(principalDue));
@@ -568,7 +624,6 @@ public class ScheduleCalculatorTest {
     }
 
     private Installment getInstallment(int id, Date dueDate, double principal, double interest, double extraInterest, double fees, double miscFees, double penalty, double miscPenalty) {
-        Installment installment = new Installment(id, dueDate, BigDecimal.valueOf(principal), BigDecimal.valueOf(interest), BigDecimal.valueOf(extraInterest), BigDecimal.valueOf(fees), BigDecimal.valueOf(miscFees), BigDecimal.valueOf(penalty), BigDecimal.valueOf(miscPenalty));
-        return installment;
+        return new Installment(id, dueDate, BigDecimal.valueOf(principal), BigDecimal.valueOf(interest), BigDecimal.valueOf(extraInterest), BigDecimal.valueOf(fees), BigDecimal.valueOf(miscFees), BigDecimal.valueOf(penalty), BigDecimal.valueOf(miscPenalty));
     }
 }
