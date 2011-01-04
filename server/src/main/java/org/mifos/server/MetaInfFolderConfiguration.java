@@ -73,7 +73,6 @@ public class MetaInfFolderConfiguration extends MetaInfConfiguration {
 				}
         	}
         	
-			// TODO TEST "*.tld" handling...
 			final File dir = resource.getFile();
 			final File[] tldFiles = dir.listFiles(new FilenameFilter() {
 				@Override

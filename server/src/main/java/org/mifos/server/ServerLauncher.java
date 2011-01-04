@@ -81,13 +81,13 @@ public class ServerLauncher {
 		connector.setSoLingerTime(-1);
 		server.setConnectors(new Connector[] { connector });
 		
-		webAppContext = new WebContextWithExtraConfigurations(null, "/" + context);
+		webAppContext = new WebContextWithServletContextResourceExtension(null, "/" + context);
 		final ResourceCollection baseResources = baseResources();
 		if (baseResources != null) {
-			// This is if a web.xml and/or some .web were found
+			// This is if a web.xml
 			webAppContext.setBaseResource(baseResources);
 		} else {
-			// This is if there is no web.xml (and .web), only META-INF/resources & web-fragment.xml
+			// This is if there is no web.xml, only META-INF/resources & web-fragment.xml
 			final File tempFileDir = File.createTempFile("jetty-empty-context-for-" + context + "__", Long.toString(System.nanoTime()));
 			tempFileDir.delete();
 			tempFileDir.mkdir();
