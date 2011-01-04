@@ -47,6 +47,7 @@ import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
@@ -278,6 +279,7 @@ public class MasterPersistence extends Persistence {
                     entity.setLookUpValue(newValue);
                     createOrUpdate(entity);
                     MessageLookup.getInstance().updateLookupValueInCache(lookupValueEntity.getLookUpName(), newValue);
+                    StaticHibernateUtil.commitTransaction();
                     break;
                 }
             }
