@@ -519,4 +519,11 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         isTextPresentInPage("Repayment Capacity of the client is " + expectedRc + " % which should be greater than the required value of " + minRc + " %");
         return this;
     }
+
+    public ApplyAdjustmentPage navigateToApplyAdjustment() {
+        selenium.click("nextPayment_loanAccount.link.applyAdjustment");
+        waitForPageToLoad();
+        return new ApplyAdjustmentPage(selenium);
+
+    }
 }

@@ -23,7 +23,6 @@ package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
 import org.mifos.test.acceptance.admin.FeeTestHelper;
-import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
@@ -69,7 +68,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
 
     @AfterMethod
     public void logOut() {
-         (new MifosPage(selenium)).logout();
+//         (new MifosPage(selenium)).logout();
     }
 
     @Override
@@ -114,14 +113,51 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         verifyEarlyLessPayment(noOfInstallments, formParameters.getOfferingName());
         verifyLateExcessPayment(noOfInstallments, formParameters.getOfferingName());
         verifyLateLessPayment(noOfInstallments, formParameters.getOfferingName());
-//        verifyMultipleDue(noOfInstallments, formParameters.getOfferingName());
+        verifyMultipleDue(5, formParameters.getOfferingName());
     }
 
-//    private void verifyMultipleDue(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
-//        DateTime paymentDate = systemDateTime.plusDays(21);
-//        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
-//        makePaymentAndVerifyPayment(paymentDate, "725", RepaymentScheduleData.MULTIPLE_DUE_PAYMENT);//verify first the due fee is knocked
-//    }
+    private void verifyMultipleDue(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
+        createAndDisburseLoanAccount(noOfInstallments, systemDateTime.plusDays(1), loanProductName);
+        makePaymentAndVerifyPayment(systemDateTime.plusDays(24), "403", RepaymentScheduleData.MULTIPLE_DUE_FIRST_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(systemDateTime.plusDays(26), "305.1", RepaymentScheduleData.MULTIPLE_DUE_SECOND_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(systemDateTime.plusDays(29), "104.4", RepaymentScheduleData.MULTIPLE_DUE_THIRD_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(systemDateTime.plusDays(29), "200", RepaymentScheduleData.MULTIPLE_DUE_FORTH_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(systemDateTime.plusDays(29), "102.8", RepaymentScheduleData.MULTIPLE_DUE_FIFTH_PAYMENT);//same date, less payment
+        makePaymentAndVerifyPayment(systemDateTime.plusDays(35), "112.3", RepaymentScheduleData.MULTIPLE_DUE_SIXTH_PAYMENT);//verify first the due fee is knocked
+        makePaymentAndVerifyPayment(systemDateTime.plusDays(38), "291.9", RepaymentScheduleData.MULTIPLE_DUE_SEVENTH_PAYMENT);//verify first the due fee is knocked
+        verifyAdjustmentFromLoanAccountPage("291.9", RepaymentScheduleData.MULTIPLE_DUE_FIRST_ADJUSTMENT);
+        verifyAdjustmentFromRepaymentSchedule("112.3", RepaymentScheduleData.MULTIPLE_DUE_SECOND_ADJUSTMENT);
+        verifyAdjustmentFromInstallmentsDetails("102.8", RepaymentScheduleData.MULTIPLE_DUE_THIRD_ADJUSTMENT);
+        verifyAdjustmentFromLoanAccountPage("200.0", RepaymentScheduleData.MULTIPLE_DUE_FORTH_ADJUSTMENT);
+        verifyAdjustmentFromRepaymentSchedule("104.4", RepaymentScheduleData.MULTIPLE_DUE_FIFTH_ADJUSTMENT);
+        verifyAdjustmentFromInstallmentsDetails("305.1", RepaymentScheduleData.MULTIPLE_DUE_SIXTH_ADJUSTMENT);
+        verifyAdjustmentFromRepaymentSchedule("403.0", RepaymentScheduleData.MULTIPLE_DUE_SEVENTH_ADJUSTMENT);
+    }
+
+    private void verifyAdjustmentFromInstallmentsDetails(String adjustedAmount, String[][] adjustedSchedule) {
+        new LoanAccountPage(selenium).
+                navigateToViewInstallmentDetails().
+                navigateToApplyAdjustment().
+                verifyAdjustment(adjustedAmount).
+                navigateToRepaymentSchedulePage().
+                verifyScheduleTable(adjustedSchedule).navigateToLoanAccountPage();
+    }
+
+    private void verifyAdjustmentFromRepaymentSchedule(String adjustedAmount, String[][] adjustedSchedule) {
+        new LoanAccountPage(selenium).
+                navigateToRepaymentSchedulePage().
+                navigateToApplyAdjustment().
+                verifyAdjustment(adjustedAmount).
+                navigateToRepaymentSchedulePage().
+                verifyScheduleTable(adjustedSchedule).navigateToLoanAccountPage();
+    }
+    private void verifyAdjustmentFromLoanAccountPage(String adjustedAmount, String[][] adjustedSchedule) {
+        new LoanAccountPage(selenium).
+                navigateToApplyAdjustment().
+                verifyAdjustment(adjustedAmount).
+                navigateToRepaymentSchedulePage().
+                verifyScheduleTable(adjustedSchedule).navigateToLoanAccountPage();
+    }
 
     private void verifyLateLessPayment(int noOfInstallments, String loanProductName) throws UnsupportedEncodingException {
         DateTime paymentDate = systemDateTime.plusDays(12);

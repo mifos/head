@@ -237,4 +237,10 @@ public class LoanAccountPage extends AbstractPage {
         return this;
 
     }
+
+    public ApplyAdjustmentPage navigateToApplyAdjustment() {
+        selenium.click("loanaccountdetail.link.applyAdjustment");
+        waitForPageToLoad();
+        return new ApplyAdjustmentPage(selenium);
+    }
 }

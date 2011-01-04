@@ -75,9 +75,23 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         setScheduleDate("28/10/2010");
         verifyOnDayBetweenSecondAndThirdInstallment();
 
+        setScheduleDate("04/11/2010");
+        verifyAfterLastInstallment();
+
         return this;
 
     }
+
+    private void verifyAfterLastInstallment() {
+        String[][] tableAfterLastInstallment =
+                {{"Installments due", "", "", "", "", ""},
+                {"1", "19-Oct-2010", "-", "332.2", "3.8", "0.0", "336.0"},
+                {"2", "26-Oct-2010", "-", "333.4", "5.5", "0.0", "338.9"},
+                {"3", "02-Nov-2010", "-", "334.4", "3.3", "0.0", "337.7"}};
+        verifyScheduleTable(tableAfterLastInstallment);
+
+    }
+
 
     private String formatDate(DateTime systemDateTime) {
         return DateTimeFormat.forPattern("dd/MM/yyyy").print(systemDateTime);
@@ -154,5 +168,12 @@ public class ViewRepaymentSchedulePage extends AbstractPage {
         selenium.click("loanRepayment.link.original_schedule");
         waitForPageToLoad();
         return new ViewOriginalSchedulePage(selenium);
+    }
+
+    public ApplyAdjustmentPage navigateToApplyAdjustment() {
+        selenium.click("loanRepayment.link.applyAdjustment");
+        waitForPageToLoad();
+        return new ApplyAdjustmentPage(selenium);
+
     }
 }
