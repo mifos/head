@@ -20,11 +20,18 @@
 
 package org.mifos.accounts.productdefinition.struts.action;
 
-import org.mifos.accounts.productdefinition.business.*;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
-import org.slf4j.Logger;
-import org.apache.commons.lang.StringUtils;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -37,6 +44,22 @@ import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
+import org.mifos.accounts.productdefinition.business.CashFlowDetail;
+import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
+import org.mifos.accounts.productdefinition.business.InterestCalcTypeEntity;
+import org.mifos.accounts.productdefinition.business.LoanAmountFromLastLoanAmountBO;
+import org.mifos.accounts.productdefinition.business.LoanAmountFromLoanCycleBO;
+import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
+import org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity;
+import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
+import org.mifos.accounts.productdefinition.business.NoOfInstallFromLastLoanAmountBO;
+import org.mifos.accounts.productdefinition.business.NoOfInstallFromLoanCycleBO;
+import org.mifos.accounts.productdefinition.business.NoOfInstallSameForAllLoanBO;
+import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
+import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
+import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.struts.actionforms.LoanPrdActionForm;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
@@ -46,6 +69,7 @@ import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -67,16 +91,8 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.MifosServiceFactory;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
 
 /**
  * @deprecated this entire class will soon be no longer used and will be deleted after localisation of messages.properties files is complete.
@@ -84,9 +100,10 @@ import java.util.Set;
  * note: all struts/jsp and tests around this will also be removed when view and define loan products links are switched over to use ftl/spring.
  */
 @Deprecated
-
 public class LoanPrdAction extends BaseAction {
+
     private static final Logger logger = LoggerFactory.getLogger(LoanOfferingBO.class);
+
     private LoanPrdBusinessService loanPrdBusinessService;
 
     public LoanPrdAction() {
@@ -96,11 +113,6 @@ public class LoanPrdAction extends BaseAction {
     @Override
     protected BusinessService getService() {
         return DependencyInjectedServiceLocator.locateLoanBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
     }
 
     public static ActionSecurity getSecurity() {
@@ -125,8 +137,8 @@ public class LoanPrdAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start Load method of loan Product Action");
         request.getSession().setAttribute(ProductDefinitionConstants.LOANPRODUCTACTIONFORM, null);
         loadMasterData(request);
@@ -146,7 +158,7 @@ public class LoanPrdAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start preview method of loan Product Action");
         request.getSession().setAttribute("isMultiCurrencyEnabled", AccountingRules.isMultiCurrencyEnabled());
         if (AccountingRules.isMultiCurrencyEnabled()) {
@@ -158,22 +170,22 @@ public class LoanPrdAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start previous method of Loan Product Action");
         return mapping.findForward(ActionForwards.previous_success.toString());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward cancelCreate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward cancelCreate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start cancelCreate method of loan Product Action");
         return mapping.findForward(ActionForwards.cancelCreate_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute(ProductDefinitionConstants.METHODCALLED);
         logger.debug("start validate method of Loan Product Action" + method);
         if (method != null) {
@@ -184,7 +196,7 @@ public class LoanPrdAction extends BaseAction {
 
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start create method of Loan Product Action");
         LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
         UserContext userContext = getUserContext(request);
@@ -228,6 +240,7 @@ public class LoanPrdAction extends BaseAction {
     }
 
     // Intentionally made public to aid testing !!!
+    @SuppressWarnings("unchecked")
     public Set<QuestionGroupReference> getQuestionGroups(HttpServletRequest request) throws PageExpiredException {
         Set<QuestionGroupReference> questionGroupReferences = null;
         List<QuestionGroupDetail> questionGroups = (List<QuestionGroupDetail>) SessionUtils.getAttribute(ProductDefinitionConstants.SELECTEDQGLIST, request);
@@ -284,7 +297,7 @@ public class LoanPrdAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
         logger.debug("start manage of Loan Product Action " + loanPrdActionForm.getPrdOfferingId());
         Short prdOfferingId = loanPrdActionForm.getPrdOfferingIdValue();
@@ -331,23 +344,23 @@ public class LoanPrdAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward editPreview(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start editPreview of Loan Product Action ");
         return mapping.findForward(ActionForwards.editPreview_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward editPrevious(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward editPrevious(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start editPrevious of Loan Product Action ");
         return mapping.findForward(ActionForwards.editPrevious_success.toString());
     }
 
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward editCancel(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward editCancel(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start cancelCreate method of loan Product Action");
         return mapping.findForward(ActionForwards.editcancel_success.toString());
     }
@@ -355,7 +368,7 @@ public class LoanPrdAction extends BaseAction {
     @CloseSession
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
         logger.debug("start update method of Loan Product Action" + loanPrdActionForm.getPrdOfferingId());
         UserContext userContext = getUserContext(request);
@@ -393,7 +406,7 @@ public class LoanPrdAction extends BaseAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         LoanPrdActionForm loanPrdActionForm = (LoanPrdActionForm) form;
         logger.debug("start get method of Loan Product Action" + loanPrdActionForm.getPrdOfferingId());
         LoanOfferingBO loanOffering = loanPrdBusinessService.getLoanOffering(loanPrdActionForm.getPrdOfferingIdValue(),
@@ -428,8 +441,8 @@ public class LoanPrdAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward viewAllLoanProducts(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward viewAllLoanProducts(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("start viewAllLoanProducts method of Loan Product Action");
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANPRODUCTLIST,
                 ((LoanPrdBusinessService) ServiceFactory.getInstance().getBusinessService(
@@ -500,6 +513,7 @@ public class LoanPrdAction extends BaseAction {
         return new FinancialBusinessService().getGLCodes(financialAction, debitCredit);
     }
 
+    @SuppressWarnings("unchecked")
     private MasterDataEntity findMasterEntity(HttpServletRequest request, String collectionName, Short value)
             throws Exception {
         logger.debug("start findMasterEntity method of Loan Product Action ");
@@ -515,6 +529,7 @@ public class LoanPrdAction extends BaseAction {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     private GLCodeEntity findGLCodeEntity(HttpServletRequest request, String collectionName, String value)
             throws PageExpiredException {
         logger.debug("start findGLCodeEntity method of Loan Product Action ");
