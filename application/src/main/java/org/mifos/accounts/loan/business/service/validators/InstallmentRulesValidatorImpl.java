@@ -53,7 +53,7 @@ public class InstallmentRulesValidatorImpl implements InstallmentRulesValidator 
         List<ErrorEntry> errorEntries = new ArrayList<ErrorEntry>();
         for (RepaymentScheduleInstallment installment : installments) {
             Calendar dueDate = installment.getDueDateValueAsCalendar();
-            if (dueDate != null && !holidayServiceFacade.isWorkingDay(dueDate, officeId)) {
+            if (dueDate != null && holidayServiceFacade.isFutureRepaymentHoliday(officeId, dueDate)) {
                 String identifier = installment.getInstallmentNumberAsString();
                 errorEntries.add(new ErrorEntry(AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, identifier));
             }

@@ -89,7 +89,7 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
     }
 
     public RepaymentRuleTypes getRepaymentRuleType() {
-        return this.repaymentRuleType;
+        return repaymentRuleType;
     }
 
     @Override
@@ -232,6 +232,10 @@ public class HolidayBO extends AbstractBusinessObject implements Holiday {
     public void validate() {
         validateFromDateAgainstCurrentDate(this.holidayFromDate);
         validateFromDateAgainstThruDate(this.holidayFromDate, this.holidayThruDate);
+    }
+
+    public boolean isFutureRepayment() {
+        return repaymentRuleType != RepaymentRuleTypes.SAME_DAY;
     }
 
     private void validateFromDateAgainstCurrentDate(final Date fromDate) {

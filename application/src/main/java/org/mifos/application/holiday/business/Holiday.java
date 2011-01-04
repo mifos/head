@@ -48,4 +48,5 @@ public interface Holiday {
 
     void markAsApplied();
 
+    boolean isFutureRepayment();
 }

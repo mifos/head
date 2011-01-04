@@ -36,6 +36,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static org.mifos.platform.util.CollectionUtils.isNotEmpty;
+
 public class HolidayDaoHibernate implements HolidayDao {
 
     private final GenericDao genericDao;
@@ -160,10 +162,19 @@ public class HolidayDaoHibernate implements HolidayDao {
 
     @Override
     public boolean isHoliday(short officeId, String date) {
+        return !getHoliday(officeId, date).isEmpty();
+    }
+
+    @Override
+    public boolean isFutureRepaymentHoliday(Short officeId, String localeDate) {
+        List<HolidayBO> holiday = getHoliday(officeId, localeDate);
+        return isNotEmpty(holiday) && holiday.get(0).isFutureRepayment();
+    }
+
+    private List<HolidayBO> getHoliday(short officeId, String date) {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CURRENT_DATE", date);
         queryParameters.put("OFFICE_ID", officeId);
-        List<HolidayBO> queryResult = (List<HolidayBO>) genericDao.executeNamedQuery("holiday.findGivenDateInCurrentAndFutureOfficeHolidays", queryParameters);
-        return !queryResult.isEmpty();
+        return (List<HolidayBO>) genericDao.executeNamedQuery("holiday.findGivenDateInCurrentAndFutureOfficeHolidays", queryParameters);
     }
 }

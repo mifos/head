@@ -34,12 +34,7 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.joda.time.DateTime;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
@@ -103,6 +98,29 @@ public class HolidayDaoHibernateIntegrationTest extends MifosIntegrationTestCase
     public void cleanDatabaseTables() {
         databaseCleaner.clean();
     }
+
+    @Test
+    public void isNotFutureRepaymentHolidayWhenHolidayDoesNotExist() {
+        DateTime secondLastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
+        Assert.assertFalse(holidayDao.isFutureRepaymentHoliday((short) 1, secondLastDayOfYear.toLocalDate().toString()));
+    }
+
+    @Test
+    public void sameDayHolidayIsNotFutureRepaymentHoliday() {
+        DateTime secondLastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
+        Holiday sameDayRepaymentHoliday = new HolidayBuilder().from(secondLastDayOfYear).to(secondLastDayOfYear).withSameDayAsRule().build();
+        insertHoliday(sameDayRepaymentHoliday);
+        Assert.assertFalse(holidayDao.isFutureRepaymentHoliday((short) 1, secondLastDayOfYear.toLocalDate().toString()));
+    }
+
+    @Test
+    public void nextDayRepaymentIsFutureRepaymentHoliday() {
+        DateTime secondLastDayOfYear = new DateTime().withMonthOfYear(12).withDayOfMonth(30).toDateMidnight().toDateTime();
+        Holiday nextDayRepaymentHoliday = new HolidayBuilder().from(secondLastDayOfYear).to(secondLastDayOfYear).withNextMeetingRule().build();
+        insertHoliday(nextDayRepaymentHoliday);
+        Assert.assertTrue(holidayDao.isFutureRepaymentHoliday((short) 1, secondLastDayOfYear.toLocalDate().toString()));
+    }
+
 
     @Test
     public void shouldSaveFutureHoliday() throws Exception {

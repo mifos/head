@@ -35,4 +35,6 @@ public interface HolidayService {
     Calendar getNextWorkingDay(Calendar day, Short officeId);
 
     Date getNextWorkingDay(Date day, Short officeId);
+
+    boolean isFutureRepaymentHoliday(Calendar date, Short officeId);
 }

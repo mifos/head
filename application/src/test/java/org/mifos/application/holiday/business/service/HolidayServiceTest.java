@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -123,6 +124,25 @@ public class HolidayServiceTest {
 
         verify(fiscalCalendarRules, times(1)).isWorkingDay(workingDay);
         verify(holidayDao).isHoliday(officeId, holidayAsString);
+    }
+
+    @Test
+    public void regularHolidayIsAFutureRepaymentHoliday() {
+        Calendar regularHoliday = toCalendar("01-Nov-2010");
+        when(fiscalCalendarRules.isWorkingDay(regularHoliday)).thenReturn(false);
+        Assert.assertTrue(holidayService.isFutureRepaymentHoliday(regularHoliday, officeId));
+        verify(fiscalCalendarRules, times(1)).isWorkingDay(regularHoliday);
+    }
+
+    @Test
+    public void determineFutureRepaymentHolidayWhenDateIsNotRegularHoliday() {
+        Calendar date = toCalendar("01-Nov-2010");
+        String holidayAsString = new DateTime(date.getTime().getTime()).toLocalDate().toString();
+        when(fiscalCalendarRules.isWorkingDay(date)).thenReturn(true);
+        when(holidayDao.isFutureRepaymentHoliday(officeId, holidayAsString)).thenReturn(false);
+        Assert.assertFalse(holidayService.isFutureRepaymentHoliday(date, officeId));
+        verify(fiscalCalendarRules, times(1)).isWorkingDay(date);
+        verify(holidayDao,times(1)).isFutureRepaymentHoliday(officeId, holidayAsString);
     }
 
     private Date toDate(String dateString) {

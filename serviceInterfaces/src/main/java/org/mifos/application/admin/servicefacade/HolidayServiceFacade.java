@@ -49,4 +49,6 @@ public interface HolidayServiceFacade {
     Date getNextWorkingDay(Date day, Short officeId);
 
     void validateDisbursementDateForNewLoan(Short officeId, DateTime disbursementDate);
+
+    boolean isFutureRepaymentHoliday(Short officeId, Calendar dueDate);
 }

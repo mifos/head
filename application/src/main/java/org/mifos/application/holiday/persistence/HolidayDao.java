@@ -53,4 +53,6 @@ public interface HolidayDao {
     List<String> retrieveApplicableOfficeNames(Collection<Short> officeIds);
 
     boolean isHoliday(short officeId, String date);
+
+    boolean isFutureRepaymentHoliday(Short officeId, String localeDate);
 }

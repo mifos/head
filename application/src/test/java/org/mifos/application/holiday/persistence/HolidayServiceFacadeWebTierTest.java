@@ -36,6 +36,7 @@ import java.util.Locale;
 
 import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -141,6 +142,14 @@ public class HolidayServiceFacadeWebTierTest {
 
 //        verify(officeDao).addHoliday(eq(Short.valueOf("1")), Mockito.any(HolidayBO.class));
 //        verify(officeDao).addHoliday(eq(Short.valueOf("2")), Mockito.any(HolidayBO.class));
+    }
+
+    @Test
+    public void isFutureRepaymentHoliday() {
+        Calendar dueDate = toCalendar("01-Nov-2010");
+        when(holidayService.isFutureRepaymentHoliday(dueDate, officeId)).thenReturn(true);
+        Assert.assertTrue(holidayServiceFacade.isFutureRepaymentHoliday(officeId, dueDate));
+        verify(holidayService, times(1)).isFutureRepaymentHoliday(dueDate, officeId);
     }
 
     @Test

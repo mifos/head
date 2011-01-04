@@ -168,10 +168,10 @@ public class InstallmentRulesValidatorTest {
         RepaymentScheduleInstallment installment1 = installmentBuilder.reset(locale).withInstallment(1).withDueDateValue("01-Nov-2010").build();
         RepaymentScheduleInstallment installment2 = installmentBuilder.reset(locale).withInstallment(2).build();
         Calendar holiday = installment1.getDueDateValueAsCalendar();
-        when(holidayServiceFacade.isWorkingDay(holiday, officeId)).thenReturn(false);
+        when(holidayServiceFacade.isFutureRepaymentHoliday(officeId, holiday)).thenReturn(true);
         List<ErrorEntry> errorEntries = installmentRulesValidator.validateForHolidays(asList(installment1, installment2), holidayServiceFacade, officeId);
         assertErrorEntry(errorEntries.get(0), AccountConstants.INSTALLMENT_DUEDATE_IS_HOLIDAY, "1");
-        verify(holidayServiceFacade, times(1)).isWorkingDay(holiday, officeId);
+        verify(holidayServiceFacade, times(1)).isFutureRepaymentHoliday(officeId, holiday);
     }
 
     @Test

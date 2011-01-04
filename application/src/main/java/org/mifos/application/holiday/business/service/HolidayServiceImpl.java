@@ -85,9 +85,11 @@ public class HolidayServiceImpl implements HolidayService {
 
     @Override
     public boolean isWorkingDay(Calendar day, Short officeId) {
-        if (!fiscalCalendarRules.isWorkingDay(day)) return false;
-        String dateAsLocalString = new DateTime(day.getTime().getTime()).toLocalDate().toString();
-        return !holidayDao.isHoliday(officeId, dateAsLocalString);
+        return (fiscalCalendarRules.isWorkingDay(day)) && !holidayDao.isHoliday(officeId, getLocaleDate(day));
+    }
+
+    private String getLocaleDate(Calendar day) {
+        return new DateTime(day.getTime().getTime()).toLocalDate().toString();
     }
 
     @Override
@@ -101,6 +103,15 @@ public class HolidayServiceImpl implements HolidayService {
     @Override
     public Date getNextWorkingDay(Date day, Short officeId) {
         return getNextWorkingDay(getCalendarDate(day), officeId).getTime();
+    }
+
+    @Override
+    public boolean isFutureRepaymentHoliday(Calendar date, Short officeId) {
+        return isRegularHoliday(date) || holidayDao.isFutureRepaymentHoliday(officeId, getLocaleDate(date));
+    }
+
+    private boolean isRegularHoliday(Calendar date) {
+        return !fiscalCalendarRules.isWorkingDay(date);
     }
 
     private static Calendar getCalendarDate(Date date) {
