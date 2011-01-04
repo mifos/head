@@ -61,6 +61,7 @@ public class CheckListPersistence extends MasterPersistence {
         return checkListMaster;
     }
 
+    @SuppressWarnings("unchecked")
     public List<CheckListStatesView> retrieveAllCustomerStatusList(Short levelId, Short localeId)
             throws PersistenceException {
         List<CheckListStatesView> checkListStatesView = new ArrayList<CheckListStatesView>();
@@ -75,6 +76,7 @@ public class CheckListPersistence extends MasterPersistence {
         return checkListStatesView;
     }
 
+    @SuppressWarnings("unchecked")
     public List<CheckListStatesView> retrieveAllAccountStateList(Short prdTypeId, Short localeId)
             throws PersistenceException {
         List<CheckListStatesView> checkListStatesView = new ArrayList<CheckListStatesView>();
@@ -99,15 +101,16 @@ public class CheckListPersistence extends MasterPersistence {
         queryParameters.put("stateId", stateId);
         if (isCustomer) {
             return (Long) execUniqueResultNamedQuery(NamedQueryConstants.CUSTOMER_VALIDATESTATE, queryParameters);
-        } else {
-            return (Long) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCT_VALIDATESTATE, queryParameters);
         }
+        return (Long) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCT_VALIDATESTATE, queryParameters);
     }
 
+    @SuppressWarnings("unchecked")
     public List<CustomerCheckListBO> retreiveAllCustomerCheckLists() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.LOAD_ALL_CUSTOMER_CHECKLISTS, null);
     }
 
+    @SuppressWarnings("unchecked")
     public List<AccountCheckListBO> retreiveAllAccountCheckLists() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.LOAD_ALL_ACCOUNT_CHECKLISTS, null);
     }

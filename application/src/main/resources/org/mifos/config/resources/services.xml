@@ -43,7 +43,9 @@
 
     <bean id="RolesPermissionServiceFacade" class="org.mifos.application.servicefacade.RolesPermissionServiceFacadeWebTier"/>
 
-    <bean id="CheckListServiceFacade" class="org.mifos.application.servicefacade.CheckListServiceFacadeWebTier"/>
+    <bean id="checkListServiceFacade" class="org.mifos.application.servicefacade.CheckListServiceFacadeWebTier">
+    	<constructor-arg ref="customerDao" />
+    </bean>
 
     <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
     	<constructor-arg ref="feeService" />

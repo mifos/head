@@ -26,7 +26,6 @@ import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
-import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -42,17 +41,6 @@ public class CheckListBusinessService implements BusinessService {
 
     protected CheckListPersistence getCheckListPersistence() {
         return new CheckListPersistence();
-    }
-
-    public void isValidCheckListState(Short levelId, Short stateId, boolean isCustomer) throws ServiceException {
-        try {
-            Long records = getCheckListPersistence().isValidCheckListState(levelId, stateId, isCustomer);
-            if (records.intValue() != 0) {
-                throw new ServiceException(CheckListConstants.EXCEPTION_STATE_ALREADY_EXIST);
-            }
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
     }
 
     public List<CustomerCheckListBO> retreiveAllCustomerCheckLists() throws ServiceException {

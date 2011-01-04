@@ -414,7 +414,7 @@ public class DependencyInjectedServiceLocator {
 
     public static CheckListServiceFacade locateCheckListServiceFacade() {
         if (checkListServiceFacade == null) {
-            checkListServiceFacade = new CheckListServiceFacadeWebTier();
+            checkListServiceFacade = new CheckListServiceFacadeWebTier(customerDao);
         }
         return checkListServiceFacade;
     }

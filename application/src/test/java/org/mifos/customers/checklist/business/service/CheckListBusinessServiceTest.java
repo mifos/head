@@ -38,17 +38,6 @@ public class CheckListBusinessServiceTest {
 
     @Test
     @ExpectedException(value = CustomerException.class)
-    public void testInvalidConnectionInIsValidCheckListState() throws PersistenceException {
-        try {
-            when(checkListPersistence.isValidCheckListState(id, id, true)).thenThrow(new PersistenceException("some exception"));
-            service.isValidCheckListState(id, id, true);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = CustomerException.class)
     public void testInvalidConnectionRetrieveAllAccountCheckLists() throws PersistenceException {
         try {
             when(checkListPersistence.retreiveAllAccountCheckLists()).thenThrow(new PersistenceException("some exception"));

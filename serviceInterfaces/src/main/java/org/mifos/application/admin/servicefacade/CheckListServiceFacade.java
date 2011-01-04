@@ -34,7 +34,7 @@ public interface CheckListServiceFacade {
 
     List<AccountCheckBoxItemDto> retreiveAllAccountCheckLists();
 
-    @PreAuthorize("isFullyAuthenticated()")
+    @PreAuthorize("isFullyAuthenticated() and hasAnyRole('ROLE_DEFINE_CHECKLIST', 'ROLE_MODIFY_CHECKLIST')")
     List<CheckListMasterDto> retrieveChecklistMasterData();
 
     @PreAuthorize("isFullyAuthenticated()")
@@ -42,4 +42,13 @@ public interface CheckListServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     List<CheckListStatesView> retrieveAllAccountStates(Short prdTypeId);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void validateIsValidCheckListState(Short masterTypeId, Short stateId, boolean isCustomer);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_DEFINE_CHECKLIST'")
+    void createCustomerChecklist(Short levelId, Short stateId, String checklistName, List<String> checklistDetails);
+
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_DEFINE_CHECKLIST'")
+    void createAccountChecklist(Short productId, Short stateId, String checklistName, List<String> checklistDetails);
 }

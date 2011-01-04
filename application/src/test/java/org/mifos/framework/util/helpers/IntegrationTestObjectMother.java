@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesEntity;
+import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fund.business.FundBO;
@@ -33,12 +34,14 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsProductBuilder;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
@@ -49,9 +52,14 @@ import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
+import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.checklist.business.AccountCheckListBO;
+import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -63,6 +71,7 @@ import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
+import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -494,6 +503,48 @@ public class IntegrationTestObjectMother {
             loan.applyPayment(paymentData);
             StaticHibernateUtil.commitTransaction();
         } catch (AccountException e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
+    }
+
+    public static CustomerCheckListBO createCustomerChecklist(Short customerLevel, Short customerStatus, Short checklistStatus, List<String> details) {
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.getLevel(customerLevel));
+            CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.fromInt(customerStatus));
+            CustomerCheckListBO customerChecklist = new CustomerCheckListBO(customerLevelEntity, customerStatusEntity,
+                    "productchecklist", checklistStatus, details, Short.valueOf("1"), PersonnelConstants.SYSTEM_USER);
+
+            customerDao.save(customerChecklist);
+            StaticHibernateUtil.commitTransaction();
+            return customerChecklist;
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new RuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+    }
+
+    public static AccountCheckListBO createAccountChecklist(Short prdTypeId, AccountState accountState,
+            Short checklistStatus, List<String> details) {
+        try {
+            StaticHibernateUtil.startTransaction();
+            ProductTypeEntity productTypeEntity = (ProductTypeEntity) StaticHibernateUtil.getSessionTL().get(
+                    ProductTypeEntity.class, prdTypeId);
+            AccountStateEntity accountStateEntity = new AccountStateEntity(accountState);
+            AccountCheckListBO accountChecklist = new AccountCheckListBO(productTypeEntity, accountStateEntity,
+                    "productchecklist", checklistStatus, details, Short.valueOf("1"), PersonnelConstants.SYSTEM_USER);
+
+            customerDao.save(accountChecklist);
+            StaticHibernateUtil.commitTransaction();
+            return accountChecklist;
+        } catch (Exception e) {
             StaticHibernateUtil.rollbackTransaction();
             throw new RuntimeException(e);
         } finally {

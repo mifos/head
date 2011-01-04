@@ -43,7 +43,6 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
@@ -81,7 +80,6 @@ import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
 import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
-import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.business.RecommendedAmntUnitEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsTypeEntity;
@@ -128,14 +126,11 @@ import org.mifos.config.ClientRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
-import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.CustomerPositionEntity;
 import org.mifos.customers.business.CustomerScheduleEntity;
-import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.center.persistence.CenterPersistence;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
@@ -1477,32 +1472,21 @@ public class TestObjectFactory {
                                                               final Short checklistStatus) throws Exception {
         List<String> details = new ArrayList<String>();
         details.add("item1");
-        CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.getLevel(customerLevel));
-        CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(CustomerStatus.fromInt(customerStatus));
-        CustomerCheckListBO customerChecklist = new CustomerCheckListBO(customerLevelEntity, customerStatusEntity,
-                "productchecklist", checklistStatus, details, TEST_LOCALE, PersonnelConstants.SYSTEM_USER);
-        customerChecklist.save();
-        StaticHibernateUtil.flushSession();
-        return customerChecklist;
+
+        return IntegrationTestObjectMother.createCustomerChecklist(customerLevel, customerStatus, checklistStatus, details);
     }
 
     public static AccountCheckListBO createAccountChecklist(final Short prdTypeId, final AccountState accountState,
                                                             final Short checklistStatus) throws Exception {
         List<String> details = new ArrayList<String>();
         details.add("item1");
-        ProductTypeEntity productTypeEntity = (ProductTypeEntity) StaticHibernateUtil.getSessionTL().get(
-                ProductTypeEntity.class, prdTypeId);
-        AccountStateEntity accountStateEntity = new AccountStateEntity(accountState);
-        AccountCheckListBO accountChecklist = new AccountCheckListBO(productTypeEntity, accountStateEntity,
-                "productchecklist", checklistStatus, details, TEST_LOCALE, PersonnelConstants.SYSTEM_USER);
-        accountChecklist.save();
-        StaticHibernateUtil.flushSession();
-        return accountChecklist;
+
+        return IntegrationTestObjectMother.createAccountChecklist(prdTypeId, accountState, checklistStatus, details);
     }
 
     public static void deleteChecklist(final CheckListBO checkListBO) {
         Session session = StaticHibernateUtil.getSessionTL();
-        Transaction transaction = StaticHibernateUtil.startTransaction();
+        StaticHibernateUtil.startTransaction();
 
         if (checkListBO.getChecklistDetails() != null) {
             for (CheckListDetailEntity checklistDetail : checkListBO.getChecklistDetails()) {

@@ -35,7 +35,6 @@ import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 
@@ -66,30 +65,6 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         List<CustomerCheckListBO> checkLists = new CheckListBusinessService().retreiveAllCustomerCheckLists();
         Assert.assertNotNull(checkLists);
         Assert.assertEquals(1, checkLists.size());
-    }
-
-    @Test
-    public void testIsValidCheckListState() throws Exception {
-        CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
-                CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
-        new CheckListBusinessService().isValidCheckListState(((CustomerCheckListBO) checkList).getCustomerLevel()
-                .getId(), ((CustomerCheckListBO) checkList).getCustomerStatus().getId(), false);
-        Assert.assertTrue(true);
-        checkList = null;
-    }
-
-    @Test
-    public void testIsValidCheckListState_failure() throws Exception {
-        CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
-                CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
-        try {
-            new CheckListBusinessService().isValidCheckListState(((CustomerCheckListBO) checkList).getCustomerLevel()
-                    .getId(), ((CustomerCheckListBO) checkList).getCustomerStatus().getId(), true);
-            Assert.fail();
-        } catch (ServiceException se) {
-            Assert.assertTrue(true);
-        }
-        checkList = null;
     }
 
     @Test

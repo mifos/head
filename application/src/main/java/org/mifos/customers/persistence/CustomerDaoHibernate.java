@@ -71,6 +71,8 @@ import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.checklist.business.AccountCheckListBO;
+import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.client.util.helpers.ClientConstants;
 import org.mifos.customers.exceptions.CustomerException;
@@ -1774,5 +1776,15 @@ public class CustomerDaoHibernate implements CustomerDao {
             activeClients.addAll(queryResult);
         }
         return activeClients;
+    }
+
+    @Override
+    public void save(CustomerCheckListBO customerChecklist) {
+        this.genericDao.createOrUpdate(customerChecklist);
+    }
+
+    @Override
+    public void save(AccountCheckListBO accountCheckListBO) {
+        this.genericDao.createOrUpdate(accountCheckListBO);
     }
 }

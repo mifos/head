@@ -37,6 +37,8 @@ import org.mifos.customers.business.CustomerMeetingEntity;
 import org.mifos.customers.business.CustomerPerformanceHistoryDto;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.center.business.CenterBO;
+import org.mifos.customers.checklist.business.AccountCheckListBO;
+import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.customers.group.business.GroupBO;
@@ -75,6 +77,10 @@ public interface CustomerDao {
     void save(AccountBO customerAccount);
 
     void save(CustomerStatusEntity cse);
+
+    void save(CustomerCheckListBO customerCheckListBO);
+
+    void save(AccountCheckListBO accountCheckListBO);
 
     CustomerBO findCustomerById(Integer customerId);
 

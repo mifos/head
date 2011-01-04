@@ -121,14 +121,6 @@ public abstract class CheckListBO extends AbstractBusinessObject {
         checklistDetails.add(checkListDetailEntity);
     }
 
-    public void save() throws CheckListException {
-        try {
-            getCheckListPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new CheckListException(e);
-        }
-    }
-
     protected CheckListPersistence getCheckListPersistence() {
         return new CheckListPersistence();
     }

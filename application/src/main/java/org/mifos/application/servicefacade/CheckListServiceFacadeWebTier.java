@@ -1,23 +1,67 @@
+/*
+ * Copyright (c) 2005-2010 Grameen Foundation USA
+ * All rights reserved.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+ * implied. See the License for the specific language governing
+ * permissions and limitations under the License.
+ *
+ * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+ * explanation of the license and how it is applied.
+ */
+
 package org.mifos.application.servicefacade;
 
+import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mifos.accounts.business.AccountStateEntity;
+import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
+import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
+import org.mifos.accounts.servicefacade.UserContextFactory;
+import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.CheckListServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.business.service.CheckListBusinessService;
+import org.mifos.customers.checklist.exceptions.CheckListException;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
+import org.mifos.customers.checklist.util.helpers.CheckListConstants;
+import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.dto.screen.AccountCheckBoxItemDto;
 import org.mifos.dto.screen.CheckListStatesView;
 import org.mifos.dto.screen.CustomerCheckBoxItemDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.mifos.security.MifosUser;
+import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
+
+    private final CustomerDao customerDao;
+    private HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
+
+    public CheckListServiceFacadeWebTier(CustomerDao customerDao) {
+        this.customerDao = customerDao;
+    }
 
     @Override
     public List<CustomerCheckBoxItemDto> retreiveAllCustomerCheckLists() {
@@ -106,6 +150,75 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
             return new CheckListPersistence().retrieveAllCustomerStatusList(levelId, localeIdNotUsed);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void validateIsValidCheckListState(Short masterTypeId, Short stateId, boolean isCustomer) {
+        try {
+            Long records = new CheckListPersistence().isValidCheckListState(masterTypeId, stateId, isCustomer);
+            if (records.intValue() != 0) {
+                throw new BusinessRuleException(CheckListConstants.EXCEPTION_STATE_ALREADY_EXIST);
+            }
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public void createCustomerChecklist(Short levelId, Short stateId, String checklistName, List<String> checklistDetails) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+        CustomerLevel level = CustomerLevel.getLevel(levelId);
+        CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(level);
+        CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(stateId);
+
+        try {
+            hibernateTransactionHelper.startTransaction();
+            CustomerCheckListBO customerCheckListBO = new CustomerCheckListBO(customerLevelEntity,
+                    customerStatusEntity, checklistName, CheckListConstants.STATUS_ACTIVE,
+                    checklistDetails, userContext.getLocaleId(), userContext.getId());
+            customerDao.save(customerCheckListBO);
+            hibernateTransactionHelper.commitTransaction();
+        } catch (CheckListException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void createAccountChecklist(Short productId, Short stateId, String checklistName, List<String> checklistDetails) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+
+        try {
+            ProductTypeEntity productTypeEntity = null;
+            for (ProductTypeEntity prdTypeEntity : new ProductCategoryBusinessService().getProductTypes()) {
+                if (productId.equals(prdTypeEntity.getProductTypeID())) {
+                    productTypeEntity = prdTypeEntity;
+                    break;
+                }
+            }
+
+            hibernateTransactionHelper.startTransaction();
+            AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.fromShort(stateId));
+            AccountCheckListBO accountCheckListBO = new AccountCheckListBO(productTypeEntity, accountStateEntity,
+                    checklistName, CheckListConstants.STATUS_ACTIVE, checklistDetails, userContext.getLocaleId(), userContext.getId());
+            customerDao.save(accountCheckListBO);
+            hibernateTransactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        } catch (CheckListException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
         }
     }
 }
