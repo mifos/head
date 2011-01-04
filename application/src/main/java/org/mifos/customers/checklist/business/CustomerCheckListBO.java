@@ -25,9 +25,7 @@ import java.util.List;
 import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.exceptions.CheckListException;
-import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
-import org.mifos.framework.exceptions.PersistenceException;
 
 public class CustomerCheckListBO extends CheckListBO {
 
@@ -75,11 +73,6 @@ public class CustomerCheckListBO extends CheckListBO {
         }
         this.customerLevel = customerLevel;
         this.customerStatus = customerStatus;
-        try {
-            new CheckListPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new CheckListException(e);
-        }
     }
 
 }

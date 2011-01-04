@@ -25,14 +25,11 @@ import java.util.List;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.customers.checklist.exceptions.CheckListException;
-import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
-import org.mifos.framework.exceptions.PersistenceException;
 
 public class AccountCheckListBO extends CheckListBO {
 
     private ProductTypeEntity productTypeEntity;
-
     private AccountStateEntity accountStateEntity;
 
     protected AccountCheckListBO() {
@@ -75,11 +72,5 @@ public class AccountCheckListBO extends CheckListBO {
         }
         this.productTypeEntity = productTypeEntity;
         this.accountStateEntity = accountStateEntity;
-        try {
-            new CheckListPersistence().createOrUpdate(this);
-        } catch (PersistenceException e) {
-            throw new CheckListException(e);
-        }
     }
-
 }

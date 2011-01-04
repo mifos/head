@@ -38,13 +38,9 @@ import org.mifos.framework.util.DateTimeService;
 public abstract class CheckListBO extends AbstractBusinessObject {
 
     private final Short checklistId;
-
     private String checklistName;
-
     private Short checklistStatus;
-
     private Set<CheckListDetailEntity> checklistDetails;
-
     private SupportedLocalesEntity supportedLocales;
 
     protected CheckListBO() {
@@ -148,8 +144,7 @@ public abstract class CheckListBO extends AbstractBusinessObject {
         this.checklistName = checkListName;
         getChecklistDetails().clear();
         for (String detail : details) {
-            CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity(detail, Short.valueOf("1"), this,
-                    localeId);
+            CheckListDetailEntity checkListDetailEntity = new CheckListDetailEntity(detail, Short.valueOf("1"), this,localeId);
             getChecklistDetails().add(checkListDetailEntity);
         }
         this.checklistStatus = checkListStatus;

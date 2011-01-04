@@ -30,9 +30,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
-import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -65,18 +63,5 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         List<CustomerCheckListBO> checkLists = new CheckListBusinessService().retreiveAllCustomerCheckLists();
         Assert.assertNotNull(checkLists);
         Assert.assertEquals(1, checkLists.size());
-    }
-
-    @Test
-    public void testGetCheckList() throws Exception {
-        CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
-                AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
-        StaticHibernateUtil.flushSession();
-        checkList = new CheckListBusinessService().getCheckList(checkList.getChecklistId());
-        Assert.assertNotNull(checkList);
-        Assert.assertEquals("productchecklist", checkList.getChecklistName());
-        Assert.assertEquals(CheckListConstants.STATUS_ACTIVE, checkList.getChecklistStatus());
-        Assert.assertEquals(1, checkList.getChecklistDetails().size());
-        checkList = null;
     }
 }

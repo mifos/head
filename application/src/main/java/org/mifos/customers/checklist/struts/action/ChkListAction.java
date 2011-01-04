@@ -29,22 +29,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
-import org.mifos.accounts.productdefinition.business.service.ProductCategoryBusinessService;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
-import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CheckListDetailEntity;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.checklist.business.service.CheckListBusinessService;
+import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.customers.checklist.struts.actionforms.ChkListActionForm;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
 import org.mifos.customers.checklist.util.helpers.CheckListType;
@@ -53,8 +48,6 @@ import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.dto.screen.AccountCheckBoxItemDto;
 import org.mifos.dto.screen.CheckListStatesView;
 import org.mifos.dto.screen.CustomerCheckBoxItemDto;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
@@ -64,11 +57,6 @@ import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
 public class ChkListAction extends BaseAction {
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return new CheckListBusinessService();
-    }
 
     public static ActionSecurity getSecurity() {
         ActionSecurity security = new ActionSecurity("chkListAction");
@@ -194,7 +182,9 @@ public class ChkListAction extends BaseAction {
 
         ChkListActionForm chkListActionForm = (ChkListActionForm) form;
         Short localeId = getUserContext(request).getLocaleId();
-        CheckListBO checkList = ((CheckListBusinessService) getService()).getCheckList(getShortValue(chkListActionForm.getCheckListId()));
+
+        Short checklistId = getShortValue(chkListActionForm.getCheckListId());
+        CheckListBO checkList = new CheckListPersistence().getCheckList(checklistId);
         if (checkList.getCheckListType().equals(CheckListType.CUSTOMER_CHECKLIST)) {
             CustomerCheckListBO customerCheckList = (CustomerCheckListBO) checkList;
             customerCheckList.getCustomerStatus().setLocaleId(localeId);
@@ -217,13 +207,100 @@ public class ChkListAction extends BaseAction {
     public ActionForward manage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ChkListActionForm chkListActionForm = (ChkListActionForm) form;
-        CheckListBO checkList = ((CheckListBusinessService) getService()).getCheckList(getShortValue(chkListActionForm.getCheckListId()));
+
+        Short checklistId = getShortValue(chkListActionForm.getCheckListId());
+        CheckListBO checkList = new CheckListPersistence().getCheckList(checklistId);
+
         if (checkList.getCheckListType().equals(CheckListType.CUSTOMER_CHECKLIST)) {
-            setValuesInForm(chkListActionForm, checkList, request);
+            chkListActionForm.setCheckListId(getStringValue(checkList.getChecklistId()));
+            chkListActionForm.setChecklistName(checkList.getChecklistName());
+            if (checkList.getCheckListType().equals(CheckListType.CUSTOMER_CHECKLIST)) {
+                chkListActionForm.setMasterTypeId(getStringValue(((CustomerCheckListBO) checkList).getCustomerLevel().getId()));
+            
+                if (chkListActionForm.getMasterTypeId().equals(getStringValue(CustomerLevel.CENTER.getValue()))) {
+                    chkListActionForm.setType("0");
+                    chkListActionForm.setMasterTypeName(ConfigurationConstants.CENTER);
+                } else if (chkListActionForm.getMasterTypeId().equals(getStringValue(CustomerLevel.GROUP.getValue()))) {
+                    chkListActionForm.setType("1");
+                    chkListActionForm.setMasterTypeName(ConfigurationConstants.GROUP);
+                } else if (chkListActionForm.getMasterTypeId().equals(getStringValue(CustomerLevel.CLIENT.getValue()))) {
+                    chkListActionForm.setType("2");
+                    chkListActionForm.setMasterTypeName(ConfigurationConstants.CLIENT);
+                }
+                chkListActionForm.setStateName(((CustomerCheckListBO) checkList).getCustomerStatus().getName());
+                chkListActionForm.setStateId(getStringValue(((CustomerCheckListBO) checkList).getCustomerStatus().getId()));
+                chkListActionForm.setIsCustomer(true);
+            } else {
+            
+                chkListActionForm.setMasterTypeId(getStringValue(((AccountCheckListBO) checkList).getProductTypeEntity()
+                        .getProductTypeID()));
+                if (chkListActionForm.getMasterTypeId().equals(getStringValue(ProductType.LOAN.getValue()))) {
+                    chkListActionForm.setType("3");
+                } else {
+                    chkListActionForm.setType("4");
+                }
+                ((AccountCheckListBO) checkList).getAccountStateEntity().setLocaleId(getUserContext(request).getLocaleId());
+                chkListActionForm.setMasterTypeName(((AccountCheckListBO) checkList).getProductTypeEntity().getName());
+                chkListActionForm.setStateName(((AccountCheckListBO) checkList).getAccountStateEntity().getName());
+                chkListActionForm.setStateId(getStringValue(((AccountCheckListBO) checkList).getAccountStateEntity().getId()));
+                chkListActionForm.setIsCustomer(false);
+            }
+            if (checkList.getChecklistStatus().equals(CheckListConstants.STATUS_ACTIVE)) {
+                chkListActionForm.setChecklistStatus(getStringValue(CheckListConstants.STATUS_ACTIVE));
+            } else {
+                chkListActionForm.setChecklistStatus(getStringValue(CheckListConstants.STATUS_INACTIVE));
+            }
+            List<String> details1 = new ArrayList<String>();
+            for (CheckListDetailEntity checkListDetailEntity : checkList.getChecklistDetails()) {
+                details1.add(checkListDetailEntity.getDetailText());
+            }
+            chkListActionForm.setDetailsList(details1);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, checkList, request);
             SessionUtils.setAttribute(CheckListConstants.TYPE, CheckListType.CUSTOMER_CHECKLIST.getValue(), request);
         } else {
-            setValuesInForm(chkListActionForm, checkList, request);
+            chkListActionForm.setCheckListId(getStringValue(checkList.getChecklistId()));
+            chkListActionForm.setChecklistName(checkList.getChecklistName());
+            if (checkList.getCheckListType().equals(CheckListType.CUSTOMER_CHECKLIST)) {
+                chkListActionForm.setMasterTypeId(getStringValue(((CustomerCheckListBO) checkList).getCustomerLevel().getId()));
+            
+                if (chkListActionForm.getMasterTypeId().equals(getStringValue(CustomerLevel.CENTER.getValue()))) {
+                    chkListActionForm.setType("0");
+                    chkListActionForm.setMasterTypeName(ConfigurationConstants.CENTER);
+                } else if (chkListActionForm.getMasterTypeId().equals(getStringValue(CustomerLevel.GROUP.getValue()))) {
+                    chkListActionForm.setType("1");
+                    chkListActionForm.setMasterTypeName(ConfigurationConstants.GROUP);
+                } else if (chkListActionForm.getMasterTypeId().equals(getStringValue(CustomerLevel.CLIENT.getValue()))) {
+                    chkListActionForm.setType("2");
+                    chkListActionForm.setMasterTypeName(ConfigurationConstants.CLIENT);
+                }
+                chkListActionForm.setStateName(((CustomerCheckListBO) checkList).getCustomerStatus().getName());
+                chkListActionForm.setStateId(getStringValue(((CustomerCheckListBO) checkList).getCustomerStatus().getId()));
+                chkListActionForm.setIsCustomer(true);
+            } else {
+            
+                chkListActionForm.setMasterTypeId(getStringValue(((AccountCheckListBO) checkList).getProductTypeEntity()
+                        .getProductTypeID()));
+                if (chkListActionForm.getMasterTypeId().equals(getStringValue(ProductType.LOAN.getValue()))) {
+                    chkListActionForm.setType("3");
+                } else {
+                    chkListActionForm.setType("4");
+                }
+                ((AccountCheckListBO) checkList).getAccountStateEntity().setLocaleId(getUserContext(request).getLocaleId());
+                chkListActionForm.setMasterTypeName(((AccountCheckListBO) checkList).getProductTypeEntity().getName());
+                chkListActionForm.setStateName(((AccountCheckListBO) checkList).getAccountStateEntity().getName());
+                chkListActionForm.setStateId(getStringValue(((AccountCheckListBO) checkList).getAccountStateEntity().getId()));
+                chkListActionForm.setIsCustomer(false);
+            }
+            if (checkList.getChecklistStatus().equals(CheckListConstants.STATUS_ACTIVE)) {
+                chkListActionForm.setChecklistStatus(getStringValue(CheckListConstants.STATUS_ACTIVE));
+            } else {
+                chkListActionForm.setChecklistStatus(getStringValue(CheckListConstants.STATUS_INACTIVE));
+            }
+            List<String> details1 = new ArrayList<String>();
+            for (CheckListDetailEntity checkListDetailEntity : checkList.getChecklistDetails()) {
+                details1.add(checkListDetailEntity.getDetailText());
+            }
+            chkListActionForm.setDetailsList(details1);
             SessionUtils.setAttribute(Constants.BUSINESS_KEY, checkList, request);
             SessionUtils.setAttribute(CheckListConstants.TYPE, CheckListType.ACCOUNT_CHECKLIST.getValue(), request);
         }
@@ -272,35 +349,24 @@ public class ChkListAction extends BaseAction {
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward update(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        ChkListActionForm chkListActionForm = (ChkListActionForm) form;
-        if (chkListActionForm.getIsCustomer()) {
-            CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel
-                    .getLevel(getShortValue(chkListActionForm.getMasterTypeId())));
-            CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(getShortValue(chkListActionForm
-                    .getStateId()));
-            CustomerCheckListBO customerCheckList = (CustomerCheckListBO) SessionUtils.getAttribute(
-                    Constants.BUSINESS_KEY, request);
-            customerCheckList.update(customerLevelEntity, customerStatusEntity, chkListActionForm.getChecklistName(),
-                    getShortValue(chkListActionForm.getChecklistStatus()),
-                    chkListActionForm.getValidCheckListDetails(), getUserContext(request).getLocaleId(),
-                    getUserContext(request).getId());
-        } else {
-            ProductTypeEntity productTypeEntity = null;
-            for (ProductTypeEntity prdTypeEntity : new ProductCategoryBusinessService().getProductTypes()) {
-                if (chkListActionForm.getMasterTypeId().equals(getStringValue(prdTypeEntity.getProductTypeID()))) {
-                    productTypeEntity = prdTypeEntity;
-                    break;
-                }
-            }
-            AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState
-                    .fromShort(getShortValue(chkListActionForm.getStateId())));
-            AccountCheckListBO accountCheckList = (AccountCheckListBO) SessionUtils.getAttribute(
-                    Constants.BUSINESS_KEY, request);
 
-            accountCheckList.update(productTypeEntity, accountStateEntity, chkListActionForm.getChecklistName(),
-                    getShortValue(chkListActionForm.getChecklistStatus()),
-                    chkListActionForm.getValidCheckListDetails(), getUserContext(request).getLocaleId(),
-                    getUserContext(request).getId());
+        ChkListActionForm chkListActionForm = (ChkListActionForm) form;
+
+        Short stateId = getShortValue(chkListActionForm.getStateId());
+        String checklistName = chkListActionForm.getChecklistName();
+        Short checklistStatus = getShortValue(chkListActionForm.getChecklistStatus());
+        List<String> details = chkListActionForm.getValidCheckListDetails();
+
+        if (chkListActionForm.getIsCustomer()) {
+
+            CustomerCheckListBO customerCheckList = (CustomerCheckListBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+
+            Short levelId = getShortValue(chkListActionForm.getMasterTypeId());
+            this.checkListServiceFacade.updateCustomerChecklist(customerCheckList.getChecklistId(), levelId, stateId, checklistStatus, checklistName, details);
+        } else {
+            AccountCheckListBO accountCheckList = (AccountCheckListBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+            Short productId = getShortValue(chkListActionForm.getMasterTypeId());
+            this.checkListServiceFacade.updateAccountChecklist(accountCheckList.getChecklistId(), productId, stateId, checklistStatus, checklistName, details);
         }
         return mapping.findForward(ActionForwards.update_success.toString());
     }
@@ -353,52 +419,6 @@ public class ChkListAction extends BaseAction {
             }
         }
         return accountCheckLists;
-    }
-
-    private void setValuesInForm(ChkListActionForm form, CheckListBO checkList, HttpServletRequest request) {
-        form.setCheckListId(getStringValue(checkList.getChecklistId()));
-        form.setChecklistName(checkList.getChecklistName());
-        if (checkList.getCheckListType().equals(CheckListType.CUSTOMER_CHECKLIST)) {
-            form.setMasterTypeId(getStringValue(((CustomerCheckListBO) checkList).getCustomerLevel().getId()));
-
-            if (form.getMasterTypeId().equals(getStringValue(CustomerLevel.CENTER.getValue()))) {
-                form.setType("0");
-                form.setMasterTypeName(ConfigurationConstants.CENTER);
-            } else if (form.getMasterTypeId().equals(getStringValue(CustomerLevel.GROUP.getValue()))) {
-                form.setType("1");
-                form.setMasterTypeName(ConfigurationConstants.GROUP);
-            } else if (form.getMasterTypeId().equals(getStringValue(CustomerLevel.CLIENT.getValue()))) {
-                form.setType("2");
-                form.setMasterTypeName(ConfigurationConstants.CLIENT);
-            }
-            form.setStateName(((CustomerCheckListBO) checkList).getCustomerStatus().getName());
-            form.setStateId(getStringValue(((CustomerCheckListBO) checkList).getCustomerStatus().getId()));
-            form.setIsCustomer(true);
-        } else {
-
-            form.setMasterTypeId(getStringValue(((AccountCheckListBO) checkList).getProductTypeEntity()
-                    .getProductTypeID()));
-            if (form.getMasterTypeId().equals(getStringValue(ProductType.LOAN.getValue()))) {
-                form.setType("3");
-            } else {
-                form.setType("4");
-            }
-            ((AccountCheckListBO) checkList).getAccountStateEntity().setLocaleId(getUserContext(request).getLocaleId());
-            form.setMasterTypeName(((AccountCheckListBO) checkList).getProductTypeEntity().getName());
-            form.setStateName(((AccountCheckListBO) checkList).getAccountStateEntity().getName());
-            form.setStateId(getStringValue(((AccountCheckListBO) checkList).getAccountStateEntity().getId()));
-            form.setIsCustomer(false);
-        }
-        if (checkList.getChecklistStatus().equals(CheckListConstants.STATUS_ACTIVE)) {
-            form.setChecklistStatus(getStringValue(CheckListConstants.STATUS_ACTIVE));
-        } else {
-            form.setChecklistStatus(getStringValue(CheckListConstants.STATUS_INACTIVE));
-        }
-        List<String> details = new ArrayList<String>();
-        for (CheckListDetailEntity checkListDetailEntity : checkList.getChecklistDetails()) {
-            details.add(checkListDetailEntity.getDetailText());
-        }
-        form.setDetailsList(details);
     }
 
     private List<CheckListStatesView> retrieveStates(boolean isCustomer, String masterTypeId) {

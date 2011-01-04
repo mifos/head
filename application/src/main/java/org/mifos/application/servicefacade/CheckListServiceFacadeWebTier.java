@@ -20,10 +20,6 @@
 
 package org.mifos.application.servicefacade;
 
-import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.business.CustomerLevelEntity;
-import org.mifos.customers.business.CustomerStatusEntity;
-import org.mifos.customers.checklist.business.AccountCheckListBO;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +31,10 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.admin.servicefacade.CheckListServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.customers.api.CustomerLevel;
+import org.mifos.customers.business.CustomerLevelEntity;
+import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.business.service.CheckListBusinessService;
 import org.mifos.customers.checklist.exceptions.CheckListException;
@@ -196,7 +196,6 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = new UserContextFactory().create(user);
 
-
         try {
             ProductTypeEntity productTypeEntity = null;
             for (ProductTypeEntity prdTypeEntity : new ProductCategoryBusinessService().getProductTypes()) {
@@ -213,6 +212,7 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
             customerDao.save(accountCheckListBO);
             hibernateTransactionHelper.commitTransaction();
         } catch (ServiceException e) {
+            hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         } catch (CheckListException e) {
             hibernateTransactionHelper.rollbackTransaction();
@@ -221,4 +221,74 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
             hibernateTransactionHelper.closeSession();
         }
     }
+
+    @Override
+    public void updateCustomerChecklist(Short checklistId, Short levelId, Short stateId, Short checklistStatus,
+            String checklistName, List<String> details) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+        CustomerLevelEntity customerLevelEntity = new CustomerLevelEntity(CustomerLevel.getLevel(levelId));
+        CustomerStatusEntity customerStatusEntity = new CustomerStatusEntity(stateId);
+
+        try {
+            hibernateTransactionHelper.startTransaction();
+            CustomerCheckListBO customerCheckList = (CustomerCheckListBO) new CheckListPersistence().getCheckList(checklistId);
+
+            customerCheckList.update(customerLevelEntity, customerStatusEntity, checklistName,
+                    checklistStatus, details, userContext.getLocaleId(),userContext.getId());
+            customerDao.save(customerCheckList);
+            hibernateTransactionHelper.commitTransaction();
+        } catch (CheckListException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (PersistenceException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
+    }
+
+    @Override
+    public void updateAccountChecklist(Short checklistId, Short productId, Short stateId, Short checklistStatus, String checklistName, List<String> checklistDetails) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+        try {
+            ProductTypeEntity productTypeEntity = null;
+            for (ProductTypeEntity prdTypeEntity : new ProductCategoryBusinessService().getProductTypes()) {
+                if (productId.equals(prdTypeEntity.getProductTypeID())) {
+                    productTypeEntity = prdTypeEntity;
+                    break;
+                }
+            }
+
+            hibernateTransactionHelper.startTransaction();
+
+            AccountStateEntity accountStateEntity = new AccountStateEntity(AccountState.fromShort(stateId));
+            AccountCheckListBO accountCheckList = (AccountCheckListBO) new CheckListPersistence().getCheckList(checklistId);
+            accountCheckList.update(productTypeEntity, accountStateEntity, checklistName,
+                    checklistStatus,
+                    checklistDetails, userContext.getLocaleId(),
+                    userContext.getId());
+
+            customerDao.save(accountCheckList);
+            hibernateTransactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (CheckListException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new BusinessRuleException(e.getKey(), e);
+        } catch (PersistenceException e) {
+            hibernateTransactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            hibernateTransactionHelper.closeSession();
+        }
+    }
+
 }

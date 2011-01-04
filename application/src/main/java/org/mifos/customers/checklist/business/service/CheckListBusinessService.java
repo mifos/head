@@ -23,7 +23,6 @@ package org.mifos.customers.checklist.business.service;
 import java.util.List;
 
 import org.mifos.customers.checklist.business.AccountCheckListBO;
-import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.persistence.CheckListPersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -58,18 +57,4 @@ public class CheckListBusinessService implements BusinessService {
             throw new ServiceException(e);
         }
     }
-
-    public CheckListBO getCheckList(Short checkListId) throws ServiceException {
-        try {
-            return getCheckListPersistence().getCheckList(checkListId);
-        } catch (PersistenceException e) {
-            try {
-                throw new ServiceException(e);
-            } catch (ServiceException e1) {
-                throw new ServiceException(e);
-            }
-        }
-
-    }
-
 }
