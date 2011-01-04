@@ -26,18 +26,15 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.application.admin.business.service.AdminBusinessService;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 
 public class AdminAction extends BaseAction {
 
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -45,15 +42,5 @@ public class AdminAction extends BaseAction {
         ActionSecurity security = new ActionSecurity("AdminAction");
         security.allow("load", SecurityConstants.VIEW);
         return security;
-    }
-
-    @Override
-    protected BusinessService getService() throws ServiceException {
-        return new AdminBusinessService();
-    }
-
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
     }
 }
