@@ -33,9 +33,9 @@ import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.util.helpers.CheckListConstants;
-import org.mifos.customers.checklist.util.helpers.CheckListMasterDto;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -56,19 +56,19 @@ public class CheckListBusinessServiceIntegrationTest extends MifosIntegrationTes
         Assert.assertEquals(checkListMasterDataView.size(), 5);
         for (CheckListMasterDto view : checkListMasterDataView) {
             if (view.getMasterTypeId().equals(CustomerLevel.CENTER)) {
-                Assert.assertEquals(true, view.getIsCustomer());
+                Assert.assertEquals(true, view.isCustomer());
             }
             if (view.getMasterTypeId().equals(CustomerLevel.GROUP)) {
-                Assert.assertEquals(true, view.getIsCustomer());
+                Assert.assertEquals(true, view.isCustomer());
             }
             if (view.getMasterTypeId().equals(CustomerLevel.CLIENT)) {
-                Assert.assertEquals(true, view.getIsCustomer());
+                Assert.assertEquals(true, view.isCustomer());
             }
             if (view.getMasterTypeId().equals(ProductType.LOAN)) {
-                Assert.assertEquals(false, view.getIsCustomer());
+                Assert.assertEquals(false, view.isCustomer());
             }
             if (view.getMasterTypeId().equals(ProductType.SAVINGS)) {
-                Assert.assertEquals(false, view.getIsCustomer());
+                Assert.assertEquals(false, view.isCustomer());
             }
         }
     }

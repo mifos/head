@@ -32,9 +32,9 @@ import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.checklist.util.helpers.CheckListMasterDto;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -84,37 +84,33 @@ public class CheckListPersistenceIntegrationTest extends MifosIntegrationTestCas
 
     @Test
     public void testRetreiveAllAccountCheckLists() throws Exception {
-        CheckListBO checkList = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
+        TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
-        CheckListBO checkList1 = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
+        TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
         List<AccountCheckListBO> checkLists = new CheckListPersistence().retreiveAllAccountCheckLists();
         Assert.assertNotNull(checkLists);
         Assert.assertEquals(1, checkLists.size());
-        checkList = null;
-        checkList1 = null;
     }
 
     @Test
     public void testRetreiveAllCustomerCheckLists() throws Exception {
-        CheckListBO checkList = TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
+        TestObjectFactory.createCustomerChecklist(CustomerLevel.CENTER.getValue(),
                 CustomerStatus.CENTER_ACTIVE.getValue(), (short) 1);
-        CheckListBO checkList1 = TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
+        TestObjectFactory.createAccountChecklist(ProductType.LOAN.getValue(),
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, (short) 1);
         List<CustomerCheckListBO> checkLists = new CheckListPersistence().retreiveAllCustomerCheckLists();
         Assert.assertNotNull(checkLists);
         Assert.assertEquals(1, checkLists.size());
-        checkList = null;
-        checkList1 = null;
     }
 
     @Test
     public void testCheckListMasterView() {
         CheckListMasterDto checkListMasterDto = new CheckListMasterDto(Short.valueOf("1"), "Loan");
-        checkListMasterDto.setIsCustomer(true);
+        checkListMasterDto.setCustomer(true);
         Assert.assertEquals(Short.valueOf("1"), checkListMasterDto.getMasterTypeId());
-        Assert.assertEquals("Loan", checkListMasterDto.getMasterTypeName());
-        Assert.assertEquals(true, checkListMasterDto.getIsCustomer());
+//        Assert.assertEquals("Loan", checkListMasterDto.getMasterTypeName());
+        Assert.assertEquals(true, checkListMasterDto.isCustomer());
     }
 
     @Test

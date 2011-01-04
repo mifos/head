@@ -18,18 +18,18 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.customers.checklist.util.helpers;
+package org.mifos.dto.domain;
 
-import org.mifos.application.master.MessageLookup;
-import org.mifos.customers.api.DataTransferObject;
+import java.io.Serializable;
 
-public class CheckListMasterDto implements DataTransferObject {
+@SuppressWarnings("PMD")
+@edu.umd.cs.findbugs.annotations.SuppressWarnings(value={"SE_NO_SERIALVERSIONID", "EI_EXPOSE_REP", "EI_EXPOSE_REP2"}, justification="should disable at filter level and also for pmd - not important for us")
+public class CheckListMasterDto implements Serializable {
 
-    private boolean isCustomer;
-
+    private boolean customer;
     private String lookupKey;
-
     private Short masterTypeId;
+    private String masterTypeName;
 
     public CheckListMasterDto(Short id, String lookupKey) {
         this.masterTypeId = id;
@@ -41,19 +41,30 @@ public class CheckListMasterDto implements DataTransferObject {
     }
 
     public String getMasterTypeName() {
-        if (isCustomer) {
-            return MessageLookup.getInstance().lookupLabel(lookupKey);
-        } else {
-            return MessageLookup.getInstance().lookup(lookupKey);
-        }
-
+        return this.masterTypeName;
     }
 
-    public boolean getIsCustomer() {
-        return isCustomer;
+    public void setMasterTypeName(String masterTypeName) {
+        this.masterTypeName = masterTypeName;
     }
 
-    public void setIsCustomer(boolean isCustomer) {
-        this.isCustomer = isCustomer;
+    public boolean isCustomer() {
+        return this.customer;
+    }
+
+    public void setCustomer(boolean customer) {
+        this.customer = customer;
+    }
+
+    public String getLookupKey() {
+        return this.lookupKey;
+    }
+
+    public void setLookupKey(String lookupKey) {
+        this.lookupKey = lookupKey;
+    }
+
+    public void setMasterTypeId(Short masterTypeId) {
+        this.masterTypeId = masterTypeId;
     }
 }

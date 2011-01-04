@@ -32,8 +32,8 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
-import org.mifos.customers.checklist.util.helpers.CheckListMasterDto;
 import org.mifos.customers.checklist.util.helpers.CheckListStatesView;
+import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.framework.exceptions.PersistenceException;
 
 public class CheckListPersistence extends MasterPersistence {
@@ -41,19 +41,20 @@ public class CheckListPersistence extends MasterPersistence {
     public CheckListPersistence() {
     }
 
+    @SuppressWarnings("unchecked")
     public List<CheckListMasterDto> getCheckListMasterData(Short localeId) throws PersistenceException {
-        List<CheckListMasterDto> checkListMaster = new ArrayList();
-        List<CheckListMasterDto> masterData = new ArrayList();
+        List<CheckListMasterDto> checkListMaster = new ArrayList<CheckListMasterDto>();
+        List<CheckListMasterDto> masterData = new ArrayList<CheckListMasterDto>();
 
         HashMap<String, Object> queryParameters = new HashMap<String, Object>();
         masterData = executeNamedQuery(NamedQueryConstants.MASTERDATA_CUSTOMER_CHECKLIST, queryParameters);
         for (CheckListMasterDto checkListMasterDataView : masterData) {
-            checkListMasterDataView.setIsCustomer(true);
+            checkListMasterDataView.setCustomer(true);
         }
         checkListMaster.addAll(masterData);
         masterData = executeNamedQuery(NamedQueryConstants.MASTERDATA_PRODUCT_CHECKLIST, queryParameters);
         for (CheckListMasterDto checkListMasterDataView : masterData) {
-            checkListMasterDataView.setIsCustomer(false);
+            checkListMasterDataView.setCustomer(false);
         }
         checkListMaster.addAll(masterData);
         masterData = null;

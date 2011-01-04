@@ -9,8 +9,11 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.checklist.business.service.CheckListBusinessService;
+import org.mifos.customers.checklist.persistence.CheckListPersistence;
+import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.dto.screen.AccountCheckBoxItemDto;
 import org.mifos.dto.screen.CustomerCheckBoxItemDto;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 
 public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
@@ -58,6 +61,29 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
             }
             return dtoList;
         } catch (ServiceException e) {
+            throw new MifosRuntimeException(e);
+        }
+    }
+
+    @Override
+    public List<CheckListMasterDto> retrieveChecklistMasterData() {
+
+        try {
+            Short localeIdNotUsed = null;
+
+            List<CheckListMasterDto> masterData = new CheckListPersistence().getCheckListMasterData(localeIdNotUsed);
+
+            for (CheckListMasterDto checkListMasterDto : masterData) {
+                if (checkListMasterDto.isCustomer()) {
+                    checkListMasterDto.setMasterTypeName(MessageLookup.getInstance().lookupLabel(
+                            checkListMasterDto.getLookupKey()));
+                } else {
+                    checkListMasterDto.setMasterTypeName(MessageLookup.getInstance().lookup(
+                            checkListMasterDto.getLookupKey()));
+                }
+            }
+            return masterData;
+        } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
     }
