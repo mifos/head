@@ -31,8 +31,8 @@ import org.mifos.accounts.fees.business.RateFeeBO;
 import org.mifos.accounts.fees.exceptions.FeeException;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.servicefacade.FeeCreateRequest;
-import org.mifos.accounts.fees.servicefacade.FeeUpdateRequest;
 import org.mifos.accounts.fees.util.helpers.FeeChangeType;
+import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
@@ -43,11 +43,13 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.AccountingRules;
 import org.mifos.core.MifosRuntimeException;
+import org.mifos.dto.domain.FeeUpdateRequest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 
 public class FeeServiceImpl implements FeeService {
 
@@ -150,28 +152,34 @@ public class FeeServiceImpl implements FeeService {
         feeBo.updateDetails(userContext);
 
         FeeChangeType feeChangeType;
+
+        FeeStatus feeStatus = null;
+        if (feeUpdateRequest.getFeeStatusValue() != null) {
+            feeStatus = FeeStatus.getFeeStatus(feeUpdateRequest.getFeeStatusValue());
+        }
+        FeeStatusEntity feeStatusEntity = new FeeStatusEntity(feeStatus);
+
         if (feeBo.getFeeType().equals(RateAmountFlag.AMOUNT)) {
             AmountFeeBO amountFee = ((AmountFeeBO) feeBo);
             feeChangeType = amountFee.calculateNewFeeChangeType(new Money(getCurrency(feeUpdateRequest.getCurrencyId()),
-                    feeUpdateRequest.getAmount()), new FeeStatusEntity(feeUpdateRequest.getFeeStatusValue()));
+                    feeUpdateRequest.getAmount()), feeStatusEntity);
             amountFee.setFeeAmount(new Money(getCurrency(feeUpdateRequest.getCurrencyId()), feeUpdateRequest.getAmount()));
         } else {
             RateFeeBO rateFee = ((RateFeeBO) feeBo);
-            feeChangeType = rateFee.calculateNewFeeChangeType(feeUpdateRequest.getRateValue(), new FeeStatusEntity(
-                    feeUpdateRequest.getFeeStatusValue()));
+            feeChangeType = rateFee.calculateNewFeeChangeType(feeUpdateRequest.getRateValue(), feeStatusEntity);
             rateFee.setRate(feeUpdateRequest.getRateValue());
         }
 
         try {
             hibernateTransactionHelper.startTransaction();
-            feeBo.updateStatus(feeUpdateRequest.getFeeStatusValue());
+            feeBo.updateStatus(feeStatus);
             feeBo.updateFeeChangeType(feeChangeType);
 
             this.feeDao.save(feeBo);
             hibernateTransactionHelper.commitTransaction();
         } catch (ApplicationException e) {
             hibernateTransactionHelper.rollbackTransaction();
-            throw new ApplicationException(e.getKey(), e);
+            throw new BusinessRuleException(e.getKey(), e);
         } catch (Exception e) {
             hibernateTransactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);

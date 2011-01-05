@@ -519,6 +519,10 @@ public class DependencyInjectedServiceLocator {
         return loanProductDao;
     }
 
+    public static FeeDao locateFeeDao() {
+        return feeDao;
+    }
+
     public static InstallmentFormatValidator locateInstallmentFormatValidator() {
         if (installmentFormatValidator == null) {
             installmentFormatValidator = new InstallmentFormatValidatorImpl();

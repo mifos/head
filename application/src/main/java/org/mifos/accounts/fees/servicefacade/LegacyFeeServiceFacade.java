@@ -22,19 +22,9 @@ package org.mifos.accounts.fees.servicefacade;
 
 import java.util.List;
 
-import org.mifos.application.servicefacade.FeeDetailsForManageDto;
-import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.security.util.UserContext;
-
 public interface LegacyFeeServiceFacade {
 
     public List<FeeDto> getProductFees();
 
     public List<FeeDto> getCustomerFees();
-
-    public FeeDto getFeeDetails(Short feeId);
-
-    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ApplicationException;
-
-    public FeeDetailsForManageDto retrieveDetailsForFeeManage(Short feeId) throws ApplicationException;
 }

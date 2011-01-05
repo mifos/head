@@ -30,7 +30,6 @@ import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeFormulaEntity;
 import org.mifos.accounts.fees.business.FeeFrequencyTypeEntity;
 import org.mifos.accounts.fees.business.FeePaymentEntity;
-import org.mifos.accounts.fees.business.FeeStatusEntity;
 import org.mifos.accounts.fees.business.service.FeeService;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
@@ -47,9 +46,9 @@ import org.mifos.application.admin.servicefacade.NewFeeServiceFacade;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.servicefacade.FeeDetailsForManageDto;
 import org.mifos.config.AccountingRules;
 import org.mifos.dto.domain.FeeCreateDto;
+import org.mifos.dto.domain.FeeUpdateRequest;
 import org.mifos.dto.screen.FeeDetailsForLoadDto;
 import org.mifos.dto.screen.FeeDetailsForPreviewDto;
 import org.mifos.dto.screen.FeeParameters;
@@ -122,11 +121,6 @@ public class FeeServiceFacadeWebTier implements LegacyFeeServiceFacade, NewFeeSe
     }
 
     @Override
-    public FeeDto getFeeDetails(Short feeId) {
-        return this.feeDao.findDtoById(feeId);
-    }
-
-    @Override
     public String createFee(FeeCreateDto feeCreateDto) {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -153,19 +147,23 @@ public class FeeServiceFacadeWebTier implements LegacyFeeServiceFacade, NewFeeSe
     }
 
     @Override
-    public void updateFee(FeeUpdateRequest feeUpdateRequest, UserContext userContext) throws ApplicationException {
-        this.feeService.update(feeUpdateRequest, userContext);
+    public void updateFee(FeeUpdateRequest feeUpdateRequest) {
+
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        UserContext userContext = new UserContextFactory().create(user);
+
+        try {
+            this.feeService.update(feeUpdateRequest, userContext);
+        } catch (ApplicationException e) {
+            throw new BusinessRuleException(e.getKey(), e);
+        }
     }
 
     @Override
     public FeeDetailsForLoadDto retrieveDetailsForFeeLoad() {
 
-        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        UserContext userContext = new UserContextFactory().create(user);
-
         FeeParameters feeParameters = parameters();
         boolean isMultiCurrencyEnabled = AccountingRules.isMultiCurrencyEnabled();
-        List<MifosCurrency> currencies = AccountingRules.getCurrencies();
         return new FeeDetailsForLoadDto(feeParameters, isMultiCurrencyEnabled);
     }
 
@@ -181,16 +179,6 @@ public class FeeServiceFacadeWebTier implements LegacyFeeServiceFacade, NewFeeSe
 
         return new FeeDetailsForPreviewDto(isMultiCurrencyEnabled, currencyCode);
     }
-
-    @Override
-    public FeeDetailsForManageDto retrieveDetailsForFeeManage(Short feeId) throws ApplicationException {
-        FeeDto fee = getFeeDetails(feeId);
-        List<FeeStatusEntity> feeStatuses = this.feeDao.retrieveFeeStatuses();
-
-        return new FeeDetailsForManageDto(fee, feeStatuses);
-    }
-
-
 
     private MifosCurrency getCurrency(Short currencyId) {
         MifosCurrency currency;

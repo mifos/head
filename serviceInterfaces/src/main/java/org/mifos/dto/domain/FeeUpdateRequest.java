@@ -18,25 +18,17 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.dto.domain;
 
-import java.io.Serializable;
-
-import org.mifos.accounts.fees.util.helpers.FeeStatus;
-
-/**
- * @author kakella
- *
- */
-public class FeeUpdateRequest implements Serializable {
+public class FeeUpdateRequest {
 
     private final Short feeId;
     private final Short currencyId;
     private final String amount;
-    private final FeeStatus feeStatusValue;
+    private final Short feeStatusValue;
     private final Double rateValue;
 
-    public FeeUpdateRequest(Short feeId, Short currencyId, String amount, FeeStatus feeStatusValue, Double rateValue) {
+    public FeeUpdateRequest(Short feeId, Short currencyId, String amount, Short feeStatusValue, Double rateValue) {
         this.feeId = feeId;
         this.currencyId = currencyId;
         this.amount = amount;
@@ -56,12 +48,11 @@ public class FeeUpdateRequest implements Serializable {
         return amount;
     }
 
-    public FeeStatus getFeeStatusValue() {
+    public Short getFeeStatusValue() {
         return feeStatusValue;
     }
 
     public Double getRateValue() {
         return rateValue;
     }
-
 }

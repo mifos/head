@@ -21,6 +21,7 @@
 package org.mifos.application.admin.servicefacade;
 
 import org.mifos.dto.domain.FeeCreateDto;
+import org.mifos.dto.domain.FeeUpdateRequest;
 import org.mifos.dto.screen.FeeDetailsForLoadDto;
 import org.mifos.dto.screen.FeeDetailsForPreviewDto;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -36,4 +37,6 @@ public interface NewFeeServiceFacade {
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_DEFINE_FEE')")
     String createFee(FeeCreateDto feeCreateRequest);
 
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_MODIFY_FEE')")
+    void updateFee(FeeUpdateRequest feeUpdateRequest);
 }

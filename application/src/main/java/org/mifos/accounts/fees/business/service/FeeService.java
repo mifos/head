@@ -22,7 +22,7 @@ package org.mifos.accounts.fees.business.service;
 
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.servicefacade.FeeCreateRequest;
-import org.mifos.accounts.fees.servicefacade.FeeUpdateRequest;
+import org.mifos.dto.domain.FeeUpdateRequest;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.util.UserContext;
 

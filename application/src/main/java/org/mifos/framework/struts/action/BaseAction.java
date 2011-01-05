@@ -38,6 +38,7 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
+import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.servicefacade.LegacyFeeServiceFacade;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
@@ -122,6 +123,7 @@ public abstract class BaseAction extends DispatchAction {
     protected LoanDao loanDao = DependencyInjectedServiceLocator.locateLoanDao();
     protected LoanProductDao loanProductDao = DependencyInjectedServiceLocator.locateLoanProductDao();
     protected SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
+    protected FeeDao feeDao = DependencyInjectedServiceLocator.locateFeeDao();
     protected NewLoginServiceFacade loginServiceFacade = DependencyInjectedServiceLocator.locationLoginServiceFacade();
     protected PersonnelServiceFacade personnelServiceFacade = DependencyInjectedServiceLocator.locatePersonnelServiceFacade();
     protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
@@ -159,6 +161,7 @@ public abstract class BaseAction extends DispatchAction {
             this.loanDao = springAppContext.getBean(LoanDao.class);
             this.loanProductDao = springAppContext.getBean(LoanProductDao.class);
             this.savingsProductDao = springAppContext.getBean(SavingsProductDao.class);
+            this.feeDao = springAppContext.getBean(FeeDao.class);
             this.loginServiceFacade = springAppContext.getBean(NewLoginServiceFacade.class);
             this.personnelServiceFacade = springAppContext.getBean(PersonnelServiceFacade.class);
             this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
