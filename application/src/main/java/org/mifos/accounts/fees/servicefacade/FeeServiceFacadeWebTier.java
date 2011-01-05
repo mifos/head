@@ -42,7 +42,7 @@ import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.servicefacade.UserContextFactory;
-import org.mifos.application.admin.servicefacade.NewFeeServiceFacade;
+import org.mifos.application.admin.servicefacade.FeeServiceFacade;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -59,7 +59,7 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-public class FeeServiceFacadeWebTier implements LegacyFeeServiceFacade, NewFeeServiceFacade {
+public class FeeServiceFacadeWebTier implements FeeServiceFacade {
 
     private final FeeDao feeDao;
     private final GeneralLedgerDao generalLedgerDao;
@@ -69,16 +69,6 @@ public class FeeServiceFacadeWebTier implements LegacyFeeServiceFacade, NewFeeSe
         this.feeService = feeService;
         this.feeDao = feeDao;
         this.generalLedgerDao = generalLedgerDao;
-    }
-
-    public List<FeeDto> getProductFees() {
-
-        return this.feeDao.retrieveAllProductFees();
-    }
-
-    public List<FeeDto> getCustomerFees() {
-
-        return this.feeDao.retrieveAllCustomerFees();
     }
 
     private FeeParameters parameters() {

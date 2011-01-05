@@ -26,7 +26,7 @@ import org.mifos.dto.screen.FeeDetailsForLoadDto;
 import org.mifos.dto.screen.FeeDetailsForPreviewDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 
-public interface NewFeeServiceFacade {
+public interface FeeServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_DEFINE_FEE')")
     FeeDetailsForLoadDto retrieveDetailsForFeeLoad();

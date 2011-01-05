@@ -237,8 +237,8 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward viewAll(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        List<FeeDto> customerFees = legacyFeeServiceFacade.getCustomerFees();
-        List<FeeDto> productFees = legacyFeeServiceFacade.getProductFees();
+        List<FeeDto> customerFees = this.feeDao.retrieveAllCustomerFees();
+        List<FeeDto> productFees = this.feeDao.retrieveAllProductFees();
 
         SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees, request);
         SessionUtils.setCollectionAttribute(FeeConstants.PRODUCT_FEES, productFees, request);
