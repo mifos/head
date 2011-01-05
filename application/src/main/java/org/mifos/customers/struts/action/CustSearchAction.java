@@ -300,6 +300,10 @@ public class CustSearchAction extends SearchAction {
         return CustomerSearchConstants.LOADFORWARDOFFICE_SUCCESS;
     }
 
+    /**
+     * FIXME: KEITHW - When replacing search functionality for customers with spring/ftl implementation,
+     * find cleaner way of implementing search that returns a non domain related class (data only object)
+     */
     @Override
     @TransactionDemarcate(joinToken = true)
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request,
