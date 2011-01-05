@@ -73,30 +73,20 @@ public class DateFormatterTest {
         assertEquals(expected, result);
     }
 
-    @Test
+    @Test(expected=IllegalArgumentException.class)
     @SuppressWarnings("PMD.EmptyCatchBlock")
     public void wrongDateTypeShouldFail() throws TemplateModelException {
         List<Object> args = getFormatterArgs("not a date!", Locale.ENGLISH);
         DateFormatter formatter = new DateFormatter();
-        try {
-            formatter.exec(args);
-            fail("Passing a non-date object should have raised an exception");
-        } catch (IllegalArgumentException e) {
-            // good! this is expected
-        }
+        formatter.exec(args);
     }
 
-    @Test
+    @Test(expected=IllegalArgumentException.class)
     @SuppressWarnings("PMD.EmptyCatchBlock")
     public void wrongNumberOfArgumentsShouldFail() throws TemplateModelException {
         DateFormatter formatter = new DateFormatter();
         List<Object> args = new ArrayList<Object>();
-        try {
-            formatter.exec(args);
-            fail("Incorrect number of arguments should have raised an exception");
-        } catch (IllegalArgumentException e) {
-            // this is expected
-        }
+        formatter.exec(args);
     }
 
     private List<Object> getFormatterArgs(Object date, Locale locale) throws TemplateModelException {
