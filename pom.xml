@@ -93,6 +93,11 @@
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
+                <artifactId>mifos-accounting</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
                 <artifactId>mifos-serviceInterfaces</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
