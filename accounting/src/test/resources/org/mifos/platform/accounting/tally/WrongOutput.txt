@@ -1,0 +1,21 @@
+branchname;voucherdate;vouchertype;glcode;glname;debit;credit
+Bavla;2010-04-01;JOURNAL;1010000100;Cash; 0.0; 1761.0
+Bavla;2010-04-01;JOURNAL;1050000100;Loan Disbursement; 754.2; 0.0
+Bavla;2010-04-01;JOURNAL;3010500100;Interest on Loan Disbursed; 1006.8; 0.0
+Bavla;2010-04-01;PAYMENT;1010000100;Cash; 0.0; 2000.0
+Bavla;2010-04-01;PAYMENT;1050000100;Loan Disbursement; 2000.0; 0.0
+Bavla;2010-04-01;RECEIPT;1010000100;Cash; 4018.6; 0.0
+Bavla;2010-04-01;RECEIPT;1050000100;Loan Disbursement; 0.0; 1714.6
+Bavla;2010-04-01;RECEIPT;3010500100;Interest on Loan Disbursed; 0.0; 2304.0
+Bavla;2010-04-01;Unknown Account Action:1 for Finanical Action 3;1010000100;Cash; 10007.6; 0.0
+Bavla;2010-04-01;Unknown Account Action:1 for Finanical Action 3;3010100100;Loan Processing Fee; 0.0; 7.7
+Bavla;2010-04-01;Unknown Account Action:1 for Finanical Action 3;3010100500;Early Repayment Penalty Fee; 0.0; 9999.9
+Kheda;2010-04-01;PAYMENT;1010000100;Cash; 0.0; 2000.0
+Kheda;2010-04-01;PAYMENT;1050000100;Loan Disbursement; 2000.0; 0.0
+Kheda;2010-04-01;RECEIPT;1010000100;Cash; 10376.4; 0.0
+Kheda;2010-04-01;RECEIPT;3010100200;Membership Fee; 0.0; 13.3
+Kheda;2010-04-01;RECEIPT;3010100300;Member Insurance Fee; 0.0; 55.5
+Kheda;2010-04-01;RECEIPT;3010100400;Miscellaneous Fee; 0.0; 10034.2
+Kheda;2010-04-01;RECEIPT;3010500100;Interest on Loan Disbursed; 0.0; 273.4
+Kheda;2010-04-01;Unknown Account Action:12 for Finanical Action 6;1010000100;Cash; 45.4; 0.0
+Kheda;2010-04-01;Unknown Account Action:12 for Finanical Action 6;3011000100;Miscellaneous Penalty; 0.0; 45.4
