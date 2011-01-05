@@ -966,6 +966,12 @@
                     <compile>false</compile>
                     <!-- makes output cleaner (less verbose) -->
                     <showSuccess>false</showSuccess>
+					<sources>
+						<directory>${basedir}/src/main/resources/META-INF/resources</directory>
+						<includes>
+							<include>**/*.jsp</include>
+						</includes>
+					</sources>
                 </configuration>
             </plugin>
             <plugin>
@@ -1055,27 +1061,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-3</version>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <finalName>${current.release.name}</finalName>
-                    <appendAssemblyId>false</appendAssemblyId>
-                    <descriptors>
-                        <descriptor>src/main/assembly/release.xml</descriptor>
-                    </descriptors>
-                    <outputDirectory>target</outputDirectory>
-                    <workDirectory>target/assembly/work</workDirectory>
-                </configuration>
             </plugin>
         </plugins>
     </build>
