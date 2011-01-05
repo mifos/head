@@ -41,6 +41,7 @@
         <module>testFramework</module>
         <module>serviceInterfaces</module>
         <module>userInterface</module>
+        <module>accounting</module>
         <module>application</module>
         <module>spi</module>
         <module>api</module>

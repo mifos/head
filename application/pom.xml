@@ -1026,6 +1026,10 @@
                             <directory>${modules.root.dir}/cashflow/src/main/webapp</directory>
                             <targetPath>.</targetPath>
                         </resource>
+                        <resource>
+                            <directory>${modules.root.dir}/accounting/src/main/webapp</directory>
+                            <targetPath>.</targetPath>
+                        </resource>
                     </webResources>
                 </configuration>
             </plugin>

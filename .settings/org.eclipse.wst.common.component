@@ -37,5 +37,9 @@
         <wb-resource deploy-path="/" source-path="/savings/src/test/java"/>
         <wb-resource deploy-path="/" source-path="/configuration/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/configuration/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/accounting/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/accounting/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/accounting/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/accounting/src/test/resources"/>
     </wb-module>
 </project-modules>
