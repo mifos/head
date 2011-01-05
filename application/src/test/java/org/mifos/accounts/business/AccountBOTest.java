@@ -32,25 +32,40 @@ import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
+import org.mifos.service.BusinessRuleException;
 import org.mockito.Mockito;
-import org.springframework.test.annotation.ExpectedException;
+import org.mockito.runners.MockitoJUnitRunner;
 
 /**
  * In memory unit tests for AccountBO.
  *
  */
-
+@RunWith(MockitoJUnitRunner.class)
 public class AccountBOTest {
 
     @Before
-    public void setUp(){
+    public void setUp() {
         initMocks(this);
     }
+
+    @Test(expected = BusinessRuleException.class)
+    public void shouldThrowExceptionWhenOfficeGlobalNumberProvidedIsBlank() throws Exception {
+
+        // setup
+        int accountId = 1;
+        AccountBO account = new AccountBO(accountId);
+        String officeGlobalNum = "";
+
+        // exercise test
+        account.generateId(officeGlobalNum);
+    }
+
     @Test
     public void testSetAndGetExternalId() {
         int accountId = 1;
@@ -61,9 +76,9 @@ public class AccountBOTest {
 
         assertThat(account.getExternalId(), is(externalId));
     }
-    
+
     @Test
-    public void testGetLastPmntToBeAdjustedReturnsFirstNonZeroElementInTheList(){
+    public void testGetLastPmntToBeAdjustedReturnsFirstNonZeroElementInTheList() {
         AccountBO account = new AccountBO(1);
         AccountPaymentEntity accountPaymentEntity1 = Mockito.mock(AccountPaymentEntity.class);
         AccountPaymentEntity accountPaymentEntity2 = Mockito.mock(AccountPaymentEntity.class);
@@ -75,15 +90,15 @@ public class AccountBOTest {
         accountPayments.add(accountPaymentEntity3);
 
         account.setAccountPayments(accountPayments);
-        when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
-        when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"2"));
-        when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"3"));
+        when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE, "0"));
+        when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE, "2"));
+        when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE, "3"));
 
-        Assert.assertSame(accountPaymentEntity2,account.getLastPmntToBeAdjusted());
+        Assert.assertSame(accountPaymentEntity2, account.getLastPmntToBeAdjusted());
     }
-    
+
     @Test
-    public void testGetLastPmntToBeAdjustedForAListWithOnePayment(){
+    public void testGetLastPmntToBeAdjustedForAListWithOnePayment() {
         AccountBO account = new AccountBO(1);
         AccountPaymentEntity accountPaymentEntity = Mockito.mock(AccountPaymentEntity.class);
 
@@ -91,14 +106,13 @@ public class AccountBOTest {
         accountPayments.add(accountPaymentEntity);
 
         account.setAccountPayments(accountPayments);
-        Mockito.when(accountPaymentEntity.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"100"));
+        Mockito.when(accountPaymentEntity.getAmount()).thenReturn(new Money(TestUtils.RUPEE, "100"));
 
-        Assert.assertEquals(accountPaymentEntity,account.getLastPmntToBeAdjusted());
+        Assert.assertEquals(accountPaymentEntity, account.getLastPmntToBeAdjusted());
     }
 
-
     @Test
-    public void testGetLastPmntToBeAdjustedReturnsNullIfNoNonZerPaymentIsDone(){
+    public void testGetLastPmntToBeAdjustedReturnsNullIfNoNonZerPaymentIsDone() {
         AccountBO account = new AccountBO(1);
         AccountPaymentEntity accountPaymentEntity1 = Mockito.mock(AccountPaymentEntity.class);
         AccountPaymentEntity accountPaymentEntity2 = Mockito.mock(AccountPaymentEntity.class);
@@ -110,29 +124,26 @@ public class AccountBOTest {
         accountPayments.add(accountPaymentEntity3);
 
         account.setAccountPayments(accountPayments);
-        when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
-        when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
-        when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE,"0"));
+        when(accountPaymentEntity1.getAmount()).thenReturn(new Money(TestUtils.RUPEE, "0"));
+        when(accountPaymentEntity2.getAmount()).thenReturn(new Money(TestUtils.RUPEE, "0"));
+        when(accountPaymentEntity3.getAmount()).thenReturn(new Money(TestUtils.RUPEE, "0"));
 
         Assert.assertNull(account.getLastPmntToBeAdjusted());
 
     }
 
-    @Test
-    @ExpectedException(value = AccountException.class)
-    public void testInvalidConnectionThrowsExceptionInUpdate() throws PersistenceException {
+    @Test(expected = AccountException.class)
+    public void testInvalidConnectionThrowsExceptionInUpdate() throws Exception {
         final AccountPersistence accountPersistence = mock(AccountPersistence.class);
-        AccountBO accountBO = new AccountBO(){
+        AccountBO accountBO = new AccountBO() {
             @Override
             public AccountPersistence getAccountPersistence() {
                 return accountPersistence;
             }
         };
-        try {
-            when(accountPersistence.createOrUpdate(accountBO)).thenThrow(new PersistenceException("some exception"));
-            accountBO.update();
-            Assert.fail("should fail because of invalid session");
-        } catch (AccountException e) {
-        }
+        when(accountPersistence.createOrUpdate(accountBO)).thenThrow(new PersistenceException("some exception"));
+
+        // exercise test
+        accountBO.update();
     }
 }

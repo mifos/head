@@ -86,6 +86,7 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.util.UserContext;
+import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1076,6 +1077,11 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     public final String generateId(final String officeGlobalNum) throws AccountException {
+
+        if (StringUtils.isBlank(officeGlobalNum)) {
+            throw new BusinessRuleException(AccountExceptionConstants.IDGenerationException);
+        }
+
         StringBuilder systemId = new StringBuilder();
         systemId.append(officeGlobalNum);
         try {

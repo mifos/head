@@ -476,6 +476,8 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
+        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
+
         CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfo.getCustomerId());
         boolean isGlimApplicable = new ConfigurationPersistence().isGlimEnabled() && customer.isGroup();
 
@@ -509,7 +511,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             this.loanDao.save(loan);
             StaticHibernateUtil.flushSession();
 
-            loan.setGlobalAccountNum(loan.generateId(userContext.getBranchGlobalNum()));
+            loan.setGlobalAccountNum(loan.generateId(userOffice.getGlobalOfficeNum()));
             this.loanDao.save(loan);
             StaticHibernateUtil.commitTransaction();
         } catch (AccountException e) {
@@ -1334,7 +1336,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     private List<MultipleLoanCreationDto> buildClientViewHelper(final LoanOfferingBO loanOffering,
             List<ClientBO> clients) {
-        return (List<MultipleLoanCreationDto>) collect(clients,
+        return collect(clients,
                 new Transformer<ClientBO, MultipleLoanCreationDto>() {
                     public MultipleLoanCreationDto transform(ClientBO client) {
                         return new MultipleLoanCreationDto(client, loanOffering.eligibleLoanAmount(client
