@@ -28,8 +28,8 @@ import org.mifos.accounts.fees.business.service.FeeService;
 import org.mifos.accounts.fees.business.service.FeeServiceImpl;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fees.persistence.FeeDaoHibernate;
-import org.mifos.accounts.fees.servicefacade.FeeServiceFacade;
-import org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade;
+import org.mifos.accounts.fees.servicefacade.LegacyFeeServiceFacade;
+import org.mifos.accounts.fees.servicefacade.FeeServiceFacadeWebTier;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDao;
 import org.mifos.accounts.financial.business.service.GeneralLedgerDaoHibernate;
 import org.mifos.accounts.fund.persistence.FundDao;
@@ -68,6 +68,7 @@ import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.WebTierAccountServiceFacade;
 import org.mifos.application.admin.servicefacade.CheckListServiceFacade;
 import org.mifos.application.admin.servicefacade.HolidayServiceFacade;
+import org.mifos.application.admin.servicefacade.NewFeeServiceFacade;
 import org.mifos.application.admin.servicefacade.OfficeServiceFacade;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
@@ -127,7 +128,8 @@ public class DependencyInjectedServiceLocator {
 
     private static HolidayServiceFacade holidayServiceFacade;
     private static OfficeServiceFacade officeServiceFacade;
-    private static FeeServiceFacade feeServiceFacade;
+    private static LegacyFeeServiceFacade legacyFeeServiceFacade;
+    private static NewFeeServiceFacade feeServiceFacade;
     private static FundServiceFacade fundServiceFacade;
     private static PersonnelServiceFacade personnelServiceFacade;
     private static RolesPermissionServiceFacade rolesPermissionServiceFacade;
@@ -440,10 +442,18 @@ public class DependencyInjectedServiceLocator {
         return officeServiceFacade;
     }
 
-    public static FeeServiceFacade locateFeeServiceFacade() {
+    public static LegacyFeeServiceFacade locateFeeServiceFacade() {
+        if (legacyFeeServiceFacade == null) {
+            feeService = locateFeeService();
+            legacyFeeServiceFacade = new FeeServiceFacadeWebTier(feeService, feeDao, generalLedgerDao);
+        }
+        return legacyFeeServiceFacade;
+    }
+
+    public static NewFeeServiceFacade locateNewFeeServiceFacade() {
         if (feeServiceFacade == null) {
             feeService = locateFeeService();
-            feeServiceFacade = new WebTierFeeServiceFacade(feeService, feeDao, generalLedgerDao);
+            feeServiceFacade = new FeeServiceFacadeWebTier(feeService, feeDao, generalLedgerDao);
         }
         return feeServiceFacade;
     }

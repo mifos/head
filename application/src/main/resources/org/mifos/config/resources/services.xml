@@ -47,7 +47,7 @@
     	<constructor-arg ref="customerDao" />
     </bean>
 
-    <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.WebTierFeeServiceFacade" >
+    <bean id="feeServiceFacade" class="org.mifos.accounts.fees.servicefacade.FeeServiceFacadeWebTier" >
     	<constructor-arg ref="feeService" />
     	<constructor-arg ref="feeDao" />
     	<constructor-arg ref="generalLedgerDao" />

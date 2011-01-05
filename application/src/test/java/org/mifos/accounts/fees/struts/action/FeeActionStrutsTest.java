@@ -43,6 +43,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.dto.screen.FeeParameters;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PageExpiredException;
@@ -57,20 +58,13 @@ import org.mifos.security.util.UserContext;
 
 public class FeeActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
     private static final double DELTA = 0.00000001;
-
     private final static String GLOCDE_ID = "47";
 
     private FeeBO fee;
-
     private FeeBO fee1;
-
     private FeeBO fee2;
-
     private FeeBO fee3;
-
     private String flowKey;
 
     @Before

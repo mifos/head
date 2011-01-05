@@ -28,22 +28,23 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
-import org.mifos.accounts.fees.servicefacade.FeeCreateRequest;
 import org.mifos.accounts.fees.servicefacade.FeeDto;
 import org.mifos.accounts.fees.servicefacade.FeeUpdateRequest;
 import org.mifos.accounts.fees.struts.actionforms.FeeActionForm;
 import org.mifos.accounts.fees.util.helpers.FeeConstants;
-import org.mifos.application.servicefacade.FeeDetailsForLoadDto;
 import org.mifos.application.servicefacade.FeeDetailsForManageDto;
-import org.mifos.application.servicefacade.FeeDetailsForPreviewDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
+import org.mifos.config.AccountingRules;
+import org.mifos.dto.domain.FeeCreateDto;
+import org.mifos.dto.screen.FeeDetailsForLoadDto;
+import org.mifos.dto.screen.FeeDetailsForPreviewDto;
+import org.mifos.dto.screen.FeeParameters;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
-import org.mifos.security.util.UserContext;
 
 public class FeeAction extends BaseAction {
 
@@ -73,10 +74,15 @@ public class FeeAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         form.reset(mapping, request);
         ((FeeActionForm) form).clear();
-        FeeDetailsForLoadDto feeDetailsForLoad = this.feeServiceFacade.retrieveDetailsForFeeLoad(getUserContext(request).getLocaleId());
+
+        FeeDetailsForLoadDto feeDetailsForLoad = this.feeServiceFacade.retrieveDetailsForFeeLoad();
+
         request.getSession().setAttribute("isMultiCurrencyEnabled", feeDetailsForLoad.isMultiCurrencyEnabled());
-        request.getSession().setAttribute("currencies", feeDetailsForLoad.getCurrencies());
         request.getSession().setAttribute(FeeParameters.class.getSimpleName(), feeDetailsForLoad.getFeeParameters());
+
+        request.getSession().setAttribute("currencies", AccountingRules.getCurrencies());
+
+
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
@@ -105,19 +111,43 @@ public class FeeAction extends BaseAction {
     }
 
     @TransactionDemarcate(validateAndResetToken = true)
-    public ActionForward create(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+    public ActionForward create(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         FeeActionForm actionForm = (FeeActionForm) form;
-        UserContext userContext = getUserContext(request);
-        FeeCreateRequest feeCreateRequest = new FeeCreateRequest(actionForm.getCategoryTypeValue(), actionForm
-                .getFeeFrequencyTypeValue(), actionForm.getGlCodeValue(), actionForm.getFeePaymentTypeValue(),
-                actionForm.getFeeFormulaValue(), actionForm.getFeeName(), actionForm.isRateFee(), actionForm
-                        .isCustomerDefaultFee(), actionForm.getRateValue(), actionForm.getCurrencyId(), actionForm
-                        .getAmount(), actionForm.getFeeRecurrenceTypeValue(), actionForm.getMonthRecurAfterValue(),
-                actionForm.getWeekRecurAfterValue());
 
-        FeeDto feeDto = this.feeServiceFacade.createFee(feeCreateRequest, userContext);
-        actionForm.setFeeId(feeDto.getId().toString());
+        Short feeCategory = null;
+        if (actionForm.getCategoryTypeValue() != null) {
+            feeCategory = actionForm.getCategoryTypeValue().getValue();
+        }
+
+        Short feeFrequency = null;
+        if (actionForm.getFeeFrequencyTypeValue() != null) {
+            feeFrequency = actionForm.getFeeFrequencyTypeValue().getValue();
+        }
+
+        Short feePayment = null;
+        if (actionForm.getFeePaymentTypeValue() != null) {
+            feePayment = actionForm.getFeePaymentTypeValue().getValue();
+        }
+
+        Short feeFormula = null;
+        if (actionForm.getFeeFormulaValue() != null) {
+            feeFormula = actionForm.getFeeFormulaValue().getValue();
+        }
+
+        Short feeRecurrence = null;
+        if (actionForm.getFeeRecurrenceTypeValue() != null) {
+            feeRecurrence = actionForm.getFeeRecurrenceTypeValue().getValue();
+        }
+
+        FeeCreateDto feeCreateRequest = new FeeCreateDto(feeCategory, feeFrequency, actionForm.getGlCodeValue(), feePayment,
+                feeFormula, actionForm.getFeeName(), actionForm.isRateFee(), actionForm
+                        .isCustomerDefaultFee(), actionForm.getRateValue(), actionForm.getCurrencyId(), actionForm
+                        .getAmount(), feeRecurrence, actionForm.getMonthRecurAfterValue(), actionForm.getWeekRecurAfterValue());
+
+        String feeId = this.feeServiceFacade.createFee(feeCreateRequest);
+
+        actionForm.setFeeId(feeId);
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
@@ -141,7 +171,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        FeeDto feeDto = this.feeServiceFacade.getFeeDetails(((FeeActionForm) form).getFeeIdValue());
+        FeeDto feeDto = this.legacyFeeServiceFacade.getFeeDetails(((FeeActionForm) form).getFeeIdValue());
         request.setAttribute("model", feeDto);
         return mapping.findForward(ActionForwards.get_success.toString());
     }
@@ -152,7 +182,7 @@ public class FeeAction extends BaseAction {
         FeeActionForm feeActionForm = (FeeActionForm) form;
 
         Short feeId = Short.valueOf(feeActionForm.getFeeId());
-        FeeDetailsForManageDto feeDetailsForManage = feeServiceFacade.retrieveDetailsForFeeManage(feeId);
+        FeeDetailsForManageDto feeDetailsForManage = legacyFeeServiceFacade.retrieveDetailsForFeeManage(feeId);
 
         SessionUtils.setCollectionAttribute(FeeConstants.STATUSLIST, feeDetailsForManage.getFeeStatuses(), request);
         feeActionForm.updateWithFee(feeDetailsForManage.getFee());
@@ -163,7 +193,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        FeeDto feeDto = this.feeServiceFacade.getFeeDetails(((FeeActionForm) form).getFeeIdValue());
+        FeeDto feeDto = this.legacyFeeServiceFacade.getFeeDetails(((FeeActionForm) form).getFeeIdValue());
         request.getSession().setAttribute("model", feeDto);
         return mapping.findForward(ActionForwards.editPreview_success.toString());
     }
@@ -171,7 +201,7 @@ public class FeeAction extends BaseAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward editPrevious(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        FeeDto feeDto = this.feeServiceFacade.getFeeDetails(((FeeActionForm) form).getFeeIdValue());
+        FeeDto feeDto = this.legacyFeeServiceFacade.getFeeDetails(((FeeActionForm) form).getFeeIdValue());
         request.setAttribute("model", feeDto);
         return mapping.findForward(ActionForwards.editprevious_success.toString());
     }
@@ -184,15 +214,15 @@ public class FeeAction extends BaseAction {
         FeeUpdateRequest feeUpdateRequest = new FeeUpdateRequest(Short.valueOf(feeActionForm.getFeeId()), feeActionForm.getCurrencyId(),
                 feeActionForm.getAmount(), feeActionForm.getFeeStatusValue(), feeActionForm.getRateValue());
 
-        this.feeServiceFacade.updateFee(feeUpdateRequest, getUserContext(request));
+        this.legacyFeeServiceFacade.updateFee(feeUpdateRequest, getUserContext(request));
         return mapping.findForward(ActionForwards.update_success.toString());
     }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward viewAll(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        List<FeeDto> customerFees = feeServiceFacade.getCustomerFees();
-        List<FeeDto> productFees = feeServiceFacade.getProductFees();
+        List<FeeDto> customerFees = legacyFeeServiceFacade.getCustomerFees();
+        List<FeeDto> productFees = legacyFeeServiceFacade.getProductFees();
 
         SessionUtils.setCollectionAttribute(FeeConstants.CUSTOMER_FEES, customerFees, request);
         SessionUtils.setCollectionAttribute(FeeConstants.PRODUCT_FEES, productFees, request);

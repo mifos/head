@@ -18,41 +18,31 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.accounts.fees.servicefacade;
+package org.mifos.dto.domain;
 
-import java.io.Serializable;
+public class FeeCreateDto {
 
-import org.mifos.accounts.fees.util.helpers.FeeCategory;
-import org.mifos.accounts.fees.util.helpers.FeeFormula;
-import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
-import org.mifos.accounts.fees.util.helpers.FeePayment;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-
-/**
- *
- */
-public class FeeCreateRequest implements Serializable {
-
-    private FeeCategory categoryType;
-    private FeeFrequencyType feeFrequencyType;
+    private Short categoryType;
+    private Short feeFrequencyType;
     private Short glCode;
-    private FeePayment feePaymentType;
-    private FeeFormula feeFormula;
+    private Short feePaymentType;
+    private Short feeFormula;
     private String feeName;
     private boolean rateFee;
     private boolean customerDefaultFee;
     private Short currencyId;
     private Double rate;
     private String amount;
-    private RecurrenceType feeRecurrenceType;
+    private Short feeRecurrenceType;
     private Short monthRecurAfter;
     private Short weekRecurAfter;
 
-    public FeeCreateRequest(
-            FeeCategory feeCategory, FeeFrequencyType feeFrequencyType, Short glCode,
-            FeePayment feePayment, FeeFormula feeFormula, String feeName,
+    @SuppressWarnings("PMD")
+    public FeeCreateDto(
+            Short feeCategory, Short feeFrequencyType, Short glCode,
+            Short feePayment, Short feeFormula, String feeName,
             boolean isRateFee, boolean isCustomerDefaultFee, Double rate,
-            Short currencyId, String amount, RecurrenceType feeRecurrenceType,
+            Short currencyId, String amount, Short feeRecurrenceType,
             Short monthRecurAfter, Short weekRecurAfter) {
 
                 this.categoryType = feeCategory;
@@ -72,59 +62,115 @@ public class FeeCreateRequest implements Serializable {
 
     }
 
-    public FeeCategory getCategoryType() {
+    public Short getCategoryType() {
         return this.categoryType;
     }
 
-    public FeeFrequencyType getFeeFrequencyType() {
+    public void setCategoryType(Short categoryType) {
+        this.categoryType = categoryType;
+    }
+
+    public Short getFeeFrequencyType() {
         return this.feeFrequencyType;
+    }
+
+    public void setFeeFrequencyType(Short feeFrequencyType) {
+        this.feeFrequencyType = feeFrequencyType;
     }
 
     public Short getGlCode() {
         return this.glCode;
     }
 
-    public FeePayment getFeePaymentType() {
+    public void setGlCode(Short glCode) {
+        this.glCode = glCode;
+    }
+
+    public Short getFeePaymentType() {
         return this.feePaymentType;
     }
 
-    public FeeFormula getFeeFormula() {
+    public void setFeePaymentType(Short feePaymentType) {
+        this.feePaymentType = feePaymentType;
+    }
+
+    public Short getFeeFormula() {
         return this.feeFormula;
+    }
+
+    public void setFeeFormula(Short feeFormula) {
+        this.feeFormula = feeFormula;
     }
 
     public String getFeeName() {
         return this.feeName;
     }
 
+    public void setFeeName(String feeName) {
+        this.feeName = feeName;
+    }
+
     public boolean isRateFee() {
         return this.rateFee;
+    }
+
+    public void setRateFee(boolean rateFee) {
+        this.rateFee = rateFee;
     }
 
     public boolean isCustomerDefaultFee() {
         return this.customerDefaultFee;
     }
 
+    public void setCustomerDefaultFee(boolean customerDefaultFee) {
+        this.customerDefaultFee = customerDefaultFee;
+    }
+
     public Short getCurrencyId() {
         return this.currencyId;
+    }
+
+    public void setCurrencyId(Short currencyId) {
+        this.currencyId = currencyId;
     }
 
     public Double getRate() {
         return this.rate;
     }
 
+    public void setRate(Double rate) {
+        this.rate = rate;
+    }
+
     public String getAmount() {
         return this.amount;
     }
 
-    public RecurrenceType getFeeRecurrenceType() {
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public Short getFeeRecurrenceType() {
         return this.feeRecurrenceType;
+    }
+
+    public void setFeeRecurrenceType(Short feeRecurrenceType) {
+        this.feeRecurrenceType = feeRecurrenceType;
     }
 
     public Short getMonthRecurAfter() {
         return this.monthRecurAfter;
     }
 
+    public void setMonthRecurAfter(Short monthRecurAfter) {
+        this.monthRecurAfter = monthRecurAfter;
+    }
+
     public Short getWeekRecurAfter() {
         return this.weekRecurAfter;
+    }
+
+    public void setWeekRecurAfter(Short weekRecurAfter) {
+        this.weekRecurAfter = weekRecurAfter;
     }
 }

@@ -18,23 +18,16 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
-
-import java.util.List;
-
-import org.mifos.accounts.fees.struts.action.FeeParameters;
-import org.mifos.application.master.business.MifosCurrency;
+package org.mifos.dto.screen;
 
 public class FeeDetailsForLoadDto {
 
     private final FeeParameters feeParameters;
-    private final boolean isMultiCurrencyEnabled;
-    private final List<MifosCurrency> currencies;
+    private final boolean multiCurrencyEnabled;
 
-    public FeeDetailsForLoadDto(FeeParameters feeParameters, boolean isMultiCurrencyEnabled, List<MifosCurrency> currencies) {
+    public FeeDetailsForLoadDto(FeeParameters feeParameters, boolean isMultiCurrencyEnabled) {
         this.feeParameters = feeParameters;
-        this.isMultiCurrencyEnabled = isMultiCurrencyEnabled;
-        this.currencies = currencies;
+        this.multiCurrencyEnabled = isMultiCurrencyEnabled;
     }
 
     public FeeParameters getFeeParameters() {
@@ -42,10 +35,6 @@ public class FeeDetailsForLoadDto {
     }
 
     public boolean isMultiCurrencyEnabled() {
-        return this.isMultiCurrencyEnabled;
-    }
-
-    public List<MifosCurrency> getCurrencies() {
-        return this.currencies;
+        return this.multiCurrencyEnabled;
     }
 }

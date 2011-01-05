@@ -18,23 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.servicefacade;
+package org.mifos.application.admin.servicefacade;
 
-public class FeeDetailsForPreviewDto {
+import org.mifos.dto.domain.FeeCreateDto;
+import org.mifos.dto.screen.FeeDetailsForLoadDto;
+import org.mifos.dto.screen.FeeDetailsForPreviewDto;
+import org.springframework.security.access.prepost.PreAuthorize;
 
-    private final boolean isMultiCurrencyEnabled;
-    private final String currencyCode;
+public interface NewFeeServiceFacade {
 
-    public FeeDetailsForPreviewDto(boolean isMultiCurrencyEnabled, String currencyCode) {
-        this.isMultiCurrencyEnabled = isMultiCurrencyEnabled;
-        this.currencyCode = currencyCode;
-    }
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_DEFINE_FEE')")
+    FeeDetailsForLoadDto retrieveDetailsForFeeLoad();
 
-    public boolean isMultiCurrencyEnabled() {
-        return this.isMultiCurrencyEnabled;
-    }
+    @PreAuthorize("isFullyAuthenticated()")
+    FeeDetailsForPreviewDto retrieveDetailsforFeePreview(Short currencyId);
 
-    public String getCurrencyCode() {
-        return this.currencyCode;
-    }
+    @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_DEFINE_FEE')")
+    String createFee(FeeCreateDto feeCreateRequest);
+
 }
