@@ -22,7 +22,6 @@ package org.mifos.framework.util.helpers;
 
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
-import org.mifos.application.admin.business.service.AdminBusinessService;
 import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.service.CustomerBusinessService;
@@ -48,7 +47,7 @@ public enum BusinessServiceName {
             ReportsBusinessService.class), Personnel(
             PersonnelBusinessService.class), Center(CenterBusinessService.class), Group(
             GroupBusinessService.class), Office(OfficeBusinessService.class), LoanProduct(LoanPrdBusinessService.class), RolesPermissions(
-            RolesPermissionsBusinessService.class), Admin(AdminBusinessService.class), AuditLog(
+            RolesPermissionsBusinessService.class), AuditLog(
             AuditBusinessService.class), Configuration(ConfigurationBusinessService.class), PrdMix(
             ProductMixBusinessService.class), ;
 
