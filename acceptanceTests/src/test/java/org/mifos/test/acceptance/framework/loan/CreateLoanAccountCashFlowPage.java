@@ -47,7 +47,7 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         return this;
     }
 
-    public CreateLoanAccountCashFlowPage enterValidData(String expense, int incremental, int cashFlowBase, String totalCapital, String totalLiability) {
+    public CreateLoanAccountCashFlowPage enterValidData(String expense, double incremental, int cashFlowBase, String totalCapital, String totalLiability) {
         int noOfMonths = selenium.getXpathCount("//input[contains(@id,'expense')]").intValue();
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
             selenium.type("//tr[" + rowIndex + "]/td[2]/input", expense);

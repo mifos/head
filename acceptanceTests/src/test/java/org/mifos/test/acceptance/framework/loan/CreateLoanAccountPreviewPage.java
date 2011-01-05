@@ -65,13 +65,13 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
 
     public void verifyWarningForThreshold(String warningThreshold) {
         verifyPage();
-        isTextPresentInPage("Installment amount for October 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
-        isTextPresentInPage("Installment amount for November 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
+        isTextPresentInPage("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
+        //isTextPresentInPage("Installment amount for November 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
     }
 
     private void isTextPresentInPage(String validationMessage) {
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"),"Blank Error message is thrown");
-        Assert.assertTrue(selenium.isTextPresent(validationMessage),validationMessage + " is missing");
+        Assert.assertTrue(selenium.isTextPresent(validationMessage),validationMessage);
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"),"Blank Error message is thrown");
     }
 
@@ -86,13 +86,7 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
 
     public CreateLoanAccountPreviewPage verifyZeroCashFlowWarning(String warningThreshold) {
         isTextPresentInPage("Cash flow for September 2010 is zero");
-        isTextPresentInPage("Cash flow for October 2010 is zero");
-        isTextPresentInPage("Cash flow for November 2010 is zero");
-        isTextPresentInPage("Cash flow for December 2010 is zero");
         isTextPresentInPage("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
-        isTextPresentInPage("Installment amount for October 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
-        isTextPresentInPage("Installment amount for November 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
-        isTextPresentInPage("Installment amount for December 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
         return this;
     }
 }

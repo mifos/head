@@ -28,6 +28,7 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.testng.Assert;
 
+import java.text.DecimalFormat;
 import java.util.Locale;
 
 public class ViewInstallmentDetailsPage extends AbstractPage {
@@ -131,7 +132,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
     }
 
     private void isTextPresentInPage(String validationMessage) {
-        Assert.assertTrue(selenium.isTextPresent(validationMessage),validationMessage + " is missing");
+        Assert.assertTrue(selenium.isTextPresent(validationMessage),validationMessage);
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()='']"),"Blank Error message is thrown");
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li[text()=' ']"),"Blank Error message is thrown");
     }
@@ -293,19 +294,26 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         Assert.assertTrue(!selenium.isElementPresent("//span[@id='schedulePreview.error.message']/li"));
     }
 
-    public ViewInstallmentDetailsPage verifyCashFlow(int cashFlowIncremental) {
+    public ViewInstallmentDetailsPage verifyCashFlow(double cashFlowIncremental, double loanAmount) {
         int noOfMonths = selenium.getXpathCount(tableXpath + "//tr").intValue() - 1;
-        int  cashFlow = cashFlowIncremental;
+        double  cashFlow = cashFlowIncremental;
+        boolean cashflowAdded = false;
+        DecimalFormat df = new DecimalFormat("#.00");
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
-            Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex+1) + "]/td[2]"),String.valueOf(cashFlow));
+            String cashFlowDisplayed = selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[2]");
+            Assert.assertEquals(cashFlowDisplayed,df.format(cashFlow));
             Assert.assertEquals(selenium.getText(tableXpath + "//tr[" + (rowIndex+1) + "]/td[5]"), "notes" + rowIndex);
+            if(!cashflowAdded){
+                cashFlow += loanAmount;
+                cashflowAdded = true;
+            }
             cashFlow = cashFlow + cashFlowIncremental;
         }
         return this;
     }
 
     public void verifyCashFlowCalcualted(int cashFlowIncremental) {
-        Assert.assertTrue(true);//To change body of created methods use File | Settings | File Templates.
+        Assert.assertTrue(true);
     }
 
     public ViewInstallmentDetailsPage verifyCashFlowDefaultValues() {
@@ -442,7 +450,6 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         verifyCellValueOfInstallments(2,6,"336.0");
         verifyCellValueOfInstallments(3,6,"335.7");
         return this;
-        //To change body of created methods use File | Settings | File Templates.
     }
 
     public CreateLoanAccountPreviewPage clickPreviewAndGoToReviewLoanAccountPage() {
