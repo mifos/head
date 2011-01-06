@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mifos</groupId>
-    <artifactId>mifos-configuration</artifactId>
+    <artifactId>mifos-appdomain</artifactId>
     <packaging>jar</packaging>
     <version>1.8-SNAPSHOT</version>
-    <name>Mifos - Configuration</name>
+    <name>Mifos - Application Domain</name>
     <url>http://www.mifos.org</url>
 
     <properties>
@@ -26,73 +26,64 @@
         <groupId>org.mifos</groupId>
         <version>1.8-SNAPSHOT</version>
     </parent>
-
+    
     <dependencies>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.validation</groupId>
-            <artifactId>validation-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
+    	<dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-testFramework</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-binding</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.webflow</groupId>
-            <artifactId>spring-webflow</artifactId>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-serviceInterfaces</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
-            <artifactId>mifos-serviceInterfaces</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <artifactId>mifos-userInterface</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-c3p0</artifactId>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-questionnaire</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-cashflow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-acl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
         </dependency>
         <dependency>
             <groupId>javassist</groupId>
@@ -100,16 +91,282 @@
             <version>3.4.GA</version>
         </dependency>
         <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-envers</artifactId>
+            <exclusions>
+                <exclusion>
+                    <artifactId>freemarker</artifactId>
+                    <groupId>freemarker</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.7.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.3</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <version>1.4</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ant</groupId>
+                    <artifactId>ant-optional</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xerces</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-digester</groupId>
+            <artifactId>commons-digester</artifactId>
+            <version>1.7</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.1.4</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springmodules</groupId>
+            <artifactId>spring-modules-cache</artifactId>
+            <version>0.9</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ant</groupId>
+                    <artifactId>ant</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>gigaspaces</groupId>
+                    <artifactId>gigaspaces-ce</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jini</groupId>
+                    <artifactId>jsk-lib</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jini</groupId>
+                    <artifactId>jsk-platform</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jini</groupId>
+                    <artifactId>mahalo</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jini</groupId>
+                    <artifactId>reggie</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jini</groupId>
+                    <artifactId>start</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jini</groupId>
+                    <artifactId>boot</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jini</groupId>
+                    <artifactId>webster</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jboss</groupId>
+                    <artifactId>jboss-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jboss</groupId>
+                    <artifactId>jboss-jmx</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jboss</groupId>
+                    <artifactId>jboss-minimal</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jboss</groupId>
+                    <artifactId>jboss-system</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>jcs</groupId>
+                    <artifactId>jcs</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xpp3</groupId>
+                    <artifactId>xpp3_min</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.dbunit</groupId>
+            <artifactId>dbunit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xmlunit</groupId>
+            <artifactId>xmlunit</artifactId>
+            <version>1.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6.1</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>1.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>struts</groupId>
+            <artifactId>struts</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>struts</groupId>
+            <artifactId>struts-el</artifactId>
+            <version>1.2.7</version>
+        </dependency>
+        <dependency>
+            <groupId>struts</groupId>
+            <artifactId>struts-legacy</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>strutstest</groupId>
+            <artifactId>strutstest</artifactId>
+            <version>2.1.4</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jsp-api</artifactId>
+            <version>2.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.1.2</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
     <build>
         <defaultGoal>jar</defaultGoal>
-        <sourceDirectory>${modules.root.dir}/configuration/src/main/java</sourceDirectory>
-        <scriptSourceDirectory>${modules.root.dir}/configuration/src/main/scripts</scriptSourceDirectory>
-        <testSourceDirectory>${modules.root.dir}/configuration/src/test/java</testSourceDirectory>
+        <sourceDirectory>${modules.root.dir}/appdomain/src/main/java</sourceDirectory>
+        <scriptSourceDirectory>${modules.root.dir}/appdomain/src/main/scripts</scriptSourceDirectory>
+        <testSourceDirectory>${modules.root.dir}/appdomain/src/test/java</testSourceDirectory>
         <outputDirectory>target/classes</outputDirectory>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <resources>

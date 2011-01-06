@@ -31,20 +31,15 @@
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="src" path="cashflow/src/test/java"/>
 	<classpathentry kind="src" path="cashflow/src/main/java"/>
-	<classpathentry kind="src" path="savings/src/main/java"/>
-	<classpathentry kind="src" path="savings/src/test/java"/>
-	<classpathentry kind="src" path="configuration/src/main/java"/>
-	<classpathentry kind="src" path="configuration/src/test/java"/>
 	<classpathentry kind="src" path="accounting/src/main/java"/>
 	<classpathentry kind="src" path="accounting/src/main/resources"/>
 	<classpathentry kind="src" path="accounting/src/test/java"/>
 	<classpathentry kind="src" path="accounting/src/test/resources"/>
+	<classpathentry kind="src" path="appdomain/src/main/java"/>
+	<classpathentry kind="src" path="appdomain/src/test/java"/>
+	<classpathentry kind="src" path="appdomain/src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER">
-		<accessrules>
-			<accessrule kind="nonaccessible" pattern="org.junit/**"/>
-		</accessrules>
-	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
 	<classpathentry kind="output" path="application/target/mifos-webapp/WEB-INF/classes"/>
 </classpath>

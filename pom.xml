@@ -43,13 +43,10 @@
         <module>userInterface</module>
         <module>accounting</module>
         <module>application</module>
-        <module>spi</module>
-        <module>api</module>
         <module>questionnaire</module>
         <module>cashflow</module>
-        <module>savings</module>
         <module>acceptanceTests</module>
-        <module>configuration</module>
+        <module>appdomain</module>
     </modules>
 
     <!--
@@ -118,12 +115,7 @@
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-                <artifactId>mifos-savings</artifactId>
-                <version>1.8-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>org.mifos</groupId>
-                <artifactId>mifos-configuration</artifactId>
+                <artifactId>mifos-appdomain</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>
