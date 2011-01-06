@@ -939,6 +939,7 @@
                     </execution>
                 </executions>
             </plugin>
+<!--            
             <plugin>
                 <groupId>org.codehaus.mojo.jspc</groupId>
                 <artifactId>jspc-maven-plugin</artifactId>
@@ -959,12 +960,12 @@
                 </dependencies>
                 <configuration>
                     <includeInProject>false</includeInProject>
-                    <!--
+                    < ! - -
                         we'll still catch noncompliance with taglibs even if this is false, and if it is true, the
                         compiled JSPs are included in the project (even if includeInProject=false!)
-                    -->
+                    - - >
                     <compile>false</compile>
-                    <!-- makes output cleaner (less verbose) -->
+                    < ! - - makes output cleaner (less verbose) - - >
                     <showSuccess>false</showSuccess>
 					<sources>
 						<directory>${basedir}/src/main/resources/META-INF/resources</directory>
@@ -974,7 +975,8 @@
 					</sources>
                 </configuration>
             </plugin>
-            <plugin>
+ -->
+             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>1.1.1-mifos-mexec-68-patch</version>
