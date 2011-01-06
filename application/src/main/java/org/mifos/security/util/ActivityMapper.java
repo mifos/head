@@ -26,71 +26,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.mifos.accounts.fees.struts.action.FeeAction;
-import org.mifos.accounts.loan.struts.action.AccountStatusAction;
-import org.mifos.accounts.loan.struts.action.LoanAccountAction;
-import org.mifos.accounts.loan.struts.action.LoanDisbursementAction;
-import org.mifos.accounts.loan.struts.action.MultipleLoanAccountsCreationAction;
-import org.mifos.accounts.loan.struts.action.RepayLoanAction;
-import org.mifos.accounts.loan.struts.action.ReverseLoanDisbursalAction;
-import org.mifos.accounts.productdefinition.struts.action.LoanPrdAction;
-import org.mifos.accounts.savings.struts.action.SavingsAction;
-import org.mifos.accounts.savings.struts.action.SavingsApplyAdjustmentAction;
-import org.mifos.accounts.savings.struts.action.SavingsClosureAction;
-import org.mifos.accounts.savings.struts.action.SavingsDepositWithdrawalAction;
-import org.mifos.accounts.struts.action.AccountAppAction;
-import org.mifos.accounts.struts.action.AccountApplyPaymentAction;
-import org.mifos.accounts.struts.action.ApplyAdjustment;
-import org.mifos.accounts.struts.action.ApplyChargeAction;
-import org.mifos.accounts.struts.action.EditStatusAction;
-import org.mifos.accounts.struts.action.NotesAction;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.admin.struts.action.AdminAction;
-import org.mifos.application.collectionsheet.struts.action.CollectionSheetEntryAction;
-import org.mifos.application.holiday.struts.action.HolidayAction;
-import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
-import org.mifos.application.meeting.struts.action.MeetingAction;
-import org.mifos.application.questionnaire.migration.struts.action.MigrateAction;
-import org.mifos.config.struts.action.LookupOptionsAction;
 import org.mifos.customers.api.CustomerLevel;
-import org.mifos.customers.center.struts.action.CenterCustAction;
-import org.mifos.customers.checklist.struts.action.ChkListAction;
-import org.mifos.customers.client.struts.action.ClientCustAction;
-import org.mifos.customers.client.struts.action.ClientTransferAction;
-import org.mifos.customers.group.struts.action.AddGroupMembershipAction;
-import org.mifos.customers.group.struts.action.GroupCustAction;
-import org.mifos.customers.group.struts.action.GroupTransferAction;
 import org.mifos.customers.group.util.helpers.GroupConstants;
-import org.mifos.customers.personnel.struts.action.PersonAction;
-import org.mifos.customers.personnel.struts.action.PersonnelNoteAction;
-import org.mifos.customers.personnel.struts.action.PersonnelSettingsAction;
-import org.mifos.customers.ppi.struts.action.PPIAction;
-import org.mifos.customers.struts.action.CustAction;
-import org.mifos.customers.struts.action.CustHistoricalDataAction;
-import org.mifos.customers.struts.action.CustSearchAction;
-import org.mifos.customers.struts.action.CustomerAccountAction;
-import org.mifos.customers.struts.action.CustomerAction;
-import org.mifos.customers.struts.action.CustomerApplyAdjustmentAction;
-import org.mifos.customers.struts.action.CustomerNotesAction;
-import org.mifos.customers.struts.action.EditCustomerStatusAction;
-import org.mifos.customers.surveys.struts.action.QuestionsAction;
-import org.mifos.customers.surveys.struts.action.SurveyInstanceAction;
-import org.mifos.customers.surveys.struts.action.SurveysAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.reports.admindocuments.struts.action.BirtAdminDocumentUploadAction;
-import org.mifos.reports.struts.action.BirtReportsUploadAction;
-import org.mifos.reports.struts.action.ReportsAction;
-import org.mifos.reports.struts.action.ReportsCategoryAction;
-import org.mifos.reports.struts.action.ReportsDataSourceAction;
-import org.mifos.reports.struts.action.ReportsParamsAction;
-import org.mifos.reports.struts.action.ReportsParamsMapAction;
-import org.mifos.reports.struts.action.ReportsUploadAction;
-import org.mifos.reports.struts.action.ReportsUserParamsAction;
+import org.mifos.reports.business.ReportsBO;
+import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.authorization.AuthorizationManager;
-import org.mifos.security.login.struts.action.LoginAction;
-import org.mifos.security.rolesandpermission.struts.action.RolesPermissionsAction;
 
 /**
  * Singleton.
@@ -178,64 +122,869 @@ public class ActivityMapper {
         addCustomerSearchMappings();
 
         // new style security configuration
-        parseActionSecurity(AdminAction.getSecurity());
-        parseActionSecurity(CustSearchAction.getSecurity());
-        parseActionSecurity(LoginAction.getSecurity());
-        parseActionSecurity(CustHistoricalDataAction.getSecurity());
-        parseActionSecurity(PersonAction.getSecurity());
-        parseActionSecurity(CenterCustAction.getSecurity());
-        parseActionSecurity(ClientTransferAction.getSecurity());
-        parseActionSecurity(GroupTransferAction.getSecurity());
-        parseActionSecurity(MeetingAction.getSecurity());
-        parseActionSecurity(LoanPrdAction.getSecurity());
-        parseActionSecurity(FeeAction.getSecurity());
-        parseActionSecurity(ChkListAction.getSecurity());
-        parseActionSecurity(EditStatusAction.getSecurity());
-        parseActionSecurity(CustAction.getSecurity());
-        parseActionSecurity(CollectionSheetEntryAction.getSecurity());
-        parseActionSecurity(AccountAppAction.getSecurity());
-        parseActionSecurity(SavingsAction.getSecurity());
-        parseActionSecurity(SavingsClosureAction.getSecurity());
-        parseActionSecurity(SavingsApplyAdjustmentAction.getSecurity());
-        parseActionSecurity(ApplyAdjustment.getSecurity());
-        parseActionSecurity(CustomerApplyAdjustmentAction.getSecurity());
-        parseActionSecurity(RepayLoanAction.getSecurity());
-        parseActionSecurity(CustomerAction.getSecurity());
-        parseActionSecurity(LoanAccountAction.getSecurity());
-        parseActionSecurity(AccountApplyPaymentAction.getSecurity());
-        parseActionSecurity(LoanDisbursementAction.getSecurity());
-        parseActionSecurity(SavingsDepositWithdrawalAction.getSecurity());
-        parseActionSecurity(EditCustomerStatusAction.getSecurity());
-        parseActionSecurity(ApplyChargeAction.getSecurity());
-        parseActionSecurity(ClientCustAction.getSecurity());
-        parseActionSecurity(AccountStatusAction.getSecurity());
-        parseActionSecurity(GroupCustAction.getSecurity());
-        parseActionSecurity(PersonnelSettingsAction.getSecurity());
-        parseActionSecurity(CustomerAccountAction.getSecurity());
-        parseActionSecurity(RolesPermissionsAction.getSecurity());
-        parseActionSecurity(PersonnelNoteAction.getSecurity());
-        parseActionSecurity(CustomerNotesAction.getSecurity());
-        parseActionSecurity(NotesAction.getSecurity());
-        parseActionSecurity(MultipleLoanAccountsCreationAction.getSecurity());
-        parseActionSecurity(ReverseLoanDisbursalAction.getSecurity());
-        parseActionSecurity(ReportsAction.getSecurity());
-        parseActionSecurity(ReportsDataSourceAction.getSecurity());
-        parseActionSecurity(ReportsParamsAction.getSecurity());
-        parseActionSecurity(ReportsParamsMapAction.getSecurity());
-        parseActionSecurity(ReportsUploadAction.getSecurity());
-        parseActionSecurity(ReportsUserParamsAction.getSecurity());
-        parseActionSecurity(HolidayAction.getSecurity());
-        parseActionSecurity(SurveysAction.getSecurity());
-        parseActionSecurity(QuestionsAction.getSecurity());
-        parseActionSecurity(AddGroupMembershipAction.getSecurity());
-        parseActionSecurity(SurveyInstanceAction.getSecurity());
-        parseActionSecurity(BirtReportsUploadAction.getSecurity());
-        parseActionSecurity(LookupOptionsAction.getSecurity());
-        parseActionSecurity(PPIAction.getSecurity());
-        parseActionSecurity(ReportsCategoryAction.getSecurity());
-        parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());
-        parseActionSecurity(ImportTransactionsAction.getSecurity());
-        parseActionSecurity(MigrateAction.getSecurity());
+        parseActionSecurity(getAdminActionSecurity());
+        parseActionSecurity(getCustSearchSecurity());
+        parseActionSecurity(getLoginSecurity());
+        parseActionSecurity(getCustHistoricalSecurity());
+        parseActionSecurity(getPersonSecurity());
+        parseActionSecurity(getCenterCustSecurity());
+        parseActionSecurity(getClientTransferSecurity());
+        parseActionSecurity(getGroupTransferSecurity());
+        parseActionSecurity(getMeetingSecurity());
+        parseActionSecurity(getLoanPrdSecurity());
+        parseActionSecurity(getFeeSecurity());
+        parseActionSecurity(getChkListSecurity());
+        parseActionSecurity(getEditStatusSecurity());
+        parseActionSecurity(getCustSecurity());
+        parseActionSecurity(getCollectionSheetEntrySecurity());
+        parseActionSecurity(getAccountAppSecurity());
+        parseActionSecurity(getSavingsSecurity());
+        parseActionSecurity(getSavingsClosureSecurity());
+        parseActionSecurity(getSavingsApplyAdjustmentSecurity());
+        parseActionSecurity(getApplyAdjustmentSecurity());
+        parseActionSecurity(getCustomerApplyAdjustmentSecurity());
+        parseActionSecurity(getRepayLoanSecurity());
+        parseActionSecurity(getCustomerSecurity());
+        parseActionSecurity(getLoanAccountSecurity());
+        parseActionSecurity(getAccountApplyPaymentSecurity());
+        parseActionSecurity(getLoanDisbursementSecurity());
+        parseActionSecurity(getSavingsDepositWithdrawalSecurity());
+        parseActionSecurity(getEditCustomerStatusSecurity());
+        parseActionSecurity(getApplyChargeSecurity());
+        parseActionSecurity(getClientCustSecurity());
+        parseActionSecurity(getAccountStatusSecurity());
+        parseActionSecurity(getGroupCustSecurity());
+        parseActionSecurity(getPersonnelSettingsSecurity());
+        parseActionSecurity(getCustomerAccountSecurity());
+        parseActionSecurity(getRolesPermissionSecurity());
+        parseActionSecurity(getPersonnelNoteSecurity());
+        parseActionSecurity(getCustomerNotesSecurity());
+        parseActionSecurity(getNotesSecurity());
+        parseActionSecurity(getMultipleLoanAccountsCreationSecurity());
+        parseActionSecurity(getReverseLoanDisbursalSecurity());
+        parseActionSecurity(getReportsSecurity());
+        parseActionSecurity(getReportsDataSourceSecurity());
+        parseActionSecurity(getReportsParamsSecurity());
+        parseActionSecurity(getReportsParamsMapSecurity());
+        parseActionSecurity(getReportsUploadSecurity());
+        parseActionSecurity(getReportsUserParamsSecurity());
+        parseActionSecurity(getHolidaySecurity());
+        parseActionSecurity(getSurveysSecurity());
+        parseActionSecurity(getQuestionsSecurity());
+        parseActionSecurity(getAddGroupMembershipSecurity());
+        parseActionSecurity(getSurveyInstanceSecurity());
+        parseActionSecurity(getBirtReportsUploadSecurity());
+        parseActionSecurity(getLookupOptionsSecurity());
+        parseActionSecurity(getPPISecurity());
+        parseActionSecurity(getReportsCategorySecurity());
+        parseActionSecurity(getBirtAdminDocumentUploadSecurity());
+        parseActionSecurity(getImportTransactionsSecurity());
+
+        parseActionSecurity(getMigrateSecurity());
+    }
+
+    private ActionSecurity getMigrateSecurity() {
+        ActionSecurity security = new ActionSecurity("migrateAction");
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("migrateSurveys", SecurityConstants.VIEW);
+        security.allow("migrateAdditionalFields", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getImportTransactionsSecurity() {
+        final ActionSecurity security = new ActionSecurity("manageImportAction");
+        security.allow("load", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        security.allow("upload", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        security.allow("confirm", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        security.allow("downloadLog", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
+        return security;
+    }
+
+    private ActionSecurity getBirtAdminDocumentUploadSecurity() {
+        ActionSecurity security = new ActionSecurity("birtAdminDocumentUploadAction");
+        security.allow("getBirtAdminDocumentUploadPage", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("preview", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("loadProductInstance", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+
+        security.allow("getProductTypes", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("previous", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("upload", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("getViewBirtAdminDocumentPage", SecurityConstants.CAN_VIEW_ADMIN_DOCUMENTS);
+        security.allow("edit", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("editpreview", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("editprevious", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("editThenUpload", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
+        security.allow("downloadAdminDocument", SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
+        return security;
+    }
+
+    private ActionSecurity getReportsCategorySecurity() {
+        ActionSecurity security = new ActionSecurity("reportsCategoryAction");
+        security.allow("loadDefineNewCategoryPage", SecurityConstants.DEFINE_REPORT_CATEGORY);
+        security.allow("preview", SecurityConstants.DEFINE_REPORT_CATEGORY);
+        security.allow("addNewCategory", SecurityConstants.DEFINE_REPORT_CATEGORY);
+        security.allow("viewReportsCategory", SecurityConstants.VIEW_REPORT_CATEGORY);
+        security.allow("confirmDeleteReportsCategory", SecurityConstants.DELETE_REPORT_CATEGORY);
+        security.allow("edit", SecurityConstants.VIEW_REPORT_CATEGORY);
+        security.allow("editPreview", SecurityConstants.VIEW_REPORT_CATEGORY);
+        security.allow("deleteReportsCategory", SecurityConstants.DELETE_REPORT_CATEGORY);
+        security.allow("editThenSubmit", SecurityConstants.VIEW_REPORT_CATEGORY);
+        return security;
+    }
+
+    private ActionSecurity getPPISecurity() {
+        ActionSecurity security = new ActionSecurity("ppiAction");
+        security.allow("configure", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getLookupOptionsSecurity() {
+        ActionSecurity security = new ActionSecurity("lookupOptionsAction");
+
+        security.allow("load", SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("addEditLookupOption", SecurityConstants.VIEW);
+        security.allow("addEditLookupOption_cancel", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getBirtReportsUploadSecurity() {
+        ActionSecurity security = new ActionSecurity("birtReportsUploadAction");
+        security.allow("getBirtReportsUploadPage", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+        security.allow("preview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+        security.allow("previous", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+        security.allow("upload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+        security.allow("getViewReportPage", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
+        security.allow("edit", SecurityConstants.EDIT_REPORT_INFORMATION);
+        security.allow("editpreview", SecurityConstants.EDIT_REPORT_INFORMATION);
+        security.allow("editprevious", SecurityConstants.EDIT_REPORT_INFORMATION);
+        security.allow("editThenUpload", SecurityConstants.EDIT_REPORT_INFORMATION);
+        security.allow("downloadBirtReport", SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
+        return security;
+    }
+
+    private ActionSecurity getSurveyInstanceSecurity() {
+        ActionSecurity security = new ActionSecurity("surveyInstanceAction");
+        security.allow("create_entry", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        security.allow("choosesurvey", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("edit", SecurityConstants.VIEW);
+        security.allow("delete", SecurityConstants.VIEW);
+        security.allow("clear", SecurityConstants.VIEW);
+        security.allow("back", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getAddGroupMembershipSecurity() {
+        ActionSecurity security = new ActionSecurity("addGroupMembershipAction");
+        security.allow("loadSearch", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
+        security.allow("previewParentAddClient", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
+        security.allow("updateParent", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
+
+        return security;
+    }
+
+    private ActionSecurity getQuestionsSecurity() {
+        ActionSecurity security = new ActionSecurity("questionsAction");
+        security.allow("viewQuestions", SecurityConstants.VIEW);
+        security.allow("defineQuestions", SecurityConstants.VIEW);
+        security.allow("addChoice", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("deleteChoice", SecurityConstants.VIEW);
+        security.allow("deleteNewQuestion", SecurityConstants.VIEW);
+        security.allow("addQuestion", SecurityConstants.VIEW);
+        security.allow("createQuestions", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("edit_entry", SecurityConstants.VIEW);
+        security.allow("update_entry", SecurityConstants.VIEW);
+        security.allow("preview_entry", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getSurveysSecurity() {
+        ActionSecurity security = new ActionSecurity("surveysAction");
+        security.allow("mainpage", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("create_entry", SecurityConstants.VIEW);
+        security.allow("add_new_question", SecurityConstants.VIEW);
+        security.allow("delete_new_question", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        security.allow("edit_entry", SecurityConstants.VIEW);
+        security.allow("preview_update", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("edit", SecurityConstants.VIEW);
+        security.allow("edit_update", SecurityConstants.VIEW);
+        security.allow("printVersion", SecurityConstants.VIEW);
+        security.allow("prePrintVersion", SecurityConstants.VIEW);
+        security.allow("delete_new_question_edit", SecurityConstants.VIEW);
+        security.allow("add_new_question_edit", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getHolidaySecurity() {
+        ActionSecurity security = new ActionSecurity("holidayAction");
+        security.allow("load", SecurityConstants.CAN_DEFINE_HOLIDAY);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("getHolidays", SecurityConstants.VIEW);
+        security.allow("addHoliday", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("officeHierarchy", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.CAN_DEFINE_HOLIDAY);
+        return security;
+    }
+
+    private ActionSecurity getReportsUserParamsSecurity() {
+        ReportActionSecurity security = new ReportActionSecurity("reportsUserParamsAction", "loadAddList");
+
+        // FIXME: no associated activity exists for this constant
+        security.allow("reportuserparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+
+        for (ReportsBO report : new ReportsPersistence().getAllReports()) {
+            security.allowReport(report.getReportId().intValue(), report.getActivityId());
+        }
+
+        // FIXME: no associated activity exists for this constant
+        security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("loadAdminReport", SecurityConstants.CAN_VIEW_ADMIN_DOCUMENTS);
+
+        return security;
+    }
+
+    private ActionSecurity getReportsUploadSecurity() {
+        ActionSecurity security = new ActionSecurity("reportsUploadAction");
+        security.allow("uploadReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("administerreports_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        return security;
+    }
+
+    private ActionSecurity getReportsParamsMapSecurity() {
+        ActionSecurity security = new ActionSecurity("reportsParamsMap");
+        security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("createParamsMap", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("deleteParamsMap", SecurityConstants.ADMINISTER_REPORTPARAMS);
+
+        security.allow("reportparamsmapaddlist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("reportparamsmap_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+
+        return security;
+    }
+
+    private ActionSecurity getReportsParamsSecurity() {
+        ActionSecurity security = new ActionSecurity("reportsParamsAction");
+        security.allow("load", SecurityConstants.ADMINISTER_REPORTS);
+        security.allow("loadList", SecurityConstants.ADMINISTER_REPORTS);
+
+        security.allow("createParams", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("deleteParams", SecurityConstants.ADMINISTER_REPORTPARAMS);
+
+        security.allow("reportparams_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("reportparamsadd_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("reportparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("loadView", SecurityConstants.ADMINISTER_REPORTPARAMS);
+        security.allow("reportparamsview_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
+
+        return security;
+    }
+
+    private ActionSecurity getReportsDataSourceSecurity() {
+        ActionSecurity security = new ActionSecurity("reportsDataSourceAction");
+        security.allow("load", SecurityConstants.ADMINISTER_REPORTDS);
+        security.allow("loadList", SecurityConstants.ADMINISTER_REPORTDS);
+        security.allow("createDataSource", SecurityConstants.ADMINISTER_REPORTDS);
+        security.allow("deleteDataSource", SecurityConstants.ADMINISTER_REPORTDS);
+        security.allow("loadView", SecurityConstants.ADMINISTER_REPORTDS);
+
+        security.allow("reportdatasource_path", SecurityConstants.ADMINISTER_REPORTDS);
+        security.allow("reportdatasourceadd_path", SecurityConstants.ADMINISTER_REPORTDS);
+        security.allow("reportdatasourcelist_path", SecurityConstants.ADMINISTER_REPORTDS);
+        security.allow("reportdatasourceview_path", SecurityConstants.ADMINISTER_REPORTDS);
+
+        return security;
+    }
+
+    private ActionSecurity getReportsSecurity() {
+        ActionSecurity security = new ActionSecurity("reportsAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("report_designer", SecurityConstants.CLIENTSDETAILVIEW);
+        security.allow("product_history", SecurityConstants.CLIENTSPRODUCTHISTORY);
+
+        security.allow("branch_performance", SecurityConstants.BRANCHPERFORMANCE);
+        security.allow("area_performance", SecurityConstants.AREAPERFORMANCE);
+        security.allow("collection_sheet", SecurityConstants.COLLECTIONSHEET);
+        security.allow("loan_distribution", SecurityConstants.LOANDISTRIBUTION);
+        security.allow("branch_disbursement", SecurityConstants.BRANCHDISBURSEMENT);
+        security.allow("staffwise_report", SecurityConstants.STAFFWISEREPORT);
+        security.allow("branchwise_report", SecurityConstants.BRANCHWISEREPORT);
+        security.allow("analysis", SecurityConstants.ANALYSIS);
+        security.allow("kendra_meeting", SecurityConstants.KENDRA_MEETING);
+        security.allow("administerreports_path", SecurityConstants.ADMINISTER_REPORTS);
+        security.allow("administerreportslist_path", SecurityConstants.ADMINISTER_REPORTS);
+        return security;
+    }
+
+    private ActionSecurity getReverseLoanDisbursalSecurity() {
+        ActionSecurity security = new ActionSecurity("reverseloandisbaction");
+        security.allow("search", SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("validate", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getMultipleLoanAccountsCreationSecurity() {
+        ActionSecurity security = new ActionSecurity("multipleloansaction");
+        security.allow("load", SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS);
+        security.allow("getLoanOfficers", SecurityConstants.VIEW);
+        security.allow("getCenters", SecurityConstants.VIEW);
+        security.allow("getPrdOfferings", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getNotesSecurity() {
+        ActionSecurity security = new ActionSecurity("notesAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("search", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getCustomerNotesSecurity() {
+        ActionSecurity security = new ActionSecurity("customerNotesAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        security.allow("search", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getPersonnelNoteSecurity() {
+        ActionSecurity security = new ActionSecurity("personnelNoteAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        security.allow("search", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getRolesPermissionSecurity() {
+        ActionSecurity security = new ActionSecurity("rolesPermission");
+        security.allow("viewRoles", SecurityConstants.VIEW);
+        security.allow("load", SecurityConstants.ROLES_CREATE_ROLES);
+        security.allow("create", SecurityConstants.ROLES_CREATE_ROLES);
+        security.allow("manage", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.ROLES_EDIT_ROLES);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.ROLES_DELETE_ROLES);
+        security.allow("delete", SecurityConstants.ROLES_DELETE_ROLES);
+        return security;
+    }
+
+    private ActionSecurity getCustomerAccountSecurity() {
+        ActionSecurity security = new ActionSecurity("customerAccountAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getPersonnelSettingsSecurity() {
+        ActionSecurity security = new ActionSecurity("yourSettings");
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("manage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+        security.allow("loadChangePassword", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+        return security;
+    }
+
+    private ActionSecurity getGroupCustSecurity() {
+        ActionSecurity security = new ActionSecurity("groupCustAction");
+        security.allow("hierarchyCheck", SecurityConstants.VIEW);
+        security.allow("chooseOffice", SecurityConstants.VIEW);
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_GROUP_MEETING);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previewOnly", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+
+        security.allow("getDetails", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("manage", SecurityConstants.GROUP_EDIT_GROUP);
+        security.allow("previewManage", SecurityConstants.VIEW);
+        security.allow("previousManage", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.GROUP_EDIT_GROUP);
+        security.allow("loadSearch", SecurityConstants.VIEW);
+        security.allow("search", SecurityConstants.VIEW);
+
+        security.allow("loadChangeLog", SecurityConstants.VIEW);
+        security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getAccountStatusSecurity() {
+        ActionSecurity security = new ActionSecurity("ChangeAccountStatus");
+        security.allow("load", SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
+        security.allow("searchResults", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("getLoanOfficers", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getClientCustSecurity() {
+        ActionSecurity security = new ActionSecurity("clientCustAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("chooseOffice", SecurityConstants.VIEW);
+        security.allow("next", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previewPersonalInfo", SecurityConstants.VIEW);
+        security.allow("retrievePictureOnPreview", SecurityConstants.VIEW);
+        security.allow("prevPersonalInfo", SecurityConstants.VIEW);
+        security.allow("prevMFIInfo", SecurityConstants.VIEW);
+        security.allow("prevMeeting", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("editPersonalInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("editFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("editAddFamilyRow", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("editDeleteFamilyRow", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("previewEditFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("previewEditPersonalInfo", SecurityConstants.VIEW);
+        security.allow("prevEditPersonalInfo", SecurityConstants.VIEW);
+        security.allow("updatePersonalInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("editMfiInfo", SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
+        security.allow("previewEditMfiInfo", SecurityConstants.VIEW);
+        security.allow("prevEditMfiInfo", SecurityConstants.VIEW);
+        security.allow("updateMfiInfo", SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
+        security.allow("retrievePicture", SecurityConstants.VIEW);
+        security.allow("showPicture", SecurityConstants.VIEW);
+        security.allow("loadChangeLog", SecurityConstants.VIEW);
+        security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        security.allow("familyInfoNext", SecurityConstants.VIEW);
+        security.allow("prevFamilyInfo", SecurityConstants.VIEW);
+        security.allow("prevFamilyInfoNext", SecurityConstants.VIEW);
+        security.allow("addFamilyRow", SecurityConstants.VIEW);
+        security.allow("deleteFamilyRow", SecurityConstants.VIEW);
+        security.allow("updateFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("editPreviewEditFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getApplyChargeSecurity() {
+        ActionSecurity security = new ActionSecurity("applyChargeAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getEditCustomerStatusSecurity() {
+        ActionSecurity security = new ActionSecurity("editCustomerStatusAction");
+        security.allow("loadStatus", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("previewStatus", SecurityConstants.VIEW);
+        security.allow("previousStatus", SecurityConstants.VIEW);
+        security.allow("updateStatus", SecurityConstants.VIEW);
+        security.allow("cancelStatus", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getSavingsDepositWithdrawalSecurity() {
+        ActionSecurity security = new ActionSecurity("savingsDepositWithdrawalAction");
+        security.allow("load", SecurityConstants.SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL);
+        security.allow("reLoad", SecurityConstants.SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("makePayment", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getLoanDisbursementSecurity() {
+        ActionSecurity security = new ActionSecurity("loanDisbursementAction");
+        security.allow("load", SecurityConstants.LOAN_CAN_DISBURSE_LOAN);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getAccountApplyPaymentSecurity() {
+        ActionSecurity security = new ActionSecurity("applyPaymentAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("applyPayment", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getLoanAccountSecurity() {
+        ActionSecurity security = new ActionSecurity("loanAccountAction");
+        security.allow("getAllActivity", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("getLoanRepaymentSchedule", SecurityConstants.VIEW);
+        security.allow("viewStatusHistory", SecurityConstants.VIEW);
+        security.allow("manage", SecurityConstants.LOAN_UPDATE_LOAN);
+        security.allow("managePreview", SecurityConstants.VIEW);
+        security.allow("managePrevious", SecurityConstants.VIEW);
+        security.allow("cancel", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.LOAN_UPDATE_LOAN);
+
+        security.allow("getPrdOfferings", SecurityConstants.VIEW);
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("schedulePreview", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+
+        security.allow("loadChangeLog", SecurityConstants.VIEW);
+        security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        security.allow("waiveChargeDue", SecurityConstants.VIEW);
+        security.allow("forwardWaiveCharge", SecurityConstants.VIEW);
+        security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
+        security.allow("redoLoanBegin", SecurityConstants.CAN_REDO_LOAN_DISPURSAL);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        security.allow("validateInstallments", SecurityConstants.VIEW);
+        security.allow("showPreview", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getCustomerSecurity() {
+        ActionSecurity security = new ActionSecurity("customerAction");
+        security.allow("forwardWaiveChargeDue", SecurityConstants.VIEW);
+        security.allow("forwardWaiveChargeOverDue", SecurityConstants.VIEW);
+        security.allow("waiveChargeDue", SecurityConstants.VIEW);
+        security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
+        security.allow("getAllActivity", SecurityConstants.VIEW);
+        security.allow("getAllClosedAccounts", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getRepayLoanSecurity() {
+        ActionSecurity security = new ActionSecurity("repayLoanAction");
+        security.allow("loadRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("preview", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("previous", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        security.allow("makeRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
+        return security;
+    }
+
+    private ActionSecurity getCustomerApplyAdjustmentSecurity() {
+        ActionSecurity security = new ActionSecurity("custApplyAdjustment");
+        security.allow("loadAdjustment", SecurityConstants.VIEW);
+        security.allow("previewAdjustment", SecurityConstants.VIEW);
+        security.allow("applyAdjustment", SecurityConstants.VIEW);
+        security.allow("cancelAdjustment", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getApplyAdjustmentSecurity() {
+        ActionSecurity security = new ActionSecurity("applyAdjustment");
+        security.allow("loadAdjustment", SecurityConstants.VIEW);
+        security.allow("previewAdjustment", SecurityConstants.VIEW);
+        security.allow("applyAdjustment", SecurityConstants.VIEW);
+        security.allow("cancelAdjustment", SecurityConstants.VIEW);
+        security.allow("loadAdjustmentWhenObligationMet", SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET);
+
+        return security;
+    }
+
+    private ActionSecurity getSavingsApplyAdjustmentSecurity() {
+        ActionSecurity security = new ActionSecurity("savingsApplyAdjustmentAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("adjustLastUserAction", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getSavingsClosureSecurity() {
+        ActionSecurity security = new ActionSecurity("savingsClosureAction");
+        security.allow("load", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+        security.allow("preview", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+        security.allow("previous", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+        security.allow("close", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
+        return security;
+    }
+
+    private ActionSecurity getSavingsSecurity() {
+        ActionSecurity security = new ActionSecurity("savingsAction");
+
+        security.allow("getPrdOfferings", SecurityConstants.VIEW);
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("reLoad", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("getStatusHistory", SecurityConstants.VIEW);
+        security.allow("edit", SecurityConstants.SAVINGS_UPDATE_SAVINGS);
+        security.allow("editPreview", SecurityConstants.SAVINGS_UPDATE_SAVINGS);
+        security.allow("editPrevious", SecurityConstants.SAVINGS_UPDATE_SAVINGS);
+        security.allow("update", SecurityConstants.SAVINGS_UPDATE_SAVINGS);
+        security.allow("getRecentActivity", SecurityConstants.VIEW);
+        security.allow("getTransactionHistory", SecurityConstants.VIEW);
+        security.allow("getDepositDueDetails", SecurityConstants.VIEW);
+        security.allow("waiveAmountDue", SecurityConstants.SAVINGS_CANWAIVE_DUEAMOUNT);
+        security.allow("waiveAmountOverDue", SecurityConstants.SAVINGS_CANWAIVE_OVERDUEAMOUNT);
+        security.allow("loadChangeLog", SecurityConstants.VIEW);
+        security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getAccountAppSecurity() {
+        ActionSecurity security = new ActionSecurity("accountAppAction");
+        security.allow("removeFees", SecurityConstants.VIEW);
+        security.allow("getTrxnHistory", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getCollectionSheetEntrySecurity() {
+        ActionSecurity security = new ActionSecurity("collectionsheetaction");
+        security.allow("load", SecurityConstants.CAN_ENTER_COLLECTION_SHEET_DATA);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("getLastMeetingDateForCustomer", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        security.allow("loadLoanOfficers", SecurityConstants.VIEW);
+        security.allow("loadCustomerList", SecurityConstants.VIEW);
+        security.allow("validate", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getCustSecurity() {
+        ActionSecurity security = new ActionSecurity("custAction");
+        security.allow("getClosedAccounts", SecurityConstants.VIEW);
+        security.allow("getBackToDetailsPage", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getEditStatusSecurity() {
+        ActionSecurity security = new ActionSecurity("editStatusAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getChkListSecurity() {
+        ActionSecurity security = new ActionSecurity("chkListAction");
+        security.allow("load", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+        security.allow("getStates", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+        security.allow("create", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
+        security.allow("cancelCreate", SecurityConstants.VIEW);
+        security.allow("cancelManage", SecurityConstants.VIEW);
+
+        security.allow("manage", SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+        security.allow("getEditStates", SecurityConstants.VIEW);
+        security.allow("managePreview", SecurityConstants.VIEW);
+        security.allow("managePrevious", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
+
+        security.allow("loadAllChecklist", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getFeeSecurity() {
+        ActionSecurity security = new ActionSecurity("feeaction");
+        security.allow("search", SecurityConstants.VIEW);
+        security.allow("load", SecurityConstants.FEES_CREATE_FEES);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("editPreview", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.FEES_CREATE_FEES);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("manage", SecurityConstants.FEES_EDIT_FEES);
+        security.allow("update", SecurityConstants.FEES_EDIT_FEES);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("editPrevious", SecurityConstants.VIEW);
+        security.allow("viewAll", SecurityConstants.VIEW);
+        security.allow("cancelCreate", SecurityConstants.VIEW);
+        security.allow("cancelEdit", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getLoanPrdSecurity() {
+        ActionSecurity security = new ActionSecurity("loanproductaction");
+        security.allow("load", SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("cancelCreate", SecurityConstants.VIEW);
+        security.allow("validate", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
+        security.allow("viewAllLoanProducts", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("editPreview", SecurityConstants.VIEW);
+        security.allow("editPrevious", SecurityConstants.VIEW);
+        security.allow("editCancel", SecurityConstants.VIEW);
+        security.allow("manage", SecurityConstants.EDIT_LOAN_PRODUCT);
+        security.allow("update", SecurityConstants.EDIT_LOAN_PRODUCT);
+        security.allow("update", SecurityConstants.EDIT_LOAN_PRODUCT);
+        security.allow("loadChangeLog", SecurityConstants.VIEW);
+        security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getMeetingSecurity() {
+        ActionSecurity security = new ActionSecurity("meetingAction");
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.VIEW);
+        security.allow("edit", SecurityConstants.VIEW);
+        security.allow("cancelCreate", SecurityConstants.VIEW);
+        security.allow("cancelUpdate", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getGroupTransferSecurity() {
+        ActionSecurity security = new ActionSecurity("groupTransferAction");
+        security.allow("loadParents", SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
+        security.allow("loadBranches", SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+        security.allow("previewBranchTransfer", SecurityConstants.VIEW);
+        security.allow("previewParentTransfer", SecurityConstants.VIEW);
+        security.allow("transferToCenter", SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
+        security.allow("transferToBranch", SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+        security.allow("loadGrpMemberShip", SecurityConstants.GROUP_TRANSFER_THE_GROUP);
+        security.allow("removeGroupMemberShip", SecurityConstants.CAN_REMOVE_CLIENTS_FROM_GROUPS);
+        return security;
+    }
+
+    private ActionSecurity getClientTransferSecurity() {
+        ActionSecurity security = new ActionSecurity("clientTransferAction");
+        security.allow("loadParents", SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
+        security.allow("loadBranches", SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
+        security.allow("previewBranchTransfer", SecurityConstants.VIEW);
+        security.allow("previewParentTransfer", SecurityConstants.VIEW);
+        security.allow("updateParent", SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
+        security.allow("transferToBranch", SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
+        return security;
+    }
+
+    private ActionSecurity getCenterCustSecurity() {
+        ActionSecurity security = new ActionSecurity("centerCustAction");
+        security.allow("chooseOffice", SecurityConstants.CENTER_CREATE_NEW_CENTER);
+        security.allow("load", SecurityConstants.CENTER_CREATE_NEW_CENTER);
+        security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_CENTER_MEETING);
+        security.allow("previous", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("create", SecurityConstants.CENTER_CREATE_NEW_CENTER);
+        security.allow("manage", SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
+        security.allow("editPrevious", SecurityConstants.VIEW);
+        security.allow("editPreview", SecurityConstants.VIEW);
+        security.allow("update", SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
+
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("loadSearch", SecurityConstants.VIEW);
+        security.allow("search", SecurityConstants.VIEW);
+        security.allow("loadChangeLog", SecurityConstants.VIEW);
+        security.allow("cancelChangeLog", SecurityConstants.VIEW);
+
+        security.allow("loadTransferSearch", SecurityConstants.VIEW);
+        security.allow("searchTransfer", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getPersonSecurity() {
+        ActionSecurity security = new ActionSecurity("PersonAction");
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("loadSearch", SecurityConstants.VIEW);
+        security.allow("search", SecurityConstants.VIEW);
+        security.allow("chooseOffice", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+        security.allow("load", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+        security.allow("manage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+        security.allow("previewManage", SecurityConstants.VIEW);
+
+        security.allow("previousManage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
+        security.allow("update", SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
+        security.allow("/PersonnelAction-prevPersonalInfo", SecurityConstants.VIEW);
+
+        security.allow("preview", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+        security.allow("previous", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+        security.allow("create", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
+        security.allow("loadUnLockUser", SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
+        security.allow("unLockUserAccount", SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
+        security.allow("loadChangeLog", SecurityConstants.VIEW);
+        security.allow("cancelChangeLog", SecurityConstants.VIEW);
+        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
+        security.allow("editQuestionResponses", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getCustHistoricalSecurity() {
+        ActionSecurity security = new ActionSecurity("custHistoricalDataAction");
+        security.allow("loadHistoricalData", SecurityConstants.VIEW);
+        security.allow("getHistoricalData", SecurityConstants.VIEW);
+        security.allow("previewHistoricalData", SecurityConstants.VIEW);
+        security.allow("previousHistoricalData", SecurityConstants.VIEW);
+        security.allow("updateHistoricalData", SecurityConstants.VIEW);
+        security.allow("cancelHistoricalData", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getLoginSecurity() {
+        ActionSecurity security = new ActionSecurity("loginAction");
+        security.allow("login", SecurityConstants.VIEW);
+        security.allow("logout", SecurityConstants.VIEW);
+        security.allow("updatePassword", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getCustSearchSecurity() {
+        ActionSecurity security = new ActionSecurity("custSearchAction");
+        security.allow("loadSearch", SecurityConstants.VIEW);
+        security.allow("search", SecurityConstants.VIEW);
+        security.allow("load", SecurityConstants.VIEW);
+        security.allow("loadMainSearch", SecurityConstants.VIEW);
+        security.allow("mainSearch", SecurityConstants.VIEW);
+        security.allow("getHomePage", SecurityConstants.VIEW);
+        security.allow("loadAllBranches", SecurityConstants.VIEW);
+        security.allow("get", SecurityConstants.VIEW);
+        security.allow("preview", SecurityConstants.VIEW);
+        security.allow("getOfficeHomePage", SecurityConstants.VIEW);
+        return security;
+    }
+
+    private ActionSecurity getAdminActionSecurity() {
+        ActionSecurity security = new ActionSecurity("AdminAction");
+        security.allow("load", SecurityConstants.VIEW);
+        return security;
     }
 
     private void addCustomerSearchMappings() {

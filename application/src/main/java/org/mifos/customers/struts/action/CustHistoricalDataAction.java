@@ -44,22 +44,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class CustHistoricalDataAction extends BaseAction {
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("custHistoricalDataAction");
-        security.allow("loadHistoricalData", SecurityConstants.VIEW);
-        security.allow("getHistoricalData", SecurityConstants.VIEW);
-        security.allow("previewHistoricalData", SecurityConstants.VIEW);
-        security.allow("previousHistoricalData", SecurityConstants.VIEW);
-        security.allow("updateHistoricalData", SecurityConstants.VIEW);
-        security.allow("cancelHistoricalData", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward getHistoricalData(ActionMapping mapping, ActionForm form, HttpServletRequest request,

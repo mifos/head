@@ -50,9 +50,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.struts.actionforms.LoginActionForm;
 import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,14 +61,6 @@ import org.slf4j.LoggerFactory;
 public class LoginAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginAction.class);
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("loginAction");
-        security.allow("login", SecurityConstants.VIEW);
-        security.allow("logout", SecurityConstants.VIEW);
-        security.allow("updatePassword", SecurityConstants.VIEW);
-        return security;
-    }
 
     public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {

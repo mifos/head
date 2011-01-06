@@ -28,19 +28,11 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class AdminAction extends BaseAction {
 
     public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.load_success.toString());
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("AdminAction");
-        security.allow("load", SecurityConstants.VIEW);
-        return security;
     }
 }
