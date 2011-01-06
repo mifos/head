@@ -24,6 +24,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
@@ -36,6 +37,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 public class MifosServerLauncherTest {
 
 	private static ServerLauncher serverLauncher;
+	
+	private static final String UID = "login.input.username";
+	private static final String PWD = "login.input.password";
+	private static final String BTN = "login.button.login";
 
 	@BeforeClass
 	public static void beforeClass() throws Exception {
@@ -56,12 +61,17 @@ public class MifosServerLauncherTest {
 	}
 
 	@Test
-	public void testAndAssertLoginPageSeen() throws Exception {
+	public void testLogin() throws Exception {
 		WebDriver wd = new FirefoxDriver();
 		wd.get(getAppURL());
 		
-		// TODO Better assert that the correct thing is on the Login Page, e.g. by ID
-		Assert.assertTrue("Not on Login page", wd.getPageSource().contains("Login"));
+		wd.findElement(By.id(UID)).sendKeys("mifos");
+		wd.findElement(By.id(PWD)).sendKeys("testmifos");
+		wd.findElement(By.id(BTN)).click();
+		
+		Assert.assertTrue(wd.getPageSource().contains("Mifos"));
+		Assert.assertTrue(wd.getPageSource().contains("Home"));
+		Assert.assertTrue(wd.getPageSource().contains("Search"));
 	}
 	
 	protected String getAppURL() {
