@@ -3,6 +3,10 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 
-	<!-- This web.xml is empty, all configuration is in web-fragment.xml files -->
+	<!-- This web.xml is empty, all configuration is in web-fragment.xml files now. 
+	
+		Note however that it is a Servlet version 3.0 web.xml - this will make Web 
+		Containers look into META-INF/resources of JARs in WEB-INF/lib. -->
+
 
 </web-app>
