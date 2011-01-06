@@ -92,7 +92,8 @@
     <!-- Struts -->
     <servlet>
         <servlet-name>Controller</servlet-name>
-        <servlet-class>org.apache.struts.action.ActionServlet</servlet-class>
+        <!-- See JavaDoc of ActionServlet30 why this instead of org.apache.struts.action.ActionServlet is used -->
+        <servlet-class>org.mifos.framework.struts.ActionServlet30</servlet-class>
         <init-param>
             <param-name>config</param-name>
             <param-value>/WEB-INF/struts-config.xml,
@@ -113,6 +114,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>Controller</servlet-name>
+        <!-- If this url-pattern ever changes, adapt the ActionServlet30 (see its JavaDoc) -->
         <url-pattern>*.do</url-pattern>
     </servlet-mapping>
 
