@@ -53,13 +53,13 @@ public class ModifiableParameterServletRequest extends HttpServletRequestWrapper
     }
 
     @Override
-    public Map getParameterMap() {
-        Map parameterMap = updatedParameterList();
+    public Map<String, String[]> getParameterMap() {
+        Map<String, String[]> parameterMap = updatedParameterList();
         return parameterMap;
     }
 
-    private Map<String, String> updatedParameterList() {
-        Map<String, String> parameterMap = new HashMap<String, String>(getRequest().getParameterMap());
+    private Map<String, String[]> updatedParameterList() {
+        Map<String, String[]> parameterMap = new HashMap<String, String[]>(getRequest().getParameterMap());
         for (String removeParameterName : removedParameterList) {
             parameterMap.remove(removeParameterName);
         }
