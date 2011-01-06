@@ -44,7 +44,9 @@ import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
+import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
+import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanActivityEntity;
@@ -112,6 +114,7 @@ import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountStatusDto;
 import org.mifos.dto.domain.AccountUpdateStatus;
 import org.mifos.dto.domain.CenterCreation;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 import org.mifos.dto.domain.CreateAccountNote;
 import org.mifos.dto.domain.CreateLoanRequest;
 import org.mifos.dto.domain.CustomFieldDto;
@@ -156,6 +159,7 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.Transformer;
@@ -595,10 +599,13 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             Double interest = loanActionForm.getInterest();
             Short gracePeriod = loanActionForm.getGracePeriod();
 
-            // FIXME - PUT BACK IN.
-//            List<FeeDto> fees = loanActionForm.getFeesToApply();
-            List<FeeDto> fees = new ArrayList<FeeDto>();
-            List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
+            List<AccountFeesEntity> fees = new ArrayList<AccountFeesEntity>();
+            List<CreateAccountFeeDto> accouontFees = loanActionForm.getFees();
+            for (CreateAccountFeeDto accountFee : accouontFees) {
+                FeeBO feeEntity = new FeePersistence().getFee(accountFee.getFeeId().shortValue());
+                Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(accountFee.getAmount());
+                fees.add(new AccountFeesEntity(null, feeEntity, feeAmount));
+            }
 
             Double maxLoanAmount = Double.valueOf(loanActionForm.getMaxLoanAmount());
             Double minLoanAmount = Double.valueOf(loanActionForm.getMinLoanAmount());
@@ -620,7 +627,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
             LoanBO loan = LoanBO.createLoan(userContext, loanOffering, customer, accountStateType, loanAmount,
                     numOfInstallments, disbursementDate.toDateMidnight().toDate(), isInterestDeductedAtDisbursement, interest, gracePeriod,
-                    fund, fees, customFields, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
+                    fund, fees, maxLoanAmount, minLoanAmount, maxNumOfInstallments,
                     minNumOfShortInstallments, isRepaymentIndependentOfMeetingEnabled, newMeetingForRepaymentDay);
 
             loan.setExternalId(externalId);
@@ -691,9 +698,15 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             boolean isInterestDeductedAtDisbursement = loanAccountInfoDto.isInterestDeductedAtDisbursement();
             Double interest = loanAccountInfoDto.getInterest();
             Short gracePeriod = loanAccountInfoDto.getGracePeriod();
-            // FIXME - put back in fees
-            // List<FeeDto> fees = loanAccountInfoDto.getFeesToApply();
-            List<FeeDto> fees = new ArrayList<FeeDto>();
+
+            List<AccountFeesEntity> fees = new ArrayList<AccountFeesEntity>();
+            List<CreateAccountFeeDto> accouontFees = loanAccountInfoDto.getFees();
+            for (CreateAccountFeeDto accountFee : accouontFees) {
+                FeeBO feeEntity = new FeePersistence().getFee(accountFee.getFeeId().shortValue());
+                Double feeAmount = new LocalizationConverter().getDoubleValueForCurrentLocale(accountFee.getAmount());
+                fees.add(new AccountFeesEntity(null, feeEntity, feeAmount));
+            }
+
             Double maxLoanAmount = Double.valueOf(loanAccountInfoDto.getMaxLoanAmount());
             Double minLoanAmount = Double.valueOf(loanAccountInfoDto.getMinLoanAmount());
             Short maxNumOfInstallments = loanAccountInfoDto.getMaxNumOfInstallments();

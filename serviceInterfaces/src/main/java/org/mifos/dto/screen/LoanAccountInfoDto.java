@@ -20,7 +20,10 @@
 
 package org.mifos.dto.screen;
 
+import java.util.List;
+
 import org.joda.time.LocalDate;
+import org.mifos.dto.domain.CreateAccountFeeDto;
 
 @SuppressWarnings("PMD")
 public class LoanAccountInfoDto {
@@ -46,6 +49,7 @@ public class LoanAccountInfoDto {
     private String collateralNote;
     private Integer selectedCollateralType;
     private Short accountState;
+    private List<CreateAccountFeeDto> fees;
 
     public Short getProductId() {
         return this.productId;
@@ -189,5 +193,13 @@ public class LoanAccountInfoDto {
 
     public void setFundId(Short fundId) {
         this.fundId = fundId;
+    }
+
+    public void setFees(List<CreateAccountFeeDto> accountFeesToCreate) {
+        this.fees = accountFeesToCreate;
+    }
+
+    public List<CreateAccountFeeDto> getFees() {
+        return this.fees;
     }
 }

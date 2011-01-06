@@ -44,7 +44,6 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeePayment;
@@ -160,7 +159,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         int loanStartDaysAgo = 14;
         int paymentDaysAgo = 8;
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, loanStartDaysAgo, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, loanStartDaysAgo, new ArrayList<AccountFeesEntity>());
 
         disburseLoanAndVerify(userContext, loan, loanStartDaysAgo);
 
@@ -189,7 +188,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testRedoLoanApplyWholeMiscPenaltyBeforeRepayments() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         Double feeAmount = new Double("33.0");
@@ -210,7 +209,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testRedoLoanApplyWholeMiscPenaltyAfterPartialPayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -243,7 +242,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testRedoLoanApplyWholeMiscPenaltyAfterFullPayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -277,7 +276,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testRedoLoanApplyFractionalMiscPenaltyBeforeRepayments() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         applyCharge(loan, Short.valueOf(AccountConstants.MISC_PENALTY), new Double("33.7"));
@@ -295,7 +294,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     public void testRedoLoanApplyFractionalMiscPenaltyAfterPartialPayment() throws Exception {
 
         try {
-            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
             disburseLoanAndVerify(userContext, loan, 14);
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -335,7 +334,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     public void testRedoLoanApplyFractionalMiscPenaltyAfterFullPayment() throws Exception {
 
         try {
-            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
             disburseLoanAndVerify(userContext, loan, 14);
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -373,7 +372,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testRedoLoanApplyWholeMiscFeeBeforeRepayments() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         Double feeAmount = new Double("33.0");
@@ -393,7 +392,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyWholeMiscFeeAfterPartialPayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -425,7 +424,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyWholeMiscFeeAfterFullPayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -458,7 +457,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyFractionalMiscFeeBeforeRepayments() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         applyCharge(loan, Short.valueOf(AccountConstants.MISC_FEES), new Double("33.7"));
@@ -475,7 +474,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     public void testRedoLoanApplyFractionalMiscFeeAfterPartialPayment() throws Exception {
 
         try {
-            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
             disburseLoanAndVerify(userContext, loan, 14);
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -514,7 +513,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     public void testRedoLoanApplyFractionalMiscFeeAfterFullPayment() throws Exception {
 
         try {
-            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
             disburseLoanAndVerify(userContext, loan, 14);
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -548,7 +547,8 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         }
     }
 
-    @Ignore @Test
+    @Ignore
+    @Test
     public void testRedoLoanWithOneTimeWholeAmountFee() throws Exception {
 
         LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, createFeeViewsWithOneTimeAmountFee(10.0));
@@ -566,7 +566,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyOneTimeWholeAmountFeeBeforeRepayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 51.0, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -589,7 +589,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyOneTimeWholeAmountFeeAfterRepayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 51.0, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -636,7 +636,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyOneTimeFractionalAmountFeeBeforeRepayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 51.0, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -659,7 +659,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanWithOneTimeFractionalAmountFeeAfterRepayment() throws Exception {
         try {
-            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
             disburseLoanAndVerify(userContext, loan, 14);
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 51.0, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -703,7 +703,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyPeriodicWholeAmountFeeBeforeRepayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 51.0, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -726,7 +726,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanWithPeriodicWholeAmountFeeAfterRepayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 51.0, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -774,7 +774,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyPeriodicRateFeeBeforeRepayment() throws Exception {
 
-        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+        LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
         disburseLoanAndVerify(userContext, loan, 14);
 
         LoanTestUtils.assertInstallmentDetails(loan, 1, 51.0, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -798,7 +798,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     @Ignore @Test
     public void testRedoLoanApplyPeriodicRateFeeAfterRepayment() throws Exception {
         try {
-            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<FeeDto>());
+            LoanBO loan = redoLoanWithMondayMeetingAndVerify(userContext, 14, new ArrayList<AccountFeesEntity>());
             disburseLoanAndVerify(userContext, loan, 14);
 
             LoanTestUtils.assertInstallmentDetails(loan, 1, 51.0, 50.9, 0.1, 0.0, 0.0, 0.0);
@@ -1019,7 +1019,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         return loanOffering;
     }
 
-    private LoanBO redoLoanAccount(GroupBO group, LoanOfferingBO loanOffering, MeetingBO meeting, List<FeeDto> feeDtos) throws AccountException {
+    private LoanBO redoLoanAccount(GroupBO group, LoanOfferingBO loanOffering, MeetingBO meeting, List<AccountFeesEntity> feeDtos) throws AccountException {
         Short numberOfInstallments = Short.valueOf("6");
         List<Date> meetingDates = TestObjectFactory.getMeetingDates(group.getOfficeId(), meeting, numberOfInstallments);
         loanBO = LoanBO.redoLoan(TestUtils.makeUser(), loanOffering, group, AccountState.LOAN_APPROVED, TestUtils
@@ -1058,7 +1058,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         return pastDate;
     }
 
-    private LoanBO redoLoanWithMondayMeeting(UserContext userContext, Date disbursementDate, List<FeeDto> feeDtos)
+    private LoanBO redoLoanWithMondayMeeting(UserContext userContext, Date disbursementDate, List<AccountFeesEntity> feeDtos)
             throws Exception {
 
         OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
@@ -1081,7 +1081,7 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         return redoLoanAccount(group, loanOffering, meeting, feeDtos);
     }
 
-    private LoanBO redoLoanWithMeetingToday(UserContext userContext, Date disbursementDate, List<FeeDto> feeDtos)
+    private LoanBO redoLoanWithMeetingToday(UserContext userContext, Date disbursementDate, List<AccountFeesEntity> feeDtos)
             throws Exception {
         OfficeBO office = TestObjectFactory.getOffice(TestObjectFactory.SAMPLE_BRANCH_OFFICE);
         meeting = new MeetingBO(MeetingTemplateImpl.createWeeklyMeetingTemplateStartingFrom(disbursementDate));
@@ -1098,14 +1098,14 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
     }
 
     protected LoanBO redoLoanWithMondayMeetingAndVerify(UserContext userContext, int numberOfDaysInPast,
-            List<FeeDto> feeDtos) throws Exception {
+            List<AccountFeesEntity> feeDtos) throws Exception {
         LoanBO loan = redoLoanWithMondayMeeting(userContext, createPreviousDate(numberOfDaysInPast), feeDtos);
         Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanAmount());
         return loan;
     }
 
     protected LoanBO redoLoanWithMeetingTodayAndVerify(UserContext userContext, int numberOfDaysInPast,
-            List<FeeDto> feeDtos) throws Exception {
+            List<AccountFeesEntity> feeDtos) throws Exception {
         LoanBO loan = redoLoanWithMeetingToday(userContext, createPreviousDate(numberOfDaysInPast), feeDtos);
         Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanAmount());
         return loan;
@@ -1127,9 +1127,8 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         return group;
     }
 
-    protected LoanBO redoLoanAndVerify(UserContext userContext, Date disbursementDate, List<FeeDto> feeDtos)
-            throws Exception {
-        LoanBO loan = redoLoanWithMondayMeeting(userContext, disbursementDate, new ArrayList<FeeDto>());
+    protected LoanBO redoLoanAndVerify(UserContext userContext, Date disbursementDate) throws Exception {
+        LoanBO loan = redoLoanWithMondayMeeting(userContext, disbursementDate, new ArrayList<AccountFeesEntity>());
         Assert.assertEquals(new Money(getCurrency(), "300.0"), loan.getLoanAmount());
         return loan;
     }
@@ -1200,10 +1199,11 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         return fee;
     }
 
-    private List<FeeDto> createFeeViewsWithOneTimeAmountFee(double amount) {
-        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
+    private List<AccountFeesEntity> createFeeViewsWithOneTimeAmountFee(double amount) {
+        List<AccountFeesEntity> feeDtos = new ArrayList<AccountFeesEntity>();
+
         FeeBO upFrontAmountFee = createOneTimeAmountFee(amount);
-        feeDtos.add(new FeeDto(userContext, upFrontAmountFee));
+        feeDtos.add(new AccountFeesEntity(null, upFrontAmountFee, Double.valueOf(amount)));
         return feeDtos;
     }
 
@@ -1213,10 +1213,10 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         return fee;
     }
 
-    private List<FeeDto> createFeeViewsWithPeriodicAmountFee(double amount) {
-        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
+    private List<AccountFeesEntity> createFeeViewsWithPeriodicAmountFee(double amount) {
+        List<AccountFeesEntity> feeDtos = new ArrayList<AccountFeesEntity>();
         FeeBO upFrontAmountFee = createPeriodicAmountFee(amount);
-        feeDtos.add(new FeeDto(userContext, upFrontAmountFee));
+        feeDtos.add(new AccountFeesEntity(null, upFrontAmountFee, Double.valueOf(amount)));
         return feeDtos;
     }
 
@@ -1226,10 +1226,10 @@ public class LoanBORedoDisbursalIntegrationTest extends MifosIntegrationTestCase
         return fee;
     }
 
-    private List<FeeDto> createFeeViewsWithPeriodicRateFee(double rate) {
-        List<FeeDto> feeDtos = new ArrayList<FeeDto>();
+    private List<AccountFeesEntity> createFeeViewsWithPeriodicRateFee(double rate) {
+        List<AccountFeesEntity> feeDtos = new ArrayList<AccountFeesEntity>();
         FeeBO periodicRateFee = createPeriodicRateFee(rate);
-        feeDtos.add(new FeeDto(userContext, periodicRateFee));
+        feeDtos.add(new AccountFeesEntity(null, periodicRateFee, Double.valueOf(rate)));
         return feeDtos;
     }
 
