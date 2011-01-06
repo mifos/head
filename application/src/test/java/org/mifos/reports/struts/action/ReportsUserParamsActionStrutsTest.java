@@ -20,17 +20,13 @@
 
 package org.mifos.reports.struts.action;
 
-import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityContext;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
@@ -66,17 +62,4 @@ public class ReportsUserParamsActionStrutsTest extends MifosMockStrutsTestCase {
         // FIXME This test leave CUSTOMER table in dirty state
 
     }
-
-    @Test
-    public void testGetSecurityShouldGetReportSecurityConstantsCorrespondingReportId() {
-        ActionSecurity security = ReportsUserParamsAction.getSecurity();
-        Assert.assertEquals(SecurityConstants.CAN_VIEW_COLLECTION_SHEET_REPORT, security.get("loadAddList-1").shortValue());
-        Assert.assertEquals(SecurityConstants.CAN_VIEW_BRANCH_CASH_CONFIRMATION_REPORT, security.get("loadAddList-2")
-                .shortValue());
-        Assert.assertEquals(SecurityConstants.CAN_VIEW_BRANCH_REPORT, security.get("loadAddList-3").shortValue());
-        Assert.assertEquals(SecurityConstants.CAN_VIEW_DETAILED_AGING_PORTFOLIO_AT_RISK, security.get("loadAddList-4").shortValue());
-        Assert.assertEquals(SecurityConstants.CAN_VIEW_GENERAL_LEDGER, security.get("loadAddList-5").shortValue());
-
-    }
-
 }

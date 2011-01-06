@@ -47,8 +47,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -64,15 +62,6 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         return getSavingsService();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("savingsApplyAdjustmentAction");
-        security.allow("load", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("adjustLastUserAction", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

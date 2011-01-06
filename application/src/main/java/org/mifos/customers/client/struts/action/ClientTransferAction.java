@@ -37,21 +37,8 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class ClientTransferAction extends BaseAction {
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("clientTransferAction");
-        security.allow("loadParents", SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
-        security.allow("loadBranches", SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
-        security.allow("previewBranchTransfer", SecurityConstants.VIEW);
-        security.allow("previewParentTransfer", SecurityConstants.VIEW);
-        security.allow("updateParent", SecurityConstants.CIENT_CHANGE_GROUP_MEMBERSHIP);
-        security.allow("transferToBranch", SecurityConstants.CIENT_TRANSFER_THE_CLIENT);
-        return security;
-    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadBranches(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,

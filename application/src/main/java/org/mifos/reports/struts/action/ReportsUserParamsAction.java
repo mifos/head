@@ -26,8 +26,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -36,7 +34,6 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.struts.action.BirtAdminDocumentUploadAction;
-import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.business.ReportsParamsMap;
 import org.mifos.reports.business.dao.ReportsParamQueryDAO;
@@ -44,9 +41,8 @@ import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.ReportsUserParamsActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.ReportActionSecurity;
-import org.mifos.security.util.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Control Class for Report Params
@@ -69,31 +65,11 @@ public class ReportsUserParamsAction extends BaseAction {
         return reportsBusinessService;
     }
 
-    public static ActionSecurity getSecurity() {
-        ReportActionSecurity security = new ReportActionSecurity("reportsUserParamsAction", "loadAddList");
-
-        // FIXME: no associated activity exists for this constant
-        security.allow("reportuserparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-        for (ReportsBO report : new ReportsPersistence().getAllReports()) {
-            security.allowReport(report.getReportId().intValue(), report.getActivityId());
-        }
-
-        // FIXME: no associated activity exists for this constant
-        security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("processReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("reportsuserprocess_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("loadAdminReport", SecurityConstants.CAN_VIEW_ADMIN_DOCUMENTS);
-
-        return security;
-    }
-
     /**
      * To allow loading Administrative documents
      */
-
-    public ActionForward loadAdminReport(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward loadAdminReport(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         request.getSession().setAttribute("listOfAllParameters", new ReportsPersistence().getAllReportParams());
 
@@ -127,8 +103,9 @@ public class ReportsUserParamsAction extends BaseAction {
     /**
      * Loads the Parameter Add page
      */
+    @SuppressWarnings("unchecked")
     public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsUserParamsAction:load Method: ");
         request.getSession().setAttribute("listOfAllParameters", new ReportsPersistence().getAllReportParams());
         ReportsParamQueryDAO paramDAO = new ReportsParamQueryDAO();
@@ -188,7 +165,7 @@ public class ReportsUserParamsAction extends BaseAction {
      * Generate report in given export format
      */
     public ActionForward processReport(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         logger.debug("In ReportsUserParamsAction:processReport Method: ");
         ReportsUserParamsActionForm actionForm = (ReportsUserParamsActionForm) form;

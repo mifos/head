@@ -25,8 +25,6 @@ import java.io.File;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -37,8 +35,8 @@ import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Control Class for Uploading Report
@@ -60,20 +58,11 @@ public class ReportsUploadAction extends BaseAction {
         return reportsBusinessService;
     }
 
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("reportsUploadAction");
-        security.allow("uploadReport", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("administerreports_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        return security;
-
-    }
-
     /**
      * Uploads the Report
      */
-
-    public ActionForward uploadReport(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward uploadReport(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsUploadAction:uploadReport Method: ");
 
         String filename = request.getParameter("filename") == null ? "" : request.getParameter("filename");
@@ -94,7 +83,5 @@ public class ReportsUploadAction extends BaseAction {
                 new ReportsPersistence().getAllReportCategories());
 
         return mapping.findForward("administerreports_path");
-
     }
-
 }

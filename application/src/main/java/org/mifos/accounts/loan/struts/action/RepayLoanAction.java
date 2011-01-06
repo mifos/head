@@ -48,8 +48,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
@@ -58,15 +56,6 @@ import org.slf4j.LoggerFactory;
 public class RepayLoanAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(RepayLoanAction.class);
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("repayLoanAction");
-        security.allow("loadRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
-        security.allow("preview", SecurityConstants.LOAN_CAN_REPAY_LOAN);
-        security.allow("previous", SecurityConstants.LOAN_CAN_REPAY_LOAN);
-        security.allow("makeRepayment", SecurityConstants.LOAN_CAN_REPAY_LOAN);
-        return security;
-    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadRepayment(ActionMapping mapping, ActionForm form, HttpServletRequest request,

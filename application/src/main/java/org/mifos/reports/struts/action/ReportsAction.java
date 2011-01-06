@@ -23,23 +23,19 @@ package org.mifos.reports.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReportsAction extends BaseAction {
 
@@ -48,8 +44,7 @@ public class ReportsAction extends BaseAction {
     private ReportsBusinessService reportsBusinessService;
 
     public ReportsAction() throws ServiceException {
-        reportsBusinessService = (ReportsBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.ReportsService);
+        reportsBusinessService = new ReportsBusinessService();
     }
 
     @Override
@@ -57,32 +52,11 @@ public class ReportsAction extends BaseAction {
         return reportsBusinessService;
     }
 
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("reportsAction");
-        security.allow("load", SecurityConstants.VIEW);
-        security.allow("report_designer", SecurityConstants.CLIENTSDETAILVIEW);
-        security.allow("product_history", SecurityConstants.CLIENTSPRODUCTHISTORY);
-
-        security.allow("branch_performance", SecurityConstants.BRANCHPERFORMANCE);
-        security.allow("area_performance", SecurityConstants.AREAPERFORMANCE);
-        security.allow("collection_sheet", SecurityConstants.COLLECTIONSHEET);
-        security.allow("loan_distribution", SecurityConstants.LOANDISTRIBUTION);
-        security.allow("branch_disbursement", SecurityConstants.BRANCHDISBURSEMENT);
-        security.allow("staffwise_report", SecurityConstants.STAFFWISEREPORT);
-        security.allow("branchwise_report", SecurityConstants.BRANCHWISEREPORT);
-        security.allow("analysis", SecurityConstants.ANALYSIS);
-        security.allow("kendra_meeting", SecurityConstants.KENDRA_MEETING);
-        security.allow("administerreports_path", SecurityConstants.ADMINISTER_REPORTS);
-        security.allow("administerreportslist_path", SecurityConstants.ADMINISTER_REPORTS);
-        return security;
-
-    }
-
     /**
      * loads report page
      */
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsAction:load Method: ");
         StaticHibernateUtil.flushAndCloseSession();
         request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
@@ -90,21 +64,20 @@ public class ReportsAction extends BaseAction {
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }
 
-    public ActionForward getReportPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward getReportPage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsAction:getReportPage Method: ");
         return mapping.findForward(request.getParameter("viewPath"));
     }
 
-    public ActionForward getAdminReportPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward getAdminReportPage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsAction:getAdminReportPage Method: ");
         return mapping.findForward("administerreports_path");
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
-
 }

@@ -23,8 +23,6 @@ package org.mifos.reports.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -33,11 +31,9 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.reports.business.ReportsCategoryBO;
 import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
@@ -46,8 +42,9 @@ import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.activity.ActivityGenerator;
 import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
-import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ReportsCategoryAction extends BaseAction {
 
@@ -56,8 +53,7 @@ public class ReportsCategoryAction extends BaseAction {
     private ReportsBusinessService reportsBusinessService;
 
     public ReportsCategoryAction() {
-        reportsBusinessService = (ReportsBusinessService) ServiceFactory.getInstance().getBusinessService(
-                BusinessServiceName.ReportsService);
+        reportsBusinessService = new ReportsBusinessService();
     }
 
     @Override
@@ -65,29 +61,15 @@ public class ReportsCategoryAction extends BaseAction {
         return reportsBusinessService;
     }
 
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("reportsCategoryAction");
-        security.allow("loadDefineNewCategoryPage", SecurityConstants.DEFINE_REPORT_CATEGORY);
-        security.allow("preview", SecurityConstants.DEFINE_REPORT_CATEGORY);
-        security.allow("addNewCategory", SecurityConstants.DEFINE_REPORT_CATEGORY);
-        security.allow("viewReportsCategory", SecurityConstants.VIEW_REPORT_CATEGORY);
-        security.allow("confirmDeleteReportsCategory", SecurityConstants.DELETE_REPORT_CATEGORY);
-        security.allow("edit", SecurityConstants.VIEW_REPORT_CATEGORY);
-        security.allow("editPreview", SecurityConstants.VIEW_REPORT_CATEGORY);
-        security.allow("deleteReportsCategory", SecurityConstants.DELETE_REPORT_CATEGORY);
-        security.allow("editThenSubmit", SecurityConstants.VIEW_REPORT_CATEGORY);
-        return security;
-    }
-
-    public ActionForward loadDefineNewCategoryPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward loadDefineNewCategoryPage(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsCategoryAction:loadDefineNewCategoryPage Method: ");
         ((ReportsCategoryActionForm) form).clear();
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsCategoryAction:preview Method: ");
         ReportsCategoryActionForm defineCategoryForm = (ReportsCategoryActionForm) form;
         String categoryName = defineCategoryForm.getCategoryName();
@@ -108,7 +90,7 @@ public class ReportsCategoryAction extends BaseAction {
     }
 
     public ActionForward addNewCategory(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsCategoryAction:addNewCategory Method: ");
 
         ReportsCategoryActionForm defineNewCategoryForm = (ReportsCategoryActionForm) form;
@@ -138,14 +120,14 @@ public class ReportsCategoryAction extends BaseAction {
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
     }
 
-    public ActionForward viewReportsCategory(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward viewReportsCategory(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsCategoryAction:viewReportsCategory Method: ");
         request.getSession().setAttribute(ReportsConstants.LISTOFREPORTCATEGORIES,
                 new ReportsPersistence().getAllReportCategories());
@@ -153,7 +135,7 @@ public class ReportsCategoryAction extends BaseAction {
     }
 
     public ActionForward confirmDeleteReportsCategory(ActionMapping mapping, ActionForm form,
-            HttpServletRequest request, HttpServletResponse response) {
+            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) {
         logger.debug("In ReportsCategoryAction:confirmDeleteReportsCategory Method: ");
         ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
         ReportsCategoryBO reportsCategoryBO = new ReportsPersistence().getReportCategoryByCategoryId(Short
@@ -180,7 +162,7 @@ public class ReportsCategoryAction extends BaseAction {
     }
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsCategoryAction:edit Method: ");
         ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
         String reportCategoryId = request.getParameter("categoryId");
@@ -191,7 +173,7 @@ public class ReportsCategoryAction extends BaseAction {
     }
 
     public ActionForward editPreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsCategoryAction:editPreview Method: ");
         ReportsCategoryActionForm defineCategoryForm = (ReportsCategoryActionForm) form;
         String inputCategoryName = defineCategoryForm.getCategoryName();
@@ -232,7 +214,7 @@ public class ReportsCategoryAction extends BaseAction {
     }
 
     public ActionForward deleteReportsCategory(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsCategoryAction:deleteReportsCategory Method: ");
         ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
         ReportsCategoryBO reportsCategoryBO = new ReportsPersistence().getReportCategoryByCategoryId(Short
@@ -250,7 +232,7 @@ public class ReportsCategoryAction extends BaseAction {
     }
 
     public ActionForward editThenSubmit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsCategoryAction:editThenSubmit Method: ");
         ReportsCategoryActionForm reportsCategoryActionForm = (ReportsCategoryActionForm) form;
         short reportCategoryId = reportsCategoryActionForm.getCategoryId();

@@ -45,8 +45,6 @@ import org.mifos.framework.formulaic.Schema;
 import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class QuestionsAction extends BaseAction {
 
@@ -62,23 +60,6 @@ public class QuestionsAction extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         throw new RuntimeException("not implemented");
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("questionsAction");
-        security.allow("viewQuestions", SecurityConstants.VIEW);
-        security.allow("defineQuestions", SecurityConstants.VIEW);
-        security.allow("addChoice", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("deleteChoice", SecurityConstants.VIEW);
-        security.allow("deleteNewQuestion", SecurityConstants.VIEW);
-        security.allow("addQuestion", SecurityConstants.VIEW);
-        security.allow("createQuestions", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("edit_entry", SecurityConstants.VIEW);
-        security.allow("update_entry", SecurityConstants.VIEW);
-        security.allow("preview_entry", SecurityConstants.VIEW);
-        return security;
     }
 
     public ActionForward viewQuestions(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,

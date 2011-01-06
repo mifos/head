@@ -53,31 +53,8 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class ChkListAction extends BaseAction {
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("chkListAction");
-        security.allow("load", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
-        security.allow("getStates", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
-        security.allow("create", SecurityConstants.CHECKLIST_CREATE_CHECKLIST);
-        security.allow("cancelCreate", SecurityConstants.VIEW);
-        security.allow("cancelManage", SecurityConstants.VIEW);
-
-        security.allow("manage", SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
-        security.allow("getEditStates", SecurityConstants.VIEW);
-        security.allow("managePreview", SecurityConstants.VIEW);
-        security.allow("managePrevious", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.CHECKLIST_EDIT_CHECKLIST);
-
-        security.allow("loadAllChecklist", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
@@ -216,7 +193,7 @@ public class ChkListAction extends BaseAction {
             chkListActionForm.setChecklistName(checkList.getChecklistName());
             if (checkList.getCheckListType().equals(CheckListType.CUSTOMER_CHECKLIST)) {
                 chkListActionForm.setMasterTypeId(getStringValue(((CustomerCheckListBO) checkList).getCustomerLevel().getId()));
-            
+
                 if (chkListActionForm.getMasterTypeId().equals(getStringValue(CustomerLevel.CENTER.getValue()))) {
                     chkListActionForm.setType("0");
                     chkListActionForm.setMasterTypeName(ConfigurationConstants.CENTER);
@@ -231,7 +208,7 @@ public class ChkListAction extends BaseAction {
                 chkListActionForm.setStateId(getStringValue(((CustomerCheckListBO) checkList).getCustomerStatus().getId()));
                 chkListActionForm.setIsCustomer(true);
             } else {
-            
+
                 chkListActionForm.setMasterTypeId(getStringValue(((AccountCheckListBO) checkList).getProductTypeEntity()
                         .getProductTypeID()));
                 if (chkListActionForm.getMasterTypeId().equals(getStringValue(ProductType.LOAN.getValue()))) {
@@ -262,7 +239,7 @@ public class ChkListAction extends BaseAction {
             chkListActionForm.setChecklistName(checkList.getChecklistName());
             if (checkList.getCheckListType().equals(CheckListType.CUSTOMER_CHECKLIST)) {
                 chkListActionForm.setMasterTypeId(getStringValue(((CustomerCheckListBO) checkList).getCustomerLevel().getId()));
-            
+
                 if (chkListActionForm.getMasterTypeId().equals(getStringValue(CustomerLevel.CENTER.getValue()))) {
                     chkListActionForm.setType("0");
                     chkListActionForm.setMasterTypeName(ConfigurationConstants.CENTER);
@@ -277,7 +254,7 @@ public class ChkListAction extends BaseAction {
                 chkListActionForm.setStateId(getStringValue(((CustomerCheckListBO) checkList).getCustomerStatus().getId()));
                 chkListActionForm.setIsCustomer(true);
             } else {
-            
+
                 chkListActionForm.setMasterTypeId(getStringValue(((AccountCheckListBO) checkList).getProductTypeEntity()
                         .getProductTypeID()));
                 if (chkListActionForm.getMasterTypeId().equals(getStringValue(ProductType.LOAN.getValue()))) {

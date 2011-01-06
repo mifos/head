@@ -21,10 +21,10 @@
 package org.mifos.security.rolesandpermission.struts.action;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,6 +37,8 @@ import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
 import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.business.service.ServiceFactory;
@@ -44,20 +46,16 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
+import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.helpers.ServletUtils;
+import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionsActionForm;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
-import org.mifos.customers.personnel.business.PersonnelBO;
 
 public class RolesPermissionsAction extends BaseAction {
 
@@ -65,19 +63,6 @@ public class RolesPermissionsAction extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         return ServiceFactory.getInstance().getBusinessService(BusinessServiceName.RolesPermissions);
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("rolesPermission");
-        security.allow("viewRoles", SecurityConstants.VIEW);
-        security.allow("load", SecurityConstants.ROLES_CREATE_ROLES);
-        security.allow("create", SecurityConstants.ROLES_CREATE_ROLES);
-        security.allow("manage", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.ROLES_EDIT_ROLES);
-        security.allow("cancel", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.ROLES_DELETE_ROLES);
-        security.allow("delete", SecurityConstants.ROLES_DELETE_ROLES);
-        return security;
     }
 
     @TransactionDemarcate(saveToken = true)

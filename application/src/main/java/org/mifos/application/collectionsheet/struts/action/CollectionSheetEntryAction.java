@@ -28,8 +28,6 @@ import java.util.ResourceBundle;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -66,9 +64,9 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CollectionSheetEntryAction extends BaseAction {
 
@@ -83,20 +81,6 @@ public class CollectionSheetEntryAction extends BaseAction {
     @Override
     protected BusinessService getService() {
         return new DummyBusinessService();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("collectionsheetaction");
-        security.allow("load", SecurityConstants.CAN_ENTER_COLLECTION_SHEET_DATA);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("getLastMeetingDateForCustomer", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.VIEW);
-        security.allow("loadLoanOfficers", SecurityConstants.VIEW);
-        security.allow("loadCustomerList", SecurityConstants.VIEW);
-        security.allow("validate", SecurityConstants.VIEW);
-        return security;
     }
 
     @Override

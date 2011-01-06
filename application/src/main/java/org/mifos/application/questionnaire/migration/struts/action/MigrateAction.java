@@ -20,6 +20,10 @@
 
 package org.mifos.application.questionnaire.migration.struts.action;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -27,33 +31,19 @@ import org.mifos.application.master.persistence.Upgrade1290720085;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class MigrateAction extends BaseAction {
 
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("migrateAction");
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("migrateSurveys", SecurityConstants.VIEW);
-        security.allow("migrateAdditionalFields", SecurityConstants.VIEW);
-        return security;
-    }
-
     @TransactionDemarcate(saveToken = true)
-    public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward get(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward migrateSurveys(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward migrateSurveys(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Upgrade1290720085 upgrade1290720085 = new Upgrade1290720085();
         ServletContext servletContext = request.getSession().getServletContext();
         upgrade1290720085.setUpgradeContext(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext));
@@ -62,8 +52,8 @@ public class MigrateAction extends BaseAction {
     }
 
     @TransactionDemarcate(saveToken = true)
-    public ActionForward migrateAdditionalFields(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward migrateAdditionalFields(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Upgrade1290720085 upgrade1290720085 = new Upgrade1290720085();
         ServletContext servletContext = request.getSession().getServletContext();
         upgrade1290720085.setUpgradeContext(WebApplicationContextUtils.getRequiredWebApplicationContext(servletContext));

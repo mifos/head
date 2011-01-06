@@ -20,9 +20,25 @@
 
 package org.mifos.customers.surveys.struts.action;
 
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.*;
+import org.apache.struts.action.ActionForm;
+import org.apache.struts.action.ActionForward;
+import org.apache.struts.action.ActionMapping;
+import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.ActionMessages;
 import org.hibernate.ObjectNotFoundException;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -31,6 +47,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -52,25 +69,25 @@ import org.mifos.customers.surveys.helpers.InstanceStatus;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.customers.surveys.persistence.SurveysPersistence;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.formulaic.*;
+import org.mifos.framework.formulaic.DateComponentValidator;
+import org.mifos.framework.formulaic.EnumValidator;
+import org.mifos.framework.formulaic.ErrorType;
+import org.mifos.framework.formulaic.IntValidator;
+import org.mifos.framework.formulaic.IsInstanceValidator;
+import org.mifos.framework.formulaic.Schema;
+import org.mifos.framework.formulaic.SchemaValidationError;
+import org.mifos.framework.formulaic.ValidationError;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
 
 public class SurveyInstanceAction extends BaseAction {
 
@@ -99,7 +116,7 @@ public class SurveyInstanceAction extends BaseAction {
             Map<String, Object> results = new HashMap<String, Object>();
             results.put("dateSurveyed", data.get("dateSurveyed"));
 
-            Map fieldErrors = new HashMap<String, ValidationError>();
+            Map<String, ValidationError> fieldErrors = new HashMap<String, ValidationError>();
             for (SurveyQuestion question : survey.getQuestions()) {
                 String formName = "response_" + Integer.toString(question.getSurveyQuestionId());
 
@@ -180,20 +197,6 @@ public class SurveyInstanceAction extends BaseAction {
 
     }
 
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("surveyInstanceAction");
-        security.allow("create_entry", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.VIEW);
-        security.allow("choosesurvey", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("edit", SecurityConstants.VIEW);
-        security.allow("delete", SecurityConstants.VIEW);
-        security.allow("clear", SecurityConstants.VIEW);
-        security.allow("back", SecurityConstants.VIEW);
-        return security;
-    }
-
     @Override
     protected BusinessService getService() throws ServiceException {
         throw new RuntimeException("not implemented");
@@ -213,7 +216,7 @@ public class SurveyInstanceAction extends BaseAction {
         return instance.getAccount().getGlobalAccountNum();
     }
 
-    public ActionForward delete(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+    public ActionForward delete(@SuppressWarnings("unused") ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         SurveysPersistence persistence = new SurveysPersistence();
         GenericActionForm actionForm = (GenericActionForm) form;
@@ -232,17 +235,16 @@ public class SurveyInstanceAction extends BaseAction {
             }
             response.sendRedirect(redirectUrl);
             return null;
-        } else {
+        }
             response.sendRedirect("/adminAction.do?method=load");
             return null;
-        }
     }
 
     // set the business key to the business object for the header link
     // set the survey instance
     // set the business object name, type and global id
     public ActionForward get(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         PPIPersistence persistence = new PPIPersistence();
         GenericActionForm actionForm = (GenericActionForm) form;
 
@@ -301,7 +303,7 @@ public class SurveyInstanceAction extends BaseAction {
     }
 
     public ActionForward create_entry(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         Map<String, Object> results;
         try {
             results = createEntryValidator.validate(request);
@@ -326,9 +328,8 @@ public class SurveyInstanceAction extends BaseAction {
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
         if (survey instanceof PPISurvey) {
             return mapping.findForward(ActionForwards.create_entry_success_ppi.toString());
-        } else {
-            return mapping.findForward(ActionForwards.create_entry_success.toString());
         }
+            return mapping.findForward(ActionForwards.create_entry_success.toString());
     }
 
     public static String getBusinessObjectName(AbstractBusinessObject businessObject) throws Exception {
@@ -408,7 +409,7 @@ public class SurveyInstanceAction extends BaseAction {
     }
 
     public ActionForward choosesurvey(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         UserContext userContext = getUserContext(request);
 
         Map<String, Object> results;
@@ -441,7 +442,7 @@ public class SurveyInstanceAction extends BaseAction {
     }
 
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         AbstractBusinessObject businessObject = (AbstractBusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         String displayName = getBusinessObjectName(businessObject);
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
@@ -516,7 +517,7 @@ public class SurveyInstanceAction extends BaseAction {
     }
 
     public ActionForward clear(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         GenericActionForm actionForm = (GenericActionForm) form;
 
         actionForm.clear();
@@ -529,13 +530,12 @@ public class SurveyInstanceAction extends BaseAction {
         Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
         if (PPISurvey.class.isInstance(survey)) {
             return mapping.findForward(ActionForwards.create_entry_success_ppi.toString());
-        } else {
-            return mapping.findForward(ActionForwards.create_entry_success.toString());
         }
+            return mapping.findForward(ActionForwards.create_entry_success.toString());
     }
 
-    public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward edit(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         AbstractBusinessObject businessObject = (AbstractBusinessObject) request.getSession().getAttribute(Constants.BUSINESS_KEY);
         String displayName = getBusinessObjectName(businessObject);
         request.setAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME, displayName);
@@ -543,9 +543,8 @@ public class SurveyInstanceAction extends BaseAction {
         Survey survey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
         if (PPISurvey.class.isInstance(survey)) {
             return mapping.findForward(ActionForwards.create_entry_success_ppi.toString());
-        } else {
-            return mapping.findForward(ActionForwards.create_entry_success.toString());
         }
+            return mapping.findForward(ActionForwards.create_entry_success.toString());
     }
 
     /*
@@ -642,7 +641,7 @@ public class SurveyInstanceAction extends BaseAction {
         return null;
     }
 
-    public ActionForward back(ActionMapping mapping, ActionForm form, HttpServletRequest request,
+    public ActionForward back(@SuppressWarnings("unused") ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
         SurveyType businessType = (SurveyType) request.getSession().getAttribute(SurveysConstants.KEY_BUSINESS_TYPE);
         String globalNum = (String) request.getSession().getAttribute(SurveysConstants.KEY_GLOBAL_NUM);
@@ -666,8 +665,7 @@ public class SurveyInstanceAction extends BaseAction {
     }
 
     @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
+    protected boolean skipActionFormToBusinessObjectConversion(@SuppressWarnings("unused") String method) {
         return true;
     }
-
 }

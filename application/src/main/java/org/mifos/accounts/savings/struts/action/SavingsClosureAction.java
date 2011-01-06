@@ -50,8 +50,6 @@ import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -62,15 +60,6 @@ import org.mifos.security.util.UserContext;
 public class SavingsClosureAction extends BaseAction {
 
     public SavingsClosureAction() {
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("savingsClosureAction");
-        security.allow("load", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
-        security.allow("preview", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
-        security.allow("previous", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
-        security.allow("close", SecurityConstants.SAVINGS_CLOSE_SAVINGS_ACCOUNT);
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

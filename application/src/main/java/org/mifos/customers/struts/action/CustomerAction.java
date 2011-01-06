@@ -25,8 +25,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -36,8 +34,8 @@ import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CustomerAction extends AccountAppAction {
 
@@ -45,17 +43,6 @@ public class CustomerAction extends AccountAppAction {
 
     public CustomerAction() throws Exception {
         super();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("customerAction");
-        security.allow("forwardWaiveChargeDue", SecurityConstants.VIEW);
-        security.allow("forwardWaiveChargeOverDue", SecurityConstants.VIEW);
-        security.allow("waiveChargeDue", SecurityConstants.VIEW);
-        security.allow("waiveChargeOverDue", SecurityConstants.VIEW);
-        security.allow("getAllActivity", SecurityConstants.VIEW);
-        security.allow("getAllClosedAccounts", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(validateAndResetToken = true)

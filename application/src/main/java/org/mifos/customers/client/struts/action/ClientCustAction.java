@@ -95,8 +95,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class ClientCustAction extends CustAction implements QuestionnaireAction {
@@ -105,48 +103,6 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
     private final QuestionnaireFlowAdapter createClientQuestionnaire = new QuestionnaireFlowAdapter("Create", "Client",
             ActionForwards.next_success, "clientCustAction.do?method=cancel", questionnaireServiceFacadeLocator);
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("clientCustAction");
-        security.allow("load", SecurityConstants.VIEW);
-        security.allow("chooseOffice", SecurityConstants.VIEW);
-        security.allow("next", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previewPersonalInfo", SecurityConstants.VIEW);
-        security.allow("retrievePictureOnPreview", SecurityConstants.VIEW);
-        security.allow("prevPersonalInfo", SecurityConstants.VIEW);
-        security.allow("prevMFIInfo", SecurityConstants.VIEW);
-        security.allow("prevMeeting", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.VIEW);
-        security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_CLIENT_MEETING);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("editPersonalInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-        security.allow("editFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-        security.allow("editAddFamilyRow", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-        security.allow("editDeleteFamilyRow", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-        security.allow("previewEditFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-        security.allow("previewEditPersonalInfo", SecurityConstants.VIEW);
-        security.allow("prevEditPersonalInfo", SecurityConstants.VIEW);
-        security.allow("updatePersonalInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-        security.allow("editMfiInfo", SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
-        security.allow("previewEditMfiInfo", SecurityConstants.VIEW);
-        security.allow("prevEditMfiInfo", SecurityConstants.VIEW);
-        security.allow("updateMfiInfo", SecurityConstants.CIENT_EDIT_MFI_INFORMATION);
-        security.allow("retrievePicture", SecurityConstants.VIEW);
-        security.allow("showPicture", SecurityConstants.VIEW);
-        security.allow("loadChangeLog", SecurityConstants.VIEW);
-        security.allow("cancelChangeLog", SecurityConstants.VIEW);
-        security.allow("familyInfoNext", SecurityConstants.VIEW);
-        security.allow("prevFamilyInfo", SecurityConstants.VIEW);
-        security.allow("prevFamilyInfoNext", SecurityConstants.VIEW);
-        security.allow("addFamilyRow", SecurityConstants.VIEW);
-        security.allow("deleteFamilyRow", SecurityConstants.VIEW);
-        security.allow("updateFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-        security.allow("editPreviewEditFamilyInfo", SecurityConstants.CLIENT_UPDATE_PERSONNEL_INFO);
-        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
-        security.allow("editQuestionResponses", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward chooseOffice(ActionMapping mapping, ActionForm form, HttpServletRequest request,

@@ -45,25 +45,10 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class GroupTransferAction extends BaseAction {
 
     public GroupTransferAction() {
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("groupTransferAction");
-        security.allow("loadParents", SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-        security.allow("loadBranches", SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-        security.allow("previewBranchTransfer", SecurityConstants.VIEW);
-        security.allow("previewParentTransfer", SecurityConstants.VIEW);
-        security.allow("transferToCenter", SecurityConstants.GROUP_CHANGE_CENTER_MEMBERSHIP);
-        security.allow("transferToBranch", SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-        security.allow("loadGrpMemberShip", SecurityConstants.GROUP_TRANSFER_THE_GROUP);
-        security.allow("removeGroupMemberShip", SecurityConstants.CAN_REMOVE_CLIENTS_FROM_GROUPS);
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

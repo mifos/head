@@ -74,8 +74,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
@@ -89,33 +87,6 @@ public class GroupCustAction extends CustAction {
 
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Group",
             ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("groupCustAction");
-        security.allow("hierarchyCheck", SecurityConstants.VIEW);
-        security.allow("chooseOffice", SecurityConstants.VIEW);
-        security.allow("load", SecurityConstants.VIEW);
-        security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_GROUP_MEETING);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previewOnly", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.VIEW);
-
-        security.allow("getDetails", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("manage", SecurityConstants.GROUP_EDIT_GROUP);
-        security.allow("previewManage", SecurityConstants.VIEW);
-        security.allow("previousManage", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.GROUP_EDIT_GROUP);
-        security.allow("loadSearch", SecurityConstants.VIEW);
-        security.allow("search", SecurityConstants.VIEW);
-
-        security.allow("loadChangeLog", SecurityConstants.VIEW);
-        security.allow("cancelChangeLog", SecurityConstants.VIEW);
-        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
-        security.allow("editQuestionResponses", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward hierarchyCheck(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,

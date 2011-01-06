@@ -45,8 +45,6 @@ import org.mifos.dto.screen.ChangeAccountStatusDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class AccountStatusAction extends BaseAction {
 
@@ -54,15 +52,6 @@ public class AccountStatusAction extends BaseAction {
 
     public AccountStatusAction() {
         super();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("ChangeAccountStatus");
-        security.allow("load", SecurityConstants.CAN_APPROVE_LOANS_IN_BULK);
-        security.allow("searchResults", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.VIEW);
-        security.allow("getLoanOfficers", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(saveToken = true)

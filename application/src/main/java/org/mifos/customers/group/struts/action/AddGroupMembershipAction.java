@@ -35,19 +35,8 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class AddGroupMembershipAction extends BaseAction {
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("addGroupMembershipAction");
-        security.allow("loadSearch", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
-        security.allow("previewParentAddClient", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
-        security.allow("updateParent", SecurityConstants.CAN_ADD_CLIENTS_TO_GROUPS);
-
-        return security;
-    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadSearch(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,

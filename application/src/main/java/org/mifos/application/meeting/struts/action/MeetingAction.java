@@ -48,21 +48,8 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class MeetingAction extends BaseAction {
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("meetingAction");
-        security.allow("load", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.VIEW);
-        security.allow("edit", SecurityConstants.VIEW);
-        security.allow("cancelCreate", SecurityConstants.VIEW);
-        security.allow("cancelUpdate", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,

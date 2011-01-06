@@ -32,8 +32,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.Globals;
 import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
@@ -64,9 +62,9 @@ import org.mifos.security.activity.ActivityGenerator;
 import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.authorization.AuthorizationManager;
-import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.ActivityMapper;
-import org.mifos.security.util.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BirtReportsUploadAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(BirtReportsUploadAction.class);
@@ -76,23 +74,8 @@ public class BirtReportsUploadAction extends BaseAction {
         reportsBusinessService = new ReportsBusinessService();
     }
 
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("birtReportsUploadAction");
-        security.allow("getBirtReportsUploadPage", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("preview", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("previous", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("upload", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("getViewReportPage", SecurityConstants.UPLOAD_REPORT_TEMPLATE);
-        security.allow("edit", SecurityConstants.EDIT_REPORT_INFORMATION);
-        security.allow("editpreview", SecurityConstants.EDIT_REPORT_INFORMATION);
-        security.allow("editprevious", SecurityConstants.EDIT_REPORT_INFORMATION);
-        security.allow("editThenUpload", SecurityConstants.EDIT_REPORT_INFORMATION);
-        security.allow("downloadBirtReport", SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
-        return security;
-    }
-
     public ActionForward getBirtReportsUploadPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsAction:getBirtReportPage Method: ");
         StaticHibernateUtil.flushAndCloseSession();
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
@@ -108,7 +91,7 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
         ReportsPersistence rp = new ReportsPersistence();
         ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
@@ -116,18 +99,17 @@ public class BirtReportsUploadAction extends BaseAction {
         request.setAttribute("category", category);
         if (isReportAlreadyExist(request, uploadForm.getReportTitle(), category)) {
             return mapping.findForward(ActionForwards.preview_failure.toString());
-        } else {
-            return mapping.findForward(ActionForwards.preview_success.toString());
         }
+            return mapping.findForward(ActionForwards.preview_success.toString());
     }
 
-    public ActionForward previous(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward previous(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     public ActionForward upload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
 
         ReportsPersistence rp = new ReportsPersistence();
@@ -219,14 +201,14 @@ public class BirtReportsUploadAction extends BaseAction {
         formFile.destroy();
     }
 
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
     }
 
-    public ActionForward getViewReportPage(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward getViewReportPage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsAction:getViewReportsPage Method: ");
         StaticHibernateUtil.flushAndCloseSession();
         request.getSession().setAttribute(ReportsConstants.LISTOFREPORTS,
@@ -235,7 +217,7 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm birtReportsUploadActionForm = (BirtReportsUploadActionForm) form;
         ReportsBO report = new ReportsPersistence().getReport(Short.valueOf(request.getParameter("reportId")));
         request.setAttribute(Constants.BUSINESS_KEY, report);
@@ -248,7 +230,7 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     public ActionForward editpreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
         ReportsPersistence rp = new ReportsPersistence();
         ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
@@ -302,7 +284,7 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     public ActionForward editprevious(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
         ReportsPersistence rp = new ReportsPersistence();
         ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
@@ -312,7 +294,7 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     public ActionForward editThenUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
         ReportsPersistence rp = new ReportsPersistence();
         ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
@@ -359,8 +341,8 @@ public class BirtReportsUploadAction extends BaseAction {
         return false;
     }
 
-    public ActionForward downloadBirtReport(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward downloadBirtReport(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute("reportsBO",
                 new ReportsPersistence().getReport(Short.valueOf(request.getParameter("reportId"))));
         return mapping.findForward(ActionForwards.download_success.toString());

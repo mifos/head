@@ -48,8 +48,6 @@ import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,15 +66,6 @@ public class ImportTransactionsAction extends BaseAction {
 
 	public static final String SESSION_ATTRIBUTE_LOG = "importTransactionLog";
 	public static final String SESSION_ATTRIBUTE_LOG_FILENAME = "importTransactionLogFilename";
-
-    public static ActionSecurity getSecurity() {
-        final ActionSecurity security = new ActionSecurity("manageImportAction");
-        security.allow("load", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
-        security.allow("upload", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
-        security.allow("confirm", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
-		security.allow("downloadLog", SecurityConstants.CAN_IMPORT_TRANSACTIONS);
-        return security;
-    }
 
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {

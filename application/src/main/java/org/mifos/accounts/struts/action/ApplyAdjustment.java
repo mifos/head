@@ -42,8 +42,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 /**
@@ -55,17 +53,6 @@ public class ApplyAdjustment extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         return new AccountBusinessService();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("applyAdjustment");
-        security.allow("loadAdjustment", SecurityConstants.VIEW);
-        security.allow("previewAdjustment", SecurityConstants.VIEW);
-        security.allow("applyAdjustment", SecurityConstants.VIEW);
-        security.allow("cancelAdjustment", SecurityConstants.VIEW);
-        security.allow("loadAdjustmentWhenObligationMet", SecurityConstants.CAN_ADJUST_PAYMENT_WHEN_OBLIGATION_MET);
-
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

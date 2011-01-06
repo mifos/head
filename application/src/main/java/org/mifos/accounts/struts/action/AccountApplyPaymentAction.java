@@ -21,7 +21,6 @@
 package org.mifos.accounts.struts.action;
 
 import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +30,6 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.api.AccountService;
-import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
@@ -52,7 +50,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
@@ -66,15 +63,6 @@ public class AccountApplyPaymentAction extends BaseAction {
         accountService = DependencyInjectedServiceLocator.locateAccountService();
         loanPaymentTypeDtos = accountService.getLoanPaymentTypes();
         feePaymentTypeDtos = accountService.getFeePaymentTypes();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("applyPaymentAction");
-        security.allow("load", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("applyPayment", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

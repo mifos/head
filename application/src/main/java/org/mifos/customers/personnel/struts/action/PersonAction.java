@@ -83,8 +83,6 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -92,32 +90,6 @@ public class PersonAction extends SearchAction {
 
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Personnel",
             ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", new DefaultQuestionnaireServiceFacadeLocator());
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("PersonAction");
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("loadSearch", SecurityConstants.VIEW);
-        security.allow("search", SecurityConstants.VIEW);
-        security.allow("chooseOffice", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-        security.allow("load", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-        security.allow("manage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-        security.allow("previewManage", SecurityConstants.VIEW);
-
-        security.allow("previousManage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-        security.allow("update", SecurityConstants.PERSONNEL_EDIT_PERSONNEL);
-        security.allow("/PersonnelAction-prevPersonalInfo", SecurityConstants.VIEW);
-
-        security.allow("preview", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-        security.allow("previous", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-        security.allow("create", SecurityConstants.PERSONNEL_CREATE_PERSONNEL);
-        security.allow("loadUnLockUser", SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
-        security.allow("unLockUserAccount", SecurityConstants.PERSONNEL_UNLOCK_PERSONNEL);
-        security.allow("loadChangeLog", SecurityConstants.VIEW);
-        security.allow("cancelChangeLog", SecurityConstants.VIEW);
-        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
-        security.allow("editQuestionResponses", SecurityConstants.VIEW);
-        return security;
-    }
 
     @SuppressWarnings("unused")
     @TransactionDemarcate(saveToken = true)

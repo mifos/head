@@ -56,8 +56,6 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.Constants;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class SurveysAction extends BaseAction {
 
@@ -74,27 +72,6 @@ public class SurveysAction extends BaseAction {
 
         editEntryValidator = new Schema();
         editEntryValidator.setSimpleValidator("value(surveyId)", new IntValidator());
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("surveysAction");
-        security.allow("mainpage", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("create_entry", SecurityConstants.VIEW);
-        security.allow("add_new_question", SecurityConstants.VIEW);
-        security.allow("delete_new_question", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.VIEW);
-        security.allow("edit_entry", SecurityConstants.VIEW);
-        security.allow("preview_update", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.VIEW);
-        security.allow("edit", SecurityConstants.VIEW);
-        security.allow("edit_update", SecurityConstants.VIEW);
-        security.allow("printVersion", SecurityConstants.VIEW);
-        security.allow("prePrintVersion", SecurityConstants.VIEW);
-        security.allow("delete_new_question_edit", SecurityConstants.VIEW);
-        security.allow("add_new_question_edit", SecurityConstants.VIEW);
-        return security;
     }
 
     public ActionForward printVersion(ActionMapping mapping, ActionForm form, HttpServletRequest request,

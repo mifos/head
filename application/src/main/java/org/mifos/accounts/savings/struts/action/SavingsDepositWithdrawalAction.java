@@ -62,8 +62,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -80,16 +78,6 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         return getSavingsService();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("savingsDepositWithdrawalAction");
-        security.allow("load", SecurityConstants.SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL);
-        security.allow("reLoad", SecurityConstants.SAVINGS_CAN_MAKE_DEPOSIT_WITHDRAWAL);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("makePayment", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

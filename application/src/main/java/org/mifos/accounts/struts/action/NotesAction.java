@@ -45,21 +45,9 @@ import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class NotesAction extends SearchAction {
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("notesAction");
-        security.allow("load", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("search", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,

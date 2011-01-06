@@ -49,8 +49,6 @@ import org.mifos.framework.formulaic.SchemaValidationError;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.struts.actionforms.GenericActionForm;
 import org.mifos.framework.util.helpers.PPICalculator;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class PPIAction extends BaseAction {
 
@@ -74,15 +72,6 @@ public class PPIAction extends BaseAction {
     @Override
     protected BusinessService getService() throws ServiceException {
         throw new RuntimeException("not implemented");
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("ppiAction");
-        security.allow("configure", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        return security;
     }
 
     public ActionForward configure(ActionMapping mapping, ActionForm form, HttpServletRequest request,

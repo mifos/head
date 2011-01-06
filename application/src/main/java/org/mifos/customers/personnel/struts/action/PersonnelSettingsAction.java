@@ -41,21 +41,8 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class PersonnelSettingsAction extends BaseAction {
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("yourSettings");
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("manage", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-        security.allow("loadChangePassword", SecurityConstants.PERSONNEL_EDIT_SELF_INFO);
-        return security;
-    }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward get(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,

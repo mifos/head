@@ -49,12 +49,10 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.ConfigurationManager;
 import org.mifos.framework.business.service.BusinessService;
-import org.mifos.framework.business.service.ServiceFactory;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.BusinessServiceName;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
@@ -65,8 +63,6 @@ import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.reports.business.service.ReportsBusinessService;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class BirtAdminDocumentUploadAction extends BaseAction {
 
@@ -76,32 +72,9 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         reportsBusinessService = new ReportsBusinessService();
     }
 
-    @Override
-    protected boolean skipActionFormToBusinessObjectConversion(String method) {
-        return true;
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("birtAdminDocumentUploadAction");
-        security.allow("getBirtAdminDocumentUploadPage", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("preview", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("loadProductInstance", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-
-        security.allow("getProductTypes", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("previous", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("upload", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("getViewBirtAdminDocumentPage", SecurityConstants.CAN_VIEW_ADMIN_DOCUMENTS);
-        security.allow("edit", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("editpreview", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("editprevious", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("editThenUpload", SecurityConstants.CAN_UPLOAD_ADMIN_DOCUMENTS);
-        security.allow("downloadAdminDocument", SecurityConstants.DOWNLOAD_REPORT_TEMPLATE);
-        return security;
-    }
-
     @TransactionDemarcate(saveToken = true)
     public ActionForward getBirtAdminDocumentUploadPage(ActionMapping mapping, ActionForm form,
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
+            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
         uploadForm.clear();
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.PRODUCTTYPELIST, getProductTypes(), request);
@@ -109,8 +82,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     }
 
     private List<ProductTypeEntity> getProductTypes() throws Exception {
-        List<ProductTypeEntity> productTypeList = ((ProductMixBusinessService) ServiceFactory.getInstance()
-                .getBusinessService(BusinessServiceName.PrdMix)).getProductTypes();
+        List<ProductTypeEntity> productTypeList = new ProductMixBusinessService().getProductTypes();
         return productTypeList;
     }
 
@@ -121,7 +93,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadProductInstance(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
         SessionUtils.removeAttribute(ProductDefinitionConstants.AVAILABLEACCOUNTSTATUS, request);
         SessionUtils.removeAttribute(ProductDefinitionConstants.SELECTEDACCOUNTSTATUS, request);
@@ -160,7 +132,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward preview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
         if (uploadForm.getAccountTypeId().equals(ProductType.LOAN.getValue().toString())) {
             uploadForm.setAccountTypeName("LOAN");
@@ -176,7 +148,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward editpreview(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtAdminDocumentUploadActionForm uploadForm = (BirtAdminDocumentUploadActionForm) form;
         if (uploadForm.getAccountTypeId().equals(ProductType.LOAN.getValue().toString())) {
             uploadForm.setAccountTypeName("LOAN");
@@ -190,6 +162,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 
     }
 
+    @SuppressWarnings("unchecked")
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward upload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -263,15 +236,15 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     }
 
     @TransactionDemarcate(joinToken = true)
-    public ActionForward validate(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward validate(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         String method = (String) request.getAttribute("methodCalled");
         return mapping.findForward(method + "_failure");
     }
 
-    public ActionForward getViewBirtAdminDocumentPage(ActionMapping mapping, ActionForm form,
-            HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public ActionForward getViewBirtAdminDocumentPage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
+            HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute(AdminDocumentsContants.LISTOFADMINISTRATIVEDOCUMENTS,
                 new AdminDocumentPersistence().getAllAdminDocuments());
         return mapping.findForward(ActionForwards.get_success.toString());
@@ -279,7 +252,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward edit(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
 
         AdminDocumentBO businessKey = null;
 
@@ -317,6 +290,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         return mapping.findForward(ActionForwards.edit_success.toString());
     }
 
+    @SuppressWarnings("unchecked")
     @TransactionDemarcate(validateAndResetToken = true)
     public ActionForward editThenUpload(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
@@ -358,8 +332,8 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         return getViewBirtAdminDocumentPage(mapping, form, request, response);
     }
 
-    public ActionForward downloadAdminDocument(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward downloadAdminDocument(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute("reportsBO",
                 new AdminDocumentPersistence().getAdminDocumentById(Short.valueOf(request.getParameter("admindocId"))));
         return mapping.findForward(ActionForwards.download_success.toString());

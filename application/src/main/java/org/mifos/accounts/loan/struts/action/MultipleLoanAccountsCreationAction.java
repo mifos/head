@@ -55,8 +55,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.framework.util.helpers.Transformer;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,17 +64,6 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(MultipleLoanAccountsCreationAction.class);
 
     public MultipleLoanAccountsCreationAction() {
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("multipleloansaction");
-        security.allow("load", SecurityConstants.CAN_CREATE_MULTIPLE_LOAN_ACCOUNTS);
-        security.allow("getLoanOfficers", SecurityConstants.VIEW);
-        security.allow("getCenters", SecurityConstants.VIEW);
-        security.allow("getPrdOfferings", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(saveToken = true)
@@ -178,7 +165,7 @@ public class MultipleLoanAccountsCreationAction extends BaseAction {
 
     private List<MultipleLoanCreationDto> buildClientViewHelper(final LoanOfferingBO loanOffering,
             List<ClientBO> clients) {
-        return (List<MultipleLoanCreationDto>) collect(clients,
+        return collect(clients,
                 new Transformer<ClientBO, MultipleLoanCreationDto>() {
                     public MultipleLoanCreationDto transform(ClientBO client) {
                         return new MultipleLoanCreationDto(client, loanOffering.eligibleLoanAmount(client

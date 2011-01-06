@@ -23,8 +23,6 @@ package org.mifos.reports.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -36,8 +34,8 @@ import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.ReportsParamsMapActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Control Class for Report Params
@@ -58,23 +56,11 @@ public class ReportsParamsMapAction extends BaseAction {
         return reportsBusinessService;
     }
 
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("reportsParamsMap");
-        security.allow("loadAddList", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("createParamsMap", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("deleteParamsMap", SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-        security.allow("reportparamsmapaddlist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("reportparamsmap_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-        return security;
-    }
-
     /**
      * Loads the Parameter Map AddList page
      */
     public ActionForward loadAddList(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsParamsMapAction:load Method: ");
         request.getSession().setAttribute("listOfAllParameters", new ReportsPersistence().getAllReportParams());
         ReportsParamsMapActionForm actionForm = (ReportsParamsMapActionForm) form;
@@ -96,7 +82,7 @@ public class ReportsParamsMapAction extends BaseAction {
      * Controls the creation of a link between parameter and a report
      */
     public ActionForward createParamsMap(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsParamsAction:createParamsMap Method: ");
         ReportsParamsMapActionForm actionForm = (ReportsParamsMapActionForm) form;
         ReportsParamsMapValue objParams = new ReportsParamsMapValue();
@@ -110,8 +96,8 @@ public class ReportsParamsMapAction extends BaseAction {
     /**
      * Controls the deletion of a link between Parameter and a report
      */
-    public ActionForward deleteParamsMap(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward deleteParamsMap(ActionMapping mapping, ActionForm form, @SuppressWarnings("unused") HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsParamsAction:deleteParams Method: ");
         ReportsParamsMapActionForm actionForm = (ReportsParamsMapActionForm) form;
         ReportsParamsMapValue objParams = new ReportsParamsMapValue();
@@ -119,5 +105,4 @@ public class ReportsParamsMapAction extends BaseAction {
         reportsPersistence.deleteReportsParamsMap(objParams);
         return mapping.findForward("reportparamsmap_path");
     }
-
 }

@@ -42,8 +42,6 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class AccountAppAction extends BaseAction {
@@ -60,13 +58,6 @@ public class AccountAppAction extends BaseAction {
     @Override
     protected BusinessService getService() {
         return getAccountBusinessService();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("accountAppAction");
-        security.allow("removeFees", SecurityConstants.VIEW);
-        security.allow("getTrxnHistory", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

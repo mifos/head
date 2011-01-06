@@ -48,8 +48,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.login.util.helpers.LoginConstants;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,17 +55,6 @@ import org.slf4j.LoggerFactory;
 public class LookupOptionsAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(LookupOptionsAction.class);
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("lookupOptionsAction");
-
-        security.allow("load", SecurityConstants.CAN_DEFINE_LOOKUP_OPTIONS);
-        security.allow("update", SecurityConstants.VIEW);
-        security.allow("cancel", SecurityConstants.VIEW);
-        security.allow("addEditLookupOption", SecurityConstants.VIEW);
-        security.allow("addEditLookupOption_cancel", SecurityConstants.VIEW);
-        return security;
-    }
 
     private void setLookupType(String configurationEntity, HttpServletRequest request) {
         ResourceBundle resources = ResourceBundle.getBundle(FilePaths.CONFIGURATION_UI_RESOURCE_PROPERTYFILE,
@@ -405,5 +392,4 @@ public class LookupOptionsAction extends BaseAction {
 
         return mapping.findForward(ActionForwards.update_success.toString());
     }
-
 }

@@ -53,8 +53,6 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
@@ -65,21 +63,6 @@ public class EditCustomerStatusAction extends BaseAction {
     private static final Logger logger = LoggerFactory.getLogger(EditCustomerStatusAction.class);
 
     public EditCustomerStatusAction() {
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("editCustomerStatusAction");
-        security.allow("loadStatus", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.VIEW);
-        security.allow("previewStatus", SecurityConstants.VIEW);
-        security.allow("previousStatus", SecurityConstants.VIEW);
-        security.allow("updateStatus", SecurityConstants.VIEW);
-        security.allow("cancelStatus", SecurityConstants.VIEW);
-        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
-        security.allow("editQuestionResponses", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

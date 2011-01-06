@@ -23,8 +23,6 @@ package org.mifos.reports.struts.action;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -36,8 +34,8 @@ import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.ReportsParamsActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Control Class for Report Params
@@ -58,28 +56,11 @@ public class ReportsParamsAction extends BaseAction {
         return reportsBusinessService;
     }
 
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("reportsParamsAction");
-        security.allow("load", SecurityConstants.ADMINISTER_REPORTS);
-        security.allow("loadList", SecurityConstants.ADMINISTER_REPORTS);
-
-        security.allow("createParams", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("deleteParams", SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-        security.allow("reportparams_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("reportparamsadd_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("reportparamslist_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("loadView", SecurityConstants.ADMINISTER_REPORTPARAMS);
-        security.allow("reportparamsview_path", SecurityConstants.ADMINISTER_REPORTPARAMS);
-
-        return security;
-    }
-
     /**
      * Loads the Parameter Add page
      */
-    public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward load(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsParamsAction:load Method: ");
         request.getSession().setAttribute("listOfReportsDataSource", reportsPersistence.getAllReportDataSource());
         return mapping.findForward(ReportsConstants.ADDREPORTSPARAMS);
@@ -88,8 +69,8 @@ public class ReportsParamsAction extends BaseAction {
     /**
      * Loads Parameter List Page
      */
-    public ActionForward loadList(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+    public ActionForward loadList(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsParamsAction:loadList Method: ");
         request.getSession().setAttribute("listOfReportsParams", new ReportsPersistence().getAllReportParams());
         return mapping.findForward(ReportsConstants.LISTREPORTSPARAMS);
@@ -99,7 +80,7 @@ public class ReportsParamsAction extends BaseAction {
      * View parameter
      */
     public ActionForward loadView(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsParamsAction:loadView Method: ");
         ReportsParamsActionForm actionForm = (ReportsParamsActionForm) form;
         String strParameterId = request.getParameter("parameterId");
@@ -120,7 +101,7 @@ public class ReportsParamsAction extends BaseAction {
      */
 
     public ActionForward createParams(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsParamsAction:createParams Method: ");
         ReportsParamsActionForm actionForm = (ReportsParamsActionForm) form;
         ReportsParamsValue objParams = new ReportsParamsValue();
@@ -145,7 +126,7 @@ public class ReportsParamsAction extends BaseAction {
      * Controls the deletion of Parameter
      */
     public ActionForward deleteParams(ActionMapping mapping, ActionForm form, HttpServletRequest request,
-            HttpServletResponse response) throws Exception {
+            @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         logger.debug("In ReportsParamsAction:deleteParams Method: ");
         ReportsParamsActionForm actionForm = (ReportsParamsActionForm) form;
         ReportsParamsValue objParams = new ReportsParamsValue();

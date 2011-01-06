@@ -39,8 +39,6 @@ import org.mifos.dto.screen.ClosedAccountDto;
 import org.mifos.framework.struts.action.SearchAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,13 +46,6 @@ import org.slf4j.LoggerFactory;
 public class CustAction extends SearchAction {
 
     private static final Logger logger = LoggerFactory.getLogger(CustAction.class);
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("custAction");
-        security.allow("getClosedAccounts", SecurityConstants.VIEW);
-        security.allow("getBackToDetailsPage", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(joinToken = true)
     public ActionForward getClosedAccounts(ActionMapping mapping, ActionForm form, HttpServletRequest request,

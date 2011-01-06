@@ -87,8 +87,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.MifosServiceFactory;
 import org.slf4j.Logger;
@@ -113,27 +111,6 @@ public class LoanPrdAction extends BaseAction {
     @Override
     protected BusinessService getService() {
         return DependencyInjectedServiceLocator.locateLoanBusinessService();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("loanproductaction");
-        security.allow("load", SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("cancelCreate", SecurityConstants.VIEW);
-        security.allow("validate", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.DEFINE_NEW_LOAN_PRODUCT_INSTANCE);
-        security.allow("viewAllLoanProducts", SecurityConstants.VIEW);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("editPreview", SecurityConstants.VIEW);
-        security.allow("editPrevious", SecurityConstants.VIEW);
-        security.allow("editCancel", SecurityConstants.VIEW);
-        security.allow("manage", SecurityConstants.EDIT_LOAN_PRODUCT);
-        security.allow("update", SecurityConstants.EDIT_LOAN_PRODUCT);
-        security.allow("update", SecurityConstants.EDIT_LOAN_PRODUCT);
-        security.allow("loadChangeLog", SecurityConstants.VIEW);
-        security.allow("cancelChangeLog", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(saveToken = true)

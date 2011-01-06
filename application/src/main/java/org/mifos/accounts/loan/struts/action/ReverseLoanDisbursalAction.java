@@ -39,25 +39,12 @@ import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ReverseLoanDisbursalAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(ReverseLoanDisbursalAction.class);
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("reverseloandisbaction");
-        security.allow("search", SecurityConstants.CAN_REVERSE_LOAN_DISBURSAL);
-        security.allow("load", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.VIEW);
-        security.allow("cancel", SecurityConstants.VIEW);
-        security.allow("validate", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward search(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,

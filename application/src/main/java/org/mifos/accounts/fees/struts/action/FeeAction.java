@@ -44,30 +44,10 @@ import org.mifos.dto.screen.FeeParameters;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class FeeAction extends BaseAction {
 
     public FeeAction() throws Exception {
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("feeaction");
-        security.allow("search", SecurityConstants.VIEW);
-        security.allow("load", SecurityConstants.FEES_CREATE_FEES);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("editPreview", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.FEES_CREATE_FEES);
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("manage", SecurityConstants.FEES_EDIT_FEES);
-        security.allow("update", SecurityConstants.FEES_EDIT_FEES);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("editPrevious", SecurityConstants.VIEW);
-        security.allow("viewAll", SecurityConstants.VIEW);
-        security.allow("cancelCreate", SecurityConstants.VIEW);
-        security.allow("cancelEdit", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(saveToken = true)

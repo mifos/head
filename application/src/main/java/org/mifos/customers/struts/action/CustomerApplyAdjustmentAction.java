@@ -36,22 +36,11 @@ import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.service.BusinessRuleException;
 
 public class CustomerApplyAdjustmentAction extends BaseAction {
 
     public CustomerApplyAdjustmentAction() {
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("custApplyAdjustment");
-        security.allow("loadAdjustment", SecurityConstants.VIEW);
-        security.allow("previewAdjustment", SecurityConstants.VIEW);
-        security.allow("applyAdjustment", SecurityConstants.VIEW);
-        security.allow("cancelAdjustment", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(joinToken = true)

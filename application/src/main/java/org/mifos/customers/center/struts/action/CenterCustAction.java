@@ -70,8 +70,6 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -82,32 +80,6 @@ public class CenterCustAction extends CustAction {
     private QuestionnaireFlowAdapter createCenterQuestionnaire = new QuestionnaireFlowAdapter("Create", "Center",
             ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator
         );
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("centerCustAction");
-        security.allow("chooseOffice", SecurityConstants.CENTER_CREATE_NEW_CENTER);
-        security.allow("load", SecurityConstants.CENTER_CREATE_NEW_CENTER);
-        security.allow("loadMeeting", SecurityConstants.MEETING_CREATE_CENTER_MEETING);
-        security.allow("previous", SecurityConstants.VIEW);
-        security.allow("preview", SecurityConstants.VIEW);
-        security.allow("create", SecurityConstants.CENTER_CREATE_NEW_CENTER);
-        security.allow("manage", SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
-        security.allow("editPrevious", SecurityConstants.VIEW);
-        security.allow("editPreview", SecurityConstants.VIEW);
-        security.allow("update", SecurityConstants.CENTER_MODIFY_CENTER_INFORMATION_AND_CHANGE_CENTER_STATUS);
-
-        security.allow("get", SecurityConstants.VIEW);
-        security.allow("loadSearch", SecurityConstants.VIEW);
-        security.allow("search", SecurityConstants.VIEW);
-        security.allow("loadChangeLog", SecurityConstants.VIEW);
-        security.allow("cancelChangeLog", SecurityConstants.VIEW);
-
-        security.allow("loadTransferSearch", SecurityConstants.VIEW);
-        security.allow("searchTransfer", SecurityConstants.VIEW);
-        security.allow("captureQuestionResponses", SecurityConstants.VIEW);
-        security.allow("editQuestionResponses", SecurityConstants.VIEW);
-        return security;
-    }
 
     @TransactionDemarcate(saveToken = true)
     public ActionForward chooseOffice(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,

@@ -39,19 +39,11 @@ import org.mifos.dto.screen.CustomerRecentActivityDto;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.security.util.ActionSecurity;
-import org.mifos.security.util.SecurityConstants;
 
 public class CustomerAccountAction extends AccountAppAction {
 
     public CustomerAccountAction() throws Exception {
         super();
-    }
-
-    public static ActionSecurity getSecurity() {
-        ActionSecurity security = new ActionSecurity("customerAccountAction");
-        security.allow("load", SecurityConstants.VIEW);
-        return security;
     }
 
     @TransactionDemarcate(saveToken = true)
