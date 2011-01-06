@@ -196,6 +196,9 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
+        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
+        userContext.setBranchGlobalNum(userOffice.getGlobalOfficeNum());
+
         GroupBO group;
 
         try {

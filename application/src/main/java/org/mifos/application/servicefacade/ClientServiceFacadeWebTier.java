@@ -40,7 +40,6 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
-import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ProcessFlowRules;
@@ -303,6 +302,9 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
 
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
+
+        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
+        userContext.setBranchGlobalNum(userOffice.getGlobalOfficeNum());
 
         try {
 

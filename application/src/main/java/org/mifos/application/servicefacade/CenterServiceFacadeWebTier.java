@@ -174,6 +174,9 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
         MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserContext userContext = toUserContext(user);
 
+        OfficeBO userOffice = this.officeDao.findOfficeById(userContext.getBranchId());
+        userContext.setBranchGlobalNum(userOffice.getGlobalOfficeNum());
+
         String centerName = createCenterDetail.getDisplayName();
         String externalId = createCenterDetail.getExternalId();
         AddressDto addressDto = createCenterDetail.getAddressDto();
