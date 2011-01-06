@@ -177,12 +177,6 @@ while(enn.hasMoreElements()){
 								<a href="defineMandatoryHiddenFields.ftl" id="admin.link.defineHiddenMandatoryFields"><mifos:mifoslabel name="admin.definehiddenmandfields" /></a>
 								</td>
 							</tr>
-							<tr class="fontnormal">
-								<td width="3%"><img src="pages/framework/images/bullet_circle.gif" width="9" height="11"></td>
-								<td width="97%"><html-el:link styleId="admin.link.viewAdditionalFields"
-								action="customFieldsAction.do?method=load&randomNUm=${sessionScope.randomNUm}">
-								<mifos:mifoslabel name="admin.view_additional_fields" /></html-el:link></td>
-							</tr>
 						</table>
 
 					<!-- spacer -->

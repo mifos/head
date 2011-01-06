@@ -25,14 +25,11 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
 
@@ -103,16 +100,4 @@ public class ApplicationConfigurationPersistence extends Persistence {
 
         return locales;
     }
-
-    public void addCustomField(CustomFieldDefinitionEntity customField) throws PersistenceException {
-        MasterPersistence masterPersistence = new MasterPersistence();
-        masterPersistence.addLookUpEntity(customField.getLookUpEntity());
-        createOrUpdate(customField);
-    }
-
-    public void updateCustomField(CustomFieldDefinitionEntity customField) throws PersistenceException {
-        createOrUpdate(customField);
-        createOrUpdate(customField.getLookUpEntity());
-    }
-
 }

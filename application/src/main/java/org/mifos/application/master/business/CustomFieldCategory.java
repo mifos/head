@@ -52,6 +52,10 @@ import org.mifos.customers.personnel.business.PersonnelCustomFieldEntity;
  *
  * {@link OfficeCustomFieldEntity} in {@link OfficeBO}
  */
+/**
+ * remove when tag library for CustomFieldTagList is removed from jsps/web.xml
+ */
+@Deprecated
 public enum CustomFieldCategory {
     Personnel(17), Office(15), Client(1), Group(12), Center(20), Loan(22), Savings(21);
 

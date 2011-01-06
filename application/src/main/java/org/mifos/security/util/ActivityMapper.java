@@ -20,6 +20,12 @@
 
 package org.mifos.security.util;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.mifos.accounts.fees.struts.action.FeeAction;
 import org.mifos.accounts.loan.struts.action.AccountStatusAction;
 import org.mifos.accounts.loan.struts.action.LoanAccountAction;
@@ -47,8 +53,8 @@ import org.mifos.application.holiday.struts.action.HolidayAction;
 import org.mifos.application.importexport.struts.action.ImportTransactionsAction;
 import org.mifos.application.meeting.struts.action.MeetingAction;
 import org.mifos.application.questionnaire.migration.struts.action.MigrateAction;
-import org.mifos.config.struts.action.CustomFieldsAction;
 import org.mifos.config.struts.action.LookupOptionsAction;
+import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.center.struts.action.CenterCustAction;
 import org.mifos.customers.checklist.struts.action.ChkListAction;
 import org.mifos.customers.client.struts.action.ClientCustAction;
@@ -73,7 +79,6 @@ import org.mifos.customers.surveys.struts.action.QuestionsAction;
 import org.mifos.customers.surveys.struts.action.SurveyInstanceAction;
 import org.mifos.customers.surveys.struts.action.SurveysAction;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.reports.admindocuments.struts.action.BirtAdminDocumentUploadAction;
 import org.mifos.reports.struts.action.BirtReportsUploadAction;
 import org.mifos.reports.struts.action.ReportsAction;
@@ -86,12 +91,6 @@ import org.mifos.reports.struts.action.ReportsUserParamsAction;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.login.struts.action.LoginAction;
 import org.mifos.security.rolesandpermission.struts.action.RolesPermissionsAction;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Singleton.
@@ -232,7 +231,6 @@ public class ActivityMapper {
         parseActionSecurity(SurveyInstanceAction.getSecurity());
         parseActionSecurity(BirtReportsUploadAction.getSecurity());
         parseActionSecurity(LookupOptionsAction.getSecurity());
-        parseActionSecurity(CustomFieldsAction.getSecurity());
         parseActionSecurity(PPIAction.getSecurity());
         parseActionSecurity(ReportsCategoryAction.getSecurity());
         parseActionSecurity(BirtAdminDocumentUploadAction.getSecurity());

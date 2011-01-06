@@ -438,8 +438,6 @@ public interface SecurityConstants {
 
     short DOWNLOAD_REPORT_TEMPLATE = 223;
 
-    short CAN_DEFINE_CUSTOM_FIELD = 224;
-
     short CAN_UPLOAD_ADMIN_DOCUMENTS = 225;
 
     /**
