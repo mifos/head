@@ -472,11 +472,16 @@ public abstract class BaseAction extends DispatchAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward loadChangeLog(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
+
         Short entityType = EntityType.getEntityValue(request.getParameter(AuditConstants.ENTITY_TYPE).toUpperCase());
         Integer entityId = Integer.valueOf(request.getParameter(AuditConstants.ENTITY_ID));
+
+        // FIXME - keithw - when replacing BaseActions loadChangeLog functionality for given entity when doing spring/ftl
+        // see CenterServiceFacade.retrieveChangeLogs for example.
         AuditBusinessService auditBusinessService = new AuditBusinessService();
         request.getSession().setAttribute(AuditConstants.AUDITLOGRECORDS,
                 auditBusinessService.getAuditLogRecords(entityType, entityId));
+
         return mapping.findForward(AuditConstants.VIEW + request.getParameter(AuditConstants.ENTITY_TYPE)
                 + AuditConstants.CHANGE_LOG);
     }
