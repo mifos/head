@@ -61,7 +61,7 @@ public class ServerLauncher {
 	}
 
 	public ServerLauncher(int httpPort) {
-		this(8080, "mifos");
+		this(httpPort, "mifos");
 	}
 
 	public ServerLauncher(int httpPort, String urlContext) {
