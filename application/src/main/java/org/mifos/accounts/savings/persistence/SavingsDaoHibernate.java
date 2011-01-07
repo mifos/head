@@ -238,11 +238,12 @@ public class SavingsDaoHibernate implements SavingsDao {
 
     @Override
     public SavingsBO findById(Long savingsId) {
+        return findById(savingsId.intValue());
+    }
 
-        final Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put("ACCOUNT_ID", savingsId.intValue());
-
-        return (SavingsBO) this.baseDao.executeUniqueResultNamedQuery("savings.findById", queryParameters);
+    @Override
+    public SavingsBO findById(Integer savingsId) {
+        return (SavingsBO) this.baseDao.getSession().get(SavingsBO.class, savingsId);
     }
 
     @Override

@@ -39,6 +39,8 @@ public interface SavingsDao {
 
     SavingsBO findById(Long savingsId);
 
+    SavingsBO findById(Integer savingsId);
+
     void save(SavingsBO savingsAccount);
 
     List<CollectionSheetCustomerSavingDto> findAllMandatorySavingAccountsForClientsOrGroupsWithCompleteGroupStatusForCustomerHierarchy(

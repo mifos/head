@@ -93,6 +93,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.MoneyUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
@@ -109,6 +110,9 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private final AccountPersistence accountPersistence = new AccountPersistence();
     private MifosCurrency currency = null;
     private PersonnelBO createdBy = null;
+
+    @Autowired
+    private SavingsDao savingsDao;
 
     private Money getRoundedMoney(final Double value) {
         return MoneyUtils.currencyRound(new Money(TestUtils.RUPEE, value.toString()));
@@ -285,13 +289,13 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         // which is what this test is all about testing.
         client1 = TestObjectFactory.createClient("client1", CustomerStatus.CLIENT_ACTIVE, group);
 
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         group = savings.getCustomer();
         center = group.getParentCustomer();
         Assert.assertEquals(10, savings.getAccountActionDates().size());
 
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         client1 = IntegrationTestObjectMother.findCustomerById(client1.getCustomerId());
         group = savings.getCustomer();
         center = group.getParentCustomer();
@@ -412,7 +416,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
         StaticHibernateUtil.getSessionTL().clear();
 
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         Money enteredAmount = new Money(currency, "100.0");
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(),
                 Short.valueOf("1"), new Date(System.currentTimeMillis()));
@@ -422,7 +426,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         paymentData.addAccountPaymentData(getSavingsPaymentdata(null));
         IntegrationTestObjectMother.applyAccountPayment(savings, paymentData);
 
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
 
         Assert.assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
         Assert.assertEquals(TestUtils.createMoney(100.0), savings.getSavingsBalance());
@@ -587,7 +591,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings.update();
         StaticHibernateUtil.flushAndClearSession();
 
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         Assert.assertEquals(1, savings.getRecentAccountActivity(3).size());
         for (SavingsRecentActivityDto view : savings.getRecentAccountActivity(3)) {
@@ -833,7 +837,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testGetTotalPaymentDueForVol() throws Exception {
         createObjectToCheckForTotalInstallmentDue(SavingsType.VOLUNTARY);
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         Money recommendedAmnt = new Money(currency, "500.0");
         Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
         Assert.assertEquals(recommendedAmnt, paymentDue);
@@ -845,7 +849,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGetTotalInstallmentDueForVol() throws Exception {
         createObjectToCheckForTotalInstallmentDue(SavingsType.VOLUNTARY);
         StaticHibernateUtil.flushAndClearSession();
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue(group.getCustomerId());
         Assert.assertEquals(1, dueInstallment.size());
         Assert.assertEquals(Short.valueOf("2"), dueInstallment.get(0).getInstallmentId());
@@ -857,7 +861,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGetTotalPaymentDueForMan() throws Exception {
         createObjectToCheckForTotalInstallmentDue(SavingsType.MANDATORY);
         StaticHibernateUtil.flushAndClearSession();
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         Money amount = new Money(currency, "1000.0");
         Money paymentDue = savings.getTotalPaymentDue(group.getCustomerId());
         Assert.assertEquals(amount, paymentDue);
@@ -869,7 +873,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     public void testGetTotalInstallmentDueForMan() throws Exception {
         createObjectToCheckForTotalInstallmentDue(SavingsType.MANDATORY);
         StaticHibernateUtil.flushAndClearSession();
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         List<AccountActionDateEntity> dueInstallment = savings.getTotalInstallmentsDue(group.getCustomerId());
         Assert.assertEquals(2, dueInstallment.size());
         group = savings.getCustomer();
@@ -918,7 +922,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         addNotes("note5");
         StaticHibernateUtil.flushAndClearSession();
 
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         List<AccountNotesEntity> notes = savings.getRecentAccountNotes();
 
         Assert.assertEquals("Size of recent notes is 3", 3, notes.size());
