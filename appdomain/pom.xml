@@ -39,6 +39,10 @@
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
+            <artifactId>mifos-accounting</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
             <artifactId>mifos-serviceInterfaces</artifactId>
         </dependency>
         <dependency>
@@ -52,10 +56,6 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-cashflow</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mifos</groupId>
-            <artifactId>mifos-common</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -315,17 +315,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-all</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>struts</groupId>
@@ -468,11 +465,13 @@
                     <target>1.6</target>
                 </configuration>
             </plugin>
+            
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4.3</version>
+                <version>2.5</version>
                 <configuration>
+                    <testNGArtifactName>null</testNGArtifactName>
                     <printSummary>true</printSummary>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
                     <includes>
@@ -481,66 +480,81 @@
                     <!-- Exclude integration test classes    -->
                     <excludes>
                         <exclude>**/*IntegrationTest.java</exclude>
+                        <exclude>**/*StrutsTest.java</exclude>
                     </excludes>
                     <reportsDirectory>${project.build.directory}/surefire-reports/unit</reportsDirectory>
                 </configuration>
+            </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.4.3</version>
+                <configuration>
+                    <linkXRef>false</linkXRef>
+                    <outputDirectory>${project.build.directory}/surefire-reports</outputDirectory>
+                    <reportsDirectories>
+                        <reportsDirectories>${project.build.directory}/surefire-reports/unit</reportsDirectories>
+                        <reportsDirectories>${project.build.directory}/surefire-reports/integration/no_db_commits</reportsDirectories>
+                        <reportsDirectories>${project.build.directory}/surefire-reports/integration/dataupgrade</reportsDirectories>
+                    </reportsDirectories>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>integration-test</id>
                         <phase>integration-test</phase>
                         <goals>
-                            <goal>test</goal>
+                            <goal>report-only</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            
+            <!-- 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.1.1-mifos-mexec-68-patch</version>
+                <executions>
+                    <execution>
+                        <id>create_props</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <printSummary>true</printSummary>
-                            <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                            <!-- override exclude integration test classes    -->
-                            <excludes>
-                                <exclude>none</exclude>
-                            </excludes>
-                            <includes>
-                                <include>**/*IntegrationTest.java</include>
-                            </includes>
-                            <systemProperties>
-                                <mifos.mode>integration</mifos.mode>
-                            </systemProperties>
-                            <argLine>${maven.surefire.memory}</argLine>
-                            <reportsDirectory>${project.build.directory}/surefire-reports/integration</reportsDirectory>
+                            <executable>${basedir}/src/main/resources/org/mifos/config/localizedResources/create_props.sh</executable>
+                            <workingDirectory>${java.io.tmpdir}</workingDirectory>
+                            <outputFile>${basedir}/target/create_props.out</outputFile>
+                            <arguments>
+                                <argument>${basedir}/src/main/resources/org/mifos/config/localizedResources</argument>
+                                <argument>${basedir}/target/mifos-webapp/WEB-INF/classes/org/mifos/config/localizedResources</argument>
+                            </arguments>
+                            <skip>${create.props.skip}</skip>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
+            -->
+            <!-- 
+            <plugin>
+                <groupId>org.mifos.maven</groupId>
+                <artifactId>mifos-settings-sanitizer</artifactId>
+                <version>0.0.1</version>
+                <executions>
+                    <execution>
+                        <id>create_sanitized_application_settings_file</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>sanitize</goal>
+                        </goals>
+                        <configuration>
+                            <inputFile>src/main/resources/org/mifos/config/resources/applicationConfiguration.default.properties</inputFile>
+                            <outputFile>target/applicationConfiguration.custom.properties</outputFile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <linkXref>true</linkXref>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <targetJdk>1.6</targetJdk>
-                    <includeTests>true</includeTests>
-                    <rulesets>
-                        <ruleset>${modules.root.dir}/.ruleset</ruleset>
-                    </rulesets>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jdepend-maven-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </reporting>
-
 </project>

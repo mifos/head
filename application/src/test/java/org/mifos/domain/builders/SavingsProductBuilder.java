@@ -17,18 +17,21 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.accounts.productdefinition.business;
+package org.mifos.domain.builders;
 
 import java.util.Date;
 
 import org.joda.time.DateTime;
 import org.mifos.accounts.financial.business.GLCodeEntity;
+import org.mifos.accounts.productdefinition.business.PrdOfferingMeetingEntity;
+import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
+import org.mifos.accounts.productdefinition.business.ProductCategoryBO;
+import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
 import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.framework.TestUtils;

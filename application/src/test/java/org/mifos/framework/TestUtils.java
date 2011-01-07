@@ -52,7 +52,6 @@ import org.mifos.customers.business.CustomerScheduleEntity;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
@@ -67,6 +66,8 @@ public class TestUtils {
      * database.
      */
     public static final int DUMMY_ROLE = 2;
+    private static final Short TEST_LOCALE = 1;
+    private static final Short HEAD_OFFICE = 1;
 
     public static UserContext makeUser() {
         return makeUser(RolesAndPermissionConstants.ADMIN_ROLE);
@@ -79,10 +80,10 @@ public class TestUtils {
      */
     public static UserContext makeUserWithLocales() {
         UserContext user = makeUser(RolesAndPermissionConstants.ADMIN_ROLE, ukLocale());
-        user.setLocaleId(TestObjectFactory.TEST_LOCALE);
+        user.setLocaleId(TEST_LOCALE);
 
         user.setMfiLocale(ukLocale());
-        user.setMfiLocaleId(TestObjectFactory.TEST_LOCALE);
+        user.setMfiLocaleId(TEST_LOCALE);
         return user;
     }
 
@@ -97,14 +98,14 @@ public class TestUtils {
     public static UserContext makeUser(int role, Locale locale) {
         UserContext user = new UserContext(Locale.getDefault(), Short.valueOf("1"));
         user.setId(PersonnelConstants.SYSTEM_USER);
-        user.setLocaleId(TestObjectFactory.TEST_LOCALE);
+        user.setLocaleId(TEST_LOCALE);
         Set<Short> set = new HashSet<Short>();
         set.add((short) role);
         user.setRoles(set);
         user.setLevel(PersonnelLevel.NON_LOAN_OFFICER);
         user.setName("mifos");
         user.setPreferredLocale(locale);
-        user.setBranchId(TestObjectFactory.HEAD_OFFICE);
+        user.setBranchId(HEAD_OFFICE);
         user.setBranchGlobalNum("0001");
         return user;
     }
@@ -334,6 +335,7 @@ public class TestUtils {
 
     public static void dereferenceObjects(final Object testCase) {
         ReflectionUtils.doWithFields(testCase.getClass(), new ReflectionUtils.FieldCallback() {
+            @SuppressWarnings("cast")
             @Override
             public void doWith(Field field) throws IllegalArgumentException, IllegalAccessException {
                 field.setAccessible(true);

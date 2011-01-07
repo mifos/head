@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.collectionsheet.persistence;
+package org.mifos.domain.builders;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +29,6 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
-import org.mifos.domain.builders.CalendarEventBuilder;
 import org.mifos.framework.TestUtils;
 
 /**

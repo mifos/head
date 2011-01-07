@@ -12,8 +12,8 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanProductBuilder;
 import org.mifos.accounts.productdefinition.business.QuestionGroupReference;
+import org.mifos.domain.builders.LoanProductBuilder;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
 
 public class QuestionGroupFilterForLoanTest {

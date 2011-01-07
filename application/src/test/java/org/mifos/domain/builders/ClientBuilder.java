@@ -17,7 +17,7 @@
  * See also http://www.apache.org/licenses/LICENSE-2.0.html for an
  * explanation of the license and how it is applied.
  */
-package org.mifos.application.collectionsheet.persistence;
+package org.mifos.domain.builders;
 
 import java.sql.Blob;
 import java.util.ArrayList;

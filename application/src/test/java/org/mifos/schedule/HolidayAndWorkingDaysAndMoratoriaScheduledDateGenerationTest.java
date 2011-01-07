@@ -33,11 +33,11 @@ import org.joda.time.DateTimeConstants;
 import org.joda.time.Days;
 import org.junit.Before;
 import org.junit.Test;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.domain.builders.HolidayBuilder;
+import org.mifos.domain.builders.MeetingBuilder;
 import org.mifos.domain.builders.ScheduledEventBuilder;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 

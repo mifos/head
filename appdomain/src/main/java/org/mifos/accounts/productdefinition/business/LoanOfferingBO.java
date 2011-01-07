@@ -249,7 +249,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
+     * @deprecated
+     * use LoanProductBuilder to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
@@ -268,7 +269,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
+     * @deprecated use LoanProductBuilder to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
@@ -290,7 +291,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
+     * @deprecated use LoanProductBuilder to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     public LoanOfferingBO(final UserContext userContext, final String prdOfferingName,
@@ -451,7 +452,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
     }
 
     /**
-     * @deprecated use {@link LoanProductBuilder} to construct legal {@link LoanOfferingBO}'s for tests.
+     * @deprecated use LoanProductBuilder to construct legal {@link LoanOfferingBO}'s for tests.
      */
     @Deprecated
     public static LoanOfferingBO createInstanceForTest(final Short prdOfferingId) {
@@ -550,7 +551,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         return interestGLcode;
     }
 
-    void setGracePeriodType(final GracePeriodTypeEntity gracePeriodType) {
+    public void setGracePeriodType(final GracePeriodTypeEntity gracePeriodType) {
         this.gracePeriodType = gracePeriodType;
     }
 
@@ -626,7 +627,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
         }
     }
 
-    void setLoanOfferingMeeting(final PrdOfferingMeetingEntity prdOfferingMeeting) {
+    public void setLoanOfferingMeeting(final PrdOfferingMeetingEntity prdOfferingMeeting) {
         this.loanOfferingMeeting = prdOfferingMeeting;
     }
 

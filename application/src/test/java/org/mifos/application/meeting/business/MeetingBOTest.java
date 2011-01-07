@@ -27,12 +27,12 @@ import static org.mockito.Mockito.when;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.domain.builders.MeetingBuilder;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 

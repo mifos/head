@@ -35,7 +35,6 @@ import java.util.Set;
 
 import org.joda.time.DateTime;
 import org.junit.*;
-import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.application.master.business.MifosCurrency;
@@ -43,6 +42,7 @@ import org.mifos.config.Localization;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.domain.builders.HolidayBuilder;
+import org.mifos.domain.builders.OfficeBuilder;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;

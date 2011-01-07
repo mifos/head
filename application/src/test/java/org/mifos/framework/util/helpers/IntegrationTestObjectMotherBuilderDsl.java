@@ -20,14 +20,14 @@
 
 package org.mifos.framework.util.helpers;
 
-import org.mifos.application.collectionsheet.persistence.CenterBuilder;
-import org.mifos.application.collectionsheet.persistence.GroupBuilder;
-import org.mifos.application.collectionsheet.persistence.MeetingBuilder;
-import org.mifos.application.collectionsheet.persistence.OfficeBuilder;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.domain.builders.CenterBuilder;
+import org.mifos.domain.builders.GroupBuilder;
+import org.mifos.domain.builders.MeetingBuilder;
+import org.mifos.domain.builders.OfficeBuilder;
 import org.mifos.framework.TestUtils;
 import org.mifos.security.util.UserContext;
 

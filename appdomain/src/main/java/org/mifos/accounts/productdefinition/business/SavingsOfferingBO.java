@@ -253,7 +253,7 @@ public class SavingsOfferingBO extends PrdOfferingBO {
         return recommendedAmount;
     }
 
-    void setRecommendedAmount(final Money recommendedAmount) {
+    public void setRecommendedAmount(final Money recommendedAmount) {
         this.recommendedAmount = recommendedAmount;
     }
 
