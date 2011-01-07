@@ -20,17 +20,12 @@
 
 package org.mifos.accounts.struts.action;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.servicefacade.AccountPaymentDto;
+import org.mifos.accounts.servicefacade.AccountServiceFacade;
 import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -44,14 +39,17 @@ import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.PaymentTypeDto;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.struts.action.BaseAction;
-import org.mifos.framework.util.helpers.CloseSession;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 public class AccountApplyPaymentAction extends BaseAction {
 
@@ -65,10 +63,16 @@ public class AccountApplyPaymentAction extends BaseAction {
         feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }
 
+    @Deprecated
+    //For unit testing
+    public AccountApplyPaymentAction(AccountServiceFacade accountServiceFacade) {
+        this.accountServiceFacade = accountServiceFacade;
+    }
+
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
-        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        UserContext userContext = getUserContext(request);
         AccountApplyPaymentActionForm actionForm = (AccountApplyPaymentActionForm) form;
         actionForm.setReceiptDate(null);
         actionForm.setReceiptId(null);
@@ -80,14 +84,17 @@ public class AccountApplyPaymentAction extends BaseAction {
                 accountReferenceDto.getAccountId(), request.getParameter(Constants.INPUT), userContext.getLocaleId(),
                 new UserReferenceDto(userContext.getId()), DateUtils.getCurrentJavaDateTime());
 
+        setValuesInSession(request, actionForm, accountPaymentDto);
+        actionForm.setLastPaymentDate(accountPaymentDto.getLastPaymentDate());
+        actionForm.setAmount(accountPaymentDto.getTotalPaymentDue());
+        return mapping.findForward(ActionForwards.load_success.toString());
+    }
+
+    void setValuesInSession(HttpServletRequest request, AccountApplyPaymentActionForm actionForm, AccountPaymentDto accountPaymentDto) throws PageExpiredException {
         SessionUtils.setAttribute(Constants.ACCOUNT_VERSION, accountPaymentDto.getVersion(), request);
         SessionUtils.setAttribute(Constants.ACCOUNT_TYPE, accountPaymentDto.getAccountType().name(), request);
         SessionUtils.setAttribute(Constants.ACCOUNT_ID, Integer.valueOf(actionForm.getAccountId()), request);
-
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, accountPaymentDto.getPaymentTypeList(), request);
-
-        actionForm.setAmount(accountPaymentDto.getTotalPaymentDue());
-        return mapping.findForward(ActionForwards.load_success.toString());
     }
 
     @TransactionDemarcate(joinToken = true)

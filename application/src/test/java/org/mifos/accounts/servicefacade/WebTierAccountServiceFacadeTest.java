@@ -28,10 +28,12 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
@@ -85,9 +87,34 @@ public class WebTierAccountServiceFacadeTest {
         when(accountTypeEntity.getAccountTypeId()).thenReturn((short)1);
         when(loanBO.getAccountType()).thenReturn(accountTypeEntity);
         when(loanBO.getTotalPaymentDue()).thenReturn(Money.zero(rupee));
+        Date lastPaymentDate = TestUtils.getDate(12, 12, 2012);
+        when(loanBO.getLastPmnt()).thenReturn(new AccountPaymentEntity(null, null, null, null, null, lastPaymentDate));
         Short transactionId = Short.valueOf("2");
         when(acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId)).thenReturn(EMPTY_LIST);
-        accountServiceFacade.getAccountPaymentInformation(LOAN_ID, Constants.LOAN, (short) 1, null, paymentDate);
+        AccountPaymentDto accountPaymentInformation = accountServiceFacade.getAccountPaymentInformation(LOAN_ID, Constants.LOAN, (short) 1, null, paymentDate);
+        Assert.assertEquals(lastPaymentDate, accountPaymentInformation.getLastPaymentDate());
+        verify(loanBO).getLastPmnt();
+        verify(scheduleCalculatorAdaptor, times(1)).computeExtraInterest(loanBO, paymentDate);
+        verify(accountBusinessService, times(1)).getAccount(LOAN_ID);
+        verify(accountTypeEntity, times(1)).getAccountTypeId();
+        verify(loanBO, times(1)).getAccountType();
+        verify(loanBO, times(1)).getTotalPaymentDue();
+        verify(acceptedPaymentTypePersistence, times(1)).getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId);
+    }
+    
+    @Test
+    public void testGetAccountPaymentInformationWhenPreviousPaymentsDoNotExist() throws ServiceException, PersistenceException {
+        Date paymentDate = TestUtils.getDate(12, 12, 2012);
+        when(accountBusinessService.getAccount(LOAN_ID)).thenReturn(loanBO);
+        when(accountTypeEntity.getAccountTypeId()).thenReturn((short)1);
+        when(loanBO.getAccountType()).thenReturn(accountTypeEntity);
+        when(loanBO.getTotalPaymentDue()).thenReturn(Money.zero(rupee));
+        when(loanBO.getLastPmnt()).thenReturn(null);
+        Short transactionId = Short.valueOf("2");
+        when(acceptedPaymentTypePersistence.getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId)).thenReturn(EMPTY_LIST);
+        AccountPaymentDto accountPaymentInformation = accountServiceFacade.getAccountPaymentInformation(LOAN_ID, Constants.LOAN, (short) 1, null, paymentDate);
+        Assert.assertEquals(new Date(0), accountPaymentInformation.getLastPaymentDate());
+        verify(loanBO).getLastPmnt();
         verify(scheduleCalculatorAdaptor, times(1)).computeExtraInterest(loanBO, paymentDate);
         verify(accountBusinessService, times(1)).getAccount(LOAN_ID);
         verify(accountTypeEntity, times(1)).getAccountTypeId();

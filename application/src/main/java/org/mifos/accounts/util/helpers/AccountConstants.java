@@ -205,4 +205,5 @@ public interface AccountConstants {
     String REPAYMENT_CAPACITY_LESS_THAN_ALLOWED = "errors.repayment.capacity.less.than.allowed";
 
     String NO_COMMENT = "";
+    String ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT = "errors.payment.date.before.last.payment";
 }

@@ -49,6 +49,9 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 
+import static org.mifos.framework.util.helpers.DateUtils.dateFallsBeforeDate;
+import static org.mifos.framework.util.helpers.DateUtils.getDateAsSentFromBrowser;
+
 public class AccountApplyPaymentActionForm extends BaseActionForm {
     private String input;
 
@@ -85,6 +88,8 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
 
     private boolean amountCannotBeZero = true;
 
+    private java.util.Date lastPaymentDate;
+
     public boolean amountCannotBeZero() {
         return this.amountCannotBeZero;
     }
@@ -117,34 +122,16 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     public ActionErrors validate(ActionMapping mapping, HttpServletRequest request) {
         String methodCalled = request.getParameter(MethodNameConstants.METHOD);
         ActionErrors errors = new ActionErrors();
-        ResourceBundle resources = ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
-                getUserLocale(request));
+        Locale userLocale = getUserLocale(request);
+        ResourceBundle resources = getResourceBundle(userLocale);
 
         if (methodCalled != null && methodCalled.equals("preview")) {
-            ActionErrors errors2 = validateDate(getTransactionDate(), resources.getString("accounts.date_of_trxn"),
-                    request);
-
-            if (null != errors2 && !errors2.isEmpty()) {
-                errors.add(errors2);
-            }
-            if (StringUtils.isEmpty(getPaymentTypeId())) {
-                errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                        resources.getString("accounts.mode_of_payment")));
-            }
-            if (getReceiptDate() != null && !getReceiptDate().equals("")) {
-                errors2 = validateDate(getReceiptDate(), resources.getString("accounts.receiptdate"), request);
-                if (null != errors2 && !errors2.isEmpty()) {
-                    errors.add(errors2);
-                }
-            }
+            validateTransactionDate(errors, resources);
+            validatePaymentType(errors, resources);
+            validateReceiptDate(errors, resources);
             String accountType = (String) request.getSession().getAttribute(Constants.ACCOUNT_TYPE);
-            if (accountType != null && accountType.equals(AccountTypeDto.LOAN_ACCOUNT.name())) {
-                if (getAmount() == null || getAmount().equals("")) {
-                    errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
-                            resources.getString("accounts.amt")));
-                }
-            }
-            validateAmount(errors,getUserLocale(request));
+            validateAccountType(errors, resources, accountType);
+            validateAmount(errors, userLocale);
         }
         if (!errors.isEmpty()) {
             request.setAttribute(Globals.ERROR_KEY, errors);
@@ -153,12 +140,71 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
         return errors;
     }
 
-    protected ActionErrors validateDate(String date, String fieldName, HttpServletRequest request) {
+    ResourceBundle getResourceBundle(Locale userLocale) {
+        return ResourceBundle.getBundle(FilePaths.ACCOUNTS_UI_RESOURCE_PROPERTYFILE,
+                userLocale);
+    }
+
+    private void validateAccountType(ActionErrors errors, ResourceBundle resources, String accountType) {
+        if (accountType != null && accountType.equals(AccountTypeDto.LOAN_ACCOUNT.name())) {
+            if (getAmount() == null || getAmount().equals("")) {
+                errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                        resources.getString("accounts.amt")));
+            }
+        }
+    }
+
+    private void validatePaymentType(ActionErrors errors, ResourceBundle resources) {
+        if (StringUtils.isEmpty(getPaymentTypeId())) {
+            errors.add(AccountConstants.ERROR_MANDATORY, new ActionMessage(AccountConstants.ERROR_MANDATORY,
+                    resources.getString("accounts.mode_of_payment")));
+        }
+    }
+
+    private void validateReceiptDate(ActionErrors errors, ResourceBundle resources) {
+        if (getReceiptDate() != null && !getReceiptDate().equals("")) {
+            ActionErrors validationErrors = validateDate(getReceiptDate(), resources.getString("accounts.receiptdate"));
+            if (null != validationErrors && !validationErrors.isEmpty()) {
+                errors.add(validationErrors);
+            }
+        }
+    }
+
+    private void validateTransactionDate(ActionErrors errors, ResourceBundle resources) {
+        String fieldName = "accounts.date_of_trxn";
+        ActionErrors validationErrors = validateDate(getTransactionDate(), resources.getString(fieldName));
+        if (null != validationErrors && !validationErrors.isEmpty()) {
+            errors.add(validationErrors);
+        }
+        validationErrors = validatePaymentDate(getTransactionDate(), resources.getString(fieldName));
+        if (null != validationErrors && !validationErrors.isEmpty()) {
+            errors.add(validationErrors);
+        }
+    }
+    //exposed for testing
+    public ActionErrors validatePaymentDate(String transactionDate, String fieldName) {
+        ActionErrors errors = null;
+        try {
+            if (lastPaymentDate != null && dateFallsBeforeDate(getDateAsSentFromBrowser(transactionDate), lastPaymentDate)) {
+                errors = new ActionErrors();
+                errors.add(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+                        new ActionMessage(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT,
+                                fieldName));
+            }
+        } catch (InvalidDateException ide) {
+            errors = new ActionErrors();
+            errors.add(AccountConstants.ERROR_INVALIDDATE, new ActionMessage(AccountConstants.ERROR_INVALIDDATE,
+                    fieldName));
+        }
+        return errors;
+    }
+
+    protected ActionErrors validateDate(String date, String fieldName) {
         ActionErrors errors = null;
         java.sql.Date sqlDate = null;
         if (date != null && !date.equals("")) {
             try {
-                sqlDate = DateUtils.getDateAsSentFromBrowser(date);
+                sqlDate = getDateAsSentFromBrowser(date);
                 if (DateUtils.whichDirection(sqlDate) > 0) {
                     errors = new ActionErrors();
                     errors.add(AccountConstants.ERROR_FUTUREDATE, new ActionMessage(AccountConstants.ERROR_FUTUREDATE,
@@ -231,7 +277,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
             receiptDateYY = null;
         } else {
             Calendar cal = new GregorianCalendar();
-            java.sql.Date date = DateUtils.getDateAsSentFromBrowser(receiptDate);
+            java.sql.Date date = getDateAsSentFromBrowser(receiptDate);
             cal.setTime(date);
             receiptDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
             receiptDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
@@ -274,7 +320,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
             transactionDateYY = null;
         } else {
             Calendar cal = new GregorianCalendar();
-            java.sql.Date date = DateUtils.getDateAsSentFromBrowser(receiptDate);
+            java.sql.Date date = getDateAsSentFromBrowser(receiptDate);
             cal.setTime(date);
             transactionDateDD = Integer.toString(cal.get(Calendar.DAY_OF_MONTH));
             transactionDateMM = Integer.toString(cal.get(Calendar.MONTH) + 1);
@@ -370,7 +416,7 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public LocalDate getReceiptDateAsLocalDate() throws InvalidDateException {
-        Date receiptDateStr = DateUtils.getDateAsSentFromBrowser(getReceiptDate());
+        Date receiptDateStr = getDateAsSentFromBrowser(getReceiptDate());
         return (receiptDateStr != null) ? new LocalDate(receiptDateStr.getTime()) : null;
     }
 
@@ -379,6 +425,10 @@ public class AccountApplyPaymentActionForm extends BaseActionForm {
     }
 
     public Date getTrxnDate() throws InvalidDateException {
-        return DateUtils.getDateAsSentFromBrowser(getTransactionDate());
+        return getDateAsSentFromBrowser(getTransactionDate());
+    }
+
+    public void setLastPaymentDate(java.util.Date lastPaymentDate) {
+        this.lastPaymentDate = lastPaymentDate;
     }
 }

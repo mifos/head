@@ -425,15 +425,19 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
         groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
-        PaymentData paymentData = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
+        PaymentData paymentData1 = TestObjectFactory.getLoanAccountPaymentData(accntActionDates, TestUtils
                 .createMoney(212), null, groupLoan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate,
                 currentDate);
-        IntegrationTestObjectMother.applyAccountPayment(groupLoan, paymentData);
+        IntegrationTestObjectMother.applyAccountPayment(groupLoan, paymentData1);
+        StaticHibernateUtil.flushAndClearSession();
 
         LoanBO loan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
 
-        IntegrationTestObjectMother.applyAccountPayment(loan, TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
-                null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate, currentDate));
+        PaymentData paymentData2 = TestObjectFactory.getLoanAccountPaymentData(null, TestUtils.createMoney(600),
+                null, loan.getPersonnel(), "receiptNum", Short.valueOf("1"), currentDate, currentDate);
+        
+        IntegrationTestObjectMother.applyAccountPayment(loan, paymentData2);
+        StaticHibernateUtil.flushAndClearSession();
 
         groupLoan = (LoanBO) StaticHibernateUtil.getSessionTL().get(LoanBO.class, groupLoan.getAccountId());
         groupLoan.setUserContext(TestUtils.makeUser());

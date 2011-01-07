@@ -27,6 +27,7 @@ import java.util.List;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
@@ -95,13 +96,22 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             List<ListItem<Short>> paymentTypeList = constructPaymentTypeList(paymentType, localeId);
             AccountTypeDto accountType = AccountTypeDto.getAccountType(account.getAccountType().getAccountTypeId());
             String totalPaymentDue = account.getTotalPaymentDue().toString();
-
             clearSessionAndRollback();
 
-            return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, totalPaymentDue, accountUser);
+            return new AccountPaymentDto(accountType, account.getVersionNo(), paymentTypeList, totalPaymentDue,
+                    accountUser, getLastPaymentDate(account));
         } catch (ServiceException e) {
             throw new MifosRuntimeException(e);
         }
+    }
+
+    private Date getLastPaymentDate(AccountBO account) {
+        Date lastPaymentDate = new Date(0);
+        AccountPaymentEntity lastPayment = account.getLastPmnt();
+        if(lastPayment != null){
+            lastPaymentDate = lastPayment.getPaymentDate();
+        }
+        return lastPaymentDate;
     }
 
     // Exposed for testing

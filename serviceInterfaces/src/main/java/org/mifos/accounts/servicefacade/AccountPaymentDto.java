@@ -20,6 +20,7 @@
 
 package org.mifos.accounts.servicefacade;
 
+import java.util.Date;
 import java.util.List;
 
 import org.mifos.application.servicefacade.ListItem;
@@ -36,14 +37,16 @@ public class AccountPaymentDto {
     private final List<ListItem<Short>> paymentTypeList;
     private final String totalPaymentDue;
     private final UserReferenceDto userMakingPayment;
+    private final Date lastPaymentDate;
 
     public AccountPaymentDto(AccountTypeDto accountType, int version, List<ListItem<Short>> paymentTypeList,
-            String totalPaymentDue, UserReferenceDto userMakingPayment) {
+                             String totalPaymentDue, UserReferenceDto userMakingPayment, Date lastPaymentDate) {
         this.accountType = accountType;
         this.version = version;
         this.paymentTypeList = paymentTypeList;
         this.totalPaymentDue = totalPaymentDue;
         this.userMakingPayment = userMakingPayment;
+        this.lastPaymentDate = new Date(lastPaymentDate.getTime());
     }
 
     public AccountTypeDto getAccountType() {
@@ -64,5 +67,9 @@ public class AccountPaymentDto {
 
     public UserReferenceDto getUserMakingPayment() {
         return this.userMakingPayment;
+    }
+
+    public Date getLastPaymentDate() {
+        return new Date(lastPaymentDate.getTime());
     }
 }
