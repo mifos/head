@@ -91,7 +91,7 @@ public class AuditLogServiceImpl implements AuditLogService {
             }
             if (!auditLogRecords.isEmpty()) {
                 auditLog.addAuditLogRecords(auditLogRecords);
-                auditLog.save();
+                new org.mifos.framework.components.audit.persistence.AuditPersistence().save(auditLog);
             }
         }
     }

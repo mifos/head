@@ -22,8 +22,6 @@ package org.mifos.application.admin.servicefacade;
 
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.UserDetailDto;
@@ -36,9 +34,6 @@ import org.mifos.framework.business.util.Name;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 public interface PersonnelServiceFacade {
-
-    @Deprecated
-    void searchUser(String searchString, Short userId, HttpServletRequest request);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CREATE_USER')")
     DefinePersonnelDto retrieveInfoForNewUserDefinition(Short officeId, Locale preferredLocale);

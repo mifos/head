@@ -43,7 +43,7 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
         AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        auditLog.save();
+        new AuditPersistence().save(auditLog);
         auditLog = getAuditLog(Integer.valueOf("1"), Short.valueOf("2"));
 
        Assert.assertEquals(Integer.valueOf("1"), auditLog.getEntityId());
@@ -56,7 +56,7 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
            Assert.assertEquals("test_1", logRecord.getOldValue());
            Assert.assertEquals("new_test_1", logRecord.getNewValue());
         }
-        
+
     }
 
     @Test
@@ -67,7 +67,7 @@ public class AuditPersistenceIntegrationTest extends MifosIntegrationTestCase {
         AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        auditLog.save();
+        new AuditPersistence().save(auditLog);
         auditLog = getAuditLog(Integer.valueOf("1"), Short.valueOf("2"));
         AuditPersistence auditPersistence = new AuditPersistence();
         List<AuditLog> auditLogList = auditPersistence.getAuditLogRecords(Short.valueOf("2"), Integer.valueOf("1"));

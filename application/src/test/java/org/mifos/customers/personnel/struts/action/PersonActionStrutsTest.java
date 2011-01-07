@@ -466,7 +466,9 @@ public class PersonActionStrutsTest extends MifosMockStrutsTestCase {
         AuditLogRecord auditLogRecord = new AuditLogRecord("ColumnName_1", "test_1", "new_test_1", auditLog);
         auditLogRecords.add(auditLogRecord);
         auditLog.addAuditLogRecords(auditLogRecords);
-        auditLog.save();
+
+        new org.mifos.framework.components.audit.persistence.AuditPersistence().save(auditLog);
+
         setRequestPathInfo("/PersonAction.do");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         addRequestParameter("method", "loadChangeLog");

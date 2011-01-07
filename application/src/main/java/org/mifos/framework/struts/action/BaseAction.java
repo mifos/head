@@ -131,7 +131,6 @@ public abstract class BaseAction extends DispatchAction {
     protected ClientServiceFacade clientServiceFacade = DependencyInjectedServiceLocator.locateClientServiceFacade();
     protected AccountServiceFacade accountServiceFacade = DependencyInjectedServiceLocator.locateAccountServiceFacade();
     protected MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
-    protected LoanServiceFacade loanServiceFacade = DependencyInjectedServiceLocator.locateLoanServiceFacade();
     protected LoanAccountServiceFacade loanAccountServiceFacade = DependencyInjectedServiceLocator.locateLoanAccountServiceFacade();
     protected SavingsServiceFacade savingsServiceFacade = DependencyInjectedServiceLocator.locateSavingsServiceFacade();
     protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
@@ -143,6 +142,9 @@ public abstract class BaseAction extends DispatchAction {
     protected CheckListServiceFacade checkListServiceFacade = DependencyInjectedServiceLocator.locateCheckListServiceFacade();
 
     protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
+
+    // non domain app
+    protected LoanServiceFacade loanServiceFacade = ApplicationOnlyDependencyInjectedServiceLocator.locateLoanServiceFacade();
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
