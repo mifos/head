@@ -32,6 +32,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -51,6 +52,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -67,6 +69,9 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
     private SavingsBO savings;
     private SavingsOfferingBO savingsOffering;
     private String flowKey;
+
+    @Autowired
+    private SavingsDao savingsDao;
 
     @Override
     protected void setStrutsConfig() {
@@ -262,7 +267,7 @@ public class SavingsApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestC
         AccountActionDateEntity accountActionDate = null;
         paymentData.addAccountPaymentData(new SavingsPaymentData(accountActionDate));
         IntegrationTestObjectMother.applyAccountPayment(savings, paymentData);
-        return new SavingsPersistence().findById(savings.getAccountId());
+        return savingsDao.findById(savings.getAccountId());
     }
 
     private SavingsBO createSavingsAccount(String globalAccountNum, SavingsOfferingBO savingsOffering,

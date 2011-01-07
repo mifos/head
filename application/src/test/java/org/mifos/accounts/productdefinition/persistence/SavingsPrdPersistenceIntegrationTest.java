@@ -35,6 +35,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountStates;
@@ -46,6 +47,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -56,6 +58,9 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
     private SavingsBO savings;
 
     private SavingsOfferingBO savingsOffering;
+
+    @Autowired
+    private SavingsDao savingsDao;
 
 
     @After
@@ -79,7 +84,7 @@ public class SavingsPrdPersistenceIntegrationTest extends MifosIntegrationTestCa
         List<SavingsBO> savingsList = new SavingsPrdPersistence().retrieveSavingsAccountsForPrd(savingsOffering
                 .getPrdOfferingId());
        Assert.assertEquals(Integer.valueOf("1").intValue(), savingsList.size());
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
     }
 
     @Test

@@ -64,6 +64,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -81,6 +82,9 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     private SavingsOfferingBO savingsOffering2;
     @SuppressWarnings("unused")
     private AccountCheckListBO accountCheckList;
+
+    @Autowired
+    private SavingsDao savingsDao;
 
     @Before
     public void setUp() throws Exception {
@@ -123,7 +127,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "xdsa", currentDate,
                 RecommendedAmountUnit.COMPLETE_GROUP);
         savings = createSavingsAccount("FFFF", savingsOffering);
-        SavingsBO savings1 = savingsPersistence.findById(savings.getAccountId());
+        SavingsBO savings1 = savingsDao.findById(savings.getAccountId());
         Assert.assertEquals(savingsOffering.getRecommendedAmount(), savings1.getRecommendedAmount());
     }
 
@@ -199,7 +203,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
             savings.update();
             StaticHibernateUtil.flushSession();
 
-            savings = savingsPersistence.findById(savings.getAccountId());
+            savings = savingsDao.findById(savings.getAccountId());
             savings.setUserContext(userContext);
             payment = helper.createAccountPaymentToPersist(savings, new Money(Configuration.getInstance()
                     .getSystemConfig().getCurrency(), "500.0"), new Money(Configuration.getInstance().getSystemConfig()
@@ -209,7 +213,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
             savings.update();
             StaticHibernateUtil.flushSession();
 
-            savings = savingsPersistence.findById(savings.getAccountId());
+            savings = savingsDao.findById(savings.getAccountId());
             savings.setUserContext(userContext);
             payment = helper.createAccountPaymentToPersist(savings, new Money(Configuration.getInstance()
                     .getSystemConfig().getCurrency(), "1200.0"), new Money(Configuration.getInstance()
@@ -219,7 +223,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
             savings.update();
             StaticHibernateUtil.flushSession();
 
-            savings = savingsPersistence.findById(savings.getAccountId());
+            savings = savingsDao.findById(savings.getAccountId());
             savings.setUserContext(userContext);
             payment = helper.createAccountPaymentToPersist(savings, new Money(Configuration.getInstance()
                     .getSystemConfig().getCurrency(), "2500.0"), new Money(Configuration.getInstance()
@@ -229,7 +233,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
             savings.update();
             StaticHibernateUtil.flushSession();
 
-            savings = savingsPersistence.findById(savings.getAccountId());
+            savings = savingsDao.findById(savings.getAccountId());
             savings.setUserContext(userContext);
             SavingsTrxnDetailEntity trxn = savingsPersistence.retrieveLastTransaction(savings.getAccountId(), helper
                     .getDate("12/03/2006"));
@@ -257,7 +261,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savings.update();
         StaticHibernateUtil.flushSession();
 
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         StaticHibernateUtil.flushSession();
         Calendar currentDateCalendar = new GregorianCalendar();
@@ -286,7 +290,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         SavingBOTestUtils.setPaymentDate(accountActionDateEntity, currentDate);
         savings.update();
         StaticHibernateUtil.flushSession();
-        savings = savingsPersistence.findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         StaticHibernateUtil.flushSession();
         Assert.assertEquals(savingsPersistence.getMissedDepositsPaidAfterDueDate(savings.getAccountId()), 1);

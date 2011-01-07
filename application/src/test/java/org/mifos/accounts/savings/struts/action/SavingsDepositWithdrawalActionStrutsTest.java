@@ -34,6 +34,7 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -55,6 +56,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -76,6 +78,9 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
     private CustomerBO client4;
     private SavingsTestHelper helper = new SavingsTestHelper();
     private String flowKey;
+
+    @Autowired
+    private SavingsDao savingsDao;
 
     @Override
     protected void setStrutsConfig() {
@@ -124,7 +129,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
 
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "load");
@@ -161,7 +166,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
 
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "load");
@@ -191,7 +196,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
 
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "reLoad");
@@ -208,7 +213,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
 
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "reLoad");
@@ -225,7 +230,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
 
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "reLoad");
@@ -241,7 +246,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "preview");
@@ -262,7 +267,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "preview");
@@ -282,7 +287,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
         savings = helper.createSavingsAccount("000X00000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_APPROVED, userContext);
         StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
         setRequestPathInfo("/savingsDepositWithdrawalAction.do");
         addRequestParameter("method", "preview");
@@ -296,7 +301,7 @@ public class SavingsDepositWithdrawalActionStrutsTest extends MifosMockStrutsTes
     }
 
 /*
-    buddy: Ignoring this failing integration test. Filed an issue for it: MIFOS-4151 
+    buddy: Ignoring this failing integration test. Filed an issue for it: MIFOS-4151
     @Test
     public void testSuccessfulMakePayment_Withdrawal() throws Exception {
         createCenterAndGroup();

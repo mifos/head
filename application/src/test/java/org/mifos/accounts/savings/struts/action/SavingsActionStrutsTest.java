@@ -35,6 +35,7 @@ import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.service.SavingsBusinessService;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -68,6 +69,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -75,8 +77,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private UserContext userContext;
 
@@ -93,6 +93,9 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
     private SavingsOfferingBO savingsOffering1;
 
     private SavingsOfferingBO savingsOffering2;
+
+    @Autowired
+    private SavingsDao savingsDao;
 
     @Override
     protected void setStrutsConfig() {
@@ -192,7 +195,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
                 new Money(getCurrency(), "100"), null);
         savings.save();
         StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         savings.setUserContext(userContext);
         Assert.assertEquals(0, savings.getAccountCustomFields().size());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -230,7 +233,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         StaticHibernateUtil.flushSession();
         savingsOffering = null;
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings = savingsDao.findById(savings.getAccountId());
         Assert.assertNotNull(savings);
         Assert.assertEquals(TestUtils.createMoney(600.0), savings.getRecommendedAmount());
         Assert.assertEquals(1, savings.getAccountCustomFields().size());

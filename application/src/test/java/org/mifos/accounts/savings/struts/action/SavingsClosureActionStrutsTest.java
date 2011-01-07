@@ -36,6 +36,7 @@ import org.mifos.accounts.productdefinition.util.helpers.RecommendedAmountUnit;
 import org.mifos.accounts.productdefinition.util.helpers.SavingsType;
 import org.mifos.accounts.savings.SavingBOTestUtils;
 import org.mifos.accounts.savings.business.SavingsBO;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
@@ -62,6 +63,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -83,6 +85,9 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
     private CustomerBO client4;
     private SavingsTestHelper helper = new SavingsTestHelper();
     private String flowKey;
+
+    @Autowired
+    private SavingsDao savingsDao;
 
     @Override
     protected void setStrutsConfig() {
@@ -309,7 +314,7 @@ public class SavingsClosureActionStrutsTest extends MifosMockStrutsTestCase {
         savings.update();
         StaticHibernateUtil.flushSession();
 
-        savings = new SavingsPersistence().findById(savings.getAccountId());
+        savings =  savingsDao.findById(savings.getAccountId());
         savings.setUserContext(userContext);
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
