@@ -45,12 +45,12 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
         return this;
     }
 
-    public ViewInstallmentDetailsPage verifyEditSchedule() {
+    public CreateLoanAccountReviewInstallmentPage verifyEditSchedule() {
         Assert.assertTrue(selenium.isElementPresent(editScheduleButton));
         selenium.click(editScheduleButton);
         waitForPageToLoad();
         verifyPage("SchedulePreview");
-        return new ViewInstallmentDetailsPage(selenium);
+        return new CreateLoanAccountReviewInstallmentPage(selenium);
     }
 
     public void verifyEditScheduleDisabled() {

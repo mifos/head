@@ -30,7 +30,6 @@ import org.mifos.test.acceptance.framework.loan.DisburseLoanParameters;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.office.OfficeParameters;
-import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
@@ -92,7 +91,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyDecliningPrincipleLoan() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(3, 1000, 20, interestType);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(3, 1000, 20, interestType);
         loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
                 submitAndGotoNewLoanProductPreviewPage().
@@ -107,7 +106,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
     public void verifyLoanPayment() throws Exception {
         new FeeTestHelper(dataSetup).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
         int noOfInstallments = 4;
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(noOfInstallments, 1000, 24, interestType);
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(noOfInstallments, 1000, 24, interestType);
         createLoanProduct(formParameters);
         verifyEarlyExcessPayment(noOfInstallments, formParameters.getOfferingName());
         verifyEarlyLessPayment(noOfInstallments, formParameters.getOfferingName());
@@ -249,15 +248,6 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 navigateToRepaymentSchedulePage().
                 verifyScheduleForDecliningPrincipal(systemDateTime).
                 verifyScheduleDateField();
-    }
-
-    private DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate, int interestType) {
-        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
-        formParameters.setDefInstallments(String.valueOf(defInstallments));
-        formParameters.setDefaultLoanAmount(String.valueOf(defaultLoanAmount));
-        formParameters.setInterestTypes(interestType);
-        formParameters.setDefaultInterestRate(String.valueOf(defaultInterestRate));
-        return formParameters;
     }
 
 }

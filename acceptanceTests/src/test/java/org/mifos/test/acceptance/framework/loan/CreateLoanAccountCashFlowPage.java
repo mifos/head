@@ -63,10 +63,10 @@ public class CreateLoanAccountCashFlowPage extends AbstractPage{
         return this;
     }
 
-    public ViewInstallmentDetailsPage clickContinue() {
+    public CreateLoanAccountReviewInstallmentPage clickContinue() {
         selenium.click("_eventId_capture");
         waitForPageToLoad();
-        return new ViewInstallmentDetailsPage(selenium);
+        return new CreateLoanAccountReviewInstallmentPage(selenium);
     }
 
     public CreateLoanAccountCashFlowPage verifyCashFlowFields() {

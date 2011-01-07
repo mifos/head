@@ -159,10 +159,10 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     }
 
 
-    public ViewInstallmentDetailsPage clickContinue(){
+    public CreateLoanAccountReviewInstallmentPage clickContinue(){
         submit();
         selenium.isVisible("schedulePreview.button.preview");
-        return  new ViewInstallmentDetailsPage(selenium);
+        return  new CreateLoanAccountReviewInstallmentPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage clickContinueAndNavigateToLoanAccountConfirmationPage() {

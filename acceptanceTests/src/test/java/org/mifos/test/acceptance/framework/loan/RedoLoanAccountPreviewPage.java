@@ -20,28 +20,29 @@
 
 package org.mifos.test.acceptance.framework.loan;
 
-import org.mifos.test.acceptance.framework.MifosPage;
-
 import com.thoughtworks.selenium.Selenium;
+import org.mifos.test.acceptance.framework.AbstractPage;
+import org.testng.Assert;
 
+public class RedoLoanAccountPreviewPage extends AbstractPage {
+    String editScheduleButton = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
 
-/**
- * @author hjon
- *
- */
-public class RedoLoanDisbursalChooseLoanInstancePage extends MifosPage {
-    public RedoLoanDisbursalChooseLoanInstancePage(Selenium selenium) {
+    public RedoLoanAccountPreviewPage(Selenium selenium) {
         super(selenium);
     }
 
-    public void verifyPage() {
-        verifyPage("LoanCreationPrdOfferingSelect");
+    public RedoLoanAccountPreviewPage verifyPage() {
+        this.verifyPage("CreateLoanPreview");
+        return this;
     }
 
-    public RedoLoanDisbursalEntryPage submitAndNavigateToRedoLoanDisbursalEntryPage (String loanProduct) {
-        selenium.select("loancreationprodofferingselect.select.loanProduct", loanProduct);
-        selenium.click("loancreationprdofferingselect.button.continue");
-        waitForPageToLoad();
-        return new RedoLoanDisbursalEntryPage(selenium);
+    public void verifyEditScheduleDisabled() {
+        Assert.assertTrue(!selenium.isElementPresent(editScheduleButton));
+    }
+
+
+    public void verifyRunningBalance(String[][] loanSchedule, String[][] runningBalanceOne) {
+        for (int rowIndex = 0; rowIndex < loanSchedule.length; rowIndex++) {
+        }
     }
 }

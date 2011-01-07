@@ -21,19 +21,29 @@
 package org.mifos.test.acceptance.loan;
 
 import org.joda.time.DateTime;
+import org.joda.time.ReadableInstant;
+import org.joda.time.format.DateTimeFormat;
 import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.admin.FeeTestHelper;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.admin.FeesCreatePage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalChooseLoanInstancePage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
+import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
+import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.office.OfficeParameters;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
+import org.mifos.test.acceptance.loanproduct.LoanProductTestHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.mifos.test.acceptance.util.ApplicationDatabaseOperation;
+import org.mifos.test.acceptance.util.TestDataSetup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
@@ -54,6 +64,15 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private DbUnitUtilities dbUnitUtilities;
     @Autowired
     private InitializeApplicationRemoteTestingService initRemote;
+    @Autowired
+    private ApplicationDatabaseOperation applicationDatabaseOperation;
+    private final static String userLoginName = "test_user";
+    private final static String officeName = "test_office";
+    private final static String clientName = "test client";
+    private final static String userName="test user";
+    LoanProductTestHelper loanProductTestHelper;
+    DateTime systemDateTime;
+    private FeeTestHelper feeTestHelper;
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -79,7 +98,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     public void redoLoanDisbursalWithPastDate() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
-        RedoLoanDisbursalParameters params = new RedoLoanDisbursalParameters();
+        RedoLoanDisbursalParameters params = setLoanParams(null, 24, 5, 1000);
 
         params.setDisbursalDateDD("23");
         params.setDisbursalDateMM("07");
@@ -95,7 +114,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
     public void redoLoanDisbursalWithCurrentOrFutureDate() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
-        RedoLoanDisbursalParameters params = new RedoLoanDisbursalParameters();
+        RedoLoanDisbursalParameters params = setLoanParams(null, 24, 5, 1000);
 
         params.setDisbursalDateDD("26");
         params.setDisbursalDateMM("07");
@@ -130,5 +149,82 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
 //        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
 //
 //    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    @Test(enabled=true)
+    public void redoLoanDisbursalForVariableInstallmentLoan() throws Exception {
+        dataSetUpForVariableInstallmentLoan();
+        applicationDatabaseOperation.updateLSIM(1);
+        String periodicFees = feeTestHelper.createPeriodicFee("loanWeeklyFee", FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
+        String fixedFeePerAmountAndInterest = feeTestHelper.createFixedFee("fixedFeePerAmountAndInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 100, "Loan Amount+Interest");
+        String fixedFeePerInterest = feeTestHelper.createFixedFee("fixedFeePerInterest", FeesCreatePage.SubmitFormParameters.LOAN, "Upfront", 20, "Interest");
+        int interest = 24;
+        int noOfInstallments = 5;
+        int loanAmount = 1000;
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = loanProductTestHelper.defineLoanProductParameters(noOfInstallments, loanAmount, interest,DefineNewLoanProductPage.SubmitFormParameters.DECLINING_BALANCE);
+        String[] invalidFees = {periodicFees, fixedFeePerInterest, fixedFeePerAmountAndInterest};
+        RedoLoanDisbursalParameters redoLoanDisbursalParameters = setLoanParams(systemDateTime, interest, noOfInstallments, loanAmount);
+
+        String maxGap = "10";
+        String minGap = "1";
+        String minInstalmentAmount = "100";
+        loanProductTestHelper.navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
+                fillVariableInstalmentOption(maxGap, minGap, minInstalmentAmount).fillCashFlow("10","10","155").submitAndGotoNewLoanProductPreviewPage().submit();
+        loanTestHelper.setApplicationTime(systemDateTime.plusDays(14));
+        DateTime disbursalDate = systemDateTime;
+        navigationHelper.
+                navigateToAdminPage().navigateToRedoLoanDisbursal().
+                searchAndNavigateToRedoLoanDisbursalPage(clientName).
+                navigateToRedoLoanDisbursalChooseLoanProductPage(clientName).
+                submitAndNavigateToRedoLoanDisbursalEntryPage(formParameters.getOfferingName()).
+                verifyFeeBlockedForVariableInstallmentLoan(invalidFees).
+                submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(redoLoanDisbursalParameters).
+                validateRepaymentScheduleFieldDefault(noOfInstallments).
+                validateDateFieldValidations(disbursalDate,minGap,maxGap,noOfInstallments).
+                verifyInstallmentTotalValidations(noOfInstallments,minInstalmentAmount, disbursalDate, minGap).
+                verifyValidData(noOfInstallments,minGap,minInstalmentAmount,disbursalDate, maxGap).
+                verifyRecalculationWhenDateAndTotalChange();
+        verifyPaymentField();
+
+        //verify fee, after creation
+        //date picker
+        //holiday
+    }
+
+    private void verifyPaymentField() {
+        new RedoLoanDisbursalSchedulePreviewPage(selenium).
+                setPaidField(RedoLoanScheduleData.VARIABLE_LOAN_PAYMENT_ONE).
+                clickPreviewAndGoToReviewLoanAccountPage();
+//                verifyRunningBalance(RedoLoanScheduleData.VARIABLE_LOAN_SCHEDULE_ONE,RedoLoanScheduleData.VARIABLE_LOAN_RUNNING_BALANCE_ONE);
+    }
+
+
+    private RedoLoanDisbursalParameters setLoanParams(ReadableInstant validDisbursalDate, int interest, int noOfInstallments, int loanAmount) {
+        RedoLoanDisbursalParameters redoLoanDisbursalParameters = new RedoLoanDisbursalParameters();
+        redoLoanDisbursalParameters.setInterestRate(String.valueOf(interest));
+        redoLoanDisbursalParameters.setNumberOfInstallments(String.valueOf(noOfInstallments));
+        redoLoanDisbursalParameters.setLoanAmount(String.valueOf(loanAmount));
+        redoLoanDisbursalParameters.setDisbursalDateDD(DateTimeFormat.forPattern("dd").print(validDisbursalDate));
+        redoLoanDisbursalParameters.setDisbursalDateMM(DateTimeFormat.forPattern("MM").print(validDisbursalDate));
+        redoLoanDisbursalParameters.setDisbursalDateYYYY(DateTimeFormat.forPattern("yyyy").print(validDisbursalDate));
+        return redoLoanDisbursalParameters;
+    }
+
+    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
+    public void dataSetUpForVariableInstallmentLoan() throws Exception {
+        navigationHelper = new NavigationHelper(selenium);
+        loanTestHelper = new LoanTestHelper(selenium);
+        loanProductTestHelper = new LoanProductTestHelper(selenium);
+        systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
+        TestDataSetup dataSetup = new TestDataSetup(selenium, applicationDatabaseOperation);
+        feeTestHelper = new FeeTestHelper(dataSetup);
+        loanTestHelper.setApplicationTime(systemDateTime);
+        dataSetup.createBranch(OfficeParameters.BRANCH_OFFICE, officeName, "Off");
+        dataSetup.createUser(userLoginName, userName, officeName);
+        dataSetup.createClient(clientName, officeName, userName);
+        dataSetup.addDecliningPrincipalBalance();
+    }
+
+
 
 }
