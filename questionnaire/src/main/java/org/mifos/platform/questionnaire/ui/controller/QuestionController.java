@@ -32,7 +32,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.webflow.execution.RequestContext;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +49,7 @@ public class QuestionController extends QuestionnaireController {
     }
 
     @RequestMapping("/viewQuestions.ftl")
-    public String getAllQuestions(ModelMap model, HttpServletRequest request) {
+    public String getAllQuestions(ModelMap model) {
         model.addAttribute("questions", questionnaireServiceFacade.getAllQuestions());
         return "viewQuestions";
     }
@@ -58,14 +57,18 @@ public class QuestionController extends QuestionnaireController {
     public String addQuestion(QuestionForm questionForm, RequestContext requestContext, boolean createMode) {
         MessageContext context = requestContext.getMessageContext();
         boolean result = validateQuestion(questionForm, context, createMode);
-        if (result) questionForm.addCurrentQuestion();
+        if (result) {
+            questionForm.addCurrentQuestion();
+        }
         return result? "success": "failure";
     }
 
     public String addSmartChoiceTag(QuestionForm questionForm, RequestContext requestContext, int choiceIndex) {
         MessageContext context = requestContext.getMessageContext();
         boolean result = validateSmartChoice(questionForm, context, choiceIndex);
-        if (result) questionForm.getCurrentQuestion().addSmartChoiceTag(choiceIndex);
+        if (result) {
+            questionForm.getCurrentQuestion().addSmartChoiceTag(choiceIndex);
+        }
         return result? "success": "failure";
     }
 
