@@ -57,11 +57,7 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
     @BeforeMethod
     public void setUp() throws Exception {
         super.setUp();
-        if (isSetUpDone) {
-            systemDateTime = new DateTime(2011, 10, 10, 10, 0, 0, 0);
-            loanTestHelper.setApplicationTime(systemDateTime);
-            return;
-        }
+        if (isSetUpDone) {return;}
         loanProductTestHelper = new LoanProductTestHelper(selenium);
         navigationHelper = new NavigationHelper(selenium);
         systemDateTime = new DateTime(2010, 10, 11, 10, 0, 0, 0);
@@ -88,7 +84,7 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=true)
+    @Test(enabled=false)
     public void verifyForFlatLoanEarlyDisbursal() throws Exception {
         int interestType = DefineNewLoanProductPage.SubmitFormParameters.FLAT;
         applicationDatabaseOperation.updateLSIM(0);
@@ -118,7 +114,7 @@ public class OriginalLoanScheduleTest extends UiTestCaseBase {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(interestType);
         loanProductTestHelper.
                 navigateToDefineNewLoanPangAndFillMandatoryFields(formParameters).
-                fillVariableInstalmentOption("20","1","100").
+                fillVariableInstalmentOption("10","1","100").
                 submitAndGotoNewLoanProductPreviewPage().submit();
         verifyLoanAccountOriginalSchedule(systemDateTime.plusDays(1), systemDateTime.plusDays(10), OriginalScheduleData.VARIABLE_LOAN_EARLY_DISBURSAL_SCHEDULE, false, systemDateTime.plusDays(15));
     }
