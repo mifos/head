@@ -41,6 +41,7 @@ public class HomePage extends MifosPage {
 
     public HomePage(Selenium selenium) {
         super(selenium);
+        verifyPage("Home");
     }
 
     public HomePage verifyPage() {

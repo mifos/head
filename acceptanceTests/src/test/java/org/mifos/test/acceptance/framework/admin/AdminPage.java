@@ -60,6 +60,7 @@ public class AdminPage extends MifosPage {
 
     public AdminPage(Selenium selenium) {
         super(selenium);
+        verifyPage(PAGE_ID);
     }
 
     public ViewHolidaysPage navigateToViewHolidaysPage() {
