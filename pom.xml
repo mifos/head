@@ -34,7 +34,7 @@
         <spring.version>3.0.5.RELEASE</spring.version>
         <spring.sec.version>3.0.4.RELEASE</spring.sec.version>
         <spring.web.version>2.2.1.RELEASE</spring.web.version>
-        <slf4j.version>1.5.8</slf4j.version>
+        <slf4j.version>1.6.1</slf4j.version>
     </properties>
     <modules>
         <module>common</module>

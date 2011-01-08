@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Copyright (c) 2005-2008 Grameen Foundation USA
+1029 Vermont Avenue, NW, Suite 400, Washington DC 20005
+All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing
+permissions and limitations under the License.
+
+See also http://www.apache.org/licenses/LICENSE-2.0.html for an
+explanation of the license and how it is applied.
+-->
+
+<!--
+Chart of Accounts XML configuration. The filename starts with "mifos" so
+this file can be easily differentiated from other files on the CLASSPATH
+when Class.getResource() (or something similiar) is used to search for
+this file.  
+
+"code" attributes refer to general ledger account codes. This attribute can
+contain numbers and letters.
+
+"name" refers to the general ledger account name. This attribute can
+contain numbers and letters.
+
+code/name combinations must be unique or Mifos will not initialize.
+
+Once this file is set and Mifos is deployed, only the name attributes may be
+changed.
+
+Leading and trailing whitespace will be trimmed.
+
+See mifosChartOfAccounts.xsd for XML validation details.
+-->
+<configuration>
+    <ChartOfAccounts>
+        <GLAssetsAccount code="10000" name="ASSETS">
+            <GLAccount code="11000" name="Cash and bank balances">
+                <GLAccount code="11100" name="Petty Cash Accounts">
+                    <GLAccount code="11101" name="Cash 1" />
+                    <GLAccount code="11102" name="Cash 2" />
+                </GLAccount>
+                <GLAccount code="11200" name="Bank Balances">
+                    <GLAccount code="11201" name="Bank Account 1" />
+                    <GLAccount code="11202" name="Bank Account 2" />
+                </GLAccount>
+            </GLAccount>
+            <GLAccount code="13000" name="Loan Portfolio">
+                <GLAccount code="13100" name="Loans and Advances">
+                    <GLAccount code="1501" name="IGLoan" />
+                    <GLAccount code="1502" name="ManagedICICI-IGLoan" />
+                    <GLAccount code="1503" name="SPLoan" />
+                    <GLAccount code="1504" name="ManagedICICI-SPLoan" />
+                    <GLAccount code="1505" name="WFLoan" />
+                    <GLAccount code="1506" name="Managed WFLoan" />
+                    <GLAccount code="1507" name="Emergency Loans" />
+                    <GLAccount code="1508" name="Special Loans" />
+                    <GLAccount code="1509" name="Micro Enterprises Loans" />
+                    <GLAccount code="13101" name="Loans to clients" />
+                </GLAccount>
+                <GLAccount code="13200" name="Loan Loss Provisions">
+                    <GLAccount code="13201" name="Write-offs" />
+                </GLAccount>
+            </GLAccount>
+        </GLAssetsAccount>
+        <GLLiabilitiesAccount code="20000" name="LIABILITIES">
+            <GLAccount code="22000" name="Interest Payable">
+                <GLAccount code="22100" name="Interest payable on clients savings">
+                    <GLAccount code="22101" name="Interest on mandatory savings" />
+                </GLAccount>
+            </GLAccount>
+            <GLAccount code="23000" name="Clients Deposits">
+                <GLAccount code="23100" name="Clients Deposits">
+                    <GLAccount code="4601" name="Emergency Fund" />
+                    <GLAccount code="4602" name="Margin Money-1" />
+                    <GLAccount code="4603" name="Margin Money-2" />
+                    <GLAccount code="4606" name="Village Development Fund" />
+                    <GLAccount code="23101" name="Savings accounts" />
+                </GLAccount>
+            </GLAccount>
+            <GLAccount code="24000" name="Mandatory Savings">
+                <GLAccount code="24100" name="Mandatory Savings">
+                    <GLAccount code="24101" name="Mandatory Savings Accounts" />
+                </GLAccount>
+            </GLAccount>
+        </GLLiabilitiesAccount>
+        <GLIncomeAccount code="30000" name="INCOME">
+            <GLAccount code="31000" name="Direct Income">
+                <GLAccount code="31100" name="Interest income from loans">
+                    <GLAccount code="5001" name="Interest" />
+                    <GLAccount code="31101" name="Interest on loans" />
+                    <GLAccount code="31102" name="Penalty" />
+                </GLAccount>
+                <GLAccount code="31300"
+                    name="Income from micro credit &amp; lending activities">
+                    <GLAccount code="5201" name="Processing Fees" />
+                    <GLAccount code="5202" name="Annual Subscription Fee" />
+                    <GLAccount code="5203" name="Emergency Loan Documentation Fee" />
+                    <GLAccount code="5204" name="Sale of Publication" />
+                    <GLAccount code="5205" name="Fines &amp; Penalties" />
+                    <GLAccount code="6201" name="Miscelleneous Income" />
+                    <GLAccount code="31301" name="Fees" />
+                </GLAccount>
+            </GLAccount>
+            <GLAccount code="31401" name="Income from 999 Account" />
+        </GLIncomeAccount>
+        <GLExpenditureAccount code="40000" name="EXPENDITURE">
+            <GLAccount code="41000" name="Direct Expenditure">
+                <GLAccount code="41100" name="Cost of Funds">
+                    <GLAccount code="41101"
+                        name="Interest on clients voluntary savings" />
+                    <GLAccount code="41102"
+                        name="Interest on clients mandatory savings" />
+                </GLAccount>
+            </GLAccount>
+        </GLExpenditureAccount>
+    </ChartOfAccounts>
+</configuration>

@@ -18,7 +18,7 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.admin.business.service;
+package org.mifos.application.admin.servicefacade;
 
 import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
@@ -27,8 +27,6 @@ import java.util.Locale;
 import javax.servlet.ServletContext;
 
 import org.hibernate.HibernateException;
-import org.mifos.application.admin.servicefacade.SystemInformationDto;
-import org.mifos.application.admin.servicefacade.SystemInformationServiceFacade;
 import org.mifos.application.admin.system.SystemInfo;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -81,5 +79,4 @@ public class SystemInformationServiceFacadeWebTier implements SystemInformationS
             throw new MifosRuntimeException(e);
         }
     }
-
 }
