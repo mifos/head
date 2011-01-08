@@ -31,9 +31,9 @@ import org.slf4j.LoggerFactory;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ConfigLocale;
-import org.mifos.config.ConfigurationManager;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.Localization;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.MifosException;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
@@ -125,7 +125,7 @@ public class StandardTestingService implements TestingService {
             Localization localization = Localization.getInstance();
             localization.setConfigLocale(configLocale);
             localization.refresh();
-            ConfigurationManager configMgr = ConfigurationManager.getInstance();
+            MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
             configMgr.setProperty("Localization.LanguageCode", languageCode);
             configMgr.setProperty("Localization.CountryCode", countryCode);
         } catch (MifosRuntimeException e) {
@@ -136,7 +136,7 @@ public class StandardTestingService implements TestingService {
     @Override
     public void setAccountingRules(String accountingRulesParamName, String accountingRulesParamValue)
             throws MifosException {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (accountingRulesParamValue == null || accountingRulesParamValue.equals("")) {
             configMgr.clearProperty(accountingRulesParamName);
             return;

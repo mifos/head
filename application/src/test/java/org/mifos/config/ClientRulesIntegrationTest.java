@@ -24,6 +24,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.mifos.config.business.ConfigurationKeyValueInteger;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.Constants;
@@ -32,7 +33,7 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testGetGroupCanApplyLoans() throws Exception {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         ConfigurationPersistence configPersistence = new ConfigurationPersistence();
         ConfigurationKeyValueInteger savedDBValue = null;
         savedDBValue = configPersistence.getConfigurationKeyValueInteger(ClientRules.GroupCanApplyLoansKey);
@@ -55,7 +56,7 @@ public class ClientRulesIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testClientCanExistOutsideGroup() throws Exception {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         ConfigurationPersistence configPersistence = new ConfigurationPersistence();
         ConfigurationKeyValueInteger savedDBValue = null;
         savedDBValue = configPersistence.getConfigurationKeyValueInteger(ClientRules.ClientCanExistOutsideGroupKey);

@@ -27,6 +27,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigConstants;
@@ -158,16 +159,16 @@ public class ClientRules {
     }
 
     private static Boolean getCenterHierarchyExistsFromConfig() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         return configMgr.getBoolean(ClientRulesCenterHierarchyExists);
     }
 
     private static String getBadOverrideMsg(String key, String detailMsg) {
-        return "The value for key " + key + " in the file " + ConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME
+        return "The value for key " + key + " in the file " + MifosConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME
                 + " must to be set to 1 because it was set to 1"
                 + " in the database, hence can't be set to to 0 in the custom"
                 + " configuration file as this might invalidate existing data. " + detailMsg + " Also, "
-                + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME + " must never be changed--make sure this"
+                + MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME + " must never be changed--make sure this"
                 + " file is untouched.";
     }
 
@@ -175,7 +176,7 @@ public class ClientRules {
         boolean cfgValue;
         try {
             int dbValue = getConfigPersistence().getConfigurationKeyValueInteger(GroupCanApplyLoansKey).getValue();
-            ConfigurationManager configMgr = ConfigurationManager.getInstance();
+            MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
             cfgValue = configMgr.getBoolean(ClientRulesGroupCanApplyLoans);
 
             if (dbValue == Constants.NO && cfgValue == true) {
@@ -207,7 +208,7 @@ public class ClientRules {
         try {
             int dbValue = getConfigPersistence().getConfigurationKeyValueInteger(ClientCanExistOutsideGroupKey)
                     .getValue();
-            ConfigurationManager configMgr = ConfigurationManager.getInstance();
+            MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
             cfgValue = configMgr.getBoolean(ClientRulesClientCanExistOutsideGroup);
 
             if (dbValue == Constants.NO && cfgValue == true) {
@@ -229,7 +230,7 @@ public class ClientRules {
      */
     public static String[] getNameSequence() {
         if (nameSequence == null) {
-            ConfigurationManager configMgr = ConfigurationManager.getInstance();
+            MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
             nameSequence = configMgr.getStringArray(ClientRulesNameSequence);
         }
         return nameSequence;
@@ -292,7 +293,7 @@ public class ClientRules {
         setMaximumAgeForNewClient(getMaximumAge());
         if (getMaximumAge() < getMinimumAge()) {
             throw new ConfigurationException("The minimum age for clients cannot be greater than the maximum age in "
-                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+                    + MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
         }
 
         updateAgeCheckEnabled();
@@ -338,17 +339,17 @@ public class ClientRules {
      */
     public static int getMinimumAge() throws ConfigurationException {
         int minimumAge = 0;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(ClientRules.MinimumAgeForNewClients)) {
             minimumAge = Integer.parseInt(configMgr.getString(ClientRules.MinimumAgeForNewClients));
         } else {
             throw new ConfigurationException("The Minimum Age for a client is not defined in "
-                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+                    + MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
         }
 
         if (minimumAge < 0 || minimumAge > 150) {
             throw new ConfigurationException("The Minimum Age defined in the "
-                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
+                    + MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
                     + "is not within the acceptable range (0 to 150)");
         }
 
@@ -362,17 +363,17 @@ public class ClientRules {
      */
     public static int getMaximumAge() throws ConfigurationException {
         int maximumAge = 0;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(ClientRules.MaximumAgeForNewClients)) {
             maximumAge = Integer.parseInt(configMgr.getString(ClientRules.MaximumAgeForNewClients));
         } else {
             throw new ConfigurationException("The Maximum Age for a client is not defined in "
-                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+                    + MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
         }
 
         if (maximumAge > 150 || maximumAge < 0) {
             throw new ConfigurationException("The Maximum Age defined in the "
-                    + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
+                    + MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME
                     + "is not within the acceptable range (0 to 150)");
         }
         return maximumAge;

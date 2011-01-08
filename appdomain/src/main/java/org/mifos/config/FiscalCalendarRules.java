@@ -26,18 +26,26 @@ import java.util.List;
 
 import org.joda.time.Days;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.config.business.MifosConfigurationManager;
 
 public class FiscalCalendarRules {
 
-    final String FiscalCalendarRulesWorkingDays = "FiscalCalendarRules.WorkingDays";
+    private MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
 
+    private final String FiscalCalendarRulesWorkingDays = "FiscalCalendarRules.WorkingDays";
     private final String FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay = "FiscalCalendarRules.ScheduleMeetingIfNonWorkingDay";
-
     private String[] configWorkingDays = getConfiguredWorkingDays();
+
+    public FiscalCalendarRules() {
+        configMgr = MifosConfigurationManager.getInstance();
+    }
+
+    public FiscalCalendarRules(MifosConfigurationManager configMgr) {
+        this.configMgr = configMgr;
+    }
 
     private String[] getConfiguredWorkingDays() {
         String[] workingDays = null;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
         if (configMgr.containsKey(FiscalCalendarRulesWorkingDays)) {
             workingDays = configMgr.getStringArray(FiscalCalendarRulesWorkingDays);
             if (workingDays == null) {
@@ -149,7 +157,7 @@ public class FiscalCalendarRules {
 
     public String getScheduleMeetingIfNonWorkingDay() {
         String scheduleType = null;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay)) {
             scheduleType = configMgr.getString(FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay);
         } else {
@@ -160,7 +168,7 @@ public class FiscalCalendarRules {
     }
 
     public void setWorkingDays(final String workingDays) {
-        ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesWorkingDays, workingDays);
+        MifosConfigurationManager.getInstance().setProperty(FiscalCalendarRulesWorkingDays, workingDays);
         reloadConfigWorkingDays();
     }
 
@@ -172,14 +180,14 @@ public class FiscalCalendarRules {
     @SuppressWarnings("unchecked")
     public String  getWorkingDaysAsString() {
         String property = "";
-        for(String day: (ArrayList<String>) ConfigurationManager.getInstance().getProperty(FiscalCalendarRulesWorkingDays)) {
+        for(String day: (ArrayList<String>) MifosConfigurationManager.getInstance().getProperty(FiscalCalendarRulesWorkingDays)) {
             property += ","+day;
         }
         return property.replaceFirst(",", "");
     }
 
     public void setScheduleTypeForMeetingIfNonWorkingDay(final String ScheduleMeetingIfNonWorkingDay) {
-        ConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay, ScheduleMeetingIfNonWorkingDay);
+        MifosConfigurationManager.getInstance().setProperty(FiscalCalendarRulesScheduleTypeForMeetingIfNonWorkingDay, ScheduleMeetingIfNonWorkingDay);
     }
 
     public List<Days> getWorkingDaysAsJodaTimeDays() {

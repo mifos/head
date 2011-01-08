@@ -20,6 +20,8 @@
 
 package org.mifos.config;
 
+import org.mifos.config.business.MifosConfigurationManager;
+
 public class GeneralConfig {
 
     public static final String MaxPointsPerPPISurvey = "GeneralConfig.MaxPointsPerPPISurvey";
@@ -30,7 +32,7 @@ public class GeneralConfig {
 
     public static int getMaxPointsPerPPISurvey() {
         int maxPointsPerPPISurvey = 101; // default value is 101
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(MaxPointsPerPPISurvey)) {
             maxPointsPerPPISurvey = configMgr.getInt(MaxPointsPerPPISurvey);
         }
@@ -39,7 +41,7 @@ public class GeneralConfig {
 
     public static int getBatchSizeForBatchJobs() {
         int batchSizeForBatchJobs = 40; // default value is 40
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(BatchSizeForBatchJobs)) {
             batchSizeForBatchJobs = configMgr.getInt(BatchSizeForBatchJobs);
         }
@@ -48,7 +50,7 @@ public class GeneralConfig {
 
     public static int getRecordCommittingSizeForBatchJobs() {
         int committingRecordSizeForBatchJobs = 1000; // default value is 1000
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(RecordCommittingSizeForBatchJobs)) {
             committingRecordSizeForBatchJobs = configMgr.getInt(RecordCommittingSizeForBatchJobs);
         }
@@ -57,7 +59,7 @@ public class GeneralConfig {
 
     public static int getOutputIntervalForBatchJobs() {
         int outputRecordIntervalForBatchJobs = 1000; // default value is 1000
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(OutputIntervalForBatchJobs)) {
             outputRecordIntervalForBatchJobs = configMgr.getInt(OutputIntervalForBatchJobs);
         }
@@ -66,7 +68,7 @@ public class GeneralConfig {
 
     public static Boolean getAllowDataPrefetchingWhenSavingCollectionSheets() {
         Boolean allowDataPrefetching = true; // default value is true
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(allowDataPrefetchingWhenSavingCollectionSheets)) {
             allowDataPrefetching = configMgr.getBoolean(allowDataPrefetchingWhenSavingCollectionSheets, allowDataPrefetching);
         }

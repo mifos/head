@@ -26,6 +26,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.apache.commons.configuration.Configuration;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.testng.annotations.Test;
 
 @Test(groups={"unit", "configTestSuite"})
@@ -40,7 +41,7 @@ public class ConfigurationManagerTest extends TestCase {
 
     @Override
     public void setUp() {
-        configuration = ConfigurationManager.getInstance().getConfiguration();
+        configuration = MifosConfigurationManager.getInstance().getConfiguration();
     }
 
     public void testGetUndefinedProperty() {

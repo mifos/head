@@ -32,7 +32,7 @@ import junit.framework.TestCase;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.framework.TestUtils;
 import org.testng.annotations.Test;
@@ -197,7 +197,7 @@ public class MoneyTest extends TestCase {
 
     public void testIsRoundedAmount() {
         String currencyCodeSuffix = "." + TestUtils.EURO.getCurrencyCode();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix, "1");
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "1");
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "1");

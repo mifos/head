@@ -86,6 +86,7 @@ import org.mifos.application.importexport.servicefacade.ImportTransactionsServic
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacadeWebTier;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.FiscalCalendarRules;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
@@ -410,7 +411,7 @@ public class DependencyInjectedServiceLocator {
 
     public static FiscalCalendarRules locateFiscalCalendarRules() {
         if (fiscalCalendarRules == null) {
-            fiscalCalendarRules = new FiscalCalendarRules();
+            fiscalCalendarRules = new FiscalCalendarRules(MifosConfigurationManager.getInstance());
         }
         return fiscalCalendarRules;
     }

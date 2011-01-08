@@ -41,16 +41,17 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.calendar.DayOfWeek;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.util.LocalizationConverter;
 
 public class FiscalCalendarRulesTest {
 
 
-    private static ConfigurationManager configMgr = null;
+    private static MifosConfigurationManager configMgr = null;
 
     @BeforeClass
     public static void init() {
-        configMgr = ConfigurationManager.getInstance();
+        configMgr = MifosConfigurationManager.getInstance();
     }
 
     @AfterClass
@@ -59,7 +60,7 @@ public class FiscalCalendarRulesTest {
     }
 
     private void setNewWorkingDays(final String newWorkingDays) {
-        configMgr.setProperty(new FiscalCalendarRules().FiscalCalendarRulesWorkingDays, newWorkingDays);
+        configMgr.setProperty("FiscalCalendarRules.WorkingDays", newWorkingDays);
         new FiscalCalendarRules().reloadConfigWorkingDays();
     }
 

@@ -33,7 +33,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.config.AccountingRulesConstants;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.Money;
 
@@ -57,15 +57,15 @@ public class MinimumBalanceCalculationStrategyTest {
     public static void setCurrency() {
         oldCurrency = Money.getDefaultCurrency();
         Money.setDefaultCurrency(TestUtils.RUPEE);
-        oldRoundingMode = (String) ConfigurationManager.getInstance().getProperty(
+        oldRoundingMode = (String) MifosConfigurationManager.getInstance().getProperty(
                 AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE,
                 RoundingMode.HALF_UP.toString());
     }
 
     @AfterClass
     public static void resetCurrency() {
-        ConfigurationManager.getInstance()
+        MifosConfigurationManager.getInstance()
                 .setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, oldRoundingMode);
         Money.setDefaultCurrency(oldCurrency);
     }

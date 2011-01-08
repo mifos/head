@@ -18,24 +18,27 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.config;
+package org.mifos.config.business;
 
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Logger;
 
 import org.apache.commons.configuration.Configuration;
 import org.apache.commons.configuration.ConfigurationConverter;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.mifos.service.test.TestMode;
+import org.springframework.core.io.ClassPathResource;
 
 /**
  * This is a quick initial sketch of a class for managing configuration values
@@ -52,7 +55,9 @@ import org.mifos.service.test.TestMode;
  * This class is currently under active development, so it is likely to be
  * changed significantly as iterative development proceeds.
  */
-public class ConfigurationManager implements Configuration {
+public class MifosConfigurationManager implements Configuration {
+
+    private static final Logger logger = Logger.getLogger(MifosConfigurationManager.class.getName());
 
     /**
      * Filename where default application-wide configuration values are stored.
@@ -75,27 +80,46 @@ public class ConfigurationManager implements Configuration {
     /** Custom application-wide configuration file for acceptance testing only. */
     public static final String ACCEPTANCE_CONFIG_PROPS_FILENAME = "applicationConfiguration.acceptance.properties";
 
-    private static ConfigurationManager configurationManagerInstance = new ConfigurationManager();
+    private static MifosConfigurationManager configurationManagerInstance = new MifosConfigurationManager();
 
     private Configuration configuration;
 
-    public static final ConfigurationManager getInstance() {
+    public static final MifosConfigurationManager getInstance() {
         if(configurationManagerInstance == null || configurationManagerInstance.isEmpty()) {
-            configurationManagerInstance = new ConfigurationManager();
+            configurationManagerInstance = new MifosConfigurationManager();
         }
         return configurationManagerInstance;
     }
 
-    private ConfigurationManager() {
-        ConfigurationLocator configurationLocator = new ConfigurationLocator();
-        Properties props = new Properties();
+    private MifosConfigurationManager() {
 
-        try {
-            File defaults = configurationLocator.getFile(DEFAULT_CONFIG_PROPS_FILENAME);
-            props.load(new BufferedInputStream(new FileInputStream(defaults)));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+        String configFilePath = "org/mifos/config/resources/applicationConfiguration.default.properties";
+        ClassPathResource configfile = new ClassPathResource(configFilePath);
+        logger.info("Checking existance of: " + configFilePath);
+
+        Properties props = new Properties();
+        if (configfile.exists()) {
+            logger.info(configfile.getFilename() + " exists on classpath");
+            InputStream in = MifosConfigurationManager.class.getClassLoader().getResourceAsStream(configFilePath);
+            if (in == null) {
+                //File not found! (Manage the problem)
+            }
+            try {
+                props.load(in);
+                logger.info(props.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
+
+        ConfigurationLocator configurationLocator = new ConfigurationLocator();
+//
+//        try {
+//            File defaults = configurationLocator.getFile(DEFAULT_CONFIG_PROPS_FILENAME);
+//            props.load(new BufferedInputStream(new FileInputStream(defaults)));
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
         // FIXME - see if we can remove use of standard testing service from here?
 //        TestMode currentTestMode = new StandardTestingService().getTestMode();

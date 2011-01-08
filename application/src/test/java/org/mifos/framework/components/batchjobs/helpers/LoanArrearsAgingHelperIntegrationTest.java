@@ -52,8 +52,8 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.config.AccountingRulesConstants;
-import org.mifos.config.ConfigurationManager;
 import org.mifos.config.business.Configuration;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -96,9 +96,9 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
     @Before
     public void setUp() throws Exception {
         StaticHibernateUtil.getSessionTL().clear();
-        oldRoundingMode =  (String) ConfigurationManager.getInstance().getProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
+        oldRoundingMode =  (String) MifosConfigurationManager.getInstance().getProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
         //FIXME this test was using CELLING ROUNDING MODE due to MIFOS-2659
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, RoundingMode.CEILING.toString());
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, RoundingMode.CEILING.toString());
         /*
          * Takes lateness days out of the equation so that the LoanArrearsTask will set all overdue account into bad
          * standing.
@@ -121,7 +121,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         loanArrearsAgingHelper = null;
         loanArrearHelper = null;
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, oldRoundingMode);
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, oldRoundingMode);
         StaticHibernateUtil.flushAndClearSession();
     }
 

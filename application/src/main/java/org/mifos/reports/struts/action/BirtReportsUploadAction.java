@@ -42,7 +42,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
 import org.hibernate.HibernateException;
 import org.mifos.application.util.helpers.ActionForwards;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -156,7 +156,7 @@ public class BirtReportsUploadAction extends BaseAction {
     }
 
     public static String getUploadStorageDirectory() {
-        String uploadsDir = ConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
+        String uploadsDir = MifosConfigurationManager.getInstance().getString("GeneralConfig.UploadStorageDirectory",
                 "$HOME/.mifos/uploads");
         if (File.separatorChar == '\\') { // windows platform
             uploadsDir = uploadsDir.replaceAll("/", "\\\\");

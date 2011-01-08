@@ -33,7 +33,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 
 import org.apache.commons.lang.StringUtils;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.ClasspathResource;
 import org.mifos.framework.exceptions.MenuParseException;
 import org.mifos.framework.exceptions.SystemException;
@@ -156,7 +156,7 @@ public class MenuParser {
     private static boolean isMenuItemVisible(Element element) {
         String visiKey = element.getAttribute(MenuConstants.KEY_FOR_HIDDEN);
         if (StringUtils.isNotBlank(visiKey)) {
-            ConfigurationManager cm = ConfigurationManager.getInstance();
+            MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
             return cm.getBoolean(visiKey);
         }
         // if attribute doesn't exist, a configuration key wasn't specified,

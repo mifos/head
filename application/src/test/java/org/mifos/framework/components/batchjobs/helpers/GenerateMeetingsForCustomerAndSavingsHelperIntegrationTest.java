@@ -41,8 +41,8 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.config.ConfigurationManager;
 import org.mifos.config.GeneralConfig;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.business.CustomerAccountBO;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.exceptions.CustomerException;
@@ -103,7 +103,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
     @Test
     public void testExecuteForSavingsAccount() throws Exception {
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         int outputInterval = 1;
 
         try {
@@ -132,7 +132,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelperIntegrationTest extends 
         // return the two different types of accounts.
 
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         int outputInterval = 1;
 
         try {

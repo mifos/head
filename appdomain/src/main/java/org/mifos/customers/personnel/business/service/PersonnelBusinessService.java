@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -53,7 +53,7 @@ public class PersonnelBusinessService implements BusinessService {
                                     RolesPermissionsPersistence rolesPermissionsPersistence) {
         this.personnelPersistence = personnelPersistence;
         this.rolesPermissionsPersistence = rolesPermissionsPersistence;
-        applicationConfiguration = ConfigurationManager.getInstance();
+        applicationConfiguration = MifosConfigurationManager.getInstance();
     }
 
     @Override

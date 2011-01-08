@@ -36,6 +36,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.StandardTestingService;
@@ -66,7 +67,7 @@ public class AccountingRulesTest {
         RoundingMode configuredMode = AccountingRules.getCurrencyRoundingMode();
         String roundingMode = "FLOOR";
         RoundingMode configRoundingMode = RoundingMode.FLOOR;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
@@ -96,7 +97,7 @@ public class AccountingRulesTest {
         RoundingMode configuredMode = AccountingRules.getInitialRoundingMode();
         String roundingMode = "FLOOR";
         RoundingMode configRoundingMode = RoundingMode.FLOOR;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
@@ -124,7 +125,7 @@ public class AccountingRulesTest {
         RoundingMode configuredMode = AccountingRules.getFinalRoundingMode();
         String roundingMode = "CEILING";
         RoundingMode configRoundingMode = RoundingMode.CEILING;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, roundingMode);
         // return value from accounting rules class has to be the value defined
         // in the config file
@@ -152,7 +153,7 @@ public class AccountingRulesTest {
     public void testGetFinalRoundOffMultiple() {
         BigDecimal configuredRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
         String roundOffMultiple = "1";
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE, roundOffMultiple);
         // return value from accounting rules class has to be the value defined
         // in the config file
@@ -169,7 +170,7 @@ public class AccountingRulesTest {
     public void testGetInitialRoundOffMultiple() {
         BigDecimal configuredRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
         String roundOffMultiple = "1";
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE, roundOffMultiple);
         // return value from accounting rules class has to be the value defined
         // in the config file
@@ -187,7 +188,7 @@ public class AccountingRulesTest {
     public void testgetMifosCurrency() {
         when(configurationPersistence.getCurrency("INR")).thenReturn(TestUtils.RUPEE);
         when(configurationPersistence.getCurrency("EUR")).thenReturn(TestUtils.EURO);
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         String currencyCode = configMgr.getString(AccountingRulesConstants.CURRENCY_CODE);
         configMgr.setProperty(AccountingRulesConstants.CURRENCY_CODE, "INR");
         MifosCurrency currency = AccountingRules.getMifosCurrency(configurationPersistence);
@@ -209,7 +210,7 @@ public class AccountingRulesTest {
     @Test
     public void testGetNumberOfInterestDays() {
         Short interestDaysInConfig = AccountingRules.getNumberOfInterestDays();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         Short insertedDays = 365;
         configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, insertedDays);
         assertEquals(insertedDays, AccountingRules.getNumberOfInterestDays());
@@ -235,14 +236,14 @@ public class AccountingRulesTest {
 
     private void checkDigitsAfterDecimalMultiple(int digitsAfterDecimalInt, String multiple) {
         Short digitsAfterDecimal = (short) digitsAfterDecimalInt;
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL,
                 digitsAfterDecimal);
         assertEquals(new BigDecimal(multiple), AccountingRules.getDigitsAfterDecimalMultiple(TestUtils.RUPEE));
     }
 
     @Test
     public void testGetDigitsAfterDecimalMultiple() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         Short digitsAfterDecimalSaved = AccountingRules.getDigitsAfterDecimal();
         try {
             checkDigitsAfterDecimalMultiple(2, "0.01");
@@ -262,7 +263,7 @@ public class AccountingRulesTest {
         assertFalse(AccountingRules.isMultiCurrencyEnabled());
         List<String> codes = new ArrayList<String>();
         codes.add("LBP");
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         try {
             configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, codes);
             assertTrue(AccountingRules.isMultiCurrencyEnabled());
@@ -278,7 +279,7 @@ public class AccountingRulesTest {
 
     @Test
     public void digitsAfterDecimalFallsBackToDefault() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         try {
             configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
             assertEquals(new Short("1"), AccountingRules.getDigitsAfterDecimal(TestUtils.EURO));
@@ -289,7 +290,7 @@ public class AccountingRulesTest {
 
     @Test
     public void canConfigureAlternateCurrencyWithNonDefaultDigitsAfterDecimal() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         try {
             configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
             configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL + "."

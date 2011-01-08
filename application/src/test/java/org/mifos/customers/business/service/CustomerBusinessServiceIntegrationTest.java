@@ -39,7 +39,7 @@ import org.mifos.accounts.savings.util.helpers.SavingsTestHelper;
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.config.AccountingRulesConstants;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.group.business.GroupBO;
@@ -78,7 +78,7 @@ public class CustomerBusinessServiceIntegrationTest extends MifosIntegrationTest
     public void tearDown() throws Exception {
         try {
             // if there is an additional currency code defined, then clear it
-            ConfigurationManager.getInstance().clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+            MifosConfigurationManager.getInstance().clearProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
             savingsBO = null;
             group = null;
             center = null;

@@ -7,4 +7,17 @@
 	<bean id="shutdownServiceFacade" class="org.mifos.application.admin.business.service.ShutdownServiceFacadeWebTier"/>
 	
 	<bean id="batchjobsServiceFacade" class="org.mifos.application.admin.business.service.BatchjobsServiceFacadeWebTier"/>
+	
+	<bean id="loanServiceFacade" class="org.mifos.application.servicefacade.LoanServiceFacadeWebTier" >
+    	<constructor-arg ref="customerDao" />
+    	<constructor-arg ref="loanProductDao" />
+    	<constructor-arg ref="personnelDao" />
+    	<constructor-arg ref="fundDao" />
+    	<constructor-arg ref="loanDao" />
+    	<constructor-arg ref="installmentsValidator" />
+    	<constructor-arg ref="scheduleCalculatorAdaptor" />
+    	<constructor-arg ref="loanBusinessService" />
+    	<constructor-arg ref="holidayServiceFacade" />
+    	<constructor-arg ref="loanPrdBusinessService" />
+    </bean>
 </beans>

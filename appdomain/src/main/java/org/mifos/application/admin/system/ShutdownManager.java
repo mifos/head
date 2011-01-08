@@ -32,7 +32,7 @@ import javax.servlet.http.HttpSessionEvent;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.FilePaths;
 
@@ -91,7 +91,7 @@ public class ShutdownManager implements Serializable {
     }
 
     public long getShutdownCountdownNotificationThreshold() {
-        return ConfigurationManager.getInstance().getLong("GeneralConfig.ShutdownCountdownNotificationThreshold", 1800) * 1000;
+        return MifosConfigurationManager.getInstance().getLong("GeneralConfig.ShutdownCountdownNotificationThreshold", 1800) * 1000;
     }
 
     private String computeInterval(long milliseconds) {

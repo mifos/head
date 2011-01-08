@@ -22,6 +22,8 @@ package org.mifos.config;
 
 import java.util.Locale;
 
+import org.mifos.config.business.MifosConfigurationManager;
+
 public class ConfigLocale {
 
     public static final String DEFAULT_DIRECTION = "auto";
@@ -44,37 +46,37 @@ public class ConfigLocale {
     }
 
     public void clearCountryCode() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.clearProperty(LocalizationCountryCode);
     }
 
     public void clearLanguageCode() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.clearProperty(LocalizationLanguageCode);
     }
 
     public void clearDirection() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.clearProperty(LocalizationDirection);
     }
 
     public void setCountryCodeToConfigFile() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.addProperty(LocalizationCountryCode, countryCode);
     }
 
     public void setLanguageCodeToConfigFile() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.addProperty(LocalizationLanguageCode, languageCode);
     }
 
     public void setDirectionToConfigFile() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.addProperty(LocalizationDirection, direction);
     }
 
     private void load() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(LocalizationCountryCode)) {
             countryCode = configMgr.getString(LocalizationCountryCode);
         } else {

@@ -55,7 +55,7 @@ import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRulesConstants;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -156,7 +156,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
      */
     @Test
     public void testGetTotalAmountForAllClientsOfGroupForMultipleCurrencies() throws Exception {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
 
         AccountBO clientAccount1;
@@ -192,7 +192,7 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
      */
     @Test
     public void testGetTotalAmountForGroupForMultipleCurrencies() throws Exception {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES, TestUtils.EURO.getCurrencyCode());
 
         GroupBO group1;

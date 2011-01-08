@@ -22,6 +22,7 @@ package org.mifos.config;
 
 import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 
@@ -136,11 +137,11 @@ public class AccountingRules {
         }
         throw new MifosRuntimeException("Unable to find currency with id: " + currencyId +
                 ". You may be missing an entry for the currency with this id in " +
-                ConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME + ".");
+                MifosConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME + ".");
     }
 
     public static String getDefaultCurrencyCode() {
-        return ConfigurationManager.getInstance().getString(AccountingRulesConstants.CURRENCY_CODE);
+        return MifosConfigurationManager.getInstance().getString(AccountingRulesConstants.CURRENCY_CODE);
     }
 
     /*
@@ -149,44 +150,44 @@ public class AccountingRules {
      */
     @SuppressWarnings("unchecked")
     public static List<String> getAdditionalCurrencyCodes() {
-        return ConfigurationManager.getInstance().getList(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
+        return MifosConfigurationManager.getInstance().getList(AccountingRulesConstants.ADDITIONAL_CURRENCY_CODES);
     }
 
     public static Double getMaxInterest() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_INTEREST);
+        return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_INTEREST);
     }
 
     public static Double getMinInterest() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
+        return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INTEREST);
     }
 
     public static Double getMaxCashFlowThreshold() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_CASH_FLOW_THRESHOLD);
+        return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_CASH_FLOW_THRESHOLD);
     }
 
     public static Double getMinCashFlowThreshold() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_CASH_FLOW_THRESHOLD);
+        return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_CASH_FLOW_THRESHOLD);
     }
 
     public static Double getMaxIndebtednessRatio() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_INDEBTEDNESS_RATIO);
+        return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_INDEBTEDNESS_RATIO);
     }
 
     public static Double getMinIndebtednessRatio() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INDEBTEDNESS_RATIO);
+        return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_INDEBTEDNESS_RATIO);
     }
 
     public static Double getMaxRepaymentCapacity() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_REPAYMENT_CAPACITY);
+        return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MAX_REPAYMENT_CAPACITY);
     }
 
     public static Double getMinRepaymentCapacity() {
-        return ConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_REPAYMENT_CAPACITY);
+        return MifosConfigurationManager.getInstance().getDouble(AccountingRulesConstants.MIN_REPAYMENT_CAPACITY);
     }
 
 
     public static Short getDigitsAfterDecimal() {
-        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
+        return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL);
     }
 
     public static Short getDigitsAfterDecimal(final MifosCurrency currency) {
@@ -198,7 +199,7 @@ public class AccountingRules {
         if (!getAdditionalCurrencyCodes().contains(code)) {
             throw new IllegalArgumentException(String.format("Currency not configured. %s. Default currency is: %s", currency, getDefaultCurrencyCode()));
         }
-        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL + "." + code,
+        return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL + "." + code,
                 getDigitsAfterDecimal());
     }
 
@@ -211,7 +212,7 @@ public class AccountingRules {
     }
 
     public static Short getDigitsAfterDecimalForInterest() {
-        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
+        return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST);
     }
 
 
@@ -220,18 +221,18 @@ public class AccountingRules {
     }
 
     public static Short getDigitsAfterDecimalForCashFlowValidations() {
-        return ConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_CASHFLOW_VALIDATIONS);
+        return MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_CASHFLOW_VALIDATIONS);
     }
 
     // the defaultValue passed in should be the value from database
     public static BigDecimal getAmountToBeRoundedTo(BigDecimal defaultValue) {
-        return ConfigurationManager.getInstance().getBigDecimal(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO,
+        return MifosConfigurationManager.getInstance().getBigDecimal(AccountingRulesConstants.AMOUNT_TO_BE_ROUNDED_TO,
                 defaultValue);
     }
 
     public static Short getRoundingMode(Short defaultValue) {
         Short mode;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(AccountingRulesConstants.ROUNDING_RULE)) {
             String returnStr = configMgr.getString(AccountingRulesConstants.ROUNDING_RULE);
             if (returnStr.equals("FLOOR")) {
@@ -255,7 +256,7 @@ public class AccountingRules {
      * Expected to return either 360 or 365
      */
     public static Short getNumberOfInterestDays() {
-        Short days = ConfigurationManager.getInstance().getShort(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
+        Short days = MifosConfigurationManager.getInstance().getShort(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS);
         if ((days != 365) && (days != 360)) {
             throw new RuntimeException("Invalid number of interest days defined in property file " + days);
         }
@@ -277,7 +278,7 @@ public class AccountingRules {
      * </ul>
      */
     public static boolean isBackDatedTxnAllowed() {
-        ConfigurationManager cm = ConfigurationManager.getInstance();
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
         return cm.getBoolean(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED);
     }
 
@@ -289,7 +290,7 @@ public class AccountingRules {
     }
 
     public static RoundingMode getInitialRoundingMode() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.INITIAL_ROUNDING_MODE);
         return getRoundingModeFromString(modeStr, "InitialRoundingMode", DEFAULT_INITIAL_ROUNDING_MODE);
     }
@@ -313,7 +314,7 @@ public class AccountingRules {
     }
 
     public static RoundingMode getFinalRoundingMode() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.FINAL_ROUNDING_MODE);
         return getRoundingModeFromString(modeStr, "FinalRoundingMode", DEFAULT_FINAL_ROUNDING_MODE);
     }
@@ -326,7 +327,7 @@ public class AccountingRules {
     }
 
     public static BigDecimal getInitialRoundOffMultiple() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE);
         return getRoundOffMultipleFromString(modeStr, DEFAULT_INITIAL_ROUNDOFF_MULTIPLE);
     }
@@ -339,13 +340,13 @@ public class AccountingRules {
         if (!getAdditionalCurrencyCodes().contains(code)) {
             throw new IllegalArgumentException("Currency not configured. " + currency);
         }
-        String modeStr = ConfigurationManager.getInstance().getString(
+        String modeStr = MifosConfigurationManager.getInstance().getString(
                 AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE + "." + code);
         return getRoundOffMultipleFromString(modeStr, DEFAULT_INITIAL_ROUNDOFF_MULTIPLE);
     }
 
     public static BigDecimal getFinalRoundOffMultiple() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE);
         return getRoundOffMultipleFromString(modeStr, DEFAULT_FINAL_ROUNDOFF_MULTIPLE);
     }
@@ -358,13 +359,13 @@ public class AccountingRules {
         if (!getAdditionalCurrencyCodes().contains(code)) {
             throw new IllegalArgumentException("Currency not configured. " + currency);
         }
-        String modeStr = ConfigurationManager.getInstance().getString(
+        String modeStr = MifosConfigurationManager.getInstance().getString(
                 AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE + "." + code);
         return getRoundOffMultipleFromString(modeStr, DEFAULT_FINAL_ROUNDOFF_MULTIPLE);
     }
 
     public static RoundingMode getCurrencyRoundingMode() {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         String modeStr = configMgr.getString(AccountingRulesConstants.CURRENCY_ROUNDING_MODE);
         return getRoundingModeFromString(modeStr, "CurrencyRoundingMode", DEFAULT_CURRENCY_ROUNDING_MODE);
     }
@@ -384,57 +385,57 @@ public class AccountingRules {
     }
 
     public static void setDigitsAfterDecimal(Short value) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL, value);
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL, value);
     }
 
     public static void setDigitsAfterDecimalForInterest(Short value) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL_FOR_INTEREST,
                 value);
     }
 
     public static void setRoundingRule(RoundingMode mode) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.ROUNDING_RULE, mode.name());
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.ROUNDING_RULE, mode.name());
     }
 
     public static void setFinalRoundOffMultiple(BigDecimal finalRoundOffMultiple) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE,
                 finalRoundOffMultiple.toString());
     }
 
     public static void setInitialRoundOffMultiple(BigDecimal initialRoundOffMultiple) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE,
                 initialRoundOffMultiple.toString());
     }
 
     public static void setCurrencyRoundingMode(RoundingMode currencyRoundingMode) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE,
                 currencyRoundingMode.name());
     }
 
     public static void setInitialRoundingMode(RoundingMode intialRoundingMode) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE,
                 intialRoundingMode.name());
     }
 
     public static void setFinalRoundingMode(RoundingMode finalRoundingMode) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE,
                 finalRoundingMode.name());
     }
 
     public static void setBackDatedTransactionsAllowed(Boolean value) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED, value);
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED, value);
     }
 
     public static void setMaxInterest(BigDecimal maxInterest) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.MAX_INTEREST, maxInterest.toString());
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.MAX_INTEREST, maxInterest.toString());
     }
 
     public static void setMinInterest(BigDecimal minInterest) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.MIN_INTEREST, minInterest.toString());
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.MIN_INTEREST, minInterest.toString());
     }
 
     public static void setNumberOfInterestDays(Integer numberOfInterestDays) {
-        ConfigurationManager.getInstance().setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS,
+        MifosConfigurationManager.getInstance().setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS,
                 numberOfInterestDays);
     }
 

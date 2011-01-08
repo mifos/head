@@ -73,7 +73,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.ClasspathResource;
 import org.mifos.customers.business.CustomerBO;
@@ -1531,17 +1531,17 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void setNumberOfInterestDays(int days) {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.NUMBER_OF_INTEREST_DAYS, new Short((short) days));
     }
 
     private void setInitialRoundingMode(RoundingMode mode) {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, mode.toString());
     }
 
     private void setFinalRoundingMode(RoundingMode mode) {
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUNDING_MODE, mode.toString());
     }
 

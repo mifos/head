@@ -26,17 +26,17 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.config.AccountingRulesConstants;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.TestUtils;
 import org.testng.Assert;
 
 public class MoneyUtilsTest {
 
-    private static ConfigurationManager configMgr;
+    private static MifosConfigurationManager configMgr;
 
     @BeforeClass
     public static void init() {
-        configMgr = ConfigurationManager.getInstance();
+        configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.CURRENCY_ROUNDING_MODE, RoundingMode.HALF_UP.toString());
         configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL, "1");
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUNDING_MODE, RoundingMode.HALF_UP.toString());

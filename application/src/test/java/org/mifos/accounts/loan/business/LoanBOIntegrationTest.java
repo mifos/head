@@ -80,8 +80,8 @@ import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.AccountingRulesConstants;
-import org.mifos.config.ConfigurationManager;
 import org.mifos.config.business.Configuration;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerBOTestUtils;
@@ -420,7 +420,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
 
 
         String currencyCodeSuffix = "." + TestUtils.EURO.getCurrencyCode();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix, "0");
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "1000");
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "100");
@@ -484,7 +484,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         String finalInstallmentInterest = "384.0";
 
         String currencyCodeSuffix = "." + TestUtils.EURO.getCurrencyCode();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix, "0");
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "100");
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "10");
@@ -519,7 +519,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         String finalInstallmentInterest = "387.6";
 
         String currencyCodeSuffix = "." + TestUtils.EURO.getCurrencyCode();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         configMgr.setProperty(AccountingRulesConstants.DIGITS_AFTER_DECIMAL+currencyCodeSuffix, "1");
         configMgr.setProperty(AccountingRulesConstants.INITIAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "100");
         configMgr.setProperty(AccountingRulesConstants.FINAL_ROUND_OFF_MULTIPLE+currencyCodeSuffix, "10");

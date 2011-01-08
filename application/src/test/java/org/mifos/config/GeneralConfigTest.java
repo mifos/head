@@ -23,6 +23,7 @@ package org.mifos.config;
 import junit.framework.Assert;
 import junit.framework.TestCase;
 
+import org.mifos.config.business.MifosConfigurationManager;
 import org.testng.annotations.Test;
 
 /**
@@ -34,7 +35,7 @@ public class GeneralConfigTest extends TestCase {
 
     public void testGetMaxPointsPerPPISurvey() {
         int configuredValue = GeneralConfig.getMaxPointsPerPPISurvey();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         int currentValue = 30;
         configMgr.setProperty(GeneralConfig.MaxPointsPerPPISurvey, currentValue);
        Assert.assertEquals(currentValue, GeneralConfig.getMaxPointsPerPPISurvey());
@@ -51,7 +52,7 @@ public class GeneralConfigTest extends TestCase {
 
     public void testGetBatchSizeForBatchJobs() {
         int configuredValue = GeneralConfig.getBatchSizeForBatchJobs();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         int currentValue = 40;
         configMgr.setProperty(GeneralConfig.BatchSizeForBatchJobs, currentValue);
        Assert.assertEquals(currentValue, GeneralConfig.getBatchSizeForBatchJobs());
@@ -68,7 +69,7 @@ public class GeneralConfigTest extends TestCase {
 
     public void testGetRecordCommittingSizeForBatchJobs() {
         int configuredValue = GeneralConfig.getRecordCommittingSizeForBatchJobs();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         int currentValue = 500;
         configMgr.setProperty(GeneralConfig.RecordCommittingSizeForBatchJobs, currentValue);
        Assert.assertEquals(currentValue, GeneralConfig.getRecordCommittingSizeForBatchJobs());
@@ -85,7 +86,7 @@ public class GeneralConfigTest extends TestCase {
 
     public void testGetOutputIntervalForBatchJobs() {
         int configuredValue = GeneralConfig.getOutputIntervalForBatchJobs();
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         int currentValue = 500;
         configMgr.setProperty(GeneralConfig.OutputIntervalForBatchJobs, currentValue);
        Assert.assertEquals(currentValue, GeneralConfig.getOutputIntervalForBatchJobs());

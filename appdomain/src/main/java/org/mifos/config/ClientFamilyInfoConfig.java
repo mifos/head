@@ -20,6 +20,7 @@
 
 package org.mifos.config;
 
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
 
 public class ClientFamilyInfoConfig{
@@ -30,11 +31,11 @@ public class ClientFamilyInfoConfig{
     public static Boolean getAreFamilyDetailsRequired() throws ConfigurationException{
         //default value is false
         Boolean required=false;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(AreFamilyDetailsRequired)) {
             required= configMgr.getBoolean(AreFamilyDetailsRequired);
         } else {
-            throw new ConfigurationException("The property are family details required is not set in "+ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+            throw new ConfigurationException("The property are family details required is not set in "+MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
         }
         return required;
     }
@@ -42,11 +43,11 @@ public class ClientFamilyInfoConfig{
     public static int getMaximumNumberOfFamilyMembers() throws ConfigurationException{
         //default value is 15
         int familyMembers=15;
-        ConfigurationManager configMgr = ConfigurationManager.getInstance();
+        MifosConfigurationManager configMgr = MifosConfigurationManager.getInstance();
         if (configMgr.containsKey(MaximumNumberOfFamilyMembers)) {
             familyMembers= configMgr.getInt(MaximumNumberOfFamilyMembers);
         } else {
-            throw new ConfigurationException("The Maximum Number of Family Members are not defined in "+ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
+            throw new ConfigurationException("The Maximum Number of Family Members are not defined in "+MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME);
         }
         return familyMembers;
     }

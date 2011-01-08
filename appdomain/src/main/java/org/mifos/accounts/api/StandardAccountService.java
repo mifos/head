@@ -44,7 +44,7 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.TrxnTypes;
-import org.mifos.config.ConfigurationManager;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -438,7 +438,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public Object getMifosConfiguration(String propertyKey) {
-        ConfigurationManager cfgMng = ConfigurationManager.getInstance();
+        MifosConfigurationManager cfgMng = MifosConfigurationManager.getInstance();
         return cfgMng.getProperty(propertyKey);
     }
 

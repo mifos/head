@@ -25,6 +25,7 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.persistence.CustomerDao;
@@ -74,11 +75,11 @@ public class ProcessFlowRules {
     }
 
     private static String getBadOverrideMsg(String key, String detailMsg) {
-        return "The value for key " + key + " in the file " + ConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME
+        return "The value for key " + key + " in the file " + MifosConfigurationManager.CUSTOM_CONFIG_PROPS_FILENAME
                 + " must to be set to 1 because it was set to 1"
                 + " in the database, hence can't be set to to 0 in the custom"
                 + " configuration file as this might invalidate existing data. " + detailMsg + " Also, "
-                + ConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME + " must never be changed--make sure this"
+                + MifosConfigurationManager.DEFAULT_CONFIG_PROPS_FILENAME + " must never be changed--make sure this"
                 + " file is untouched.";
     }
 
@@ -156,7 +157,7 @@ public class ProcessFlowRules {
     }
 
     public static boolean isClientPendingApprovalStateEnabled() {
-        ConfigurationManager cm = ConfigurationManager.getInstance();
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
         return cm.getBoolean(CLIENT_PENDING_APPROVAL);
     }
 
@@ -185,7 +186,7 @@ public class ProcessFlowRules {
     }
 
     public static boolean isGroupPendingApprovalStateEnabled() {
-        ConfigurationManager cm = ConfigurationManager.getInstance();
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
         return cm.getBoolean(GROUP_PENDING_APPROVAL);
     }
 
@@ -232,7 +233,7 @@ public class ProcessFlowRules {
     }
 
     public static boolean isLoanPendingApprovalStateEnabled() {
-        ConfigurationManager cm = ConfigurationManager.getInstance();
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
         return cm.getBoolean(LOAN_PENDING_APPROVAL);
     }
 
@@ -257,7 +258,7 @@ public class ProcessFlowRules {
     }
 
     public static boolean isSavingsPendingApprovalStateEnabled() {
-        ConfigurationManager cm = ConfigurationManager.getInstance();
+        MifosConfigurationManager cm = MifosConfigurationManager.getInstance();
         return cm.getBoolean(SAVINGS_PENDING_APPROVAL);
     }
 }
