@@ -159,14 +159,6 @@ public class SavingsPersistence extends Persistence {
         return (AccountBO) obj1[0];
     }
 
-    public List<SavingsBO> getAllSavingsAccount() throws PersistenceException {
-        HashMap<String, Object> queryParameters = new HashMap<String, Object>();
-
-        List<SavingsBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_SAVINGS_ACCOUNTS, queryParameters);
-        return queryResult;
-
-    }
-
     public void persistSavingAccounts(ClientBO clientBO) throws CustomerException {
         for (AccountBO account : clientBO.getAccounts()) {
             if (account.getType() == AccountTypes.SAVINGS_ACCOUNT && account.getGlobalAccountNum() == null) {

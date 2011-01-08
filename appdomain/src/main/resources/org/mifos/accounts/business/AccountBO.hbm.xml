@@ -541,10 +541,6 @@ having max(cs.installment_id) > max(cfs.installment_id)
 		and account.globalAccountNum=:searchString ]]>
 	</query>
 
-	<query name="accounts.getAllSavingsAccounts">
-		<![CDATA[from org.mifos.accounts.savings.business.SavingsBO]]>
-	</query>
-
 	<query name="accounts.getAllLoanAccounts">
 		<![CDATA[from org.mifos.accounts.loan.business.LoanBO]]>
 	</query>

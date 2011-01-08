@@ -448,7 +448,6 @@ public interface NamedQueryConstants {
     String GET_CUSTOMERS_BY_LEVELID = "Customer.getCustomersByLevelId";
     String GET_ALL_OFFICES_FOR_CUSTOM_FIELD = "office.getAllOfficesForCustomField";
     String GET_ALL_PERSONNEL = "personnel.getAllPersonnel";
-    String GET_ALL_SAVINGS_ACCOUNTS = "accounts.getAllSavingsAccounts";
     String GET_ALL_LOAN_ACCOUNTS = "accounts.getAllLoanAccounts";
 
     String GET_BRANCH_REPORT_FOR_DATE_AND_BRANCH = "branchReport.getBranchReportForDateAndBranch";
@@ -492,6 +491,6 @@ public interface NamedQueryConstants {
     // Insert CustomerCustomFieldEntity entries
     String INSERT_CUSTOMER_CUSTOM_FIELD_ENTITY = "CustomerCustomFieldEntity.insertEntries";
 
-    
+
     String GET_ORIGINAL_SCHEDULE_BY_ACCOUNT_ID = "originalLoanScheduleEntity.getScheduleForLoan";
 }

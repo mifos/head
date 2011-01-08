@@ -388,7 +388,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("create_success");
         String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
         Assert.assertNotNull(globalAccountNum);
-        savings = new SavingsPersistence().findBySystemId(globalAccountNum);
+        savings = savingsDao.findBySystemId(globalAccountNum);
     }
 
     @Test
@@ -459,7 +459,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
         Assert.assertNotNull(globalAccountNum);
         StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findBySystemId(globalAccountNum);
+        savings = savingsDao.findBySystemId(globalAccountNum);
         Assert.assertNotNull(savings);
         Assert.assertEquals(TestUtils.createMoney(600.0), savings.getRecommendedAmount());
         verifyNoActionErrors();
@@ -480,7 +480,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
         Assert.assertNotNull(globalAccountNum);
         StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findBySystemId(globalAccountNum);
+        savings = savingsDao.findBySystemId(globalAccountNum);
         Assert.assertNotNull(savings);
         Assert.assertEquals(TestUtils.createMoney(600.0), savings.getRecommendedAmount());
         verifyNoActionErrors();
@@ -633,7 +633,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         String globalAccountNum = (String) request.getAttribute(SavingsConstants.GLOBALACCOUNTNUM);
         Assert.assertNotNull(globalAccountNum);
         StaticHibernateUtil.flushSession();
-        savings = new SavingsPersistence().findBySystemId(globalAccountNum);
+        savings = savingsDao.findBySystemId(globalAccountNum);
         Assert.assertNotNull(savings);
         Assert.assertEquals(TestUtils.createMoney(600.0), savings.getRecommendedAmount());
         StaticHibernateUtil.getInterceptor().afterTransactionCompletion(new AuditTransactionForTests());

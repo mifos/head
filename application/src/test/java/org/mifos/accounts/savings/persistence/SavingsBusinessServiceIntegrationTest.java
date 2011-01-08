@@ -110,19 +110,6 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
         Assert.assertEquals(1, savingsAccounts.size());
     }
 
-    @Test
-    public void testGetAllSavingsAccount() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = createSavingsAccount("FFFF", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-
-        List<SavingsBO> savingsAccounts = service.getAllSavingsAccount();
-        Assert.assertNotNull(savingsAccounts);
-        Assert.assertEquals(1, savingsAccounts.size());
-    }
-
     private void createInitialObjects() {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
         center = TestObjectFactory.createWeeklyFeeCenter("Center_Active_test", meeting);

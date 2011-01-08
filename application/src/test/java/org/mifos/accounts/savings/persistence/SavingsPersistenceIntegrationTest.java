@@ -172,7 +172,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "v1ws", currentDate,
                 RecommendedAmountUnit.COMPLETE_GROUP);
         savings = createSavingsAccount("kkk", savingsOffering);
-        SavingsBO savings1 = savingsPersistence.findBySystemId(savings.getGlobalAccountNum());
+        SavingsBO savings1 = savingsDao.findBySystemId(savings.getGlobalAccountNum());
         Assert.assertEquals(savings.getAccountId(), savings1.getAccountId());
         Assert.assertEquals(savingsOffering.getRecommendedAmount(), savings1.getRecommendedAmount());
     }
@@ -294,20 +294,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
         savings.setUserContext(userContext);
         StaticHibernateUtil.flushSession();
         Assert.assertEquals(savingsPersistence.getMissedDepositsPaidAfterDueDate(savings.getAccountId()), 1);
-    }
-
-    @Test
-    public void testGetAllSavingsAccount() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "v1ws", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = createSavingsAccount("kkk", savingsOffering);
-
-        List<SavingsBO> savingsAccounts = savingsPersistence.getAllSavingsAccount();
-        Assert.assertNotNull(savingsAccounts);
-        Assert.assertEquals(1, savingsAccounts.size());
-
     }
 
     private void createInitialObjects() {

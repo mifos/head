@@ -19,6 +19,7 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.transform.Transformers;
@@ -137,5 +138,10 @@ public class GenericDaoHibernate implements GenericDao {
     @Override
     public Session getSession() {
         return StaticHibernateUtil.getSessionTL();
+    }
+
+    @Override
+    public void initialize(final Object object) {
+        Hibernate.initialize(object);
     }
 }

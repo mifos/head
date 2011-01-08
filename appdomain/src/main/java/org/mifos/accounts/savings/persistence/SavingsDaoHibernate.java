@@ -49,11 +49,15 @@ import org.mifos.dto.domain.NoteSearchDto;
 import org.mifos.dto.screen.NotesSearchResultsDto;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  *
  */
 public class SavingsDaoHibernate implements SavingsDao {
+
+    private static final Logger logger = LoggerFactory.getLogger(SavingsDaoHibernate.class);
 
     private final GenericDao baseDao;
 
@@ -219,22 +223,21 @@ public class SavingsDaoHibernate implements SavingsDao {
 
 
     @Override
-    public SavingsBO findBySystemId(String globalAccountNum) {
-
-//        SavingsBO savings = queryResult == null ? null : (SavingsBO) queryResult;
-//        if (savings != null && savings.getRecommendedAmount() == null) {
-//            savings.setRecommendedAmount(new Money(savings.getCurrency()));
-//            initialize(savings.getAccountActionDates());
-//            initialize(savings.getAccountNotes());
-//            initialize(savings.getAccountFlags());
-//        }
-//        return savings;
-
+    public SavingsBO findBySystemId(String globalAccountNumber) {
+        logger.debug("In SavingsPersistence::findBySystemId(), globalAccountNumber: " + globalAccountNumber);
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(AccountConstants.GLOBAL_ACCOUNT_NUMBER, globalAccountNum);
-
-        return (SavingsBO) this.baseDao.executeUniqueResultNamedQuery("accounts.findBySystemId", queryParameters);
+        queryParameters.put(AccountConstants.GLOBAL_ACCOUNT_NUMBER, globalAccountNumber);
+        Object queryResult = baseDao.executeUniqueResultNamedQuery(NamedQueryConstants.FIND_ACCOUNT_BY_SYSTEM_ID, queryParameters);
+        SavingsBO savings = queryResult == null ? null : (SavingsBO) queryResult;
+        if (savings != null && savings.getRecommendedAmount() == null) {
+            savings.setRecommendedAmount(new Money(savings.getCurrency()));
+            baseDao.initialize(savings.getAccountActionDates());
+            baseDao.initialize(savings.getAccountNotes());
+            baseDao.initialize(savings.getAccountFlags());
+        }
+        return savings;
     }
+
 
     @Override
     public SavingsBO findById(Long savingsId) {

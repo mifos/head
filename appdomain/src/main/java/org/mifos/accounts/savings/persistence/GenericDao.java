@@ -19,6 +19,7 @@
  */
 package org.mifos.accounts.savings.persistence;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -50,4 +51,6 @@ public interface GenericDao {
     Session getSession();
 
     Iterator<? extends Object> executeNamedQueryIterator(String queryName, Map<String, ?> queryParameters);
+
+    public void initialize(final Object object);
 }
