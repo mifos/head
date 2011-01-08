@@ -30,10 +30,6 @@
     	<constructor-arg ref="generalLedgerDao" />    	
     </bean>
     
-    <bean id="shutdownServiceFacade" class="org.mifos.application.admin.business.service.ShutdownServiceFacadeWebTier"/>
-
-    <bean id="batchjobsServiceFacade" class="org.mifos.application.admin.business.service.BatchjobsServiceFacadeWebTier"/>
-
     <bean id="personnelServiceFacade" class="org.mifos.application.servicefacade.PersonnelServiceFacadeWebTier">
     	<constructor-arg ref="officeDao" />
         <constructor-arg ref="customerDao" />

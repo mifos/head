@@ -3,4 +3,8 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 	<bean id="systemInformationServiceFacade" class="org.mifos.application.admin.servicefacade.SystemInformationServiceFacadeWebTier"/>
+	
+	<bean id="shutdownServiceFacade" class="org.mifos.application.admin.business.service.ShutdownServiceFacadeWebTier"/>
+	
+	<bean id="batchjobsServiceFacade" class="org.mifos.application.admin.business.service.BatchjobsServiceFacadeWebTier"/>
 </beans>
