@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
@@ -151,7 +152,7 @@ public class MasterPersistence extends Persistence {
             Session session = getSession();
             List<T> masterEntities = session.createQuery("from " + type.getName()).list();
             for (MasterDataEntity masterData : masterEntities) {
-                initialize(masterData.getNames());
+                Hibernate.initialize(masterData.getNames());
                 masterData.setLocaleId(localeId);
             }
             return masterEntities;
@@ -170,7 +171,7 @@ public class MasterPersistence extends Persistence {
             if (masterEntity != null && masterEntity.size() > 0) {
                 MasterDataEntity masterDataEntity = masterEntity.get(0);
                 masterDataEntity.setLocaleId(localeId);
-                initialize(masterDataEntity.getNames());
+                Hibernate.initialize(masterDataEntity.getNames());
                 return masterDataEntity;
             }
             throw new PersistenceException("errors.entityNotFound");
@@ -188,7 +189,7 @@ public class MasterPersistence extends Persistence {
             if (masterEntities != null && masterEntities.size() > 0) {
                 T masterDataEntity = masterEntities.get(0);
                 masterDataEntity.setLocaleId(localeId);
-                initialize(masterDataEntity.getNames());
+                Hibernate.initialize(masterDataEntity.getNames());
                 return masterDataEntity;
             }
             throw new PersistenceException("errors.entityNotFound");

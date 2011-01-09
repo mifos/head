@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.hibernate.Hibernate;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdOfferingBO;
 import org.mifos.accounts.productdefinition.business.PrdStatusEntity;
@@ -95,8 +96,8 @@ public class PrdOfferingPersistence extends Persistence {
         List<PrdStatusEntity> prdStatusList = (List<PrdStatusEntity>) executeNamedQuery(
                 NamedQueryConstants.PRODUCT_STATUS, queryParameters);
         for (PrdStatusEntity prdStatus : prdStatusList) {
-            initialize(prdStatus);
-            initialize(prdStatus.getPrdState());
+            Hibernate.initialize(prdStatus);
+            Hibernate.initialize(prdStatus.getPrdState());
             prdStatus.getPrdState().setLocaleId(localeId);
         }
         logger.debug("getting the applicable product Status Done and : " + prdStatusList);

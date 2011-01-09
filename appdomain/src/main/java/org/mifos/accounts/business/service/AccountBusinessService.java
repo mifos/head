@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.hibernate.Hibernate;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
@@ -403,7 +404,7 @@ public class AccountBusinessService implements BusinessService {
         try {
             List<CustomFieldDefinitionEntity> customFields = getAccountPersistence()
                     .retrieveCustomFieldsDefinition(entityType.getValue());
-            getAccountPersistence().initialize(customFields);
+            Hibernate.initialize(customFields);
             return customFields;
         } catch (PersistenceException e) {
             throw new ServiceException(e);

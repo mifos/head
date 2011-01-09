@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.hibernate.Hibernate;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFeesEntity;
 import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
@@ -89,7 +90,7 @@ public class LoanPrdPersistence extends Persistence {
 
     public LoanOfferingBO getLoanOffering(final Short loanOfferingId, final Short localeId) throws PersistenceException {
         LoanOfferingBO loanOffering = (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class, loanOfferingId);
-        initialize(loanOffering);
+        Hibernate.initialize(loanOffering);
         loanOffering.getPrdCategory().getProductCategoryName();
         loanOffering.getPrdApplicableMaster().setLocaleId(localeId);
         loanOffering.getPrdStatus().getPrdState().setLocaleId(localeId);

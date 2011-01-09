@@ -180,10 +180,6 @@ public class LoanBusinessService implements BusinessService {
         }
     }
 
-    public void initialize(final Object object) {
-        getLoanPersistence().initialize(object);
-    }
-
     public List<LoanBO> getAllChildrenForParentGlobalAccountNum(final String globalAccountNum) throws ServiceException {
         return findIndividualLoans(findBySystemId(globalAccountNum).getAccountId().toString());
     }

@@ -27,6 +27,7 @@ import java.util.Locale;
 
 import junit.framework.Assert;
 
+import org.hibernate.Hibernate;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -519,7 +520,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         savingsOffering = TestObjectFactory.createSavingsProduct("sav prd1", "prd1", currentDate,
                 RecommendedAmountUnit.COMPLETE_GROUP);
         savings = createSavingsAccount("000X00000000020", savingsOffering, AccountState.SAVINGS_PARTIAL_APPLICATION);
-        new SavingsBusinessService().initialize(savings);
+        Hibernate.initialize(savings);
         savingsOffering = null;
         StaticHibernateUtil.flushSession();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
@@ -592,7 +593,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         savingsOffering = helper.createSavingsOffering("asfddsf", "213a");
         savings = helper.createSavingsAccount("000100000000017", savingsOffering, group,
                 AccountStates.SAVINGS_ACC_PARTIALAPPLICATION, userContext);
-        new SavingsBusinessService().initialize(savings);
+        Hibernate.initialize(savings);
         savingsOffering = null;
         AccountStateMachines.getInstance().initialize(AccountTypes.SAVINGS_ACCOUNT, null);
 

@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.hibernate.Hibernate;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
@@ -57,7 +58,7 @@ public class SavingsBusinessService implements BusinessService {
         try {
             List<CustomFieldDefinitionEntity> customFields = savingsPersistence
                     .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
-            initialize(customFields);
+            Hibernate.initialize(customFields);
             return customFields;
         } catch (PersistenceException e) {
             throw new ServiceException(e);
@@ -70,10 +71,6 @@ public class SavingsBusinessService implements BusinessService {
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
-    }
-
-    public void initialize(Object object) {
-        savingsPersistence.initialize(object);
     }
 
     public void persistSavings(SavingsBO savingsBO) throws AccountException {

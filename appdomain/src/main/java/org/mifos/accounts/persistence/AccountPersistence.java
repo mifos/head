@@ -22,6 +22,7 @@ package org.mifos.accounts.persistence;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.commons.configuration.XMLConfiguration;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.joda.time.DateTime;
@@ -206,10 +207,10 @@ public class AccountPersistence extends Persistence {
     private void initializeAccountStates(List<AccountStateEntity> queryResult) {
         for (AccountStateEntity accountStateEntity : queryResult) {
             for (AccountStateFlagEntity accountStateFlagEntity : accountStateEntity.getFlagSet()) {
-                initialize(accountStateFlagEntity);
-                initialize(accountStateFlagEntity.getNames());
+                Hibernate.initialize(accountStateFlagEntity);
+                Hibernate.initialize(accountStateFlagEntity.getNames());
             }
-            initialize(accountStateEntity.getNames());
+            Hibernate.initialize(accountStateEntity.getNames());
         }
     }
 
@@ -560,7 +561,7 @@ public class AccountPersistence extends Persistence {
 
         return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
     }
-    
+
     @SuppressWarnings("unchecked")
 	public List<AccountPaymentEntity> findAccountPaymentsByReceiptNumber(String receiptNumber) throws PersistenceException {
     	 Map<String, Object> parameters = new HashMap<String, Object>();
@@ -568,5 +569,5 @@ public class AccountPersistence extends Persistence {
 
          return executeNamedQuery("findAccountPaymentsByReceiptNumber", parameters);
     }
-    
+
 }

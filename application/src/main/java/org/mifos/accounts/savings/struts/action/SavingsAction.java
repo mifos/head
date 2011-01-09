@@ -35,6 +35,7 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.hibernate.Hibernate;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountFlagMapping;
 import org.mifos.accounts.business.AccountStatusChangeHistoryEntity;
@@ -405,7 +406,7 @@ public class SavingsAction extends BaseAction {
         List<SavingsStatusChangeHistoryDto> savingsStatusHistoryDtoList = this.savingsServiceFacade.retrieveStatusChangeHistory(globalAccountNum);
 
         SavingsBO savings = this.savingsDao.findBySystemId(globalAccountNum);
-        savingsService.initialize(savings.getAccountStatusChangeHistory());
+        Hibernate.initialize(savings.getAccountStatusChangeHistory());
         savings.setUserContext((UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession()));
 
         List<AccountStatusChangeHistoryEntity> savingsStatusHistoryViewList = new ArrayList<AccountStatusChangeHistoryEntity>(savings.getAccountStatusChangeHistory());
@@ -448,16 +449,16 @@ public class SavingsAction extends BaseAction {
 
         SavingsBO savings = savingsDao.findBySystemId(savingsSystemId);
         for (AccountActionDateEntity actionDate : savings.getAccountActionDates()) {
-            savingsService.initialize(actionDate);
+            Hibernate.initialize(actionDate);
         }
 
-        savingsService.initialize(savings.getAccountNotes());
+        Hibernate.initialize(savings.getAccountNotes());
 
         for (AccountFlagMapping accountFlagMapping : savings.getAccountFlags()) {
-            savingsService.initialize(accountFlagMapping.getFlag());
+            Hibernate.initialize(accountFlagMapping.getFlag());
             accountFlagMapping.getFlag().setLocaleId(uc.getLocaleId());
         }
-        savingsService.initialize(savings.getAccountFlags());
+        Hibernate.initialize(savings.getAccountFlags());
         savings.getAccountState().setLocaleId(uc.getLocaleId());
         savings.setUserContext(uc);
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);

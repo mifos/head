@@ -33,6 +33,7 @@ import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
+import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -747,10 +748,10 @@ public class CustomerPersistence extends Persistence {
                 queryParameters);
         for (CustomerStatusEntity customerStatus : queryResult) {
             for (CustomerStatusFlagEntity customerStatusFlagEntity : customerStatus.getFlagSet()) {
-                initialize(customerStatusFlagEntity);
-                initialize(customerStatusFlagEntity.getNames());
+                Hibernate.initialize(customerStatusFlagEntity);
+                Hibernate.initialize(customerStatusFlagEntity.getNames());
             }
-            initialize(customerStatus.getLookUpValue());
+            Hibernate.initialize(customerStatus.getLookUpValue());
         }
         return queryResult;
     }

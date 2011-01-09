@@ -216,10 +216,6 @@ public abstract class Persistence {
         return new Param(type, name, value);
     }
 
-    public void initialize(final Object object) {
-        Hibernate.initialize(object);
-    }
-
     protected Integer getCountFromQueryResult(final List queryResult) {
         int count = 0;
         if (queryResult.size() > 0 && queryResult.get(0) != null) {
