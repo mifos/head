@@ -40,5 +40,7 @@
         <wb-resource deploy-path="/" source-path="/appdomain/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/appdomain/src/test/java"/>
         <wb-resource deploy-path="/" source-path="/appdomain/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/abstract-domain/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/abstract-domain/src/test/java"/>
     </wb-module>
 </project-modules>

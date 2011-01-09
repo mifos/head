@@ -39,6 +39,10 @@
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
+            <artifactId>mifos-abstract-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
             <artifactId>mifos-accounting</artifactId>
         </dependency>
         <dependency>

@@ -47,6 +47,7 @@
         <module>cashflow</module>
         <module>acceptanceTests</module>
         <module>appdomain</module>
+        <module>abstract-domain</module>
     </modules>
 
     <!--
@@ -116,6 +117,11 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-appdomain</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-abstract-domain</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>
