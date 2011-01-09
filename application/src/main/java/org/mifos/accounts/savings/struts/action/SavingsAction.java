@@ -446,7 +446,7 @@ public class SavingsAction extends BaseAction {
 
         String savingsSystemId = actionform.getGlobalAccountNum();
 
-        SavingsBO savings = savingsService.findBySystemId(savingsSystemId);
+        SavingsBO savings = savingsDao.findBySystemId(savingsSystemId);
         for (AccountActionDateEntity actionDate : savings.getAccountActionDates()) {
             savingsService.initialize(actionDate);
         }

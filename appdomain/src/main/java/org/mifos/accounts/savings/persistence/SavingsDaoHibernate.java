@@ -28,6 +28,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.hibernate.Criteria;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
@@ -231,13 +232,19 @@ public class SavingsDaoHibernate implements SavingsDao {
         SavingsBO savings = queryResult == null ? null : (SavingsBO) queryResult;
         if (savings != null && savings.getRecommendedAmount() == null) {
             savings.setRecommendedAmount(new Money(savings.getCurrency()));
-            baseDao.initialize(savings.getAccountActionDates());
-            baseDao.initialize(savings.getAccountNotes());
-            baseDao.initialize(savings.getAccountFlags());
+            Hibernate.initialize(savings.getAccountActionDates());
+            Hibernate.initialize(savings.getAccountNotes());
+            Hibernate.initialize(savings.getAccountFlags());
         }
         return savings;
     }
 
+    public void save(List<SavingsBO> savingsAccounts) {
+        final Session session = baseDao.getSession();
+        for (SavingsBO savingsBO : savingsAccounts) {
+            session.saveOrUpdate(savingsBO);
+        }
+    }
 
     @Override
     public SavingsBO findById(Long savingsId) {

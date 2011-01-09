@@ -531,7 +531,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("depositduedetails_success");
 
         StaticHibernateUtil.flushSession();
-        savings = new SavingsBusinessService().findBySystemId(savings.getGlobalAccountNum());
+        savings = savingsDao.findBySystemId(savings.getGlobalAccountNum());
 
     }
 
@@ -555,7 +555,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("waiveAmount_success");
 
         StaticHibernateUtil.flushSession();
-        savings = new SavingsBusinessService().findBySystemId(savings.getGlobalAccountNum());
+        savings = savingsDao.findBySystemId(savings.getGlobalAccountNum());
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 
@@ -579,7 +579,7 @@ public class SavingsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward("waiveAmount_success");
 
         StaticHibernateUtil.flushSession();
-        savings = new SavingsBusinessService().findBySystemId(savings.getGlobalAccountNum());
+        savings = savingsDao.findBySystemId(savings.getGlobalAccountNum());
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 

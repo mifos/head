@@ -70,4 +70,6 @@ public interface SavingsDao {
 
     NotesSearchResultsDto searchNotes(NoteSearchDto noteSearch);
 
+    void save(List<SavingsBO> savingsAccounts);
+
 }

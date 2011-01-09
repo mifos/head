@@ -35,7 +35,7 @@ import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.core.MifosRuntimeException;
@@ -67,15 +67,15 @@ public class SaveCollectionSheetAssembler {
     private final ClientAttendanceDao clientAttendanceDao;
     private final LoanPersistence loanPersistence;
     private final AccountPersistence accountPersistence;
-    private final SavingsPersistence savingsPersistence;
+    private final SavingsDao savingsDao;
 
     public SaveCollectionSheetAssembler(final ClientAttendanceDao clientAttendanceDao,
             final LoanPersistence loanPersistence, final AccountPersistence accountPersistence,
-            final SavingsPersistence savingsPersistence) {
+            final SavingsDao savingsDao) {
         this.clientAttendanceDao = clientAttendanceDao;
         this.loanPersistence = loanPersistence;
         this.accountPersistence = accountPersistence;
-        this.savingsPersistence = savingsPersistence;
+        this.savingsDao = savingsDao;
     }
 
     public List<SavingsBO> savingsAccountAssemblerFromDto(
@@ -124,7 +124,7 @@ public class SaveCollectionSheetAssembler {
                     boolean storeAccountForSavingLater = false;
                     try {
                         final CustomerBO payingCustomer = customerPersistence.getCustomer(customerId);
-                        SavingsBO account = savingsPersistence.findById(saveCollectionSheetCustomerSaving
+                        SavingsBO account = savingsDao.findById(saveCollectionSheetCustomerSaving
                                 .getAccountId());
 
                         if (isDeposit) {

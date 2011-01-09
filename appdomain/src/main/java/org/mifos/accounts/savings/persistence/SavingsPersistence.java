@@ -30,8 +30,6 @@ import org.hibernate.Session;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
-import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -40,10 +38,8 @@ import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
-import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Money;
@@ -60,27 +56,6 @@ public class SavingsPersistence extends Persistence {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(AccountConstants.ENTITY_TYPE, entityType);
         return executeNamedQuery(NamedQueryConstants.RETRIEVE_CUSTOM_FIELDS, queryParameters);
-    }
-
-    public SavingsBO findById(Integer accountId) throws PersistenceException {
-        logger.debug("In SavingsPersistence::findById(), accountId: " + accountId);
-        return (SavingsBO) getPersistentObject(SavingsBO.class, accountId);
-    }
-
-    public SavingsBO findBySystemId(String globalAccountNumber) throws PersistenceException {
-        logger.debug("In SavingsPersistence::findBySystemId(), globalAccountNumber: " + globalAccountNumber);
-        Map<String, Object> queryParameters = new HashMap<String, Object>();
-        queryParameters.put(AccountConstants.GLOBAL_ACCOUNT_NUMBER, globalAccountNumber);
-        Object queryResult = execUniqueResultNamedQuery(NamedQueryConstants.FIND_ACCOUNT_BY_SYSTEM_ID, queryParameters);
-        SavingsBO savings = queryResult == null ? null : (SavingsBO) queryResult;
-        if (savings != null && savings.getRecommendedAmount() == null) {
-            savings.setRecommendedAmount(new Money(savings.getCurrency()));
-            initialize(savings.getAccountActionDates());
-            initialize(savings.getAccountNotes());
-            initialize(savings.getAccountFlags());
-        }
-        return savings;
-
     }
 
     public SavingsTrxnDetailEntity retrieveLastTransaction(Integer accountId, Date date) throws PersistenceException {
@@ -168,13 +143,6 @@ public class SavingsPersistence extends Persistence {
                     throw new CustomerException(ae);
                 }
             }
-        }
-    }
-
-    public void save(List<SavingsBO> savingsAccounts) {
-        final Session session = getSession();
-        for (SavingsBO savingsBO : savingsAccounts) {
-            session.saveOrUpdate(savingsBO);
         }
     }
 

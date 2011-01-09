@@ -158,7 +158,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
 
         Survey retrievedSurvey = (Survey) request.getSession().getAttribute(SurveysConstants.KEY_SURVEY);
         Assert.assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
-        Assert.assertEquals(SurveyInstanceAction.getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum),
+        Assert.assertEquals(new SurveyInstanceAction().getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum),
                 (String) request.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 
         int surveyQuestion3Id = surveyQuestion3.getSurveyQuestionId();
@@ -317,7 +317,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         retrievedSurvey = (Survey) StaticHibernateUtil.getSessionTL().get(Survey.class, retrievedSurvey.getSurveyId());
 
         Assert.assertEquals(survey.getSurveyId(), retrievedSurvey.getSurveyId());
-        Assert.assertEquals(SurveyInstanceAction.getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum),
+        Assert.assertEquals(new SurveyInstanceAction().getBusinessObjectName(survey.getAppliesToAsEnum(), globalNum),
                 (String) request.getAttribute(SurveysConstants.KEY_BUSINESS_OBJECT_NAME));
 
         InstanceStatus status = InstanceStatus.COMPLETED;

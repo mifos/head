@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
+import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.collectionsheet.persistence.CollectionSheetDao;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.client.business.AttendanceType;
@@ -62,7 +62,7 @@ public class CollectionSheetServiceImplTest {
     @Mock
     private AccountPersistence accountPersistence;
     @Mock
-    private SavingsPersistence savingsPersistence;
+    private SavingsDao savingsDao;
     @Mock
     private CollectionSheetDao collectionSheetDao;
 
@@ -70,7 +70,7 @@ public class CollectionSheetServiceImplTest {
     public void setupAndInjectDependencies() {
 
         collectionSheetService = new CollectionSheetServiceImpl(clientAttendanceDao, loanPersistence,
-                accountPersistence, savingsPersistence, collectionSheetDao);
+                accountPersistence, savingsDao, collectionSheetDao);
     }
 
     @Test

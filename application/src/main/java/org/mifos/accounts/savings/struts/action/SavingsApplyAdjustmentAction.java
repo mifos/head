@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.hibernate.Hibernate;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
@@ -87,7 +88,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
                     AccountActionEntity.class, new SavingsHelper().getPaymentActionType(lastPayment));
             accountAction.setLocaleId(uc.getLocaleId());
 
-            getSavingsService().initialize(savings.findMostRecentPaymentByPaymentDate().getAccountTrxns());
+            Hibernate.initialize(savings.findMostRecentPaymentByPaymentDate().getAccountTrxns());
 
             SessionUtils.setAttribute(SavingsConstants.ACCOUNT_ACTION, accountAction, request);
             SessionUtils.setAttribute(SavingsConstants.CLIENT_NAME, savingsAdjustmentDto.getClientName(), request);
@@ -121,7 +122,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         SavingsBO savings = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
         Integer accountId = savings.getAccountId();
         Integer versionNum = savings.getVersionNo();
-        savings = getSavingsService().findById(accountId);
+        savings = savingsDao.findById(accountId);
 
         // NOTE: initialise so when error occurs when apply adjustment, savings object is correctly initialised for
         // use within Tag library in jsp.

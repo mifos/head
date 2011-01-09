@@ -51,6 +51,4 @@ public interface GenericDao {
     Session getSession();
 
     Iterator<? extends Object> executeNamedQueryIterator(String queryName, Map<String, ?> queryParameters);
-
-    public void initialize(final Object object);
 }

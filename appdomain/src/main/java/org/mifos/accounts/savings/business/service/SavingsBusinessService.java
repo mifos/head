@@ -40,6 +40,7 @@ import org.mifos.security.util.UserContext;
 public class SavingsBusinessService implements BusinessService {
     private SavingsPersistence savingsPersistence = getSavingsPersistence();
 
+
     protected SavingsPersistence getSavingsPersistence() {
         return new SavingsPersistence();
     }
@@ -58,24 +59,6 @@ public class SavingsBusinessService implements BusinessService {
                     .retrieveCustomFieldsDefinition(SavingsConstants.SAVINGS_CUSTOM_FIELD_ENTITY_TYPE);
             initialize(customFields);
             return customFields;
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public SavingsBO findById(Integer accountId) throws ServiceException {
-        logger.debug("In SavingsBusinessService::findById(), accountId: " + accountId);
-        try {
-            return savingsPersistence.findById(accountId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-    public SavingsBO findBySystemId(String globalAccountNumber) throws ServiceException {
-        logger.debug("In SavingsBusinessService::findBySystemId(), globalAccountNumber: " + globalAccountNumber);
-        try {
-            return savingsPersistence.findBySystemId(globalAccountNumber);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

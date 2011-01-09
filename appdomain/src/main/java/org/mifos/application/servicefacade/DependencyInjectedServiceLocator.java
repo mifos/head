@@ -198,7 +198,7 @@ public class DependencyInjectedServiceLocator {
 
         if (collectionSheetService == null) {
             collectionSheetService = new CollectionSheetServiceImpl(clientAttendanceDao, loanPersistence,
-                    accountPersistence, savingsPersistence, collectionSheetDao);
+                    accountPersistence, savingsDao, collectionSheetDao);
         }
         return collectionSheetService;
     }

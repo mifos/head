@@ -370,7 +370,7 @@ public class SurveyInstanceAction extends BaseAction {
      * String globalNum)} and {@link #getBusinessObjectName(BusinessObject
      * customer)} instead of this method.
      */
-    public static String getBusinessObjectName(SurveyType surveyType, String globalNum) throws Exception {
+    public String getBusinessObjectName(SurveyType surveyType, String globalNum) throws Exception {
         if (surveyType == SurveyType.CLIENT || surveyType == SurveyType.CENTER || surveyType == SurveyType.GROUP) {
             CustomerBO customer = new CustomerPersistence().findBySystemId(globalNum);
             return customer.getDisplayName();
@@ -380,13 +380,13 @@ public class SurveyInstanceAction extends BaseAction {
             return loanBO.getLoanOffering().getPrdOfferingName() + "# " + globalNum;
         } else if (surveyType == SurveyType.SAVINGS) {
             SavingsBusinessService service = new SavingsBusinessService();
-            SavingsBO savingsBO = service.findBySystemId(globalNum);
+            SavingsBO savingsBO = savingsDao.findBySystemId(globalNum);
             return savingsBO.getSavingsOffering().getPrdOfferingName() + "# " + globalNum;
         }
         throw new NotImplementedException();
     }
 
-    public static AbstractBusinessObject getBusinessObject(SurveyType surveyType, String globalNum) throws Exception {
+    public AbstractBusinessObject getBusinessObject(SurveyType surveyType, String globalNum) throws Exception {
         if (surveyType == SurveyType.CLIENT) {
             ClientBO client = (ClientBO) new CustomerPersistence().findBySystemId(globalNum, CustomerLevel.CLIENT.getValue());
             return client;
@@ -402,7 +402,7 @@ public class SurveyInstanceAction extends BaseAction {
             return loanBO;
         } else if (surveyType == SurveyType.SAVINGS) {
             SavingsBusinessService service = new SavingsBusinessService();
-            SavingsBO savingsBO = service.findBySystemId(globalNum);
+            SavingsBO savingsBO = savingsDao.findBySystemId(globalNum);
             return savingsBO;
         }
         throw new NotImplementedException();

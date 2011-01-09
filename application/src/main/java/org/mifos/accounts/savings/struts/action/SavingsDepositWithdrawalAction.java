@@ -182,7 +182,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
     public ActionForward makePayment(final ActionMapping mapping, final ActionForm form,
             final HttpServletRequest request, @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
         SavingsBO savedAccount = (SavingsBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        SavingsBO savings = getSavingsService().findById(savedAccount.getAccountId());
+        SavingsBO savings = savingsDao.findById(savedAccount.getAccountId());
         checkVersionMismatch(savedAccount.getVersionNo(), savings.getVersionNo());
         savings.setVersionNo(savedAccount.getVersionNo());
 

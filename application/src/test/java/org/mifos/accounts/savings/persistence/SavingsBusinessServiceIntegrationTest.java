@@ -47,6 +47,7 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -56,6 +57,10 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
     private SavingsBO savings;
     private SavingsOfferingBO savingsOffering;
     private SavingsOfferingBO savingsOffering2;
+
+
+    @Autowired
+    private SavingsDao savingsDao;
 
     @Before
     public void setUp() throws Exception {
@@ -72,24 +77,13 @@ public class SavingsBusinessServiceIntegrationTest extends MifosIntegrationTestC
     }
 
     @Test
-    public void testFindById() throws Exception {
-        createInitialObjects();
-        Date currentDate = new Date(System.currentTimeMillis());
-        savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "kh6y", currentDate,
-                RecommendedAmountUnit.COMPLETE_GROUP);
-        savings = createSavingsAccount("FFFF", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-        SavingsBO savings1 = service.findById(savings.getAccountId());
-        Assert.assertNotNull(savings1);
-    }
-
-    @Test
     public void testFindBySystemId() throws Exception {
         createInitialObjects();
         Date currentDate = new Date(System.currentTimeMillis());
         savingsOffering = TestObjectFactory.createSavingsProduct("SavingPrd1", "cadf", currentDate,
                 RecommendedAmountUnit.COMPLETE_GROUP);
         savings = createSavingsAccount("YYYY", savingsOffering, AccountStates.SAVINGS_ACC_PARTIALAPPLICATION);
-        SavingsBO savings1 = service.findBySystemId(savings.getGlobalAccountNum());
+        SavingsBO savings1 = savingsDao.findBySystemId(savings.getGlobalAccountNum());
 
         Assert.assertEquals(savings.getAccountId(), savings1.getAccountId());
     }

@@ -139,9 +139,4 @@ public class GenericDaoHibernate implements GenericDao {
     public Session getSession() {
         return StaticHibernateUtil.getSessionTL();
     }
-
-    @Override
-    public void initialize(final Object object) {
-        Hibernate.initialize(object);
-    }
 }
