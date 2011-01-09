@@ -106,7 +106,6 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private SavingsBO savings;
     private SavingsOfferingBO savingsOffering;
     private final SavingsTestHelper helper = new SavingsTestHelper();
-    private final SavingsPersistence savingsPersistence = new SavingsPersistence();
     private final AccountPersistence accountPersistence = new AccountPersistence();
     private MifosCurrency currency = null;
     private PersonnelBO createdBy = null;

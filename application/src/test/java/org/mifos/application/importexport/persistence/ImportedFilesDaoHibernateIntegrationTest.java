@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -66,8 +67,7 @@ public class ImportedFilesDaoHibernateIntegrationTest extends MifosIntegrationTe
     /**
      * ignoring as can't get first
      */
-    @Ignore
-    @Test(expected=ConstraintViolationException.class)
+    @Test(expected=MifosRuntimeException.class)
     public void testSaveConstraintVoilation() throws Exception {
         Short personnelId = new Short("1");
         PersonnelBO personnelBO = TestObjectFactory.getPersonnel(personnelId);
@@ -77,12 +77,10 @@ public class ImportedFilesDaoHibernateIntegrationTest extends MifosIntegrationTe
 
         StaticHibernateUtil.startTransaction();
         importedFilesDao.saveImportedFile(expected);
-        StaticHibernateUtil.commitTransaction();
-        StaticHibernateUtil.flushAndClearSession();
+        StaticHibernateUtil.flushSession();
 
         ImportedFilesEntity shouldViolateConstraint = new ImportedFilesEntity(fileName, timeStamp, personnelBO);
-        StaticHibernateUtil.startTransaction();
         importedFilesDao.saveImportedFile(shouldViolateConstraint);
-        StaticHibernateUtil.commitTransaction();
+        StaticHibernateUtil.flushSession();
     }
 }
