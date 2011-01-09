@@ -212,7 +212,7 @@ public class BranchReportPersistence extends Persistence {
     }
 
     private void runStaffSummaryQueryClosure(Query query, Closure closure) {
-        List<Object[]> resultSet = runQuery(query);
+        List<Object[]> resultSet = query.list();
         for (Object[] result : resultSet) {
             closure.execute(result);
         }

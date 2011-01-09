@@ -82,14 +82,6 @@ public abstract class Persistence {
         }
     }
 
-    public void rollbackTransaction() {
-        StaticHibernateUtil.rollbackTransaction();
-    }
-
-    public void commitTransaction() {
-        StaticHibernateUtil.commitTransaction();
-    }
-
     /**
      * This method takes the name of a named query to be executed as well as a
      * list of parameters that the query uses. It assumes the session is open.
@@ -98,14 +90,10 @@ public abstract class Persistence {
         try {
             Query query = createdNamedQuery(queryName);
             query.setProperties(queryParameters);
-            return runQuery(query);
+            return query.list();
         } catch (Exception e) {
             throw new PersistenceException(e);
         }
-    }
-
-    public List runQuery(final Query query) {
-        return query.list();
     }
 
     public Query createdNamedQuery(final String queryName) {

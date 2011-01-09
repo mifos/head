@@ -950,9 +950,9 @@ public class CustomerPersistence extends Persistence {
 
     public Integer getDormantClientsCountBySavingAccountForOffice(final OfficeBO office, final Integer loanCyclePeriod)
             throws PersistenceException {
-        return getCountFromQueryResult(executeNamedQuery(
+        return executeNamedQuery(
                 NamedQueryConstants.GET_DORMANT_CLIENTS_COUNT_BY_SAVING_ACCOUNT_FOR_OFFICE, populateDormantQueryParams(
-                        office, loanCyclePeriod)));
+                        office, loanCyclePeriod));
     }
 
     public Integer getVeryPoorDormantClientsCountBySavingAccountForOffice(final OfficeBO office,

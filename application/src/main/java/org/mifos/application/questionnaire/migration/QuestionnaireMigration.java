@@ -162,7 +162,7 @@ public class QuestionnaireMigration {
                     surveysPersistence.delete(customField);
                 } catch (PersistenceException e) {
                     logger.error(format("Unable to remove custom field with ID %d", customField.getFieldId()), e);
-                    surveysPersistence.rollbackTransaction();
+                    StaticHibernateUtil.rollbackTransaction();
                     return;
                 }
             }

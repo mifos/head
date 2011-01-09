@@ -285,9 +285,7 @@ public class PersonnelPersistence extends Persistence {
         paramList.add(typeNameValue("Short", "USERID", personnel.getPersonnelId()));
         paramList.add(typeNameValue("Short", "LOID", PersonnelLevel.LOAN_OFFICER.getValue()));
         paramList.add(typeNameValue("Short", "USERLEVEL_ID", personnel.getLevelEnum().getValue()));
-
         return paramList;
-
     }
 
     private QueryResult getQueryResults(List<Param> paramList, String[] namedQuery) throws PersistenceException {

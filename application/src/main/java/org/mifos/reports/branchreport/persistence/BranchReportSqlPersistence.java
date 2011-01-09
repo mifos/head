@@ -61,7 +61,7 @@ public class BranchReportSqlPersistence extends Persistence {
         Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
                 AccountTypes.LOAN_ACCOUNT);
         query.setProperties(params);
-        return getCountFromQueryResult(runQuery(query));
+        return getCountFromQueryResult(query.list());
     }
 
     private Map<String, Object> populateParamsForActiveClientAccountSummary(Short officeId,
@@ -79,7 +79,7 @@ public class BranchReportSqlPersistence extends Persistence {
         Map<String, Object> params = populateParamsForActiveClientAccountSummary(officeId, customerLevel,
                 AccountTypes.LOAN_ACCOUNT);
         query.setProperties(params);
-        return getCountFromQueryResult(runQuery(query));
+        return getCountFromQueryResult(query.list());
     }
 
     public Integer getActiveSaversCount(Short officeId, CustomerLevel customerLevel) {
@@ -89,7 +89,7 @@ public class BranchReportSqlPersistence extends Persistence {
         query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE.getValue(),
                 AccountState.SAVINGS_INACTIVE.getValue()));
         query.setProperties(params);
-        return getCountFromQueryResult(runQuery(query));
+        return getCountFromQueryResult(query.list());
     }
 
     public Integer getVeryPoorActiveSaversCount(Short officeId, CustomerLevel customerLevel) {
@@ -99,7 +99,7 @@ public class BranchReportSqlPersistence extends Persistence {
         query.setParameterList("accountStateIds", Arrays.asList(AccountState.SAVINGS_ACTIVE.getValue(),
                 AccountState.SAVINGS_INACTIVE.getValue()));
         query.setProperties(params);
-        return getCountFromQueryResult(runQuery(query));
+        return getCountFromQueryResult(query.list());
     }
 
     public Integer getReplacementCountForOffice(Short officeId, CustomerLevel customerLevel, Short fieldId,
