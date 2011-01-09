@@ -1040,6 +1040,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- 
             <plugin>
                 <groupId>org.mifos.maven</groupId>
                 <artifactId>mifos-settings-sanitizer</artifactId>
@@ -1058,6 +1059,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-plugin</artifactId>

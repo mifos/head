@@ -25,7 +25,7 @@
     </fileSets>
     <files>
         <file>
-            <source>target/applicationConfiguration.custom.properties</source>
+            <source>../appdomain/target/applicationConfiguration.custom.properties</source>
             <outputDirectory>config</outputDirectory>
         </file>
         <file>
