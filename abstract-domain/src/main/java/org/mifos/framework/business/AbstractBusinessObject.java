@@ -22,7 +22,7 @@ package org.mifos.framework.business;
 
 import java.util.Date;
 
-import org.mifos.framework.util.DateTimeService;
+import org.joda.time.DateTime;
 import org.mifos.security.util.UserContext;
 
 @SuppressWarnings("PMD")
@@ -98,7 +98,7 @@ public abstract class AbstractBusinessObject extends AbstractEntity {
     }
 
     public void setCreateDetails() {
-        setCreatedDate(new DateTimeService().getCurrentJavaDateTime());
+        setCreatedDate(new DateTime().toDate());
         if (userContext != null) {
             setCreatedBy(userContext.getId());
         } else {
@@ -112,7 +112,7 @@ public abstract class AbstractBusinessObject extends AbstractEntity {
     }
 
     public void setUpdateDetails() {
-        setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+        setUpdatedDate(new DateTime().toDate());
         if (userContext != null) {
             setUpdatedBy(userContext.getId());
         } else {
@@ -127,7 +127,7 @@ public abstract class AbstractBusinessObject extends AbstractEntity {
     }
 
     protected void setUpdateDetails(Short userId) {
-        setUpdatedDate(new DateTimeService().getCurrentJavaDateTime());
+        setUpdatedDate(new DateTime().toDate());
         setUpdatedBy(userId);
     }
 }
