@@ -4,7 +4,6 @@
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
 	<classpathentry excluding="**" kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
 	<classpathentry kind="src" output="domain-dto/target/classes" path="domain-dto/src/main/java"/>
-	<classpathentry kind="src" output="domain-dto/target/test-classes" path="domain-dto/src/test/java"/>
 	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/java"/>
 	<classpathentry excluding="**" kind="src" output="testFramework/target/classes" path="testFramework/src/main/resources"/>
 	<classpathentry kind="src" output="testFramework/target/test-classes" path="testFramework/src/test/java"/>
@@ -24,14 +23,12 @@
 	<classpathentry kind="src" output="cashflow/target/test-classes" path="cashflow/src/test/java"/>
 	<classpathentry excluding="**" kind="src" output="cashflow/target/test-classes" path="cashflow/src/test/resources"/>
 	<classpathentry kind="src" output="organization/target/classes" path="organization/src/main/java"/>
-	<classpathentry kind="src" output="organization/target/test-classes" path="organization/src/test/java"/>
 	<classpathentry excluding="**" kind="src" output="acceptanceTests/target/classes" path="application/src/main/sql"/>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/java"/>
 	<classpathentry excluding="**" kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="src" path="appdomain/src/main/java"/>
 	<classpathentry kind="src" path="appdomain/src/test/java"/>
 	<classpathentry kind="src" path="abstract-domain/src/main/java"/>
-	<classpathentry kind="src" path="abstract-domain/src/test/java"/>
 	<classpathentry kind="src" path="serviceInterfaces/src/main/java"/>
 	<classpathentry kind="src" path="serviceInterfaces/src/test/java"/>
 	<classpathentry kind="src" path="application/src/test/java"/>
