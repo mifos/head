@@ -86,8 +86,19 @@ public class LabelTagUtils {
         }
 
         if (StringUtils.isBlank(message)) {
+            // FOR Resources.properties
+            String newKey = key.toLowerCase();
+            message = resources.getMessage(locale, newKey);
+        }
+
+        if (StringUtils.isBlank(message)) {
+            // FOR MenuResources.properties
             String newKey = "label." + key.toLowerCase();
             message = resources.getMessage(locale, newKey);
+        }
+
+        if (StringUtils.isBlank(message)) {
+            message = "";
         }
 
         return message;
