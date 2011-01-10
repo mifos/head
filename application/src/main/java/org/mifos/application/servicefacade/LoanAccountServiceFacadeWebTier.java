@@ -594,6 +594,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
         CustomerBO customer = this.customerDao.findCustomerById(loanAccountInfoDto.getCustomerId());
         LoanBO loan = redoLoan(customer, loanAccountMeetingDto, loanAccountInfoDto, existingLoanPayments);
 
+        StaticHibernateUtil.startTransaction();
         PersonnelBO createdBy = this.personnelDao.findPersonnelById(userContext.getId());
         try {
             loan.addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(loan.getAccountState(), loan

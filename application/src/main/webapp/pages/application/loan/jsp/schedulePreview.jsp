@@ -55,8 +55,14 @@ explanation of the license and how it is applied.
             </c:otherwise>
         </c:choose>
         <STYLE TYPE="text/css"><!-- @import url(pages/css/jquery/jquery-ui.css); --></STYLE>
+        <script type="text/javascript" src="pages/js/datejs/date.js"></script>
         <script type="text/javascript" src="pages/js/jquery/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="pages/js/jquery/jquery-ui.min.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.min-2.1.2.js"></script>
+        <script type="text/javascript" src="pages/js/jquery/jquery.datePicker.configuration.js"></script>
+		<script type="text/javascript" src="pages/js/jquery/jquery.keyfilter-1.7.js"></script>
+		<script type="text/javascript" src="pages/js/jquery/jquery.validate.min.js"></script>
+        <STYLE TYPE="text/css"><!-- @import url(pages/css/datepicker/datepicker.css); --></STYLE>
         <script type="text/javascript" src="pages/framework/js/CommonUtilities.js"></script>
 		<!--[if IE]><script type="text/javascript" src="pages/js/jquery/jquery.bgiframe.js"></script><![endif]-->
 		<SCRIPT SRC="pages/framework/js/CommonUtilities.js"></SCRIPT>
@@ -383,9 +389,9 @@ explanation of the license and how it is applied.
                                                             <td width="5%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.total" /></b></td>
                                                             <td width="30%" class="drawtablerow" align="center" ><b><mifos:mifoslabel name="loan.amount" /></b></td>
                                                         </tr>
-                                                        
-                                                        
-                                                        <c:forEach var="paymentDataBeans" items="${loanAccountActionForm.paymentDataBeans}">
+
+
+                                                        <c:forEach var="paymentDataBeans" items="${loanAccountActionForm.paymentDataBeans}" varStatus="loopStatus">
                                                         <tr>
                                                             <td class="drawtablerow" align="center">
                                                                 <c:out value="${paymentDataBeans.installment.installment}" />
@@ -394,7 +400,7 @@ explanation of the license and how it is applied.
                                                                 <c:out value="${paymentDataBeans.installment.dueDate}" />
                                                             </td>
                                                             <td class="drawtablerow" align="center">
-                                                                <date:datetag name="paymentDataBeans" indexed="true" property="date" />
+                                                            	<html-el:text styleId="paymentDataBeans.date.${loopStatus.index}" styleClass="date-pick-payment-data-beans" indexed="true" name="paymentDataBeans" property="date" size="10" />
                                                             </td>
                                                             <td> &nbsp; </td>
                                                             <td class="drawtablerow" align="center">
