@@ -24,13 +24,6 @@ import java.util.List;
 
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.customers.office.persistence.OfficeDao;
-import org.mifos.customers.office.persistence.OfficePersistence;
-import org.mifos.customers.persistence.CustomerPersistence;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.dto.domain.CustomerDto;
-import org.mifos.dto.domain.OfficeDetailsDto;
-import org.mifos.dto.domain.PersonnelDto;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -49,14 +42,6 @@ public class MasterDataService implements BusinessService {
     @Override
     public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
-    }
-
-    public String retrieveMasterEntities(Integer entityId, Short localeId) throws ServiceException {
-        try {
-            return masterPersistence.retrieveMasterEntities(entityId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
     }
 
     public List<ValueListElement> retrieveMasterEntities(String entityName, Short localeId) throws ServiceException {

@@ -7,11 +7,9 @@ import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
-import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.springframework.test.annotation.ExpectedException;
@@ -43,16 +41,4 @@ public class MasterDataServiceTest {
         }
     }
 
-    @Test
-    @ExpectedException(value = ServiceException.class)
-    public void testInvalidConnectionForRetrieveMasterEntities() throws PersistenceException {
-        try {
-            Short id = Short.valueOf("1");
-            when(masterPersistence.retrieveMasterEntities(1)).
-                    thenThrow(new PersistenceException("some exception"));
-            service.retrieveMasterEntities(1, id);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
 }

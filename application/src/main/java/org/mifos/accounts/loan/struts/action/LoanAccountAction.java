@@ -1835,7 +1835,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.removeAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME, request);
         if (loanAccountActionForm.getBusinessActivityIdValue() != null) {
             SessionUtils.setAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME, getNameForBusinessActivityEntity(
-                    loanAccountActionForm.getBusinessActivityIdValue(), localeId), request);
+                    loanAccountActionForm.getBusinessActivityIdValue()), request);
         }
     }
 
@@ -1978,9 +1978,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return loanPrdBusinessService.getLoanOffering(loanOfferingId, localeId);
     }
 
-    private String getNameForBusinessActivityEntity(final Integer entityId, final Short localeId) throws Exception {
+    private String getNameForBusinessActivityEntity(final Integer entityId) throws Exception {
         if (entityId != null) {
-            return masterDataService.retrieveMasterEntities(entityId, localeId);
+            return new MasterPersistence().retrieveMasterEntities(entityId);
         }
         return "";
     }
