@@ -74,7 +74,7 @@ import org.springframework.util.Log4jConfigurer;
  * this class.
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/applicationContext.xml", "/org/mifos/config/resources/apponly-services.xml"})
+@ContextConfiguration(locations = { "/integration-test-context.xml", "/org/mifos/config/resources/applicationContext.xml"})
 public class MifosIntegrationTestCase {
 
     private static Boolean isTestingModeSet = false;
