@@ -513,7 +513,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         try {
             String value = "";
             if (entityId != null) {
-                 value = new MasterPersistence().retrieveMasterEntities(entityId);
+                 value = new MasterPersistence().getMessageForLookupEntity(entityId);
             }
             return value;
         } catch (PersistenceException e) {

@@ -282,42 +282,44 @@ public class AuditConfiguration {
 
     private void fetchMasterData(String entityName, Short localeId) throws SystemException {
         List<ValueListElement> businessActivityList = masterPersistence
-                .retrieveMasterEntities(entityName);
+                .findValueListElements(entityName);
         for (ValueListElement businessActivityEntity : businessActivityList) {
             valueMap.put(businessActivityEntity.getId().toString(), businessActivityEntity.getName());
         }
     }
 
     private void fetchMasterData(String entityName, Short localeId, String classPath) throws SystemException {
+        Class clazz = null;
         try {
-            List<MasterDataEntity> masterDataList = masterPersistence.retrieveMasterDataEntity(classPath);
-            for (MasterDataEntity masterDataEntity : masterDataList) {
-                masterDataEntity.setLocaleId(localeId);
-
-                if (masterDataEntity instanceof PersonnelStatusEntity) {
-                    String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
-                    ((PersonnelStatusEntity) masterDataEntity).setName(name);
-                }
-
-                if (masterDataEntity instanceof PersonnelLevelEntity) {
-                    String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
-                    ((PersonnelLevelEntity) masterDataEntity).setName(name);
-                }
-
-                if (masterDataEntity instanceof OfficeLevelEntity) {
-                    String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
-                    ((OfficeLevelEntity) masterDataEntity).setName(name);
-                }
-
-                if (masterDataEntity instanceof OfficeStatusEntity) {
-                    String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
-                    ((OfficeStatusEntity) masterDataEntity).setName(name);
-                }
-
-                valueMap.put(masterDataEntity.getId().toString(), masterDataEntity.getName());
-            }
-        } catch (PersistenceException e) {
+            clazz = ClassLoader.getSystemClassLoader().loadClass(classPath);
+        } catch (ClassNotFoundException e) {
             throw new SystemException(e);
+        }
+        List<MasterDataEntity> masterDataList = masterPersistence.findMasterDataEntities(clazz);
+        for (MasterDataEntity masterDataEntity : masterDataList) {
+            masterDataEntity.setLocaleId(localeId);
+
+            if (masterDataEntity instanceof PersonnelStatusEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((PersonnelStatusEntity) masterDataEntity).setName(name);
+            }
+
+            if (masterDataEntity instanceof PersonnelLevelEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((PersonnelLevelEntity) masterDataEntity).setName(name);
+            }
+
+            if (masterDataEntity instanceof OfficeLevelEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((OfficeLevelEntity) masterDataEntity).setName(name);
+            }
+
+            if (masterDataEntity instanceof OfficeStatusEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((OfficeStatusEntity) masterDataEntity).setName(name);
+            }
+
+            valueMap.put(masterDataEntity.getId().toString(), masterDataEntity.getName());
         }
     }
 

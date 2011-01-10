@@ -440,11 +440,11 @@ public class LoanPrdAction extends BaseAction {
                 .getActiveLoanProductCategories(), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANAPPLFORLIST, service
                 .getLoanApplicableCustomerTypes(localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, new MasterPersistence().retrieveMasterEntities(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, new MasterPersistence().findMasterDataEntitiesWithLocale(
                 GracePeriodTypeEntity.class, localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST, new MasterPersistence().retrieveMasterEntities(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST, new MasterPersistence().findMasterDataEntitiesWithLocale(
                 InterestTypesEntity.class, localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, new MasterPersistence().retrieveMasterEntities(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, new MasterPersistence().findMasterDataEntitiesWithLocale(
                 InterestCalcTypeEntity.class, localeId), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCFUNDSLIST, this.fundDao.findAllFunds(),
                 request);

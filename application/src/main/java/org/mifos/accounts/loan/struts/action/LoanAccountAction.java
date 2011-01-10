@@ -1573,7 +1573,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 request);
 
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
-        masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES), request);
+        masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES), request);
         SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
 
         SessionUtils.setAttribute(RECURRENCEID, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum()
@@ -1611,7 +1611,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void populateGlimAttributes(final HttpServletRequest request, final LoanAccountActionForm loanActionForm,
                                         final String globalAccountNum, final CustomerBO customer) throws PageExpiredException, ServiceException {
         GlimSessionAttributes glimSessionAttributes = getGlimSpecificPropertiesToSet(loanActionForm, globalAccountNum,
-                customer, masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES));
+                customer, masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES));
         glimSessionAttributes.putIntoSession(request);
     }
 
@@ -1782,7 +1782,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private String findBusinessActivityName(final String businessActivity) {
-        List<ValueListElement> businessActEntity = masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES);
+        List<ValueListElement> businessActEntity = masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES);
         for (ValueListElement busact : businessActEntity) {
 
             if (busact.getId().toString().equals(businessActivity)) {
@@ -1914,7 +1914,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private String getNameForBusinessActivityEntity(final Integer entityId) throws Exception {
         if (entityId != null) {
-            return new MasterPersistence().retrieveMasterEntities(entityId);
+            return new MasterPersistence().getMessageForLookupEntity(entityId);
         }
         return "";
     }

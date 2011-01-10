@@ -20,8 +20,6 @@
 
 package org.mifos.application.master.persistence;
 
-import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,7 +33,6 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
-import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
@@ -45,7 +42,6 @@ import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.ValueListElement;
-import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -93,8 +89,7 @@ public class MasterPersistence extends Persistence {
         Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
         queryEntity.setString("entityType", entityName);
         CustomValueDto entity = (CustomValueDto) queryEntity.uniqueResult();
-        List<CustomValueListElementDto> listElements = getCustomValueListElements(entityName, classPath, column,
-                session);
+        List<CustomValueListElementDto> listElements = getCustomValueListElements(entityName, classPath, column, session);
         entity.setCustomValueListElements(listElements);
         return entity;
     }
@@ -111,10 +106,6 @@ public class MasterPersistence extends Persistence {
                         + " and lookup.lookUpEntity.entityType = ?" + " and lookup.lookUpId = lookupvalue.lookUpId"
                         + " and lookupvalue.localeId = ?");
         queryEntity.setString(0, entityName);
-
-        // Jan 16, 2008 work in progress
-        // all override or custom values are now stored in locale 1
-        // queryEntity.setShort(1, localeId);
         queryEntity.setShort(1, (short) 1);
         List<CustomValueListElementDto> entityList = queryEntity.list();
 
@@ -124,8 +115,9 @@ public class MasterPersistence extends Persistence {
     /**
      * use Dao specific calls - see feeDao.doRetrieveFeeCategories
      */
+    @SuppressWarnings("unchecked")
     @Deprecated
-    public <T extends MasterDataEntity> List<T> retrieveMasterEntities(final Class<T> type, final Short localeId) {
+    public <T extends MasterDataEntity> List<T> findMasterDataEntitiesWithLocale(final Class<T> type, final Short localeId) {
         Session session = getSession();
         List<T> masterEntities = session.createQuery("from " + type.getName()).list();
         for (MasterDataEntity masterData : masterEntities) {
@@ -136,40 +128,18 @@ public class MasterPersistence extends Persistence {
     }
 
     @SuppressWarnings("unchecked")
-    public MasterDataEntity retrieveMasterEntity(final Short entityId, final Class clazz, final Short localeId)
-            throws PersistenceException {
-        try {
-            Session session = getSession();
-            List<MasterDataEntity> masterEntity = session.createQuery(
-                    "from " + clazz.getName() + " masterEntity where masterEntity.id = " + entityId).list();
-            if (masterEntity != null && masterEntity.size() > 0) {
-                MasterDataEntity masterDataEntity = masterEntity.get(0);
-                masterDataEntity.setLocaleId(localeId);
-                Hibernate.initialize(masterDataEntity.getNames());
-                return masterDataEntity;
-            }
-            throw new PersistenceException("errors.entityNotFound");
-        } catch (Exception he) {
-            throw new PersistenceException(he);
+    public <T extends MasterDataEntity> T findMasterDataEntityWithLocale(final Class<T> entityType, final Short entityId,
+            final Short localeId) throws PersistenceException {
+        Session session = getSession();
+        List<T> masterEntities = session.createQuery(
+                "from " + entityType.getName() + " masterEntity where masterEntity.id = " + entityId).list();
+        if (masterEntities != null && masterEntities.size() > 0) {
+            T masterDataEntity = masterEntities.get(0);
+            masterDataEntity.setLocaleId(localeId);
+            Hibernate.initialize(masterDataEntity.getNames());
+            return masterDataEntity;
         }
-    }
-
-    public <T extends MasterDataEntity> T retrieveMasterEntity(final Class<T> entityType, final Short entityId, final Short localeId)
-    throws PersistenceException {
-        try {
-            Session session = getSession();
-            List<T> masterEntities = session.createQuery(
-                    "from " + entityType.getName() + " masterEntity where masterEntity.id = " + entityId).list();
-            if (masterEntities != null && masterEntities.size() > 0) {
-                T masterDataEntity = masterEntities.get(0);
-                masterDataEntity.setLocaleId(localeId);
-                Hibernate.initialize(masterDataEntity.getNames());
-                return masterDataEntity;
-            }
-            throw new PersistenceException("errors.entityNotFound");
-        } catch (Exception he) {
-            throw new PersistenceException(he);
-        }
+        throw new PersistenceException("errors.entityNotFound");
     }
 
     /**
@@ -189,7 +159,6 @@ public class MasterPersistence extends Persistence {
         queryParameters.put("fieldId", fieldId);
         return (CustomFieldDefinitionEntity) execUniqueResultNamedQuery(NamedQueryConstants.RETRIEVE_ONE_CUSTOM_FIELD,
                 queryParameters);
-
     }
 
     /**
@@ -200,7 +169,7 @@ public class MasterPersistence extends Persistence {
      */
     @SuppressWarnings("unchecked")
     @Deprecated
-    public List<ValueListElement> retrieveMasterEntities(final String entityName)  {
+    public List<ValueListElement> findValueListElements(final String entityName)  {
         Query query = getSession().getNamedQuery(NamedQueryConstants.MASTERDATA_MIFOS_ENTITY_VALUE);
         query.setParameter("entityType", entityName);
         return query.list();
@@ -210,26 +179,20 @@ public class MasterPersistence extends Persistence {
     /*
      * @param entityId - the primary key of a LookUpValueEntity
      */
-    public String retrieveMasterEntities(final Integer entityId) throws PersistenceException {
-
+    public String getMessageForLookupEntity(final Integer entityId) throws PersistenceException {
         LookUpValueEntity lookupValue = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class, entityId);
         return MessageLookup.getInstance().lookup(lookupValue);
     }
 
     @SuppressWarnings("unchecked")
-    public List<MasterDataEntity> retrieveMasterDataEntity(final String classPath) throws PersistenceException {
-        List<MasterDataEntity> queryResult = null;
-        try {
-            queryResult = getSession().createQuery("from " + classPath).list();
-        } catch (Exception he) {
-            throw new PersistenceException(he);
-        }
-        return queryResult;
+    public <T extends MasterDataEntity> List<T> findMasterDataEntities(final Class<T> clazz) {
+        List<MasterDataEntity> queryResult = getSession().createQuery("from " + clazz.getName()).list();
+        return (List<T>) queryResult;
     }
 
     @SuppressWarnings("unchecked")
-    public MasterDataEntity getMasterDataEntity(final Class clazz, final Short id) throws PersistenceException {
-        return (MasterDataEntity) getPersistentObject(clazz, id);
+    public <T extends MasterDataEntity> T findMasterDataEntity(final Class<T> clazz, final Short id) throws PersistenceException {
+        return (T) getPersistentObject(clazz, id);
     }
 
     /**
@@ -304,18 +267,11 @@ public class MasterPersistence extends Persistence {
     public void deleteValueListElement(final Integer lookupValueEntityId) throws PersistenceException {
         LookUpValueEntity lookUpValueEntity = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class,
                 lookupValueEntityId);
-
-        // the cascade property defined for lookUpValueLocales member of
-        // LookUpValueEntity
-        // means that deleting the LookUpValueEntity should delete all the
-        // associated
-        // LookUpValueLocaleEntity objects as well.
         delete(lookUpValueEntity);
         MifosConfiguration.getInstance().deleteKey(lookUpValueEntity.getLookUpName());
     }
 
     public void addLookUpEntity(final LookUpEntity lookUpEntity) throws PersistenceException {
-
         createOrUpdate(lookUpEntity);
     }
 
@@ -328,11 +284,6 @@ public class MasterPersistence extends Persistence {
         if (null != obj) {
             return (LookUpValueLocaleEntity) obj;
         }
-        return null;
-    }
-
-    public Collection<? extends Serializable> getMasterEntities(Class<InterestTypesEntity> class1, Short localeId) {
-        // TODO Auto-generated method stub
         return null;
     }
 }

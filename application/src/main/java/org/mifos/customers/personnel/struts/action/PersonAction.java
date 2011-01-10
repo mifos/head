@@ -332,7 +332,7 @@ public class PersonAction extends SearchAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
 
         UserContext userContext = getUserContext(request);
-        List<PersonnelStatusEntity> statuses = new MasterPersistence().retrieveMasterEntities(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
+        List<PersonnelStatusEntity> statuses = new MasterPersistence().findMasterDataEntitiesWithLocale(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
         SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, statuses, request);
 
         OfficeBO loggedInOffice = this.officeDao.findOfficeById(userContext.getBranchId());

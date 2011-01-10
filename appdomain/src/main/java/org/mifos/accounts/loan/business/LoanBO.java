@@ -1519,8 +1519,8 @@ public class LoanBO extends AccountBO {
                 if (noOfInstallments <= 1) {
                     throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
                 }
-                setGracePeriodType((GracePeriodTypeEntity) new MasterPersistence().retrieveMasterEntity(GraceType.NONE
-                        .getValue(), GracePeriodTypeEntity.class, getUserContext().getLocaleId()));
+                setGracePeriodType(new MasterPersistence().findMasterDataEntityWithLocale(GracePeriodTypeEntity.class, GraceType.NONE
+                        .getValue(), getUserContext().getLocaleId()));
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }

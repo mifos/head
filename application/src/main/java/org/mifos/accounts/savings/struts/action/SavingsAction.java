@@ -165,10 +165,10 @@ public class SavingsAction extends BaseAction {
         SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savingsOfferingBO, request);
 
         // NOTE - these details are included in SavingsProductReferenceDto but left as is to satisfy JSP at present
-        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, masterPersistence.retrieveMasterEntities(
+        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, masterPersistence.findMasterDataEntitiesWithLocale(
                 SavingsTypeEntity.class, uc.getLocaleId()), request);
         SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, masterPersistence
-                .retrieveMasterEntities(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
+                .findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
 
         List<CustomFieldDefinitionEntity> customFieldDefinitions = savingsService.retrieveCustomFieldsDefinition();
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, customFieldDefinitions, request);
@@ -272,8 +272,8 @@ public class SavingsAction extends BaseAction {
         }
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, masterPersistence.retrieveMasterEntities(SavingsTypeEntity.class, uc.getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, masterPersistence.retrieveMasterEntities(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, masterPersistence.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class, uc.getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, masterPersistence.findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService.retrieveCustomFieldsDefinition(), request);
 
         SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savings.getSavingsOffering(), request);
