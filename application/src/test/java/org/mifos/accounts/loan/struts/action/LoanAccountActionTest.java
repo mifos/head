@@ -35,11 +35,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,8 +48,10 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
+import org.mifos.accounts.loan.persistance.LoanDao;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -61,10 +59,14 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.cashflow.struts.CashFlowAdaptor;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
+import org.mifos.dto.domain.LoanAccountDetailsDto;
+import org.mifos.dto.screen.LoanCreationPreviewDto;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Flow;
@@ -134,9 +136,17 @@ public class LoanAccountActionTest {
     @Mock
     private QuestionnaireFlowAdapter createLoanQuestionnaire;
 
+    @Mock
+    private LoanBO loanBO;
+
     @Before
     public void setUp() throws PageExpiredException {
         loanAccountAction = new LoanAccountAction(null, loanBusinessService, null, loanPrdBusinessService, null, null, null) {
+            @Override
+            LoanBO getLoan(Integer loanId) {
+                return loanBO;
+            }
+            
             @Override
             protected UserContext getUserContext(@SuppressWarnings("unused") HttpServletRequest request) {
                 return userContext;
@@ -146,6 +156,20 @@ public class LoanAccountActionTest {
             QuestionnaireFlowAdapter getCreateLoanQuestionnaire() {
                 return createLoanQuestionnaire;
             }
+
+            @Override
+            boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
+              return true;
+            };
+
+            @Override
+            LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate, UserContext userContext) {
+                return loanBO;
+            };
+            @Override
+            LoanCreationPreviewDto getLoanCreatePreviewDto(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds) {
+                return new LoanCreationPreviewDto(false, false, Collections.<LoanAccountDetailsDto>emptyList());
+            };
         };
         loanAccountAction.setLoanServiceFacade(loanServiceFacade);
         loanAccountAction.setCustomerDao(customerDao);
@@ -338,6 +362,23 @@ public class LoanAccountActionTest {
         verify(request,times(1)).setAttribute(PERSPECTIVE, redoLoan);
         verify(createLoanQuestionnaire).rejoinFlow(mapping);
     }
+
+    @Test
+    public void getLoanRepaymentScheduleShouldCalculateExtraInterest() throws Exception {
+        when(request.getParameter("accountId")).thenReturn("1");
+        when(loanServiceFacade.retrieveOriginalLoanSchedule(Matchers.<Integer>any(), Matchers.<Locale>anyObject())).
+                thenReturn(new OriginalScheduleInfoDto("100", new Date(), Collections.<RepaymentScheduleInstallment>emptyList()));
+        loanAccountAction.getLoanRepaymentSchedule(mapping, form, request, response);
+        verify(loanBusinessService, times(1)).computeExtraInterest(Matchers.<LoanBO>any(), Matchers.<Date>any());
+    }
+
+    @Test
+    public void previewForRedoShouldComputeExtraInterest() throws Exception {
+        when(form.getPerspective()).thenReturn("redoLoan");
+        loanAccountAction.preview(mapping, form, request, response);
+        verify(loanBusinessService, times(1)).computeExtraInterest(Matchers.<LoanBO>any(), Matchers.<Date>any());
+    }
+
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {
         QuestionGroupInstanceDetail detail = new QuestionGroupInstanceDetail();
