@@ -29,7 +29,8 @@ import org.apache.struts.action.ActionMessage;
 import org.apache.struts.action.ActionMessages;
 import org.apache.struts.upload.FormFile;
 import org.apache.struts.upload.MultipartRequestHandler;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.struts.actionforms.BaseActionForm;
 
 /**
@@ -114,8 +115,7 @@ public class ImportTransactionsActionForm extends BaseActionForm {
         try {
 
             // FIXME - remove call to service facade from form.
-            if (importTransactionsFile.getFileName() != null
-                    && DependencyInjectedServiceLocator.locateImportTransactionsServiceFacade().isAlreadyImported(importTransactionsFile.getFileName())) {
+            if (importTransactionsFile.getFileName() != null  && ApplicationContextProvider.getBean(ImportTransactionsServiceFacade.class).isAlreadyImported(importTransactionsFile.getFileName())) {
                 errors.add("importTransactionsFile", new ActionMessage("errors.importexport.already_submitted"));
             }
 

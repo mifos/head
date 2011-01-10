@@ -30,7 +30,7 @@ import org.mifos.accounts.servicefacade.AccountTypeDto;
 import org.mifos.accounts.struts.actionforms.AccountApplyPaymentActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.util.helpers.MasterConstants;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.exceptions.CustomerException;
@@ -58,7 +58,7 @@ public class AccountApplyPaymentAction extends BaseAction {
     private List<PaymentTypeDto> feePaymentTypeDtos;
 
     public AccountApplyPaymentAction() throws Exception {
-        accountService = DependencyInjectedServiceLocator.locateAccountService();
+        accountService = ApplicationContextProvider.getBean(AccountService.class);
         loanPaymentTypeDtos = accountService.getLoanPaymentTypes();
         feePaymentTypeDtos = accountService.getFeePaymentTypes();
     }

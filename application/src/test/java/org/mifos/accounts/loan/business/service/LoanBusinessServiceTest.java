@@ -179,7 +179,7 @@ public class LoanBusinessServiceTest {
         verify(loanBO).updateInstallmentSchedule(installments);
         verify(loanBO).toRepaymentScheduleDto(locale);
     }
-    
+
     @Test
     public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabledAndInstallmentsArePassed() {
         RepaymentScheduleInstallment installment1 =
@@ -411,7 +411,7 @@ public class LoanBusinessServiceTest {
         verify(loanPersistence).getOriginalLoanScheduleEntity(accountId);
         Assert.assertEquals(expected,loanScheduleEntities);
     }
-    
+
 
     private void assertInstallmentDueDate(RepaymentScheduleInstallment installment, String expectedDueDate) {
         String actualDueDate = DateUtils.getDBtoUserFormatString(installment.getDueDateValue(), locale);

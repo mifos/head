@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
@@ -48,7 +48,7 @@ public class TestCaseInitializer {
 
     private static boolean initialized = false;
 
-    private ApplicationConfigurationDao applicationConfigurationDao = DependencyInjectedServiceLocator.locateApplicationConfigurationDao();
+    private ApplicationConfigurationDao applicationConfigurationDao = ApplicationContextProvider.getBean(ApplicationConfigurationDao.class);
 
     public void initialize() throws Exception {
         if (!initialized) {

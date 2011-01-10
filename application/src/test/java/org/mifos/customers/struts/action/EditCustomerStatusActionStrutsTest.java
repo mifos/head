@@ -34,7 +34,7 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
@@ -895,7 +895,7 @@ public class EditCustomerStatusActionStrutsTest extends MifosMockStrutsTestCase 
         // setup
         createInitialObjects(CustomerStatus.CENTER_ACTIVE, CustomerStatus.GROUP_CANCELLED, CustomerStatus.CLIENT_CLOSED);
 
-        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+        CustomerService customerService = ApplicationContextProvider.getBean(CustomerService.class);
 
         CustomerStatusFlag customerStatusFlag = CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
         CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), center.getPersonnel(), center);

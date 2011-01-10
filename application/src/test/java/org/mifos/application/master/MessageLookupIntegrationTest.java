@@ -40,7 +40,6 @@ public class MessageLookupIntegrationTest extends MifosIntegrationTestCase {
 
     private static MessageLookup messageLookup;
 
-
     @Before
     public void setUp() throws Exception {
         messageLookup = MessageLookup.getInstance();

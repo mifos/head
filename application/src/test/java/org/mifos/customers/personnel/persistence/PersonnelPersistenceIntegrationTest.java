@@ -34,7 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerNoteEntity;
 import org.mifos.customers.business.service.CustomerService;
@@ -78,8 +78,8 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private final OfficePersistence officePersistence = new OfficePersistence();
 
-    private CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
-    private CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+    private CustomerService customerService = ApplicationContextProvider.getBean(CustomerService.class);
+    private CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
 
     @Before
     public void setUp() throws Exception {

@@ -36,10 +36,7 @@ import java.util.Map;
  */
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
-    private final MasterPersistence masterPersistence;
-    public StandardClientAttendanceDao(final MasterPersistence masterPersistence) {
-        this.masterPersistence = masterPersistence;
-    }
+    private MasterPersistence masterPersistence = new MasterPersistence();
 
     @Override
     @SuppressWarnings("unchecked")

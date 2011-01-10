@@ -49,7 +49,7 @@ import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.calendar.DayOfWeek;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.center.business.CenterBO;
@@ -261,7 +261,7 @@ public class SavingsScheduleIntegrationTest extends MifosIntegrationTestCase {
 
         savingsProduct = new SavingsProductBuilder().mandatory().appliesToClientsOnly().buildForIntegrationTests();
 
-        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+        HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
         List<Holiday> holidays = holidayDao.findAllHolidaysThisYearAndNext(client.getOfficeId());
 
         savingsAccount = new SavingsAccountBuilder().withSavingsProduct(savingsProduct)

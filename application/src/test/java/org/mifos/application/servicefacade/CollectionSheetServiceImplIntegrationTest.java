@@ -46,7 +46,7 @@ public class CollectionSheetServiceImplIntegrationTest extends MifosIntegrationT
 
     @BeforeClass
     public static void init() {
-        collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
+        collectionSheetService = ApplicationContextProvider.getBean(CollectionSheetService.class);
     }
 
     @Before

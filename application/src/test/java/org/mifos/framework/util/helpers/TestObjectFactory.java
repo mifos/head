@@ -65,6 +65,7 @@ import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.util.helpers.ChartOfAccountsCache;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanBOIntegrationTest;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
@@ -109,6 +110,7 @@ import org.mifos.application.collectionsheet.business.CollectionSheetEntryInstal
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryLoanInstallmentDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntrySavingsInstallmentDto;
 import org.mifos.application.holiday.business.Holiday;
+import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.InterestTypesEntity;
@@ -119,7 +121,7 @@ import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.config.ClientRules;
@@ -988,7 +990,7 @@ public class TestObjectFactory {
 
     public static List<Date> getMeetingDates(short officeId, final MeetingBO meeting, final int occurrences) {
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao()
+        List<Holiday> upcomingHolidays = ApplicationContextProvider.getBean(HolidayDao.class)
                 .findAllHolidaysThisYearAndNext(officeId);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
@@ -1009,7 +1011,7 @@ public class TestObjectFactory {
     public static List<Date> getMeetingDatesThroughTo(short officeId, final MeetingBO meeting, Date endDate) {
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        List<Holiday> upcomingHolidays = DependencyInjectedServiceLocator.locateHolidayDao()
+        List<Holiday> upcomingHolidays = ApplicationContextProvider.getBean(HolidayDao.class)
                 .findAllHolidaysThisYearAndNext(officeId);
 
         ScheduledEvent scheduledEvent = ScheduledEventFactory.createScheduledEventFrom(meeting);
@@ -1791,7 +1793,7 @@ public class TestObjectFactory {
         FundBO fundBO = new FundBO(fundCode, fundName);
 
         try {
-            DependencyInjectedServiceLocator.locateFundDao().save(fundBO);
+            ApplicationContextProvider.getBean(FundDao.class).save(fundBO);
             StaticHibernateUtil.flushSession();
             return fundBO;
         } catch (Exception e) {

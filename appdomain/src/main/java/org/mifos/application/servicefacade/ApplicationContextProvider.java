@@ -1,13 +1,12 @@
 package org.mifos.application.servicefacade;
 
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 
-public class ApplicationContextProvider implements ApplicationContextAware, FactoryBean<ApplicationContextProvider> {
+public class ApplicationContextProvider implements FactoryBean<ApplicationContextProvider> {
 
     private static ApplicationContextProvider applicationContextProvider;
+    private static ApplicationContextHolder applicationContextHolder;
 
     public static ApplicationContextProvider getInstance() {
         if(applicationContextProvider == null) {
@@ -16,19 +15,16 @@ public class ApplicationContextProvider implements ApplicationContextAware, Fact
         return applicationContextProvider;
     }
 
-    private static ApplicationContext ctx = null;
-
-    public static ApplicationContext getApplicationContext() {
-        return ctx;
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext ctx) throws BeansException {
-        this.ctx = ctx;
+    public void setApplicationContextHolder(ApplicationContextHolder applicationContextHolder) {
+        ApplicationContextProvider.applicationContextHolder = applicationContextHolder;
     }
 
     public static <T> T getBean(Class<T> clazz) {
-        return getInstance().getApplicationContext().getBean(clazz);
+        return ApplicationContextProvider.applicationContextHolder.getApplicationContext().getBean(clazz);
+    }
+
+    public static ApplicationContext getApplicationContext() {
+        return ApplicationContextProvider.applicationContextHolder.getApplicationContext();
     }
 
     @Override
@@ -45,4 +41,5 @@ public class ApplicationContextProvider implements ApplicationContextAware, Fact
     public boolean isSingleton() {
         return true;
     }
+
 }

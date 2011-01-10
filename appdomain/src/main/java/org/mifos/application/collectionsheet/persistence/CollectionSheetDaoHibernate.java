@@ -44,6 +44,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -52,6 +53,7 @@ public class CollectionSheetDaoHibernate extends Persistence implements Collecti
 
     private final SavingsDao savingsDao;
 
+    @Autowired
     public CollectionSheetDaoHibernate(final SavingsDao savingsDao) {
         this.savingsDao = savingsDao;
     }

@@ -43,6 +43,7 @@ import org.mifos.accounts.financial.business.service.FinancialBusinessService;
 import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.fund.business.FundBO;
+import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.productdefinition.business.CashFlowDetail;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
@@ -70,7 +71,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -111,7 +112,7 @@ public class LoanPrdAction extends BaseAction {
 
     @Override
     protected BusinessService getService() {
-        return DependencyInjectedServiceLocator.locateLoanBusinessService();
+        return ApplicationContextProvider.getBean(LoanBusinessService.class);
     }
 
     @TransactionDemarcate(saveToken = true)

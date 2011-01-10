@@ -103,7 +103,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -1608,7 +1608,7 @@ public class LoanBO extends AccountBO {
     protected AccountPaymentEntity makePayment(final PaymentData paymentData) throws AccountException {
         AccountPaymentEntity accountPaymentEntity = prePayment(paymentData);
         LoanPaymentTypes loanPaymentType = getLoanPaymentType(paymentData.getTotalAmount());
-        DependencyInjectedServiceLocator.locateLoanBusinessService().applyPayment(paymentData, this, accountPaymentEntity);
+        ApplicationContextProvider.getBean(LoanBusinessService.class).applyPayment(paymentData, this, accountPaymentEntity);
         postPayment(paymentData, accountPaymentEntity, loanPaymentType);
         return accountPaymentEntity;
     }
@@ -1633,7 +1633,7 @@ public class LoanBO extends AccountBO {
     }
 
     private void pay(PaymentData paymentData, AccountPaymentEntity accountPaymentEntity) {
-        new LoanBusinessService().applyPayment(paymentData, this, accountPaymentEntity);
+        ApplicationContextProvider.getBean(LoanBusinessService.class).applyPayment(paymentData, this, accountPaymentEntity);
     }
 
     private void handleLoanArrearsAging(LoanPaymentTypes loanPaymentTypes) throws AccountException {

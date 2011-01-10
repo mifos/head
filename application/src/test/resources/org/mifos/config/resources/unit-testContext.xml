@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-
-	<import resource="configurationBean.xml" />
+    
     <import resource="messageSourceBean.xml" />
-    <import resource="financialRulesBean.xml" />
-    <import resource="persistenceContext.xml" />
-    <import resource="classpath*:org/mifos/**/dataSourceContext.xml" />
-    <import resource="hibernate-daos.xml" />
-    <import resource="services.xml" />
+    
+    <bean id="genericDao" class="org.mifos.accounts.savings.persistence.GenericDaoHibernate" />
+ 
+    <bean id="applicationConfigurationDao" class="org.mifos.config.persistence.ApplicationConfigurationDaoHibernate" >
+    	<constructor-arg ref="genericDao" />
+    </bean>
 
     <bean id="applicationContextProvider" class="org.mifos.application.servicefacade.ApplicationContextProvider">
-         <property name="applicationContextHolder" ref="applicationContextHolder" />
+    <property name="applicationContextHolder" ref="applicationContextHolder" />
     </bean>
-    
     <bean id="applicationContextHolder" class="org.mifos.application.servicefacade.ApplicationContextHolder"/>
 
 </beans>

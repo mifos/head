@@ -47,7 +47,7 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.calendar.CalendarUtils;
 import org.mifos.customers.api.CustomerLevel;
@@ -1048,7 +1048,7 @@ public abstract class CustomerBO extends AbstractBusinessObject {
             childAddedForParent(getParentCustomer());
             this.setSearchId(getParentCustomer().getSearchId() + "." + getParentCustomer().getMaxChildCount());
         } else {
-            CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+            CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
             int numberOfCustomersInOfficeAlready = customerDao.retrieveLastSearchIdValueForNonParentCustomersInOffice(getOffice().getOfficeId());
 
             String searchId = GroupConstants.PREFIX_SEARCH_STRING + ++numberOfCustomersInOfficeAlready;

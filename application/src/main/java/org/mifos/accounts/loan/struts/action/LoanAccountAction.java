@@ -74,6 +74,7 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -217,7 +218,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private static final String CUSTOMER_SEARCH_URL = "custSearchAction.do?method=loadMainSearch";
 
     public LoanAccountAction() {
-        this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
+        this(new ConfigurationBusinessService(), ApplicationContextProvider.getBean(LoanBusinessService.class), new GlimLoanUpdater(),
                 new LoanPrdBusinessService(), new MasterPersistence(),
                 new ConfigurationPersistence(), new AccountBusinessService());
     }

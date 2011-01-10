@@ -55,7 +55,6 @@ import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.application.cashflow.struts.CashFlowAdaptor;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.servicefacade.LoanServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -155,7 +154,7 @@ public class LoanAccountActionTest {
             LoanBO getLoan(Integer loanId) {
                 return loanBO;
             }
-            
+
             @Override
             protected UserContext getUserContext(@SuppressWarnings("unused") HttpServletRequest request) {
                 return userContext;

@@ -52,8 +52,8 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRulesConstants;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.core.CurrencyMismatchException;
@@ -974,10 +974,10 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
         CustomerStatusFlag customerStatusFlag = CustomerStatusFlag.GROUP_CANCEL_BLACKLISTED;
         CustomerNoteEntity customerNote = new CustomerNoteEntity("Made Inactive", new java.util.Date(), center.getPersonnel(), center);
 
-        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+        CustomerService customerService = ApplicationContextProvider.getBean(CustomerService.class);
         customerService.updateCenterStatus((CenterBO)center, CustomerStatus.CENTER_INACTIVE, customerStatusFlag, customerNote);
 
-        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
         center = customerDao.findCenterBySystemId(center.getGlobalCustNum());
 
         verifyCustomerNotLoaded(center.getCustomerId(), center.getDisplayName());

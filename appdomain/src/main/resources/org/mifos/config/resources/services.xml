@@ -68,6 +68,8 @@
     	<constructor-arg ref="loanBusinessService" />
     </bean>
     
+    <bean id="collectionSheetService" class="org.mifos.application.servicefacade.CollectionSheetServiceImpl"/>
+    
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" >
         <constructor-arg ref="savingsDao" />
         <constructor-arg ref="savingsProductDao" />

@@ -51,18 +51,26 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Default implementation of {@link CollectionSheetServiceFacade}.
  */
 public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServiceFacade {
 
-    private final OfficePersistence officePersistence;
-    private final MasterPersistence masterPersistence;
-    private final PersonnelPersistence personnelPersistence;
-    private final CustomerPersistence customerPersistence;
+    private OfficePersistence officePersistence = new OfficePersistence();
+    private MasterPersistence masterPersistence = new MasterPersistence();
+    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private CustomerPersistence customerPersistence = new CustomerPersistence();
     private final CollectionSheetService collectionSheetService;
     private final CollectionSheetDtoTranslator collectionSheetTranslator;
+
+    @Autowired
+    public CollectionSheetServiceFacadeWebTier(final CollectionSheetService collectionSheetService,
+            final CollectionSheetDtoTranslator collectionSheetTranslator) {
+        this.collectionSheetService = collectionSheetService;
+        this.collectionSheetTranslator = collectionSheetTranslator;
+    }
 
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
             final MasterPersistence masterPersistence, final PersonnelPersistence personnelPersistence,

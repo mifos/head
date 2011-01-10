@@ -46,7 +46,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -70,7 +70,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
     @Before
     public void setUp() throws Exception {
-        loanBusinessService = DependencyInjectedServiceLocator.locateLoanBusinessService();
+        loanBusinessService = ApplicationContextProvider.getBean(LoanBusinessService.class);
         accountPersistence = new AccountPersistence();
     }
 

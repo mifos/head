@@ -46,8 +46,6 @@
         <property name="sessionFactory" ref="sessionFactory" />
     </bean>
 
-    <bean id="applicationContextProvider" class="org.mifos.application.servicefacade.ApplicationContextProvider"/>
-
     <tx:advice id="txAdvice" transaction-manager="platformTransactionManager">
         <tx:attributes>
             <!-- all methods starting with 'get', 'find', 'list', 'iterate', 'retrieve' are read-only -->

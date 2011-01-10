@@ -32,6 +32,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.util.helpers.LoanExceptionConstants;
 import org.mifos.accounts.productsmix.business.service.ProductMixBusinessService;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -40,12 +41,12 @@ import org.mifos.framework.exceptions.ServiceException;
 public class ProductMixValidator {
 
     public ProductMixValidator() {
-        this(new LoanBusinessService(), new AccountBusinessService(), new ConfigurationBusinessService(),
+        this(ApplicationContextProvider.getBean(LoanBusinessService.class), new AccountBusinessService(), new ConfigurationBusinessService(),
                 new ProductMixBusinessService());
     }
 
     ProductMixValidator(ConfigurationBusinessService configService, ProductMixBusinessService productMixBusinessService) {
-        this(new LoanBusinessService(), new AccountBusinessService(), configService, productMixBusinessService);
+        this(ApplicationContextProvider.getBean(LoanBusinessService.class), new AccountBusinessService(), configService, productMixBusinessService);
     }
 
     private ProductMixValidator(LoanBusinessService loanBusinessService, AccountBusinessService accountBusinessService,

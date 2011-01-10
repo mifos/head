@@ -36,7 +36,7 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.AccountStatusActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
@@ -48,7 +48,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 
 public class AccountStatusAction extends BaseAction {
 
-    private LoanBusinessService loanService = DependencyInjectedServiceLocator.locateLoanBusinessService();
+    private LoanBusinessService loanService = ApplicationContextProvider.getBean(LoanBusinessService.class);
 
     public AccountStatusAction() {
         super();
@@ -123,7 +123,7 @@ public class AccountStatusAction extends BaseAction {
         SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, changeAccountStatusDto.getLoanOfficers(), request);
 
         if (officeId != null) {
-            AccountStateEntity accountStateEntity = (AccountStateEntity) new MasterPersistence().findMasterDataEntity(
+            AccountStateEntity accountStateEntity = new MasterPersistence().findMasterDataEntity(
                     AccountStateEntity.class, changeAccountStatusDto.getAccountState());
             accountStateEntity.setLocaleId(getUserContext(request).getLocaleId());
             SessionUtils.setAttribute(LoanConstants.LOANACCOUNTSTAES, accountStateEntity, request);

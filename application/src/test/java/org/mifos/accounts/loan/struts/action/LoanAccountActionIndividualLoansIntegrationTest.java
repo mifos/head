@@ -33,6 +33,7 @@ import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.dto.domain.LoanAccountDetailsDto;
@@ -43,7 +44,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
     @Test
     public void testShouldCallCreateMethodIfNewMembersSelected() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
-        LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
+        LoanAccountAction loanAccountAction = new LoanAccountAction(ApplicationContextProvider.getBean(LoanBusinessService.class),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
         LoanBO parentLoanMock = createMock(LoanBO.class);
         LoanAccountActionForm loanAccountActionForm = new LoanAccountActionForm();
@@ -64,7 +65,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
     @Test
     public void testShouldCallUpdateMethodIfExistingMembersChanged() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
-        LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
+        LoanAccountAction loanAccountAction = new LoanAccountAction(ApplicationContextProvider.getBean(LoanBusinessService.class),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
         LoanBO loanMock = createMock(LoanBO.class);
         expect(loanMock.getAccountId()).andReturn(2).anyTimes();
@@ -88,7 +89,7 @@ public class LoanAccountActionIndividualLoansIntegrationTest extends MifosIntegr
     @Test
     public void testShouldCallDeleteMethodIfExistingMembersRemoved() throws Exception {
         GlimLoanUpdater glimLoanUpdaterMock = createMock(GlimLoanUpdater.class);
-        LoanAccountAction loanAccountAction = new LoanAccountAction(new LoanBusinessService(),
+        LoanAccountAction loanAccountAction = new LoanAccountAction(ApplicationContextProvider.getBean(LoanBusinessService.class),
                 new ConfigurationBusinessService(), glimLoanUpdaterMock);
         LoanBO loanMock = createMock(LoanBO.class);
         expect(loanMock.getAccountId()).andReturn(2).anyTimes();

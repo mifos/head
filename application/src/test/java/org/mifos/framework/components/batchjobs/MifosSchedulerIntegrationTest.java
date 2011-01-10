@@ -32,11 +32,12 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.components.batchjobs.exceptions.TaskSystemException;
 import org.mifos.framework.util.ConfigurationLocator;
 import org.springframework.core.io.ClassPathResource;
 
-public class MifosSchedulerTest {
+public class MifosSchedulerIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testRegisterTasks() throws Exception {

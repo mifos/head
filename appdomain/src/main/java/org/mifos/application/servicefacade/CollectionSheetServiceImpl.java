@@ -28,6 +28,7 @@ import java.util.Map;
 import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.hibernate.HibernateException;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
@@ -54,10 +55,18 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     private static final Logger logger = LoggerFactory.getLogger(CollectionSheetServiceImpl.class);
 
     private final ClientAttendanceDao clientAttendanceDao;
-    private final LoanPersistence loanPersistence;
-    private final AccountPersistence accountPersistence;
+    private LoanPersistence loanPersistence = new LoanPersistence();
+    private AccountPersistence accountPersistence = new AccountPersistence();
     private final SavingsDao savingsDao;
     private final CollectionSheetDao collectionSheetDao;
+
+    @Autowired
+    public CollectionSheetServiceImpl(final ClientAttendanceDao clientAttendanceDao,
+            final SavingsDao savingsDao, final CollectionSheetDao collectionSheetDao) {
+        this.clientAttendanceDao = clientAttendanceDao;
+        this.savingsDao = savingsDao;
+        this.collectionSheetDao = collectionSheetDao;
+    }
 
     public CollectionSheetServiceImpl(final ClientAttendanceDao clientAttendanceDao,
             final LoanPersistence loanPersistence, final AccountPersistence accountPersistence,
@@ -74,6 +83,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
      *
      * @throws SaveCollectionSheetException
      * */
+    @Override
     public CollectionSheetErrorsDto saveCollectionSheet(final SaveCollectionSheetDto saveCollectionSheet)
             throws SaveCollectionSheetException {
 

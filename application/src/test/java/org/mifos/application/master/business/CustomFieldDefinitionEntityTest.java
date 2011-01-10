@@ -23,15 +23,11 @@ package org.mifos.application.master.business;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.application.util.helpers.YesNoFlag;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.mifos.framework.MifosSpringBasedUnitTestCase;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/org/mifos/config/resources/messageSourceBean.xml"})
-public class CustomFieldDefinitionEntityTest {
+public class CustomFieldDefinitionEntityTest extends MifosSpringBasedUnitTestCase {
 
     @Test
     public void testMandatory() {

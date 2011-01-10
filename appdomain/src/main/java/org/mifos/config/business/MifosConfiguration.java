@@ -32,7 +32,7 @@ import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
@@ -50,7 +50,7 @@ public class MifosConfiguration {
 
     private Map<LabelKey, String> labelCache;
 
-    private ApplicationConfigurationDao applicationConfigurationDao = DependencyInjectedServiceLocator.locateApplicationConfigurationDao();
+    private ApplicationConfigurationDao applicationConfigurationDao = ApplicationContextProvider.getBean(ApplicationConfigurationDao.class);
 
     private static final MifosConfiguration configuration = new MifosConfiguration();
 

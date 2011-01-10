@@ -48,7 +48,7 @@ import org.mifos.application.holiday.business.service.HolidayService;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.business.CustomerBO;
@@ -96,19 +96,19 @@ public class IntegrationTestObjectMother {
 
     // DAO's for fetching existing data within database
     private static final OfficePersistence officePersistence = new OfficePersistence();
-    private static final OfficeDao officeDao = DependencyInjectedServiceLocator.locateOfficeDao();
-    private static final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
-    private static final FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
-    private static final SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
-    private static final SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
-    private static final CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
-    private static final LoanDao loanDao = DependencyInjectedServiceLocator.locateLoanDao();
-    private static final PersonnelDao personnelDao = DependencyInjectedServiceLocator.locatePersonnelDao();
+    private static final OfficeDao officeDao = ApplicationContextProvider.getBean(OfficeDao.class);
+    private static final HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
+    private static final FundDao fundDao = ApplicationContextProvider.getBean(FundDao.class);
+    private static final SavingsDao savingsDao = ApplicationContextProvider.getBean(SavingsDao.class);
+    private static final SavingsProductDao savingsProductDao = ApplicationContextProvider.getBean(SavingsProductDao.class);
+    private static final CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
+    private static final LoanDao loanDao = ApplicationContextProvider.getBean(LoanDao.class);
+    private static final PersonnelDao personnelDao = ApplicationContextProvider.getBean(PersonnelDao.class);
     private static final CustomerPersistence customerPersistence = new CustomerPersistence();
 
-    private static final CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
-    private static final HolidayService holidayService = DependencyInjectedServiceLocator.locateHolidayService();
-    private static final GenericDao genericDao = DependencyInjectedServiceLocator.locateGenericDao();
+    private static final CustomerService customerService = ApplicationContextProvider.getBean(CustomerService.class);
+    private static final HolidayService holidayService = ApplicationContextProvider.getBean(HolidayService.class);
+    private static final GenericDao genericDao = ApplicationContextProvider.getBean(GenericDao.class);
 
     public static OfficeBO sampleBranchOffice() {
         if (sampleBranchOffice == null) {

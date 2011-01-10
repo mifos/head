@@ -29,7 +29,7 @@ import org.joda.time.DateMidnight;
 import org.joda.time.DateTime;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerCustomFieldEntity;
 import org.mifos.customers.center.CenterTemplate;
@@ -140,7 +140,7 @@ public class CenterPersistence extends Persistence {
         CenterBO center = CenterBO.createNew(userContext, template.getDisplayName(), new DateTime(template.getMfiJoiningDate()), meeting, loanOfficer,
                 centerOffice, numberOfCustomersInOfficeAlready, template.getAddress(), template.getExternalId(), new DateMidnight().toDateTime());
 
-        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
 
         try {
         StaticHibernateUtil.startTransaction();

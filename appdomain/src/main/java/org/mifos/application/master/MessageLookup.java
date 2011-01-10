@@ -31,7 +31,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.business.MifosConfiguration;
@@ -42,6 +42,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 
@@ -75,9 +76,11 @@ import org.springframework.context.MessageSourceAware;
 public class MessageLookup implements MessageSourceAware {
     private static MessageLookup messageLookupInstance = new MessageLookup();
 
-    private ApplicationConfigurationDao applicationConfigurationDao = DependencyInjectedServiceLocator.locateApplicationConfigurationDao();
+    @Autowired
+    private ApplicationConfigurationDao applicationConfigurationDao;
 
-    private static GenericDao genericDao = DependencyInjectedServiceLocator.locateGenericDao();
+    @Autowired
+    private GenericDao genericDao;
 
     private MessageSource messageSource;
 
@@ -235,6 +238,7 @@ public class MessageLookup implements MessageSourceAware {
      * This is a dependency injection method used by Spring to inject a
      * MessageSource for resource bundle based message lookup.
      */
+    @Override
     public void setMessageSource(MessageSource messageSource) {
         this.messageSource = messageSource;
     }

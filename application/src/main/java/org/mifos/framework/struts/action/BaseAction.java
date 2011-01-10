@@ -55,10 +55,10 @@ import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.CustomerServiceFacade;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.GroupServiceFacade;
 import org.mifos.application.servicefacade.LoanAccountServiceFacade;
 import org.mifos.application.servicefacade.LoanServiceFacade;
@@ -102,6 +102,7 @@ import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -113,44 +114,43 @@ public abstract class BaseAction extends DispatchAction {
         return null;
     }
 
-    protected PersonnelDao personnelDao = DependencyInjectedServiceLocator.locatePersonnelDao();
-    protected OfficeDao officeDao = DependencyInjectedServiceLocator.locateOfficeDao();
-    protected CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
-    protected SavingsDao savingsDao = DependencyInjectedServiceLocator.locateSavingsDao();
-    protected LoanDao loanDao = DependencyInjectedServiceLocator.locateLoanDao();
-    protected LoanProductDao loanProductDao = DependencyInjectedServiceLocator.locateLoanProductDao();
-    protected SavingsProductDao savingsProductDao = DependencyInjectedServiceLocator.locateSavingsProductDao();
-    protected FeeDao feeDao = DependencyInjectedServiceLocator.locateFeeDao();
-    protected NewLoginServiceFacade loginServiceFacade = DependencyInjectedServiceLocator.locationLoginServiceFacade();
-    protected PersonnelServiceFacade personnelServiceFacade = DependencyInjectedServiceLocator.locatePersonnelServiceFacade();
-    protected CustomerServiceFacade customerServiceFacade = DependencyInjectedServiceLocator.locateCustomerServiceFacade();
-    protected CenterServiceFacade centerServiceFacade = DependencyInjectedServiceLocator.locateCenterServiceFacade();
-    protected GroupServiceFacade groupServiceFacade = DependencyInjectedServiceLocator.locateGroupServiceFacade();
-    protected ClientServiceFacade clientServiceFacade = DependencyInjectedServiceLocator.locateClientServiceFacade();
-    protected AccountServiceFacade accountServiceFacade = DependencyInjectedServiceLocator.locateAccountServiceFacade();
-    protected MeetingServiceFacade meetingServiceFacade = DependencyInjectedServiceLocator.locateMeetingServiceFacade();
-    protected LoanAccountServiceFacade loanAccountServiceFacade = DependencyInjectedServiceLocator.locateLoanAccountServiceFacade();
-    protected SavingsServiceFacade savingsServiceFacade = DependencyInjectedServiceLocator.locateSavingsServiceFacade();
-    protected HolidayServiceFacade holidayServiceFacade = DependencyInjectedServiceLocator.locateHolidayServiceFacade();
-    protected OfficeServiceFacade officeServiceFacade = DependencyInjectedServiceLocator.locateOfficeServiceFacade();
-    protected FeeServiceFacade feeServiceFacade = DependencyInjectedServiceLocator.locateFeeServiceFacade();
-    protected FundServiceFacade fundServiceFacade = DependencyInjectedServiceLocator.locateFundServiceFacade();
-    protected AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade = DependencyInjectedServiceLocator.locateAuthenticationAuthorizationServiceFacade();
-    protected ImportTransactionsServiceFacade importTransactionsServiceFacade = DependencyInjectedServiceLocator.locateImportTransactionsServiceFacade();
-    protected CheckListServiceFacade checkListServiceFacade = DependencyInjectedServiceLocator.locateCheckListServiceFacade();
-    protected ApplicationConfigurationDao applicationConfigurationDao = DependencyInjectedServiceLocator.locateApplicationConfigurationDao();
+    protected PersonnelDao personnelDao;
+    protected OfficeDao officeDao;
+    protected CustomerDao customerDao;
+    protected SavingsDao savingsDao;
+    protected LoanDao loanDao;
+    protected LoanProductDao loanProductDao;
+    protected SavingsProductDao savingsProductDao;
+    protected FeeDao feeDao;
+    protected NewLoginServiceFacade loginServiceFacade;
+    protected PersonnelServiceFacade personnelServiceFacade;
+    protected CustomerServiceFacade customerServiceFacade;
+    protected CenterServiceFacade centerServiceFacade;
+    protected GroupServiceFacade groupServiceFacade;
+    protected ClientServiceFacade clientServiceFacade;
+    protected AccountServiceFacade accountServiceFacade;
+    protected MeetingServiceFacade meetingServiceFacade;
+    protected LoanAccountServiceFacade loanAccountServiceFacade;
+    protected SavingsServiceFacade savingsServiceFacade;
+    protected HolidayServiceFacade holidayServiceFacade;
+    protected OfficeServiceFacade officeServiceFacade;
+    protected FeeServiceFacade feeServiceFacade;
+    protected FundServiceFacade fundServiceFacade;
+    protected AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade;
+    protected ImportTransactionsServiceFacade importTransactionsServiceFacade;
+    protected CheckListServiceFacade checkListServiceFacade;
+    protected ApplicationConfigurationDao applicationConfigurationDao;
 
-    protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
+    protected FundDao fundDao;
 
     // non domain app
-    protected LoanServiceFacade loanServiceFacade = ApplicationOnlyDependencyInjectedServiceLocator.locateLoanServiceFacade();
+    protected LoanServiceFacade loanServiceFacade;
 
     @Override
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 
-        HttpSession session = request.getSession();
-        WebApplicationContext springAppContext = WebApplicationContextUtils.getWebApplicationContext(session.getServletContext());
+        ApplicationContext springAppContext = ApplicationContextProvider.getApplicationContext();
 
         if (springAppContext != null) {
             this.personnelDao = springAppContext.getBean(PersonnelDao.class);

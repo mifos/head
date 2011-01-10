@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.joda.time.LocalDate;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.customers.personnel.util.helpers.PersonnelLevel;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
@@ -33,6 +33,7 @@ import org.mifos.framework.components.batchjobs.TaskHelper;
 import org.mifos.framework.components.batchjobs.exceptions.BatchJobException;
 import org.mifos.security.MifosUser;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -42,7 +43,7 @@ import org.springframework.security.core.context.SecurityContextImpl;
 
 public class SavingsIntPostingHelper extends TaskHelper {
 
-    private SavingsServiceFacade savingsServiceFacade = DependencyInjectedServiceLocator.locateSavingsServiceFacade();
+    private SavingsServiceFacade savingsServiceFacade = ApplicationContextProvider.getBean(SavingsServiceFacade.class);
 
     public SavingsIntPostingHelper() {
         super();
