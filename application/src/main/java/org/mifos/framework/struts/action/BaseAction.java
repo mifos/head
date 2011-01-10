@@ -22,7 +22,6 @@ package org.mifos.framework.struts.action;
 
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,9 +54,7 @@ import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.ClientServiceFacade;
 import org.mifos.application.servicefacade.CustomerServiceFacade;
@@ -389,10 +386,6 @@ public abstract class BaseAction extends DispatchAction {
 
     protected UserContext getUserContext(HttpServletRequest request) {
         return (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-    }
-
-    protected <T extends MasterDataEntity>  List<T> getMasterEntities(Class<T> type, Short localeId) throws ServiceException {
-        return new MasterDataService().retrieveMasterEntities(type, localeId);
     }
 
     protected Short getShortValue(String str) {

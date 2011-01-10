@@ -67,7 +67,6 @@ import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -387,8 +386,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
             // Business activities got in getPrdOfferings also but only for glim.
-            List<ValueListElement> loanPurposes = new MasterDataService().retrieveMasterEntities(
-                    MasterConstants.LOAN_PURPOSES, userContext.getLocaleId());
+            List<ValueListElement> loanPurposes = new MasterPersistence().retrieveMasterEntities(MasterConstants.LOAN_PURPOSES);
 
             MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
                     .getMeetingDetails();

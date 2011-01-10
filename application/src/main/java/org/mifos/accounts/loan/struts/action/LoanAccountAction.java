@@ -63,7 +63,6 @@ import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -199,7 +198,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private final LoanBusinessService loanBusinessService;
     private final LoanPrdBusinessService loanPrdBusinessService;
-    private final MasterDataService masterDataService;
+    private final MasterPersistence masterPersistence;
     private final ConfigurationPersistence configurationPersistence;
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
@@ -219,14 +218,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     public LoanAccountAction() {
         this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
-                new LoanPrdBusinessService(), new MasterDataService(),
+                new LoanPrdBusinessService(), new MasterPersistence(),
                 new ConfigurationPersistence(), new AccountBusinessService());
     }
 
     public LoanAccountAction(final ConfigurationBusinessService configService,
                              final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater,
                              final LoanPrdBusinessService loanPrdBusinessService,
-                             final MasterDataService masterDataService, final ConfigurationPersistence configurationPersistence,
+                             final MasterPersistence masterPersistence, final ConfigurationPersistence configurationPersistence,
                              final AccountBusinessService accountBusinessService) {
         super(accountBusinessService);
 
@@ -234,7 +233,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.loanBusinessService = loanBusinessService;
         this.glimLoanUpdater = glimLoanUpdater;
         this.loanPrdBusinessService = loanPrdBusinessService;
-        this.masterDataService = masterDataService;
+        this.masterPersistence = masterPersistence;
         this.configurationPersistence = configurationPersistence;
         this.questionGroupFilter = new QuestionGroupFilterForLoan();
         this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
@@ -261,7 +260,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     @Deprecated
     private LoanAccountAction(final ConfigurationBusinessService configService,
                               final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
-        this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new MasterDataService(), new ConfigurationPersistence(),
+        this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new MasterPersistence(), new ConfigurationPersistence(),
                 new AccountBusinessService());
     }
 
@@ -1574,8 +1573,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                 request);
 
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
-        masterDataService.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request)
-        .getLocaleId()), request);
+        masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES), request);
         SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
 
         SessionUtils.setAttribute(RECURRENCEID, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum()
@@ -1613,8 +1611,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void populateGlimAttributes(final HttpServletRequest request, final LoanAccountActionForm loanActionForm,
                                         final String globalAccountNum, final CustomerBO customer) throws PageExpiredException, ServiceException {
         GlimSessionAttributes glimSessionAttributes = getGlimSpecificPropertiesToSet(loanActionForm, globalAccountNum,
-                customer, masterDataService.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request)
-                .getLocaleId()));
+                customer, masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES));
         glimSessionAttributes.putIntoSession(request);
     }
 
@@ -1765,7 +1762,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private void setGovernmentIdAndPurpose(final LoanAccountDetailsDto clientDetail, final Short localeId)
             throws ServiceException {
-        clientDetail.setBusinessActivityName(findBusinessActivityName(clientDetail.getBusinessActivity(), localeId));
+        clientDetail.setBusinessActivityName(findBusinessActivityName(clientDetail.getBusinessActivity()));
         clientDetail.setGovermentId(findGovernmentId(getIntegerValue(clientDetail.getClientId())));
     }
 
@@ -1784,10 +1781,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return StringUtils.isBlank(governmentId) ? "-" : governmentId;
     }
 
-    private String findBusinessActivityName(final String businessActivity, final Short localeId)
-            throws ServiceException {
-        List<ValueListElement> businessActEntity = masterDataService.retrieveMasterEntities(
-                MasterConstants.LOAN_PURPOSES, localeId);
+    private String findBusinessActivityName(final String businessActivity) {
+        List<ValueListElement> businessActEntity = masterPersistence.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES);
         for (ValueListElement busact : businessActEntity) {
 
             if (busact.getId().toString().equals(businessActivity)) {

@@ -281,14 +281,10 @@ public class AuditConfiguration {
     }
 
     private void fetchMasterData(String entityName, Short localeId) throws SystemException {
-        try {
-            List<ValueListElement> businessActivityList = masterPersistence
-                    .retrieveMasterEntities(entityName, localeId);
-            for (ValueListElement businessActivityEntity : businessActivityList) {
-                valueMap.put(businessActivityEntity.getId().toString(), businessActivityEntity.getName());
-            }
-        } catch (PersistenceException e) {
-            throw new SystemException(e);
+        List<ValueListElement> businessActivityList = masterPersistence
+                .retrieveMasterEntities(entityName);
+        for (ValueListElement businessActivityEntity : businessActivityList) {
+            valueMap.put(businessActivityEntity.getId().toString(), businessActivityEntity.getName());
         }
     }
 

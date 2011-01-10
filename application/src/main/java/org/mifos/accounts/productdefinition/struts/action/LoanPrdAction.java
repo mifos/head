@@ -66,6 +66,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -439,11 +440,11 @@ public class LoanPrdAction extends BaseAction {
                 .getActiveLoanProductCategories(), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANAPPLFORLIST, service
                 .getLoanApplicableCustomerTypes(localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, getMasterEntities(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, new MasterPersistence().retrieveMasterEntities(
                 GracePeriodTypeEntity.class, localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST, getMasterEntities(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST, new MasterPersistence().retrieveMasterEntities(
                 InterestTypesEntity.class, localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, getMasterEntities(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, new MasterPersistence().retrieveMasterEntities(
                 InterestCalcTypeEntity.class, localeId), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCFUNDSLIST, this.fundDao.findAllFunds(),
                 request);

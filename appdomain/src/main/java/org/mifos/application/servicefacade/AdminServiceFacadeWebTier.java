@@ -82,7 +82,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.business.service.MasterDataService;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -1038,11 +1038,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     private <T extends MasterDataEntity> List<T> getMasterEntities(Class<T> type, Short localeId) {
-        try {
-            return new MasterDataService().retrieveMasterEntities(type, localeId);
-        } catch (ServiceException e) {
-            throw new MifosRuntimeException(e);
-        }
+        return new MasterPersistence().retrieveMasterEntities(type, localeId);
     }
 
     private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,

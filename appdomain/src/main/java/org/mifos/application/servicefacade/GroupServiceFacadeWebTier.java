@@ -421,28 +421,24 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
     private List<CustomerPositionDto> generateCustomerPositionViews(CustomerBO customer, Short localeId) {
 
-        try {
-            List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
+        List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
-            List<PositionEntity> allCustomerPositions = new MasterPersistence().retrieveMasterEntities(
-                    PositionEntity.class, localeId);
-            if (!new ClientRules().getCenterHierarchyExists()) {
-                customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
-            } else {
-                customerPositions.addAll(allCustomerPositions);
-            }
-
-            List<CustomerPositionDto> customerPositionDtos = new ArrayList<CustomerPositionDto>();
-            generatePositionsFromExistingCustomerPositions(customer, customerPositions, customerPositionDtos);
-
-            if (customerPositionDtos.isEmpty()) {
-                generateNewListOfPositions(customer, customerPositions, customerPositionDtos);
-            }
-
-            return customerPositionDtos;
-        } catch (PersistenceException e) {
-            throw new MifosRuntimeException(e);
+        List<PositionEntity> allCustomerPositions = new MasterPersistence().retrieveMasterEntities(
+                PositionEntity.class, localeId);
+        if (!new ClientRules().getCenterHierarchyExists()) {
+            customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
+        } else {
+            customerPositions.addAll(allCustomerPositions);
         }
+
+        List<CustomerPositionDto> customerPositionDtos = new ArrayList<CustomerPositionDto>();
+        generatePositionsFromExistingCustomerPositions(customer, customerPositions, customerPositionDtos);
+
+        if (customerPositionDtos.isEmpty()) {
+            generateNewListOfPositions(customer, customerPositions, customerPositionDtos);
+        }
+
+        return customerPositionDtos;
     }
 
     private List<PositionEntity> populateWithNonCenterRelatedPositions(List<PositionEntity> allCustomerPositions) {
