@@ -50,10 +50,7 @@ public class DefineLabelsTest  extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    /**
-     * FIXME - keithw - ignoring for now.
-     */
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void defineLabelsTest() {
         AdminPage adminPage = navigationHelper.navigateToAdminPage();
         DefineLabelsPage defineLabelsPage = adminPage.navigateToDefineLabelsPage();

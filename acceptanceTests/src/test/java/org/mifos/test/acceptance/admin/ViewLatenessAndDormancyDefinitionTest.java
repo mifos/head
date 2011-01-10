@@ -51,7 +51,7 @@ public class ViewLatenessAndDormancyDefinitionTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyViewLatenessAndDormancyDefinitionPage() {
         AdminPage adminPage = loginAndGoToAdminPage();
         ViewLatenessAndDormancyDefinitionPage viewLatenessAndDormancyDefinitionPage = adminPage.navigateToViewLatenessAndDormancyDefinitionPage();
