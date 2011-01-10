@@ -77,7 +77,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testGetLookUpEntity() throws Exception {
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto gender = masterPersistence.getLookUpEntity(MasterConstants.GENDER, Short.valueOf("1"));
+        CustomValueDto gender = masterPersistence.getLookUpEntity(MasterConstants.GENDER);
         List<CustomValueListElementDto> genderValues = gender.getCustomValueListElements();
        Assert.assertEquals(2, genderValues.size());
 
@@ -180,8 +180,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     public void testAddAndDeleteValueListElement() throws Exception {
         // get the CustomValueDto that we want to add to
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto salutationValueList = masterPersistence.getLookUpEntity(MasterConstants.SALUTATION,
-                DEFAULT_LOCALE);
+        CustomValueDto salutationValueList = masterPersistence.getLookUpEntity(MasterConstants.SALUTATION);
 
         // add a CustomValueListElementDto to the list
         final String NEW_SALUTATION_STRING = "Sir";

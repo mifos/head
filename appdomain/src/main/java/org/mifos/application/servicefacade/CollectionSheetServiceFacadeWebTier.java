@@ -201,8 +201,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             return translatedGridView;
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
-        } catch (ApplicationException e) {
-            throw new MifosRuntimeException(e);
         }
     }
 

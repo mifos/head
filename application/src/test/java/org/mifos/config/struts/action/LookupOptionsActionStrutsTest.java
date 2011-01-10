@@ -179,7 +179,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
     private void verifyOneListAndRestoreOriginalValues(String masterConstant, String configurationConstant,
             String listName, String originalName) throws SystemException, ApplicationException {
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
+        CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant);
         List<CustomValueListElementDto> elementList = valueList.getCustomValueListElements();
         // compare the updated element
         CustomValueListElementDto valueListElement = elementList.get(0);
@@ -196,7 +196,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
     private String setupAddOrEditForOneList(String masterConstant, String configurationConstant, String listName,
             String addOrEdit) throws SystemException, ApplicationException {
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
+        CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant);
         Short valueListId = valueList.getEntityId();
         CustomValueListElementDto valueListElement = valueList.getCustomValueListElements().get(0);
 
@@ -224,7 +224,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
     private void setupNoSelectionForOneList(String masterConstant, String configurationConstant, String listName)
             throws SystemException, ApplicationException {
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
+        CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant);
         Short valueListId = valueList.getEntityId();
 
         addRequestParameter(ConfigurationConstants.ENTITY, configurationConstant);
@@ -238,7 +238,7 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
     private String prepareForUpdate(String masterConstant, String configurationConstant, String listName,
             String addOrEdit, LookupOptionData data, String nameString) throws SystemException, ApplicationException {
         MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant, DEFAULT_LOCALE);
+        CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant);
         Short valueListId = valueList.getEntityId();
         CustomValueListElementDto valueListElement = valueList.getCustomValueListElements().get(0);
         CustomValueListElementDto valueListElement1 = valueList.getCustomValueListElements().get(1);

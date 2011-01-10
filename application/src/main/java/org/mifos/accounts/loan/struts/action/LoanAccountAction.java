@@ -395,7 +395,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         loanActionForm.setDefaultFees(defaultFees);
 
-        CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES, userContext.getLocaleId());
+        CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
         List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
         SessionUtils.setCollectionAttribute(LoanConstants.CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
@@ -1158,7 +1158,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // lookup_value_locale table associated with the current user context
         // locale
         SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
-                MasterConstants.COLLATERAL_TYPES, getUserContext(request).getLocaleId()).getCustomValueListElements(), request);
+                MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(), request);
         SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
 
@@ -1569,7 +1569,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // lookup_value_locale table associated with the current user context
         // locale
         SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
-                MasterConstants.COLLATERAL_TYPES, getUserContext(request).getLocaleId()).getCustomValueListElements(),
+                MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(),
                 request);
 
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
@@ -1596,11 +1596,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             throws ApplicationException {
         request.setAttribute("accountState", loanBO.getState());
         request.setAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
-                MasterConstants.COLLATERAL_TYPES, getUserContext(request).getLocaleId()).getCustomValueListElements());
+                MasterConstants.COLLATERAL_TYPES).getCustomValueListElements());
         request.setAttribute("collateralTypeId", loanBO.getCollateralTypeId());
     }
 
-    private CustomerBO getCustomerFromRequest(final HttpServletRequest request) throws ServiceException {
+    private CustomerBO getCustomerFromRequest(final HttpServletRequest request) {
         String customerId = request.getParameter(CUSTOMER_ID);
         if (isNotEmpty(customerId)) {
             return getCustomer(Integer.valueOf(customerId));

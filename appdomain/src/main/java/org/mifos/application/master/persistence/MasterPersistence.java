@@ -63,59 +63,40 @@ import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 public class MasterPersistence extends Persistence {
 
     /**
-     * Only two non-test usages, one that may never be called and one for
-     * getting labels.
+     * Only two non-test usages, one that may never be called and one for getting labels.
      */
-    public CustomValueDto getLookUpEntity(final String entityName, final Short localeId) throws ApplicationException,
-            SystemException {
-        try {
-            Session session = getSession();
-
-            Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
-            queryEntity.setString("entityType", entityName);
-
-            CustomValueDto entity = (CustomValueDto) queryEntity.uniqueResult();
-
-            entity.setCustomValueListElements(lookUpValue(entityName, localeId, session));
-
-            return entity;
-        } catch (Exception e) {
-            throw new ApplicationException(e);
-        }
+    public CustomValueDto getLookUpEntity(final String entityName) throws SystemException {
+        Session session = getSession();
+        Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
+        queryEntity.setString("entityType", entityName);
+        CustomValueDto entity = (CustomValueDto) queryEntity.uniqueResult();
+        entity.setCustomValueListElements(lookUpValue(entityName, session));
+        return entity;
     }
 
     @SuppressWarnings("unchecked")
-    private List<CustomValueListElementDto> lookUpValue(final String entityName, final Short localeId, final Session session) {
+    private List<CustomValueListElementDto> lookUpValue(final String entityName, final Session session) {
         Query queryEntity = session.getNamedQuery("masterdata.entitylookupvalue");
         queryEntity.setString("entityType", entityName);
         List<CustomValueListElementDto> entityList = queryEntity.list();
-
         return entityList;
     }
 
     /**
      * Used once in getMasterData, otherwise, test usage and one other method
-     * MifosPropertyMessageResources.getCustomValueListElements (and that method
-     * may never be called)
+     * MifosPropertyMessageResources.getCustomValueListElements (and that method may never be called)
      */
     public CustomValueDto getCustomValueList(final String entityName, final String classPath, final String column)
-            throws ApplicationException, SystemException {
+            throws SystemException {
         Session session = null;
-        try {
-            session = getSession();
-
-            Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
-            queryEntity.setString("entityType", entityName);
-
-            CustomValueDto entity = (CustomValueDto) queryEntity.uniqueResult();
-
-            List<CustomValueListElementDto> listElements = getCustomValueListElements(entityName, classPath, column,
-                    session);
-            entity.setCustomValueListElements(listElements);
-            return entity;
-        } catch (Exception e) {
-            throw new ApplicationException(e);
-        }
+        session = getSession();
+        Query queryEntity = session.getNamedQuery("masterdata.entityvalue");
+        queryEntity.setString("entityType", entityName);
+        CustomValueDto entity = (CustomValueDto) queryEntity.uniqueResult();
+        List<CustomValueListElementDto> listElements = getCustomValueListElements(entityName, classPath, column,
+                session);
+        entity.setCustomValueListElements(listElements);
+        return entity;
     }
 
     @SuppressWarnings("unchecked")

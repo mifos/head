@@ -381,8 +381,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
                     .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
 
-            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES,
-                    userContext.getLocaleId());
+            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
             // Business activities got in getPrdOfferings also but only for glim.
