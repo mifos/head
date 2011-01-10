@@ -29,6 +29,7 @@ import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.BundleKey;
@@ -119,7 +120,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
         if (returnVal == null) {
             // try to get it from the database
             try {
-                short locale_id = dao.getLocaleId(locale);
+                short locale_id = Localization.getInstance().getLocaleId();
                 CustomValueDto entity = null;
                 if (mappingKey == null || mappingKey.equals("")) {
                     entity = dao.getLookUpEntity(key, locale_id);
@@ -149,7 +150,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
     public CustomValueDto getEntity(final Locale locale, final String key) {
         CustomValueDto entity = null;
         try {
-            short locale_id = dao.getLocaleId(locale);
+            short locale_id = Localization.getInstance().getLocaleId();
             entity = dao.getLookUpEntity(key, locale_id);
         } catch (Exception e) {
             // logger.error(e.getMessage());

@@ -22,7 +22,6 @@ package org.mifos.application.master.persistence;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +39,6 @@ import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
-import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.dto.domain.ValueListElement;
@@ -90,10 +88,6 @@ public class MasterPersistence extends Persistence {
         List<CustomValueListElementDto> entityList = queryEntity.list();
 
         return entityList;
-    }
-
-    public short getLocaleId(final Locale locale) {
-        return Localization.getInstance().getLocaleId();
     }
 
     /**
