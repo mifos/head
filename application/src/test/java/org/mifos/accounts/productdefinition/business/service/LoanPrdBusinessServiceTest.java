@@ -53,18 +53,6 @@ public class LoanPrdBusinessServiceTest {
 
     @Test
     @ExpectedException(value = ServiceException.class)
-    public void testInvalidConnectionThrowsExceptionInGetLoanApplicableCustomerTypes() throws PersistenceException {
-
-        try {
-            when(masterPersistence.findMasterDataEntitiesWithLocale(PrdApplicableMasterEntity.class, localeId)).thenThrow(new PersistenceException("some exception"));
-            loanPrdBusinessService.getLoanApplicableCustomerTypes(localeId);
-            Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = ServiceException.class)
     public void testInvalidConnectionThrowsExceptionInGetApplicablePrdStatus() throws PersistenceException {
 
         try {
