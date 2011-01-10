@@ -787,6 +787,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 labelText = MessageLookup.getInstance().lookupLabel(entity.findLabelKey());
             }
 
+            if (StringUtils.isBlank(labelText)) {
+                labelText = "test-blank";
+            }
+
             if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
                 lookupLabels.setClient(labelText);
             } else if (entity.getEntityType().equals(ConfigurationConstants.GROUP)) {

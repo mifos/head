@@ -28,6 +28,7 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
 import org.mifos.config.Localization;
@@ -83,6 +84,12 @@ public class LabelTagUtils {
         } else {
             message = resources.getMessage(locale, key, args);
         }
+
+        if (StringUtils.isBlank(message)) {
+            String newKey = "label." + key.toLowerCase();
+            message = resources.getMessage(locale, newKey);
+        }
+
         return message;
     }
 

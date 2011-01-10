@@ -20,4 +20,7 @@
     	<constructor-arg ref="holidayServiceFacade" />
     	<constructor-arg ref="loanPrdBusinessService" />
     </bean>
+    
+    <bean name="questionnaireMigration" class="org.mifos.application.questionnaire.migration.QuestionnaireMigration"/>
+    <bean name="questionnaireMigrationMapper" class="org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapperImpl"/>
 </beans>

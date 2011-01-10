@@ -149,7 +149,8 @@ public class LookUpEntity extends AbstractEntity {
                 return lookUpLabel.getLabelText();
             }
         }
-        throw new RuntimeException("Label not found for locale with id: \"" + localeId + "\"");
+//        throw new RuntimeException("Label not found for locale with id: \"" + localeId + "\"");
+        return "";
     }
 
     private String findLabelKeyForLocale(Short localeId) {
@@ -158,6 +159,6 @@ public class LookUpEntity extends AbstractEntity {
                 return lookUpLabel.getLabelKey();
             }
         }
-        throw new RuntimeException("Label key not found for locale with id: \"" + localeId + "\"");
+        return "";
     }
 }
