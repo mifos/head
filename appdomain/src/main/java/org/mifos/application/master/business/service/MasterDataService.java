@@ -40,24 +40,6 @@ import org.mifos.security.util.UserContext;
 
 public class MasterDataService implements BusinessService {
 
-    private final PersonnelPersistence personnelPersistence = getPersonnelPersistence();
-
-    protected PersonnelPersistence getPersonnelPersistence() {
-        return new PersonnelPersistence();
-    }
-
-    private final OfficePersistence officePersistence = getOfficePersistence();
-
-    protected OfficePersistence getOfficePersistence() {
-        return new OfficePersistence();
-    }
-
-    private final CustomerPersistence customerPersistence = getCustomerPersistence();
-
-    protected CustomerPersistence getCustomerPersistence() {
-        return new CustomerPersistence();
-    }
-
     private final MasterPersistence masterPersistence = getMasterPersistence();
 
     MasterPersistence getMasterPersistence() {
@@ -67,44 +49,6 @@ public class MasterDataService implements BusinessService {
     @Override
     public AbstractBusinessObject getBusinessObject(UserContext userContext) {
         return null;
-    }
-
-    /**
-     * @deprecated -
-     */
-    @Deprecated
-    public List<PersonnelDto> getListOfActiveLoanOfficers(Short levelId, Short officeId, Short userId,
-            Short userLevelId) throws ServiceException {
-        try {
-            return personnelPersistence.getActiveLoanOfficersInBranch(levelId, officeId, userId, userLevelId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-    }
-
-
-    /**
-     * @deprecated see {@link OfficeDao}.
-     */
-    @Deprecated
-    public List<OfficeDetailsDto> getActiveBranches(Short branchId) throws ServiceException {
-        try {
-            return officePersistence.getActiveOffices(branchId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-
-    }
-
-    @Deprecated
-    public List<CustomerDto> getListOfActiveParentsUnderLoanOfficer(Short personnelId, Short customerLevel,
-            Short officeId) throws ServiceException {
-        try {
-            return customerPersistence.getActiveParentList(personnelId, customerLevel, officeId);
-        } catch (PersistenceException e) {
-            throw new ServiceException(e);
-        }
-
     }
 
     public String retrieveMasterEntities(Integer entityId, Short localeId) throws ServiceException {

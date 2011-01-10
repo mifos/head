@@ -24,65 +24,10 @@ public class MasterDataServiceTest {
 
     MasterDataService service = new MasterDataService() {
         @Override
-        protected PersonnelPersistence getPersonnelPersistence() {
-            return personnelPersistence;
-        }
-
-        @Override
-        protected OfficePersistence getOfficePersistence() {
-            return officePersistence;
-        }
-
-        @Override
-        protected CustomerPersistence getCustomerPersistence() {
-            return customerPersistence;
-        }
-
-        @Override
         MasterPersistence getMasterPersistence() {
             return masterPersistence;
         }
     };
-
-    @Test
-    @ExpectedException(value = ServiceException.class)
-    public void testInvalidConnectionForFindById() throws PersistenceException {
-        try {
-            Short accountId = new Short("1");
-            when(officePersistence.getActiveOffices(accountId)).
-                    thenThrow(new PersistenceException("some exception"));
-            service.getActiveBranches(accountId);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = ServiceException.class)
-    public void testInvalidConnectionForGetListOfActiveLoanOfficers() throws PersistenceException {
-        try {
-            Short id = Short.valueOf("3");
-            when(personnelPersistence.getActiveLoanOfficersInBranch(PersonnelConstants.LOAN_OFFICER, id, id, PersonnelConstants.LOAN_OFFICER)).
-                    thenThrow(new PersistenceException("some exception"));
-            service.getListOfActiveLoanOfficers(PersonnelConstants.LOAN_OFFICER, id, id, PersonnelConstants.LOAN_OFFICER);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
-
-    @Test
-    @ExpectedException(value = ServiceException.class)
-    public void testInvalidConnectionForGetListOfActiveParentsUnderLoanOfficer() throws PersistenceException {
-        try {
-            Short id = Short.valueOf("3");
-            Short value = CustomerLevel.CENTER.getValue();
-            when(customerPersistence.getActiveParentList(id, value, id)).
-                    thenThrow(new PersistenceException("some exception"));
-            service.getListOfActiveParentsUnderLoanOfficer(id, value, id);
-            junit.framework.Assert.fail("should fail because of invalid session");
-        } catch (ServiceException e) {
-        }
-    }
 
     @Test
     @ExpectedException(value = ServiceException.class)
