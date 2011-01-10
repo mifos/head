@@ -243,6 +243,10 @@
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
+            <artifactId>mifos-domain-dto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
             <artifactId>mifos-accounting</artifactId>
         </dependency>
         <dependency>
@@ -264,6 +268,10 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-abstract-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-organization</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>

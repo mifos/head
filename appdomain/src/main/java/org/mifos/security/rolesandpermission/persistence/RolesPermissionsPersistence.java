@@ -29,6 +29,7 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.Persistence;
@@ -87,5 +88,13 @@ public class RolesPermissionsPersistence extends Persistence {
             return (ActivityEntity) obj;
         }
         return null;
+    }
+
+    public void save(RoleBO roleBO) {
+        try {
+            super.save(roleBO);
+        } catch (PersistenceException e) {
+            throw new MifosRuntimeException(e);
+        }
     }
 }

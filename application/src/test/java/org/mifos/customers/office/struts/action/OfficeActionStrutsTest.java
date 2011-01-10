@@ -32,8 +32,6 @@ import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.struts.actionforms.OffActionForm;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
-import org.mifos.customers.office.util.helpers.OfficeLevel;
-import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeDto;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -193,17 +191,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     @Test
-    public void testEdit() throws Exception {
-        setRequestPathInfo("/offAction.do");
-        addRequestParameter("method", Methods.edit.toString());
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-        OfficeBO officeBO = createLoadOffice();
-        actionPerform();
-        verifyForward(ActionForwards.edit_success.toString());
-    }
-
-    @Test
     public void testEditPreview() {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", Methods.editpreview.toString());
@@ -219,27 +206,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
         actionPerform();
         verifyForward(ActionForwards.editprevious_success.toString());
-    }
-
-    @Test
-    public void testUpdate() throws Exception {
-        setRequestPathInfo("/offAction.do");
-        addRequestParameter("method", Methods.update.toString());
-        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
-        request.setAttribute(Constants.CURRENTFLOWKEY, flowKey);
-
-        OfficeBO officeBO = createLoadOffice();
-        addRequestParameter("officeName", "RAJOFFICE");
-        addRequestParameter("shortName", "OFFI");
-        addRequestParameter("officeLevel", officeBO.getOfficeLevel().getValue().toString());
-        addRequestParameter("parentOfficeId", officeBO.getParentOffice().getOfficeId().toString());
-        addRequestParameter("officeStatus", officeBO.getOfficeStatus().getValue().toString());
-        actionPerform();
-        verifyForward(ActionForwards.update_success.toString());
-        TestObjectFactory.flushandCloseSession();
-        officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
-        Assert.assertEquals("RAJOFFICE", officeBO.getOfficeName());
-        Assert.assertEquals("OFFI", officeBO.getShortName());
     }
 
     @Test
@@ -263,20 +229,6 @@ public class OfficeActionStrutsTest extends MifosMockStrutsTestCase {
     private void addActionMethod(String method) {
         setRequestPathInfo("/offAction.do");
         addRequestParameter("method", method);
-    }
-
-    private OfficeBO createLoadOffice() throws Exception {
-        OfficeBO parent = TestObjectFactory.getOffice(TestObjectFactory.HEAD_OFFICE);
-        OfficeBO officeBO = new OfficeBO(userContext, OfficeLevel.AREAOFFICE, parent, null, "abcd", "abcd", null,
-                OperationMode.REMOTE_SERVER);
-        officeBO.save();
-        TestObjectFactory.flushandCloseSession();
-        officeBO = TestObjectFactory.getOffice(officeBO.getOfficeId());
-        OfficeDto officeDto = new OfficeDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(),
-                officeBO.getShortName(), officeBO.getGlobalOfficeNum(), officeBO.getParentOffice().getOfficeId(),
-                officeBO.getStatus().getId(), officeBO.getLevel().getId());
-        SessionUtils.setAttribute(OfficeConstants.OFFICE_DTO, officeDto, request);
-        return officeBO;
     }
 
     public void ignore_testFlowSuccess() throws Exception {

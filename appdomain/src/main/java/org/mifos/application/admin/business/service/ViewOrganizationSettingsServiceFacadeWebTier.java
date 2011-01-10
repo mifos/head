@@ -64,9 +64,16 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         Properties fiscalRules = new Properties();
 
         fiscalRules.setProperty("workingDays", getWorkingDays());
-        fiscalRules.setProperty("startOfWeek", WeekDay.getWeekDay(new FiscalCalendarRules().getStartOfWeek()).getName());
+
+        FiscalCalendarRules fiscalCalendarRules = new FiscalCalendarRules();
+        Short startOfWeekValue = fiscalCalendarRules.getStartOfWeek();
+        WeekDay startOfWeek = WeekDay.getWeekDay(startOfWeekValue);
+        String weekdayName = MessageLookup.getInstance().lookup(startOfWeek.getPropertiesKey());
+        startOfWeek.setWeekdayName(weekdayName);
+
+        fiscalRules.setProperty("startOfWeek", startOfWeek.getName());
         fiscalRules.setProperty("offDays", getOffDays());
-        fiscalRules.setProperty("holidayMeeting", new FiscalCalendarRules().getScheduleMeetingIfNonWorkingDay());
+        fiscalRules.setProperty("holidayMeeting", fiscalCalendarRules.getScheduleMeetingIfNonWorkingDay());
 
         return fiscalRules;
     }
@@ -165,6 +172,8 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         List<WeekDay> workDaysList = new FiscalCalendarRules().getWorkingDays();
         List<String> workDayNames = new ArrayList<String>();
         for (WeekDay workDay : workDaysList) {
+            String weekdayName = MessageLookup.getInstance().lookup(workDay.getPropertiesKey());
+            workDay.setWeekdayName(weekdayName);
             workDayNames.add(workDay.getName());
         }
         return StringUtils.join(workDayNames, DELIMITER);
@@ -174,7 +183,10 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
         List<Short> offDaysList = new FiscalCalendarRules().getWeekDayOffList();
         List<String> offDayNames = new ArrayList<String>();
         for (Short offDayNum : offDaysList) {
-            offDayNames.add(WeekDay.getWeekDay(offDayNum).getName());
+            WeekDay weekDay = WeekDay.getWeekDay(offDayNum);
+            String weekdayName = MessageLookup.getInstance().lookup(weekDay.getPropertiesKey());
+            weekDay.setWeekdayName(weekdayName);
+            offDayNames.add(weekDay.getName());
         }
         return StringUtils.join(offDayNames, DELIMITER);
     }
@@ -194,8 +206,9 @@ public class ViewOrganizationSettingsServiceFacadeWebTier implements ViewOrganiz
 		for (TransactionImport ti : new PluginManager().loadImportPlugins()) {
 			String key = ti.getPropertyNameForAdminDisplay();
 			String value = ti.getPropertyValueForAdminDisplay();
-			if (key != null && value != null)
-				result.put(key, value);
+			if (key != null && value != null) {
+                result.put(key, value);
+            }
 		}
 		return result;
 	}

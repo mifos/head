@@ -31,6 +31,8 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 
 /**
@@ -197,16 +199,23 @@ public class RoleTempleteBuilder {
 
                 buff.append("bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomBorder\"  ><span class=\"fontnormal\">");
 
+                ActivityEntity entity = l.get(index);
+                String activityName = MessageLookup.getInstance().lookup(entity.getActivityNameLookupValues());
+                entity.setActivityName(activityName);
+
                 buff.append(l.get(index).getActivityName());
                 buff.append("</span></td>");
                 buff.append("<td width=\"50%\" bgcolor=\"#FFFFFF\" class=\"paddingleft05BottomLeftBorder\"  >"
                         + "<span class=\"fontnormal\">");
 
-                if (null == l.get(index).getDescription()) {
+                String description = MessageLookup.getInstance().lookup(entity.getActivityNameLookupValues());
+                entity.setDescription(description);
+
+                if (StringUtils.isBlank(entity.getDescription())) {
                     buff.append(" &nbsp; ");
                 } else {
 
-                    buff.append(l.get(index).getDescription());
+                    buff.append(entity.getDescription());
                 }
 
                 buff.append("</span></td></tr>");
@@ -263,7 +272,10 @@ public class RoleTempleteBuilder {
             buff.append(maxDepth + 2 + "\"  >");
             buff.append("<span class=\"fontnormalbold\">");
 
-            buff.append(l.get(index).getActivityName());
+            ActivityEntity entity = l.get(index);
+            String activityName = MessageLookup.getInstance().lookup(entity.getActivityNameLookupValues());
+
+            buff.append(activityName);
             buff.append("</span></td></tr>");
             makeTable(l, li.get(i).getId(), buff, 1, name);
             buff.append("</table><br>");

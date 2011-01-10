@@ -23,6 +23,7 @@ package org.mifos.customers.personnel.business;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -34,9 +35,12 @@ public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCa
         MasterPersistence masterPersistenceService = new MasterPersistence();
         PersonnelStatusEntity personnelStatusEntity = (PersonnelStatusEntity) masterPersistenceService
                 .getPersistentObject(PersonnelStatusEntity.class, (short) 1);
-       Assert.assertEquals(Short.valueOf("1"), personnelStatusEntity.getId());
-        personnelStatusEntity.setLocaleId(TestObjectFactory.TEST_LOCALE);
-       Assert.assertEquals("Active", personnelStatusEntity.getName());
-    }
 
+        String name = MessageLookup.getInstance().lookup(personnelStatusEntity.getLookUpValue());
+        (personnelStatusEntity).setName(name);
+
+        Assert.assertEquals(Short.valueOf("1"), personnelStatusEntity.getId());
+        personnelStatusEntity.setLocaleId(TestObjectFactory.TEST_LOCALE);
+        Assert.assertEquals("Active", personnelStatusEntity.getName());
+    }
 }

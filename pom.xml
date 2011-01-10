@@ -38,16 +38,18 @@
     </properties>
     <modules>
         <module>common</module>
+        <module>domain-dto</module>
         <module>testFramework</module>
         <module>serviceInterfaces</module>
         <module>userInterface</module>
         <module>accounting</module>
-        <module>application</module>
         <module>questionnaire</module>
         <module>cashflow</module>
-        <module>acceptanceTests</module>
-        <module>appdomain</module>
         <module>abstract-domain</module>
+        <module>organization</module>
+        <module>appdomain</module>
+        <module>application</module>
+        <module>acceptanceTests</module>
     </modules>
 
     <!--
@@ -91,6 +93,11 @@
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
+                <artifactId>mifos-domain-dto</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
                 <artifactId>mifos-accounting</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
@@ -116,12 +123,17 @@
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-                <artifactId>mifos-appdomain</artifactId>
+                <artifactId>mifos-abstract-domain</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>org.mifos</groupId>
-                <artifactId>mifos-abstract-domain</artifactId>
+                <artifactId>mifos-organization</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-appdomain</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>

@@ -27,12 +27,17 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.customers.office.business.OfficeLevelEntity;
+import org.mifos.customers.office.business.OfficeStatusEntity;
+import org.mifos.customers.personnel.business.PersonnelLevelEntity;
+import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -295,6 +300,27 @@ public class AuditConfiguration {
             List<MasterDataEntity> masterDataList = masterPersistence.retrieveMasterDataEntity(classPath);
             for (MasterDataEntity masterDataEntity : masterDataList) {
                 masterDataEntity.setLocaleId(localeId);
+
+                if (masterDataEntity instanceof PersonnelStatusEntity) {
+                    String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                    ((PersonnelStatusEntity) masterDataEntity).setName(name);
+                }
+
+                if (masterDataEntity instanceof PersonnelLevelEntity) {
+                    String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                    ((PersonnelLevelEntity) masterDataEntity).setName(name);
+                }
+
+                if (masterDataEntity instanceof OfficeLevelEntity) {
+                    String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                    ((OfficeLevelEntity) masterDataEntity).setName(name);
+                }
+
+                if (masterDataEntity instanceof OfficeStatusEntity) {
+                    String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                    ((OfficeStatusEntity) masterDataEntity).setName(name);
+                }
+
                 valueMap.put(masterDataEntity.getId().toString(), masterDataEntity.getName());
             }
         } catch (PersistenceException e) {

@@ -54,7 +54,12 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.MifosUser;
+import org.mifos.security.authorization.HierarchyManager;
+import org.mifos.security.util.EventManger;
+import org.mifos.security.util.OfficeSearch;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -246,9 +251,11 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
         Address address = officeBO.getAddress() != null ? officeBO.getAddress().getAddress(): null;
         AddressDto addressDto = address != null ? Address.toDto(officeBO.getAddress().getAddress()): null;
 
+        String officeLevelName = MessageLookup.getInstance().lookup(officeBO.getLevel().getLookUpValue());
+        String officeStatusName = MessageLookup.getInstance().lookup(officeBO.getStatus().getLookUpValue());
         OfficeDto officeDto = new OfficeDto(officeBO.getOfficeId(), officeBO.getOfficeName(), officeBO.getSearchId(), officeBO.getShortName(),
                 officeBO.getGlobalOfficeNum(), parentOfficeId, officeBO.getStatus().getId(), officeBO.getLevel().getId(),
-                parentOffineName, officeBO.getVersionNo(), officeBO.getStatus().getName(), officeBO.getLevel().getName(),
+                parentOffineName, officeBO.getVersionNo(), officeStatusName, officeLevelName,
                 addressDto, customFields);
 
         return officeDto;
@@ -276,13 +283,37 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
         try {
             OfficeBO officeBO = new OfficeBO(userContext, level, parentOffice, officeDto.getCustomFields(),
                     officeDto.getName(), officeDto.getOfficeShortName(), address, OperationMode.fromInt(operationMode.intValue()));
-            //not sure why it is needed - copied from OffAction
-            StaticHibernateUtil.flushAndCloseSession();
-            officeBO.save();
+
+            OfficePersistence officePersistence = new OfficePersistence();
+            if (officePersistence.isOfficeNameExist(officeDto.getName())) {
+                throw new OfficeValidationException(OfficeConstants.OFFICENAMEEXIST);
+            }
+
+            if (officePersistence.isOfficeShortNameExist(officeDto.getOfficeShortName())) {
+                throw new OfficeValidationException(OfficeConstants.OFFICESHORTNAMEEXIST);
+            }
+
+            String searchId = generateSearchId(parentOffice);
+            officeBO.setSearchId(searchId);
+
+            String globalOfficeNum = generateOfficeGlobalNo();
+            officeBO.setGlobalOfficeNum(globalOfficeNum);
+
+            StaticHibernateUtil.startTransaction();
+            this.officeDao.save(officeBO);
+            StaticHibernateUtil.commitTransaction();
+
             //Shahid - this is hackish solution to return officeId and globalOfficeNum via ListElement, it should be fixed, at least
             //a proper data storage class can be created
             ListElement element = new ListElement(new Integer(officeBO.getOfficeId()), officeBO.getGlobalOfficeNum());
-            StaticHibernateUtil.commitTransaction();
+
+            // if we are here it means office created sucessfully
+            // we need to update hierarchy manager cache
+            OfficeSearch os = new OfficeSearch(officeBO.getOfficeId(), officeBO.getSearchId(), officeBO.getParentOffice().getOfficeId());
+            List<OfficeSearch> osList = new ArrayList<OfficeSearch>();
+            osList.add(os);
+            EventManger.postEvent(Constants.CREATE, osList, SecurityConstants.OFFICECHANGEEVENT);
+
             return element;
         } catch (OfficeValidationException e) {
             StaticHibernateUtil.rollbackTransaction();
@@ -292,9 +323,43 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
             throw new MifosRuntimeException(e);
         } catch (OfficeException e) {
             StaticHibernateUtil.rollbackTransaction();
-            throw new MifosRuntimeException(e);
+            throw new BusinessRuleException(e.getKey(), e);
         } finally {
             StaticHibernateUtil.closeSession();
+        }
+    }
+
+    private String generateSearchId(OfficeBO parentOffice) throws OfficeException {
+        Integer noOfChildern;
+        try {
+            noOfChildern = new OfficePersistence().getChildCount(parentOffice.getOfficeId());
+        } catch (PersistenceException e) {
+            throw new OfficeException(e);
+        }
+        String parentSearchId = HierarchyManager.getInstance().getSearchId(parentOffice.getOfficeId());
+        parentSearchId += ++noOfChildern;
+        parentSearchId += ".";
+        return parentSearchId;
+    }
+
+    private String generateOfficeGlobalNo() throws OfficeException {
+
+        try {
+            /*
+             * TODO: Why not auto-increment? Fetching the max and adding one would seem to have a race condition.
+             */
+            String officeGlobelNo = String.valueOf(new OfficePersistence().getMaxOfficeId().intValue() + 1);
+            if (officeGlobelNo.length() > 4) {
+                throw new OfficeException(OfficeConstants.MAXOFFICELIMITREACHED);
+            }
+            StringBuilder temp = new StringBuilder("");
+            for (int i = officeGlobelNo.length(); i < 4; i++) {
+                temp.append("0");
+            }
+
+            return officeGlobelNo = temp.append(officeGlobelNo).toString();
+        } catch (PersistenceException e) {
+            throw new OfficeException(e);
         }
     }
 

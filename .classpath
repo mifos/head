@@ -1,46 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="common/src/main/java"/>
-	<classpathentry kind="src" output="application/target/mifos-webapp/WEB-INF" path="questionnaire/src/main/webapp/WEB-INF"/>
-	<classpathentry kind="src" output="application/target/mifos-webapp/pages" path="questionnaire/src/main/webapp/pages"/>
-	<classpathentry kind="src" output="application/target/mifos-webapp/WEB-INF" path="cashflow/src/main/webapp/WEB-INF"/>
-	<classpathentry kind="src" output="application/target/mifos-webapp/pages" path="cashflow/src/main/webapp/pages"/>
-	<classpathentry kind="src" output="application/target/mifos-webapp/WEB-INF" path="userInterface/src/main/webapp/WEB-INF"/>
-	<classpathentry kind="src" output="application/target/mifos-webapp/pages" path="userInterface/src/main/webapp/pages"/>
-	<classpathentry kind="src" output="application/target/mifos-webapp/WEB-INF" path="application/src/main/webapp/WEB-INF"/>
-	<classpathentry kind="src" output="application/target/mifos-webapp/pages" path="application/src/main/webapp/pages"/>
-	<classpathentry kind="src" path="questionnaire/src/main/java"/>
-	<classpathentry kind="src" path="questionnaire/src/test/java"/>
-	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
+	<classpathentry kind="src" output="common/target/classes" path="common/src/main/java"/>
 	<classpathentry kind="src" output="common/target/test-classes" path="common/src/test/java"/>
-	<classpathentry kind="src" path="userInterface/src/main/java"/>
-	<classpathentry kind="src" path="userInterface/src/main/resources"/>
-	<classpathentry kind="src" output="userInterface/target/test-classes" path="userInterface/src/test/java"/>
-	<classpathentry kind="src" path="serviceInterfaces/src/main/java"/>
-	<classpathentry kind="src" path="serviceInterfaces/src/test/java"/>
-	<classpathentry excluding="assembly/|java/|resources/|webapp/" including="sql/*" kind="src" path="application/src/main"/>
-	<classpathentry kind="src" path="application/src/main/java"/>
-	<classpathentry kind="src" path="application/src/main/resources"/>
-	<classpathentry kind="src" output="application/target/test-classes" path="application/src/test/java"/>
-	<classpathentry kind="src" path="application/src/test/resources"/>
+	<classpathentry excluding="**" kind="src" output="common/target/test-classes" path="common/src/test/resources"/>
+	<classpathentry kind="src" output="domain-dto/target/classes" path="domain-dto/src/main/java"/>
+	<classpathentry kind="src" output="domain-dto/target/test-classes" path="domain-dto/src/test/java"/>
 	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="testFramework/target/classes" path="testFramework/src/main/resources"/>
 	<classpathentry kind="src" output="testFramework/target/test-classes" path="testFramework/src/test/java"/>
-	<classpathentry kind="src" output="testFramework/target/classes" path="testFramework/src/main/resources"/>
+	<classpathentry kind="src" output="userInterface/target/classes" path="userInterface/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="userInterface/target/classes" path="userInterface/src/main/resources"/>
+	<classpathentry kind="src" output="userInterface/target/test-classes" path="userInterface/src/test/java"/>
+	<classpathentry kind="src" output="accounting/target/classes" path="accounting/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="accounting/target/classes" path="accounting/src/main/resources"/>
+	<classpathentry kind="src" output="accounting/target/test-classes" path="accounting/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="accounting/target/test-classes" path="accounting/src/test/resources"/>
+	<classpathentry kind="src" output="questionnaire/target/classes" path="questionnaire/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="questionnaire/target/classes" path="questionnaire/src/main/resources"/>
+	<classpathentry kind="src" output="questionnaire/target/test-classes" path="questionnaire/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="questionnaire/target/test-classes" path="questionnaire/src/test/resources"/>
+	<classpathentry kind="src" output="cashflow/target/classes" path="cashflow/src/main/java"/>
+	<classpathentry excluding="**" kind="src" output="cashflow/target/classes" path="cashflow/src/main/resources"/>
+	<classpathentry kind="src" output="cashflow/target/test-classes" path="cashflow/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="cashflow/target/test-classes" path="cashflow/src/test/resources"/>
+	<classpathentry kind="src" output="organization/target/classes" path="organization/src/main/java"/>
+	<classpathentry kind="src" output="organization/target/test-classes" path="organization/src/test/java"/>
+	<classpathentry excluding="**" kind="src" output="acceptanceTests/target/classes" path="application/src/main/sql"/>
 	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/java"/>
-	<classpathentry kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
-	<classpathentry kind="src" path="cashflow/src/test/java"/>
-	<classpathentry kind="src" path="cashflow/src/main/java"/>
-	<classpathentry kind="src" path="accounting/src/main/java"/>
-	<classpathentry kind="src" path="accounting/src/main/resources"/>
-	<classpathentry kind="src" path="accounting/src/test/java"/>
-	<classpathentry kind="src" path="accounting/src/test/resources"/>
+	<classpathentry excluding="**" kind="src" output="acceptanceTests/target/test-classes" path="acceptanceTests/src/test/resources"/>
 	<classpathentry kind="src" path="appdomain/src/main/java"/>
 	<classpathentry kind="src" path="appdomain/src/test/java"/>
-	<classpathentry kind="src" path="appdomain/src/main/resources"/>
 	<classpathentry kind="src" path="abstract-domain/src/main/java"/>
 	<classpathentry kind="src" path="abstract-domain/src/test/java"/>
+	<classpathentry kind="src" path="serviceInterfaces/src/main/java"/>
+	<classpathentry kind="src" path="serviceInterfaces/src/test/java"/>
+	<classpathentry kind="src" path="application/src/test/java"/>
+	<classpathentry kind="src" path="application/src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="con" path="org.maven.ide.eclipse.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry kind="output" path="application/target/mifos-webapp/WEB-INF/classes"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

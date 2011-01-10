@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -57,8 +58,6 @@ import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     @Before
     public void setUp() throws Exception {
@@ -331,9 +330,20 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
                 updatedRoleActivities.add(ae);
             }
         }
-        role.update(userContext.getId(), "test", updatedRoleActivities);
-        role.save();
-        AuthorizationManager.getInstance().updateRole(role);
+
+        try {
+            StaticHibernateUtil.startTransaction();
+            role.update(userContext.getId(), "test", updatedRoleActivities);
+            rolesPermissionsPersistence.save(role);
+            StaticHibernateUtil.commitTransaction();
+            AuthorizationManager.getInstance().updateRole(role);
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
+
 
         setRequestPathInfo("/birtReportsUploadAction.do");
         addRequestParameter("method", "edit");

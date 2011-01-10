@@ -26,6 +26,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
@@ -84,8 +86,12 @@ public class MifosConfiguration {
                 keyString = " ";
             }
 
-            labelCache.put(new LabelKey(keyString, MasterDataEntity.CUSTOMIZATION_LOCALE_ID), lookupValueEntity
-                    .getMessageText());
+            String messageText = lookupValueEntity.getMessageText();
+            if (StringUtils.isBlank(messageText)) {
+                messageText = MessageLookup.getInstance().lookup(keyString);
+            }
+
+            labelCache.put(new LabelKey(keyString, MasterDataEntity.CUSTOMIZATION_LOCALE_ID), messageText);
         }
 
         List<LookUpEntity> entities = configurationPersistence.getLookupEntities();

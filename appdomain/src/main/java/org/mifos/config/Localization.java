@@ -27,7 +27,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
 
 public class Localization {
@@ -57,8 +56,8 @@ public class Localization {
     }
 
     // this init has to be called when Mifos starts
-    public void init() {
-        initializeLocaleCache();
+    public void init(List<SupportedLocalesEntity> locales) {
+        initializeLocaleCache(locales);
         loadMembers();
     }
 
@@ -78,11 +77,9 @@ public class Localization {
     public String getCountryCode() {
         if (mainLocale != null) {
             return mainLocale.getCountry();
-        } else {
-            mainLocale = getConfiguredLocale();
-            return mainLocale.getCountry();
         }
-
+        mainLocale = getConfiguredLocale();
+        return mainLocale.getCountry();
     }
 
     // for the testing purpose
@@ -103,32 +100,27 @@ public class Localization {
     public String getLanguageCode() {
         if (mainLocale != null) {
             return mainLocale.getLanguage();
-        } else {
-            mainLocale = getConfiguredLocale();
-            return mainLocale.getLanguage();
         }
-
+        mainLocale = getConfiguredLocale();
+        return mainLocale.getLanguage();
     }
 
     public String getLanguageName() {
 
         if (mainLocale != null) {
             return mainLocale.getDisplayLanguage();
-        } else {
-            mainLocale = getConfiguredLocale();
-            return mainLocale.getDisplayLanguage();
         }
+        mainLocale = getConfiguredLocale();
+        return mainLocale.getDisplayLanguage();
     }
 
     public String getCountryName() {
 
         if (mainLocale != null) {
             return mainLocale.getDisplayCountry();
-        } else {
-            mainLocale = getConfiguredLocale();
-            return mainLocale.getDisplayCountry();
         }
-
+        mainLocale = getConfiguredLocale();
+        return mainLocale.getDisplayCountry();
     }
 
     public Short getLocaleId() {
@@ -142,10 +134,9 @@ public class Localization {
     public Locale getConfiguredLocale() {
         if (mainLocale != null) {
             return mainLocale;
-        } else {
-            mainLocale = getLocaleFromConfig();
-            return mainLocale;
         }
+        mainLocale = getLocaleFromConfig();
+        return mainLocale;
 
     }
 
@@ -169,8 +160,8 @@ public class Localization {
     }
 
     /**
-     * from the language code and country code defined in the config return the
-     * java Locale class instantiated using the language code and country code
+     * from the language code and country code defined in the config return the java Locale class instantiated using the
+     * language code and country code
      */
     private Locale getLocaleFromConfig() {
 
@@ -179,7 +170,6 @@ public class Localization {
         }
         // need to check if this configLocale is supported by Mifos
         if ((localeId = getConfiguredLocaleId()) == -1) {
-            // FIXME: should not throw raw exception type
             throw new MifosRuntimeException("This configured locale: language code " + configLocale.getLanguageCode()
                     + ", country code " + configLocale.getCountryCode() + " is not supported by Mifos.");
         }
@@ -199,8 +189,7 @@ public class Localization {
         return localeIds;
     }
 
-    private void initializeLocaleCache() {
-        List<SupportedLocalesEntity> locales = new ApplicationConfigurationPersistence().getSupportedLocale();
+    private void initializeLocaleCache(List<SupportedLocalesEntity> locales) {
         localeCache.clear();
         for (SupportedLocalesEntity locale : locales) {
             localeCache.put(locale.getLanguage().getLanguageShortName().toLowerCase() + "_"

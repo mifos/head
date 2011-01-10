@@ -20,6 +20,7 @@
 
 package org.mifos.application.meeting.util.helpers;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SearchUtils;
@@ -38,6 +39,8 @@ public class MeetingHelper {
                 key = MeetingConstants.WEEK_SCHEDULE;
             args[0] = meeting.getMeetingDetails().getRecurAfter();
             WeekDay weekDay = meeting.getMeetingDetails().getMeetingRecurrence().getWeekDayValue();
+            String weekdayName = MessageLookup.getInstance().lookup(weekDay.getPropertiesKey());
+            weekDay.setWeekdayName(weekdayName);
             args[1] = weekDay.getName();
         } else if (meeting.isMonthlyOnDate()) {
                 key = MeetingConstants.MONTH_DAY_SCHEDULE;

@@ -23,6 +23,7 @@ package org.mifos.framework;
 import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.admin.system.ShutdownManager;
+import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.ConfigLocale;
@@ -31,6 +32,7 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
+import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
@@ -69,6 +71,7 @@ import java.lang.reflect.Field;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
 
@@ -189,7 +192,8 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         // this method is called so that supported locales will be
         // loaded
         // from db and stored in cache for later use
-        Localization.getInstance().init();
+        List<SupportedLocalesEntity> supportedLocales = new ApplicationConfigurationPersistence().getSupportedLocale();
+        Localization.getInstance().init(supportedLocales);
         // Check ClientRules configuration in db and config file(s)
         // for errors. Also caches ClientRules values.
         ClientRules.init();

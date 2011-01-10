@@ -28,6 +28,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.business.AccountActionDateEntity;
@@ -66,7 +67,6 @@ import org.mifos.accounts.savings.interest.SavingsProductHistoricalInterestDetai
 import org.mifos.accounts.savings.interest.schedule.InterestScheduledEvent;
 import org.mifos.accounts.savings.interest.schedule.SavingsInterestScheduledEventFactory;
 import org.mifos.accounts.savings.persistence.SavingsDao;
-import org.mifos.accounts.savings.persistence.SavingsPersistence;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountPaymentData;
@@ -75,8 +75,10 @@ import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.SavingsPaymentData;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.holiday.persistence.HolidayDao;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.util.helpers.EntityType;
@@ -570,7 +572,12 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
 
             List<ListElement> transactionTypes = new ArrayList<ListElement>();
             for (AccountActionEntity accountActionEntity : trxnTypes) {
-                transactionTypes.add(new ListElement(accountActionEntity.getId().intValue(), accountActionEntity.getLookUpValue().getMessageText()));
+                LookUpValueEntity lookupValue = accountActionEntity.getLookUpValue();
+                String messageText = lookupValue.getMessageText();
+                if (StringUtils.isBlank(messageText)) {
+                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                }
+                transactionTypes.add(new ListElement(accountActionEntity.getId().intValue(), messageText));
             }
 
             List<ListElement> depositPaymentTypes = retrieveDepositPaymentTypes(userContext);
@@ -578,7 +585,14 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<ListElement> withdrawalPaymentTypes = new ArrayList<ListElement>();
             List<PaymentTypeEntity> withdrawalPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_withdrawal.getValue());
             for (PaymentTypeEntity paymentTypeEntity : withdrawalPaymentEntityTypes) {
-                withdrawalPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), paymentTypeEntity.getLookUpValue().getMessageText()));
+
+                LookUpValueEntity lookupValue = paymentTypeEntity.getLookUpValue();
+                String messageText = lookupValue.getMessageText();
+                if (StringUtils.isBlank(messageText)) {
+                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                }
+
+                withdrawalPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), messageText));
             }
 
             boolean backDatedTransactionsAllowed = AccountingRules.isBackDatedTxnAllowed();
@@ -597,7 +611,14 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
             List<ListElement> depositPaymentTypes = new ArrayList<ListElement>();
             List<PaymentTypeEntity> acceptedPaymentEntityTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.savings_deposit.getValue());
             for (PaymentTypeEntity paymentTypeEntity : acceptedPaymentEntityTypes) {
-                depositPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), paymentTypeEntity.getLookUpValue().getMessageText()));
+
+                LookUpValueEntity lookupValue = paymentTypeEntity.getLookUpValue();
+                String messageText = lookupValue.getMessageText();
+                if (StringUtils.isBlank(messageText)) {
+                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                }
+
+                depositPaymentTypes.add(new ListElement(paymentTypeEntity.getId().intValue(), messageText));
             }
             return depositPaymentTypes;
         } catch (PersistenceException e) {

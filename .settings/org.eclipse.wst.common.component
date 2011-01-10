@@ -9,38 +9,35 @@
 <wb-resource deploy-path="/" source-path="/testFramework/src/test/java"/>
 <wb-resource deploy-path="/" source-path="/testFramework/src/main/resources"/>
 <wb-resource deploy-path="/" source-path="/testFramework/src/main/java"/>
-<wb-resource deploy-path="/" source-path="/serviceInterfaces/src/main/java"/>
 <wb-resource deploy-path="/" source-path="/common/src/main/java"/>
-<wb-resource deploy-path="/" source-path="/common/src/test/java"/>
-<wb-resource deploy-path="/" source-path="/common/src/test/resources"/>
-<wb-resource deploy-path="/" source-path="/application/src/main"/>
-<wb-resource deploy-path="/" source-path="/application/src/main/java"/>
-<wb-resource deploy-path="/" source-path="/application/src/main/resources"/>
-<wb-resource deploy-path="/" source-path="/application/src/test/java"/>
-<wb-resource deploy-path="/" source-path="/application/src/test/resources"/>
+        <wb-resource deploy-path="/" source-path="/common/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/common/src/test/resources"/>
         <wb-resource deploy-path="/" source-path="/api/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/serviceInterfaces/src/test"/>
-        <wb-resource deploy-path="/" source-path="/serviceInterfaces/src/test/java"/>
         <wb-resource deploy-path="/" source-path="/questionnaire/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/questionnaire/src/test/java"/>
         <wb-resource deploy-path="/" source-path="/cashflow/src/test/java"/>
         <wb-resource deploy-path="/" source-path="/cashflow/src/main/java"/>
-        <wb-resource deploy-path="/" source-path="/userInterface/src/main/webapp/WEB-INF"/>
-        <wb-resource deploy-path="/" source-path="/userInterface/src/main/webapp/pages"/>
-        <wb-resource deploy-path="/" source-path="/application/src/main/webapp/WEB-INF"/>
-        <wb-resource deploy-path="/" source-path="/application/src/main/webapp/pages"/>
-        <wb-resource deploy-path="/" source-path="/questionnaire/src/main/webapp/WEB-INF"/>
-        <wb-resource deploy-path="/" source-path="/questionnaire/src/main/webapp/pages"/>
-        <wb-resource deploy-path="/" source-path="/cashflow/src/main/webapp/WEB-INF"/>
-        <wb-resource deploy-path="/" source-path="/cashflow/src/main/webapp/pages"/>
         <wb-resource deploy-path="/" source-path="/accounting/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/accounting/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/accounting/src/test/java"/>
         <wb-resource deploy-path="/" source-path="/accounting/src/test/resources"/>
+        <wb-resource deploy-path="/" source-path="/organization/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/organization/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/domain-dto/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/domain-dto/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/questionnaire/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/questionnaire/src/test/resources"/>
+        <wb-resource deploy-path="/" source-path="/cashflow/src/main/resources"/>
+        <wb-resource deploy-path="/" source-path="/cashflow/src/test/resources"/>
+        <wb-resource deploy-path="/" source-path="/application/src/main/sql"/>
         <wb-resource deploy-path="/" source-path="/appdomain/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/appdomain/src/test/java"/>
-        <wb-resource deploy-path="/" source-path="/appdomain/src/main/resources"/>
         <wb-resource deploy-path="/" source-path="/abstract-domain/src/main/java"/>
         <wb-resource deploy-path="/" source-path="/abstract-domain/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/serviceInterfaces/src/main/java"/>
+        <wb-resource deploy-path="/" source-path="/serviceInterfaces/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/application/src/test/java"/>
+        <wb-resource deploy-path="/" source-path="/application/src/main/java"/>
     </wb-module>
 </project-modules>

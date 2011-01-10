@@ -146,7 +146,9 @@ import org.mifos.customers.group.GroupTemplate;
 import org.mifos.customers.group.business.GroupBO;
 import org.mifos.customers.group.persistence.GroupPersistence;
 import org.mifos.customers.office.business.OfficeBO;
+import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.persistence.OfficePersistence;
+import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.customers.persistence.CustomerPersistence;
@@ -159,6 +161,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.dto.domain.CustomFieldDto;
 import org.mifos.dto.screen.ClientNameDetailDto;
 import org.mifos.dto.screen.ClientPersonalDetailDto;
+import org.mifos.dto.screen.ListElement;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.business.util.Address;
@@ -177,8 +180,12 @@ import org.mifos.schedule.ScheduledEvent;
 import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDateGeneration;
 import org.mifos.security.authentication.EncryptionService;
+import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
 
@@ -1682,9 +1689,59 @@ public class TestObjectFactory {
                                         final String shortName) throws Exception {
         OfficeBO officeBO = new OfficeBO(TestUtils.makeUserWithLocales(), level, parentOffice, null, officeName,
                 shortName, null, OperationMode.REMOTE_SERVER);
-        officeBO.save();
-        StaticHibernateUtil.flushSession();
+
+        String searchId = generateSearchId(parentOffice);
+        officeBO.setSearchId(searchId);
+
+        String globalOfficeNum = generateOfficeGlobalNo();
+        officeBO.setGlobalOfficeNum(globalOfficeNum);
+
+        try {
+        StaticHibernateUtil.startTransaction();
+        new OfficePersistence().save(officeBO);
+
+        StaticHibernateUtil.commitTransaction();
+        } catch (Exception e) {
+            StaticHibernateUtil.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } finally {
+            StaticHibernateUtil.closeSession();
+        }
         return officeBO;
+    }
+
+    private static String generateSearchId(OfficeBO parentOffice) throws OfficeException {
+        Integer noOfChildern;
+        try {
+            noOfChildern = new OfficePersistence().getChildCount(parentOffice.getOfficeId());
+        } catch (PersistenceException e) {
+            throw new OfficeException(e);
+        }
+        String parentSearchId = HierarchyManager.getInstance().getSearchId(parentOffice.getOfficeId());
+        parentSearchId += ++noOfChildern;
+        parentSearchId += ".";
+        return parentSearchId;
+    }
+
+    private static String generateOfficeGlobalNo() throws OfficeException {
+
+        try {
+            /*
+             * TODO: Why not auto-increment? Fetching the max and adding one would seem to have a race condition.
+             */
+            String officeGlobelNo = String.valueOf(new OfficePersistence().getMaxOfficeId().intValue() + 1);
+            if (officeGlobelNo.length() > 4) {
+                throw new OfficeException(OfficeConstants.MAXOFFICELIMITREACHED);
+            }
+            StringBuilder temp = new StringBuilder("");
+            for (int i = officeGlobelNo.length(); i < 4; i++) {
+                temp.append("0");
+            }
+
+            return officeGlobelNo = temp.append(officeGlobelNo).toString();
+        } catch (PersistenceException e) {
+            throw new OfficeException(e);
+        }
     }
 
     public static void removeCustomerFromPosition(final CustomerBO customer) throws CustomerException {
@@ -1712,9 +1769,21 @@ public class TestObjectFactory {
 
     public static RoleBO createRole(final UserContext context, final String roleName,
                                     final List<ActivityEntity> activities) throws Exception {
+
+        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+
         RoleBO roleBO = new RoleBO(context, roleName, activities);
-        roleBO.save();
-        StaticHibernateUtil.flushSession();
+        roleBO.validateRoleName(roleName);
+
+        if (roleBO.getName() == null || !roleBO.getName().trim().equalsIgnoreCase(roleName.trim())) {
+            if (rolesPermissionsPersistence.getRole(roleName.trim()) != null) {
+                throw new RolesPermissionException(RolesAndPermissionConstants.KEYROLEALREADYEXIST);
+            }
+        }
+
+        StaticHibernateUtil.startTransaction();
+        rolesPermissionsPersistence.save(roleBO);
+        StaticHibernateUtil.commitTransaction();
         return roleBO;
     }
 

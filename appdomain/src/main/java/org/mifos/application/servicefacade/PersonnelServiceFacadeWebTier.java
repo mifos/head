@@ -188,7 +188,8 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
         String displayName = personnel.getDisplayName();
         PersonnelStatusEntity personnelStatus = personnel.getStatus();
-        ListElement status = new ListElement(new Integer(personnelStatus.getId()), personnelStatus.getName());
+        String statusName = MessageLookup.getInstance().lookup(personnelStatus.getLookUpValue());
+        ListElement status = new ListElement(new Integer(personnelStatus.getId()), statusName);
         boolean locked = personnel.isLocked();
         PersonnelDetailsEntity personnelDetailsEntity = personnel.getPersonnelDetails();
         Address address = personnelDetailsEntity.getAddress();
