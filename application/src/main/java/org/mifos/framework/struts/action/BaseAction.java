@@ -71,6 +71,7 @@ import org.mifos.application.servicefacade.SavingsServiceFacade;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
@@ -140,6 +141,7 @@ public abstract class BaseAction extends DispatchAction {
     protected AuthenticationAuthorizationServiceFacade authenticationAuthorizationServiceFacade = DependencyInjectedServiceLocator.locateAuthenticationAuthorizationServiceFacade();
     protected ImportTransactionsServiceFacade importTransactionsServiceFacade = DependencyInjectedServiceLocator.locateImportTransactionsServiceFacade();
     protected CheckListServiceFacade checkListServiceFacade = DependencyInjectedServiceLocator.locateCheckListServiceFacade();
+    protected ApplicationConfigurationDao applicationConfigurationDao = DependencyInjectedServiceLocator.locateApplicationConfigurationDao();
 
     protected FundDao fundDao = DependencyInjectedServiceLocator.locateFundDao();
 
@@ -180,6 +182,7 @@ public abstract class BaseAction extends DispatchAction {
             this.authenticationAuthorizationServiceFacade = springAppContext.getBean(AuthenticationAuthorizationServiceFacade.class);
             this.importTransactionsServiceFacade = springAppContext.getBean(ImportTransactionsServiceFacade.class);
             this.checkListServiceFacade = springAppContext.getBean(CheckListServiceFacade.class);
+            this.applicationConfigurationDao = springAppContext.getBean(ApplicationConfigurationDao.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }

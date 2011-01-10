@@ -32,7 +32,7 @@ import org.mifos.config.ProcessFlowRules;
 import org.mifos.config.business.Configuration;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.components.batchjobs.MifosScheduler;
@@ -184,15 +184,15 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         if (databaseError.isError) {
             databaseError.logError();
         } else {
-            initializeDB();
+            initializeDB(applicationContext);
         }
     }
 
-    private void initializeDB() throws ConfigurationException, PersistenceException, FinancialException {
+    private void initializeDB(ApplicationContext applicationContext) throws ConfigurationException, PersistenceException, FinancialException {
         // this method is called so that supported locales will be
         // loaded
         // from db and stored in cache for later use
-        List<SupportedLocalesEntity> supportedLocales = new ApplicationConfigurationPersistence().getSupportedLocale();
+        List<SupportedLocalesEntity> supportedLocales = applicationContext.getBean(ApplicationConfigurationDao.class).findSupportedLocale();
         Localization.getInstance().init(supportedLocales);
         // Check ClientRules configuration in db and config file(s)
         // for errors. Also caches ClientRules values.

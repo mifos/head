@@ -24,17 +24,19 @@ import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -51,7 +53,7 @@ import org.springframework.context.MessageSourceAware;
  * rather convoluted one in {@link MasterPersistence}, {@link MasterDataEntity},
  * etc. Or at least we can centralize where we call the convoluted mechanism.
  * <p>
- * Also see {@link ApplicationConfigurationPersistence}.
+ * Also see {@link ApplicationConfigurationDao}.
  * <p>
  * The word "label" might be better than "message"; at least that's what we call
  * them in places like LabelConfigurationAction.
@@ -72,6 +74,10 @@ import org.springframework.context.MessageSourceAware;
  */
 public class MessageLookup implements MessageSourceAware {
     private static MessageLookup messageLookupInstance = new MessageLookup();
+
+    private ApplicationConfigurationDao applicationConfigurationDao = DependencyInjectedServiceLocator.locateApplicationConfigurationDao();
+
+    private static GenericDao genericDao = DependencyInjectedServiceLocator.locateGenericDao();
 
     private MessageSource messageSource;
 
@@ -163,18 +169,17 @@ public class MessageLookup implements MessageSourceAware {
      * overrides.
      */
     public void setCustomLabel(String labelKey, String value, UserContext userContext) throws PersistenceException {
-        ApplicationConfigurationPersistence configurationPersistence = new ApplicationConfigurationPersistence();
 
         // only update the value if there is a change
         if (lookupLabel(labelKey, userContext).compareTo(value) != 0) {
             // getLookupEntities currently closes the Hibernate session (which
             // is bad)
-            for (LookUpEntity entity : configurationPersistence.getLookupEntities()) {
+            for (LookUpEntity entity : applicationConfigurationDao.findLookupEntities()) {
                 if (entity.getEntityType().equals(labelKey)) {
                     Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
                     for (LookUpLabelEntity label : labels) {
                         label.setLabelName(value);
-                        configurationPersistence.createOrUpdate(label);
+                        genericDao.createOrUpdate(label);
                         // because the session is closed at the beginning of
                         // this method, we need to make sure we commit
                         // this is bad too, and should go away with some

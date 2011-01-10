@@ -33,7 +33,6 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.office.business.OfficeLevelEntity;
 import org.mifos.customers.office.business.OfficeStatusEntity;
 import org.mifos.customers.personnel.business.PersonnelLevelEntity;
@@ -63,14 +62,12 @@ public class AuditConfiguration {
 
     private List<Short> locales;
 
-    private ApplicationConfigurationPersistence configurationPersistence;
     private MasterPersistence masterPersistence;
 
     public static AuditConfiguration auditConfigurtion = new AuditConfiguration();
 
     private AuditConfiguration() {
         masterPersistence = new MasterPersistence();
-        configurationPersistence = new ApplicationConfigurationPersistence();
 
         locales = Localization.getInstance().getSupportedLocaleIds();
         locale = Localization.getInstance().getMainLocale();

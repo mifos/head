@@ -35,6 +35,7 @@
     	<constructor-arg ref="officeDao" />
         <constructor-arg ref="customerDao" />
     	<constructor-arg ref="personnelDao" />
+        <constructor-arg ref="applicationConfigurationDao" />
     </bean>
 
     <bean id="RolesPermissionServiceFacade" class="org.mifos.application.servicefacade.RolesPermissionServiceFacadeWebTier"/>

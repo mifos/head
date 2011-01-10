@@ -35,7 +35,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficeDao;
@@ -86,13 +86,15 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     private final OfficeDao officeDao;
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
+    private final ApplicationConfigurationDao applicationConfigurationDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
-    public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao) {
+    public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao) {
         super();
         this.officeDao = officeDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
+        this.applicationConfigurationDao = applicationConfigurationDao;
     }
 
     @Override
@@ -365,7 +367,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                     PersonnelLevelEntity.class, userHierarchyLevel.getValue());
 
             Short preferredLocaleId = Localization.getInstance().getLocaleId();
-            List<SupportedLocalesEntity> allLocales = new ApplicationConfigurationPersistence().getSupportedLocale();
+            List<SupportedLocalesEntity> allLocales = applicationConfigurationDao.findSupportedLocale();
             for (SupportedLocalesEntity locale : allLocales) {
                 if (personnel.getPreferredLocale() != null
                         && locale.getLanguage().getLookUpValue().getLookUpId() == personnel.getPreferredLocale()
@@ -554,7 +556,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
 
             Short localeId = Localization.getInstance().getLocaleId();
             if (preferredLocale != null) {
-                for (SupportedLocalesEntity locale : new ApplicationConfigurationPersistence().getSupportedLocale()) {
+                for (SupportedLocalesEntity locale : applicationConfigurationDao.findSupportedLocale()) {
                     if (locale.getLanguage().getLookUpValue().getLookUpId() == preferredLocale.intValue()) {
                         localeId = locale.getLocaleId();
                     }

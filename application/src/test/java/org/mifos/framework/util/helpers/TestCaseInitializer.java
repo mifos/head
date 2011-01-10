@@ -24,10 +24,11 @@ import java.util.List;
 
 import org.mifos.accounts.financial.util.helpers.FinancialInitializer;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.framework.components.audit.util.helpers.AuditConfiguration;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -47,6 +48,8 @@ public class TestCaseInitializer {
 
     private static boolean initialized = false;
 
+    private ApplicationConfigurationDao applicationConfigurationDao = DependencyInjectedServiceLocator.locateApplicationConfigurationDao();
+
     public void initialize() throws Exception {
         if (!initialized) {
             initializeDB();
@@ -56,7 +59,7 @@ public class TestCaseInitializer {
 
     private void initializeDB() throws Exception{
         StaticHibernateUtil.initialize();
-        List<SupportedLocalesEntity> supportedLocales = new ApplicationConfigurationPersistence().getSupportedLocale();
+        List<SupportedLocalesEntity> supportedLocales = applicationConfigurationDao.findSupportedLocale();
         Localization.getInstance().init(supportedLocales);
 
         Money.setDefaultCurrency(AccountingRules.getMifosCurrency(new ConfigurationPersistence()));

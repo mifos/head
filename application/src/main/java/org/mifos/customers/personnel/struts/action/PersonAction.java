@@ -44,7 +44,6 @@ import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFac
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.Localization;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -236,7 +235,7 @@ public class PersonAction extends SearchAction {
         Short preferredLocale = Localization.getInstance().getLocaleId();
 
         if (getPerefferedLocale(personActionForm, userContext) != null) {
-            for (SupportedLocalesEntity locale : new ApplicationConfigurationPersistence().getSupportedLocale()) {
+            for (SupportedLocalesEntity locale : applicationConfigurationDao.findSupportedLocale()) {
                 if (locale.getLanguage().getLookUpValue().getLookUpId() == getPerefferedLocale(personActionForm, userContext).intValue()) {
                     preferredLocale = getPerefferedLocale(personActionForm, userContext);
                 }

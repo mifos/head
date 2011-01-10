@@ -88,6 +88,8 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.business.service.ConfigurationBusinessService;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
+import org.mifos.config.persistence.ApplicationConfigurationDaoHibernate;
 import org.mifos.customers.business.service.CustomerService;
 import org.mifos.customers.business.service.CustomerServiceImpl;
 import org.mifos.customers.office.business.service.OfficeServiceFacadeWebTier;
@@ -170,6 +172,8 @@ public class DependencyInjectedServiceLocator {
     private static SavingsProductDao savingsProductDao = new SavingsProductDaoHibernate(genericDao);
     private static CollectionSheetDao collectionSheetDao = new CollectionSheetDaoHibernate(savingsDao);
     private static GeneralLedgerDao generalLedgerDao = new GeneralLedgerDaoHibernate(genericDao);
+    private static ApplicationConfigurationDao applicationConfigurationDao  = new ApplicationConfigurationDaoHibernate(genericDao);
+
     private static AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
 
     // translators
@@ -390,7 +394,7 @@ public class DependencyInjectedServiceLocator {
 
     public static PersonnelServiceFacade locatePersonnelServiceFacade() {
         if (personnelServiceFacade == null) {
-            personnelServiceFacade = new PersonnelServiceFacadeWebTier(officeDao, customerDao, personnelDao);
+            personnelServiceFacade = new PersonnelServiceFacadeWebTier(officeDao, customerDao, personnelDao, applicationConfigurationDao);
         }
         return personnelServiceFacade;
     }
@@ -536,5 +540,9 @@ public class DependencyInjectedServiceLocator {
             importTransactionsServiceFacade = new ImportTransactionsServiceFacadeWebTier(importedFilesService, personnelDao);
         }
         return importTransactionsServiceFacade;
+    }
+
+    public static ApplicationConfigurationDao locateApplicationConfigurationDao() {
+        return applicationConfigurationDao;
     }
 }

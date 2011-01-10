@@ -93,7 +93,6 @@ import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
 import org.mifos.config.Localization;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.config.util.helpers.ConfigurationConstants;
 import org.mifos.config.util.helpers.HiddenMandatoryFieldNamesConstants;
 import org.mifos.config.util.helpers.LabelConfigurations;
@@ -324,7 +323,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private List<LookUpValueEntity> findAccountStates(AccountStatusesLabelDto updatedDetails) {
         List<LookUpValueEntity> entitiesForUpdate = new ArrayList<LookUpValueEntity>();
 
-        List<LookUpValueEntity> accountStateEntities = new ApplicationConfigurationPersistence().getLookupValues();
+        List<LookUpValueEntity> accountStateEntities = applicationConfigurationDao.findLookupValues();
         for (LookUpValueEntity value : accountStateEntities) {
 
             if (isPartialApplicationLookup(value)) {
@@ -726,7 +725,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
         List<GracePeriodTypeEntity> gracePeriodTypes = applicationConfigurationDao.findGracePeriodTypes();
         GracePeriodDto gracePeriodDtos = assembleGracePeriod(gracePeriodTypes);
 
-        List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupValueTypes();
+        List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupEntities();
         ConfigurableLookupLabelDto lookupLabels = assembleLookupEntities(lookupEntities);
 
         List<AccountStateEntity> accountStateEntities = applicationConfigurationDao.findAllAccountStateEntities();
