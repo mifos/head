@@ -1038,7 +1038,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     private <T extends MasterDataEntity> List<T> getMasterEntities(Class<T> type, Short localeId) {
-        return new MasterPersistence().retrieveMasterEntities(type, localeId);
+        return new MasterPersistence().findMasterDataEntitiesWithLocale(type, localeId);
     }
 
     private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,

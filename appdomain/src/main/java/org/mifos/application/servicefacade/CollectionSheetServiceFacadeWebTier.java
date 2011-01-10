@@ -89,7 +89,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         final Short backDatedTransactionAllowed = Constants.NO;
 
         try {
-            final List<PaymentTypeEntity> paymentTypesList = masterPersistence.retrieveMasterEntities(
+            final List<PaymentTypeEntity> paymentTypesList = masterPersistence.findMasterDataEntitiesWithLocale(
                     PaymentTypeEntity.class, Short.valueOf("1"));
             paymentTypesDtoList = convertToPaymentTypesListItemDto(paymentTypesList);
 
@@ -200,8 +200,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
 
             return translatedGridView;
         } catch (SystemException e) {
-            throw new MifosRuntimeException(e);
-        } catch (ApplicationException e) {
             throw new MifosRuntimeException(e);
         }
     }

@@ -306,8 +306,8 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
     private FeeStatusEntity retrieveFeeStatusEntity(final FeeStatus status) throws FeeException {
         try {
-            return (FeeStatusEntity) new MasterPersistence().retrieveMasterEntity(status.getValue(),
-                    FeeStatusEntity.class, userContext.getLocaleId());
+            return new MasterPersistence().findMasterDataEntityWithLocale(FeeStatusEntity.class, status.getValue(),
+                     userContext.getLocaleId());
         } catch (PersistenceException pe) {
             throw new FeeException(pe);
         }

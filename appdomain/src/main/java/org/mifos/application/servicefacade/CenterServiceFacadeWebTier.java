@@ -269,7 +269,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
-        List<PositionEntity> allCustomerPositions = new MasterPersistence().retrieveMasterEntities(PositionEntity.class, localeId);
+        List<PositionEntity> allCustomerPositions = new MasterPersistence().findMasterDataEntitiesWithLocale(PositionEntity.class, localeId);
         if (!new ClientRules().getCenterHierarchyExists()) {
             customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
         } else {

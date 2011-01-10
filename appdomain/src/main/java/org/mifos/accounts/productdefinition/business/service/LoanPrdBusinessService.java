@@ -69,7 +69,7 @@ public class LoanPrdBusinessService implements BusinessService {
      */
     @Deprecated
     public List<? extends MasterDataEntity> getLoanApplicableCustomerTypes(final Short localeId) throws ServiceException {
-        List<PrdApplicableMasterEntity> applList = getMasterPersistence().retrieveMasterEntities(PrdApplicableMasterEntity.class, localeId);
+        List<PrdApplicableMasterEntity> applList = getMasterPersistence().findMasterDataEntitiesWithLocale(PrdApplicableMasterEntity.class, localeId);
         if (applList != null) {
             for (Iterator<PrdApplicableMasterEntity> iter = applList.iterator(); iter.hasNext();) {
                 MasterDataEntity masterData = iter.next();
