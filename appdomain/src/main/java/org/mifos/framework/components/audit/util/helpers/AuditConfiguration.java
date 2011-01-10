@@ -291,7 +291,7 @@ public class AuditConfiguration {
     private void fetchMasterData(String entityName, Short localeId, String classPath) throws SystemException {
         Class clazz = null;
         try {
-            clazz = ClassLoader.getSystemClassLoader().loadClass(classPath);
+            clazz = Thread.currentThread().getContextClassLoader().loadClass(classPath);
         } catch (ClassNotFoundException e) {
             throw new SystemException(e);
         }
