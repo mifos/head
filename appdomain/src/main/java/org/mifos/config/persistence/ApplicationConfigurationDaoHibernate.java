@@ -50,9 +50,9 @@ import java.util.Set;
 
 public class ApplicationConfigurationDaoHibernate implements ApplicationConfigurationDao {
 
-    @Autowired
     private final GenericDao genericDao;
 
+    @Autowired
     public ApplicationConfigurationDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }
