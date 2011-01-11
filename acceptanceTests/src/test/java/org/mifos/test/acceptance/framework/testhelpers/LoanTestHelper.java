@@ -33,7 +33,6 @@ import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
 import org.mifos.test.acceptance.framework.loan.ChargeParameters;
-import org.mifos.test.acceptance.framework.loan.CreateLoanAccountConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountEntryPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchPage;
 import org.mifos.test.acceptance.framework.loan.CreateLoanAccountSearchParameters;
@@ -90,6 +89,7 @@ public class LoanTestHelper {
      * Creates a loan account.
      * @param searchParameters Parameters to find the client/group that will be the owner of the account.
      * @param submitAccountParameters The parameters for the loan account.
+     * @return LoanAccountPage
      */
     public LoanAccountPage createLoanAccount(CreateLoanAccountSearchParameters searchParameters,
                                              CreateLoanAccountSubmitParameters submitAccountParameters) {
@@ -103,6 +103,7 @@ public class LoanTestHelper {
      * @param searchParameters Parameters to find the client/group that will be the owner of the account.
      * @param submitAccountParameters The parameters for the loan account.
      * @param questionResponseParameters The parameters for the create loan question responses.
+     * @return LoanAccountPage
      */
     public LoanAccountPage createLoanAccount(CreateLoanAccountSearchParameters searchParameters,
                                              CreateLoanAccountSubmitParameters submitAccountParameters, QuestionResponseParameters questionResponseParameters) {
@@ -162,7 +163,7 @@ public class LoanTestHelper {
             populateQuestionGroupResponses(responseParameters);
         }
 
-        loanAccountPage = new EditAccountStatusConfirmationPage(selenium).submitAndNavigateToLoanAccountPage();
+        new EditAccountStatusConfirmationPage(selenium).submitAndNavigateToLoanAccountPage();
     }
 
     private void populateQuestionGroupResponses(QuestionResponseParameters responseParameters) {
@@ -184,9 +185,7 @@ public class LoanTestHelper {
         DisburseLoanConfirmationPage disburseLoanConfirmationPage = disburseLoanPage.submitAndNavigateToDisburseLoanConfirmationPage(disburseParameters);
         disburseLoanConfirmationPage.verifyPage();
 
-        LoanAccountPage loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
-
-        return loanAccountPage;
+        return disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
     }
 
     public void editLoanProduct(String loanProduct, boolean interestWaiver) {
@@ -197,7 +196,7 @@ public class LoanTestHelper {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
         formParameters.setInterestWaiver(interestWaiver);
         EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitInterestWaiverChanges(formParameters);
-        loanProductDetailsPage = editLoanProductPreviewPage.submit();
+        editLoanProductPreviewPage.submit();
     }
 
     public void editLoanProduct(String loanProduct, String... questionGroup) {
@@ -208,7 +207,7 @@ public class LoanTestHelper {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = new DefineNewLoanProductPage.SubmitFormParameters();
         formParameters.setQuestionGroups(Arrays.asList(questionGroup));
         EditLoanProductPreviewPage editLoanProductPreviewPage = editLoanProductPage.submitQuestionGroupChanges(formParameters);
-        loanProductDetailsPage = editLoanProductPreviewPage.submit();
+        editLoanProductPreviewPage.submit();
     }
 
     public DisburseLoanPage prepareToDisburseLoan(String loanId) {
@@ -286,8 +285,10 @@ public class LoanTestHelper {
      * Redoes the loan disbursal.
      * @param clientName The name of the client.
      * @param loanProduct The name of the loan product.
-     * @param paramsPastDate The parameters for the loan disbursal.
+     * @param paramsPastDate The parameters for the loan disbursal (past date).
+     * @param paramsCurrentDate The parameters for the loan disbursal (current date).
      * @param amountPaid The amount typed in second pay row. Used to pay whole loan.
+     * @return LoanAccountPage
      */
     public LoanAccountPage redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate, RedoLoanDisbursalParameters paramsCurrentDate, int amountPaid) {
         RedoLoanDisbursalEntryPage dataEntryPage = navigationHelper
@@ -305,12 +306,10 @@ public class LoanTestHelper {
         RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(paramsPastDate);
         schedulePreviewPage.typeAmountPaid(amountPaid);
 
-        LoanAccountPage loanAccountPage = schedulePreviewPage
+        return schedulePreviewPage
             .submitAndNavigateToRedoLoanDisbursalPreviewPage()
             .submitAndNavigateToLoanAccountConfirmationPage()
             .navigateToLoanAccountDetailsPage();
-
-        return loanAccountPage;
     }
 
     public LoanAccountPage navigateToLoanAccountPage(CreateLoanAccountSearchParameters searchParams) {
