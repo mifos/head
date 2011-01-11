@@ -19,7 +19,6 @@
  */
 package org.mifos.accounts.savings.persistence;
 
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -48,6 +47,7 @@ public interface GenericDao {
 
     void delete(Object entity);
 
+    // NOTE: This is temporary, should be removed once we move to spring managed transaction
     Session getSession();
 
     Iterator<? extends Object> executeNamedQueryIterator(String queryName, Map<String, ?> queryParameters);
