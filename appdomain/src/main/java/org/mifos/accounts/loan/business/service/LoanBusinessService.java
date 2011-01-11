@@ -283,7 +283,7 @@ public class LoanBusinessService implements BusinessService {
         if (dailyInterestRatesApplicable(loanScheduleGenerationDto, loanBO)) {
             loanScheduleGenerationDto.setInstallments(installments);
             applyDailyInterestRates(loanScheduleGenerationDto);
-            loanBO.copyInstallmentSchedule(installments);
+            loanBO.updateInstallmentSchedule(installments);
         }
         return installments;
     }

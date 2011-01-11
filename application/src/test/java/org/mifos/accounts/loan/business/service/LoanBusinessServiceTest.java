@@ -176,7 +176,7 @@ public class LoanBusinessServiceTest {
                 applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                         loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
-        verify(loanBO).copyInstallmentSchedule(installments);
+        verify(loanBO).updateInstallmentSchedule(installments);
         verify(loanBO).toRepaymentScheduleDto(locale);
     }
     
@@ -198,7 +198,7 @@ public class LoanBusinessServiceTest {
                 applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                         loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), installments);
-        verify(loanBO).copyInstallmentSchedule(installments);
+        verify(loanBO).updateInstallmentSchedule(installments);
     }
 
     @Test
@@ -220,7 +220,7 @@ public class LoanBusinessServiceTest {
         loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
-        verify(loanBO).copyInstallmentSchedule(installments);
+        verify(loanBO).updateInstallmentSchedule(installments);
         verify(loanBO).toRepaymentScheduleDto(locale);
     }
 
@@ -234,7 +234,7 @@ public class LoanBusinessServiceTest {
         loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
-        verify(loanBO, never()).copyInstallmentSchedule(any(List.class));
+        verify(loanBO, never()).updateInstallmentSchedule(any(List.class));
     }
 
     @Test

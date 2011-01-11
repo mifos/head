@@ -532,7 +532,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             installments.add(repaymentScheduleInstallment);
         }
 
-        loan.copyInstallmentSchedule(installments);
+        loan.updateInstallmentSchedule(installments);
     }
 
     private MeetingBO createNewMeetingForRepaymentDay(LocalDate disbursementDate,

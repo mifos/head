@@ -19,7 +19,6 @@
  */
 package org.mifos.accounts.loan.business;
 
-import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,15 +30,13 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.savings.business.SavingsTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
-import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.domain.builders.LoanAccountBuilder;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -50,11 +47,11 @@ import java.math.BigDecimal;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.getDate;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -122,7 +119,8 @@ public class LoanBOTest {
 
     @Test
     public void testCopyInstallmentSchedule() {
-        LoanBO loanBO = new LoanBO();
+        Money.setDefaultCurrency(rupee);
+        LoanBO loanBO = new LoanAccountBuilder().build();
         loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "1", Money.zero(rupee)));
         loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "2", Money.zero(rupee)));
         loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 12, 2010), "100", "10", "3", Money.zero(rupee)));
@@ -130,12 +128,36 @@ public class LoanBOTest {
         installments.add(getRepaymentScheduleInstallment("24-Oct-2010", 1, "123", "12"));
         installments.add(getRepaymentScheduleInstallment("24-Nov-2010", 2, "231", "23"));
         installments.add(getRepaymentScheduleInstallment("24-Dec-2010", 3, "312", "31"));
-        loanBO.copyInstallmentSchedule(installments);
+        loanBO.updateInstallmentSchedule(installments);
         Set<LoanScheduleEntity> loanScheduleEntities = loanBO.getLoanScheduleEntities();
         LoanScheduleEntity[] loanScheduleEntitiesArr = loanScheduleEntities.toArray(new LoanScheduleEntity[loanScheduleEntities.size()]);
         assertLoanScheduleEntity(loanScheduleEntitiesArr[0], "123.0", "12.0", "2010-10-24");
         assertLoanScheduleEntity(loanScheduleEntitiesArr[1], "231.0", "23.0", "2010-11-24");
         assertLoanScheduleEntity(loanScheduleEntitiesArr[2], "312.0", "31.0", "2010-12-24");
+    }
+
+    @Test
+    public void testLoanSummaryShouldBeUpdateOnInstallmentScheduleUpdate() {
+        Money.setDefaultCurrency(rupee);
+        LoanBO loanBO = new LoanAccountBuilder().build();
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 10, 2010), "100", "10", "1", Money.zero(rupee)));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 11, 2010), "100", "10", "2", Money.zero(rupee)));
+        loanBO.addAccountActionDate(getLoanScheduleEntity(rupee, getDate(23, 12, 2010), "100", "10", "3", Money.zero(rupee)));
+        List<RepaymentScheduleInstallment> installments = new ArrayList<RepaymentScheduleInstallment>();
+        installments.add(getRepaymentScheduleInstallment("24-Oct-2010", 1, "123", "12"));
+        installments.add(getRepaymentScheduleInstallment("24-Nov-2010", 2, "231", "23"));
+        installments.add(getRepaymentScheduleInstallment("24-Dec-2010", 3, "312", "31"));
+        loanBO.updateInstallmentSchedule(installments);
+        Set<LoanScheduleEntity> loanScheduleEntities = loanBO.getLoanScheduleEntities();
+        LoanScheduleEntity[] loanScheduleEntitiesArr = loanScheduleEntities.toArray(new LoanScheduleEntity[loanScheduleEntities.size()]);
+        assertLoanScheduleEntity(loanScheduleEntitiesArr[0], "123.0", "12.0", "2010-10-24");
+        assertLoanScheduleEntity(loanScheduleEntitiesArr[1], "231.0", "23.0", "2010-11-24");
+        assertLoanScheduleEntity(loanScheduleEntitiesArr[2], "312.0", "31.0", "2010-12-24");
+
+        LoanSummaryEntity loanSummary = loanBO.getLoanSummary();
+        assertEquals("666.0",loanSummary.getOriginalPrincipal().toString());
+        assertEquals("66.0",loanSummary.getOriginalInterest().toString());
+
     }
 
     private void assertLoanScheduleEntity(LoanScheduleEntity loanScheduleEntity, String pricipal, String interest, String dueDate) {

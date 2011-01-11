@@ -2448,6 +2448,28 @@ public class LoanBO extends AccountBO {
 
     }
 
+    private void updateLoanSummary(){
+        Money interest = new Money(getCurrency());
+        Money fees = new Money(getCurrency());
+        Money principal = new Money(getCurrency());
+
+        Set<LoanScheduleEntity> loanScheduleEntities = getLoanScheduleEntities();
+        if (loanScheduleEntities != null && loanScheduleEntities.size() > 0) {
+            for (AccountActionDateEntity accountActionDate : loanScheduleEntities) {
+                LoanScheduleEntity loanSchedule = (LoanScheduleEntity) accountActionDate;
+                principal = principal.add(loanSchedule.getPrincipal());
+                interest = interest.add(loanSchedule.getInterest());
+                fees = fees.add(loanSchedule.getTotalFeesDueWithMiscFee());
+            }
+        }
+        fees = fees.add(getDisbursementFeeAmount());
+
+        loanSummary.setOriginalPrincipal(principal);
+        loanSummary.setOriginalInterest(interest);
+        loanSummary.setOriginalFees(fees);
+    }
+
+
     private void buildRawAmountTotal() {
         Money interest = new Money(getCurrency());
         Money fees = new Money(getCurrency());
@@ -3922,7 +3944,7 @@ public class LoanBO extends AccountBO {
         return loanOffering.isInterestWaived();
     }
 
-    public void copyInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
+    public void updateInstallmentSchedule(List<RepaymentScheduleInstallment> installments) {
         Map<Integer, LoanScheduleEntity> loanScheduleEntityLookUp = getLoanScheduleEntityMap();
         for (RepaymentScheduleInstallment installment : installments) {
             LoanScheduleEntity loanScheduleEntity = loanScheduleEntityLookUp.get(installment.getInstallment());
@@ -3930,6 +3952,9 @@ public class LoanBO extends AccountBO {
             loanScheduleEntity.setInterest(installment.getInterest());
             loanScheduleEntity.setActionDate(new java.sql.Date(installment.getDueDateValue().getTime()));
         }
+
+    updateLoanSummary();
+
     }
 
     public boolean isVariableInstallmentsAllowed() {

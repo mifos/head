@@ -1198,23 +1198,6 @@ public class AccountBO extends AbstractBusinessObject {
         return installmentDates;
     }
 
-    // @Deprecated
-    // protected final List<FeeInstallment> getFeeInstallments(final List<InstallmentDate> installmentDates)
-    // throws AccountException {
-    // List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
-    // for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-    // if (accountFeesEntity.isActive()) {
-    // Short accountFeeType = accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId();
-    // if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
-    // feeInstallmentList.add(handleOneTime(accountFeesEntity, installmentDates));
-    // } else if (accountFeeType.equals(FeeFrequencyType.PERIODIC.getValue())) {
-    // feeInstallmentList.addAll(handlePeriodic(accountFeesEntity, installmentDates));
-    // }
-    // }
-    // }
-    // return feeInstallmentList;
-    // }
-
     /**
      *
      * @param installmentDates

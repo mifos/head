@@ -181,7 +181,6 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
         }
     }
 
-    // TODO: Write unit tests for this method. Currently they only exist for repayment capacity related validations
     @Override
     public Errors validateCashFlowForInstallments(List<RepaymentScheduleInstallment> installments, CashFlowForm cashFlowForm, Double repaymentCapacity) {
         Errors errors = new Errors();
