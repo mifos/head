@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.testng.Assert;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -28,9 +29,6 @@ import com.thoughtworks.selenium.Selenium;
 public class EditLoanAccountInformationPage extends MifosPage {
     public EditLoanAccountInformationPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("EditLoanAccount");
     }
 
@@ -54,5 +52,12 @@ public class EditLoanAccountInformationPage extends MifosPage {
         if (editAccountParameters.getGracePeriod() != null) {
             selenium.type("editLoanAccount.input.gracePeriod", editAccountParameters.getGracePeriod());
         }
+    }
+
+    public void verifyGLIMClient(int clientNumber, String expectedClientName, String loanAmount, String loanPurpose){
+        Assert.assertEquals(selenium.getText("GLIMLoanAccounts.clientName." + clientNumber), expectedClientName);
+        selenium.isChecked("clients[" + clientNumber + "]");
+        Assert.assertEquals(selenium.getValue("clientDetails[" + clientNumber + "].loanAmount"), loanAmount);
+        Assert.assertEquals(selenium.getSelectedLabel("clientDetails[" + clientNumber + "].businessActivity"), loanPurpose);
     }
 }

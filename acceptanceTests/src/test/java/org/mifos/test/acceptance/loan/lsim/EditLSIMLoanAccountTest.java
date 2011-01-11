@@ -81,8 +81,7 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
         String testAccount = "000100000000221";
         EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
         params.setExternalID("ID83328");
-        LoanAccountPage loanAccountPage = editLoanAccount(testAccount, params);
-        loanAccountPage.verifyPage();
+        editLoanAccount(testAccount, params);
         assertTextFoundOnPage(params.getExternalID());
     }
 
@@ -92,8 +91,7 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
         String testAccount = "000100000000222";
         EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
         params.setExternalID("ID98765");
-        LoanAccountPage loanAccountPage = editLoanAccount(testAccount, params);
-        loanAccountPage.verifyPage();
+        editLoanAccount(testAccount, params);
         assertTextFoundOnPage(params.getExternalID());
     }
 
@@ -103,8 +101,7 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
         String testAccount = "000100000000223";
         EditLoanAccountInformationParameters params = new EditLoanAccountInformationParameters();
         params.setExternalID("ID2323ID");
-        LoanAccountPage loanAccountPage = editLoanAccount(testAccount, params);
-        loanAccountPage.verifyPage();
+        editLoanAccount(testAccount, params);
         assertTextFoundOnPage(params.getExternalID());
     }
 
@@ -112,13 +109,10 @@ public class EditLSIMLoanAccountTest extends UiTestCaseBase {
         NavigationHelper helper = new NavigationHelper(selenium);
 
         LoanAccountPage loanAccountPage = helper.navigateToLoanAccountPage(accountID);
-        loanAccountPage.verifyPage();
 
         EditLoanAccountInformationPage editAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
-        editAccountInformationPage.verifyPage();
         editAccountInformationPage.editExternalID(params);
         EditPreviewLoanAccountPage editPreviewLoanAccountPage = editAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage();
-        editPreviewLoanAccountPage.verifyPage();
         loanAccountPage = editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
 
         return loanAccountPage;

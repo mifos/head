@@ -92,13 +92,10 @@ public class LoanTestHelper {
      * @param submitAccountParameters The parameters for the loan account.
      */
     public LoanAccountPage createLoanAccount(CreateLoanAccountSearchParameters searchParameters,
-            CreateLoanAccountSubmitParameters submitAccountParameters) {
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigateToLoanAccountEntryPage(searchParameters);
-        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
-        .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
-        loanAccountPage.verifyPage();
-        return loanAccountPage;
+                                             CreateLoanAccountSubmitParameters submitAccountParameters) {
+        return navigateToLoanAccountEntryPage(searchParameters)
+                .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters)
+                .navigateToLoanAccountDetailsPage();
     }
 
     /**
@@ -108,13 +105,10 @@ public class LoanTestHelper {
      * @param questionResponseParameters The parameters for the create loan question responses.
      */
     public LoanAccountPage createLoanAccount(CreateLoanAccountSearchParameters searchParameters,
-            CreateLoanAccountSubmitParameters submitAccountParameters, QuestionResponseParameters questionResponseParameters) {
-        CreateLoanAccountEntryPage createLoanAccountEntryPage = navigateToLoanAccountEntryPage(searchParameters);
-        CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
-        .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters, questionResponseParameters);
-        LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
-        loanAccountPage.verifyPage();
-        return loanAccountPage;
+                                             CreateLoanAccountSubmitParameters submitAccountParameters, QuestionResponseParameters questionResponseParameters) {
+        return navigateToLoanAccountEntryPage(searchParameters)
+                .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters, questionResponseParameters)
+                .navigateToLoanAccountDetailsPage();
     }
 
     private CreateLoanAccountEntryPage navigateToLoanAccountEntryPage(CreateLoanAccountSearchParameters searchParameters) {
@@ -140,10 +134,8 @@ public class LoanTestHelper {
      */
     public EditPreviewLoanAccountPage changeLoanAccountInformation(String loanId, CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        loanAccountPage.verifyPage();
 
         EditLoanAccountInformationPage editAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
-        editAccountInformationPage.verifyPage();
 
         editAccountInformationPage.editAccountParams(accountSubmitParameters, editAccountParameters);
         return editAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage();
@@ -160,7 +152,6 @@ public class LoanTestHelper {
 
     public void changeLoanAccountStatusProvidingQuestionGroupResponses(String loanId, EditLoanAccountStatusParameters params, QuestionResponseParameters responseParameters) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        loanAccountPage.verifyPage();
 
         EditLoanAccountStatusPage editAccountStatusPage = loanAccountPage.navigateToEditAccountStatus();
         editAccountStatusPage.verifyPage();
@@ -172,7 +163,6 @@ public class LoanTestHelper {
         }
 
         loanAccountPage = new EditAccountStatusConfirmationPage(selenium).submitAndNavigateToLoanAccountPage();
-        loanAccountPage.verifyPage();
     }
 
     private void populateQuestionGroupResponses(QuestionResponseParameters responseParameters) {
@@ -195,7 +185,6 @@ public class LoanTestHelper {
         disburseLoanConfirmationPage.verifyPage();
 
         LoanAccountPage loanAccountPage = disburseLoanConfirmationPage.submitAndNavigateToLoanAccountPage();
-        loanAccountPage.verifyPage();
 
         return loanAccountPage;
     }
@@ -224,7 +213,6 @@ public class LoanTestHelper {
 
     public DisburseLoanPage prepareToDisburseLoan(String loanId) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        loanAccountPage.verifyPage();
 
         DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
         disburseLoanPage.verifyPage();
@@ -239,13 +227,11 @@ public class LoanTestHelper {
      */
     public LoanAccountPage applyCharge(String loanId, ChargeParameters params) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        loanAccountPage.verifyPage();
 
         ApplyChargePage applyChargePage = loanAccountPage.navigateToApplyCharge();
         applyChargePage.verifyPage();
 
         loanAccountPage = applyChargePage.submitAndNavigateToApplyChargeConfirmationPage(params);
-        loanAccountPage.verifyPage();
 
         return loanAccountPage;
     }
@@ -258,7 +244,6 @@ public class LoanTestHelper {
      */
     public LoanAccountPage applyPayment(String loanId, PaymentParameters paymentParams) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        loanAccountPage.verifyPage();
 
         ApplyPaymentPage applyPaymentPage = loanAccountPage.navigateToApplyPayment();
         applyPaymentPage.verifyPage();
@@ -267,7 +252,6 @@ public class LoanTestHelper {
         applyPaymentConfirmationPage.verifyPage();
 
         loanAccountPage = applyPaymentConfirmationPage.submitAndNavigateToLoanAccountDetailsPage();
-        loanAccountPage.verifyPage();
 
         return loanAccountPage;
     }
@@ -278,7 +262,6 @@ public class LoanTestHelper {
      */
     public void waiveFee(String loanId) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        loanAccountPage.verifyPage();
 
         ViewInstallmentDetailsPage installmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
         installmentDetailsPage.verifyPage();
@@ -292,7 +275,6 @@ public class LoanTestHelper {
      */
     public void waivePenalty(String loanId) {
         LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-        loanAccountPage.verifyPage();
 
         ViewInstallmentDetailsPage installmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
         installmentDetailsPage.verifyPage();
@@ -340,9 +322,7 @@ public class LoanTestHelper {
         homePage.verifyPage();
         SearchResultsPage searchResultsPage = homePage.search(searchString);
 
-        LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage(searchString);
-        loanAccountPage.verifyPage();
-        return loanAccountPage;
+        return searchResultsPage.navigateToLoanAccountDetailPage(searchString);
     }
 
     private CreateLoanAccountSearchPage navigateToCreateLoanAccountSearchPage() {
@@ -374,8 +354,6 @@ public class LoanTestHelper {
         SearchResultsPage searchResultsPage = homePage.search(loanId);
         searchResultsPage.verifyPage();
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage(loanId);
-        loanAccountPage.verifyPage();
-        loanAccountPage.verifyPage();
 
         DisburseLoanPage disburseLoanPage = loanAccountPage.navigateToDisburseLoan();
         disburseLoanPage.verifyPage();

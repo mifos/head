@@ -81,6 +81,15 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         return new CreateLoanAccountConfirmationPage(selenium);
     }
 
+    private CreateLoanAccountConfirmationPage navigateToConfirmationPageSaveForLaterButton() {
+        selenium.click("schedulePreview.button.preview");
+        waitForPageToLoad();
+        selenium.isVisible("createloanpreview.button.saveForLater");
+        selenium.click("createloanpreview.button.saveForLater");
+        waitForPageToLoad();
+        return new CreateLoanAccountConfirmationPage(selenium);
+    }
+
     public ViewInstallmentDetailsPage submitAndNavigateToLoanPreviewPage(CreateLoanAccountSubmitParameters formParameters) {
         selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
         if (formParameters.isGracePeriodTypeNone()) {
@@ -111,6 +120,12 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
         submit();
         return navigateToConfirmationPage();
+
+    }
+
+    public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPageSaveForLaterButton() {
+        submit();
+        return navigateToConfirmationPageSaveForLaterButton();
 
     }
 
@@ -148,13 +163,15 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     }
 
     public void selectGLIMClients(int clientNumber, String expectedClientName, String loanAmount) {
+        selectGLIMClients(clientNumber, expectedClientName, loanAmount, null);
+    }
+
+    public void selectGLIMClients(int clientNumber, String expectedClientName, String loanAmount, String loanPurpose) {
         Assert.assertEquals(selenium.getText("GLIMLoanAccounts.clientName." + clientNumber), expectedClientName);
-        if (clientNumber <  1) {
-            selenium.check("glimLoanForm.input.select");
-            selenium.type("glimLoanForm.input.loanAmount", loanAmount);
-        } else {
-            selenium.check("clients[" + clientNumber + "]");
-            selenium.type("clientDetails[" + clientNumber + "].loanAmount", loanAmount);
+        selenium.check("clients[" + clientNumber + "]");
+        selenium.type("clientDetails[" + clientNumber + "].loanAmount", loanAmount);
+        if(loanPurpose!=null){
+            selenium.select("clientDetails[" + clientNumber + "].businessActivity", "label=" + loanPurpose);
         }
     }
 
@@ -204,7 +221,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         Assert.assertTrue(!selenium.isTextPresent("Minimum installment amount:" )) ;
         Assert.assertTrue(!selenium.isTextPresent("Can configure variable installments: No"));
         return this;
-        
+
     }
 
     public CreateLoanAccountEntryPage setDisbursalDate(DateTime validDisbursalDate) {
@@ -247,8 +264,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
             selenium.select("selectedFee[" + index + "].feeId",fee);
         }
         submit();
-        for (int index = 0; index < fees.length; index++) {
-            String fee = fees[index];
+        for (String fee : fees) {
             Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
         }
         for (int index = 0; index < fees.length; index++) {

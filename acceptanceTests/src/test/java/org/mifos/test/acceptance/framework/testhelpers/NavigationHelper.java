@@ -71,7 +71,6 @@ public class NavigationHelper {
         SearchResultsPage searchResultsPage = homePage.search(loanAccountID);
         searchResultsPage.verifyPage();
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage(loanAccountID);
-        loanAccountPage.verifyPage();
 
         return loanAccountPage;
     }

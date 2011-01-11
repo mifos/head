@@ -31,9 +31,6 @@ public class LoanAccountPage extends AbstractPage {
 
     public LoanAccountPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("LoanAccountDetail");
     }
 

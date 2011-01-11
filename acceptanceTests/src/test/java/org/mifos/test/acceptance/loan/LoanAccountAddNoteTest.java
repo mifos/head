@@ -78,8 +78,7 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void addNoteToLoanAccountAndVerifyRecentNotes() throws Exception {
         initData();
-        LoanAccountPage loanAccountPage = addNoteToAccount();
-        loanAccountPage.verifyPage();
+        addNoteToAccount();
         assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
     }
 
@@ -89,7 +88,6 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
         initData();
 
         LoanAccountPage loanAccountPage = addNoteToAccount();
-        loanAccountPage.verifyPage();
         AccountNotesPage accountNotesPage = loanAccountPage.navigateToAccountNotesPage();
         accountNotesPage.verifyPage();
         assertTextFoundOnPage(TEST_ACCOUNT_NOTE);
@@ -104,7 +102,6 @@ public class LoanAccountAddNoteTest extends UiTestCaseBase {
         NavigationHelper helper = new NavigationHelper(selenium);
 
         LoanAccountPage loanAccountPage = helper.navigateToLoanAccountPage(TEST_ACCOUNT);
-        loanAccountPage.verifyPage();
 
         AccountAddNotesPage addNotesPage = loanAccountPage.navigateToAddNotesPage();
         addNotesPage.verifyPage();

@@ -75,7 +75,6 @@ public class AttachSurveyLinkTest extends UiTestCaseBase {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_005_dbunit.xml", dataSource, selenium);
 
         LoanAccountPage loanAccountDetailPage = navigationHelper.navigateToLoanAccountPage("000100000000004");
-        loanAccountDetailPage.verifyPage();
 
         AttachSurveyPage attachSurveyPage = loanAccountDetailPage.navigateToAttachSurveyPage();
         attachSurveyPage.verifyPage("selectQuestionnaire");

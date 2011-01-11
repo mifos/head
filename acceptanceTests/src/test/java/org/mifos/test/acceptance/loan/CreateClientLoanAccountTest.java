@@ -107,7 +107,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         questionResponseDetailPage.verifyQuestionPresent(question1, answer);
         questionResponseDetailPage.verifyQuestionPresent(question2, choiceAnswer);
         questionResponseDetailPage.navigateToDetailsPage();
-        loanAccountPage.verifyPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -147,8 +146,7 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         EditLoanAccountInformationParameters editAccountParameters = new EditLoanAccountInformationParameters();
         editAccountParameters.setGracePeriod("5");
         EditPreviewLoanAccountPage editPreviewLoanAccountPage = tryToEditLoan(loanId, submitAccountParameters, editAccountParameters);
-        LoanAccountPage loanAccountPage = editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
-        loanAccountPage.verifyPage();
+        editPreviewLoanAccountPage.submitAndNavigateToLoanAccountPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
@@ -235,7 +233,6 @@ public class CreateClientLoanAccountTest extends UiTestCaseBase {
         } else {
             loanAccountPage = loanTestHelper.createLoanAccount(searchParameters, submitAccountParameters, questionResponseParameters);
         }
-        loanAccountPage.verifyPage();
         return loanAccountPage;
     }
 
