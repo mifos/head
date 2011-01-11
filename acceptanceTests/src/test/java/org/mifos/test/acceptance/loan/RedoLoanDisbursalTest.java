@@ -24,12 +24,8 @@ import org.joda.time.DateTime;
 import org.mifos.framework.util.DbUnitUtilities;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
-import org.mifos.test.acceptance.framework.admin.AdminPage;
-import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalChooseLoanInstancePage;
-import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
-import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
-import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
 import org.mifos.test.acceptance.framework.testhelpers.LoanTestHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
@@ -46,7 +42,6 @@ import org.testng.annotations.Test;
 @Test(sequential = true, groups = {"loan","acceptance","ui"})
 public class RedoLoanDisbursalTest extends UiTestCaseBase {
     private LoanTestHelper loanTestHelper;
-    private NavigationHelper navigationHelper;
 
     @Autowired
     private DriverManagerDataSource dataSource;
@@ -66,7 +61,7 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         DateTime targetTime = new DateTime(2009,7,26,15,0,0,0);
         dateTimeUpdaterRemoteTestingService.setDateTime(targetTime);
 
-        navigationHelper = new NavigationHelper(selenium);
+        NavigationHelper navigationHelper = new NavigationHelper(selenium);
         loanTestHelper = new LoanTestHelper(selenium, navigationHelper);
     }
 
@@ -75,60 +70,51 @@ public class RedoLoanDisbursalTest extends UiTestCaseBase {
         (new MifosPage(selenium)).logout();
     }
 
+    /*
+     * Verify a redone loan directly moves into "Closed-Met Obligation"
+     * state when the loan is wholly paid off before the current date.
+     *
+     * http://mifosforge.jira.com/browse/MIFOSTEST-12
+     * http://mifosforge.jira.com/browse/MIFOSTEST-17
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     public void redoLoanDisbursalWithPastDate() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
-        RedoLoanDisbursalParameters params = new RedoLoanDisbursalParameters();
+        RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
+        paramsPastDate.setDisbursalDateDD("09");
+        paramsPastDate.setDisbursalDateMM("07");
+        paramsPastDate.setDisbursalDateYYYY("2009");
 
-        params.setDisbursalDateDD("23");
-        params.setDisbursalDateMM("07");
-        params.setDisbursalDateYYYY("2009");
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, null, 3237);
 
-        loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", params);
-
-//        verifyRedoneLoanDisbursal("RedoLoanDisbursalTest_001_result_dbunit.xml");
+        loanAccountPage.verifyStatus("Closed- Obligation met");
     }
 
+    /*
+     * Verify that the status of the loan is Active in Good Standing
+     * when the loan is not wholly paid off before current date.
+     * Also verifies that loan cannot be redone on a date equal to
+     * or greater than the current date.
+     *
+     * http://mifosforge.jira.com/browse/MIFOSTEST-13
+     * http://mifosforge.jira.com/browse/MIFOSTEST-15
+     */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    @Test(enabled=true)
-    public void redoLoanDisbursalWithCurrentOrFutureDate() throws Exception {
+    public void redoLoanDisbursalWithPastDateUnpaid() throws Exception {
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
-        RedoLoanDisbursalParameters params = new RedoLoanDisbursalParameters();
+        RedoLoanDisbursalParameters paramsPastDate = new RedoLoanDisbursalParameters();
+        paramsPastDate.setDisbursalDateDD("09");
+        paramsPastDate.setDisbursalDateMM("07");
+        paramsPastDate.setDisbursalDateYYYY("2009");
+        RedoLoanDisbursalParameters paramsCurrentDate = new RedoLoanDisbursalParameters();
+        paramsCurrentDate.setDisbursalDateDD("29");
+        paramsCurrentDate.setDisbursalDateMM("07");
+        paramsCurrentDate.setDisbursalDateYYYY("2009");
 
-        params.setDisbursalDateDD("26");
-        params.setDisbursalDateMM("07");
-        params.setDisbursalDateYYYY("2009");
+        LoanAccountPage loanAccountPage = loanTestHelper.redoLoanDisbursal("MyGroup1233266255641", "WeeklyGroupFlatLoanWithOnetimeFee", paramsPastDate, paramsCurrentDate, 1237);
 
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        adminPage.verifyPage();
-
-        RedoLoanDisbursalSearchPage searchPage = adminPage.navigateToRedoLoanDisbursal();
-        searchPage.verifyPage();
-
-        RedoLoanDisbursalSearchResultsPage resultsPage = searchPage.searchAndNavigateToRedoLoanDisbursalPage("MyGroup1233266255641");
-        resultsPage.verifyPage();
-
-        RedoLoanDisbursalChooseLoanInstancePage chooseLoanPage = resultsPage.navigateToRedoLoanDisbursalChooseLoanProductPage("MyGroup1233266255641");
-        chooseLoanPage.verifyPage();
-
-        RedoLoanDisbursalEntryPage dataEntryPage = chooseLoanPage.submitAndNavigateToRedoLoanDisbursalEntryPage("WeeklyGroupFlatLoanWithOnetimeFee");
-        dataEntryPage.verifyPage();
-
-        MifosPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(params);
-        schedulePreviewPage.verifyPage("LoanCreationDetail"); // the page.id for dataEntryPage, we want to stay there.
+        loanAccountPage.verifyStatus("Active in Good Standing");
     }
-
-//    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-//    private void verifyRedoneLoanDisbursal(String resultDataSetFile) throws Exception {
-//        String[] tablesToValidate = { /*"ACCOUNT_STATUS_CHANGE_HISTORY",*/ "LOAN_ACCOUNT", "LOAN_ACTIVITY_DETAILS", "LOAN_SUMMARY", "LOAN_TRXN_DETAIL"};
-//
-//        IDataSet expectedDataSet = dbUnitUtilities.getDataSetFromDataSetDirectoryFile(resultDataSetFile);
-//        IDataSet databaseDataSet = dbUnitUtilities.getDataSetForTables(dataSource, tablesToValidate);
-//
-//        dbUnitUtilities.verifyTables(tablesToValidate, databaseDataSet, expectedDataSet);
-//
-//    }
-
 }

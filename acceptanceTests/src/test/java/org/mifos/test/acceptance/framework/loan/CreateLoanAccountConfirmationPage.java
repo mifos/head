@@ -26,12 +26,8 @@ import com.thoughtworks.selenium.Selenium;
 
 public class CreateLoanAccountConfirmationPage extends MifosPage {
 
-
     public CreateLoanAccountConfirmationPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         this.verifyPage("CreateLoanAccountConfirmation");
     }
 

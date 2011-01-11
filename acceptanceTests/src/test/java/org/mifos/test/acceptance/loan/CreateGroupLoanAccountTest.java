@@ -94,7 +94,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);
         createLoanAccountEntryPage.verifyPage();
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage.submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();
     }
@@ -121,7 +120,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);
         createLoanAccountEntryPage.verifyPage();
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage.submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();
     }
@@ -148,7 +146,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);
         createLoanAccountEntryPage.verifyPage();
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage.submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();
     }
@@ -167,7 +164,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         loanAccountEntryPage.selectTwoClientsForGlim();
 
         CreateLoanAccountConfirmationPage confirmationPage = loanAccountEntryPage.clickContinueAndNavigateToLoanAccountConfirmationPage();
-        confirmationPage.verifyPage();
 
         LoanAccountPage loanAccountPage = confirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();

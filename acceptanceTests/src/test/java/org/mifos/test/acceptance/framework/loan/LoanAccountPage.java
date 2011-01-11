@@ -243,4 +243,8 @@ public class LoanAccountPage extends AbstractPage {
         waitForPageToLoad();
         return new ApplyAdjustmentPage(selenium);
     }
+
+    public void verifyStatus(String status) {
+        Assert.assertTrue(selenium.isTextPresent(status));
+    }
 }

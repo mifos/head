@@ -31,9 +31,6 @@ import com.thoughtworks.selenium.Selenium;
 public class RedoLoanDisbursalSearchResultsPage extends MifosPage {
     public RedoLoanDisbursalSearchResultsPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("CustSearchAccountResults");
     }
 

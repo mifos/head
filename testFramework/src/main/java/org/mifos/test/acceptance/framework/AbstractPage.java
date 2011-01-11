@@ -32,7 +32,7 @@ import org.testng.Assert;
  */
 public class AbstractPage {
 
-    private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "8000";
+    private static final String MAX_WAIT_FOR_PAGE_TO_LOAD_IN_MILLISECONDS = "30000";
     protected Selenium selenium;
 
     public AbstractPage() {

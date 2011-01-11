@@ -47,9 +47,6 @@ import com.thoughtworks.selenium.Selenium;
 public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     public RedoLoanDisbursalSchedulePreviewPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("SchedulePreview");
     }
 
@@ -57,5 +54,10 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
         selenium.click("schedulePreview.button.preview");
         waitForPageToLoad();
         return new RedoLoanDisbursalPreviewPage(selenium);
+    }
+
+    public void typeAmountPaid(int amountPaid) {
+        selenium.type("name=paymentDataBeans[1].total", String.valueOf(amountPaid));
+        selenium.type("name=paymentDataBeans[1].amount", String.valueOf(amountPaid));
     }
 }

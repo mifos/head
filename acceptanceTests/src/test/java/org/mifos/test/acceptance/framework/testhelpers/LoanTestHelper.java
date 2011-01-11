@@ -50,13 +50,9 @@ import org.mifos.test.acceptance.framework.loan.EditPreviewLoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
 import org.mifos.test.acceptance.framework.loan.PaymentParameters;
 import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
-import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalChooseLoanInstancePage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
-import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalPreviewPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
-import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchPage;
-import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSearchResultsPage;
 import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
@@ -100,7 +96,6 @@ public class LoanTestHelper {
         CreateLoanAccountEntryPage createLoanAccountEntryPage = navigateToLoanAccountEntryPage(searchParameters);
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
         .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters);
-        createLoanAccountConfirmationPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();
         return loanAccountPage;
@@ -117,7 +112,6 @@ public class LoanTestHelper {
         CreateLoanAccountEntryPage createLoanAccountEntryPage = navigateToLoanAccountEntryPage(searchParameters);
         CreateLoanAccountConfirmationPage createLoanAccountConfirmationPage = createLoanAccountEntryPage
         .submitAndNavigateToLoanAccountConfirmationPage(submitAccountParameters, questionResponseParameters);
-        createLoanAccountConfirmationPage.verifyPage();
         LoanAccountPage loanAccountPage = createLoanAccountConfirmationPage.navigateToLoanAccountDetailsPage();
         loanAccountPage.verifyPage();
         return loanAccountPage;
@@ -310,34 +304,32 @@ public class LoanTestHelper {
      * Redoes the loan disbursal.
      * @param clientName The name of the client.
      * @param loanProduct The name of the loan product.
-     * @param params The parameters for the loan disbursal.
+     * @param paramsPastDate The parameters for the loan disbursal.
+     * @param amountPaid The amount typed in second pay row. Used to pay whole loan.
      */
-    public void redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters params) {
-        AdminPage adminPage = navigationHelper.navigateToAdminPage();
-        adminPage.verifyPage();
+    public LoanAccountPage redoLoanDisbursal(String clientName, String loanProduct, RedoLoanDisbursalParameters paramsPastDate, RedoLoanDisbursalParameters paramsCurrentDate, int amountPaid) {
+        RedoLoanDisbursalEntryPage dataEntryPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToRedoLoanDisbursal()
+            .searchAndNavigateToRedoLoanDisbursalPage(clientName)
+            .navigateToRedoLoanDisbursalChooseLoanProductPage(clientName)
+            .submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct);
 
-        RedoLoanDisbursalSearchPage searchPage = adminPage.navigateToRedoLoanDisbursal();
-        searchPage.verifyPage();
+        if(paramsCurrentDate != null) { // tests current or future date if need to.
+            dataEntryPage = dataEntryPage.submitFutureDateAndReloadPageWithInputError(paramsCurrentDate);
+            dataEntryPage.verifyFutureDateInputError();
+        }
 
-        RedoLoanDisbursalSearchResultsPage resultsPage = searchPage.searchAndNavigateToRedoLoanDisbursalPage(clientName);
-        resultsPage.verifyPage();
+        RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(paramsPastDate);
+        schedulePreviewPage.typeAmountPaid(amountPaid);
 
-        RedoLoanDisbursalChooseLoanInstancePage chooseLoanPage = resultsPage.navigateToRedoLoanDisbursalChooseLoanProductPage(clientName);
-        chooseLoanPage.verifyPage();
+        LoanAccountPage loanAccountPage = schedulePreviewPage
+            .submitAndNavigateToRedoLoanDisbursalPreviewPage()
+            .submitAndNavigateToLoanAccountConfirmationPage()
+            .navigateToLoanAccountDetailsPage();
 
-        RedoLoanDisbursalEntryPage dataEntryPage = chooseLoanPage.submitAndNavigateToRedoLoanDisbursalEntryPage(loanProduct);
-        dataEntryPage.verifyPage();
-
-        RedoLoanDisbursalSchedulePreviewPage schedulePreviewPage = dataEntryPage.submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(params);
-        schedulePreviewPage.verifyPage();
-
-        RedoLoanDisbursalPreviewPage previewPage = schedulePreviewPage.submitAndNavigateToRedoLoanDisbursalPreviewPage();
-        previewPage.verifyPage();
-
-        CreateLoanAccountConfirmationPage confirmationPage = previewPage.submitAndNavigateToLoanAccountConfirmationPage();
-        confirmationPage.verifyPage();
+        return loanAccountPage;
     }
-
 
     public LoanAccountPage navigateToLoanAccountPage(CreateLoanAccountSearchParameters searchParams) {
         String searchString = searchParams.getSearchString();
@@ -393,7 +385,7 @@ public class LoanTestHelper {
     public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPageWithoutLogout(String clientName, String loanProductName) {
         return navigateToCreateLoanAccountEntryPageWithoutLogout(setLoanSearchParameters(clientName,loanProductName));
     }
-    
+
     public CreateLoanAccountSearchParameters setLoanSearchParameters(String clientName, String loanProductName) {
         CreateLoanAccountSearchParameters accountSearchParameters = new CreateLoanAccountSearchParameters();
         accountSearchParameters.setSearchString(clientName);
