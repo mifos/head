@@ -21,6 +21,7 @@
 package org.mifos.framework.util.helpers;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -31,7 +32,15 @@ import javax.servlet.jsp.PageContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.struts.taglib.TagUtils;
 import org.apache.struts.util.MessageResources;
+import org.mifos.accounts.savings.persistence.GenericDao;
+import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
+import org.mifos.application.master.MessageLookup;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.config.Localization;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
+import org.mifos.config.persistence.ApplicationConfigurationDaoHibernate;
+import org.mifos.config.util.helpers.ConfigurationConstants;
+import org.mifos.dto.domain.ConfigurableLookupLabelDto;
 import org.mifos.framework.struts.tags.MifosPropertyMessageResources;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
@@ -86,22 +95,123 @@ public class LabelTagUtils {
         }
 
         if (StringUtils.isBlank(message)) {
-            // FOR Resources.properties
-            String newKey = key.toLowerCase();
-            message = resources.getMessage(locale, newKey);
+
+            GenericDao genericDao = new GenericDaoHibernate();
+            ApplicationConfigurationDao  applicationConfigurationDao = new ApplicationConfigurationDaoHibernate(genericDao);
+            List<LookUpEntity> lookupEntities = applicationConfigurationDao.findLookupEntities();
+            ConfigurableLookupLabelDto lookupLabels = assembleLookupEntities(lookupEntities);
+
+            if (ConfigurationConstants.CENTER.equalsIgnoreCase(key)) {
+                message = lookupLabels.getCenter();
+            } else if (ConfigurationConstants.GROUP.equalsIgnoreCase(key)) {
+                message = lookupLabels.getGroup();
+            } else if (ConfigurationConstants.CLIENT.equalsIgnoreCase(key)) {
+                message = lookupLabels.getClient();
+            } else if (ConfigurationConstants.LOAN.equalsIgnoreCase(key)) {
+                message = lookupLabels.getLoans();
+            } else if (ConfigurationConstants.SAVINGS.equalsIgnoreCase(key)) {
+                message = lookupLabels.getSavings();
+            } else if (ConfigurationConstants.INTEREST.equalsIgnoreCase(key)) {
+                message = lookupLabels.getInterest();
+            } else if (ConfigurationConstants.STATE.equalsIgnoreCase(key)) {
+                message = lookupLabels.getState();
+            } else if (ConfigurationConstants.POSTAL_CODE.equalsIgnoreCase(key)) {
+                message = lookupLabels.getPostalCode();
+            } else if (ConfigurationConstants.ETHINICITY.equalsIgnoreCase(key)) {
+                message = lookupLabels.getEthnicity();
+            } else if (ConfigurationConstants.CITIZENSHIP.equalsIgnoreCase(key)) {
+                message = lookupLabels.getCitizenship();
+            } else if (ConfigurationConstants.HANDICAPPED.equalsIgnoreCase(key)) {
+                message = lookupLabels.getHandicapped();
+            } else if (ConfigurationConstants.GOVERNMENT_ID.equalsIgnoreCase(key)) {
+                message = lookupLabels.getGovtId();
+            } else if (ConfigurationConstants.ADDRESS1.equalsIgnoreCase(key)) {
+                message = lookupLabels.getAddress1();
+            } else if (ConfigurationConstants.ADDRESS2.equalsIgnoreCase(key)) {
+                message = lookupLabels.getAddress2();
+            } else if (ConfigurationConstants.ADDRESS3.equalsIgnoreCase(key)) {
+                message = lookupLabels.getAddress3();
+            } else if (ConfigurationConstants.EXTERNALID.equalsIgnoreCase(key)) {
+                message = lookupLabels.getExternalId();
+            } else if (ConfigurationConstants.BULKENTRY.equalsIgnoreCase(key)) {
+                message = lookupLabels.getBulkEntry();
+            } else if (ConfigurationConstants.CITY.equalsIgnoreCase(key)) {
+                message = lookupLabels.getCity();
+            }
         }
 
-        if (StringUtils.isBlank(message)) {
-            // FOR MenuResources.properties
-            String newKey = "label." + key.toLowerCase();
-            message = resources.getMessage(locale, newKey);
-        }
+//        if (StringUtils.isBlank(message)) {
+//            // FOR Resources.properties
+//            String newKey = key.toLowerCase();
+//            message = resources.getMessage(locale, newKey);
+//        }
+//
+//        if (StringUtils.isBlank(message)) {
+//            // FOR MenuResources.properties
+//            String newKey = "label." + key.toLowerCase();
+//            message = resources.getMessage(locale, newKey);
+//        }
 
         if (StringUtils.isBlank(message)) {
             message = "";
         }
 
         return message;
+    }
+
+    private ConfigurableLookupLabelDto assembleLookupEntities(List<LookUpEntity> lookupEntities) {
+
+        ConfigurableLookupLabelDto lookupLabels = new ConfigurableLookupLabelDto();
+
+        for (LookUpEntity entity : lookupEntities) {
+
+            String labelText = entity.findLabel();
+            if (StringUtils.isBlank(labelText)) {
+                labelText = MessageLookup.getInstance().lookupLabel(entity.findLabelKey());
+            }
+
+            if (StringUtils.isBlank(labelText)) {
+                labelText = "test-blank";
+            }
+
+            if (entity.getEntityType().equals(ConfigurationConstants.CLIENT)) {
+                lookupLabels.setClient(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.GROUP)) {
+                lookupLabels.setGroup(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.CENTER)) {
+                lookupLabels.setCenter(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.LOAN)) {
+                lookupLabels.setLoans(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.SAVINGS)) {
+                lookupLabels.setSavings(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.STATE)) {
+                lookupLabels.setState(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.POSTAL_CODE)) {
+                lookupLabels.setPostalCode(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ETHINICITY)) {
+                lookupLabels.setEthnicity(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.CITIZENSHIP)) {
+                lookupLabels.setCitizenship(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.HANDICAPPED)) {
+                lookupLabels.setHandicapped(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.GOVERNMENT_ID)) {
+                lookupLabels.setGovtId(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS1)) {
+                lookupLabels.setAddress1(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS2)) {
+                lookupLabels.setAddress2(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
+                lookupLabels.setAddress3(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.INTEREST)) {
+                lookupLabels.setInterest(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.EXTERNALID)) {
+                lookupLabels.setExternalId(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.BULKENTRY)) {
+                lookupLabels.setBulkEntry(labelText);
+            }
+        }
+
+        return lookupLabels;
     }
 
     /**

@@ -30,6 +30,7 @@ public class ConfigurableLookupLabelDto {
     private String loans;
     private String savings;
 
+    private String city;
     private String state;
     private String postalCode;
     private String ethnicity;
@@ -179,5 +180,13 @@ public class ConfigurableLookupLabelDto {
 
     public void setBulkEntry(String bulkEntry) {
         this.bulkEntry = bulkEntry;
+    }
+
+    public String getCity() {
+        return this.city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

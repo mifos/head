@@ -803,6 +803,8 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
                 lookupLabels.setSavings(labelText);
             } else if (entity.getEntityType().equals(ConfigurationConstants.STATE)) {
                 lookupLabels.setState(labelText);
+            } else if (entity.getEntityType().equals(ConfigurationConstants.CITY)) {
+                lookupLabels.setCity(labelText);
             } else if (entity.getEntityType().equals(ConfigurationConstants.POSTAL_CODE)) {
                 lookupLabels.setPostalCode(labelText);
             } else if (entity.getEntityType().equals(ConfigurationConstants.ETHINICITY)) {
