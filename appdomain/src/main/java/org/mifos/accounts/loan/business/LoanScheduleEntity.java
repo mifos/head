@@ -33,10 +33,12 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.util.CollectionUtils;
 
 import java.util.*;
+import java.util.Date;
 
 import static org.mifos.framework.util.helpers.NumberUtils.min;
 
@@ -602,7 +604,13 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     void recordForAdjustment() {
         setPaymentStatus(PaymentStatus.UNPAID);
-        setPaymentDate(null);
+        setPaymentDate(getLastPaymentDate());
+    }
+
+    private java.sql.Date getLastPaymentDate() {
+        AccountPaymentEntity lastPaymentToBeAdjusted = getAccount().getLastPmntToBeAdjusted();
+        return lastPaymentToBeAdjusted == null ? null :
+                new java.sql.Date(lastPaymentToBeAdjusted.getPaymentDate().getTime());
     }
 
     void recordPayment(Date paymentDate) {

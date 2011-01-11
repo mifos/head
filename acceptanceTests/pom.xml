@@ -363,6 +363,9 @@
                     </rulesets>
                     <includeTests>true</includeTests>
                     <targetJdk>${jdk.version}</targetJdk>
+                    <excludes>
+                        <exclude>**/RepaymentScheduleData.java</exclude>
+                    </excludes>
                 </configuration>
                 <executions>
                     <execution>

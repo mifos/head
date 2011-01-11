@@ -94,16 +94,6 @@ public class InstallmentPayments {
         installmentPayments.add(installmentPayment);
     }
 
-    public Date getRecentPartialPaymentDate() {
-        Date lastPaymentDate = null;
-        for (InstallmentPayment installmentPayment : installmentPayments) {
-            if (installmentPayment.isPartialPayment()) {
-                lastPaymentDate = NumberUtils.max(lastPaymentDate, installmentPayment.getPaidDate());
-            }
-        }
-        return lastPaymentDate;
-    }
-
     public Date getRecentPrincipalPaidDate() {
         Date lastPaymentDate = null;
         for (InstallmentPayment installmentPayment : installmentPayments) {
