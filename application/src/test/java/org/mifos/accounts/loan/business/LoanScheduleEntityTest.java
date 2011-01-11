@@ -19,7 +19,6 @@
  */
 package org.mifos.accounts.loan.business;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -63,8 +62,6 @@ public class LoanScheduleEntityTest {
     private AccountPaymentEntity accountPayment;
     @Mock
     private LoanPersistence loanPersistence;
-    @Mock
-    private AccountPaymentEntity accountPaymentEntity;
 
     private LoanScheduleEntity loanScheduleEntity;
     private Date paymentDate;
@@ -351,30 +348,6 @@ public class LoanScheduleEntityTest {
         assertThat(loanScheduleEntity.getInterestPaidAsDouble(), is(0d));
         assertThat(loanScheduleEntity.getExtraInterestPaidAsDouble(), is(0d));
     }
-
-    @Test
-    public void testRecordAdjustmentSinglePaymentExists() {
-        loanScheduleEntity.setAccount(loanBO);
-        when(loanBO.getLastPmntToBeAdjusted()).thenReturn(null);
-        loanScheduleEntity.recordForAdjustment();
-        Assert.assertEquals(PaymentStatus.UNPAID, loanScheduleEntity.getPaymentStatusAsEnum());
-        Assert.assertNull(loanScheduleEntity.getPaymentDate());
-        verify(loanBO, Mockito.times(1)).getLastPmntToBeAdjusted();
-    }
-
-    @Test
-    public void testRecordAdjustmentWhenMultiplePaymentsExist() {
-        loanScheduleEntity.setAccount(loanBO);
-        when(loanBO.getLastPmntToBeAdjusted()).thenReturn(accountPaymentEntity);
-        Date dateOfPaymentPriorToAdjustedOne = new Date();
-        when(accountPaymentEntity.getPaymentDate()).thenReturn(dateOfPaymentPriorToAdjustedOne);
-        loanScheduleEntity.recordForAdjustment();
-        Assert.assertEquals(PaymentStatus.UNPAID, loanScheduleEntity.getPaymentStatusAsEnum());
-        Assert.assertEquals(dateOfPaymentPriorToAdjustedOne, loanScheduleEntity.getPaymentDate());
-        verify(accountPaymentEntity, Mockito.times(1)).getPaymentDate();
-        verify(loanBO, Mockito.times(1)).getLastPmntToBeAdjusted();
-    }
-
 
     private LoanFeeScheduleEntity getFee(int id, double amount, double amountPaid) {
         LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity();
