@@ -87,7 +87,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("2765.0");
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAndAccountsPage.verifyPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
 
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);
@@ -113,7 +112,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1000.0");
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAndAccountsPage.verifyPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
 
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);
@@ -139,7 +137,6 @@ public class CreateGroupLoanAccountTest extends UiTestCaseBase {
         submitAccountParameters.setAmount("1000.0");
 
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAndAccountsPage.verifyPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
 
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage.searchAndNavigateToCreateLoanAccountPage(searchParameters);

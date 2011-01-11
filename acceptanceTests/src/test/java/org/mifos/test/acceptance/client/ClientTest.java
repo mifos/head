@@ -254,7 +254,6 @@ public class ClientTest extends UiTestCaseBase {
         MifosPage mifosPage = questionnairePage.submit();
         Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
-        clientViewDetailsPage.verifyPage();
         viewClientDetailsPage = clientViewDetailsPage;
     }
 
@@ -267,7 +266,6 @@ public class ClientTest extends UiTestCaseBase {
         Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice3"));
         Assert.assertTrue(questionGroupResponsePage.getAnswerHtml(question2).contains("Choice4"));
         viewClientDetailsPage = questionGroupResponsePage.navigateToViewClientDetailsPage();
-        viewClientDetailsPage.verifyPage();
     }
 
     private void verifyQuestionGroupInstanceListing(int expectedSize) {
@@ -292,7 +290,6 @@ public class ClientTest extends UiTestCaseBase {
         MifosPage mifosPage = questionnairePage.submit();
         Assert.assertTrue(mifosPage instanceof ClientViewDetailsPage);
         ClientViewDetailsPage clientViewDetailsPage = (ClientViewDetailsPage) mifosPage;
-        clientViewDetailsPage.verifyPage();
         viewClientDetailsPage = clientViewDetailsPage;
     }
 
@@ -344,7 +341,6 @@ public class ClientTest extends UiTestCaseBase {
         responseDetailPage.verifyQuestionPresent(question1, answer);
         responseDetailPage.verifyQuestionPresent(question2, "Choice1", "Choice2");
         responseDetailPage.navigateToDetailsPage();
-        clientDetailsPage.verifyPage();
     }
 
     private Map<String, String> getChoiceTags() {
@@ -365,9 +361,7 @@ public class ClientTest extends UiTestCaseBase {
     }
 
     private ClientViewDetailsPage verifyCancel(QuestionnairePage questionnairePage) {
-        ClientViewDetailsPage viewDetailsPage = questionnairePage.cancel();
-        viewDetailsPage.verifyPage();
-        return viewDetailsPage;
+        return questionnairePage.cancel();
     }
 
     public Integer latestInstanceId(Map<Integer, QuestionGroup> questionGroups) {

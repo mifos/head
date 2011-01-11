@@ -28,7 +28,10 @@ import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.AppLauncher;
 import org.mifos.test.acceptance.framework.ClientsAndAccountsHomepage;
 import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.admin.AdminPage;
+import org.mifos.test.acceptance.framework.client.ClientSearchResultsPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 import org.mifos.test.acceptance.framework.loan.ApplyChargePage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentConfirmationPage;
 import org.mifos.test.acceptance.framework.loan.ApplyPaymentPage;
@@ -312,6 +315,38 @@ public class LoanTestHelper {
             .navigateToLoanAccountDetailsPage();
     }
 
+    /*
+     *
+     * Reverses the loan disbursal account
+     * @param accountID the id of loan account that should be reversed
+     */
+    public MifosPage reverseLoanDisbursal(String accountID, String clientID, boolean isGroup, String resultClickLink) {
+        ClientSearchResultsPage clientSearchResultsPage = navigationHelper
+            .navigateToAdminPage()
+            .navigateToUndoLoanDisbursal()
+            .searchAndNavigateToUndoLoanDisbursalPage(accountID)
+            .submitAndNavigateToUndoLoanDisbursalConfirmationPage("test reverse loan disembursal note")
+            .submitAndNavigateToAdminPage()
+            .navigateToClientsAndAccountsUsingHeaderTab()
+            .searchForClient(clientID);
+
+        MifosPage searchResultsPage;
+        if(isGroup) {
+            searchResultsPage = clientSearchResultsPage.navigateToGroupSearchResult(resultClickLink);
+        }
+        else {
+            searchResultsPage = clientSearchResultsPage.navigateToSearchResult(resultClickLink);
+        }
+        return searchResultsPage;
+    }
+
+    public void verifyHistoryAndSummaryReversedLoan(GroupViewDetailsPage clientViewDetailsPage) {
+        LoanAccountPage loanAccountPage = clientViewDetailsPage.navigateToClosedAccountsPage()
+            .navigateToLoanAccountPage();
+        loanAccountPage.verifyClosedLoanPerformanceHistory();
+        loanAccountPage.navigateToTransactionHistory();
+    }
+
     public LoanAccountPage navigateToLoanAccountPage(CreateLoanAccountSearchParameters searchParams) {
         String searchString = searchParams.getSearchString();
 
@@ -330,7 +365,6 @@ public class LoanTestHelper {
         HomePage homePage = loginPage.loginSuccessfullyUsingDefaultCredentials();
         homePage.verifyPage();
         ClientsAndAccountsHomepage clientsAndAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAndAccountsPage.verifyPage();
         return clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
     }
 
@@ -340,7 +374,6 @@ public class LoanTestHelper {
 
     public CreateLoanAccountEntryPage navigateToCreateLoanAccountEntryPageWithoutLogout(CreateLoanAccountSearchParameters searchParameters) {
         ClientsAndAccountsHomepage clientsAndAccountsPage = new HomePage(selenium).navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAndAccountsPage.verifyPage();
         CreateLoanAccountSearchPage createLoanAccountSearchPage = clientsAndAccountsPage.navigateToCreateLoanAccountUsingLeftMenu();
         createLoanAccountSearchPage.verifyPage();
         CreateLoanAccountEntryPage createLoanAccountEntryPage = createLoanAccountSearchPage

@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.client;
 
 import org.mifos.test.acceptance.framework.MifosPage;
+import org.mifos.test.acceptance.framework.group.GroupViewDetailsPage;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -38,5 +39,11 @@ public class ClientSearchResultsPage extends MifosPage {
         selenium.click("link=" + linkText);
         waitForPageToLoad();
         return new ClientViewDetailsPage(selenium);
+    }
+
+    public GroupViewDetailsPage navigateToGroupSearchResult(String linkText) {
+        selenium.click("link=" + linkText);
+        waitForPageToLoad();
+        return new GroupViewDetailsPage(selenium);
     }
 }

@@ -98,4 +98,8 @@ public class GroupViewDetailsPage extends MifosPage {
         waitForPageToLoad();
         return new ViewQuestionResponseDetailPage(selenium);
     }
+
+    public void verifyLoanDoesntExist(String loanID) {
+        Assert.assertFalse(selenium.isTextPresent(loanID));
+    }
 }

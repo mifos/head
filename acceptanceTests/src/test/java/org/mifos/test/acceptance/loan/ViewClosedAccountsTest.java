@@ -119,12 +119,10 @@ public class ViewClosedAccountsTest extends UiTestCaseBase {
         searchResultsPage.verifyPage();
 
         ClientViewDetailsPage clientViewDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=Stu*");
-        clientViewDetailsPage.verifyPage();
 
         ClosedAccountsPage closedAccountsPage = clientViewDetailsPage.navigateToClosedAccountsPage();
         closedAccountsPage.verifyPage();
 
-        ClientViewDetailsPage returnedClientViewDetailsPage = closedAccountsPage.returnToClientViewDetailsPage();
-        returnedClientViewDetailsPage.verifyPage();
+        closedAccountsPage.returnToClientViewDetailsPage();
     }
 }

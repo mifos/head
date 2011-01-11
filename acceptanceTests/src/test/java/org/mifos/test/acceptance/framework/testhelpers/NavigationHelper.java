@@ -88,10 +88,8 @@ public class NavigationHelper {
         HomePage homePage = navigateToHomePage();
         SearchResultsPage searchResultsPage = homePage.search(clientName);
         searchResultsPage.verifyPage();
-        ClientViewDetailsPage clientDetailsPage = searchResultsPage.navigateToClientViewDetailsPage("link=" + clientName + "*");
-        clientDetailsPage.verifyPage();
 
-        return clientDetailsPage;
+        return searchResultsPage.navigateToClientViewDetailsPage("link=" + clientName + "*");
     }
 
     public CenterViewDetailsPage navigateToCenterViewDetailsPage(String centerName) {
@@ -125,10 +123,8 @@ public class NavigationHelper {
 
     public ClientsAndAccountsHomepage navigateToClientsAndAccountsPage() {
         HomePage homePage = navigateToHomePage();
-        ClientsAndAccountsHomepage clientsAccountsPage = homePage.navigateToClientsAndAccountsUsingHeaderTab();
-        clientsAccountsPage.verifyPage();
 
-        return clientsAccountsPage;
+        return homePage.navigateToClientsAndAccountsUsingHeaderTab();
     }
 
     public ChooseOfficePage navigateToCreateUserPage() {

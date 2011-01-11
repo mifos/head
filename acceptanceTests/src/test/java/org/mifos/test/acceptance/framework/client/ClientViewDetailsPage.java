@@ -43,9 +43,6 @@ public class ClientViewDetailsPage extends MifosPage {
 
     public ClientViewDetailsPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("ViewClientDetails");
     }
 
@@ -134,6 +131,10 @@ public class ClientViewDetailsPage extends MifosPage {
 
     public void verifyTextOnPage(String text) {
         Assert.assertTrue(selenium.isTextPresent(text));
+    }
+
+    public void verifyLoanDoesntExist(String loanID) {
+        Assert.assertFalse(selenium.isTextPresent(loanID));
     }
 
     public ClientNotesPage navigateToAllNotesPage() {

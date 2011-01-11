@@ -52,9 +52,6 @@ public class ClientsAndAccountsHomepage extends AbstractPage {
 
     public ClientsAndAccountsHomepage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("ClientsAccounts");
     }
 

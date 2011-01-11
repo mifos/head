@@ -28,9 +28,6 @@ import com.thoughtworks.selenium.Selenium;
 public class DefineNewSavingsProductPreviewPage extends MifosPage {
     public DefineNewSavingsProductPreviewPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public void verifyPage() {
         verifyPage("SavingsProductPreview");
     }
 
