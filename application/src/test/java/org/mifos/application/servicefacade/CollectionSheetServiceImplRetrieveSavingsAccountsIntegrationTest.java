@@ -56,7 +56,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
 
     @BeforeClass
     public static void init() {
-        collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
+        collectionSheetService = ApplicationContextProvider.getBean(CollectionSheetService.class);
     }
 
     private static CollectionSheetService collectionSheetService;

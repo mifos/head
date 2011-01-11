@@ -27,12 +27,16 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.PropertyResourceBundle;
 
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.customers.office.business.OfficeLevelEntity;
+import org.mifos.customers.office.business.OfficeStatusEntity;
+import org.mifos.customers.personnel.business.PersonnelLevelEntity;
+import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.components.audit.persistence.AuditConfigurationPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -58,14 +62,12 @@ public class AuditConfiguration {
 
     private List<Short> locales;
 
-    private ApplicationConfigurationPersistence configurationPersistence;
     private MasterPersistence masterPersistence;
 
     public static AuditConfiguration auditConfigurtion = new AuditConfiguration();
 
     private AuditConfiguration() {
         masterPersistence = new MasterPersistence();
-        configurationPersistence = new ApplicationConfigurationPersistence();
 
         locales = Localization.getInstance().getSupportedLocaleIds();
         locale = Localization.getInstance().getMainLocale();
@@ -279,26 +281,45 @@ public class AuditConfiguration {
     }
 
     private void fetchMasterData(String entityName, Short localeId) throws SystemException {
-        try {
-            List<ValueListElement> businessActivityList = masterPersistence
-                    .retrieveMasterEntities(entityName, localeId);
-            for (ValueListElement businessActivityEntity : businessActivityList) {
-                valueMap.put(businessActivityEntity.getId().toString(), businessActivityEntity.getName());
-            }
-        } catch (PersistenceException e) {
-            throw new SystemException(e);
+        List<ValueListElement> businessActivityList = masterPersistence
+                .findValueListElements(entityName);
+        for (ValueListElement businessActivityEntity : businessActivityList) {
+            valueMap.put(businessActivityEntity.getId().toString(), businessActivityEntity.getName());
         }
     }
 
     private void fetchMasterData(String entityName, Short localeId, String classPath) throws SystemException {
+        Class clazz = null;
         try {
-            List<MasterDataEntity> masterDataList = masterPersistence.retrieveMasterDataEntity(classPath);
-            for (MasterDataEntity masterDataEntity : masterDataList) {
-                masterDataEntity.setLocaleId(localeId);
-                valueMap.put(masterDataEntity.getId().toString(), masterDataEntity.getName());
-            }
-        } catch (PersistenceException e) {
+            clazz = Thread.currentThread().getContextClassLoader().loadClass(classPath);
+        } catch (ClassNotFoundException e) {
             throw new SystemException(e);
+        }
+        List<MasterDataEntity> masterDataList = masterPersistence.findMasterDataEntities(clazz);
+        for (MasterDataEntity masterDataEntity : masterDataList) {
+            masterDataEntity.setLocaleId(localeId);
+
+            if (masterDataEntity instanceof PersonnelStatusEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((PersonnelStatusEntity) masterDataEntity).setName(name);
+            }
+
+            if (masterDataEntity instanceof PersonnelLevelEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((PersonnelLevelEntity) masterDataEntity).setName(name);
+            }
+
+            if (masterDataEntity instanceof OfficeLevelEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((OfficeLevelEntity) masterDataEntity).setName(name);
+            }
+
+            if (masterDataEntity instanceof OfficeStatusEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((OfficeStatusEntity) masterDataEntity).setName(name);
+            }
+
+            valueMap.put(masterDataEntity.getId().toString(), masterDataEntity.getName());
         }
     }
 

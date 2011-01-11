@@ -55,8 +55,6 @@ import org.mifos.security.util.UserContext;
 
 public class CustActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
     private CenterBO center;
 
     private GroupBO group;

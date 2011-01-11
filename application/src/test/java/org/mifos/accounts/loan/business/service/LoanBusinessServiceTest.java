@@ -176,10 +176,10 @@ public class LoanBusinessServiceTest {
                 applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                         loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
-        verify(loanBO).copyInstallmentSchedule(installments);
+        verify(loanBO).updateInstallmentSchedule(installments);
         verify(loanBO).toRepaymentScheduleDto(locale);
     }
-    
+
     @Test
     public void shouldComputeVariableInstallmentScheduleForVariableInstallmentsIfVariableInstallmentsIsEnabledAndInstallmentsArePassed() {
         RepaymentScheduleInstallment installment1 =
@@ -198,7 +198,7 @@ public class LoanBusinessServiceTest {
                 applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                         loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), installments);
-        verify(loanBO).copyInstallmentSchedule(installments);
+        verify(loanBO).updateInstallmentSchedule(installments);
     }
 
     @Test
@@ -220,7 +220,7 @@ public class LoanBusinessServiceTest {
         loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
-        verify(loanBO).copyInstallmentSchedule(installments);
+        verify(loanBO).updateInstallmentSchedule(installments);
         verify(loanBO).toRepaymentScheduleDto(locale);
     }
 
@@ -234,7 +234,7 @@ public class LoanBusinessServiceTest {
         loanBusinessService.applyDailyInterestRatesWhereApplicable(new LoanScheduleGenerationDto(TestUtils.getDate(22, 8, 2010),
                 loanBO, loanAccountActionForm.isVariableInstallmentsAllowed(), loanAccountActionForm.getLoanAmountValue(),
                 loanAccountActionForm.getInterestDoubleValue()), locale);
-        verify(loanBO, never()).copyInstallmentSchedule(any(List.class));
+        verify(loanBO, never()).updateInstallmentSchedule(any(List.class));
     }
 
     @Test
@@ -411,7 +411,7 @@ public class LoanBusinessServiceTest {
         verify(loanPersistence).getOriginalLoanScheduleEntity(accountId);
         Assert.assertEquals(expected,loanScheduleEntities);
     }
-    
+
 
     private void assertInstallmentDueDate(RepaymentScheduleInstallment installment, String expectedDueDate) {
         String actualDueDate = DateUtils.getDBtoUserFormatString(installment.getDueDateValue(), locale);

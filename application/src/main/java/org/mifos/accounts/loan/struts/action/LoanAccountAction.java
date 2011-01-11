@@ -20,62 +20,10 @@
 
 package org.mifos.accounts.loan.struts.action;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-import static org.apache.commons.lang.StringUtils.isNotEmpty;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADDITIONAL_FEES_LIST;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.ADMINISTRATIVE_DOCUMENT_IS_ENABLED;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.CLIENT_LIST;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.CUSTOM_FIELDS;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANACCOUNTOWNER;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANFUNDS;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOANOFFERING;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ACCOUNT_OWNER_IS_A_GROUP;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_ALL_ACTIVITY_VIEW;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.LOAN_INDIVIDUAL_MONITORING_IS_ENABLED;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MAX_RANGE_IS_NOT_MET;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.METHODCALLED;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_DAYS_BETWEEN_DISBURSAL_AND_FIRST_REPAYMENT_DAY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.MIN_RANGE_IS_NOT_MET;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.NEXTMEETING_DATE;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.PROPOSED_DISBURSAL_DATE;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCEID;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.RECURRENCENAME;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.STATUS_HISTORY;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.TOTAL_AMOUNT_OVERDUE;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEWINSTALLMENTDETAILS_SUCCESS;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEW_OVERDUE_INSTALLMENT_DETAILS;
-import static org.mifos.accounts.loan.util.helpers.LoanConstants.VIEW_UPCOMING_INSTALLMENT_DETAILS;
-import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
-import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
-
-import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Locale;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts.action.ActionErrors;
-import org.apache.struts.action.ActionForm;
-import org.apache.struts.action.ActionForward;
-import org.apache.struts.action.ActionMapping;
-import org.apache.struts.action.ActionMessage;
+import org.apache.struts.action.*;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountFeesEntity;
@@ -89,7 +37,6 @@ import org.mifos.accounts.fund.business.FundBO;
 import org.mifos.accounts.loan.business.CashFlowDataAdaptor;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.MaxMinInterestRate;
-import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
 import org.mifos.accounts.loan.business.service.OriginalScheduleInfoDto;
@@ -98,11 +45,7 @@ import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.struts.uihelpers.PaymentDataHtmlBean;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.productdefinition.business.LoanAmountOption;
-import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
-import org.mifos.accounts.productdefinition.business.LoanOfferingFundEntity;
-import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
-import org.mifos.accounts.productdefinition.business.VariableInstallmentDetailsBO;
+import org.mifos.accounts.productdefinition.business.*;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
 import org.mifos.accounts.productdefinition.business.service.LoanProductService;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
@@ -120,23 +63,18 @@ import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingDetailsEntity;
 import org.mifos.application.meeting.exceptions.MeetingException;
-import org.mifos.application.meeting.util.helpers.MeetingConstants;
-import org.mifos.application.meeting.util.helpers.MeetingType;
-import org.mifos.application.meeting.util.helpers.RankOfDay;
-import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.meeting.util.helpers.*;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.questionnaire.struts.QuestionnaireServiceFacadeLocator;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.LoanCreationLoanScheduleDetailsDto;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -153,36 +91,15 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
-import org.mifos.dto.domain.CreateAccountFeeDto;
-import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.CustomerDetailDto;
-import org.mifos.dto.domain.LoanAccountDetailsDto;
-import org.mifos.dto.domain.LoanActivityDto;
-import org.mifos.dto.domain.LoanInstallmentDetailsDto;
-import org.mifos.dto.domain.LoanPaymentDto;
-import org.mifos.dto.domain.MeetingDto;
-import org.mifos.dto.domain.ValueListElement;
-import org.mifos.dto.screen.LoanAccountInfoDto;
-import org.mifos.dto.screen.LoanAccountMeetingDto;
-import org.mifos.dto.screen.LoanCreationGlimDto;
-import org.mifos.dto.screen.LoanCreationLoanDetailsDto;
-import org.mifos.dto.screen.LoanCreationPreviewDto;
-import org.mifos.dto.screen.LoanCreationProductDetailsDto;
-import org.mifos.dto.screen.LoanCreationResultDto;
-import org.mifos.dto.screen.LoanInformationDto;
-import org.mifos.dto.screen.LoanScheduledInstallmentDto;
+import org.mifos.dto.domain.*;
+import org.mifos.dto.screen.*;
 import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.LocalizationConverter;
-import org.mifos.framework.util.helpers.Constants;
-import org.mifos.framework.util.helpers.DateUtils;
-import org.mifos.framework.util.helpers.Money;
-import org.mifos.framework.util.helpers.SessionUtils;
-import org.mifos.framework.util.helpers.TransactionDemarcate;
-import org.mifos.framework.util.helpers.Transformer;
+import org.mifos.framework.util.helpers.*;
 import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
@@ -193,6 +110,20 @@ import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.util.*;
+
+import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
+import static org.mifos.accounts.loan.util.helpers.LoanConstants.*;
+import static org.mifos.accounts.loan.util.helpers.RequestConstants.PERSPECTIVE;
+import static org.mifos.framework.util.helpers.Constants.BUSINESS_KEY;
 
 /**
  * Creation and management of loan accounts.
@@ -268,7 +199,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private final LoanBusinessService loanBusinessService;
     private final LoanPrdBusinessService loanPrdBusinessService;
-    private final MasterDataService masterDataService;
+    private final MasterPersistence masterPersistence;
     private final ConfigurationPersistence configurationPersistence;
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
@@ -287,15 +218,15 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private static final String CUSTOMER_SEARCH_URL = "custSearchAction.do?method=loadMainSearch";
 
     public LoanAccountAction() {
-        this(new ConfigurationBusinessService(), new LoanBusinessService(), new GlimLoanUpdater(),
-                new LoanPrdBusinessService(), new MasterDataService(),
+        this(new ConfigurationBusinessService(), ApplicationContextProvider.getBean(LoanBusinessService.class), new GlimLoanUpdater(),
+                new LoanPrdBusinessService(), new MasterPersistence(),
                 new ConfigurationPersistence(), new AccountBusinessService());
     }
 
     public LoanAccountAction(final ConfigurationBusinessService configService,
                              final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater,
                              final LoanPrdBusinessService loanPrdBusinessService,
-                             final MasterDataService masterDataService, final ConfigurationPersistence configurationPersistence,
+                             final MasterPersistence masterPersistence, final ConfigurationPersistence configurationPersistence,
                              final AccountBusinessService accountBusinessService) {
         super(accountBusinessService);
 
@@ -303,7 +234,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.loanBusinessService = loanBusinessService;
         this.glimLoanUpdater = glimLoanUpdater;
         this.loanPrdBusinessService = loanPrdBusinessService;
-        this.masterDataService = masterDataService;
+        this.masterPersistence = masterPersistence;
         this.configurationPersistence = configurationPersistence;
         this.questionGroupFilter = new QuestionGroupFilterForLoan();
         this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
@@ -330,7 +261,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     @Deprecated
     private LoanAccountAction(final ConfigurationBusinessService configService,
                               final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
-        this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new MasterDataService(), new ConfigurationPersistence(),
+        this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new MasterPersistence(), new ConfigurationPersistence(),
                 new AccountBusinessService());
     }
 
@@ -465,7 +396,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         loanActionForm.setDefaultFees(defaultFees);
 
-        CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES, userContext.getLocaleId());
+        CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
         List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
         SessionUtils.setCollectionAttribute(LoanConstants.CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
@@ -534,7 +465,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return getActionErrors(loanServiceFacade.validateCashFlowForInstallments(installments, cashFlowForm, repaymentCapacity));
     }
 
-    private boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
+    boolean validateInstallments(HttpServletRequest request, LoanAccountActionForm loanActionForm) throws Exception {
         boolean result = true;
         UserContext userContext = getUserContext(request);
         LoanOfferingBO loanOffering = getLoanOffering(loanActionForm.getPrdOfferingIdValue(), userContext.getLocaleId());
@@ -949,7 +880,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
                 CustomerBO customer = this.customerDao.findCustomerById(customerId);
                 LoanBO loan =  redoLoan(customer, loanAccountForm, disbursementDate, userContext);
-
+                loanBusinessService.computeExtraInterest(loan, DateUtils.currentDate());
                 String loanDisbursementDate = DateUtils.getUserLocaleDate(null, disbursementDate.toDate());
                 SessionUtils.setAttribute("loanDisbursementDate", loanDisbursementDate, request);
                 SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
@@ -958,7 +889,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             List<LoanAccountDetailsDto> accountDetails = loanAccountForm.getClientDetails();
             List<String> selectedClientIds = loanAccountForm.getClients();
 
-            LoanCreationPreviewDto loanPreviewDto = loanAccountServiceFacade.previewLoanCreationDetails(customerId, accountDetails, selectedClientIds);
+            LoanCreationPreviewDto loanPreviewDto = getLoanCreatePreviewDto(customerId, accountDetails, selectedClientIds);
 
             List<BusinessActivityEntity> businessActEntity = retrieveLoanPurposesFromSession(request);
             for (LoanAccountDetailsDto loanAccountDetailsView : loanPreviewDto.getLoanAccountDetailsView()) {
@@ -986,13 +917,18 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return mapping.findForward(forward.name());
     }
 
+    // Method exists to support unit testing
+    LoanCreationPreviewDto getLoanCreatePreviewDto(Integer customerId, List<LoanAccountDetailsDto> accountDetails, List<String> selectedClientIds) {
+        return loanAccountServiceFacade.previewLoanCreationDetails(customerId, accountDetails, selectedClientIds);
+    }
+
     private void setPerspective(HttpServletRequest request, String perspective) {
         if (perspective != null) {
             request.setAttribute(PERSPECTIVE, perspective);
         }
     }
 
-    private LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate, UserContext userContext) {
+    LoanBO redoLoan(CustomerBO customer, LoanAccountActionForm loanAccountActionForm, DateTime disbursementDate, UserContext userContext) {
 
         try {
             boolean isRepaymentIndepOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
@@ -1223,7 +1159,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // lookup_value_locale table associated with the current user context
         // locale
         SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
-                MasterConstants.COLLATERAL_TYPES, getUserContext(request).getLocaleId()).getCustomValueListElements(), request);
+                MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(), request);
         SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
 
@@ -1244,7 +1180,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         // John W - temporarily put back because needed in applychargeaction - update
         // keithW - and for recentAccountNotes
-        LoanBO loan = this.loanDao.findById(loanInformationDto.getAccountId());
+        LoanBO loan = getLoan(loanInformationDto.getAccountId());
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, loan, request);
         setCurrentPageUrl(request, loan);
         setQuestionGroupInstances(request, loan);
@@ -1293,10 +1229,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         Date viewDate = loanAccountActionForm.getScheduleViewDateValue(locale);
 
 
-        LoanBO loan = this.loanDao.findById(loanId);
+        LoanBO loan = getLoan(loanId);
         loan.updateDetails(userContext);
-        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor = DependencyInjectedServiceLocator.locateScheduleCalculatorAdaptor();
-        scheduleCalculatorAdaptor.computeExtraInterest(loan, viewDate);
+        loanBusinessService.computeExtraInterest(loan, viewDate);
 
         OriginalScheduleInfoDto originalSchedule = this.loanServiceFacade.retrieveOriginalLoanSchedule(loanId, locale);
 
@@ -1305,6 +1240,10 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.setAttribute(Constants.VIEW_DATE, viewDate, request);
 
         return mapping.findForward(ActionForwards.getLoanRepaymentSchedule.toString());
+    }
+    // Method exists to support unit testing
+    LoanBO getLoan(Integer loanId) {
+        return loanDao.findById(loanId);
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -1631,12 +1570,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // lookup_value_locale table associated with the current user context
         // locale
         SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
-                MasterConstants.COLLATERAL_TYPES, getUserContext(request).getLocaleId()).getCustomValueListElements(),
+                MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(),
                 request);
 
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
-        masterDataService.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request)
-        .getLocaleId()), request);
+        masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES), request);
         SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
 
         SessionUtils.setAttribute(RECURRENCEID, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum()
@@ -1659,11 +1597,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
             throws ApplicationException {
         request.setAttribute("accountState", loanBO.getState());
         request.setAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
-                MasterConstants.COLLATERAL_TYPES, getUserContext(request).getLocaleId()).getCustomValueListElements());
+                MasterConstants.COLLATERAL_TYPES).getCustomValueListElements());
         request.setAttribute("collateralTypeId", loanBO.getCollateralTypeId());
     }
 
-    private CustomerBO getCustomerFromRequest(final HttpServletRequest request) throws ServiceException {
+    private CustomerBO getCustomerFromRequest(final HttpServletRequest request) {
         String customerId = request.getParameter(CUSTOMER_ID);
         if (isNotEmpty(customerId)) {
             return getCustomer(Integer.valueOf(customerId));
@@ -1674,8 +1612,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void populateGlimAttributes(final HttpServletRequest request, final LoanAccountActionForm loanActionForm,
                                         final String globalAccountNum, final CustomerBO customer) throws PageExpiredException, ServiceException {
         GlimSessionAttributes glimSessionAttributes = getGlimSpecificPropertiesToSet(loanActionForm, globalAccountNum,
-                customer, masterDataService.retrieveMasterEntities(MasterConstants.LOAN_PURPOSES, getUserContext(request)
-                .getLocaleId()));
+                customer, masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES));
         glimSessionAttributes.putIntoSession(request);
     }
 
@@ -1826,7 +1763,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private void setGovernmentIdAndPurpose(final LoanAccountDetailsDto clientDetail, final Short localeId)
             throws ServiceException {
-        clientDetail.setBusinessActivityName(findBusinessActivityName(clientDetail.getBusinessActivity(), localeId));
+        clientDetail.setBusinessActivityName(findBusinessActivityName(clientDetail.getBusinessActivity()));
         clientDetail.setGovermentId(findGovernmentId(getIntegerValue(clientDetail.getClientId())));
     }
 
@@ -1835,7 +1772,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         SessionUtils.removeAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME, request);
         if (loanAccountActionForm.getBusinessActivityIdValue() != null) {
             SessionUtils.setAttribute(MasterConstants.BUSINESS_ACTIVITIE_NAME, getNameForBusinessActivityEntity(
-                    loanAccountActionForm.getBusinessActivityIdValue(), localeId), request);
+                    loanAccountActionForm.getBusinessActivityIdValue()), request);
         }
     }
 
@@ -1845,10 +1782,8 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return StringUtils.isBlank(governmentId) ? "-" : governmentId;
     }
 
-    private String findBusinessActivityName(final String businessActivity, final Short localeId)
-            throws ServiceException {
-        List<ValueListElement> businessActEntity = masterDataService.retrieveMasterEntities(
-                MasterConstants.LOAN_PURPOSES, localeId);
+    private String findBusinessActivityName(final String businessActivity) {
+        List<ValueListElement> businessActEntity = masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES);
         for (ValueListElement busact : businessActEntity) {
 
             if (busact.getId().toString().equals(businessActivity)) {
@@ -1978,9 +1913,9 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         return loanPrdBusinessService.getLoanOffering(loanOfferingId, localeId);
     }
 
-    private String getNameForBusinessActivityEntity(final Integer entityId, final Short localeId) throws Exception {
+    private String getNameForBusinessActivityEntity(final Integer entityId) throws Exception {
         if (entityId != null) {
-            return masterDataService.retrieveMasterEntities(entityId, localeId);
+            return new MasterPersistence().getMessageForLookupEntity(entityId);
         }
         return "";
     }

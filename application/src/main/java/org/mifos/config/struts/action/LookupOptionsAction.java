@@ -206,7 +206,7 @@ public class LookupOptionsAction extends BaseAction {
     private void populateConfigurationListBox(String configurationEntity, MasterPersistence masterPersistence,
             Short localeId, HttpServletRequest request, LookupOptionsActionForm lookupOptionsActionForm,
             String configurationEntityConst) throws Exception {
-        CustomValueDto valueList = masterPersistence.getLookUpEntity(configurationEntity, localeId);
+        CustomValueDto valueList = masterPersistence.getLookUpEntity(configurationEntity);
         Short valueListId = valueList.getEntityId();
         // save this value and will be retrieved when update the data to db
         SessionUtils.setAttribute(configurationEntityConst, valueListId, request);

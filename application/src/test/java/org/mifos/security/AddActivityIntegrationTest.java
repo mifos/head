@@ -31,6 +31,7 @@ import junit.framework.Assert;
 import org.hibernate.Session;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.accounts.business.AddAccountAction;
 import org.mifos.application.master.business.LookUpEntity;
@@ -64,11 +65,13 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
 
     }
 
+    @Ignore
     @Test
     public void testStartFromStandardStore() throws Exception {
         upgradeAndCheck();
     }
 
+    @Ignore
     @Test
     public void testStartFromSystemWithAddedLookupValues() throws Exception {
 
@@ -130,6 +133,7 @@ public class AddActivityIntegrationTest extends MifosIntegrationTestCase {
         Assert.assertFalse(AddAccountAction.validateLookupValueKey(format, invalidKey));
     }
 
+    @Ignore
     @Test
     public void testConstructorTest() throws Exception {
         Connection conn =session.connection();

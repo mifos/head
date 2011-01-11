@@ -40,7 +40,7 @@ import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.AccountExceptionConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.holiday.business.service.HolidayService;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.business.service.ConfigurationBusinessService;
 import org.mifos.customers.business.CustomerBO;
@@ -52,13 +52,20 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanBusinessService implements BusinessService {
 
-    private LoanPersistence loanPersistence;
-    private ConfigurationBusinessService configService;
+    private LoanPersistence loanPersistence = new LoanPersistence();
+    private ConfigurationBusinessService configService = new ConfigurationBusinessService();
+
+    @Autowired
     private AccountBusinessService accountBusinessService;
+
+    @Autowired
     private HolidayService holidayService;
+
+    @Autowired
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
 
 
@@ -83,15 +90,11 @@ public class LoanBusinessService implements BusinessService {
         return accountBusinessService;
     }
 
-    /**
-     * Use {@link org.mifos.application.servicefacade.DependencyInjectedServiceLocator} to create instances of this service.
-     * Does not instantiate HolidayService & ScheduleCalculatorAdaptor.
-     */
-    @Deprecated
-    public LoanBusinessService() {
-        this(new LoanPersistence(), new ConfigurationBusinessService(),
-                new AccountBusinessService(), DependencyInjectedServiceLocator.locateHolidayService(),
-                DependencyInjectedServiceLocator.locateScheduleCalculatorAdaptor());
+    // Spring requires this
+    // Autowired can be used at the constructor but
+    // constructor is possing some non bean dependencies so for now
+    // we use property bean injection instead of construct-arg
+    protected LoanBusinessService() {
     }
 
     public LoanBusinessService(LoanPersistence loanPersistence, ConfigurationBusinessService configService,
@@ -283,7 +286,7 @@ public class LoanBusinessService implements BusinessService {
         if (dailyInterestRatesApplicable(loanScheduleGenerationDto, loanBO)) {
             loanScheduleGenerationDto.setInstallments(installments);
             applyDailyInterestRates(loanScheduleGenerationDto);
-            loanBO.copyInstallmentSchedule(installments);
+            loanBO.updateInstallmentSchedule(installments);
         }
         return installments;
     }

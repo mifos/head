@@ -134,4 +134,8 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
     public String getInstallmentNumber() {
         return this.installment.getInstallmentNumberAsString();
     }
+
+    public boolean hasNoTransactionDate() {
+        return !hasTransactionDate();
+    }
 }

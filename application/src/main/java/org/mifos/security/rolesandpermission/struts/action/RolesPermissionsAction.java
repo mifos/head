@@ -35,7 +35,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.application.admin.servicefacade.RolesPermissionServiceFacade;
 import org.mifos.application.admin.system.ShutdownManager;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.business.service.PersonnelBusinessService;
@@ -59,7 +59,7 @@ import org.mifos.security.util.UserContext;
 
 public class RolesPermissionsAction extends BaseAction {
 
-    private final RolesPermissionServiceFacade rolesPermissionServiceFacade = DependencyInjectedServiceLocator.locateRolesPermissionServiceFacade();
+    private final RolesPermissionServiceFacade rolesPermissionServiceFacade = ApplicationContextProvider.getBean(RolesPermissionServiceFacade.class);
     @Override
     protected BusinessService getService() throws ServiceException {
         return ServiceFactory.getInstance().getBusinessService(BusinessServiceName.RolesPermissions);

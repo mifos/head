@@ -20,7 +20,11 @@
 
 package org.mifos.framework.persistence;
 
-import org.hibernate.Hibernate;
+import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Map;
+
 import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -33,11 +37,6 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 /**
  * This class is intended to be replaced by <b>SessionPersistence</b> which
@@ -68,6 +67,20 @@ public abstract class Persistence {
         return object;
     }
 
+    public Object save(final Object object) throws PersistenceException {
+        try {
+            Session session = StaticHibernateUtil.getSessionTL();
+            session.saveOrUpdate(object);
+            if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
+                StaticHibernateUtil.getInterceptor().createChangeValueMap(object);
+            }
+        } catch (Exception e) { // including exceptions *not* from hibernate!
+            throw new PersistenceException(e);
+        }
+
+        return object;
+    }
+
     public Session getSession() {
         return StaticHibernateUtil.getSessionTL();
     }
@@ -76,6 +89,18 @@ public abstract class Persistence {
         Session session = StaticHibernateUtil.getSessionTL();
         try {
             StaticHibernateUtil.startTransaction();
+            session.delete(object);
+        } catch (Exception he) {
+            throw new PersistenceException(he);
+        }
+    }
+
+    /**
+     * assumes transactionality is controlled by caller of method.
+     */
+    public void deleteInTransaction(final Object object) throws PersistenceException {
+        Session session = StaticHibernateUtil.getSessionTL();
+        try {
             session.delete(object);
         } catch (Exception he) {
             throw new PersistenceException(he);

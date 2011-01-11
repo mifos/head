@@ -49,6 +49,7 @@ import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
@@ -424,7 +425,7 @@ public class MultipleLoanAccountsCreationActionStrutsTest extends MifosMockStrut
 
         List<String> accountNumbers = ((List<String>) request.getAttribute(LoanConstants.ACCOUNTS_LIST));
         Assert.assertEquals(1, accountNumbers.size());
-        LoanBO loan = new LoanBusinessService().findBySystemId(accountNumbers.get(0));
+        LoanBO loan = ApplicationContextProvider.getBean(LoanBusinessService.class).findBySystemId(accountNumbers.get(0));
         Assert.assertEquals(loanOffering.getEligibleLoanAmountSameForAllLoan().getDefaultLoanAmount().toString(), loan
                 .getLoanAmount().toString());
         Assert.assertEquals(loanOffering.getDefInterestRate(), loan.getInterestRate());

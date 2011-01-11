@@ -243,6 +243,10 @@
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
+            <artifactId>mifos-domain-dto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
             <artifactId>mifos-accounting</artifactId>
         </dependency>
         <dependency>
@@ -260,6 +264,14 @@
         <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-cashflow</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-abstract-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-organization</artifactId>
         </dependency>
         <dependency>
             <groupId>org.mifos</groupId>
@@ -1040,6 +1052,7 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- 
             <plugin>
                 <groupId>org.mifos.maven</groupId>
                 <artifactId>mifos-settings-sanitizer</artifactId>
@@ -1058,6 +1071,7 @@
                     </execution>
                 </executions>
             </plugin>
+            -->
             <plugin>
                 <groupId>org.codehaus.groovy.maven</groupId>
                 <artifactId>gmaven-plugin</artifactId>

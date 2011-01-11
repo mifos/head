@@ -212,7 +212,7 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
         collectionSheetRetrieveSavingsAccountsUtils.createSampleCenterHierarchy();
 
         // retrieve the collection sheet for today
-        CollectionSheetService collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
+        CollectionSheetService collectionSheetService = ApplicationContextProvider.getBean(CollectionSheetService.class);
         CollectionSheetDto collectionSheet = collectionSheetService.retrieveCollectionSheet(
                 collectionSheetRetrieveSavingsAccountsUtils.getCenter().getCustomerId(), transactionDate);
 

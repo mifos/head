@@ -129,7 +129,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         // stubbing
         when(masterDataEntity.getId()).thenReturn(paymentTypeId);
         when(masterDataEntity.getName()).thenReturn(paymentTypeName);
-        when(masterPersistence.retrieveMasterEntities(PaymentTypeEntity.class, Short.valueOf("1"))).thenReturn(
+        when(masterPersistence.findMasterDataEntitiesWithLocale(PaymentTypeEntity.class, Short.valueOf("1"))).thenReturn(
                 paymentTypeEntities);
 
         // exercise test

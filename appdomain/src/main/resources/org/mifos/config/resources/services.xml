@@ -2,7 +2,9 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-	<bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl"/>
+   <bean id="mifosAuthenticationAuthorizationService" class="org.mifos.security.AuthenticationAuthorizationServiceFacadeImpl">
+    	<constructor-arg ref="personnelDao" />
+    </bean>
 
 	<bean id="viewOrganizationSettingsServiceFacade" class="org.mifos.application.admin.business.service.ViewOrganizationSettingsServiceFacadeWebTier"/>
 	<bean id="appliedUpgradesServiceFacade" class="org.mifos.application.admin.business.service.AppliedUpgradesServiceFacadeWebTier">
@@ -35,6 +37,7 @@
     	<constructor-arg ref="officeDao" />
         <constructor-arg ref="customerDao" />
     	<constructor-arg ref="personnelDao" />
+        <constructor-arg ref="applicationConfigurationDao" />
     </bean>
 
     <bean id="RolesPermissionServiceFacade" class="org.mifos.application.servicefacade.RolesPermissionServiceFacadeWebTier"/>
@@ -68,6 +71,8 @@
     	<constructor-arg ref="scheduleCalculatorAdaptor" />
     	<constructor-arg ref="loanBusinessService" />
     </bean>
+    
+    <bean id="collectionSheetService" class="org.mifos.application.servicefacade.CollectionSheetServiceImpl"/>
     
     <bean id="savingsServiceFacade" class="org.mifos.application.servicefacade.SavingsServiceFacadeWebTier" >
         <constructor-arg ref="savingsDao" />
@@ -167,11 +172,11 @@
     <bean id="surveysPersistence" class="org.mifos.customers.surveys.persistence.SurveysPersistence" />
 
     <bean name="qgFlowsService" class="org.mifos.application.questionnaire.service.QGFlowsServiceImpl"/>
+ 
+	<bean name="auditLogService" class="org.mifos.framework.components.audit.business.service.AuditLogServiceImpl"/>
 
-    <bean name="questionnaireMigration" class="org.mifos.application.questionnaire.migration.QuestionnaireMigration"/>
-
-    <bean name="questionnaireMigrationMapper" class="org.mifos.application.questionnaire.migration.mappers.QuestionnaireMigrationMapperImpl"/>
-
+	<bean name="questionnaireServiceFacade" class="org.mifos.platform.questionnaire.service.QuestionnaireServiceFacadeImpl"/>
+	
     <bean name="installmentFormatValidator" class="org.mifos.accounts.loan.business.service.validators.InstallmentFormatValidatorImpl"/>
 
     <bean name="listOfInstallmentsValidator" class="org.mifos.accounts.loan.business.service.validators.ListOfInstallmentsValidatorImpl"/>

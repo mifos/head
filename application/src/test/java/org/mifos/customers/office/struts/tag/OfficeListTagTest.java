@@ -34,7 +34,6 @@ import junitx.framework.StringAssert;
 import org.dom4j.DocumentException;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.exceptions.OfficeException;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -42,14 +41,11 @@ import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
+import org.mifos.framework.MifosSpringBasedUnitTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.security.util.UserContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/org/mifos/config/resources/messageSourceBean.xml"})
 public class OfficeListTagTest {
 
     private XmlBuilder result;

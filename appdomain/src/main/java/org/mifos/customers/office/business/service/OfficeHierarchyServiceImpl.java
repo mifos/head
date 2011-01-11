@@ -22,6 +22,7 @@ package org.mifos.customers.office.business.service;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpEntity;
@@ -110,12 +111,22 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
 
             for (OfficeLevelEntity entity : changedOfficeLabels) {
                 officeDao.save(entity);
-                MessageLookup.getInstance().updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), entity.getLookUpValue().getMessageText());
+                LookUpValueEntity lookupValue = entity.getLookUpValue();
+                String messageText = lookupValue.getMessageText();
+                if (StringUtils.isBlank(messageText)) {
+                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                }
+                MessageLookup.getInstance().updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), messageText);
             }
 
             for (GracePeriodTypeEntity entity : gracePeriods) {
                 applicationConfigurationDao.save(entity);
-                MessageLookup.getInstance().updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), entity.getLookUpValue().getMessageText());
+                LookUpValueEntity lookupValue = entity.getLookUpValue();
+                String messageText = lookupValue.getMessageText();
+                if (StringUtils.isBlank(messageText)) {
+                    messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+                }
+                MessageLookup.getInstance().updateLookupValueInCache(entity.getLookUpValue().getLookUpName(), messageText);
             }
 
             for (LookUpEntity entity : lookupEntities) {

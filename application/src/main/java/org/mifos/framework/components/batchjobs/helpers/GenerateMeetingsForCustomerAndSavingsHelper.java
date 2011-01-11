@@ -31,7 +31,7 @@ import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.config.GeneralConfig;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -46,7 +46,7 @@ import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDat
 
 public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
-    private final HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+    private HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
     private final AccountPersistence accountPersistence = new AccountPersistence();
 
     private List<Days> workingDays;

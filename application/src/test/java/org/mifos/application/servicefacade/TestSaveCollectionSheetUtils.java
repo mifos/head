@@ -112,7 +112,7 @@ public class TestSaveCollectionSheetUtils {
     private MifosCurrency currency;
 
     public TestSaveCollectionSheetUtils() {
-        collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
+        collectionSheetService = ApplicationContextProvider.getBean(CollectionSheetService.class);
         currency = Money.getDefaultCurrency();
         userContext = TestUtils.makeUser();
     }

@@ -66,7 +66,7 @@ import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerBOTestUtils;
@@ -432,7 +432,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 
         new DateTimeService().setCurrentDateTime(dateWhenMeetingWillBeChanged.toDateTimeAtStartOfDay());
 
-        CustomerService customerService = DependencyInjectedServiceLocator.locateCustomerService();
+        CustomerService customerService = ApplicationContextProvider.getBean(CustomerService.class);
 
         MeetingUpdateRequest meetingUpdateRequest = new MeetingUpdateRequest(center.getCustomerId(), center.getVersionNo(), newMeeting.getRecurrenceType().getValue(),
                 newMeeting.getMeetingPlace(),

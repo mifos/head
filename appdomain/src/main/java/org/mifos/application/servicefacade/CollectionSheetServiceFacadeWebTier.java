@@ -25,6 +25,7 @@ import java.util.List;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
@@ -36,6 +37,8 @@ import org.mifos.config.ClientRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
+import org.mifos.customers.personnel.business.PersonnelLevelEntity;
+import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.api.CustomerLevel;
@@ -48,18 +51,26 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Default implementation of {@link CollectionSheetServiceFacade}.
  */
 public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServiceFacade {
 
-    private final OfficePersistence officePersistence;
-    private final MasterPersistence masterPersistence;
-    private final PersonnelPersistence personnelPersistence;
-    private final CustomerPersistence customerPersistence;
+    private OfficePersistence officePersistence = new OfficePersistence();
+    private MasterPersistence masterPersistence = new MasterPersistence();
+    private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
+    private CustomerPersistence customerPersistence = new CustomerPersistence();
     private final CollectionSheetService collectionSheetService;
     private final CollectionSheetDtoTranslator collectionSheetTranslator;
+
+    @Autowired
+    public CollectionSheetServiceFacadeWebTier(final CollectionSheetService collectionSheetService,
+            final CollectionSheetDtoTranslator collectionSheetTranslator) {
+        this.collectionSheetService = collectionSheetService;
+        this.collectionSheetTranslator = collectionSheetTranslator;
+    }
 
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
             final MasterPersistence masterPersistence, final PersonnelPersistence personnelPersistence,
@@ -86,7 +97,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         final Short backDatedTransactionAllowed = Constants.NO;
 
         try {
-            final List<PaymentTypeEntity> paymentTypesList = masterPersistence.retrieveMasterEntities(
+            final List<PaymentTypeEntity> paymentTypesList = masterPersistence.findMasterDataEntitiesWithLocale(
                     PaymentTypeEntity.class, Short.valueOf("1"));
             paymentTypesDtoList = convertToPaymentTypesListItemDto(paymentTypesList);
 
@@ -198,8 +209,6 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
             return translatedGridView;
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
-        } catch (ApplicationException e) {
-            throw new MifosRuntimeException(e);
         }
     }
 
@@ -243,6 +252,17 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private List<ListItem<Short>> convertToPaymentTypesListItemDto(final List<? extends MasterDataEntity> paymentTypesList) {
         List<ListItem<Short>> paymentTypesDtoList = new ArrayList<ListItem<Short>>();
         for (MasterDataEntity paymentType : paymentTypesList) {
+
+            if (paymentType instanceof PersonnelStatusEntity) {
+                String name = MessageLookup.getInstance().lookup(paymentType.getLookUpValue());
+                ((PersonnelStatusEntity) paymentType).setName(name);
+            }
+
+            if (paymentType instanceof PersonnelLevelEntity) {
+                String name = MessageLookup.getInstance().lookup(paymentType.getLookUpValue());
+                ((PersonnelLevelEntity) paymentType).setName(name);
+            }
+
             paymentTypesDtoList.add(new ListItem<Short>(paymentType.getId(), paymentType.getName()));
         }
         return paymentTypesDtoList;

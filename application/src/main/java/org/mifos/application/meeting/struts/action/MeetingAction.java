@@ -21,6 +21,7 @@
 package org.mifos.application.meeting.struts.action;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.struts.actionforms.MeetingActionForm;
@@ -36,6 +38,7 @@ import org.mifos.application.meeting.util.helpers.MeetingConstants;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.api.CustomerLevel;
@@ -61,9 +64,20 @@ public class MeetingAction extends BaseAction {
             setValuesInActionForm(form1, meeting);
         }
 
-        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules().getWorkingDays(), request);
+        List<WeekDay> workingDays = getLocalizedWorkingDays();
+
+        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST, workingDays, request);
         SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST, RankOfDay.getRankOfDayList(), request);
         return mapping.findForward(ActionForwards.load_success.toString());
+    }
+
+    private List<WeekDay> getLocalizedWorkingDays() {
+        List<WeekDay> workingDays = new FiscalCalendarRules().getWorkingDays();
+        for (WeekDay workDay : workingDays) {
+            String weekdayName = MessageLookup.getInstance().lookup(workDay.getPropertiesKey());
+            workDay.setWeekdayName(weekdayName);
+        }
+        return workingDays;
     }
 
     @TransactionDemarcate(joinToken = true)
@@ -84,7 +98,9 @@ public class MeetingAction extends BaseAction {
         CustomerBO customer = this.customerDao.findCustomerById(customerInSession.getCustomerId());
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customer, request);
-        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST, new FiscalCalendarRules().getWorkingDays(), request);
+
+        List<WeekDay> workingDays = getLocalizedWorkingDays();
+        SessionUtils.setCollectionAttribute(MeetingConstants.WEEKDAYSLIST, workingDays, request);
         SessionUtils.setCollectionAttribute(MeetingConstants.WEEKRANKLIST, RankOfDay.getRankOfDayList(), request);
 
         ActionForward forward = null;

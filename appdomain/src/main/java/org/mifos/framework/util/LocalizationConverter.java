@@ -287,7 +287,9 @@ public class LocalizationConverter {
         for (int i = 0; i < number.length(); i++) {
             if (!Character.isDigit(number.charAt(i))) {
                 char charAt = number.charAt(i);
-                if (charAt == decimalFormatSymbol || (allowNegativeValue && charAt == minusSign)) continue;
+                if (charAt == decimalFormatSymbol || (allowNegativeValue && charAt == minusSign)) {
+                    continue;
+                }
                 error = ConversionError.NOT_ALL_NUMBER;
                 errors.add(error);
                 return errors;
@@ -380,7 +382,6 @@ public class LocalizationConverter {
         }
 
         return getDateSeparator(dateLocale, DateFormat.SHORT);
-
     }
 
     public String getDateSeparator(Locale dateLocale, int dateFormat) {

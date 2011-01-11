@@ -28,19 +28,11 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.customers.office.business.OfficeBO;
-import org.mifos.customers.office.business.OfficeTemplate;
-import org.mifos.customers.office.business.OfficeTemplateImpl;
-import org.mifos.customers.office.exceptions.OfficeException;
-import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.TestUtils;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.exceptions.ValidationException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.util.UserContext;
 
 public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -59,32 +51,6 @@ public class OfficePersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private OfficePersistence getOfficePersistence() {
         return this.officePersistence;
-    }
-
-    @Test
-    public void testCreateOffice() throws Exception {
-        long transactionCount = getStatisticsService().getSuccessfulTransactionCount();
-            UserContext userContext = TestUtils.makeUser();
-            OfficeTemplate template = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
-            OfficeBO office = getOfficePersistence().createOffice(userContext, template);
-
-            Assert.assertNotNull(office.getOfficeId());
-            Assert.assertTrue(office.isActive());
-        Assert.assertTrue(transactionCount == getStatisticsService().getSuccessfulTransactionCount());
-    }
-
-    @Test
-    public void testCreateOfficeValidationFailure() throws PersistenceException, OfficeException {
-        UserContext userContext = TestUtils.makeUser();
-        OfficeTemplateImpl template = OfficeTemplateImpl.createNonUniqueOfficeTemplate(OfficeLevel.BRANCHOFFICE);
-        template.setParentOfficeId(new Short((short) -1));
-        try {
-            OfficeBO office = getOfficePersistence().createOffice(userContext, template);
-            Assert.fail("Office " + office.getOfficeName() + "should not have been successfully created");
-        } catch (ValidationException e) {
-            // This is what we're expecting here.
-            Assert.assertTrue(e.getMessage().equals(OfficeConstants.PARENTOFFICE));
-        }
     }
 
     @Test

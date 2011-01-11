@@ -29,8 +29,6 @@ import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -293,13 +291,14 @@ public class DateUtils {
 
     // parse new-style browser date format... separate m,d,y fields, no js
     // assembling
-    public static java.sql.Date parseBrowserDateFields(HttpServletRequest request, String property)
-            throws InvalidDateException {
-        String yearStr = request.getParameter(property + "YY");
-        String monthStr = request.getParameter(property + "MM");
-        String dayStr = request.getParameter(property + "DD");
-        return parseBrowserDateFields(yearStr, monthStr, dayStr);
-    }
+    // FIXME - KEITHW - removed as don't want httpServletRequest here, create 'web specific' date utils class if needed.
+//    public static java.sql.Date parseBrowserDateFields(HttpServletRequest request, String property)
+//            throws InvalidDateException {
+//        String yearStr = request.getParameter(property + "YY");
+//        String monthStr = request.getParameter(property + "MM");
+//        String dayStr = request.getParameter(property + "DD");
+//        return parseBrowserDateFields(yearStr, monthStr, dayStr);
+//    }
 
     public static java.sql.Date parseBrowserDateFields(String yearStr, String monthStr, String dayStr)
             throws InvalidDateException {

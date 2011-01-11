@@ -100,8 +100,6 @@ import org.mifos.security.util.UserContext;
  */
 public class BulkEntryActionStrutsTest extends MifosMockStrutsTestCase {
 
-
-
     /*
      * Setting this to true fixes the printing of stack traces to standard out, but seems to cause failures (MySQL threw
      * a "Deadlock found when trying to get lock; try restarting transaction" exception) only if

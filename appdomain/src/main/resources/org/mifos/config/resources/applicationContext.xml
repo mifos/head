@@ -10,4 +10,10 @@
     <import resource="hibernate-daos.xml" />
     <import resource="services.xml" />
 
+    <bean id="applicationContextProvider" class="org.mifos.application.servicefacade.ApplicationContextProvider">
+         <property name="applicationContextHolder" ref="applicationContextHolder" />
+    </bean>
+    
+    <bean id="applicationContextHolder" class="org.mifos.application.servicefacade.ApplicationContextHolder"/>
+
 </beans>

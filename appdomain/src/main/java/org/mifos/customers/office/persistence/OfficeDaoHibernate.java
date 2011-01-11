@@ -28,10 +28,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.util.helpers.ConfigurationConstants;
@@ -66,6 +68,11 @@ public class OfficeDaoHibernate implements OfficeDao {
     @Override
     public void save(OfficeLevelEntity entity) {
         this.genericDao.createOrUpdate(entity);
+    }
+
+    @Override
+    public void save(OfficeBO office) {
+        this.genericDao.createOrUpdate(office);
     }
 
     @SuppressWarnings("unchecked")
@@ -162,27 +169,33 @@ public class OfficeDaoHibernate implements OfficeDao {
         OfficeLevelDto officeLevels = new OfficeLevelDto();
         for (OfficeLevelEntity officeLevelEntity : officeLevelEntities) {
 
+            LookUpValueEntity lookupValue = officeLevelEntity.getLookUpValue();
+            String messageText = lookupValue.getMessageText();
+            if (StringUtils.isBlank(messageText)) {
+                messageText = MessageLookup.getInstance().lookup(lookupValue.getPropertiesKey());
+            }
+
             OfficeLevel level = OfficeLevel.getOfficeLevel(officeLevelEntity.getId());
             switch (level) {
             case HEADOFFICE:
                 officeLevels.setHeadOfficeEnabled(officeLevelEntity.isConfigured());
-                officeLevels.setHeadOfficeNameKey(officeLevelEntity.getLookUpValue().getMessageText());
+                officeLevels.setHeadOfficeNameKey(messageText);
                 break;
             case REGIONALOFFICE:
                 officeLevels.setRegionalOfficeEnabled(officeLevelEntity.isConfigured());
-                officeLevels.setRegionalOfficeNameKey(officeLevelEntity.getLookUpValue().getMessageText());
+                officeLevels.setRegionalOfficeNameKey(messageText);
                 break;
             case SUBREGIONALOFFICE:
                 officeLevels.setSubRegionalOfficeEnabled(officeLevelEntity.isConfigured());
-                officeLevels.setSubRegionalOfficeNameKey(officeLevelEntity.getLookUpValue().getMessageText());
+                officeLevels.setSubRegionalOfficeNameKey(messageText);
                 break;
             case AREAOFFICE:
                 officeLevels.setAreaOfficeEnabled(officeLevelEntity.isConfigured());
-                officeLevels.setAreaOfficeNameKey(officeLevelEntity.getLookUpValue().getMessageText());
+                officeLevels.setAreaOfficeNameKey(messageText);
                 break;
             case BRANCHOFFICE:
                 officeLevels.setBranchOfficeEnabled(officeLevelEntity.isConfigured());
-                officeLevels.setBranchOfficeNameKey(officeLevelEntity.getLookUpValue().getMessageText());
+                officeLevels.setBranchOfficeNameKey(messageText);
                 break;
             default:
                 break;

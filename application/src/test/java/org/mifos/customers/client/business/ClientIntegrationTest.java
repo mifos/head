@@ -534,6 +534,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testUpdateBranchFirstTime() throws Exception {
+        StaticHibernateUtil.closeSession();
         createObjectsForClientTransfer();
         Assert.assertNull(client.getActiveCustomerMovement());
 
@@ -549,6 +550,7 @@ public class ClientIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testUpdateBranchSecondTime() throws Exception {
+        StaticHibernateUtil.closeSession();
         createObjectsForClientTransfer();
         Assert.assertNull(client.getActiveCustomerMovement());
         OfficeBO oldOffice = client.getOffice();

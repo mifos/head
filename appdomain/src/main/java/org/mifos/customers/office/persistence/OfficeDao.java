@@ -41,6 +41,8 @@ public interface OfficeDao {
 
     OfficeDto findOfficeDtoById(Short officeId);
 
+    void save(OfficeBO officeBO);
+
     void save(OfficeLevelEntity entity);
 
     List<OfficeDto> findAllOffices();

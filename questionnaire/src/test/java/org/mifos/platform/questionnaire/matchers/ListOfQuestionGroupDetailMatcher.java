@@ -23,6 +23,7 @@ import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Assert;
 import org.mifos.platform.questionnaire.service.QuestionGroupDetail;
+import org.mifos.platform.questionnaire.matchers.QuestionGroupDetailMatcher;
 
 import java.util.List;
 

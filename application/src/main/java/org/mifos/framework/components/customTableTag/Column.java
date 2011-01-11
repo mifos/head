@@ -48,8 +48,6 @@ public class Column {
 
     private LinkDetails linkDetails = null;
 
-    private MifosConfiguration labelConfig = MifosConfiguration.getInstance();
-
     public void setLinkDetails(LinkDetails linkDetails) {
         this.linkDetails = linkDetails;
     }

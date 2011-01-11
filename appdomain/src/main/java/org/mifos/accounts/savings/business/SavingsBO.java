@@ -70,7 +70,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.calendar.CalendarEvent;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ProcessFlowRules;
@@ -341,7 +341,7 @@ public class SavingsBO extends AccountBO {
     @Deprecated
     private void goActiveForFristTimeAndGenerateSavingsSchedule(final CustomerBO customer) throws AccountException {
 
-        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+        HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
 
         CalendarEvent futureCalendarEventsApplicableToOffice = holidayDao.findCalendarEventsForThisYearAndNext(customer
                 .getOfficeId());

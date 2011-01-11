@@ -26,13 +26,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.commons.lang.StringUtils;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.exceptions.ConfigurationException;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
+import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.config.util.helpers.LabelKey;
 
 /**
@@ -46,6 +49,8 @@ import org.mifos.config.util.helpers.LabelKey;
 public class MifosConfiguration {
 
     private Map<LabelKey, String> labelCache;
+
+    private ApplicationConfigurationDao applicationConfigurationDao = ApplicationContextProvider.getBean(ApplicationConfigurationDao.class);
 
     private static final MifosConfiguration configuration = new MifosConfiguration();
 
@@ -75,20 +80,23 @@ public class MifosConfiguration {
 
     public void initializeLabelCache() {
         labelCache.clear();
-        ApplicationConfigurationPersistence configurationPersistence = new ApplicationConfigurationPersistence();
 
-        List<LookUpValueEntity> lookupValueEntities = configurationPersistence.getLookupValues();
+        List<LookUpValueEntity> lookupValueEntities = applicationConfigurationDao.findLookupValues();
         for (LookUpValueEntity lookupValueEntity : lookupValueEntities) {
             String keyString = lookupValueEntity.getPropertiesKey();
             if (keyString == null) {
                 keyString = " ";
             }
 
-            labelCache.put(new LabelKey(keyString, MasterDataEntity.CUSTOMIZATION_LOCALE_ID), lookupValueEntity
-                    .getMessageText());
+            String messageText = lookupValueEntity.getMessageText();
+            if (StringUtils.isBlank(messageText)) {
+                messageText = MessageLookup.getInstance().lookup(keyString);
+            }
+
+            labelCache.put(new LabelKey(keyString, MasterDataEntity.CUSTOMIZATION_LOCALE_ID), messageText);
         }
 
-        List<LookUpEntity> entities = configurationPersistence.getLookupEntities();
+        List<LookUpEntity> entities = applicationConfigurationDao.findLookupEntities();
         for (LookUpEntity entity : entities) {
             Set<LookUpLabelEntity> labels = entity.getLookUpLabels();
             for (LookUpLabelEntity label : labels) {

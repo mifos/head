@@ -19,19 +19,7 @@
  */
 package org.mifos.accounts.loan.business;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.mifos.framework.TestUtils.RUPEE;
-import static org.mifos.framework.TestUtils.getDate;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Date;
-
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +40,19 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Date;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.mifos.framework.TestUtils.RUPEE;
+import static org.mifos.framework.TestUtils.getDate;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 @RunWith(MockitoJUnitRunner.class)
 public class LoanScheduleEntityTest {
     @Mock
@@ -62,6 +63,8 @@ public class LoanScheduleEntityTest {
     private AccountPaymentEntity accountPayment;
     @Mock
     private LoanPersistence loanPersistence;
+    @Mock
+    private AccountPaymentEntity accountPaymentEntity;
 
     private LoanScheduleEntity loanScheduleEntity;
     private Date paymentDate;
@@ -298,7 +301,32 @@ public class LoanScheduleEntityTest {
         assertThat(loanScheduleEntity.getInterestPaidAsDouble(), is(0d));
         assertThat(loanScheduleEntity.getExtraInterestPaidAsDouble(), is(0d));
     }
-    
+
+    @Test
+    public void shouldNotPopulateComputedInterestForPAWDEPAdjustmentForFutureInstallment() {
+        loanScheduleEntity.setAccount(loanBO);
+        when(loanBO.getCurrency()).thenReturn(RUPEE);
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
+        when(accountPayment.getAccount()).thenReturn(loanBO);
+        LoanTrxnDetailEntity loanReverseTrxn = new LoanTrxnDetailEntity(accountPayment,
+                AccountActionTypes.LOAN_ADJUSTMENT, Short.valueOf("1"), paymentDate,
+                personnel, paymentDate,
+                makeMoney(280), "test for loan adjustment", null, makeMoney(-14.06),
+                makeMoney(-2.5), makeMoney(0), makeMoney(0), makeMoney(0), null, loanPersistence);
+        loanScheduleEntity.setInterest(makeMoney(14.96d));
+        loanScheduleEntity.setPrincipalPaid(makeMoney(14.06d));
+        loanScheduleEntity.setInterestPaid(makeMoney(2.5d));
+        loanScheduleEntity.setExtraInterestPaid(makeMoney(0d));
+        loanScheduleEntity.setPenaltyPaid(makeMoney(0d));
+        loanScheduleEntity.setMiscPenaltyPaid(makeMoney(0d));
+        loanScheduleEntity.setMiscFeePaid(makeMoney(0d));
+        loanScheduleEntity.updatePaymentDetailsForAdjustment(loanReverseTrxn);
+        assertThat(loanScheduleEntity.getPrincipalPaidAsDouble(), is(0d));
+        assertThat(loanScheduleEntity.getInterest().getAmount().doubleValue(), is(14.96d));
+        assertThat(loanScheduleEntity.getInterestPaidAsDouble(), is(0d));
+        assertThat(loanScheduleEntity.getExtraInterestPaidAsDouble(), is(0d));
+    }
+
     @Test
     public void shouldPopulateComputedInterestForNormalAdjustment() {
         loanScheduleEntity.setAccount(loanBO);
@@ -323,6 +351,30 @@ public class LoanScheduleEntityTest {
         assertThat(loanScheduleEntity.getInterestPaidAsDouble(), is(0d));
         assertThat(loanScheduleEntity.getExtraInterestPaidAsDouble(), is(0d));
     }
+
+    @Test
+    public void testRecordAdjustmentSinglePaymentExists() {
+        loanScheduleEntity.setAccount(loanBO);
+        when(loanBO.getLastPmntToBeAdjusted()).thenReturn(null);
+        loanScheduleEntity.recordForAdjustment();
+        Assert.assertEquals(PaymentStatus.UNPAID, loanScheduleEntity.getPaymentStatusAsEnum());
+        Assert.assertNull(loanScheduleEntity.getPaymentDate());
+        verify(loanBO, Mockito.times(1)).getLastPmntToBeAdjusted();
+    }
+
+    @Test
+    public void testRecordAdjustmentWhenMultiplePaymentsExist() {
+        loanScheduleEntity.setAccount(loanBO);
+        when(loanBO.getLastPmntToBeAdjusted()).thenReturn(accountPaymentEntity);
+        Date dateOfPaymentPriorToAdjustedOne = new Date();
+        when(accountPaymentEntity.getPaymentDate()).thenReturn(dateOfPaymentPriorToAdjustedOne);
+        loanScheduleEntity.recordForAdjustment();
+        Assert.assertEquals(PaymentStatus.UNPAID, loanScheduleEntity.getPaymentStatusAsEnum());
+        Assert.assertEquals(dateOfPaymentPriorToAdjustedOne, loanScheduleEntity.getPaymentDate());
+        verify(accountPaymentEntity, Mockito.times(1)).getPaymentDate();
+        verify(loanBO, Mockito.times(1)).getLastPmntToBeAdjusted();
+    }
+
 
     private LoanFeeScheduleEntity getFee(int id, double amount, double amountPaid) {
         LoanFeeScheduleEntity loanFeeScheduleEntity = new LoanFeeScheduleEntity();

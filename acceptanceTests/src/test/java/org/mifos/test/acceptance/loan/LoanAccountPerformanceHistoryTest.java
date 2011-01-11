@@ -20,15 +20,31 @@
 
 package org.mifos.test.acceptance.loan;
 
+import org.dbunit.dataset.IDataSet;
+import org.joda.time.DateTime;
+import org.mifos.framework.util.DbUnitUtilities;
+import org.mifos.test.acceptance.framework.AppLauncher;
+import org.mifos.test.acceptance.framework.HomePage;
+import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
+import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanConfirmationPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanPage;
+import org.mifos.test.acceptance.framework.loan.RepayLoanParameters;
+import org.mifos.test.acceptance.framework.search.SearchResultsPage;
+import org.mifos.test.acceptance.remote.DateTimeUpdaterRemoteTestingService;
+import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.test.context.ContextConfiguration;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@SuppressWarnings("PMD")
 @ContextConfiguration(locations={"classpath:ui-test-context.xml"})
 @Test(sequential=true, groups={"loan","acceptance","ui","smoke"})
 public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
-/*
+
     private static final String CLIENT_PERFORMANCE_HISTORY = "CLIENT_PERF_HISTORY";
     private AppLauncher appLauncher;
 
@@ -59,7 +75,6 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException") // one of the dependent methods throws Exception
     public void repayLoanAndVerifyPerformanceHistory() throws Exception {
-
         initRemote.dataLoadAndCacheRefresh(dbUnitUtilities, "acceptance_small_003_dbunit.xml", dataSource, selenium);
 
         // find the loan w/ id 000100000000048
@@ -83,5 +98,4 @@ public class LoanAccountPerformanceHistoryTest extends UiTestCaseBase {
 
         dbUnitUtilities.verifyTable(CLIENT_PERFORMANCE_HISTORY, databaseDataSet, expectedDataSet);
     }
-*/
 }

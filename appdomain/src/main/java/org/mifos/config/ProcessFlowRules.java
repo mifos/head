@@ -24,7 +24,7 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.customers.business.CustomerStatusEntity;
@@ -122,7 +122,7 @@ public class ProcessFlowRules {
 
     private static void initClientPendingApprovalState() throws ConfigurationException {
 
-        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
         CustomerStatusEntity cse = customerDao.findClientPendingStatus();
 
         boolean fromDb = isClientPendingApprovalStateEnabledOnDatabaseConfiguration(cse);
@@ -163,7 +163,7 @@ public class ProcessFlowRules {
 
     private static void initGroupPendingApprovalState() throws ConfigurationException {
 
-        CustomerDao customerDao = DependencyInjectedServiceLocator.locateCustomerDao();
+        CustomerDao customerDao = ApplicationContextProvider.getBean(CustomerDao.class);
         CustomerStatusEntity cse = customerDao.findGroupPendingStatus();
 
         boolean fromDb = isGroupPendingApprovalStateEnabledOnDatabaseConfiguration(cse);

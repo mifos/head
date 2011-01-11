@@ -36,8 +36,8 @@ import org.mifos.framework.util.helpers.MifosSelectHelper;
 
 public class MifosPropertyMessageResources extends PropertyMessageResources {
 
-    private final Map dbMap_labels = new ConcurrentHashMap();
-    private final Map dbMap_Values = new ConcurrentHashMap();
+    private final Map<BundleKey, String> dbMap_labels = new ConcurrentHashMap<BundleKey, String>();
+    private final Map<BundleKey, Collection> dbMap_Values = new ConcurrentHashMap<BundleKey, Collection>();
     private final MasterPersistence dao = new MasterPersistence();
 
     public MifosPropertyMessageResources(final MessageResourcesFactory factory, final String config, final boolean returnNull) {
@@ -60,12 +60,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
     public String getMessage(final Locale locale, final String key) {
 
         String returnVal = null;
-
-        // try to get the value from the PropertyMessageResources
         returnVal = super.getMessage(locale, key);
-
-        // logger.debug("The value from the super call is - " + (returnVal ==
-        // null ? "null" : returnVal) );
         if (returnVal == null) {
             // try to get from the local hashmap
             try {
@@ -81,14 +76,14 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
         }
 
         if (returnVal == null) {
-            returnVal = (String) dbMap_labels.get(new BundleKey(locale, key));
+            returnVal = dbMap_labels.get(new BundleKey(locale, key));
         }
 
         if (returnVal == null) {
             // try to get it from the database
             try {
 
-                CustomValueDto entity = getEntity(locale, key);
+                CustomValueDto entity = getEntity( key);
                 if (entity != null) {
                     returnVal = entity.getEntityLabel();
                     // put it into hash map for further use
@@ -110,19 +105,15 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
      * Only used in one method (LabelTagUtils.getCustomValueListElements), which
      * may never be called
      */
-    public Collection getCustomValueListElements(final Locale locale, final String key, final String mappingKey) {
+    public Collection<?> getCustomValueListElements(final Locale locale, final String key, final String mappingKey) {
 
-        Collection returnVal = null;
-        // try to get from the local hashmap
-        returnVal = (Collection) dbMap_Values.get(new BundleKey(locale, key));
+        Collection<?> returnVal = null;
+        returnVal = dbMap_Values.get(new BundleKey(locale, key));
 
         if (returnVal == null) {
-            // try to get it from the database
-            try {
-                short locale_id = dao.getLocaleId(locale);
                 CustomValueDto entity = null;
                 if (mappingKey == null || mappingKey.equals("")) {
-                    entity = dao.getLookUpEntity(key, locale_id);
+                    entity = dao.getLookUpEntity(key);
                 } else {
                     String[] mappingValues = MifosSelectHelper.getInstance().getValue(mappingKey);
                     if (mappingValues != null && mappingValues.length == 2) {
@@ -133,11 +124,6 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
                     returnVal = entity.getCustomValueListElements();
                     dbMap_Values.put(new BundleKey(locale, key), returnVal);
                 }
-
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-
         }
         return returnVal;
     }
@@ -146,15 +132,9 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
      * Only called from one place: MifosPropertyMessageResources.getMessage in
      * order to get a label.
      */
-    public CustomValueDto getEntity(final Locale locale, final String key) {
+    public CustomValueDto getEntity(final String key) {
         CustomValueDto entity = null;
-        try {
-            short locale_id = dao.getLocaleId(locale);
-            entity = dao.getLookUpEntity(key, locale_id);
-        } catch (Exception e) {
-            // logger.error(e.getMessage());
-        }
-
+        entity = dao.getLookUpEntity(key);
         return entity;
 
     }

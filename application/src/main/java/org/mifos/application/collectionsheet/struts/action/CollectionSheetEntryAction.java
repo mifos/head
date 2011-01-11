@@ -40,6 +40,7 @@ import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionF
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetDataDto;
 import org.mifos.application.collectionsheet.util.helpers.CollectionSheetEntryConstants;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CollectionSheetDataViewAssembler;
 import org.mifos.application.servicefacade.CollectionSheetEntryDecomposedDto;
 import org.mifos.application.servicefacade.CollectionSheetEntryFormDto;
@@ -47,8 +48,8 @@ import org.mifos.application.servicefacade.CollectionSheetEntryFormDtoDecorator;
 import org.mifos.application.servicefacade.CollectionSheetEntryViewTranslator;
 import org.mifos.application.servicefacade.CollectionSheetErrorsDto;
 import org.mifos.application.servicefacade.CollectionSheetFormEnteredDataDto;
+import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.application.servicefacade.CollectionSheetServiceFacade;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
 import org.mifos.application.servicefacade.FormEnteredDataAssembler;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.business.Configuration;
@@ -72,8 +73,7 @@ public class CollectionSheetEntryAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(CollectionSheetEntryAction.class);
 
-    private final CollectionSheetServiceFacade collectionSheetServiceFacade = DependencyInjectedServiceLocator
-            .locateCollectionSheetServiceFacade();
+    private final CollectionSheetServiceFacade collectionSheetServiceFacade = ApplicationContextProvider.getBean(CollectionSheetServiceFacade.class);
 
     public CollectionSheetEntryAction() {
     }

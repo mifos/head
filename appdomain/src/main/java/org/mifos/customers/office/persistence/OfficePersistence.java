@@ -47,24 +47,6 @@ public class OfficePersistence extends Persistence {
         super();
     }
 
-    public OfficeBO createOffice(UserContext userContext, OfficeTemplate office) throws OfficeException,
-            PersistenceException, ValidationException {
-        OfficeBO parentOffice = null;
-        if (office.getParentOfficeId() != null) {
-            parentOffice = this.getOffice(office.getParentOfficeId());
-            if (parentOffice == null) {
-                throw new ValidationException(OfficeConstants.PARENTOFFICE);
-            }
-        }
-
-        OfficeBO officeBO = new OfficeBO(userContext, office.getOfficeLevel(), parentOffice, office
-                .getCustomFieldViews(), office.getOfficeName(), office.getShortName(), office.getOfficeAddress(),
-                office.getOperationMode());
-        officeBO.save();
-
-        return officeBO;
-    }
-
     /**
      * @deprecated see {@link OfficeDao}.
      */

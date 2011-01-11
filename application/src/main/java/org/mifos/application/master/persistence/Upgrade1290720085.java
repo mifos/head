@@ -49,7 +49,7 @@ public class Upgrade1290720085 extends Upgrade {
         logMessage(" - migrating surveys...");
         migrateSurveys();
         logMessage("    - took " + (new DateTimeService().getCurrentDateTime().getMillis() - time1) + " msec");
-        
+
         time1 = new DateTimeService().getCurrentDateTime().getMillis();
         logMessage(" - migrating additional fields...");
         migrateAdditionalFields();
@@ -78,7 +78,8 @@ public class Upgrade1290720085 extends Upgrade {
             // workaround for LatestTestAfterCheckpointIntegrationTest
             upgradeContext = new ClassPathXmlApplicationContext(
                                     "classpath:/org/mifos/config/resources/applicationContext.xml",
-                                    "classpath:META-INF/spring/QuestionnaireContext.xml");
+                                    "classpath:META-INF/spring/QuestionnaireContext.xml",
+                                    "classpath:/org/mifos/config/resources/apponly-services.xml");
         }
         super.setUpgradeContext(upgradeContext);
         initializeDependencies();

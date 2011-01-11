@@ -28,17 +28,18 @@ import java.util.List;
 import java.util.Locale;
 
 import junit.framework.Assert;
-import junit.framework.TestCase;
+
 import junitx.framework.ObjectAssert;
 
+import org.junit.Test;
 import org.mifos.core.ClasspathResource;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.exceptions.TableTagParseException;
-import org.testng.annotations.Test;
 
-@Test(groups={"unit", "fastTestsSuite"},  dependsOnGroups={"productMixTestSuite"})
-public class TableTagParserTest extends TestCase {
 
+public class TableTagParserTest {
+
+    @Test
     public void testParserFailure() {
         TableTagParser tableTagParser = new TableTagParser();
         try {
@@ -50,6 +51,7 @@ public class TableTagParserTest extends TestCase {
         }
     }
 
+    @Test
     public void testParser() throws Exception {
         Table table = TableTagParser.getInstance().parser(
                 ClasspathResource.getURI("org/mifos/framework/util/resources/customTableTag/example.xml").toString());
@@ -86,6 +88,7 @@ public class TableTagParserTest extends TestCase {
 
     }
 
+    @Test
     public void testActionParam() throws Exception {
         ActionParam actionParam = new ActionParam();
         actionParam.setName("officeName");
@@ -96,6 +99,7 @@ public class TableTagParserTest extends TestCase {
 
     }
 
+    @Test
     public void testLinkDetails() throws Exception {
         LinkDetails linkDetails = new LinkDetails();
         linkDetails.setAction("Load");
@@ -109,6 +113,7 @@ public class TableTagParserTest extends TestCase {
 
     }
 
+    @Test
     public void testRow() throws Exception {
 
         Row row = new Row();

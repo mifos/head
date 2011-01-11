@@ -158,7 +158,7 @@ public class StandardAccountService implements AccountService {
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = this.loanPersistence.getAccount(accountPaymentParametersDto.getAccountId());
 
-            PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().getMasterDataEntity(
+            PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().findMasterDataEntity(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
             Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
             Date receiptDate = null;

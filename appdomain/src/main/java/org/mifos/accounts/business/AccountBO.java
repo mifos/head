@@ -58,7 +58,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.customers.business.CustomerAccountBO;
@@ -1166,7 +1166,7 @@ public class AccountBO extends AbstractBusinessObject {
             DateTime startFromMeetingDate = new DateTime(meeting.getMeetingStartDate());
 
             if (adjustForHolidays) {
-                HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+                HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
                 holidays = holidayDao.findAllHolidaysFromDateAndNext(getOffice().getOfficeId(), startFromMeetingDate.toLocalDate().toString());
             }
 
@@ -1197,23 +1197,6 @@ public class AccountBO extends AbstractBusinessObject {
         removeInstallmentsNeedNotPay(installmentToSkip, installmentDates);
         return installmentDates;
     }
-
-    // @Deprecated
-    // protected final List<FeeInstallment> getFeeInstallments(final List<InstallmentDate> installmentDates)
-    // throws AccountException {
-    // List<FeeInstallment> feeInstallmentList = new ArrayList<FeeInstallment>();
-    // for (AccountFeesEntity accountFeesEntity : getAccountFees()) {
-    // if (accountFeesEntity.isActive()) {
-    // Short accountFeeType = accountFeesEntity.getFees().getFeeFrequency().getFeeFrequencyType().getId();
-    // if (accountFeeType.equals(FeeFrequencyType.ONETIME.getValue())) {
-    // feeInstallmentList.add(handleOneTime(accountFeesEntity, installmentDates));
-    // } else if (accountFeeType.equals(FeeFrequencyType.PERIODIC.getValue())) {
-    // feeInstallmentList.addAll(handlePeriodic(accountFeesEntity, installmentDates));
-    // }
-    // }
-    // }
-    // return feeInstallmentList;
-    // }
 
     /**
      *
@@ -1250,7 +1233,7 @@ public class AccountBO extends AbstractBusinessObject {
         MeetingBO customerMeeting = getCustomer().getCustomerMeetingValue();
 
         List<Days> workingDays = new FiscalCalendarRules().getWorkingDaysAsJodaTimeDays();
-        HolidayDao holidayDao = DependencyInjectedServiceLocator.locateHolidayDao();
+        HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
         List<Holiday> holidays;
         if (adjustForHolidays) {
             holidays = holidayDao.findAllHolidaysThisYearAndNext(getOffice().getOfficeId());
@@ -1695,7 +1678,9 @@ public class AccountBO extends AbstractBusinessObject {
     }
 
     private void changeActionDateOfFirstInstallment(Calendar date, Set<AccountActionDateEntity> accountActionDates) {
-        if (accountActionDates.isEmpty()) return;
+        if (accountActionDates.isEmpty()) {
+            return;
+        }
         java.sql.Date actionDate = new java.sql.Date(date.getTimeInMillis());
         accountActionDates.toArray(new AccountActionDateEntity[accountActionDates.size()])[0].setActionDate(actionDate);
     }

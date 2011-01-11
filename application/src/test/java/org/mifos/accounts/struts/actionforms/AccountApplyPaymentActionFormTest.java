@@ -54,7 +54,7 @@ public class AccountApplyPaymentActionFormTest {
     public void paymentDateCannotBePriorToLastPaymentDate() throws Exception {
         accountApplyPaymentActionForm.setLastPaymentDate(new DateTime().withDate(2010, 10, 13).toDate());
         ActionErrors actionErrors = accountApplyPaymentActionForm.validatePaymentDate("12/10/2010", "accounts.date_of_trxn");
-        Assert.assertNotNull(actionErrors.get(AccountConstants.ERROR_PAYMENT_DATE_BEFORE_LAST_PAYMENT));
+        Assert.assertEquals(1,actionErrors.size());
     }
 
     @Test

@@ -67,7 +67,6 @@ import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.business.service.MasterDataService;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -382,13 +381,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
                     .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
 
-            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES,
-                    userContext.getLocaleId());
+            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
             // Business activities got in getPrdOfferings also but only for glim.
-            List<ValueListElement> loanPurposes = new MasterDataService().retrieveMasterEntities(
-                    MasterConstants.LOAN_PURPOSES, userContext.getLocaleId());
+            List<ValueListElement> loanPurposes = new MasterPersistence().findValueListElements(MasterConstants.LOAN_PURPOSES);
 
             MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
                     .getMeetingDetails();
@@ -409,8 +406,6 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             throw new MifosRuntimeException(e);
         } catch (SystemException e) {
             throw new MifosRuntimeException(e);
-        } catch (ApplicationException e) {
-            throw new BusinessRuleException(e.getKey(), e);
         }
     }
 
@@ -537,7 +532,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             installments.add(repaymentScheduleInstallment);
         }
 
-        loan.copyInstallmentSchedule(installments);
+        loan.updateInstallmentSchedule(installments);
     }
 
     private MeetingBO createNewMeetingForRepaymentDay(LocalDate disbursementDate,
@@ -897,20 +892,19 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
 
     BigDecimal interestDueForNextInstallment(BigDecimal totalRepaymentAmount, BigDecimal waivedAmount,
                                              LoanBO loan, boolean waiveInterest) {
-        if (loan.isDecliningBalanceInterestRecalculation()) {
-            if (waiveInterest) {
-                return BigDecimal.ZERO;
+        BigDecimal result = BigDecimal.ZERO;
+        if (!waiveInterest) {
+            if (loan.isDecliningBalanceInterestRecalculation()) {
+                result = totalRepaymentAmount.subtract(waivedAmount);
             } else {
-                return totalRepaymentAmount.subtract(waivedAmount);
-            }
-        } else {
-            if (waiveInterest) {
-                return BigDecimal.ZERO;
-            } else {
-                LoanScheduleEntity nextInstallment = (LoanScheduleEntity) loan.getDetailsOfNextInstallment();
-                return nextInstallment.getInterestDue().getAmount();
+                AccountActionDateEntity nextInstallment = loan.getDetailsOfNextInstallment();
+                if (nextInstallment != null) {
+                    LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) nextInstallment;
+                    result = loanScheduleEntity.getInterestDue().getAmount();
+                }
             }
         }
+        return result;
     }
 
     public LoanInformationDto retrieveLoanInformation(String globalAccountNum) {

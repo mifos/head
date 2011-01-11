@@ -88,6 +88,7 @@ import org.mifos.framework.exceptions.PropertyNotFoundException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.TestObjectPersistence;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
@@ -278,7 +279,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
             if (i == schedules.length - 1) {
                 Money zeroAmount = new Money(getCurrency(), "0");
                 Assert.assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
-                Assert.assertEquals(schedules[i].getPaymentDate(), null);
+                Assert.assertNotNull(schedules[i].getPaymentDate());
                 Assert.assertEquals(schedules[i].isPaid(), false);
             } else {
                 Assert.assertEquals(i + "th installment is still not paid", schedules[i].isPaid(), true);
@@ -381,7 +382,11 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         for (int i = 0; i < schedules.length; i++) {
             Money zeroAmount = new Money(getCurrency(), "0");
             Assert.assertEquals(schedules[i].getPrincipalPaid(), zeroAmount);
-            Assert.assertEquals(schedules[i].getPaymentDate(), null);
+            if (i != schedules.length - 1) {
+                Assert.assertNotNull(schedules[i].getPaymentDate());
+            } else {
+                Assert.assertNull(schedules[i].getPaymentDate());
+            }
             Assert.assertEquals(schedules[i].isPaid(), false);
             verifyScheduleAndPaymentDetail(schedules[i], list.get(i));
         }

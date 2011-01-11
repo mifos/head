@@ -33,7 +33,9 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
+import org.mifos.application.master.business.SupportedLocalesEntity;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.api.CustomerLevel;
@@ -72,10 +74,8 @@ public class ApplicationConfigurationDaoHibernate implements ApplicationConfigur
 
     @SuppressWarnings("unchecked")
     @Override
-    public List<LookUpEntity> findLookupValueTypes() {
-
+    public List<LookUpEntity> findLookupEntities() {
         Session session = StaticHibernateUtil.getSessionTL();
-
         List<LookUpEntity> entities = session.getNamedQuery(NamedQueryConstants.GET_ENTITIES).list();
 
         for (LookUpEntity entity : entities) {
@@ -86,8 +86,50 @@ public class ApplicationConfigurationDaoHibernate implements ApplicationConfigur
                 label.getLocaleId();
             }
         }
-
         return entities;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<LookUpValueEntity> findLookupValues() {
+        List<LookUpValueEntity> values = null;
+
+        Session session = StaticHibernateUtil.getSessionTL();
+        values = session.getNamedQuery(NamedQueryConstants.GET_LOOKUPVALUES).list();
+        if (values != null) {
+            for (LookUpValueEntity value : values) {
+                Set<LookUpValueLocaleEntity> localeValues = value.getLookUpValueLocales();
+                value.getLookUpName();
+                if (localeValues != null) {
+                    for (LookUpValueLocaleEntity locale : localeValues) {
+
+                        locale.getLookUpValue();
+                        locale.getLocaleId();
+                    }
+                }
+
+            }
+        }
+        return values;
+    }
+
+
+    // this method is used by Localization class to load all the supported
+    // locales to its cache
+    @SuppressWarnings("unchecked")
+    public List<SupportedLocalesEntity> findSupportedLocale() {
+        List<SupportedLocalesEntity> locales = null;
+
+        Session session = StaticHibernateUtil.getSessionTL();
+
+        locales = session.getNamedQuery(NamedQueryConstants.SUPPORTED_LOCALE_LIST).list();
+
+        for (SupportedLocalesEntity locale : locales) {
+            locale.getLanguage().getLanguageShortName();
+            locale.getCountry().getCountryShortName();
+            locale.getLocaleId();
+        }
+        return locales;
     }
 
     @SuppressWarnings("unchecked")

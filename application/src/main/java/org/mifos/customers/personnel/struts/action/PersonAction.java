@@ -40,11 +40,11 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.config.Localization;
-import org.mifos.config.persistence.ApplicationConfigurationPersistence;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -236,7 +236,7 @@ public class PersonAction extends SearchAction {
         Short preferredLocale = Localization.getInstance().getLocaleId();
 
         if (getPerefferedLocale(personActionForm, userContext) != null) {
-            for (SupportedLocalesEntity locale : new ApplicationConfigurationPersistence().getSupportedLocale()) {
+            for (SupportedLocalesEntity locale : applicationConfigurationDao.findSupportedLocale()) {
                 if (locale.getLanguage().getLookUpValue().getLookUpId() == getPerefferedLocale(personActionForm, userContext).intValue()) {
                     preferredLocale = getPerefferedLocale(personActionForm, userContext);
                 }
@@ -332,7 +332,7 @@ public class PersonAction extends SearchAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
 
         UserContext userContext = getUserContext(request);
-        List<PersonnelStatusEntity> statuses = getMasterEntities(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
+        List<PersonnelStatusEntity> statuses = new MasterPersistence().findMasterDataEntitiesWithLocale(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
         SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, statuses, request);
 
         OfficeBO loggedInOffice = this.officeDao.findOfficeById(userContext.getBranchId());

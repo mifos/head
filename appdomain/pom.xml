@@ -38,6 +38,18 @@
             <artifactId>mifos-common</artifactId>
         </dependency>
         <dependency>
+	        <groupId>org.mifos</groupId>
+	        <artifactId>mifos-domain-dto</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-abstract-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.mifos</groupId>
+            <artifactId>mifos-organization</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.mifos</groupId>
             <artifactId>mifos-accounting</artifactId>
         </dependency>
@@ -115,10 +127,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-validator</artifactId>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -535,7 +543,6 @@
                 </executions>
             </plugin>
             -->
-            <!-- 
             <plugin>
                 <groupId>org.mifos.maven</groupId>
                 <artifactId>mifos-settings-sanitizer</artifactId>
@@ -554,7 +561,6 @@
                     </execution>
                 </executions>
             </plugin>
-            -->
         </plugins>
     </build>
 </project>

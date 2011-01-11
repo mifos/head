@@ -42,7 +42,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
-import org.mifos.application.servicefacade.DependencyInjectedServiceLocator;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.AccountReferenceDto;
 import org.mifos.dto.domain.CustomerDto;
@@ -64,7 +64,7 @@ public class StandardAccountServiceIntegrationTest extends AccountIntegrationTes
     public void setUp() throws Exception {
         super.setUp();
         StaticHibernateUtil.startTransaction();
-        standardAccountService = DependencyInjectedServiceLocator.locateAccountService();
+        standardAccountService = ApplicationContextProvider.getBean(AccountService.class);
         defaultPaymentType = standardAccountService.getLoanPaymentTypes().get(0);
     }
 

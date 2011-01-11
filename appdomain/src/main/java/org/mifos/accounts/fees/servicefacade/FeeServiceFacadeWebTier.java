@@ -43,10 +43,13 @@ import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.FeeServiceFacade;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.config.AccountingRules;
+import org.mifos.customers.personnel.business.PersonnelLevelEntity;
+import org.mifos.customers.personnel.business.PersonnelStatusEntity;
 import org.mifos.dto.domain.FeeCreateDto;
 import org.mifos.dto.domain.FeeUpdateRequest;
 import org.mifos.dto.screen.FeeDetailsForLoadDto;
@@ -105,6 +108,17 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
     private Map<Short, String> listToMap(List<? extends MasterDataEntity> masterDataEntityList) {
         Map<Short, String> idNameMap = new HashMap<Short, String>();
         for (MasterDataEntity masterDataEntity : masterDataEntityList) {
+
+            if (masterDataEntity instanceof PersonnelStatusEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((PersonnelStatusEntity) masterDataEntity).setName(name);
+            }
+
+            if (masterDataEntity instanceof PersonnelLevelEntity) {
+                String name = MessageLookup.getInstance().lookup(masterDataEntity.getLookUpValue());
+                ((PersonnelLevelEntity) masterDataEntity).setName(name);
+            }
+
             idNameMap.put(masterDataEntity.getId(), masterDataEntity.getName());
         }
         return idNameMap;

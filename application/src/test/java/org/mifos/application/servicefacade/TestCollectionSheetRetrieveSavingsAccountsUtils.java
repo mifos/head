@@ -51,7 +51,7 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 public class TestCollectionSheetRetrieveSavingsAccountsUtils {
 
     public TestCollectionSheetRetrieveSavingsAccountsUtils() {
-        collectionSheetService = DependencyInjectedServiceLocator.locateCollectionSheetService();
+        collectionSheetService = ApplicationContextProvider.getBean(CollectionSheetService.class);
     }
 
     private Boolean onlyCreateCenterAndItsSavingsAccount = false;

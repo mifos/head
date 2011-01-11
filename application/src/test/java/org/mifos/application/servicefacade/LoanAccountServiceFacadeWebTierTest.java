@@ -57,10 +57,7 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -271,6 +268,16 @@ public class LoanAccountServiceFacadeWebTierTest {
         when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(true);
         BigDecimal interestDue = ((LoanAccountServiceFacadeWebTier) loanAccountServiceFacade).
                 interestDueForNextInstallment(BigDecimal.TEN, BigDecimal.ZERO, loanBO, true);
+        assertThat(interestDue.doubleValue(), is(0d));
+    }
+
+    @Test
+    public void interestDueForNextInstallmentShouldReturnZeroIfNextInstallmentIsNull() {
+        LoanScheduleEntity loanScheduleEntity = null;
+        when(loanBO.getDetailsOfNextInstallment()).thenReturn(loanScheduleEntity);
+        when(loanBO.isDecliningBalanceInterestRecalculation()).thenReturn(false);
+        BigDecimal interestDue = ((LoanAccountServiceFacadeWebTier) loanAccountServiceFacade).
+                interestDueForNextInstallment(BigDecimal.TEN, BigDecimal.ZERO, loanBO, false);
         assertThat(interestDue.doubleValue(), is(0d));
     }
 }
