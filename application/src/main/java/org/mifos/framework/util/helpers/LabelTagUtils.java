@@ -111,7 +111,8 @@ public class LabelTagUtils {
             } else if (ConfigurationConstants.SAVINGS.equalsIgnoreCase(key)) {
                 ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
                 message = lookupLabels.getSavings();
-            } else if (ConfigurationConstants.INTEREST.equalsIgnoreCase(key)) {
+            } else if ((ConfigurationConstants.INTEREST.equalsIgnoreCase(key))
+                    || (ConfigurationConstants.SERVICE_CHARGE.equalsIgnoreCase(key))) {
                 ConfigurableLookupLabelDto lookupLabels = populateConfigurableLookupLabels();
                 message = lookupLabels.getInterest();
             } else if (ConfigurationConstants.STATE.equalsIgnoreCase(key)) {
@@ -214,7 +215,8 @@ public class LabelTagUtils {
                 lookupLabels.setAddress2(labelText);
             } else if (entity.getEntityType().equals(ConfigurationConstants.ADDRESS3)) {
                 lookupLabels.setAddress3(labelText);
-            } else if (entity.getEntityType().equals(ConfigurationConstants.INTEREST)) {
+            } else if ((entity.getEntityType().equals(ConfigurationConstants.INTEREST))
+                || (entity.getEntityType().equals(ConfigurationConstants.SERVICE_CHARGE))) {
                 lookupLabels.setInterest(labelText);
             } else if (entity.getEntityType().equals(ConfigurationConstants.EXTERNALID)) {
                 lookupLabels.setExternalId(labelText);

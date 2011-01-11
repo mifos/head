@@ -105,7 +105,7 @@ public class DefineNewLoanProductPreviewPage extends AbstractPage {
     }
 
     public DefineNewLoanProductPreviewPage verifyInterestTypeInPreview(String interestType) {
-        String expectedText = "Interest Rate type: " + interestType;
+        String expectedText = "Interest rate type: " + interestType;
         Assert.assertTrue(selenium.isTextPresent(expectedText), expectedText + " does not exist on page.");
         return this;
     }
