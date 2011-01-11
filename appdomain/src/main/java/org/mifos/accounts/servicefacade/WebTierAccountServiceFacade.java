@@ -54,6 +54,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -67,6 +68,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
 
+    @Autowired
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
                                        AccountBusinessService accountBusinessService,
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,

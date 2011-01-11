@@ -30,12 +30,14 @@ import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.Assert;
 
 public class FundDaoHibernate implements FundDao {
 
     private GenericDao genericDao;
 
+    @Autowired
     public FundDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
     }

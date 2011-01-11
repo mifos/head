@@ -14,11 +14,13 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.dto.domain.SurveyDto;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanDaoHibernate implements LoanDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public LoanDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
     }

@@ -52,6 +52,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -62,6 +63,7 @@ public class SavingsDaoHibernate implements SavingsDao {
 
     private final GenericDao baseDao;
 
+    @Autowired
     public SavingsDaoHibernate(final GenericDao baseDao) {
         this.baseDao = baseDao;
     }

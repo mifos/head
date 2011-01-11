@@ -52,6 +52,7 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticH
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
@@ -59,6 +60,7 @@ public class CheckListServiceFacadeWebTier implements CheckListServiceFacade {
     private final CustomerDao customerDao;
     private HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
     public CheckListServiceFacadeWebTier(CustomerDao customerDao) {
         this.customerDao = customerDao;
     }

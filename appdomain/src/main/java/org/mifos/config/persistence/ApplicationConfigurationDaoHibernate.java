@@ -40,6 +40,7 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ import java.util.Set;
 
 public class ApplicationConfigurationDaoHibernate implements ApplicationConfigurationDao {
 
+    @Autowired
     private final GenericDao genericDao;
 
     public ApplicationConfigurationDaoHibernate(final GenericDao genericDao) {

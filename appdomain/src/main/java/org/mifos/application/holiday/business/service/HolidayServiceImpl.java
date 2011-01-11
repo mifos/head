@@ -30,6 +30,7 @@ import org.mifos.customers.office.persistence.OfficeDao;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -43,6 +44,7 @@ public class HolidayServiceImpl implements HolidayService {
     private final HibernateTransactionHelper hibernateTransactionHelper;
     private final FiscalCalendarRules fiscalCalendarRules;
 
+    @Autowired
     public HolidayServiceImpl(OfficeDao officeDao, HolidayDao holidayDao,
                               HibernateTransactionHelper hibernateTransactionHelper,
                               FiscalCalendarRules fiscalCalendarRules) {

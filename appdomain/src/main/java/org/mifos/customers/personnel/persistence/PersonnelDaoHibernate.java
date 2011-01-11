@@ -53,6 +53,7 @@ import org.mifos.dto.screen.SystemUserSearchResultsDto;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 
@@ -62,6 +63,7 @@ public class PersonnelDaoHibernate implements PersonnelDao {
 
     private static final ResourceBundle activityIdToRolesMap = ResourceBundle.getBundle("org.mifos.security.rolesandpermission.mifos_activity_role");
 
+    @Autowired
     public PersonnelDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
     }

@@ -23,11 +23,13 @@ import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.dto.domain.PrdOfferingDto;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SavingsProductDaoHibernate implements SavingsProductDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public SavingsProductDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }

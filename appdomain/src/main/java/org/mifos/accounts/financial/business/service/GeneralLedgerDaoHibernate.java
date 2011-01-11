@@ -35,11 +35,13 @@ import org.mifos.accounts.financial.util.helpers.FinancialActionConstants;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.NamedQueryConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class GeneralLedgerDaoHibernate implements GeneralLedgerDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public GeneralLedgerDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
     }

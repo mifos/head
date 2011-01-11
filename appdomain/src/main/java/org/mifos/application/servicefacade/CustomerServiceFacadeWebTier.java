@@ -45,6 +45,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
@@ -54,6 +55,7 @@ public class CustomerServiceFacadeWebTier implements CustomerServiceFacade {
     private final CustomerDao customerDao;
     private final CustomerService customerService;
 
+    @Autowired
     public CustomerServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
         this.customerService = customerService;

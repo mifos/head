@@ -29,12 +29,14 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ImportedFilesServiceImpl implements ImportedFilesService {
 
     private ImportedFilesDao importedFileDao;
     private HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
     public ImportedFilesServiceImpl(ImportedFilesDao importedFilesDao) {
         this.importedFileDao = importedFilesDao;
     }

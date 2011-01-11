@@ -36,6 +36,7 @@ import org.mifos.security.MifosUser;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
@@ -47,6 +48,7 @@ public class LoginServiceFacadeWebTier implements NewLoginServiceFacade {
     private final PersonnelDao personnelDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
     public LoginServiceFacadeWebTier(PersonnelService personnelService, PersonnelDao personnelDao) {
         this.personnelService = personnelService;
         this.personnelDao = personnelDao;

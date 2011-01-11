@@ -108,6 +108,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class GroupServiceFacadeWebTier implements GroupServiceFacade {
@@ -118,6 +119,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     private final CustomerService customerService;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
     public GroupServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
         this.customerService = customerService;

@@ -39,6 +39,7 @@ import org.mifos.accounts.fees.util.helpers.FeePayment;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,6 +50,7 @@ public class FeeDaoHibernate implements FeeDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public FeeDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
     }

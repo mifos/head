@@ -132,6 +132,7 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
@@ -147,6 +148,7 @@ public class SavingsServiceFacadeWebTier implements SavingsServiceFacade {
     private CalendarPeriodHelper interestCalculationIntervalHelper = new CalendarPeriodHelper();
     private SavingsInterestScheduledEventFactory savingsInterestScheduledEventFactory = new SavingsInterestScheduledEventFactory();
 
+    @Autowired
     public SavingsServiceFacadeWebTier(SavingsDao savingsDao, SavingsProductDao savingsProductDao, PersonnelDao personnelDao, CustomerDao customerDao, HolidayDao holidayDao) {
         this.savingsDao = savingsDao;
         this.savingsProductDao = savingsProductDao;

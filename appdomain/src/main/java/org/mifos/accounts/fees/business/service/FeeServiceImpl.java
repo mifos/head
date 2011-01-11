@@ -50,6 +50,7 @@ import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FeeServiceImpl implements FeeService {
 
@@ -57,6 +58,7 @@ public class FeeServiceImpl implements FeeService {
     private final GeneralLedgerDao generalLedgerDao;
     private final HibernateTransactionHelper hibernateTransactionHelper;
 
+    @Autowired
     public FeeServiceImpl(FeeDao feeDao, GeneralLedgerDao generalLedgerDao, HibernateTransactionHelper hibernateTransactionHelper) {
         this.feeDao = feeDao;
         this.generalLedgerDao = generalLedgerDao;

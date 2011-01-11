@@ -62,6 +62,7 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * A service class implementation to expose basic functions on loans. As an external API, this class should not expose
@@ -77,6 +78,7 @@ public class StandardAccountService implements AccountService {
     private LoanBusinessService loanBusinessService;
     private HibernateTransactionHelper transactionHelper;
 
+    @Autowired
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
                                   AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
@@ -158,7 +160,7 @@ public class StandardAccountService implements AccountService {
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = this.loanPersistence.getAccount(accountPaymentParametersDto.getAccountId());
 
-            PaymentTypeEntity paymentTypeEntity = (PaymentTypeEntity) new MasterPersistence().findMasterDataEntity(
+            PaymentTypeEntity paymentTypeEntity = new MasterPersistence().findMasterDataEntity(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
             Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
             Date receiptDate = null;

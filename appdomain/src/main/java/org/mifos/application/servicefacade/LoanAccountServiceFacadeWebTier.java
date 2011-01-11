@@ -158,6 +158,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
@@ -184,6 +185,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final LoanBusinessService loanBusinessService;
     private final HibernateTransactionHelper transactionHelper;
 
+    @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
                                            PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao,
                                            AccountService accountService, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,

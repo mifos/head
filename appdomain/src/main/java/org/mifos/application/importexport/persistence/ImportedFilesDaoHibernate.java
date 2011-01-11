@@ -25,11 +25,13 @@ import java.util.Map;
 
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.application.importexport.business.ImportedFilesEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ImportedFilesDaoHibernate implements ImportedFilesDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public ImportedFilesDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }

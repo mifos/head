@@ -79,6 +79,7 @@ import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
@@ -89,6 +90,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     private final ApplicationConfigurationDao applicationConfigurationDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
     public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao) {
         super();
         this.officeDao = officeDao;

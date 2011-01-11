@@ -148,6 +148,7 @@ import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
@@ -163,6 +164,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final GeneralLedgerDao generalLedgerDao;
     private LoanProductAssembler loanProductAssembler;
 
+    @Autowired
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
             MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
             SavingsProductDao savingsProductDao, OfficeDao officeDao,

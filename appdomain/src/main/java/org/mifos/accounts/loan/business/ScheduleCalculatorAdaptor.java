@@ -25,6 +25,7 @@ import org.mifos.accounts.loan.schedule.domain.Schedule;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.helpers.Money;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ScheduleCalculatorAdaptor {
     private ScheduleCalculator scheduleCalculator;
     private ScheduleMapper scheduleMapper;
 
+    @Autowired
     public ScheduleCalculatorAdaptor(ScheduleCalculator scheduleCalculator, ScheduleMapper scheduleMapper) {
         this.scheduleCalculator = scheduleCalculator;
         this.scheduleMapper = scheduleMapper;

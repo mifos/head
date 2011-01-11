@@ -97,6 +97,7 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Default implementation of {@link CustomerService}.
@@ -111,6 +112,7 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerAccountFactory customerAccountFactory = DefaultCustomerAccountFactory.createNew();
     private MessageLookupHelper messageLookupHelper = DefaultMessageLookupHelper.createNew();
 
+    @Autowired
     public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
             HolidayDao holidayDao, final HibernateTransactionHelper hibernateTransactionHelper) {
         this.customerDao = customerDao;

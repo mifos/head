@@ -114,6 +114,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ClientServiceFacadeWebTier implements ClientServiceFacade {
@@ -124,6 +125,7 @@ public class ClientServiceFacadeWebTier implements ClientServiceFacade {
     private final CustomerService customerService;
     private final FeeDao feeDao;
 
+    @Autowired
     public ClientServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao, FeeDao feeDao) {
         this.customerService = customerService;

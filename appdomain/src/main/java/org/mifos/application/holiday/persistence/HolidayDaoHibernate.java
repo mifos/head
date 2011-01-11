@@ -31,6 +31,7 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.util.helpers.OfficeConstants;
 import org.mifos.framework.exceptions.ApplicationException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -42,6 +43,7 @@ public class HolidayDaoHibernate implements HolidayDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public HolidayDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }

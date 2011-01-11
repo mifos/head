@@ -62,6 +62,7 @@ import org.mifos.security.util.OfficeSearch;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
@@ -69,6 +70,7 @@ public class OfficeServiceFacadeWebTier implements OfficeServiceFacade {
     private final OfficeDao officeDao;
     private final HolidayDao holidayDao;
 
+    @Autowired
     public OfficeServiceFacadeWebTier(OfficeDao officeDao, HolidayDao holidayDao) {
         this.officeDao = officeDao;
         this.holidayDao = holidayDao;

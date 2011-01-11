@@ -39,6 +39,7 @@ import org.mifos.framework.components.mifosmenu.MenuRepository;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
 
@@ -46,6 +47,7 @@ public class OfficeHierarchyServiceImpl implements OfficeHierarchyService {
     private final ApplicationConfigurationDao applicationConfigurationDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
     public OfficeHierarchyServiceImpl(OfficeDao officeDao, ApplicationConfigurationDao applicationConfigurationDao) {
         this.officeDao = officeDao;
         this.applicationConfigurationDao = applicationConfigurationDao;
