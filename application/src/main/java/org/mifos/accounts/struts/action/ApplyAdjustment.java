@@ -20,29 +20,27 @@
 
 package org.mifos.accounts.struts.action;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.struts.actionforms.ApplyAdjustmentActionForm;
 import org.mifos.accounts.util.helpers.AccountTypes;
+import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.util.UserContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * This is the action class for applying adjustment. This action is to be merged
@@ -97,29 +95,27 @@ public class ApplyAdjustment extends BaseAction {
         request.setAttribute("method", "applyAdjustment");
         ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
         AccountBO accountBOInSession = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        AccountBO accnt = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-        checkVersionMismatch(accountBOInSession.getVersionNo(), accnt.getVersionNo());
-        UserContext uc = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        accnt.setUserContext(uc);
-        PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(uc.getId());
-        if (accnt.getPersonnel() != null) {
-            getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
-                    accnt.getOffice().getOfficeId(), accnt.getPersonnel().getPersonnelId());
-        } else {
-            getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, uc,
-                    accnt.getOffice().getOfficeId(), uc.getId());
-        }
+        AccountBO accountBO = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+        checkVersionMismatch(accountBOInSession.getVersionNo(), accountBO.getVersionNo());
+        UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
+        accountBO.setUserContext(userContext);
+        checkPermissionForAdjustment(accountBO, userContext);
         try {
-            accnt.adjustLastPayment(appAdjustActionForm.getAdjustmentNote(), loggedInUser);
-            new AccountPersistence().createOrUpdate(accnt);
-            StaticHibernateUtil.commitTransaction();
-        } catch (ApplicationException ae) {
-            StaticHibernateUtil.rollbackTransaction();
+            accountServiceFacade.applyAdjustment(appAdjustActionForm.getGlobalAccountNum(),
+                    appAdjustActionForm.getAdjustmentNote(), userContext.getId());
+        } catch (MifosRuntimeException e) {
             request.setAttribute("method", "previewAdjustment");
-            throw ae;
+            throw new ApplicationException(e);
         }
         resetActionFormFields(appAdjustActionForm);
         return mapping.findForward("applyadj_success");
+    }
+
+    private void checkPermissionForAdjustment(AccountBO accountBO, UserContext userContext) throws ApplicationException {
+        PersonnelBO personnel = accountBO.getPersonnel();
+        Short personnelId = personnel != null? personnel.getPersonnelId() : userContext.getId();
+        getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, userContext,
+                accountBO.getOffice().getOfficeId(), personnelId);
     }
 
     @TransactionDemarcate(validateAndResetToken = true)

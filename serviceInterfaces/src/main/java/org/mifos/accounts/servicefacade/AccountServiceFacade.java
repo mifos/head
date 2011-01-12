@@ -20,14 +20,14 @@
 
 package org.mifos.accounts.servicefacade;
 
-import java.util.Date;
-import java.util.List;
-
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.UserReferenceDto;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * Interface for presentation layer to access accounts
@@ -52,4 +52,7 @@ public interface AccountServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated()")
     void makePayment(AccountPaymentParametersDto accountPaymentParametersDto);
+
+    @PreAuthorize("isFullyAuthenticated()")
+    void applyAdjustment(String globalAccountNum, String adjustmentNote, Short personnelId);
 }

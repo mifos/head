@@ -96,6 +96,8 @@
 
     <bean name="loanPersistence" class="org.mifos.accounts.loan.persistance.LoanPersistence"/>
 
+    <bean name="personnelPersistence" class="org.mifos.customers.personnel.persistence.PersonnelPersistence"/>
+
     <bean name="accountServiceFacade" class="org.mifos.accounts.servicefacade.WebTierAccountServiceFacade" />
 
     <bean name="acceptedPaymentTypePersistence" class="org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence"/>

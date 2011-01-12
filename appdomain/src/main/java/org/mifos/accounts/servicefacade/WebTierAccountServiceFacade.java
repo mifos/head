@@ -20,17 +20,15 @@
 
 package org.mifos.accounts.servicefacade;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
@@ -38,6 +36,8 @@ import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.exceptions.CustomerException;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.dto.domain.AccountPaymentParametersDto;
 import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.domain.UserReferenceDto;
@@ -46,7 +46,6 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
-import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.security.MifosUser;
@@ -56,6 +55,10 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Concrete implementation of service to manipulate accounts from the presentation layer.
@@ -67,17 +70,22 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private AccountBusinessService accountBusinessService;
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
+    private PersonnelPersistence personnelPersistence;
+    private AccountPersistence accountPersistence;
 
     @Autowired
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
                                        AccountBusinessService accountBusinessService,
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
-                                       AcceptedPaymentTypePersistence acceptedPaymentTypePersistence) {
+                                       AcceptedPaymentTypePersistence acceptedPaymentTypePersistence,
+                                       PersonnelPersistence personnelPersistence, AccountPersistence accountPersistence) {
         this.accountService = accountService;
         this.transactionHelper = transactionHelper;
         this.accountBusinessService = accountBusinessService;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
+        this.personnelPersistence = personnelPersistence;
+        this.accountPersistence = accountPersistence;
     }
 
     @Override
@@ -253,5 +261,26 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     @Override
     public void makePayment(AccountPaymentParametersDto accountPaymentParametersDto) {
         this.accountService.makePayment(accountPaymentParametersDto);
+    }
+
+    @Override
+    public void applyAdjustment(String globalAccountNum, String adjustmentNote, Short personnelId) {
+        try {
+            AccountBO accountBO = accountBusinessService.findBySystemId(globalAccountNum);
+            PersonnelBO personnelBO = personnelPersistence.findPersonnelById(personnelId);
+            transactionHelper.startTransaction();
+            accountBO.adjustLastPayment(adjustmentNote, personnelBO);
+            accountPersistence.createOrUpdate(accountBO);
+            transactionHelper.commitTransaction();
+        } catch (ServiceException e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (AccountException e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        } catch (PersistenceException e) {
+            transactionHelper.rollbackTransaction();
+            throw new MifosRuntimeException(e);
+        }
     }
 }

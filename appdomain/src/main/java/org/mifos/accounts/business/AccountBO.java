@@ -20,13 +20,6 @@
 
 package org.mifos.accounts.business;
 
-import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
-import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
 import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -81,6 +74,23 @@ import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import static org.mifos.accounts.util.helpers.AccountTypes.LOAN_ACCOUNT;
+import static org.mifos.accounts.util.helpers.AccountTypes.SAVINGS_ACCOUNT;
 
 public class AccountBO extends AbstractBusinessObject {
 
@@ -486,7 +496,7 @@ public class AccountBO extends AbstractBusinessObject {
         }
     }
 
-    public final void adjustLastPayment(final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
+    public void adjustLastPayment(final String adjustmentComment, PersonnelBO loggedInUser) throws AccountException {
         if (isAdjustPossibleOnLastTrxn()) {
             logger.debug("Adjustment is possible hence attempting to adjust.");
             adjustPayment(getLastPmntToBeAdjusted(), loggedInUser, adjustmentComment);

@@ -19,15 +19,6 @@
  */
 package org.mifos.accounts.servicefacade;
 
-import static java.util.Collections.EMPTY_LIST;
-import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.math.BigDecimal;
-import java.util.Date;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,16 +27,31 @@ import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePer
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTypeEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
+import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.customers.personnel.business.PersonnelBO;
+import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
+import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+import java.util.Date;
+
+import static java.util.Collections.EMPTY_LIST;
+import static org.mifos.framework.util.helpers.TestObjectFactory.TEST_LOCALE;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WebTierAccountServiceFacadeTest {
@@ -65,13 +71,21 @@ public class WebTierAccountServiceFacadeTest {
     @Mock
     private AccountTypeEntity accountTypeEntity;
 
+    @Mock
+    private PersonnelPersistence personnelPersistence;
+    @Mock
+    private AccountPersistence accountPersistence;
+    @Mock
+
+    private HibernateTransactionHelper transactionHelper;
     private WebTierAccountServiceFacade accountServiceFacade;
     private MifosCurrency rupee;
     private static final int LOAN_ID = 1;
 
     @Before
     public void setUp() throws Exception {
-        accountServiceFacade = new WebTierAccountServiceFacade(null, null, accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence){
+        accountServiceFacade = new WebTierAccountServiceFacade(null, transactionHelper,
+                accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence, personnelPersistence, accountPersistence){
             @Override
             void clearSessionAndRollback() {
                 // do nothing
@@ -123,4 +137,20 @@ public class WebTierAccountServiceFacadeTest {
         verify(acceptedPaymentTypePersistence, times(1)).getAcceptedPaymentTypesForATransaction(TEST_LOCALE, transactionId);
     }
 
+    @Test
+    public void shouldAdjustLastPaymentMadeOnAccount() throws ServiceException, AccountException, PersistenceException {
+        String globalAccountNum = "123";
+        String adjustmentNote = "note";
+        Short personnelId = Short.valueOf("1");
+        PersonnelBO personnelBO = mock(PersonnelBO.class);
+        when(accountBusinessService.findBySystemId(globalAccountNum)).thenReturn(loanBO);
+        when(personnelPersistence.findPersonnelById(personnelId)).thenReturn(personnelBO);
+        accountServiceFacade.applyAdjustment(globalAccountNum, adjustmentNote, personnelId);
+        verify(accountBusinessService).findBySystemId(globalAccountNum);
+        verify(personnelPersistence).findPersonnelById(personnelId);
+        verify(loanBO).adjustLastPayment(adjustmentNote, personnelBO);
+        verify(accountPersistence).createOrUpdate(loanBO);
+        verify(transactionHelper).startTransaction();
+        verify(transactionHelper).commitTransaction();
+    }
 }
