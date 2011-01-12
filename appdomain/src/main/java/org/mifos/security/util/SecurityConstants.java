@@ -265,6 +265,8 @@ public interface SecurityConstants {
 
     short LOAN_MODIFY_THE_DEFAULTS_AMOUNT = 112;
 
+    short LOAN_ADJUST_BACK_DATED_TRXNS = 244;
+
     // savings
     short SAVINGS_APPLY_ADJUSTMENT = 186;
 

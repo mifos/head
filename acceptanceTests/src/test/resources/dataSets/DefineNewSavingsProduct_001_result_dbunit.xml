@@ -1786,6 +1786,7 @@
   <lookup_value lookup_id="631" entity_id="87" lookup_name="Permissions-CanRunBatchJobsOnDemand"/>
   <lookup_value lookup_id="632" entity_id="87" lookup_name="Permissions-CanUpdateBatchJobsConfiguration"/>
   <lookup_value lookup_id="633" entity_id="87" lookup_name="Permissions-CanActivateQuestionGroups"/>
+  <lookup_value lookup_id="634" entity_id="87" lookup_name="Permissions-CanAdjustBackDatedTransactions"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
