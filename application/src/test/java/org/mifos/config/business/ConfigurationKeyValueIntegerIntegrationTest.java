@@ -71,7 +71,7 @@ public class ConfigurationKeyValueIntegerIntegrationTest extends MifosIntegratio
             configurationPersistence.addConfigurationKeyValueInteger(TEST_KEY, TEST_VALUE_2);
             Assert.fail("Expected PersistenceException for violating uniqueness constraint on the key.");
         } catch (PersistenceException e) {
-            Assert.assertTrue(e.getMessage().contains("could not insert"));
+            Assert.assertTrue(e.getCause().getMessage().contains("could not insert"));
         }
 
         StaticHibernateUtil.getSessionTL().clear();
