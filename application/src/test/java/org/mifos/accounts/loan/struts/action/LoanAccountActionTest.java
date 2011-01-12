@@ -387,6 +387,14 @@ public class LoanAccountActionTest {
         verify(loanBusinessService, times(1)).computeExtraInterest(Matchers.<LoanBO>any(), Matchers.<Date>any());
     }
 
+    @Test
+    public void previousActionShouldSetPerspective() throws Exception {
+        when(request.getParameter(PERSPECTIVE)).thenReturn("redoLoan");
+        loanAccountAction.previous(mapping, form, request, response);
+        verify(request, times(1)).getParameter(PERSPECTIVE);
+        verify(request, times(1)).setAttribute(PERSPECTIVE, "redoLoan");
+    }
+
 
     private QuestionGroupInstanceDetail getQuestionGroupInstanceDetail(String questionGroupTitle) {
         QuestionGroupInstanceDetail detail = new QuestionGroupInstanceDetail();

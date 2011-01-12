@@ -305,7 +305,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     @TransactionDemarcate(joinToken = true)
     public ActionForward load(final ActionMapping mapping, final ActionForm form, final HttpServletRequest request,
                               @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
-
         LoanAccountActionForm loanActionForm = (LoanAccountActionForm) form;
         loanActionForm.clearDetailsForLoan();
 
@@ -1362,6 +1361,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     public ActionForward previous(final ActionMapping mapping, @SuppressWarnings("unused") final ActionForm form,
                                   @SuppressWarnings("unused") final HttpServletRequest request,
                                   @SuppressWarnings("unused") final HttpServletResponse response) throws Exception {
+        setPerspective(request, request.getParameter(PERSPECTIVE));
         return mapping.findForward(ActionForwards.load_success.toString());
     }
 

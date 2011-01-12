@@ -467,7 +467,7 @@ explanation of the license and how it is applied.
 														</td>
 													</tr>
 												</table>
-												<c:if test="${loanAccountActionForm.variableInstallmentsAllowed}">
+												<c:if test="${loanAccountActionForm.variableInstallmentsAllowed || LoanOffering.decliningBalanceInterestRecalculation}">
 													<span class="fontnormal"> <br> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnScheduleEdit(this.form)">
 														<mifos:mifoslabel name="loan.edit_loan_schedule" />
 													</html-el:button> </span>

@@ -291,6 +291,9 @@ public class CustSearchAction extends SearchAction {
     @TransactionDemarcate(joinToken = true)
     public ActionForward search(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
+        if (request.getParameter("perspective") != null) {
+            request.setAttribute("perspective", request.getParameter("perspective"));
+        }
         ActionForward actionForward = super.search(mapping, form, request, response);
 
         CustSearchActionForm actionForm = (CustSearchActionForm) form;
@@ -316,10 +319,6 @@ public class CustSearchAction extends SearchAction {
             QueryResult customerForSavings = new CustomerPersistence().searchCustForSavings(searchString, userContext.getId());
             SessionUtils.setQueryResultAttribute(Constants.SEARCH_RESULTS, customerForSavings, request);
         }
-        if (request.getParameter("perspective") != null) {
-            request.setAttribute("perspective", request.getParameter("perspective"));
-        }
         return actionForward;
-
     }
 }
