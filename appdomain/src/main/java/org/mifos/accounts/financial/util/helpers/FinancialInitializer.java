@@ -90,7 +90,7 @@ public class FinancialInitializer {
         try {
             coa = ChartOfAccountsConfig.load(coaLocation);
         } catch (ConfigurationException e) {
-            throw new FinancialException(e);
+            throw new FinancialException(coaLocation + " loading failed", e);
         }
 
         AccountPersistence ap = new AccountPersistence();

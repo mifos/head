@@ -24,7 +24,11 @@ import org.mifos.framework.exceptions.ApplicationException;
 
 public class FinancialException extends ApplicationException {
 
-    public FinancialException(String key, Object[] values) {
+    public FinancialException(String key, Object... values) {
+        super(key, values);
+    }
+
+    public FinancialException(String key, Throwable cause, Object... values) {
         super(key, values);
     }
 
