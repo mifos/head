@@ -38,7 +38,7 @@ import org.mifos.accounts.savings.struts.actionforms.SavingsApplyAdjustmentActio
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.savings.util.helpers.SavingsHelper;
 import org.mifos.accounts.util.helpers.AccountTypes;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.domain.SavingsAdjustmentDto;
 import org.mifos.dto.screen.SavingsAdjustmentReferenceDto;
@@ -84,7 +84,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         if (savingsAdjustmentDto.isDepositOrWithdrawal()) {
 
             AccountPaymentEntity lastPayment = savings.findMostRecentPaymentByPaymentDate();
-            AccountActionEntity accountAction = masterPersistence.getPersistentObject(
+            AccountActionEntity accountAction = legacyMasterDao.getPersistentObject(
                     AccountActionEntity.class, new SavingsHelper().getPaymentActionType(lastPayment));
             accountAction.setLocaleId(uc.getLocaleId());
 

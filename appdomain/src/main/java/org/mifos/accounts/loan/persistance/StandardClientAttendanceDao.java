@@ -22,7 +22,7 @@ package org.mifos.accounts.loan.persistance;
 
 import org.hibernate.Session;
 import org.joda.time.LocalDate;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -38,7 +38,7 @@ import java.util.Map;
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
     @Autowired
-    private MasterPersistence masterPersistence;
+    private LegacyMasterDao legacyMasterDao;
 
     @Override
     @SuppressWarnings("unchecked")
@@ -49,7 +49,7 @@ public class StandardClientAttendanceDao implements ClientAttendanceDao {
         queryParameters.put("BRANCH_ID", branchId);
         queryParameters.put("SEARCH_ID", searchId + ".%");
         queryParameters.put("MEETING_DATE", meetingDate.toDateMidnight().toDate());
-        return masterPersistence.executeNamedQuery("ClientAttendance.getAttendanceForClientsOnMeetingDate",
+        return legacyMasterDao.executeNamedQuery("ClientAttendance.getAttendanceForClientsOnMeetingDate",
                 queryParameters);
     }
 

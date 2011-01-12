@@ -25,7 +25,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.reports.struts.actionforms.ReportsCategoryActionForm;
@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @Override
     protected void setStrutsConfig() {
@@ -321,10 +321,10 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     public ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
         LookUpValueEntity anLookUp = new LookUpValueEntity();
-        LookUpEntity lookUpEntity = masterPersistence.getPersistentObject(LookUpEntity.class, Short
+        LookUpEntity lookUpEntity = legacyMasterDao.getPersistentObject(LookUpEntity.class, Short
                 .valueOf((short) LookUpEntity.ACTIVITY));
         anLookUp.setLookUpEntity(lookUpEntity);
-        ActivityEntity parent = masterPersistence.getPersistentObject(ActivityEntity.class, (short) 13);
+        ActivityEntity parent = legacyMasterDao.getPersistentObject(ActivityEntity.class, (short) 13);
         ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);
         rpp.createOrUpdate(anLookUp);
         rpp.createOrUpdate(activityEntity);

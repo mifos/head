@@ -44,7 +44,7 @@ import org.mifos.application.collectionsheet.util.helpers.CollectionSheetConstan
 import org.mifos.application.servicefacade.CollectionSheetService;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
 /**
  * no longer used in relation to Collection sheet functionality
@@ -52,7 +52,7 @@ import org.mifos.framework.persistence.Persistence;
  * @see CollectionSheetService#retrieveCollectionSheet(Integer, LocalDate)
  */
 @Deprecated
-public class CollectionSheetPersistence extends Persistence {
+public class CollectionSheetPersistence extends LegacyGenericDao {
 
     public CollectionSheetPersistence() {
         super();

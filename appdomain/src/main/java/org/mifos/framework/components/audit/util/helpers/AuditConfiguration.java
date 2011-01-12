@@ -29,7 +29,7 @@ import java.util.PropertyResourceBundle;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
@@ -64,7 +64,7 @@ public class AuditConfiguration {
 
     private List<Short> locales;
 
-    private MasterPersistence masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
+    private LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
     public static AuditConfiguration auditConfigurtion = new AuditConfiguration();
 
@@ -281,7 +281,7 @@ public class AuditConfiguration {
     }
 
     private void fetchMasterData(String entityName, Short localeId) throws SystemException {
-        List<ValueListElement> businessActivityList = masterPersistence
+        List<ValueListElement> businessActivityList = legacyMasterDao
                 .findValueListElements(entityName);
         for (ValueListElement businessActivityEntity : businessActivityList) {
             valueMap.put(businessActivityEntity.getId().toString(), businessActivityEntity.getName());
@@ -295,7 +295,7 @@ public class AuditConfiguration {
         } catch (ClassNotFoundException e) {
             throw new SystemException(e);
         }
-        List<MasterDataEntity> masterDataList = masterPersistence.findMasterDataEntities(clazz);
+        List<MasterDataEntity> masterDataList = legacyMasterDao.findMasterDataEntities(clazz);
         for (MasterDataEntity masterDataEntity : masterDataList) {
             masterDataEntity.setLocaleId(localeId);
 

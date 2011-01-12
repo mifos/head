@@ -34,9 +34,9 @@ import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class AuditConfigurationPersistence extends Persistence {
+public class AuditConfigurationPersistence extends LegacyGenericDao {
 
     public Map<String, String> retrieveAllCustomFieldsDefinition(Short localeId) throws PersistenceException {
         Map<String, String> valueMap = new HashMap<String, String>();

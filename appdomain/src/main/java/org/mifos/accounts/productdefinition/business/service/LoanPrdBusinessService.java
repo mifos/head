@@ -37,7 +37,7 @@ import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
@@ -47,7 +47,7 @@ import org.mifos.security.util.UserContext;
 
 public class LoanPrdBusinessService implements BusinessService {
 
-    MasterPersistence masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
+    LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
     @Override
     public AbstractBusinessObject getBusinessObject(@SuppressWarnings("unused") final UserContext userContext) {
@@ -72,7 +72,7 @@ public class LoanPrdBusinessService implements BusinessService {
      */
     @Deprecated
     public List<? extends MasterDataEntity> getLoanApplicableCustomerTypes(final Short localeId) throws ServiceException {
-        List<PrdApplicableMasterEntity> applList = masterPersistence.findMasterDataEntitiesWithLocale(PrdApplicableMasterEntity.class, localeId);
+        List<PrdApplicableMasterEntity> applList = legacyMasterDao.findMasterDataEntitiesWithLocale(PrdApplicableMasterEntity.class, localeId);
         if (applList != null) {
             for (Iterator<PrdApplicableMasterEntity> iter = applList.iterator(); iter.hasNext();) {
                 MasterDataEntity masterData = iter.next();

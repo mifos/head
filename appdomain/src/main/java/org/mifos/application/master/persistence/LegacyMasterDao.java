@@ -45,7 +45,7 @@ import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
@@ -54,9 +54,9 @@ import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
  * {@link MasterDataEntity} in the database. Most of what is here can better be
  * accomplished by enums and by {@link MessageLookup}.
  */
-public class MasterPersistence extends Persistence {
+public class LegacyMasterDao extends LegacyGenericDao {
 
-    private MasterPersistence() {
+    private LegacyMasterDao() {
     }
 
     /**

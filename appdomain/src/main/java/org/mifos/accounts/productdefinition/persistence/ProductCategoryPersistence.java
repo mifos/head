@@ -30,9 +30,9 @@ import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class ProductCategoryPersistence extends Persistence {
+public class ProductCategoryPersistence extends LegacyGenericDao {
 
     public Short getMaxPrdCategoryId() throws PersistenceException {
         return (Short) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTCATEGORIES_MAX, null);

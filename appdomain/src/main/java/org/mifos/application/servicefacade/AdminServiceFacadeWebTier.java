@@ -82,7 +82,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -166,7 +166,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
 
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
@@ -1050,7 +1050,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     private <T extends MasterDataEntity> List<T> getMasterEntities(Class<T> type, Short localeId) {
-        return masterPersistence.findMasterDataEntitiesWithLocale(type, localeId);
+        return legacyMasterDao.findMasterDataEntitiesWithLocale(type, localeId);
     }
 
     private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,

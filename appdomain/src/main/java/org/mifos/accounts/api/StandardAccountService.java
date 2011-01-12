@@ -42,7 +42,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -79,7 +79,7 @@ public class StandardAccountService implements AccountService {
     private HibernateTransactionHelper transactionHelper;
 
     @Autowired
-    private MasterPersistence masterPersistence;
+    private LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
@@ -163,7 +163,7 @@ public class StandardAccountService implements AccountService {
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = this.loanPersistence.getAccount(accountPaymentParametersDto.getAccountId());
 
-            PaymentTypeEntity paymentTypeEntity = masterPersistence.getPersistentObject(
+            PaymentTypeEntity paymentTypeEntity = legacyMasterDao.getPersistentObject(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
             Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
             Date receiptDate = null;

@@ -52,7 +52,7 @@ import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryDto;
 import org.mifos.application.collectionsheet.business.CollectionSheetEntryGridDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ListItem;
@@ -94,7 +94,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
     private SavingsBO clientSavingsAccount;
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @After
     public void tearDown() throws Exception {
@@ -158,7 +158,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
         // Assert that the extracted attendance types are the ones expected
         final String[] EXPECTED_ATTENDANCE_TYPES = { "P", "A", "AA", "L" };
-        List<CustomValueListElementDto> attendanceTypesCustomValueList = masterPersistence.getCustomValueList(
+        List<CustomValueListElementDto> attendanceTypesCustomValueList = legacyMasterDao.getCustomValueList(
                 MasterConstants.ATTENDENCETYPES,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements();

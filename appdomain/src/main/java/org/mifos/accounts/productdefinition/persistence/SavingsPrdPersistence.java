@@ -33,9 +33,9 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class SavingsPrdPersistence extends Persistence {
+public class SavingsPrdPersistence extends LegacyGenericDao {
 
     public SavingsOfferingBO getSavingsProduct(Short prdOfferingId) throws PersistenceException {
         return (SavingsOfferingBO) getPersistentObject(SavingsOfferingBO.class, prdOfferingId);

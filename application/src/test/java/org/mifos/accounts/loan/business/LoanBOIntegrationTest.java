@@ -70,7 +70,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -178,7 +178,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private String interestDueForNextInstallment = "0";
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
 
     @Before
@@ -281,7 +281,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         officePersistence.getOffice((short)3).getHolidays().clear();
 
         HolidayBO holiday2 = IntegrationTestObjectMother.findHolidayById(holiday.getId());
-        masterPersistence.delete(holiday2);
+        legacyMasterDao.delete(holiday2);
         StaticHibernateUtil.flushAndClearSession();
     }
 

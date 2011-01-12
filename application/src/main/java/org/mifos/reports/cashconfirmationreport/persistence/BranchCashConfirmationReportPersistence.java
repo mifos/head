@@ -32,13 +32,13 @@ import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationCenterRecoveryBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationDisbursementBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationInfoBO;
 import org.mifos.reports.cashconfirmationreport.BranchCashConfirmationReportBO;
 
-public class BranchCashConfirmationReportPersistence extends Persistence {
+public class BranchCashConfirmationReportPersistence extends LegacyGenericDao {
 
     public BranchCashConfirmationReportPersistence() {
         super();

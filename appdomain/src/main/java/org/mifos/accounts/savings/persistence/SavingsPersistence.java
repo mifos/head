@@ -41,12 +41,12 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.customers.client.business.ClientBO;
 import org.mifos.customers.exceptions.CustomerException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class SavingsPersistence extends Persistence {
+public class SavingsPersistence extends LegacyGenericDao {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsPersistence.class);
 

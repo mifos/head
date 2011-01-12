@@ -43,9 +43,9 @@ import org.slf4j.LoggerFactory;
  * intentionally has a very similar set of methods (many subclasses can be moved
  * over just by changing what they inherit from, with no further changes).
  */
-public abstract class Persistence {
+public abstract class LegacyGenericDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(Persistence.class);
+    private static final Logger logger = LoggerFactory.getLogger(LegacyGenericDao.class);
 
     /**
      * @deprecated - move away from using this as starts transaction but doesn't not commit..

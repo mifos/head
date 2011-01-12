@@ -28,14 +28,14 @@ import java.util.Set;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.AbstractEntity;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
@@ -129,8 +129,8 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
         financialTransactions = new HashSet<FinancialTransactionBO>();
         this.account = accountPayment.getAccount();
         try {
-            MasterPersistence masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
-            this.accountActionEntity = (masterPersistence == null)? null: masterPersistence.getPersistentObject(AccountActionEntity.class, accountActionType.getValue());
+            LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
+            this.accountActionEntity = (legacyMasterDao == null)? null: legacyMasterDao.getPersistentObject(AccountActionEntity.class, accountActionType.getValue());
         } catch (PersistenceException e) {
             // this should not happen because we are passing an enumerated type that maps to the AccountActionEntity
             throw new MifosRuntimeException(e);

@@ -35,7 +35,7 @@ import org.mifos.customers.surveys.helpers.QuestionState;
 import org.mifos.customers.surveys.helpers.SurveyState;
 import org.mifos.customers.surveys.helpers.SurveyType;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class SurveysPersistence extends Persistence {
+public class SurveysPersistence extends LegacyGenericDao {
 
     public SurveysPersistence() {
     }

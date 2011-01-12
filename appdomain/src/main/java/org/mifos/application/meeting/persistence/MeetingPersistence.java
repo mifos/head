@@ -22,9 +22,9 @@ package org.mifos.application.meeting.persistence;
 
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class MeetingPersistence extends Persistence {
+public class MeetingPersistence extends LegacyGenericDao {
 
     public MeetingBO getMeeting(Integer meetingId) throws PersistenceException {
         return (MeetingBO) getPersistentObject(MeetingBO.class, meetingId);

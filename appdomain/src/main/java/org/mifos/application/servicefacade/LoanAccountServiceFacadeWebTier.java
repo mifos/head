@@ -67,7 +67,7 @@ import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -186,7 +186,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final HibernateTransactionHelper transactionHelper;
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
@@ -386,11 +386,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
                     .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
 
-            CustomValueDto customValueDto = masterPersistence.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
+            CustomValueDto customValueDto = legacyMasterDao.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
             // Business activities got in getPrdOfferings also but only for glim.
-            List<ValueListElement> loanPurposes = masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES);
+            List<ValueListElement> loanPurposes = legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
 
             MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
                     .getMeetingDetails();
@@ -987,7 +987,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private String getAccountStateName(Short id) {
         AccountStateEntity accountStateEntity;
         try {
-            accountStateEntity = masterPersistence.getPersistentObject(AccountStateEntity.class,
+            accountStateEntity = legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     id);
             return accountStateEntity.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -998,7 +998,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private String getGracePeriodTypeName(Short id) {
         GracePeriodTypeEntity gracePeriodType;
         try {
-            gracePeriodType = masterPersistence.getPersistentObject(GracePeriodTypeEntity.class,
+            gracePeriodType = legacyMasterDao.getPersistentObject(GracePeriodTypeEntity.class,
                     id);
             return gracePeriodType.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -1009,7 +1009,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private String getInterestTypeName(Short id) {
         InterestTypesEntity interestType;
         try {
-            interestType = masterPersistence.getPersistentObject(InterestTypesEntity.class,
+            interestType = legacyMasterDao.getPersistentObject(InterestTypesEntity.class,
                     id);
             return interestType.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -1031,7 +1031,7 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private String getAccountStateFlagEntityName(Short id) {
         AccountStateFlagEntity accountStateFlagEntity;
         try {
-            accountStateFlagEntity = masterPersistence.getPersistentObject(AccountStateFlagEntity.class,
+            accountStateFlagEntity = legacyMasterDao.getPersistentObject(AccountStateFlagEntity.class,
                     id);
             return accountStateFlagEntity.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {

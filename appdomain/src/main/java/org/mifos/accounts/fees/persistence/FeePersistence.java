@@ -35,13 +35,13 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
 /**
  * @deprecated move to {@link FeeDao} and replace all usage of this methods with calls to {@link FeeDao}.
  */
 @Deprecated
-public class FeePersistence extends Persistence {
+public class FeePersistence extends LegacyGenericDao {
 
     /**
      * use {@link FeeDao#findById(Short)}

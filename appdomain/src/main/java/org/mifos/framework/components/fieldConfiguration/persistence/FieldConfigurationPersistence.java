@@ -29,9 +29,9 @@ import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class FieldConfigurationPersistence extends Persistence {
+public class FieldConfigurationPersistence extends LegacyGenericDao {
 
     public List<EntityMaster> getEntityMasterList() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.GET_ENTITY_MASTER, null);

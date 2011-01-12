@@ -72,7 +72,7 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.reports.branchreport.BranchReportBO;
 import org.mifos.reports.branchreport.BranchReportClientSummaryBO;
@@ -84,7 +84,7 @@ import org.mifos.reports.branchreport.BranchReportStaffingLevelSummaryBO;
 import org.mifos.reports.branchreport.LoanArrearsAgingPeriod;
 
 // Takes care of classes BranchReportBatchBO, BranchReportClientSummaryBatchBO, BranchReportLoanArrearsAgingBatchBO
-public class BranchReportPersistence extends Persistence {
+public class BranchReportPersistence extends LegacyGenericDao {
 
     public BranchReportPersistence() {
     }

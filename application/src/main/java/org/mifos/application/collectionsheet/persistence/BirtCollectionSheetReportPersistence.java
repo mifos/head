@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.reports.business.dto.CollectionSheetReportData;
 
 /**
@@ -41,7 +41,7 @@ import org.mifos.reports.business.dto.CollectionSheetReportData;
  *
  * All methods make call to large collection sheet query now stored in AccountBO.hbm.xml
  */
-public class BirtCollectionSheetReportPersistence extends Persistence {
+public class BirtCollectionSheetReportPersistence extends LegacyGenericDao {
 
     private static final String ALL_VALUE = "ALL";
 

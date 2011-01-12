@@ -28,16 +28,16 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.LookUpValueEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 
-public class RolesPermissionsPersistence extends Persistence {
+public class RolesPermissionsPersistence extends LegacyGenericDao {
 
     public RoleBO getRole(String roleName) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -80,7 +80,7 @@ public class RolesPermissionsPersistence extends Persistence {
 
     public ActivityEntity retrieveOneActivityEntity(int lookUpId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        MasterPersistence mp = ApplicationContextProvider.getBean(MasterPersistence.class);
+        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
         LookUpValueEntity aLookUpValueEntity = mp.getPersistentObject(LookUpValueEntity.class,
                 lookUpId);
         queryParameters.put("aLookUpValueEntity", aLookUpValueEntity);

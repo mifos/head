@@ -67,7 +67,7 @@ import org.mifos.accounts.productdefinition.util.helpers.PrdStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -441,11 +441,11 @@ public class LoanPrdAction extends BaseAction {
                 .getActiveLoanProductCategories(), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANAPPLFORLIST, service
                 .getLoanApplicableCustomerTypes(localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, masterPersistence.findMasterDataEntitiesWithLocale(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.LOANGRACEPERIODTYPELIST, legacyMasterDao.findMasterDataEntitiesWithLocale(
                 GracePeriodTypeEntity.class, localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST, masterPersistence.findMasterDataEntitiesWithLocale(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTERESTTYPESLIST, legacyMasterDao.findMasterDataEntitiesWithLocale(
                 InterestTypesEntity.class, localeId), request);
-        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, masterPersistence.findMasterDataEntitiesWithLocale(
+        SessionUtils.setCollectionAttribute(ProductDefinitionConstants.INTCALCTYPESLIST, legacyMasterDao.findMasterDataEntitiesWithLocale(
                 InterestCalcTypeEntity.class, localeId), request);
         SessionUtils.setCollectionAttribute(ProductDefinitionConstants.SRCFUNDSLIST, this.fundDao.findAllFunds(),
                 request);

@@ -41,7 +41,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.util.helpers.EntityType;
@@ -134,7 +134,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public CenterServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
@@ -274,7 +274,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
-        List<PositionEntity> allCustomerPositions = masterPersistence.findMasterDataEntitiesWithLocale(PositionEntity.class, localeId);
+        List<PositionEntity> allCustomerPositions = legacyMasterDao.findMasterDataEntitiesWithLocale(PositionEntity.class, localeId);
         if (!new ClientRules().getCenterHierarchyExists()) {
             customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
         } else {

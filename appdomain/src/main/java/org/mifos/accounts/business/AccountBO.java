@@ -49,7 +49,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.AccountingRules;
@@ -121,7 +121,7 @@ public class AccountBO extends AbstractBusinessObject {
     private Set<AccountCustomFieldEntity> accountCustomFields;
 
     private AccountPersistence accountPersistence = null;
-    private MasterPersistence masterPersistence = null;
+    private LegacyMasterDao legacyMasterDao = null;
     private DateTimeService dateTimeService = null;
     private FinancialBusinessService financialBusinessService = null;
 
@@ -158,11 +158,11 @@ public class AccountBO extends AbstractBusinessObject {
         this.accountPersistence = accountPersistence;
     }
 
-    public MasterPersistence getMasterPersistence() {
-        if (null == masterPersistence) {
-            masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
+    public LegacyMasterDao getlegacyMasterDao() {
+        if (null == legacyMasterDao) {
+            legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
         }
-        return masterPersistence;
+        return legacyMasterDao;
     }
 
     /**
@@ -576,13 +576,13 @@ public class AccountBO extends AbstractBusinessObject {
             logger.debug("In the change status method of AccountBO:: new StatusId= " + newStatusId);
 
             activationDateHelper(newStatusId);
-            MasterPersistence masterPersistence = getMasterPersistence();
-            AccountStateEntity accountStateEntity = masterPersistence.getPersistentObject(
+            LegacyMasterDao legacyMasterDao = getlegacyMasterDao();
+            AccountStateEntity accountStateEntity = legacyMasterDao.getPersistentObject(
                     AccountStateEntity.class, newStatusId);
             accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
             AccountStateFlagEntity accountStateFlagEntity = null;
             if (flagId != null) {
-                accountStateFlagEntity = masterPersistence.getPersistentObject(
+                accountStateFlagEntity = legacyMasterDao.getPersistentObject(
                         AccountStateFlagEntity.class, flagId);
             }
 

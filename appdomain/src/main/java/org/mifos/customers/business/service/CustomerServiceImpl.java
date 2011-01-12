@@ -42,7 +42,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RankOfDay;
@@ -113,7 +113,7 @@ public class CustomerServiceImpl implements CustomerService {
     private MessageLookupHelper messageLookupHelper = DefaultMessageLookupHelper.createNew();
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
@@ -621,7 +621,7 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerStatusFlagEntity customerStatusFlagEntity = null;
         if (customerStatusFlag != null) {
             try {
-                customerStatusFlagEntity = masterPersistence.getPersistentObject(
+                customerStatusFlagEntity = legacyMasterDao.getPersistentObject(
                         CustomerStatusFlagEntity.class, customerStatusFlag.getValue());
             } catch (PersistenceException e) {
                 throw new CustomerException(e);

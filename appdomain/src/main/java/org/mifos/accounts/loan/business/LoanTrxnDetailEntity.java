@@ -30,10 +30,10 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,7 +125,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
     public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, LoanScheduleEntity loanScheduleEntity,
                                 PersonnelBO personnel, Date transactionDate, AccountActionTypes accountActionType,
-                                String comments, Persistence persistence) {
+                                String comments, LegacyGenericDao persistence) {
         super(accountPaymentEntity, accountActionType, loanScheduleEntity.getInstallmentId(), loanScheduleEntity
                 .getActionDate(), personnel, null, transactionDate, loanScheduleEntity.getPaymentAllocation().getTotalPaid(), comments,
                 null);

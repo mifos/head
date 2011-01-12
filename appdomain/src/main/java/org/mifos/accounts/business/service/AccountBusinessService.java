@@ -47,7 +47,7 @@ import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -96,7 +96,7 @@ public class AccountBusinessService implements BusinessService {
     public AccountActionEntity getAccountAction(Short actionType, Short localeId) throws ServiceException {
         AccountActionEntity accountAction = null;
         try {
-            accountAction = ApplicationContextProvider.getBean(MasterPersistence.class).getPersistentObject(
+            accountAction = ApplicationContextProvider.getBean(LegacyMasterDao.class).getPersistentObject(
                     AccountActionEntity.class, actionType);
             accountAction.setLocaleId(localeId);
         } catch (PersistenceException e) {

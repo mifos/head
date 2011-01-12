@@ -36,12 +36,12 @@ import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ValidationException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.OfficeCacheDto;
 import org.mifos.security.util.UserContext;
 
-public class OfficePersistence extends Persistence {
+public class OfficePersistence extends LegacyGenericDao {
 
     public OfficePersistence() {
         super();

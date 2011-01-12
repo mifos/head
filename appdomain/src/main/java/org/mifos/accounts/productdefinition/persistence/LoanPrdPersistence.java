@@ -33,9 +33,9 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class LoanPrdPersistence extends Persistence {
+public class LoanPrdPersistence extends LegacyGenericDao {
 
     private static ThreadLocal<Map> reportsCacheTL = new ThreadLocal<Map>();
 

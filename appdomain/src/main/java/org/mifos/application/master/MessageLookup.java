@@ -30,7 +30,7 @@ import org.mifos.application.master.business.LookUpLabelEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.business.MifosConfiguration;
@@ -50,7 +50,7 @@ import org.springframework.context.MessageSourceAware;
  * {@link LookUpValueLocaleEntity} and the like.
  * <p>
  * The idea is that we'll be able to come up with a simpler mechanism than the
- * rather convoluted one in {@link MasterPersistence}, {@link MasterDataEntity},
+ * rather convoluted one in {@link LegacyMasterDao}, {@link MasterDataEntity},
  * etc. Or at least we can centralize where we call the convoluted mechanism.
  * <p>
  * Also see {@link ApplicationConfigurationDao}.
@@ -82,7 +82,7 @@ public class MessageLookup implements MessageSourceAware {
     private GenericDao genericDao;
 
     @Autowired(required=false)
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     private MessageSource messageSource;
 
@@ -224,7 +224,7 @@ public class MessageLookup implements MessageSourceAware {
                         && (entity.getLookUpValue() == null || !entity.getLookUpValue().equals(newValue))) {
                     entity.setLookUpValue(newValue);
                     try {
-                        masterPersistence.createOrUpdate(entity);
+                        legacyMasterDao.createOrUpdate(entity);
                     } catch (Exception ex) {
                         throw new RuntimeException(ex.getMessage());
                     }

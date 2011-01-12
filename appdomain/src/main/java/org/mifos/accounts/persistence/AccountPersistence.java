@@ -61,7 +61,7 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MifosStringUtils;
 
@@ -79,7 +79,7 @@ import java.util.Map;
  * <li>A general ledger account</li>
  * </ol>
  */
-public class AccountPersistence extends Persistence {
+public class AccountPersistence extends LegacyGenericDao {
 
     public AccountBO getAccount(Integer accountId) throws PersistenceException {
         return (AccountBO) getPersistentObject(AccountBO.class, accountId);

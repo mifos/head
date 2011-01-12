@@ -25,7 +25,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -86,7 +86,7 @@ public class ActivityGenerator {
     }
 
     private void insertLookUpValueLocale(int lookUpId, String lookUpDescription) throws PersistenceException {
-        MasterPersistence mp = ApplicationContextProvider.getBean(MasterPersistence.class);
+        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
         LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
         lookUpValueLocaleEntity.setLookUpId(new Integer(lookUpId));
         lookUpValueLocaleEntity.setLocaleId(DatabaseMigrator.ENGLISH_LOCALE);
@@ -99,7 +99,7 @@ public class ActivityGenerator {
             throws PersistenceException {
 
         LookUpValueEntity anLookUp = new LookUpValueEntity();
-        MasterPersistence mp = ApplicationContextProvider.getBean(MasterPersistence.class);
+        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
         LookUpEntity lookUpEntity = mp.getPersistentObject(LookUpEntity.class, Short
                 .valueOf((short) LookUpEntity.ACTIVITY));
         String lookupName = SearchUtils.generateLookupName(type.name(), lookUpDescription);
@@ -111,7 +111,7 @@ public class ActivityGenerator {
     }
 
     public LookUpValueLocaleEntity getLookUpValueLocaleEntity(short localId, int lookUpId) throws PersistenceException {
-        MasterPersistence mp = ApplicationContextProvider.getBean(MasterPersistence.class);
+        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
         return mp.retrieveOneLookUpValueLocaleEntity(localId, lookUpId);
     }
 
@@ -146,7 +146,7 @@ public class ActivityGenerator {
     public static void changeActivityMessage(short activityId, short localeId, String newMessage)
             throws PersistenceException {
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
-        MasterPersistence mp = ApplicationContextProvider.getBean(MasterPersistence.class);
+        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
         ActivityEntity activityEntity = rpp.getPersistentObject(ActivityEntity.class, Short
                 .valueOf(activityId));
         Integer lookUpId = activityEntity.getActivityNameLookupValues().getLookUpId();

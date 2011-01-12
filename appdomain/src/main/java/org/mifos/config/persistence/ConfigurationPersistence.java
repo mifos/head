@@ -34,13 +34,13 @@ import org.mifos.config.business.ConfigurationKeyValueInteger;
 import org.mifos.config.util.helpers.ConfigConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
 /**
  * This class concerns certain configuration settings, especially
  * {@link ConfigurationKeyValueInteger} and friends.
  */
-public class ConfigurationPersistence extends Persistence {
+public class ConfigurationPersistence extends LegacyGenericDao {
 
     private static final String KEY_QUERY_PARAMETER = "KEY";
 

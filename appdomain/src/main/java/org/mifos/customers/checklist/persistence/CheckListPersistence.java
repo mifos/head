@@ -27,7 +27,7 @@ import java.util.Map;
 
 import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.application.NamedQueryConstants;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.checklist.business.AccountCheckListBO;
 import org.mifos.customers.checklist.business.CheckListBO;
@@ -35,9 +35,9 @@ import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.dto.screen.CheckListStatesView;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class CheckListPersistence extends Persistence {
+public class CheckListPersistence extends LegacyGenericDao {
 
     public CheckListPersistence() {
     }

@@ -30,7 +30,7 @@ import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
@@ -65,7 +65,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     private final CollectionSheetDtoTranslator collectionSheetTranslator;
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public CollectionSheetServiceFacadeWebTier(final CollectionSheetService collectionSheetService,
@@ -75,11 +75,11 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
     }
 
     public CollectionSheetServiceFacadeWebTier(final OfficePersistence officePersistence,
-            final MasterPersistence masterPersistence, final PersonnelPersistence personnelPersistence,
+            final LegacyMasterDao legacyMasterDao, final PersonnelPersistence personnelPersistence,
             final CustomerPersistence customerPersistence, final CollectionSheetService collectionSheetService,
             final CollectionSheetDtoTranslator collectionSheetTranslator) {
         this.officePersistence = officePersistence;
-        this.masterPersistence = masterPersistence;
+        this.legacyMasterDao = legacyMasterDao;
         this.personnelPersistence = personnelPersistence;
         this.customerPersistence = customerPersistence;
         this.collectionSheetService = collectionSheetService;
@@ -99,7 +99,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
         final Short backDatedTransactionAllowed = Constants.NO;
 
         try {
-            final List<PaymentTypeEntity> paymentTypesList = masterPersistence.findMasterDataEntitiesWithLocale(
+            final List<PaymentTypeEntity> paymentTypesList = legacyMasterDao.findMasterDataEntitiesWithLocale(
                     PaymentTypeEntity.class, Short.valueOf("1"));
             paymentTypesDtoList = convertToPaymentTypesListItemDto(paymentTypesList);
 
@@ -201,7 +201,7 @@ public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServi
                 .getCustomer().getCustomerId(), DateUtils.getLocalDateFromDate(formEnteredDataDto.getMeetingDate()));
 
         try {
-            final List<CustomValueListElementDto> attendanceTypesList = masterPersistence.getCustomValueList(
+            final List<CustomValueListElementDto> attendanceTypesList = legacyMasterDao.getCustomValueList(
                     MasterConstants.ATTENDENCETYPES, "org.mifos.application.master.business.CustomerAttendanceType",
                     "attendanceId").getCustomValueListElements();
 

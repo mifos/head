@@ -63,7 +63,7 @@ import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -87,7 +87,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCase {
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
     private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
@@ -247,7 +247,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     @Test
     public void testGetAccountAction() throws Exception {
-        AccountActionEntity accountAction = masterPersistence.getPersistentObject(
+        AccountActionEntity accountAction = legacyMasterDao.getPersistentObject(
                 AccountActionEntity.class, AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue());
         Assert.assertNotNull(accountAction);
     }

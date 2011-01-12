@@ -46,7 +46,7 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
@@ -54,7 +54,7 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import java.math.BigDecimal;
 import java.util.*;
 
-public class LoanPersistence extends Persistence {
+public class LoanPersistence extends LegacyGenericDao {
 
     @SuppressWarnings("unchecked")
     public Money getFeeAmountAtDisbursement(final Integer accountId, final MifosCurrency currency) {

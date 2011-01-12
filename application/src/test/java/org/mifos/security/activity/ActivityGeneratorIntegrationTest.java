@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -42,7 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @Test
     public void testShouldInsertSuccessActivity() throws Exception {
@@ -89,12 +89,12 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
        Assert.assertEquals(373, lookUpId.intValue());
 
         short localeId = DatabaseMigrator.ENGLISH_LOCALE;
-        LookUpValueLocaleEntity lookUpValueLocaleEntity = masterPersistence.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId
+        LookUpValueLocaleEntity lookUpValueLocaleEntity = legacyMasterDao.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId
                 .intValue());
         Assert.assertNull(lookUpValueLocaleEntity.getLookUpValue());
 
         ActivityGenerator.changeActivityMessage((short) 3, localeId, "wahaha");
-        lookUpValueLocaleEntity = masterPersistence.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId.intValue());
+        lookUpValueLocaleEntity = legacyMasterDao.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId.intValue());
 
        Assert.assertEquals("wahaha", lookUpValueLocaleEntity.getLookUpValue());
         ActivityGenerator.changeActivityMessage((short) 3, localeId, null);
@@ -113,10 +113,10 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
     private ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
         LookUpValueEntity anLookUp = new LookUpValueEntity();
-        LookUpEntity lookUpEntity = masterPersistence.getPersistentObject(LookUpEntity.class, Short
+        LookUpEntity lookUpEntity = legacyMasterDao.getPersistentObject(LookUpEntity.class, Short
                 .valueOf((short) LookUpEntity.ACTIVITY));
         anLookUp.setLookUpEntity(lookUpEntity);
-        ActivityEntity parent = masterPersistence.getPersistentObject(ActivityEntity.class, (short) 13);
+        ActivityEntity parent = legacyMasterDao.getPersistentObject(ActivityEntity.class, (short) 13);
         ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);
         rpp.createOrUpdate(anLookUp);
         rpp.createOrUpdate(activityEntity);

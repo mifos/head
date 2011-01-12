@@ -33,7 +33,7 @@ import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.PersonnelServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.config.Localization;
 import org.mifos.config.persistence.ApplicationConfigurationDao;
 import org.mifos.core.MifosRuntimeException;
@@ -91,7 +91,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
-    MasterPersistence masterPersistence;
+    LegacyMasterDao legacyMasterDao;
 
     @Autowired
     public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao) {
@@ -365,10 +365,10 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 }
             }
 
-            PersonnelStatusEntity personnelStatus = masterPersistence
+            PersonnelStatusEntity personnelStatus = legacyMasterDao
                     .getPersistentObject(PersonnelStatusEntity.class, status.getValue());
 
-            PersonnelLevelEntity personnelLevel = masterPersistence.getPersistentObject(
+            PersonnelLevelEntity personnelLevel = legacyMasterDao.getPersistentObject(
                     PersonnelLevelEntity.class, userHierarchyLevel.getValue());
 
             Short preferredLocaleId = Localization.getInstance().getLocaleId();
@@ -518,7 +518,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         try {
             String value = "";
             if (entityId != null) {
-                 value = masterPersistence.getMessageForLookupEntity(entityId);
+                 value = legacyMasterDao.getMessageForLookupEntity(entityId);
             }
             return value;
         } catch (PersistenceException e) {

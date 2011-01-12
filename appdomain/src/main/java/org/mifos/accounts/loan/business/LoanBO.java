@@ -96,7 +96,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -178,7 +178,7 @@ public class LoanBO extends AccountBO {
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
     private LoanPersistence loanPersistence = null;
-    MasterPersistence masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
+    LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
     public LoanPersistence getLoanPersistence() {
         if (null == loanPersistence) {
@@ -1238,11 +1238,11 @@ public class LoanBO extends AccountBO {
             addLoanActivity(loanActivity);
             buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
-            AccountStateEntity newAccountState = masterPersistence.getPersistentObject(
+            AccountStateEntity newAccountState = legacyMasterDao.getPersistentObject(
                     AccountStateEntity.class, AccountStates.LOANACC_OBLIGATIONSMET);
             addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(getAccountState(), newAccountState,
                     new PersonnelPersistence().getPersonnel(personnelId), this));
-            setAccountState(masterPersistence.getPersistentObject(AccountStateEntity.class,
+            setAccountState(legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_OBLIGATIONSMET));
             setClosedDate(transactionDate);
 
@@ -1274,7 +1274,7 @@ public class LoanBO extends AccountBO {
     public void handleArrears() throws AccountException {
         AccountStateEntity stateEntity;
         try {
-            stateEntity = masterPersistence.getPersistentObject(AccountStateEntity.class,
+            stateEntity = legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_BADSTANDING);
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -1518,7 +1518,7 @@ public class LoanBO extends AccountBO {
                 if (noOfInstallments <= 1) {
                     throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
                 }
-                setGracePeriodType(masterPersistence.findMasterDataEntityWithLocale(GracePeriodTypeEntity.class, GraceType.NONE
+                setGracePeriodType(legacyMasterDao.findMasterDataEntityWithLocale(GracePeriodTypeEntity.class, GraceType.NONE
                         .getValue(), getUserContext().getLocaleId()));
             } catch (PersistenceException e) {
                 throw new AccountException(e);
@@ -2752,7 +2752,7 @@ public class LoanBO extends AccountBO {
             throws AccountException {
         AccountStateEntity accountState = this.getAccountState();
         try {
-            setAccountState(masterPersistence.getPersistentObject(AccountStateEntity.class,
+            setAccountState(legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     newAccountState.getValue()));
         } catch (PersistenceException e) {
             throw new AccountException(e);

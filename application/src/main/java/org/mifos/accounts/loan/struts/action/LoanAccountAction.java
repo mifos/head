@@ -63,7 +63,7 @@ import org.mifos.application.master.business.BusinessActivityEntity;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -394,7 +394,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         loanActionForm.setDefaultFees(defaultFees);
 
-        CustomValueDto customValueDto = masterPersistence.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
+        CustomValueDto customValueDto = legacyMasterDao.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
         List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
         SessionUtils.setCollectionAttribute(LoanConstants.CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
@@ -1156,7 +1156,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // Retrieve and set into the session all collateral types from the
         // lookup_value_locale table associated with the current user context
         // locale
-        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, masterPersistence.getLookUpEntity(
+        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, legacyMasterDao.getLookUpEntity(
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(), request);
         SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
@@ -1567,12 +1567,12 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // Retrieve and set into the session all collateral types from the
         // lookup_value_locale table associated with the current user context
         // locale
-        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, masterPersistence.getLookUpEntity(
+        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, legacyMasterDao.getLookUpEntity(
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(),
                 request);
 
         SessionUtils.setCollectionAttribute(MasterConstants.BUSINESS_ACTIVITIES,
-        masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES), request);
+        legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES), request);
         SessionUtils.setCollectionAttribute(CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
 
         SessionUtils.setAttribute(RECURRENCEID, loanBO.getLoanMeeting().getMeetingDetails().getRecurrenceTypeEnum()
@@ -1594,7 +1594,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void setRequestAttributesForEditPage(final HttpServletRequest request, final LoanBO loanBO)
             throws ApplicationException {
         request.setAttribute("accountState", loanBO.getState());
-        request.setAttribute(MasterConstants.COLLATERAL_TYPES, masterPersistence.getLookUpEntity(
+        request.setAttribute(MasterConstants.COLLATERAL_TYPES, legacyMasterDao.getLookUpEntity(
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements());
         request.setAttribute("collateralTypeId", loanBO.getCollateralTypeId());
     }
@@ -1610,7 +1610,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void populateGlimAttributes(final HttpServletRequest request, final LoanAccountActionForm loanActionForm,
                                         final String globalAccountNum, final CustomerBO customer) throws PageExpiredException, ServiceException {
         GlimSessionAttributes glimSessionAttributes = getGlimSpecificPropertiesToSet(loanActionForm, globalAccountNum,
-                customer, masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES));
+                customer, legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES));
         glimSessionAttributes.putIntoSession(request);
     }
 
@@ -1781,7 +1781,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     }
 
     private String findBusinessActivityName(final String businessActivity) {
-        List<ValueListElement> businessActEntity = masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES);
+        List<ValueListElement> businessActEntity = legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
         for (ValueListElement busact : businessActEntity) {
 
             if (busact.getId().toString().equals(businessActivity)) {
@@ -1913,7 +1913,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private String getNameForBusinessActivityEntity(final Integer entityId) throws Exception {
         if (entityId != null) {
-            return masterPersistence.getMessageForLookupEntity(entityId);
+            return legacyMasterDao.getMessageForLookupEntity(entityId);
         }
         return "";
     }

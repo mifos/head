@@ -25,10 +25,10 @@ import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 
-public class AdminDocumentPersistence extends Persistence {
+public class AdminDocumentPersistence extends LegacyGenericDao {
 
     public AdminDocumentPersistence() {
     }
