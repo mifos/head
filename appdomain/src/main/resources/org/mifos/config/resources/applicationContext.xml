@@ -9,6 +9,8 @@
     <import resource="classpath*:org/mifos/**/dataSourceContext.xml" />
     <import resource="hibernate-daos.xml" />
     <import resource="services.xml" />
+    <import resource="legacy-daos.xml" />
+    <import resource="legacy-services.xml" />
 
     <bean id="applicationContextProvider" class="org.mifos.application.servicefacade.ApplicationContextProvider">
          <property name="applicationContextHolder" ref="applicationContextHolder" />

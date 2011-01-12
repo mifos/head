@@ -123,7 +123,7 @@ public class AccountStatusAction extends BaseAction {
         SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, changeAccountStatusDto.getLoanOfficers(), request);
 
         if (officeId != null) {
-            AccountStateEntity accountStateEntity = new MasterPersistence().findMasterDataEntity(
+            AccountStateEntity accountStateEntity = new MasterPersistence().getPersistentObject(
                     AccountStateEntity.class, changeAccountStatusDto.getAccountState());
             accountStateEntity.setLocaleId(getUserContext(request).getLocaleId());
             SessionUtils.setAttribute(LoanConstants.LOANACCOUNTSTAES, accountStateEntity, request);

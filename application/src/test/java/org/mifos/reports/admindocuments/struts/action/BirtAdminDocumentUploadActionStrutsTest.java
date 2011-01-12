@@ -82,7 +82,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         AdminDocumentBO adminDocument = (AdminDocumentBO) request.getAttribute(Constants.BUSINESS_KEY);
         Assert.assertNotNull(adminDocument);
         ReportsPersistence rp = new ReportsPersistence();
-        ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(ReportsJasperMap.class, adminDocument
+        ReportsJasperMap jasper = rp.getPersistentObject(ReportsJasperMap.class, adminDocument
                 .getAdmindocId());
         Assert.assertNotNull(jasper);
 
@@ -97,10 +97,10 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
 
         AdminDocumentPersistence reportPersistence = new AdminDocumentPersistence();
         reportPersistence.getSession().clear();
-        ReportsBO report = (ReportsBO) reportPersistence.getPersistentObject(AdminDocumentBO.class, reportId);
+        ReportsBO report = reportPersistence.getPersistentObject(ReportsBO.class, reportId);
 
         RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
-        ActivityEntity activityEntity = (ActivityEntity) permPersistence.getPersistentObject(ActivityEntity.class,
+        ActivityEntity activityEntity = permPersistence.getPersistentObject(ActivityEntity.class,
                 report.getActivityId());
         reportPersistence.delete(report);
 

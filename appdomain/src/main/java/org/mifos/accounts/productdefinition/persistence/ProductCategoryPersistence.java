@@ -39,7 +39,7 @@ public class ProductCategoryPersistence extends Persistence {
     }
 
     public Integer getProductCategory(String productCategoryName) throws PersistenceException {
-        Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYNAME, productCategoryName);
         return ((Number) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTCATEGORIES_COUNT_CREATE, queryParameters))
                 .intValue();
@@ -48,7 +48,7 @@ public class ProductCategoryPersistence extends Persistence {
 
     @Deprecated
     public Integer getProductCategory(String productCategoryName, Short productCategoryId) throws PersistenceException {
-        Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYNAME, productCategoryName);
         queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYID, productCategoryId);
         return ((Number) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTCATEGORIES_COUNT_UPDATE, queryParameters))
@@ -66,7 +66,7 @@ public class ProductCategoryPersistence extends Persistence {
     }
 
     public ProductCategoryBO findByGlobalNum(String globalNum) throws PersistenceException {
-        Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalNum", globalNum);
         return (ProductCategoryBO) execUniqueResultNamedQuery(NamedQueryConstants.GET_PRODUCTCATEGORY, queryParameters);
 

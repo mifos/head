@@ -50,7 +50,7 @@ public class AuditPersistence extends Persistence {
     }
 
     public List<AuditLog> getAuditLogRecords(Short entityType, Integer entityId) throws PersistenceException {
-        Map<Object, Object> queryParameter = new HashMap<Object, Object>();
+        Map<String, Object> queryParameter = new HashMap<String, Object>();
         queryParameter.put("entityType", entityType);
         queryParameter.put("entityId", entityId);
         return executeNamedQuery(NamedQueryConstants.RETRIEVE_AUDIT_LOG_RECORD, queryParameter);
