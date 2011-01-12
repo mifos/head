@@ -28,6 +28,8 @@ import java.util.Set;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
+import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -37,6 +39,7 @@ import org.mifos.framework.persistence.Persistence;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.Money;
 
+@SuppressWarnings("unused")
 public abstract class AccountTrxnEntity extends AbstractEntity {
 
     private final Integer accountTrxnId = null;
@@ -89,10 +92,10 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
     @Deprecated
     public AccountTrxnEntity(final AccountPaymentEntity accountPayment, final AccountActionTypes accountActionType,
             final Short installmentId, final Date dueDate, final PersonnelBO personnel, final CustomerBO customer, final Date actionDate,
-            final Money amount, final String comments, final AccountTrxnEntity relatedTrxn, final Persistence persistence) {
+            final Money amount, final String comments, final AccountTrxnEntity relatedTrxn) {
         this(accountPayment, accountActionType,
                 installmentId, dueDate, personnel, customer, actionDate,
-                amount, comments, relatedTrxn, persistence,
+                amount, comments, relatedTrxn,
                 new Timestamp(new DateTimeService().getCurrentDateTime().getMillis()));
     }
 
@@ -120,14 +123,14 @@ public abstract class AccountTrxnEntity extends AbstractEntity {
     @Deprecated
     public AccountTrxnEntity(final AccountPaymentEntity accountPayment, final AccountActionTypes accountActionType,
             final Short installmentId, final Date dueDate, final PersonnelBO personnel, final CustomerBO customer, final Date actionDate,
-            final Money amount, final String comments, final AccountTrxnEntity relatedTrxn, final Persistence persistence,
+            final Money amount, final String comments, final AccountTrxnEntity relatedTrxn,
             final Date transactionCreatedDate) {
         trxnCreatedDate = new Timestamp(transactionCreatedDate.getTime());
         financialTransactions = new HashSet<FinancialTransactionBO>();
         this.account = accountPayment.getAccount();
         try {
-            this.accountActionEntity = (AccountActionEntity) persistence.getPersistentObject(AccountActionEntity.class,
-                    accountActionType.getValue());
+            MasterPersistence masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
+            this.accountActionEntity = (masterPersistence == null)? null: masterPersistence.getPersistentObject(AccountActionEntity.class, accountActionType.getValue());
         } catch (PersistenceException e) {
             // this should not happen because we are passing an enumerated type that maps to the AccountActionEntity
             throw new MifosRuntimeException(e);

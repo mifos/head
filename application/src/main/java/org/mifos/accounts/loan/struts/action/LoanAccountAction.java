@@ -199,7 +199,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private final LoanBusinessService loanBusinessService;
     private final LoanPrdBusinessService loanPrdBusinessService;
-    private final MasterPersistence masterPersistence;
     private final ConfigurationPersistence configurationPersistence;
     private final ConfigurationBusinessService configService;
     private final GlimLoanUpdater glimLoanUpdater;
@@ -219,14 +218,14 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     public LoanAccountAction() {
         this(new ConfigurationBusinessService(), ApplicationContextProvider.getBean(LoanBusinessService.class), new GlimLoanUpdater(),
-                new LoanPrdBusinessService(), new MasterPersistence(),
+                new LoanPrdBusinessService(),
                 new ConfigurationPersistence(), new AccountBusinessService());
     }
 
     public LoanAccountAction(final ConfigurationBusinessService configService,
                              final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater,
                              final LoanPrdBusinessService loanPrdBusinessService,
-                             final MasterPersistence masterPersistence, final ConfigurationPersistence configurationPersistence,
+                             final ConfigurationPersistence configurationPersistence,
                              final AccountBusinessService accountBusinessService) {
         super(accountBusinessService);
 
@@ -234,7 +233,6 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         this.loanBusinessService = loanBusinessService;
         this.glimLoanUpdater = glimLoanUpdater;
         this.loanPrdBusinessService = loanPrdBusinessService;
-        this.masterPersistence = masterPersistence;
         this.configurationPersistence = configurationPersistence;
         this.questionGroupFilter = new QuestionGroupFilterForLoan();
         this.questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
@@ -261,7 +259,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     @Deprecated
     private LoanAccountAction(final ConfigurationBusinessService configService,
                               final LoanBusinessService loanBusinessService, final GlimLoanUpdater glimLoanUpdater) {
-        this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new MasterPersistence(), new ConfigurationPersistence(),
+        this(configService, loanBusinessService, glimLoanUpdater, new LoanPrdBusinessService(), new ConfigurationPersistence(),
                 new AccountBusinessService());
     }
 
@@ -396,7 +394,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
         loanActionForm.setDefaultFees(defaultFees);
 
-        CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
+        CustomValueDto customValueDto = masterPersistence.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
         List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
         SessionUtils.setCollectionAttribute(LoanConstants.CUSTOM_FIELDS, new ArrayList<CustomFieldDefinitionEntity>(), request);
@@ -1158,7 +1156,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // Retrieve and set into the session all collateral types from the
         // lookup_value_locale table associated with the current user context
         // locale
-        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
+        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, masterPersistence.getLookUpEntity(
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(), request);
         SessionUtils.setAttribute(AccountConstants.LAST_PAYMENT_ACTION, loanBusinessService.getLastPaymentAction(loanInformationDto.getAccountId()), request);
         SessionUtils.removeThenSetAttribute("loanInformationDto", loanInformationDto, request);
@@ -1569,7 +1567,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         // Retrieve and set into the session all collateral types from the
         // lookup_value_locale table associated with the current user context
         // locale
-        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
+        SessionUtils.setCollectionAttribute(MasterConstants.COLLATERAL_TYPES, masterPersistence.getLookUpEntity(
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements(),
                 request);
 
@@ -1596,7 +1594,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
     private void setRequestAttributesForEditPage(final HttpServletRequest request, final LoanBO loanBO)
             throws ApplicationException {
         request.setAttribute("accountState", loanBO.getState());
-        request.setAttribute(MasterConstants.COLLATERAL_TYPES, new MasterPersistence().getLookUpEntity(
+        request.setAttribute(MasterConstants.COLLATERAL_TYPES, masterPersistence.getLookUpEntity(
                 MasterConstants.COLLATERAL_TYPES).getCustomValueListElements());
         request.setAttribute("collateralTypeId", loanBO.getCollateralTypeId());
     }
@@ -1915,7 +1913,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
 
     private String getNameForBusinessActivityEntity(final Integer entityId) throws Exception {
         if (entityId != null) {
-            return new MasterPersistence().getMessageForLookupEntity(entityId);
+            return masterPersistence.getMessageForLookupEntity(entityId);
         }
         return "";
     }

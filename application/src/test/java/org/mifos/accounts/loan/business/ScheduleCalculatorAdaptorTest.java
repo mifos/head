@@ -155,7 +155,6 @@ public class ScheduleCalculatorAdaptorTest {
         verify(loanBO, times(2)).getLoanPersistence();
         verify(loanBO, times(2)).recordSummaryAndPerfHistory(anyBoolean(), Matchers.<PaymentAllocation>any());
         verify(accountPaymentEntity, times(2)).getAccount();
-        verify(loanPersistence, times(2)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
     }
 
     @Test

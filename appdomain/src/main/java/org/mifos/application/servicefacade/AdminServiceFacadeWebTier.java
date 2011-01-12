@@ -164,6 +164,10 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final GeneralLedgerDao generalLedgerDao;
     private LoanProductAssembler loanProductAssembler;
 
+
+    @Autowired
+    MasterPersistence masterPersistence;
+
     @Autowired
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
             MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
@@ -1046,7 +1050,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     private <T extends MasterDataEntity> List<T> getMasterEntities(Class<T> type, Short localeId) {
-        return new MasterPersistence().findMasterDataEntitiesWithLocale(type, localeId);
+        return masterPersistence.findMasterDataEntitiesWithLocale(type, localeId);
     }
 
     private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,

@@ -186,6 +186,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final HibernateTransactionHelper transactionHelper;
 
     @Autowired
+    MasterPersistence masterPersistence;
+
+    @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
                                            PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao,
                                            AccountService accountService, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
@@ -383,11 +386,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
                     .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
 
-            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
+            CustomValueDto customValueDto = masterPersistence.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
             // Business activities got in getPrdOfferings also but only for glim.
-            List<ValueListElement> loanPurposes = new MasterPersistence().findValueListElements(MasterConstants.LOAN_PURPOSES);
+            List<ValueListElement> loanPurposes = masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES);
 
             MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
                     .getMeetingDetails();
@@ -982,11 +985,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     private String getAccountStateName(Short id) {
-
-        MasterPersistence masterPersistence = new MasterPersistence();
         AccountStateEntity accountStateEntity;
         try {
-            accountStateEntity = (AccountStateEntity) masterPersistence.getPersistentObject(AccountStateEntity.class,
+            accountStateEntity = masterPersistence.getPersistentObject(AccountStateEntity.class,
                     id);
             return accountStateEntity.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -995,11 +996,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     private String getGracePeriodTypeName(Short id) {
-
-        MasterPersistence masterPersistence = new MasterPersistence();
         GracePeriodTypeEntity gracePeriodType;
         try {
-            gracePeriodType = (GracePeriodTypeEntity) masterPersistence.getPersistentObject(GracePeriodTypeEntity.class,
+            gracePeriodType = masterPersistence.getPersistentObject(GracePeriodTypeEntity.class,
                     id);
             return gracePeriodType.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -1008,11 +1007,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     private String getInterestTypeName(Short id) {
-
-        MasterPersistence masterPersistence = new MasterPersistence();
         InterestTypesEntity interestType;
         try {
-            interestType = (InterestTypesEntity) masterPersistence.getPersistentObject(InterestTypesEntity.class,
+            interestType = masterPersistence.getPersistentObject(InterestTypesEntity.class,
                     id);
             return interestType.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -1032,10 +1029,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     private String getAccountStateFlagEntityName(Short id) {
-        MasterPersistence masterPersistence = new MasterPersistence();
         AccountStateFlagEntity accountStateFlagEntity;
         try {
-            accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence.getPersistentObject(AccountStateFlagEntity.class,
+            accountStateFlagEntity = masterPersistence.getPersistentObject(AccountStateFlagEntity.class,
                     id);
             return accountStateFlagEntity.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {

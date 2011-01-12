@@ -40,11 +40,14 @@ public class ApplicationContextProvider implements FactoryBean<ApplicationContex
     }
 
     public static <T> T getBean(Class<T> clazz) {
-        return ApplicationContextProvider.applicationContextHolder.getApplicationContext().getBean(clazz);
+        if(applicationContextHolder == null || applicationContextHolder.getApplicationContext() == null) {
+            return null;
+        }
+        return applicationContextHolder.getApplicationContext().getBean(clazz);
     }
 
     public static ApplicationContext getApplicationContext() {
-        return ApplicationContextProvider.applicationContextHolder.getApplicationContext();
+        return applicationContextHolder.getApplicationContext();
     }
 
     @Override

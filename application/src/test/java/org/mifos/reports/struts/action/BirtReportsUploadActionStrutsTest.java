@@ -30,7 +30,9 @@ import org.apache.struts.action.ActionErrors;
 import org.apache.struts.upload.FormFile;
 import org.junit.Before;
 import org.junit.Test;
+import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosMockStrutsTestCase;
@@ -52,12 +54,15 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
-import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
+
+    @Autowired
+    MasterPersistence masterPersistence;
 
     @Before
     public void setUp() throws Exception {
@@ -167,7 +172,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testShouldCreateFailureWhenActivityIdOutOfRange() throws Exception {
-        ActivityEntity activityEntity = ActivityTestUtil.insertActivityForTest(Short.MIN_VALUE);
+        ActivityEntity activityEntity = insertActivityForTest(Short.MIN_VALUE);
 
         FormFile file = new MockFormFile("testFilename");
         BirtReportsUploadActionForm actionForm = new BirtReportsUploadActionForm();
@@ -184,7 +189,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         String[] errors = { ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID };
         verifyActionErrors(errors);
 
-        ActivityTestUtil.deleteActivityForTest(activityEntity);
+        deleteActivityForTest(activityEntity);
     }
 
     @Test
@@ -242,7 +247,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         ReportsBO report = (ReportsBO) request.getAttribute("report");
         Assert.assertNotNull(report);
         ReportsPersistence rp = new ReportsPersistence();
-        ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(ReportsJasperMap.class, report
+        ReportsJasperMap jasper = rp.getPersistentObject(ReportsJasperMap.class, report
                 .getReportsJasperMap().getReportId());
         Assert.assertNotNull(jasper);
 
@@ -260,7 +265,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         ReportsPersistence persistence = new ReportsPersistence();
         ReportsBO report = new ReportsBO();
         report.setReportName("testShouldSubmitSuccessAfterEdit");
-        report.setReportsCategoryBO((ReportsCategoryBO) persistence.getPersistentObject(ReportsCategoryBO.class,
+        report.setReportsCategoryBO(persistence.getPersistentObject(ReportsCategoryBO.class,
                 (short) 1));
         report.setIsActive((short) 1);
         short newActivityId = (short) (new BirtReportsUploadAction()).insertActivity((short) 1, "test"
@@ -289,7 +294,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(2, newReport.getReportsCategoryBO().getReportCategoryId().shortValue());
         Assert.assertEquals(0, newReport.getIsActive().shortValue());
         Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", newReport.getReportsJasperMap().getReportJasper());
-        ReportsJasperMap jasper = (ReportsJasperMap) persistence.getPersistentObject(ReportsJasperMap.class, report
+        ReportsJasperMap jasper = persistence.getPersistentObject(ReportsJasperMap.class, report
                 .getReportsJasperMap().getReportId());
         Assert.assertEquals("newTestShouldSubmitSuccessAfterEdit.rptdesign", jasper.getReportJasper());
 
@@ -354,10 +359,10 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
         ReportsPersistence reportPersistence = new ReportsPersistence();
         reportPersistence.getSession().clear();
-        ReportsBO report = (ReportsBO) reportPersistence.getPersistentObject(ReportsBO.class, reportId);
+        ReportsBO report = reportPersistence.getPersistentObject(ReportsBO.class, reportId);
 
         RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
-        ActivityEntity activityEntity = (ActivityEntity) permPersistence.getPersistentObject(ActivityEntity.class,
+        ActivityEntity activityEntity = permPersistence.getPersistentObject(ActivityEntity.class,
                 report.getActivityId());
         reportPersistence.delete(report);
 
@@ -367,6 +372,27 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         permPersistence.delete(anLookUp);
 
         StaticHibernateUtil.flushSession();
+    }
+
+    private ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
+        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LookUpValueEntity anLookUp = new LookUpValueEntity();
+        LookUpEntity lookUpEntity = masterPersistence.getPersistentObject(LookUpEntity.class, Short
+                .valueOf((short) LookUpEntity.ACTIVITY));
+        anLookUp.setLookUpEntity(lookUpEntity);
+        ActivityEntity parent = masterPersistence.getPersistentObject(ActivityEntity.class, (short) 13);
+        ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);
+        rpp.createOrUpdate(anLookUp);
+        rpp.createOrUpdate(activityEntity);
+        return activityEntity;
+    }
+
+    private void deleteActivityForTest(ActivityEntity activityEntity) throws PersistenceException {
+        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        rpp.getSession().clear();
+        LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
+        rpp.delete(activityEntity);
+        rpp.delete(anLookUp);
     }
 
 }

@@ -48,10 +48,9 @@ import org.mifos.framework.util.helpers.FilePaths;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
-
-
 
     private UserContext userContext;
     private String flowKey;
@@ -71,6 +70,9 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
     private final int MASTER_CONSTANT = 0;
     private final int CONFIG_CONSTANT = 1;
     private final int LIST_NAME = 2;
+
+    @Autowired
+    MasterPersistence masterPersistence;
 
     private final String[][] configurationNameSet = {
             { MasterConstants.SALUTATION, ConfigurationConstants.CONFIG_SALUTATION, "salutationList" },
@@ -178,7 +180,6 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
      */
     private void verifyOneListAndRestoreOriginalValues(String masterConstant, String configurationConstant,
             String listName, String originalName) throws SystemException, ApplicationException {
-        MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant);
         List<CustomValueListElementDto> elementList = valueList.getCustomValueListElements();
         // compare the updated element
@@ -195,7 +196,6 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private String setupAddOrEditForOneList(String masterConstant, String configurationConstant, String listName,
             String addOrEdit) throws SystemException, ApplicationException {
-        MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant);
         Short valueListId = valueList.getEntityId();
         CustomValueListElementDto valueListElement = valueList.getCustomValueListElements().get(0);
@@ -223,7 +223,6 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private void setupNoSelectionForOneList(String masterConstant, String configurationConstant, String listName)
             throws SystemException, ApplicationException {
-        MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant);
         Short valueListId = valueList.getEntityId();
 
@@ -237,7 +236,6 @@ public class LookupOptionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     private String prepareForUpdate(String masterConstant, String configurationConstant, String listName,
             String addOrEdit, LookupOptionData data, String nameString) throws SystemException, ApplicationException {
-        MasterPersistence masterPersistence = new MasterPersistence();
         CustomValueDto valueList = masterPersistence.getLookUpEntity(masterConstant);
         Short valueListId = valueList.getEntityId();
         CustomValueListElementDto valueListElement = valueList.getCustomValueListElements().get(0);

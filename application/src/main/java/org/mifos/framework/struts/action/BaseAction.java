@@ -55,6 +55,7 @@ import org.mifos.application.admin.system.ShutdownManager;
 import org.mifos.application.importexport.servicefacade.ImportTransactionsServiceFacade;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CenterServiceFacade;
 import org.mifos.application.servicefacade.ClientServiceFacade;
@@ -143,6 +144,8 @@ public abstract class BaseAction extends DispatchAction {
 
     protected FundDao fundDao;
 
+    protected MasterPersistence masterPersistence;
+
     // non domain app
     protected LoanServiceFacade loanServiceFacade;
 
@@ -180,6 +183,7 @@ public abstract class BaseAction extends DispatchAction {
             this.importTransactionsServiceFacade = springAppContext.getBean(ImportTransactionsServiceFacade.class);
             this.checkListServiceFacade = springAppContext.getBean(CheckListServiceFacade.class);
             this.applicationConfigurationDao = springAppContext.getBean(ApplicationConfigurationDao.class);
+            this.masterPersistence = springAppContext.getBean(MasterPersistence.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
         }

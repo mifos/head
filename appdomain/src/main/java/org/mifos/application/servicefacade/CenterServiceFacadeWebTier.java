@@ -134,6 +134,9 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
+    MasterPersistence masterPersistence;
+
+    @Autowired
     public CenterServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
         this.customerService = customerService;
@@ -271,7 +274,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
-        List<PositionEntity> allCustomerPositions = new MasterPersistence().findMasterDataEntitiesWithLocale(PositionEntity.class, localeId);
+        List<PositionEntity> allCustomerPositions = masterPersistence.findMasterDataEntitiesWithLocale(PositionEntity.class, localeId);
         if (!new ClientRules().getCenterHierarchyExists()) {
             customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
         } else {

@@ -31,7 +31,6 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
-import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.config.LocalizedTextLookup;
 import org.mifos.config.business.MifosConfiguration;
@@ -76,11 +75,14 @@ import org.springframework.context.MessageSourceAware;
 public class MessageLookup implements MessageSourceAware {
     private static MessageLookup messageLookupInstance = new MessageLookup();
 
-    @Autowired
+    @Autowired(required=false)
     private ApplicationConfigurationDao applicationConfigurationDao;
 
-    @Autowired
+    @Autowired(required=false)
     private GenericDao genericDao;
+
+    @Autowired(required=false)
+    MasterPersistence masterPersistence;
 
     private MessageSource messageSource;
 
@@ -217,7 +219,6 @@ public class MessageLookup implements MessageSourceAware {
 
         Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
         if ((lookUpValueLocales != null) && StringUtils.isNotBlank(newValue)) {
-            MasterPersistence masterPersistence = new MasterPersistence();
             for (LookUpValueLocaleEntity entity : lookUpValueLocales) {
                 if (entity.getLookUpId().equals(lookupValueEntity.getLookUpId())
                         && (entity.getLookUpValue() == null || !entity.getLookUpValue().equals(newValue))) {

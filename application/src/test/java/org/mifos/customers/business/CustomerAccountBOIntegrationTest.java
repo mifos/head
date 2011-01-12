@@ -61,7 +61,6 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.PaymentData;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.customers.center.business.CenterBO;
@@ -295,7 +294,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
 
         PaymentData paymentData = PaymentData.createPaymentData(new Money(getCurrency(), "133.0"),
             center.getPersonnel(), (short)1, firstInstallment.getActionDate());
-        
+
         customerAccountBO.applyPayment(paymentData);
 
         for (AccountActionDateEntity accountActionDateEntity : customerAccountBO.getAccountActionDates()) {
@@ -1096,8 +1095,6 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         accountAction.setPaymentDate(currentDate);
         accountAction.setPaymentStatus(PaymentStatus.PAID);
 
-        MasterPersistence masterPersistenceService = new MasterPersistence();
-
         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(customerAccountBO,
                 TestUtils.createMoney(300), "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")),
                 new Date(System.currentTimeMillis()));
@@ -1105,8 +1102,7 @@ public class CustomerAccountBOIntegrationTest extends MifosIntegrationTestCase {
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(), TestObjectFactory
                         .getPersonnel(userContext.getId()), currentDate, TestUtils.createMoney(300),
-                "payment done", null, TestUtils.createMoney(100), TestUtils.createMoney(100),
-                masterPersistenceService);
+                "payment done", null, TestUtils.createMoney(100), TestUtils.createMoney(100));
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
             CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,

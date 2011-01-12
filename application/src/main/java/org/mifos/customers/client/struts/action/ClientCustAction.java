@@ -153,7 +153,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         List<ApplicableAccountFeeDto> additionalFees = clientFormCreationDto.getAdditionalFees();
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, additionalFees, request);
 
-        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = masterPersistence.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getClientDropdowns().getSalutations(), request);
@@ -577,7 +577,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, personalInfo.getClientDropdowns().getHandicapped(), request);
 
         UserContext userContext = getUserContext(request);
-        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = masterPersistence.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         boolean isFamilyDetailsRequired = personalInfo.getClientRules().isFamilyDetailsRequired();
@@ -729,7 +729,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
 
         UserContext userContext = getUserContext(request);
-        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = masterPersistence.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);

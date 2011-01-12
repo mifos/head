@@ -30,6 +30,7 @@ import java.util.PropertyResourceBundle;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
@@ -42,6 +43,7 @@ import org.mifos.framework.components.audit.persistence.AuditConfigurationPersis
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuditConfiguration {
 
@@ -62,13 +64,11 @@ public class AuditConfiguration {
 
     private List<Short> locales;
 
-    private MasterPersistence masterPersistence;
+    private MasterPersistence masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
 
     public static AuditConfiguration auditConfigurtion = new AuditConfiguration();
 
     private AuditConfiguration() {
-        masterPersistence = new MasterPersistence();
-
         locales = Localization.getInstance().getSupportedLocaleIds();
         locale = Localization.getInstance().getMainLocale();
         columnNames = (PropertyResourceBundle) PropertyResourceBundle.getBundle(

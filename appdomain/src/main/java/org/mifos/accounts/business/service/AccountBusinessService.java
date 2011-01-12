@@ -50,6 +50,7 @@ import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.api.CustomerLevel;
@@ -95,7 +96,7 @@ public class AccountBusinessService implements BusinessService {
     public AccountActionEntity getAccountAction(Short actionType, Short localeId) throws ServiceException {
         AccountActionEntity accountAction = null;
         try {
-            accountAction = (AccountActionEntity) new MasterPersistence().getPersistentObject(
+            accountAction = ApplicationContextProvider.getBean(MasterPersistence.class).getPersistentObject(
                     AccountActionEntity.class, actionType);
             accountAction.setLocaleId(localeId);
         } catch (PersistenceException e) {

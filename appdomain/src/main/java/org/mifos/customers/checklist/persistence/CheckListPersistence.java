@@ -35,8 +35,9 @@ import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.dto.domain.CheckListMasterDto;
 import org.mifos.dto.screen.CheckListStatesView;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.persistence.Persistence;
 
-public class CheckListPersistence extends MasterPersistence {
+public class CheckListPersistence extends Persistence {
 
     public CheckListPersistence() {
     }
@@ -92,7 +93,7 @@ public class CheckListPersistence extends MasterPersistence {
     }
 
     public CheckListBO getCheckList(Short checkListId) throws PersistenceException {
-        return (CheckListBO) getPersistentObject(CheckListBO.class, checkListId);
+        return getPersistentObject(CheckListBO.class, checkListId);
     }
 
     public long isValidCheckListState(Short levelId, Short stateId, boolean isCustomer) throws PersistenceException {

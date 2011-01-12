@@ -91,6 +91,9 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
+    MasterPersistence masterPersistence;
+
+    @Autowired
     public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao) {
         super();
         this.officeDao = officeDao;
@@ -362,10 +365,10 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
                 }
             }
 
-            PersonnelStatusEntity personnelStatus = (PersonnelStatusEntity) new MasterPersistence()
+            PersonnelStatusEntity personnelStatus = masterPersistence
                     .getPersistentObject(PersonnelStatusEntity.class, status.getValue());
 
-            PersonnelLevelEntity personnelLevel = (PersonnelLevelEntity) new MasterPersistence().getPersistentObject(
+            PersonnelLevelEntity personnelLevel = masterPersistence.getPersistentObject(
                     PersonnelLevelEntity.class, userHierarchyLevel.getValue());
 
             Short preferredLocaleId = Localization.getInstance().getLocaleId();
@@ -515,7 +518,7 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
         try {
             String value = "";
             if (entityId != null) {
-                 value = new MasterPersistence().getMessageForLookupEntity(entityId);
+                 value = masterPersistence.getMessageForLookupEntity(entityId);
             }
             return value;
         } catch (PersistenceException e) {

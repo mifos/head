@@ -120,6 +120,9 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
+    MasterPersistence masterPersistence;
+
+    @Autowired
     public GroupServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
         this.customerService = customerService;
@@ -425,7 +428,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
-        List<PositionEntity> allCustomerPositions = new MasterPersistence().findMasterDataEntitiesWithLocale(
+        List<PositionEntity> allCustomerPositions = masterPersistence.findMasterDataEntitiesWithLocale(
                 PositionEntity.class, localeId);
         if (!new ClientRules().getCenterHierarchyExists()) {
             customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);

@@ -27,13 +27,16 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonnelStatusEntityIntegrationTest extends MifosIntegrationTestCase {
 
+    @Autowired
+    MasterPersistence masterPersistence;
+
     @Test
     public void testGetPersonnelStatusEntity() throws Exception {
-        MasterPersistence masterPersistenceService = new MasterPersistence();
-        PersonnelStatusEntity personnelStatusEntity = (PersonnelStatusEntity) masterPersistenceService
+        PersonnelStatusEntity personnelStatusEntity = masterPersistence
                 .getPersistentObject(PersonnelStatusEntity.class, (short) 1);
 
         String name = MessageLookup.getInstance().lookup(personnelStatusEntity.getLookUpValue());

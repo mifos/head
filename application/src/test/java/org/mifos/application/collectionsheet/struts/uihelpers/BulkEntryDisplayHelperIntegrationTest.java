@@ -71,6 +71,7 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestCase {
 
@@ -91,6 +92,9 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
     private SavingsBO groupSavingsAccount;
 
     private SavingsBO clientSavingsAccount;
+
+    @Autowired
+    MasterPersistence masterPersistence;
 
     @After
     public void tearDown() throws Exception {
@@ -154,7 +158,7 @@ public class BulkEntryDisplayHelperIntegrationTest extends MifosIntegrationTestC
 
         // Assert that the extracted attendance types are the ones expected
         final String[] EXPECTED_ATTENDANCE_TYPES = { "P", "A", "AA", "L" };
-        List<CustomValueListElementDto> attendanceTypesCustomValueList = new MasterPersistence().getCustomValueList(
+        List<CustomValueListElementDto> attendanceTypesCustomValueList = masterPersistence.getCustomValueList(
                 MasterConstants.ATTENDENCETYPES,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId")
                 .getCustomValueListElements();

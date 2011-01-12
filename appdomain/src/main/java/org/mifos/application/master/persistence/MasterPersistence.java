@@ -56,6 +56,9 @@ import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
  */
 public class MasterPersistence extends Persistence {
 
+    private MasterPersistence() {
+    }
+
     /**
      * Only two non-test usages, one that may never be called and one for getting labels.
      */

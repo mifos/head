@@ -29,6 +29,7 @@ import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -74,13 +75,13 @@ public class RolesPermissionsPersistence extends Persistence {
     }
 
     public RoleBO getRole(Short roleId) throws PersistenceException {
-        return (RoleBO) getPersistentObject(RoleBO.class, roleId);
+        return getPersistentObject(RoleBO.class, roleId);
     }
 
     public ActivityEntity retrieveOneActivityEntity(int lookUpId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        MasterPersistence mp = new MasterPersistence();
-        LookUpValueEntity aLookUpValueEntity = (LookUpValueEntity) mp.getPersistentObject(LookUpValueEntity.class,
+        MasterPersistence mp = ApplicationContextProvider.getBean(MasterPersistence.class);
+        LookUpValueEntity aLookUpValueEntity = mp.getPersistentObject(LookUpValueEntity.class,
                 lookUpId);
         queryParameters.put("aLookUpValueEntity", aLookUpValueEntity);
         Object obj = execUniqueResultNamedQuery(NamedQueryConstants.GETACTIVITYENTITY, queryParameters);

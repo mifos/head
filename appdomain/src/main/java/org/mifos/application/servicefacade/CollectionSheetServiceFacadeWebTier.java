@@ -59,11 +59,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class CollectionSheetServiceFacadeWebTier implements CollectionSheetServiceFacade {
 
     private OfficePersistence officePersistence = new OfficePersistence();
-    private MasterPersistence masterPersistence = new MasterPersistence();
     private PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private CustomerPersistence customerPersistence = new CustomerPersistence();
     private final CollectionSheetService collectionSheetService;
     private final CollectionSheetDtoTranslator collectionSheetTranslator;
+
+    @Autowired
+    MasterPersistence masterPersistence;
 
     @Autowired
     public CollectionSheetServiceFacadeWebTier(final CollectionSheetService collectionSheetService,

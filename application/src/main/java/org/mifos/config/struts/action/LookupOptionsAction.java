@@ -295,7 +295,6 @@ public class LookupOptionsAction extends BaseAction {
 
         Short localeId = getUserContext(request).getLocaleId();
         setSpecialLables(getUserContext(request), lookupOptionsActionForm);
-        MasterPersistence masterPersistence = new MasterPersistence();
         populateConfigurationListBox(MasterConstants.SALUTATION, masterPersistence, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_SALUTATION);
         populateConfigurationListBox(MasterConstants.PERSONNEL_TITLE, masterPersistence, localeId, request,
@@ -370,7 +369,6 @@ public class LookupOptionsAction extends BaseAction {
         LookupOptionData data = (LookupOptionData) SessionUtils.getAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA,request);
         data.setLookupValue(lookupOptionsActionForm.getLookupValue());
         String entity = request.getParameter(ConfigurationConstants.ENTITY);
-        MasterPersistence masterPersistence = new MasterPersistence();
         if (data.getLookupId() > 0) {
             masterPersistence.updateValueListElementForLocale(data.getLookupId(), data.getLookupValue());
         } else {
@@ -384,7 +382,7 @@ public class LookupOptionsAction extends BaseAction {
              */
             if (entity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
                 PaymentTypeEntity newPaymentType = new PaymentTypeEntity(newLookupValue);
-                new MasterPersistence().createOrUpdate(newPaymentType);
+                masterPersistence.createOrUpdate(newPaymentType);
                 StaticHibernateUtil.commitTransaction();
             }
 

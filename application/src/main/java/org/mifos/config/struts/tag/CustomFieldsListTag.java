@@ -33,6 +33,7 @@ import org.mifos.application.master.business.CustomFieldCategory;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.tags.XmlBuilder;
@@ -112,7 +113,7 @@ public class CustomFieldsListTag extends BodyTagSupport { // SimpleTagSupport {
     }
 
     public String getCustomFieldsList(UserContext userContext) throws PersistenceException {
-        MasterPersistence master = new MasterPersistence();
+        MasterPersistence master = ApplicationContextProvider.getBean(MasterPersistence.class);
         EntityType entityType = CustomFieldCategory.getCustomFieldCategoryFromString(category).mapToEntityType();
 
         XmlBuilder html = new XmlBuilder();

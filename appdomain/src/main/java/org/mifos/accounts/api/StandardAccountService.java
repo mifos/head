@@ -79,6 +79,9 @@ public class StandardAccountService implements AccountService {
     private HibernateTransactionHelper transactionHelper;
 
     @Autowired
+    private MasterPersistence masterPersistence;
+
+    @Autowired
     public StandardAccountService(AccountPersistence accountPersistence, LoanPersistence loanPersistence,
                                   AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
@@ -160,7 +163,7 @@ public class StandardAccountService implements AccountService {
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
             LoanBO loan = this.loanPersistence.getAccount(accountPaymentParametersDto.getAccountId());
 
-            PaymentTypeEntity paymentTypeEntity = new MasterPersistence().getPersistentObject(
+            PaymentTypeEntity paymentTypeEntity = masterPersistence.getPersistentObject(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
             Money amount = new Money(loan.getCurrency(), accountPaymentParametersDto.getPaymentAmount());
             Date receiptDate = null;

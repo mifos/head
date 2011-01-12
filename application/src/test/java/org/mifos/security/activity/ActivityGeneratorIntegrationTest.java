@@ -26,6 +26,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.junit.Test;
 import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
@@ -36,9 +37,12 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
-import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
+
+    @Autowired
+    MasterPersistence masterPersistence;
 
     @Test
     public void testShouldInsertSuccessActivity() throws Exception {
@@ -67,11 +71,11 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testShouldSuccessWhenChangeActivityParent() throws PersistenceException {
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
-        ActivityEntity activity = (ActivityEntity) rpp.getPersistentObject(ActivityEntity.class, Short
+        ActivityEntity activity = rpp.getPersistentObject(ActivityEntity.class, Short
                 .valueOf((short) 2));
        Assert.assertEquals(1, activity.getParent().getId().shortValue());
         ActivityGenerator.reparentActivityUsingHibernate((short) 2, (short) 13);
-        activity = (ActivityEntity) rpp.getPersistentObject(ActivityEntity.class, Short.valueOf((short) 2));
+        activity = rpp.getPersistentObject(ActivityEntity.class, Short.valueOf((short) 2));
        Assert.assertEquals(13, activity.getParent().getId().shortValue());
         ActivityGenerator.reparentActivityUsingHibernate((short) 2, (short) 1);
     }
@@ -79,19 +83,18 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testShouldSuccessWhenChangeActivityMessage() throws Exception {
         RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
-        MasterPersistence mp = new MasterPersistence();
-        ActivityEntity activityEntity = (ActivityEntity) rpp.getPersistentObject(ActivityEntity.class, Short
+        ActivityEntity activityEntity = rpp.getPersistentObject(ActivityEntity.class, Short
                 .valueOf((short) 3));
         Integer lookUpId = activityEntity.getActivityNameLookupValues().getLookUpId();
        Assert.assertEquals(373, lookUpId.intValue());
 
         short localeId = DatabaseMigrator.ENGLISH_LOCALE;
-        LookUpValueLocaleEntity lookUpValueLocaleEntity = mp.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId
+        LookUpValueLocaleEntity lookUpValueLocaleEntity = masterPersistence.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId
                 .intValue());
         Assert.assertNull(lookUpValueLocaleEntity.getLookUpValue());
 
         ActivityGenerator.changeActivityMessage((short) 3, localeId, "wahaha");
-        lookUpValueLocaleEntity = mp.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId.intValue());
+        lookUpValueLocaleEntity = masterPersistence.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId.intValue());
 
        Assert.assertEquals("wahaha", lookUpValueLocaleEntity.getLookUpValue());
         ActivityGenerator.changeActivityMessage((short) 3, localeId, null);
@@ -101,9 +104,30 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testShouldGenerateMinActivityIdWhenCalculate() throws Exception {
         short minActivityId = -32767;
-        ActivityEntity activity = ActivityTestUtil.insertActivityForTest(minActivityId);
-       Assert.assertEquals(minActivityId - 1, ActivityGenerator.calculateDynamicActivityId());
-        ActivityTestUtil.deleteActivityForTest(activity);
+        ActivityEntity activity = insertActivityForTest(minActivityId);
+        Assert.assertEquals(minActivityId - 1, ActivityGenerator.calculateDynamicActivityId());
+        deleteActivityForTest(activity);
     }
 
+
+    private ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
+        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LookUpValueEntity anLookUp = new LookUpValueEntity();
+        LookUpEntity lookUpEntity = masterPersistence.getPersistentObject(LookUpEntity.class, Short
+                .valueOf((short) LookUpEntity.ACTIVITY));
+        anLookUp.setLookUpEntity(lookUpEntity);
+        ActivityEntity parent = masterPersistence.getPersistentObject(ActivityEntity.class, (short) 13);
+        ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);
+        rpp.createOrUpdate(anLookUp);
+        rpp.createOrUpdate(activityEntity);
+        return activityEntity;
+    }
+
+    private void deleteActivityForTest(ActivityEntity activityEntity) throws PersistenceException {
+        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        rpp.getSession().clear();
+        LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
+        rpp.delete(activityEntity);
+        rpp.delete(anLookUp);
+    }
 }

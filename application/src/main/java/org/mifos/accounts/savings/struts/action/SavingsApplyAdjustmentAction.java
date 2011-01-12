@@ -84,7 +84,7 @@ public class SavingsApplyAdjustmentAction extends BaseAction {
         if (savingsAdjustmentDto.isDepositOrWithdrawal()) {
 
             AccountPaymentEntity lastPayment = savings.findMostRecentPaymentByPaymentDate();
-            AccountActionEntity accountAction = (AccountActionEntity) new MasterPersistence().getPersistentObject(
+            AccountActionEntity accountAction = masterPersistence.getPersistentObject(
                     AccountActionEntity.class, new SavingsHelper().getPaymentActionType(lastPayment));
             accountAction.setLocaleId(uc.getLocaleId());
 

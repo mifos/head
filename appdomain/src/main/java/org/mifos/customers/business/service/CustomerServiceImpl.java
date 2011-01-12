@@ -113,6 +113,9 @@ public class CustomerServiceImpl implements CustomerService {
     private MessageLookupHelper messageLookupHelper = DefaultMessageLookupHelper.createNew();
 
     @Autowired
+    MasterPersistence masterPersistence;
+
+    @Autowired
     public CustomerServiceImpl(CustomerDao customerDao, PersonnelDao personnelDao, OfficeDao officeDao,
             HolidayDao holidayDao, final HibernateTransactionHelper hibernateTransactionHelper) {
         this.customerDao = customerDao;
@@ -618,7 +621,7 @@ public class CustomerServiceImpl implements CustomerService {
         CustomerStatusFlagEntity customerStatusFlagEntity = null;
         if (customerStatusFlag != null) {
             try {
-                customerStatusFlagEntity = (CustomerStatusFlagEntity) new MasterPersistence().getPersistentObject(
+                customerStatusFlagEntity = masterPersistence.getPersistentObject(
                         CustomerStatusFlagEntity.class, customerStatusFlag.getValue());
             } catch (PersistenceException e) {
                 throw new CustomerException(e);

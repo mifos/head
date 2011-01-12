@@ -350,7 +350,7 @@ public class CustomerAccountBO extends AccountBO {
             if (leftFromPaidIn.compareTo(BigDecimal.ZERO) == 0) {
                 break;
             }
-            
+
             BigDecimal miscPenaltyToPay = leftFromPaidIn.min(customerSchedule.getMiscPenaltyDue().getAmount());
             if (miscPenaltyToPay.compareTo(BigDecimal.ZERO) > 0) {
                 customerSchedule.payMiscPenalty(new Money(totalPaid.getCurrency(), miscPenaltyToPay));
@@ -391,7 +391,7 @@ public class CustomerAccountBO extends AccountBO {
                     AccountActionTypes.CUSTOMER_ACCOUNT_REPAYMENT, customerSchedule.getInstallmentId(),
                     customerSchedule.getActionDate(), paymentData.getPersonnel(), paymentData.getTransactionDate(),
                     customerScheduleAmountPaid, AccountConstants.PAYMENT_RCVD, null, new Money(totalPaid.getCurrency(), miscFeeToPay),
-                    new Money(totalPaid.getCurrency(), miscPenaltyToPay), getFeePersistence());
+                    new Money(totalPaid.getCurrency(), miscPenaltyToPay));
 
             for (FeesTrxnDetailEntity feesTrxnDetailEntity : feeTrxns) {
                 accountTrxn.addFeesTrxnDetail(feesTrxnDetailEntity);
@@ -1136,7 +1136,7 @@ public class CustomerAccountBO extends AccountBO {
      * PaymentTypeEntity.
      */
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
-        return (PaymentTypeEntity)getFeePersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
+        return getFeePersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 
     @Override

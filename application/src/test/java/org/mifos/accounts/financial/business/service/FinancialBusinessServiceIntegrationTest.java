@@ -55,19 +55,21 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
     private LoanBO loan = null;
-    private SavingsBO savings;
     private CustomerBO center = null;
     private CustomerBO group = null;
+
+    @Autowired
+    MasterPersistence masterPersistence;
 
     @After
     public void tearDown() throws Exception {
         try {
             loan = null;
-            savings = null;
             group = null;
             center = null;
         } catch (Exception e) {
@@ -143,7 +145,6 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
     }
 
     private AccountTrxnEntity getAccountTrxnObj(AccountPaymentEntity accountPaymentEntity) throws Exception {
-        MasterPersistence masterPersistenceService = new MasterPersistence();
         Date currentDate = new Date(System.currentTimeMillis());
 
         LoanScheduleEntity accountAction = (LoanScheduleEntity) loan.getAccountActionDate(Short.valueOf("1"));
@@ -153,7 +154,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 TestObjectFactory.getPersonnel(PersonnelConstants.SYSTEM_USER), currentDate,
                 TestUtils.createMoney(630), "test for loan adjustment", null, TestUtils.createMoney(200), TestUtils
                         .createMoney(300), TestUtils.createMoney(), TestUtils.createMoney(10), TestUtils
-                        .createMoney(20), null, masterPersistenceService);
+                        .createMoney(20), null);
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
             LoanBOTestUtils.setFeeAmountPaid(accountFeesActionDetailEntity, TestUtils.createMoney(100));
@@ -191,8 +192,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                         .getActionDate(), personnel, new Date(System.currentTimeMillis()),
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Written Off", null,
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(getCurrency()), new Money(
-                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null,
-                new MasterPersistence());
+                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, loan);
@@ -230,8 +230,7 @@ public class FinancialBusinessServiceIntegrationTest extends MifosIntegrationTes
                 accountActionDateEntity.getActionDate(), personnel, new Date(System.currentTimeMillis()),
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), "Loan Rescheduled", null,
                 ((LoanScheduleEntity) accountActionDateEntity).getPrincipal(), new Money(getCurrency()), new Money(
-                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null,
-                new MasterPersistence());
+                        getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
         AccountTestUtils.addAccountPayment(accountPaymentEntity, loan);

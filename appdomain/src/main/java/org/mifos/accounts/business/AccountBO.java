@@ -160,13 +160,9 @@ public class AccountBO extends AbstractBusinessObject {
 
     public MasterPersistence getMasterPersistence() {
         if (null == masterPersistence) {
-            masterPersistence = new MasterPersistence();
+            masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
         }
         return masterPersistence;
-    }
-
-    public void setMasterPersistence(final MasterPersistence masterPersistence) {
-        this.masterPersistence = masterPersistence;
     }
 
     /**
@@ -581,12 +577,12 @@ public class AccountBO extends AbstractBusinessObject {
 
             activationDateHelper(newStatusId);
             MasterPersistence masterPersistence = getMasterPersistence();
-            AccountStateEntity accountStateEntity = (AccountStateEntity) masterPersistence.getPersistentObject(
+            AccountStateEntity accountStateEntity = masterPersistence.getPersistentObject(
                     AccountStateEntity.class, newStatusId);
             accountStateEntity.setLocaleId(this.getUserContext().getLocaleId());
             AccountStateFlagEntity accountStateFlagEntity = null;
             if (flagId != null) {
-                accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence.getPersistentObject(
+                accountStateFlagEntity = masterPersistence.getPersistentObject(
                         AccountStateFlagEntity.class, flagId);
             }
 

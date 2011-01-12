@@ -23,14 +23,21 @@ package org.mifos.reports.struts.action;
 import junit.framework.Assert;
 
 import org.junit.Test;
+import org.mifos.application.master.business.LookUpEntity;
+import org.mifos.application.master.business.LookUpValueEntity;
+import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.MifosMockStrutsTestCase;
+import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.utils.ActivityTestUtil;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
 
+    @Autowired
+    MasterPersistence masterPersistence;
 
     @Override
     protected void setStrutsConfig() {
@@ -298,7 +305,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testShouldCreateFailureWhenActivityIdOutOfRange() throws Exception {
-        ActivityEntity activity = ActivityTestUtil.insertActivityForTest(Short.MIN_VALUE);
+        ActivityEntity activity = insertActivityForTest(Short.MIN_VALUE);
         setRequestPathInfo("/reportsCategoryAction.do");
         addRequestParameter("method", "addNewCategory");
         addRequestParameter("categoryName", "willFailureForRangeNewCategory");
@@ -308,7 +315,28 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
         String[] errors = { ReportsConstants.ERROR_NOMOREDYNAMICACTIVITYID };
         verifyActionErrors(errors);
 
-        ActivityTestUtil.deleteActivityForTest(activity);
+        deleteActivityForTest(activity);
+    }
+
+    public ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
+        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LookUpValueEntity anLookUp = new LookUpValueEntity();
+        LookUpEntity lookUpEntity = masterPersistence.getPersistentObject(LookUpEntity.class, Short
+                .valueOf((short) LookUpEntity.ACTIVITY));
+        anLookUp.setLookUpEntity(lookUpEntity);
+        ActivityEntity parent = masterPersistence.getPersistentObject(ActivityEntity.class, (short) 13);
+        ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);
+        rpp.createOrUpdate(anLookUp);
+        rpp.createOrUpdate(activityEntity);
+        return activityEntity;
+    }
+
+    private void deleteActivityForTest(ActivityEntity activityEntity) throws PersistenceException {
+        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        rpp.getSession().clear();
+        LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
+        rpp.delete(activityEntity);
+        rpp.delete(anLookUp);
     }
 
 }

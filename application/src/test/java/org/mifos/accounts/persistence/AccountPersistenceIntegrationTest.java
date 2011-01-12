@@ -82,8 +82,12 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCase {
+
+    @Autowired
+    MasterPersistence masterPersistence;
 
     public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
     private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
@@ -243,7 +247,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     @Test
     public void testGetAccountAction() throws Exception {
-        AccountActionEntity accountAction = (AccountActionEntity) new MasterPersistence().getPersistentObject(
+        AccountActionEntity accountAction = masterPersistence.getPersistentObject(
                 AccountActionEntity.class, AccountActionTypes.SAVINGS_INTEREST_POSTING.getValue());
         Assert.assertNotNull(accountAction);
     }
@@ -431,7 +435,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         assertThat(accountIds.contains(client.getCustomerAccount().getAccountId()), is(true));
         assertThat(accountIds.contains(savingsBO.getAccountId()), is(true));
     }
-    
+
     @Test
     public void testFindingAccountPaymentShouldReturnOnePayment() throws Exception {
         savingsBO = createSavingsAccount();
@@ -449,7 +453,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         Assert.assertEquals(1, result.size());
         Assert.assertEquals("1111", result.get(0).getReceiptNumber());
     }
-    
+
     @Test
     public void testFindingAccountPaymentShouldReturnZeroPayments() throws Exception {
         savingsBO = createSavingsAccount();

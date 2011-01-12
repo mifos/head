@@ -119,6 +119,7 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -175,6 +176,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private AccountPersistence accountPersistence = null;
     private Money zeroMoney;
     private String interestDueForNextInstallment = "0";
+
+    @Autowired
+    MasterPersistence masterPersistence;
 
 
     @Before
@@ -277,7 +281,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         officePersistence.getOffice((short)3).getHolidays().clear();
 
         HolidayBO holiday2 = IntegrationTestObjectMother.findHolidayById(holiday.getId());
-        new MasterPersistence().delete(holiday2);
+        masterPersistence.delete(holiday2);
         StaticHibernateUtil.flushAndClearSession();
     }
 

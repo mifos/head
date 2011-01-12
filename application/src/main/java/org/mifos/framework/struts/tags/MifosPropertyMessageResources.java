@@ -29,6 +29,7 @@ import org.apache.struts.util.MessageResourcesFactory;
 import org.apache.struts.util.PropertyMessageResources;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.framework.util.helpers.BundleKey;
@@ -38,7 +39,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
 
     private final Map<BundleKey, String> dbMap_labels = new ConcurrentHashMap<BundleKey, String>();
     private final Map<BundleKey, Collection> dbMap_Values = new ConcurrentHashMap<BundleKey, Collection>();
-    private final MasterPersistence dao = new MasterPersistence();
+    private final MasterPersistence masterPersistence = ApplicationContextProvider.getBean(MasterPersistence.class);
 
     public MifosPropertyMessageResources(final MessageResourcesFactory factory, final String config, final boolean returnNull) {
         super(factory, config, returnNull);
@@ -113,11 +114,11 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
         if (returnVal == null) {
                 CustomValueDto entity = null;
                 if (mappingKey == null || mappingKey.equals("")) {
-                    entity = dao.getLookUpEntity(key);
+                    entity = masterPersistence.getLookUpEntity(key);
                 } else {
                     String[] mappingValues = MifosSelectHelper.getInstance().getValue(mappingKey);
                     if (mappingValues != null && mappingValues.length == 2) {
-                        entity = dao.getCustomValueList(key, mappingValues[0], mappingValues[1]);
+                        entity = masterPersistence.getCustomValueList(key, mappingValues[0], mappingValues[1]);
                     }
                 }
                 if (entity != null) {
@@ -134,7 +135,7 @@ public class MifosPropertyMessageResources extends PropertyMessageResources {
      */
     public CustomValueDto getEntity(final String key) {
         CustomValueDto entity = null;
-        entity = dao.getLookUpEntity(key);
+        entity = masterPersistence.getLookUpEntity(key);
         return entity;
 
     }

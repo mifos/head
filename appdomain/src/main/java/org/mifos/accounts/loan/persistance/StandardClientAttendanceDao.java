@@ -26,6 +26,7 @@ import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.customers.client.business.ClientAttendanceBO;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +37,8 @@ import java.util.Map;
  */
 public class StandardClientAttendanceDao implements ClientAttendanceDao {
 
-    private MasterPersistence masterPersistence = new MasterPersistence();
+    @Autowired
+    private MasterPersistence masterPersistence;
 
     @Override
     @SuppressWarnings("unchecked")

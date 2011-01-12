@@ -36,7 +36,6 @@ import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.PaymentStatus;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.customers.center.business.CenterBO;
 import org.mifos.customers.client.business.ClientBO;
@@ -109,15 +108,13 @@ public class CustomerTrxnDetailEntityIntegrationTest extends MifosIntegrationTes
         accountAction.setPaymentDate(currentDate);
         accountAction.setPaymentStatus(PaymentStatus.PAID);
 
-        MasterPersistence masterPersistenceService = new MasterPersistence();
-
         AccountPaymentEntity accountPaymentEntity = new AccountPaymentEntity(accountBO, TestUtils.createMoney(100),
                 "1111", currentDate, new PaymentTypeEntity(Short.valueOf("1")), new Date(System.currentTimeMillis()));
 
         CustomerTrxnDetailEntity accountTrxnEntity = new CustomerTrxnDetailEntity(accountPaymentEntity,
                 AccountActionTypes.PAYMENT, Short.valueOf("1"), accountAction.getActionDate(), TestObjectFactory
                         .getPersonnel(userContext.getId()), currentDate, TestUtils.createMoney(200), "payment done",
-                null, TestUtils.createMoney(100), TestUtils.createMoney(100), masterPersistenceService);
+                null, TestUtils.createMoney(100), TestUtils.createMoney(100));
 
         for (AccountFeesActionDetailEntity accountFeesActionDetailEntity : accountAction.getAccountFeesActionDetails()) {
             CustomerAccountBOTestUtils.setFeeAmountPaid((CustomerFeeScheduleEntity) accountFeesActionDetailEntity,

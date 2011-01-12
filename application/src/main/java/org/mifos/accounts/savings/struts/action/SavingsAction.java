@@ -90,7 +90,6 @@ public class SavingsAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsAction.class);
     private SavingsBusinessService savingsService;
-    private MasterPersistence masterPersistence;
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Savings",
             ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
@@ -124,7 +123,6 @@ public class SavingsAction extends BaseAction {
 
     public SavingsAction() throws Exception {
         savingsService = new SavingsBusinessService();
-        masterPersistence = new MasterPersistence();
     }
 
     @Override

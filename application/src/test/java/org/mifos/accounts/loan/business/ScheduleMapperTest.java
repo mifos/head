@@ -26,12 +26,10 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mifos.framework.TestUtils.getDate;
 import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -64,7 +62,6 @@ import org.mifos.framework.util.CollectionUtils;
 import org.mifos.framework.util.helpers.Transformer;
 import org.mockito.Matchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 // TODO: Test data instantiation inside this class needs improvement - johnvic/buddy
@@ -108,7 +105,6 @@ public class ScheduleMapperTest {
         loanScheduleEntities.add(scheduleEntityForPopulateTestInput);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
         when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
-        when(loanPersistence.getPersistentObject(Mockito.eq(AccountActionEntity.class), Mockito.<Serializable>any())).thenReturn(accountActionEntity);
         Date paymentDate = getDate(24, 11, 2010);
         Schedule schedule = getScheduleWithSingleInstallment();
         scheduleMapper.populatePaymentDetails(schedule, loanBO, paymentDate, personnelBO, accountPaymentEntity);
@@ -117,7 +113,6 @@ public class ScheduleMapperTest {
         verify(loanBO, times(1)).getLoanScheduleEntities();
         verify(loanBO, times(1)).getLoanPersistence();
         verify(loanBO, times(1)).recordSummaryAndPerfHistory(anyBoolean(), Matchers.<PaymentAllocation>any());
-        verify(loanPersistence, times(1)).getPersistentObject(eq(AccountActionEntity.class), Mockito.<Serializable>any());
     }
 
     private void assertCalculatedInterestOnPayment(AccountPaymentEntity accountPaymentEntity) {
