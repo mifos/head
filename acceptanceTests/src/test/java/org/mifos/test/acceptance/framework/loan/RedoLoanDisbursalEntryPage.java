@@ -58,10 +58,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
     }
 
     public RedoLoanDisbursalEntryPage verifyFeeBlockedForVariableInstallmentLoan(String[] fees) {
-        for (int index = 0; index < fees.length; index++) {
-            String fee = fees[index];
-            selenium.select("selectedFee[" + index + "].feeId",fee);
-        }
+        selectFee(fees);
         submit();
         for (String fee : fees) {
             Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
@@ -71,5 +68,13 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         }
         return this;
 
+    }
+
+    public RedoLoanDisbursalEntryPage selectFee(String[] fees) {
+        for (int index = 0; index < fees.length; index++) {
+            String fee = fees[index];
+            selenium.select("selectedFee[" + index + "].feeId",fee);
+        }
+        return this;
     }
 }

@@ -90,6 +90,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyLSIMDisabled() throws Exception {
         applicationDatabaseOperation.updateLSIM(0);
         loanProductTestHelper.navigateToDefineNewLoanProductPage().
@@ -97,6 +98,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyVariableInstalmentUnChecked() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -119,6 +121,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyVariableInstalmentWithNullValue() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -128,6 +131,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyVariableInstalment() throws Exception {
         applicationDatabaseOperation.updateLSIM(1);
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
@@ -137,6 +141,7 @@ public class VariableInstalmentLoanProductTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyVariableInstalmentField() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
         applicationDatabaseOperation.updateLSIM(1);

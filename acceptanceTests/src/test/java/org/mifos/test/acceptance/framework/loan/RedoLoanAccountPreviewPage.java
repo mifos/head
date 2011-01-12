@@ -26,6 +26,9 @@ import org.testng.Assert;
 
 public class RedoLoanAccountPreviewPage extends AbstractPage {
     String editScheduleButton = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
+    String scheduleTable = "//table[@id='repaymentScheduleTable']";
+    String balanceTable = "//table[@id='runningBalanceTable']";
+    String editScheduleInformation = "//input[@id='createloanpreview.button.edit' and @name='editButton' and @value='Edit Loan Schedule Information']";
 
     public RedoLoanAccountPreviewPage(Selenium selenium) {
         super(selenium);
@@ -40,9 +43,39 @@ public class RedoLoanAccountPreviewPage extends AbstractPage {
         Assert.assertTrue(!selenium.isElementPresent(editScheduleButton));
     }
 
-
-    public void verifyRunningBalance(String[][] loanSchedule, String[][] runningBalanceOne) {
-        for (int rowIndex = 0; rowIndex < loanSchedule.length; rowIndex++) {
+    @SuppressWarnings("PMD.PositionLiteralsFirstInComparisons")
+    public RedoLoanAccountPreviewPage verifyRunningBalance(String[][] loanSchedule, String[][] runningBalance) {
+         for (int rowIndex = 0; rowIndex < loanSchedule.length; rowIndex++) {
+            String[] installment = loanSchedule[rowIndex];
+            for (int columnIndex = 0; columnIndex < installment.length; columnIndex++) {
+                String value = installment[columnIndex];
+                int row = rowIndex+3;
+                if (!"".equals(value)) {
+                    int column = columnIndex + 1;
+                    String actualCellValue = selenium.getText(scheduleTable + "//tr[" + row + "]/td[" + column + "]");
+                    Assert.assertEquals(actualCellValue, value, "In Schedule Table for row " + row + " and column " + column + " expected value is " + value + " but the actual value is " + actualCellValue);
+                }
+            }
         }
+         for (int rowIndex = 0; rowIndex < runningBalance.length; rowIndex++) {
+            String[] installment = runningBalance[rowIndex];
+            for (int columnIndex = 0; columnIndex < installment.length; columnIndex++) {
+                String value = installment[columnIndex];
+                int row = rowIndex+4;
+                if (!value.equals("")) {
+                    int column = columnIndex + 1;
+                    String actualCellValue = selenium.getText(balanceTable + "//tr[" + row + "]/td[" + column + "]");
+                    Assert.assertEquals(actualCellValue, value, "In Schedule Table for row " + row + " and column " + column + " expected value is " + value + " but the actual value is " + actualCellValue);
+                }
+            }
+        }
+        return this;
+
+    }
+
+    public RedoLoanDisbursalSchedulePreviewPage editSchedule() {
+        selenium.click(editScheduleInformation);
+        waitForPageToLoad();
+        return new RedoLoanDisbursalSchedulePreviewPage(selenium);
     }
 }

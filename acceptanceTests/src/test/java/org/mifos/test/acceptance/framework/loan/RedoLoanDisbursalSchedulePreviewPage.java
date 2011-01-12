@@ -322,15 +322,9 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     public RedoLoanDisbursalSchedulePreviewPage setPaidField(String[][] payment) {
-        String[] dates = payment[0];
-        String[] amounts = payment[1];
-        for (int index = 0; index < dates.length; index++) {
-            String date = dates[index];
-            selenium.type(String.format(paidDateField,index),date);
-        }
-        for (int index = 0; index < amounts.length; index++) {
-            String amount = amounts[index];
-            selenium.type(String.format(paidAmountField,index),amount);
+        for (int rowIndex = 0; rowIndex < payment.length; rowIndex++) {
+            selenium.type(String.format(paidDateField,rowIndex),payment[rowIndex][0]);
+            selenium.type(String.format(paidAmountField,rowIndex),payment[rowIndex][1]);
         }
         return this;
     }
