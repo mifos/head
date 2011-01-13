@@ -20,11 +20,12 @@
 
 package org.mifos.framework.components.fieldConfiguration.business;
 
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.EntityMaster;
-import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
 public class FieldConfigurationEntity {
 
@@ -122,7 +123,7 @@ public class FieldConfigurationEntity {
     public void update(Short mandatoryFlag, Short hiddenFlag) throws PersistenceException {
         this.mandatoryFlag = mandatoryFlag;
         this.hiddenFlag = hiddenFlag;
-        new LegacyFieldConfigurationDao().createOrUpdate(this);
+        ApplicationContextProvider.getBean(LegacyGenericDao.class).createOrUpdate(this);
     }
 
 }

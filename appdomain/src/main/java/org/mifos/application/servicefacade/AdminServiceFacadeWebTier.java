@@ -169,6 +169,9 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     LegacyMasterDao legacyMasterDao;
 
     @Autowired
+    LegacyFieldConfigurationDao legacyFieldConfigurationDao;
+
+    @Autowired
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
             MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
             SavingsProductDao savingsProductDao, OfficeDao officeDao,
@@ -874,7 +877,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
 
         try {
-            List<FieldConfigurationEntity> confFieldList = new LegacyFieldConfigurationDao()
+            List<FieldConfigurationEntity> confFieldList = legacyFieldConfigurationDao
                     .getAllConfigurationFieldList();
             MandatoryHiddenFieldsDto dto = new MandatoryHiddenFieldsDto();
             populateDto(dto, confFieldList);
@@ -1015,7 +1018,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) {
         try {
-            List<FieldConfigurationEntity> confFieldList = new LegacyFieldConfigurationDao()
+            List<FieldConfigurationEntity> confFieldList = legacyFieldConfigurationDao
                     .getAllConfigurationFieldList();
             mandatoryHiddenFieldService.updateMandatoryHiddenFields(dto, confFieldList);
         } catch (PersistenceException e) {

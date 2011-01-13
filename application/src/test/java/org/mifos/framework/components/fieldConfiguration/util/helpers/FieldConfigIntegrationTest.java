@@ -34,20 +34,22 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
 
-    private LegacyFieldConfigurationDao persistence = new LegacyFieldConfigurationDao();
+    @Autowired
+    private LegacyFieldConfigurationDao legacyFieldConfigurationDao;
 
     private FieldConfig fieldConfig = FieldConfig.getInstance();
 
     @Test
     public void testIsFieldHidden() throws HibernateProcessException, PersistenceException {
         EntityMasterData.getInstance().init();
-        List<EntityMaster> entityMasterList = persistence.getEntityMasterList();
+        List<EntityMaster> entityMasterList = legacyFieldConfigurationDao.getEntityMasterList();
         for (EntityMaster entityMaster : entityMasterList) {
             fieldConfig.getEntityFieldMap()
-                    .put(entityMaster.getId(), persistence.getListOfFields(entityMaster.getId()));
+                    .put(entityMaster.getId(), legacyFieldConfigurationDao.getListOfFields(entityMaster.getId()));
         }
        Assert.assertEquals(fieldConfig.isFieldHidden("Loan.PurposeOfLoan"), false);
        Assert.assertEquals(fieldConfig.isFieldHidden("Group.City"), true);
@@ -57,10 +59,10 @@ public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testIsFieldMandatory() throws HibernateProcessException, PersistenceException {
         EntityMasterData.getInstance().init();
-        List<EntityMaster> entityMasterList = persistence.getEntityMasterList();
+        List<EntityMaster> entityMasterList = legacyFieldConfigurationDao.getEntityMasterList();
         for (EntityMaster entityMaster : entityMasterList) {
             fieldConfig.getEntityFieldMap()
-                    .put(entityMaster.getId(), persistence.getListOfFields(entityMaster.getId()));
+                    .put(entityMaster.getId(), legacyFieldConfigurationDao.getListOfFields(entityMaster.getId()));
         }
        Assert.assertEquals(fieldConfig.isFieldManadatory("Loan.PurposeOfLoan"), true);
         fieldConfig.getEntityFieldMap().clear();
