@@ -3,5 +3,6 @@
     xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
     
     <bean id="legacyMasterDao" class="org.mifos.application.master.persistence.LegacyMasterDao"/>
+    <bean id="legacyAdminDocumentDao" class="org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao"/>
 
 </beans>

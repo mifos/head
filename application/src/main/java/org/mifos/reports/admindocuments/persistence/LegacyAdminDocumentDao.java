@@ -30,7 +30,7 @@ import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 
 public class LegacyAdminDocumentDao extends LegacyGenericDao {
 
-    public LegacyAdminDocumentDao() {
+    private LegacyAdminDocumentDao() {
     }
 
     public AdminDocumentBO getAdminDocumentById(Short adminDocumentId) throws PersistenceException {

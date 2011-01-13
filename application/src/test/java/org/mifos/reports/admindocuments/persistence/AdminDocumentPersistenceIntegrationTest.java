@@ -23,30 +23,26 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AdminDocumentPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private LegacyAdminDocumentDao reportsPersistence;
-
-    @Before
-    public void setUp() throws Exception {
-        reportsPersistence = new LegacyAdminDocumentDao();
-    }
+    @Autowired
+    private LegacyAdminDocumentDao legacyAdminDocumentDao;
 
     @Test
     public void testGetAllAdminDocuments() throws PersistenceException {
-        List<AdminDocumentBO> listadmindoc = reportsPersistence.getAllAdminDocuments();
+        List<AdminDocumentBO> listadmindoc = legacyAdminDocumentDao.getAllAdminDocuments();
        Assert.assertEquals(0, listadmindoc.size());
     }
 
     @Test
     public void testGetAdminDocumentById() throws NumberFormatException, PersistenceException {
-        AdminDocumentBO admindoc = reportsPersistence.getAdminDocumentById(Short.valueOf("1"));
+        AdminDocumentBO admindoc = legacyAdminDocumentDao.getAdminDocumentById(Short.valueOf("1"));
        Assert.assertEquals(null, admindoc);
     }
 

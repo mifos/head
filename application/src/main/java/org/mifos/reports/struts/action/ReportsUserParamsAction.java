@@ -79,9 +79,9 @@ public class ReportsUserParamsAction extends BaseAction {
             strReportId = "0";
         }
         int reportId = Integer.parseInt(strReportId);
-        String reportName = new LegacyAdminDocumentDao().getAdminDocumentById((short) reportId)
+        String reportName = legacyAdminDocumentDao.getAdminDocumentById((short) reportId)
                 .getAdminDocumentName();
-        String filename = new LegacyAdminDocumentDao().getAdminDocumentById((short) reportId)
+        String filename = legacyAdminDocumentDao.getAdminDocumentById((short) reportId)
                 .getAdminDocumentIdentifier();
         File file = new File(BirtAdminDocumentUploadAction.getAdminDocumentStorageDirectory(), filename);
 

@@ -98,6 +98,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.util.UserContext;
@@ -145,6 +146,7 @@ public abstract class BaseAction extends DispatchAction {
     protected FundDao fundDao;
 
     protected LegacyMasterDao legacyMasterDao;
+    protected LegacyAdminDocumentDao legacyAdminDocumentDao;
 
     // non domain app
     protected LoanServiceFacade loanServiceFacade;
@@ -183,9 +185,11 @@ public abstract class BaseAction extends DispatchAction {
             this.importTransactionsServiceFacade = springAppContext.getBean(ImportTransactionsServiceFacade.class);
             this.checkListServiceFacade = springAppContext.getBean(CheckListServiceFacade.class);
             this.applicationConfigurationDao = springAppContext.getBean(ApplicationConfigurationDao.class);
-            this.legacyMasterDao = springAppContext.getBean(LegacyMasterDao.class);
 
             this.fundDao = springAppContext.getBean(FundDao.class);
+
+            this.legacyMasterDao = springAppContext.getBean(LegacyMasterDao.class);
+            this.legacyAdminDocumentDao = springAppContext.getBean(LegacyAdminDocumentDao.class);
         }
 
         if (MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess()) {

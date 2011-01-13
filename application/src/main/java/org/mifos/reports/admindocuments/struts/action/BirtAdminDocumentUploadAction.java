@@ -246,7 +246,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward getViewBirtAdminDocumentPage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
             HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute(AdminDocumentsContants.LISTOFADMINISTRATIVEDOCUMENTS,
-                new LegacyAdminDocumentDao().getAllAdminDocuments());
+                legacyAdminDocumentDao.getAllAdminDocuments());
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
@@ -307,14 +307,14 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             newFile = true;
         }
 
-        AdminDocumentBO admindoc = new LegacyAdminDocumentDao().getAdminDocumentById(Short.valueOf(SessionUtils
+        AdminDocumentBO admindoc = legacyAdminDocumentDao.getAdminDocumentById(Short.valueOf(SessionUtils
                 .getAttribute("admindocId", request).toString()));
         admindoc.setAdminDocumentName(uploadForm.getAdminiDocumentTitle());
         admindoc.setIsActive(Short.valueOf("1"));
         if (newFile) {
             admindoc.setAdminDocumentIdentifier(formFile.getFileName());
         }
-        new LegacyAdminDocumentDao().createOrUpdate(admindoc);
+        legacyAdminDocumentDao.createOrUpdate(admindoc);
         List<AdminDocAccStateMixBO> admindoclist = new AdminDocAccStateMixPersistence().getMixByAdminDocuments(Short
                 .valueOf(SessionUtils.getAttribute("admindocId", request).toString()));
         for (AdminDocAccStateMixBO temp : admindoclist) {
@@ -335,7 +335,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward downloadAdminDocument(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute("reportsBO",
-                new LegacyAdminDocumentDao().getAdminDocumentById(Short.valueOf(request.getParameter("admindocId"))));
+                legacyAdminDocumentDao.getAdminDocumentById(Short.valueOf(request.getParameter("admindocId"))));
         return mapping.findForward(ActionForwards.download_success.toString());
     }
 
@@ -345,7 +345,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         admindocBO.setAdminDocumentName(admindocTitle);
         admindocBO.setIsActive(isActive);
         admindocBO.setAdminDocumentIdentifier(fileName);
-        new LegacyAdminDocumentDao().createOrUpdate(admindocBO);
+        legacyAdminDocumentDao.createOrUpdate(admindocBO);
         return admindocBO;
     }
 }

@@ -40,11 +40,13 @@ import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Ignore
 public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
-
+    @Autowired
+    private LegacyAdminDocumentDao legacyAdminDocumentDao;
 
     @Override
     protected void setStrutsConfig() {
@@ -94,15 +96,13 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
     }
 
     private void removeReport(Short reportId) throws PersistenceException {
-
-        LegacyAdminDocumentDao reportPersistence = new LegacyAdminDocumentDao();
-        reportPersistence.getSession().clear();
-        ReportsBO report = reportPersistence.getPersistentObject(ReportsBO.class, reportId);
+        legacyAdminDocumentDao.getSession().clear();
+        ReportsBO report = legacyAdminDocumentDao.getPersistentObject(ReportsBO.class, reportId);
 
         RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
         ActivityEntity activityEntity = permPersistence.getPersistentObject(ActivityEntity.class,
                 report.getActivityId());
-        reportPersistence.delete(report);
+        legacyAdminDocumentDao.delete(report);
 
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
 
