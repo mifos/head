@@ -20,29 +20,28 @@
 
 package org.mifos.platform.questionnaire.parsers;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import java.io.InputStream;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.ChoiceDto;
 import org.mifos.platform.questionnaire.service.dtos.EventSourceDto;
-import org.mifos.platform.questionnaire.service.QuestionType;
 import org.mifos.platform.questionnaire.service.dtos.QuestionDto;
 import org.mifos.platform.questionnaire.service.dtos.QuestionGroupDto;
 import org.mifos.platform.questionnaire.service.dtos.SectionDto;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionGroupDefinitionParserTest {
 
     @Test
-    public void shouldParseQuestionDefinitionXml() throws IOException {
+    public void shouldParseQuestionDefinitionXml() throws Exception {
         QuestionGroupDefinitionParser questionGroupDefinitionParser = new QuestionGroupDefinitionParserImpl();
         String questionGroupDefXml = "/org/mifos/platform/questionnaire/QuestionGroupDefinition.xml";
         InputStream inputStream = getClass().getResourceAsStream(questionGroupDefXml);
