@@ -50,7 +50,6 @@ import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
@@ -700,13 +699,13 @@ public class CustomerPersistenceIntegrationTest extends MifosIntegrationTestCase
     @Test
     public void testDeleteMeeting() throws Exception {
         MeetingBO meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
 
         customerPersistence.deleteMeeting(meeting);
         StaticHibernateUtil.flushSession();
 
 
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
         Assert.assertNull(meeting);
     }
 
