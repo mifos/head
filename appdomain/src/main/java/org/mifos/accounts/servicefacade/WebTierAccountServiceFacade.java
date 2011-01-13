@@ -264,10 +264,11 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     }
 
     @Override
-    public void applyAdjustment(String globalAccountNum, String adjustmentNote, Short personnelId) {
+    public void applyAdjustment(String globalAccountNum, String adjustmentNote, Short loggedInUser) {
         try {
             AccountBO accountBO = accountBusinessService.findBySystemId(globalAccountNum);
-            PersonnelBO personnelBO = personnelPersistence.findPersonnelById(personnelId);
+            checkPermissionForAdjustment(accountBO);
+            PersonnelBO personnelBO = personnelPersistence.findPersonnelById(loggedInUser);
             transactionHelper.startTransaction();
             accountBO.adjustLastPayment(adjustmentNote, personnelBO);
             accountPersistence.createOrUpdate(accountBO);
@@ -282,5 +283,21 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             transactionHelper.rollbackTransaction();
             throw new MifosRuntimeException(e);
         }
+    }
+
+    private void checkPermissionForAdjustment(AccountBO accountBO) throws ServiceException {
+        AccountPaymentEntity lastPmntToBeAdjusted = accountBO.getLastPmntToBeAdjusted();
+        if (lastPmntToBeAdjusted == null) return;
+        UserContext userContext = getUserContext();
+        Date lastPaymentDate = lastPmntToBeAdjusted.getPaymentDate();
+        PersonnelBO personnel = accountBO.getPersonnel();
+        Short personnelId = personnel != null? personnel.getPersonnelId() : userContext.getId();
+        Short officeId = accountBO.getOfficeId();
+        accountBusinessService.checkPermissionForAdjustmentOnBackDatedPayments(lastPaymentDate, userContext, officeId, personnelId);
+    }
+
+    UserContext getUserContext() {
+        MifosUser user = (MifosUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return new UserContextFactory().create(user);
     }
 }

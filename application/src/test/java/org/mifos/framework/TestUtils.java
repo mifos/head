@@ -20,23 +20,7 @@
 
 package org.mifos.framework;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.StringReader;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
-
 import junit.framework.Assert;
-
 import org.dom4j.DocumentException;
 import org.dom4j.io.SAXReader;
 import org.joda.time.DateMidnight;
@@ -57,6 +41,21 @@ import org.mifos.schedule.ScheduledEventFactory;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.UserContext;
 import org.springframework.util.ReflectionUtils;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.StringReader;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
 public class TestUtils {
 
@@ -360,7 +359,13 @@ public class TestUtils {
     }
 
     public static Date getDate(int date, int month, int year) {
-        return new DateMidnight(year,month,date).toDate();
+        DateMidnight dateMidnight = new DateMidnight(year, month, date);
+        return dateMidnight.toDate();
+    }
+
+    public static DateTime getDateTime(int date, int month, int year) {
+        DateMidnight dateMidnight = new DateMidnight(year, month, date);
+        return dateMidnight.toDateTime();
     }
 
     public static java.sql.Date getSqlDate(int date, int month, int year) {

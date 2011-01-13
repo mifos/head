@@ -20,12 +20,12 @@
 
 package org.mifos.accounts.servicefacade;
 
-import java.util.HashSet;
-import java.util.Locale;
-
 import org.mifos.config.Localization;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+
+import java.util.HashSet;
+import java.util.Locale;
 
 public class UserContextFactory {
 
@@ -34,7 +34,7 @@ public class UserContextFactory {
         Short localeId = Localization.getInstance().getLocaleId();
         UserContext userContext = new UserContext(preferredLocale, localeId);
         userContext.setBranchId(user.getBranchId());
-        userContext.setId(Short.valueOf((short) user.getUserId()));
+        userContext.setId((short) user.getUserId());
         userContext.setName(user.getUsername());
         userContext.setLevelId(user.getLevelId());
         userContext.setRoles(new HashSet<Short>(user.getRoleIds()));

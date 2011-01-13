@@ -105,7 +105,7 @@ public class ApplyAdjustment extends BaseAction {
                     appAdjustActionForm.getAdjustmentNote(), userContext.getId());
         } catch (MifosRuntimeException e) {
             request.setAttribute("method", "previewAdjustment");
-            throw new ApplicationException(e);
+            throw (Exception) e.getCause();
         }
         resetActionFormFields(appAdjustActionForm);
         return mapping.findForward("applyadj_success");
