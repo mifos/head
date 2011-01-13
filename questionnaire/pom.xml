@@ -58,7 +58,6 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
         
-        <!-- junit and hamcrest made compile and not test due to QuestionaireServiceFacadeTest and the moving of matchers it uses into production source of questionnaire module -->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
