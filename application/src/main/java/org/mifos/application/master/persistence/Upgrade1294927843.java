@@ -18,18 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.security.rolesandpermission;
+package org.mifos.application.master.persistence;
 
-public class RoleTestUtil {
-    /**
-     * The total number of activities for the built in Admin role. Whenever a
-     * new activity is added to the role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITIES_FOR_ROLE = 169;
-    /**
-     * The total number of activities. Whenever a new activity is added to the
-     * role this number must be increased by one.
-     */
-    public static final int EXPECTED_ACTIVITY_COUNT = 190;
+import org.mifos.framework.persistence.Upgrade;
+import org.mifos.security.AddActivity;
+import org.mifos.security.util.SecurityConstants;
+
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
+
+public class Upgrade1294927843 extends Upgrade {
+
+    @Override
+    public void upgrade(Connection connection) throws IOException, SQLException {
+        new AddActivity("Permissions-CanEditPhoneNumber", SecurityConstants.CAN_EDIT_PHONE_NUMBER,
+                SecurityConstants.CLIENTS).upgrade(connection);
+    }
 
 }

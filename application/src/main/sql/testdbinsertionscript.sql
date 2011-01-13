@@ -60,6 +60,59 @@ values(182,2);
 insert into roles_activity(activity_id,role_id)
 values(183,2);
 
+insert into role(role_id,role_name,version_no,created_by,created_date,updated_by,updated_date)
+values(3,'EditPhoneNumberTestPermisson',1,null,null,null,null);
+insert into roles_activity(activity_id,role_id)
+values(35,3);
+insert into roles_activity(activity_id,role_id)
+values(36,3);
+insert into roles_activity(activity_id,role_id)
+values(37,3);
+insert into roles_activity(activity_id,role_id)
+values(38,3);
+insert into roles_activity(activity_id,role_id)
+values(39,3);
+insert into roles_activity(activity_id,role_id)
+values(40,3);
+insert into roles_activity(activity_id,role_id)
+values(41,3);
+insert into roles_activity(activity_id,role_id)
+values(42,3);
+insert into roles_activity(activity_id,role_id)
+values(43,3);
+insert into roles_activity(activity_id,role_id)
+values(44,3);
+insert into roles_activity(activity_id,role_id)
+values(46,3);
+insert into roles_activity(activity_id,role_id)
+values(47,3);
+insert into roles_activity(activity_id,role_id)
+values(48,3);
+insert into roles_activity(activity_id,role_id)
+values(49,3);
+insert into roles_activity(activity_id,role_id)
+values(50,3);
+insert into roles_activity(activity_id,role_id)
+values(51,3);
+insert into roles_activity(activity_id,role_id)
+values(52,3);
+insert into roles_activity(activity_id,role_id)
+values(53,3);
+insert into roles_activity(activity_id,role_id)
+values(54,3);
+insert into roles_activity(activity_id,role_id)
+values(55,3);
+insert into roles_activity(activity_id,role_id)
+values(121,3);
+insert into roles_activity(activity_id,role_id)
+values(126,3);
+insert into roles_activity(activity_id,role_id)
+values(198,3);
+insert into roles_activity(activity_id,role_id)
+values(206,3);
+insert into roles_activity(activity_id,role_id)
+values(208,3);
+
 update field_configuration set mandatory_flag = 1, hidden_flag = 1
   where field_name = 'SecondLastName' and entity_id = 1;
 update field_configuration set mandatory_flag = 1, hidden_flag = 1

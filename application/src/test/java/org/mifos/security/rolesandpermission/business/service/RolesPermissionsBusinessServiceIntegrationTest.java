@@ -41,7 +41,7 @@ public class RolesPermissionsBusinessServiceIntegrationTest extends MifosIntegra
 
     @Test
     public void testGetRoles() throws Exception {
-       Assert.assertEquals(2, rolesPermissionsBusinessService.getRoles().size());
+       Assert.assertEquals(3, rolesPermissionsBusinessService.getRoles().size());
     }
 
     @Test

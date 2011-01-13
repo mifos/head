@@ -65,6 +65,7 @@ public class TestUtils {
      * database.
      */
     public static final int DUMMY_ROLE = 2;
+    public static final int TEST_ROLE = 3;
     private static final Short TEST_LOCALE = 1;
     private static final Short HEAD_OFFICE = 1;
 

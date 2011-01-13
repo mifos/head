@@ -1397,6 +1397,11 @@ msgctxt "Permissions-Clients-CanWaiveADueAmount"
 msgid "Can waive a due amount"
 msgstr "Puede eliminar una cantidad aduedada"
 
+#: Permissions-Clients-CanEditPhoneNumber
+msgctxt "Permissions-Clients-CanEditPhoneNumber"
+msgid "Can Edit Phone Number"
+msgstr ""
+
 #: Permissions-ConfigurationManagement
 msgid "Configuration Management"
 msgstr "Administración de la configuración"

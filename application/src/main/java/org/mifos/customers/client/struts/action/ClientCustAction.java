@@ -95,6 +95,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class ClientCustAction extends CustAction implements QuestionnaireAction {
@@ -580,6 +582,8 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
+        SessionUtils.setAttribute("CanEditPhoneNumber", ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()), request);
+
         boolean isFamilyDetailsRequired = personalInfo.getClientRules().isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
         if (isFamilyDetailsRequired) {
@@ -683,9 +687,52 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
+        final String clientSystemId = clientInSession.getGlobalCustNum();
+
+        ClientPersonalInfoDto clientPersonalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId);
+
         AddressDto address = null;
         if (actionForm.getAddress() != null) {
             address = Address.toDto(actionForm.getAddress());
+        }
+
+        if(clientPersonalInfo.getCustomerDetail()!= null)
+        {
+            if(clientPersonalInfo.getCustomerDetail().getAddress()!=null)
+            {
+                if(clientPersonalInfo.getCustomerDetail().getAddress().getPhoneNumber() != null && (!clientPersonalInfo.getCustomerDetail().getAddress().getPhoneNumber().equals(address.getPhoneNumber())))
+                {
+                    UserContext userContext = getUserContext(request);
+                    if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()))
+                    {
+                        throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                    }
+                }
+                else if(clientPersonalInfo.getCustomerDetail().getAddress().getPhoneNumber() == null && address.getPhoneNumber()!= null && !address.getPhoneNumber().equals(""))
+                {
+                    UserContext userContext = getUserContext(request);
+                    if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()))
+                    {
+                        throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                    }
+                }
+            }
+            else if(address.getPhoneNumber()!= null && !address.getPhoneNumber().equals(""))
+            {
+                UserContext userContext = getUserContext(request);
+                if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()))
+                {
+                    throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                }
+            }
+        }
+        else if(address.getPhoneNumber()!= null && !address.getPhoneNumber().equals(""))
+        {
+            UserContext userContext = getUserContext(request);
+            if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()))
+            {
+                throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+            }
         }
 
         ClientNameDetailDto spouseFather = null;

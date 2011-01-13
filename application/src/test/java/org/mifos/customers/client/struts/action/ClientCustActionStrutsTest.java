@@ -92,6 +92,7 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -1176,6 +1177,39 @@ public class ClientCustActionStrutsTest extends MifosMockStrutsTestCase {
         Assert.assertEquals(1, client.getCustomerDetail().getEthinicity().shortValue());
         client = TestObjectFactory.getClient(client.getCustomerId());
 
+    }
+
+    @Test
+    public void testEditPhoneNumberFailure() throws Exception {
+        createAndSetClientInSession();
+        SessionUtils.setAttribute(Constants.USERCONTEXT, createUser(), request.getSession());
+        setRequestPathInfo("/clientCustAction.do");
+        addRequestParameter("method", "editPersonalInfo");
+        addRequestParameter("officeId", "3");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+
+        setRequestPathInfo("/clientCustAction.do");
+        addRequestParameter("method", "previewEditPersonalInfo");
+        addRequestParameter("address.phoneNumber", "11111111");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        
+        verifyNoActionErrors();
+        verifyNoActionMessages();
+        verifyForward(ActionForwards.previewEditPersonalInfo_success.toString());
+
+        setRequestPathInfo("/clientCustAction.do");
+        addRequestParameter("method", "updatePersonalInfo");
+        addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
+        actionPerform();
+        verifyActionErrors(new String[] { SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED });
+
+    }
+
+    private UserContext createUser() throws Exception {
+        this.userContext = TestUtils.makeUser(TestUtils.TEST_ROLE);
+        return userContext;
     }
 
     @Test

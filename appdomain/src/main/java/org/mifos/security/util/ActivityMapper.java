@@ -1593,4 +1593,10 @@ public class ActivityMapper {
     AuthorizationManager getAuthorizationManager() {
         return AuthorizationManager.getInstance();
     }
+
+     public boolean isEditPhoneNumberPermitted(UserContext useContext, Short officeId){
+        return AuthorizationManager.getInstance().isActivityAllowed(
+                useContext,
+                new ActivityContext(SecurityConstants.CAN_EDIT_PHONE_NUMBER, officeId));
+    }
 }
