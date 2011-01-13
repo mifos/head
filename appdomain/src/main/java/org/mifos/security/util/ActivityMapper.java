@@ -673,6 +673,7 @@ public class ActivityMapper {
         security.allow("editQuestionResponses", SecurityConstants.VIEW);
         security.allow("validateInstallments", SecurityConstants.VIEW);
         security.allow("showPreview", SecurityConstants.VIEW);
+        security.allow("viewOriginalSchedule", SecurityConstants.VIEW);
         return security;
     }
 
