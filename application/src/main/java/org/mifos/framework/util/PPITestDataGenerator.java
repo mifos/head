@@ -190,11 +190,7 @@ public class PPITestDataGenerator {
 
     public static ApplicationContext initializeSpring() {
         return new ClassPathXmlApplicationContext(
-                "classpath:/org/mifos/config/resources/messageSourceBean.xml",
-                "classpath:/org/mifos/config/resources/services.xml",
-                "classpath:/org/mifos/config/resources/hibernate-daos.xml",
-                "classpath:/org/mifos/config/resources/persistenceContext.xml",
-                "classpath:/org/mifos/config/resources/dataSourceContext.xml",
+                "classpath:/org/mifos/config/resources/applicationContext.xml",
                 "classpath:/META-INF/spring/QuestionnaireContext.xml");
     }
 
