@@ -80,6 +80,7 @@ import org.mifos.framework.business.util.helpers.MethodNameConstants;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditConstants;
 import org.mifos.framework.components.batchjobs.MifosBatchJob;
+import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PageExpiredException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -98,6 +99,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.ServletUtils;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocAccStateMixDao;
 import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.mifos.security.login.util.helpers.LoginConstants;
@@ -147,6 +149,8 @@ public abstract class BaseAction extends DispatchAction {
 
     protected LegacyMasterDao legacyMasterDao;
     protected LegacyAdminDocumentDao legacyAdminDocumentDao;
+    protected LegacyFieldConfigurationDao legacyFieldConfigurationDao;
+    protected LegacyAdminDocAccStateMixDao legacyAdminDocAccStateMixDao;
 
     // non domain app
     protected LoanServiceFacade loanServiceFacade;
@@ -190,6 +194,8 @@ public abstract class BaseAction extends DispatchAction {
 
             this.legacyMasterDao = springAppContext.getBean(LegacyMasterDao.class);
             this.legacyAdminDocumentDao = springAppContext.getBean(LegacyAdminDocumentDao.class);
+            this.legacyFieldConfigurationDao = springAppContext.getBean(LegacyFieldConfigurationDao.class);
+            this.legacyAdminDocAccStateMixDao = springAppContext.getBean(LegacyAdminDocAccStateMixDao.class);
         }
 
         if (MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess()) {

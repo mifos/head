@@ -179,7 +179,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             admindocaccstatemixBO = new AdminDocAccStateMixBO();
             admindocaccstatemixBO.setAccountStateID(acc);
             admindocaccstatemixBO.setAdminDocumentID(admindocBO);
-            new LegacyAdminDocAccStateMixDao().createOrUpdate(admindocaccstatemixBO);
+            legacyAdminDocAccStateMixDao.createOrUpdate(admindocaccstatemixBO);
 
         }
         request.setAttribute("report", admindocBO);
@@ -257,7 +257,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         AdminDocumentBO businessKey = null;
 
         BirtAdminDocumentUploadActionForm birtReportsUploadActionForm = (BirtAdminDocumentUploadActionForm) form;
-        List<AdminDocAccStateMixBO> admindoclist = new LegacyAdminDocAccStateMixDao().getMixByAdminDocuments(Short
+        List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(Short
                 .valueOf(request.getParameter("admindocId")));
         if ((admindoclist != null) && (!admindoclist.isEmpty())) {
             SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(), request);
@@ -315,10 +315,10 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             admindoc.setAdminDocumentIdentifier(formFile.getFileName());
         }
         legacyAdminDocumentDao.createOrUpdate(admindoc);
-        List<AdminDocAccStateMixBO> admindoclist = new LegacyAdminDocAccStateMixDao().getMixByAdminDocuments(Short
+        List<AdminDocAccStateMixBO> admindoclist = legacyAdminDocAccStateMixDao.getMixByAdminDocuments(Short
                 .valueOf(SessionUtils.getAttribute("admindocId", request).toString()));
         for (AdminDocAccStateMixBO temp : admindoclist) {
-            new LegacyAdminDocAccStateMixDao().delete(temp);
+            legacyAdminDocAccStateMixDao.delete(temp);
         }
 
         AdminDocAccStateMixBO admindocaccstatemixBO = new AdminDocAccStateMixBO();
@@ -326,7 +326,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             admindocaccstatemixBO = new AdminDocAccStateMixBO();
             admindocaccstatemixBO.setAccountStateID(acc);
             admindocaccstatemixBO.setAdminDocumentID(admindoc);
-            new LegacyAdminDocAccStateMixDao().createOrUpdate(admindocaccstatemixBO);
+            legacyAdminDocAccStateMixDao.createOrUpdate(admindocaccstatemixBO);
 
         }
         return getViewBirtAdminDocumentPage(mapping, form, request, response);

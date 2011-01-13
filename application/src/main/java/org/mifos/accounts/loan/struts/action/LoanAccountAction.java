@@ -1171,7 +1171,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                     legacyAdminDocumentDao.getAllAdminDocuments(), request);
 
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSACCSTATEMIXLIST,
-                    new LegacyAdminDocAccStateMixDao().getAllMixedAdminDocuments(), request);
+                    legacyAdminDocAccStateMixDao.getAllMixedAdminDocuments(), request);
 
         }
 

@@ -30,7 +30,7 @@ import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 
 public class LegacyAdminDocAccStateMixDao extends LegacyGenericDao {
 
-    public LegacyAdminDocAccStateMixDao() {
+    private LegacyAdminDocAccStateMixDao() {
         super();
     }
 
