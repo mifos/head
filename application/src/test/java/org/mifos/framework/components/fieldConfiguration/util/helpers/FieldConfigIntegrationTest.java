@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
@@ -37,7 +37,7 @@ import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
 public class FieldConfigIntegrationTest extends MifosIntegrationTestCase {
 
-    private FieldConfigurationPersistence persistence = new FieldConfigurationPersistence();
+    private LegacyFieldConfigurationDao persistence = new LegacyFieldConfigurationDao();
 
     private FieldConfig fieldConfig = FieldConfig.getInstance();
 

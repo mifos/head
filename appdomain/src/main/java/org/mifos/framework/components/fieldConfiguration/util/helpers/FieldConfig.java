@@ -27,14 +27,14 @@ import java.util.Map;
 
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.struts.plugin.helper.EntityMasterData;
 
 public class FieldConfig {
 
-    private static FieldConfigurationPersistence fieldConfigurationPersistence = new FieldConfigurationPersistence();
+    private static LegacyFieldConfigurationDao fieldConfigurationPersistence = new LegacyFieldConfigurationDao();
 
     private static FieldConfig instance = new FieldConfig();
 

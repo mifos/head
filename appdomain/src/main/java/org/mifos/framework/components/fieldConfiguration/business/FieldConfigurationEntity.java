@@ -22,7 +22,7 @@ package org.mifos.framework.components.fieldConfiguration.business;
 
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.business.EntityMaster;
-import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfigurationConstant;
 import org.mifos.framework.exceptions.PersistenceException;
 
@@ -122,7 +122,7 @@ public class FieldConfigurationEntity {
     public void update(Short mandatoryFlag, Short hiddenFlag) throws PersistenceException {
         this.mandatoryFlag = mandatoryFlag;
         this.hiddenFlag = hiddenFlag;
-        new FieldConfigurationPersistence().createOrUpdate(this);
+        new LegacyFieldConfigurationDao().createOrUpdate(this);
     }
 
 }

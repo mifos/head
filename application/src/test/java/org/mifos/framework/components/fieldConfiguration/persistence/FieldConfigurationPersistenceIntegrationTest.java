@@ -33,7 +33,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 
 public class FieldConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private FieldConfigurationPersistence fieldConfigurationPersistence = new FieldConfigurationPersistence();
+    private LegacyFieldConfigurationDao fieldConfigurationPersistence = new LegacyFieldConfigurationDao();
 
     @Test
     public void testGetEntityMasterList() throws PersistenceException {

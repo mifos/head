@@ -135,7 +135,7 @@ import org.mifos.dto.screen.SavingsProductFormDto;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -874,7 +874,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
 
         try {
-            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence()
+            List<FieldConfigurationEntity> confFieldList = new LegacyFieldConfigurationDao()
                     .getAllConfigurationFieldList();
             MandatoryHiddenFieldsDto dto = new MandatoryHiddenFieldsDto();
             populateDto(dto, confFieldList);
@@ -1015,7 +1015,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) {
         try {
-            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence()
+            List<FieldConfigurationEntity> confFieldList = new LegacyFieldConfigurationDao()
                     .getAllConfigurationFieldList();
             mandatoryHiddenFieldService.updateMandatoryHiddenFields(dto, confFieldList);
         } catch (PersistenceException e) {

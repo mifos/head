@@ -31,7 +31,7 @@ import org.mifos.framework.components.fieldConfiguration.util.helpers.FieldConfi
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class FieldConfigurationPersistence extends LegacyGenericDao {
+public class LegacyFieldConfigurationDao extends LegacyGenericDao {
 
     public List<EntityMaster> getEntityMasterList() throws PersistenceException {
         return executeNamedQuery(NamedQueryConstants.GET_ENTITY_MASTER, null);
