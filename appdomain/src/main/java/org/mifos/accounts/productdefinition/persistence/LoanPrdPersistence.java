@@ -85,11 +85,11 @@ public class LoanPrdPersistence extends LegacyGenericDao {
     }
 
     public LoanOfferingBO getLoanOffering(final Short prdofferingId) throws PersistenceException {
-        return (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class, prdofferingId);
+        return getPersistentObject(LoanOfferingBO.class, prdofferingId);
     }
 
     public LoanOfferingBO getLoanOffering(final Short loanOfferingId, final Short localeId) throws PersistenceException {
-        LoanOfferingBO loanOffering = (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class, loanOfferingId);
+        LoanOfferingBO loanOffering = getPersistentObject(LoanOfferingBO.class, loanOfferingId);
         Hibernate.initialize(loanOffering);
         loanOffering.getPrdCategory().getProductCategoryName();
         loanOffering.getPrdApplicableMaster().setLocaleId(localeId);

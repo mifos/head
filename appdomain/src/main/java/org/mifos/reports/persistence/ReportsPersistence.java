@@ -396,7 +396,7 @@ public class ReportsPersistence extends LegacyGenericDao {
     public void updateLookUpValue(Short activityId, String inputCategoryName) {
         ActivityEntity activityEntity = null;
         try {
-            activityEntity = (ActivityEntity) getPersistentObject(ActivityEntity.class, activityId);
+            activityEntity = getPersistentObject(ActivityEntity.class, activityId);
         } catch (Exception ex) {
             throw new RuntimeException(ex.getMessage());
         }

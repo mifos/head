@@ -76,7 +76,7 @@ public class PersonnelPersistence extends LegacyGenericDao {
         if (personnelId == null) {
             return null;
         }
-        return (PersonnelBO) getPersistentObject(PersonnelBO.class, personnelId);
+        return getPersistentObject(PersonnelBO.class, personnelId);
     }
 
     public boolean isUserExist(String userName) throws PersistenceException {

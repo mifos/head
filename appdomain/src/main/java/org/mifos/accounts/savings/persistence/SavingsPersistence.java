@@ -76,7 +76,7 @@ public class SavingsPersistence extends LegacyGenericDao {
 
     public AccountStateEntity getAccountStatusObject(Short accountStatusId) throws PersistenceException {
         logger.debug("In SavingsPersistence::getAccountStatusObject(), accountStatusId: " + accountStatusId);
-        return (AccountStateEntity) getPersistentObject(AccountStateEntity.class, accountStatusId);
+        return getPersistentObject(AccountStateEntity.class, accountStatusId);
     }
 
     public List<SavingsBO> getAllClosedAccount(Integer customerId) throws PersistenceException {

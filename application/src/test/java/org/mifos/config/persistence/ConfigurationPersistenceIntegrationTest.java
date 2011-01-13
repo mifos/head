@@ -39,7 +39,7 @@ public class ConfigurationPersistenceIntegrationTest extends MifosIntegrationTes
     @Test
     public void testGetCurrencyForCurrencyId() throws Exception {
         ConfigurationPersistence configurationPersistence = new ConfigurationPersistence();
-        MifosCurrency currency = (MifosCurrency) configurationPersistence.getPersistentObject(MifosCurrency.class,
+        MifosCurrency currency = configurationPersistence.getPersistentObject(MifosCurrency.class,
                 Short.valueOf("2"));
         Assert.assertNotNull(currency);
        Assert.assertEquals("Indian Rupee", currency.getCurrencyName());

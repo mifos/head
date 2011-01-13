@@ -78,7 +78,7 @@ public class PPIChoiceIntegrationTest extends MifosIntegrationTestCase {
         new SurveysPersistence().createOrUpdate(question);
         int choiceId = regularChoice.getChoiceId();
 
-        QuestionChoice retrievedChoice = (QuestionChoice) new SurveysPersistence().getPersistentObject(
+        QuestionChoice retrievedChoice = new SurveysPersistence().getPersistentObject(
                 QuestionChoice.class, choiceId);
        Assert.assertEquals("Hello World", retrievedChoice.getChoiceText());
         Assert.assertFalse(retrievedChoice instanceof PPIChoice);

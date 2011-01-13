@@ -40,7 +40,7 @@ public class ProductMixPersistence extends LegacyGenericDao {
 
     public ProductMixBO getAllLoanOfferingMixByID(Short prdofferingMixId) throws PersistenceException {
         logger.debug("in getAllLoanOfferingMix");
-        return (ProductMixBO) getPersistentObject(ProductMixBO.class, prdofferingMixId);
+        return getPersistentObject(ProductMixBO.class, prdofferingMixId);
     }
 
     @SuppressWarnings("cast")

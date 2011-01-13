@@ -60,9 +60,8 @@ public class ProductCategoryPersistence extends LegacyGenericDao {
         return (List<ProductTypeEntity>) executeNamedQuery(NamedQueryConstants.GET_PRD_TYPES, null);
     }
 
-    @SuppressWarnings("cast")
     public ProductTypeEntity getProductTypes(Short prdtype) throws PersistenceException {
-        return (ProductTypeEntity) getPersistentObject(ProductTypeEntity.class, prdtype);
+        return getPersistentObject(ProductTypeEntity.class, prdtype);
     }
 
     public ProductCategoryBO findByGlobalNum(String globalNum) throws PersistenceException {

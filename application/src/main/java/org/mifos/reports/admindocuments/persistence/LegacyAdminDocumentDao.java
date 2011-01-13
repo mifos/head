@@ -34,7 +34,7 @@ public class LegacyAdminDocumentDao extends LegacyGenericDao {
     }
 
     public AdminDocumentBO getAdminDocumentById(Short adminDocumentId) throws PersistenceException {
-        return (AdminDocumentBO) getPersistentObject(AdminDocumentBO.class, adminDocumentId);
+        return getPersistentObject(AdminDocumentBO.class, adminDocumentId);
     }
 
     public List<AdminDocumentBO> getAllAdminDocuments() throws PersistenceException {

@@ -87,7 +87,7 @@ public class OfficePersistence extends LegacyGenericDao {
         if (officeId == null) {
             return null;
         }
-        return (OfficeBO) getPersistentObject(OfficeBO.class, officeId);
+        return getPersistentObject(OfficeBO.class, officeId);
     }
 
     public void addHoliday(Short officeId, HolidayBO holiday) throws PersistenceException {

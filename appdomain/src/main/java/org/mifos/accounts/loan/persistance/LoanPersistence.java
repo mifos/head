@@ -139,7 +139,7 @@ public class LoanPersistence extends LegacyGenericDao {
     }
 
     public LoanBO getAccount(final Integer accountId) throws PersistenceException {
-        return (LoanBO) getPersistentObject(LoanBO.class, accountId);
+        return getPersistentObject(LoanBO.class, accountId);
     }
 
     @SuppressWarnings("unchecked")
@@ -171,7 +171,7 @@ public class LoanPersistence extends LegacyGenericDao {
     }
 
     public LoanOfferingBO getLoanOffering(final Short loanOfferingId, final Short localeId) throws PersistenceException {
-        LoanOfferingBO loanOffering = (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class, loanOfferingId);
+        LoanOfferingBO loanOffering = getPersistentObject(LoanOfferingBO.class, loanOfferingId);
         if (loanOffering.getLoanOfferingFunds() != null && loanOffering.getLoanOfferingFunds().size() > 0) {
             for (LoanOfferingFundEntity loanOfferingFund : loanOffering.getLoanOfferingFunds()) {
                 loanOfferingFund.getFund().getFundId();

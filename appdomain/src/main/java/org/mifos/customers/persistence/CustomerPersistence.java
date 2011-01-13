@@ -246,7 +246,7 @@ public class CustomerPersistence extends LegacyGenericDao {
      */
     @Deprecated
     public CustomerBO getCustomer(final Integer customerId) throws PersistenceException {
-        return (CustomerBO) getPersistentObject(CustomerBO.class, customerId);
+        return getPersistentObject(CustomerBO.class, customerId);
     }
 
     public CustomerBO findBySystemId(final String globalCustNum) throws PersistenceException {
@@ -1098,7 +1098,7 @@ public class CustomerPersistence extends LegacyGenericDao {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerId);
 
-        return (CollectionSheetCustomerDto) execUniqueResultNamedQueryWithResultTransformer(
+        return execUniqueResultNamedQueryWithResultTransformer(
                 "findCustomerWithNoAssocationsLoaded", queryParameters, CollectionSheetCustomerDto.class);
 
     }

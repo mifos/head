@@ -43,7 +43,7 @@ public class ClientPersistence extends LegacyGenericDao {
      * Get a client by Id and inject any required dependencies
      */
     public ClientBO getClient(final Integer customerId) throws PersistenceException {
-        return (ClientBO) getPersistentObject(ClientBO.class, customerId);
+        return getPersistentObject(ClientBO.class, customerId);
     }
 
     public Blob createBlob(final InputStream picture) throws PersistenceException {

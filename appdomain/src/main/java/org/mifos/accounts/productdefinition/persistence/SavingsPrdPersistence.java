@@ -38,7 +38,7 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 public class SavingsPrdPersistence extends LegacyGenericDao {
 
     public SavingsOfferingBO getSavingsProduct(Short prdOfferingId) throws PersistenceException {
-        return (SavingsOfferingBO) getPersistentObject(SavingsOfferingBO.class, prdOfferingId);
+        return getPersistentObject(SavingsOfferingBO.class, prdOfferingId);
     }
 
     public List<SavingsBO> retrieveSavingsAccountsForPrd(Short prdOfferingId) throws PersistenceException {

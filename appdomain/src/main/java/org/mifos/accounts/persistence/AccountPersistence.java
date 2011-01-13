@@ -82,7 +82,7 @@ import java.util.Map;
 public class AccountPersistence extends LegacyGenericDao {
 
     public AccountBO getAccount(Integer accountId) throws PersistenceException {
-        return (AccountBO) getPersistentObject(AccountBO.class, accountId);
+        return getPersistentObject(AccountBO.class, accountId);
     }
 
     public Integer getAccountRunningNumber() throws PersistenceException {
@@ -145,7 +145,7 @@ public class AccountPersistence extends LegacyGenericDao {
     }
 
     public AccountFeesEntity getAccountFeeEntity(Integer accountFeesEntityId) throws PersistenceException {
-        return (AccountFeesEntity) getPersistentObject(AccountFeesEntity.class, accountFeesEntityId);
+        return getPersistentObject(AccountFeesEntity.class, accountFeesEntityId);
     }
 
     @SuppressWarnings("unchecked")

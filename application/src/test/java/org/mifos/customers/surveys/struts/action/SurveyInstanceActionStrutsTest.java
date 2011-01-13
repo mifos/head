@@ -237,7 +237,7 @@ public class SurveyInstanceActionStrutsTest extends MifosMockStrutsTestCase {
         persistence.createOrUpdate(response1);
         persistence.createOrUpdate(response2);
         persistence.createOrUpdate(sampleInstance);
-        sampleInstance = (SurveyInstance) persistence.getPersistentObject(SurveyInstance.class, sampleInstance
+        sampleInstance = persistence.getPersistentObject(SurveyInstance.class, sampleInstance
                 .getInstanceId());
 
         setRequestPathInfo("/surveyInstanceAction");

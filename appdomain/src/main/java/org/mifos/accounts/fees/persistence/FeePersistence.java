@@ -55,10 +55,10 @@ public class FeePersistence extends LegacyGenericDao {
     public FeeBO getFee(Short feeId, RateAmountFlag rateflag) throws PersistenceException {
 
         if (rateflag.equals(RateAmountFlag.AMOUNT)) {
-            return (AmountFeeBO) getPersistentObject(AmountFeeBO.class, feeId);
+            return getPersistentObject(AmountFeeBO.class, feeId);
         }
 
-        return (RateFeeBO) getPersistentObject(RateFeeBO.class, feeId);
+        return getPersistentObject(RateFeeBO.class, feeId);
     }
 
     @SuppressWarnings("unchecked")

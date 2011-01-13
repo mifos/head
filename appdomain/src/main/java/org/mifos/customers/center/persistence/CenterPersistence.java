@@ -65,7 +65,7 @@ public class CenterPersistence extends LegacyGenericDao {
     }
 
     public CenterBO getCenter(Integer customerId) throws PersistenceException {
-        return (CenterBO) getPersistentObject(CenterBO.class, customerId);
+        return getPersistentObject(CenterBO.class, customerId);
     }
 
     public CenterBO findBySystemId(String globalCustNum) throws PersistenceException {

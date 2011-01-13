@@ -147,7 +147,7 @@ public class GroupPersistence extends LegacyGenericDao {
     }
 
     public GroupBO getGroupByCustomerId(Integer customerId) throws PersistenceException {
-        return (GroupBO) getPersistentObject(GroupBO.class, customerId);
+        return getPersistentObject(GroupBO.class, customerId);
     }
 
     // this code is used in the PAR task to improve performance
