@@ -349,6 +349,7 @@ public class LoanAccountActionTest {
     public void showPreviewShouldSetPerspective() throws Exception {
         when(request.getParameter(PERSPECTIVE)).thenReturn(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
         loanAccountAction.showPreview(mapping, form, request, response);
+        verify(request,times(1)).getParameter("preview_mode");
         verify(request,times(1)).setAttribute(LoanConstants.METHODCALLED, "showPreview");
         verify(request,times(1)).setAttribute(PERSPECTIVE, LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
     }

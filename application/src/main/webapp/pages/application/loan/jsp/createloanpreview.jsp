@@ -521,6 +521,7 @@ explanation of the license and how it is applied.
 												</html-el:button>
 											</td>
 											<!-- This hidden field is being used in the customPreview method of the LoanAction class to discriminate the preview method call-->
+											<html-el:hidden property="preview_mode" value="create" />
 											<html-el:hidden property="input" value="accountPreview" />
 											<html-el:hidden value="" property="stateSelected" />
 											<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

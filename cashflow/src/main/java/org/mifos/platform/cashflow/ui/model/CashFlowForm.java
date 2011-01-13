@@ -117,6 +117,7 @@ public class CashFlowForm implements Serializable {
     }
 
     public BigDecimal computeRepaymentCapacity(BigDecimal totalInstallmentAmount) {
-        return getTotalBalance().multiply(CashFlowConstants.HUNDRED).divide(totalInstallmentAmount, 2, BigDecimal.ROUND_HALF_UP);
+        return getTotalBalance().multiply(CashFlowConstants.HUNDRED).
+                divide(totalInstallmentAmount, 2, BigDecimal.ROUND_HALF_UP);
     }
 }

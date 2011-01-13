@@ -116,7 +116,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
 
     private Date getLastPaymentDate(AccountBO account) {
         Date lastPaymentDate = new Date(0);
-        AccountPaymentEntity lastPayment = account.getLastPmnt();
+        AccountPaymentEntity lastPayment = account.findMostRecentNonzeroPaymentByPaymentDate();
         if(lastPayment != null){
             lastPaymentDate = lastPayment.getPaymentDate();
         }

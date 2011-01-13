@@ -515,7 +515,11 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
         setPerspectiveOnRequest(request);
         ActionForward forwardAfterCashFlowBinding = cashFlowAdaptor.bindCashFlow((CashFlowCaptor) form,
                 ActionForwards.schedulePreview_success.toString(), request.getSession(), mapping);
-        bindCashFlowIfPresent(request, form, true);
+        boolean addLoanAmountToCashFlow = true;
+        if ("edit".equals(request.getParameter("preview_mode"))) {
+            addLoanAmountToCashFlow = false;
+        }
+        bindCashFlowIfPresent(request, form, addLoanAmountToCashFlow);
         return forwardAfterCashFlowBinding;
     }
 
