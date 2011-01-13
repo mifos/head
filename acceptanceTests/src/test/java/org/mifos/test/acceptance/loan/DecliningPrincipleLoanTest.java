@@ -101,7 +101,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
         verifyDecliningPrincipalLoanAccount(3, interestTypeName, systemDateTime.plusDays(1), formParameters.getOfferingName());
     }
 
-    @Test(enabled=true)
+    @Test(enabled=false)
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
     public void verifyLoanPayment() throws Exception {
         new FeeTestHelper(dataSetup).createPeriodicFee(feeName, FeesCreatePage.SubmitFormParameters.LOAN, FeesCreatePage.SubmitFormParameters.WEEKLY_FEE_RECURRENCE, 1, 100);
