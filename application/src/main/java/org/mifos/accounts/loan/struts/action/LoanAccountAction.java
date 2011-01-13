@@ -105,7 +105,7 @@ import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
 import org.mifos.platform.validations.ErrorEntry;
 import org.mifos.platform.validations.Errors;
-import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocAccStateMixDao;
 import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.security.util.UserContext;
@@ -1171,7 +1171,7 @@ public class LoanAccountAction extends AccountAppAction implements Questionnaire
                     legacyAdminDocumentDao.getAllAdminDocuments(), request);
 
             SessionUtils.setCollectionAttribute(AdminDocumentsContants.ADMINISTRATIVEDOCUMENTSACCSTATEMIXLIST,
-                    new AdminDocAccStateMixPersistence().getAllMixedAdminDocuments(), request);
+                    new LegacyAdminDocAccStateMixDao().getAllMixedAdminDocuments(), request);
 
         }
 

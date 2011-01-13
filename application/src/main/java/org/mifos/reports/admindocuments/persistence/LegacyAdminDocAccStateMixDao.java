@@ -28,11 +28,10 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 
-public class AdminDocAccStateMixPersistence extends LegacyGenericDao {
+public class LegacyAdminDocAccStateMixDao extends LegacyGenericDao {
 
-    public AdminDocAccStateMixPersistence() {
+    public LegacyAdminDocAccStateMixDao() {
         super();
-
     }
 
     public List<AdminDocAccStateMixBO> getMixByAdminDocuments(Short admindocId) throws PersistenceException {

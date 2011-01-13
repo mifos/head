@@ -58,7 +58,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
-import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocAccStateMixDao;
 import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
@@ -179,7 +179,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             admindocaccstatemixBO = new AdminDocAccStateMixBO();
             admindocaccstatemixBO.setAccountStateID(acc);
             admindocaccstatemixBO.setAdminDocumentID(admindocBO);
-            new AdminDocAccStateMixPersistence().createOrUpdate(admindocaccstatemixBO);
+            new LegacyAdminDocAccStateMixDao().createOrUpdate(admindocaccstatemixBO);
 
         }
         request.setAttribute("report", admindocBO);
@@ -257,7 +257,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         AdminDocumentBO businessKey = null;
 
         BirtAdminDocumentUploadActionForm birtReportsUploadActionForm = (BirtAdminDocumentUploadActionForm) form;
-        List<AdminDocAccStateMixBO> admindoclist = new AdminDocAccStateMixPersistence().getMixByAdminDocuments(Short
+        List<AdminDocAccStateMixBO> admindoclist = new LegacyAdminDocAccStateMixDao().getMixByAdminDocuments(Short
                 .valueOf(request.getParameter("admindocId")));
         if ((admindoclist != null) && (!admindoclist.isEmpty())) {
             SessionUtils.setAttribute("admindocId", admindoclist.get(0).getAdminDocumentID().getAdmindocId(), request);
@@ -315,10 +315,10 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             admindoc.setAdminDocumentIdentifier(formFile.getFileName());
         }
         legacyAdminDocumentDao.createOrUpdate(admindoc);
-        List<AdminDocAccStateMixBO> admindoclist = new AdminDocAccStateMixPersistence().getMixByAdminDocuments(Short
+        List<AdminDocAccStateMixBO> admindoclist = new LegacyAdminDocAccStateMixDao().getMixByAdminDocuments(Short
                 .valueOf(SessionUtils.getAttribute("admindocId", request).toString()));
         for (AdminDocAccStateMixBO temp : admindoclist) {
-            new AdminDocAccStateMixPersistence().delete(temp);
+            new LegacyAdminDocAccStateMixDao().delete(temp);
         }
 
         AdminDocAccStateMixBO admindocaccstatemixBO = new AdminDocAccStateMixBO();
@@ -326,7 +326,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             admindocaccstatemixBO = new AdminDocAccStateMixBO();
             admindocaccstatemixBO.setAccountStateID(acc);
             admindocaccstatemixBO.setAdminDocumentID(admindoc);
-            new AdminDocAccStateMixPersistence().createOrUpdate(admindocaccstatemixBO);
+            new LegacyAdminDocAccStateMixDao().createOrUpdate(admindocaccstatemixBO);
 
         }
         return getViewBirtAdminDocumentPage(mapping, form, request, response);

@@ -31,11 +31,11 @@ import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 
 public class AdminDocAccStateMixPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private AdminDocAccStateMixPersistence reportsPersistence;
+    private LegacyAdminDocAccStateMixDao reportsPersistence;
 
     @Before
     public void setUp() throws Exception {
-        reportsPersistence = new AdminDocAccStateMixPersistence();
+        reportsPersistence = new LegacyAdminDocAccStateMixDao();
     }
 
     @Test
