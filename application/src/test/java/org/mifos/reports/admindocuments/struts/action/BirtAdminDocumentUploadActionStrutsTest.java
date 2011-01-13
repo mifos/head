@@ -32,7 +32,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
-import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.reports.business.MockFormFile;
 import org.mifos.reports.business.ReportsBO;
@@ -95,7 +95,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
 
     private void removeReport(Short reportId) throws PersistenceException {
 
-        AdminDocumentPersistence reportPersistence = new AdminDocumentPersistence();
+        LegacyAdminDocumentDao reportPersistence = new LegacyAdminDocumentDao();
         reportPersistence.getSession().clear();
         ReportsBO report = reportPersistence.getPersistentObject(ReportsBO.class, reportId);
 

@@ -59,7 +59,7 @@ import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 import org.mifos.reports.admindocuments.persistence.AdminDocAccStateMixPersistence;
-import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.reports.admindocuments.util.helpers.AdminDocumentsContants;
 import org.mifos.reports.business.service.ReportsBusinessService;
@@ -246,7 +246,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward getViewBirtAdminDocumentPage(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form,
             HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute(AdminDocumentsContants.LISTOFADMINISTRATIVEDOCUMENTS,
-                new AdminDocumentPersistence().getAllAdminDocuments());
+                new LegacyAdminDocumentDao().getAllAdminDocuments());
         return mapping.findForward(ActionForwards.get_success.toString());
     }
 
@@ -307,14 +307,14 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
             newFile = true;
         }
 
-        AdminDocumentBO admindoc = new AdminDocumentPersistence().getAdminDocumentById(Short.valueOf(SessionUtils
+        AdminDocumentBO admindoc = new LegacyAdminDocumentDao().getAdminDocumentById(Short.valueOf(SessionUtils
                 .getAttribute("admindocId", request).toString()));
         admindoc.setAdminDocumentName(uploadForm.getAdminiDocumentTitle());
         admindoc.setIsActive(Short.valueOf("1"));
         if (newFile) {
             admindoc.setAdminDocumentIdentifier(formFile.getFileName());
         }
-        new AdminDocumentPersistence().createOrUpdate(admindoc);
+        new LegacyAdminDocumentDao().createOrUpdate(admindoc);
         List<AdminDocAccStateMixBO> admindoclist = new AdminDocAccStateMixPersistence().getMixByAdminDocuments(Short
                 .valueOf(SessionUtils.getAttribute("admindocId", request).toString()));
         for (AdminDocAccStateMixBO temp : admindoclist) {
@@ -335,7 +335,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
     public ActionForward downloadAdminDocument(ActionMapping mapping, @SuppressWarnings("unused") ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.getSession().setAttribute("reportsBO",
-                new AdminDocumentPersistence().getAdminDocumentById(Short.valueOf(request.getParameter("admindocId"))));
+                new LegacyAdminDocumentDao().getAdminDocumentById(Short.valueOf(request.getParameter("admindocId"))));
         return mapping.findForward(ActionForwards.download_success.toString());
     }
 
@@ -345,7 +345,7 @@ public class BirtAdminDocumentUploadAction extends BaseAction {
         admindocBO.setAdminDocumentName(admindocTitle);
         admindocBO.setIsActive(isActive);
         admindocBO.setAdminDocumentIdentifier(fileName);
-        new AdminDocumentPersistence().createOrUpdate(admindocBO);
+        new LegacyAdminDocumentDao().createOrUpdate(admindocBO);
         return admindocBO;
     }
 }

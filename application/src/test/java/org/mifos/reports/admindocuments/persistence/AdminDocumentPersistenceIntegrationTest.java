@@ -31,11 +31,11 @@ import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 
 public class AdminDocumentPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private AdminDocumentPersistence reportsPersistence;
+    private LegacyAdminDocumentDao reportsPersistence;
 
     @Before
     public void setUp() throws Exception {
-        reportsPersistence = new AdminDocumentPersistence();
+        reportsPersistence = new LegacyAdminDocumentDao();
     }
 
     @Test

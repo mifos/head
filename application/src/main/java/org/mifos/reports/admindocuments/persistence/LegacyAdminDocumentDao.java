@@ -28,9 +28,9 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
 
-public class AdminDocumentPersistence extends LegacyGenericDao {
+public class LegacyAdminDocumentDao extends LegacyGenericDao {
 
-    public AdminDocumentPersistence() {
+    public LegacyAdminDocumentDao() {
     }
 
     public AdminDocumentBO getAdminDocumentById(Short adminDocumentId) throws PersistenceException {
