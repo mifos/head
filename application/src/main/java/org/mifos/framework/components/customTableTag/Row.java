@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 import org.mifos.framework.exceptions.TableTagParseException;
@@ -61,22 +60,22 @@ public class Row {
         this.bottomLineRequired = bottomLineRequired;
     }
 
-    public void getRowHeader(StringBuilder tableInfo, PageContext pageContext, String bundle) throws JspException {
+    public void getRowHeader(StringBuilder tableInfo, PageContext pageContext, String bundle) {
         Column[] column = getColumn();
         for (Column element : column) {
             element.getColumnHeader(tableInfo, pageContext, bundle);
         }
     }
 
-    public void generateTableRows(StringBuilder tableInfo, List obj, Locale locale, Locale prefferedLocale,
-            Locale mfiLocale) throws TableTagParseException {
+    @SuppressWarnings("unchecked")
+    public void generateTableRows(StringBuilder tableInfo, List obj, Locale locale, Locale mfiLocale) throws TableTagParseException {
         Iterator it = obj.iterator();
         Column[] column = getColumn();
         while (it.hasNext()) {
             tableInfo.append("<tr>");
             Object objValue = it.next();
             for (Column element : column) {
-                element.generateTableColumn(tableInfo, objValue, locale, prefferedLocale, mfiLocale);
+                element.generateTableColumn(tableInfo, objValue, locale, mfiLocale);
             }
             tableInfo.append("</tr>");
         }

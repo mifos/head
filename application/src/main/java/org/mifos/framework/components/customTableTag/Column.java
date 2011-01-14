@@ -24,11 +24,10 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Locale;
 
-import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.config.business.MifosConfiguration;
 import org.mifos.framework.exceptions.TableTagParseException;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.LabelTagUtils;
@@ -96,7 +95,7 @@ public class Column {
         return columnType;
     }
 
-    public void getColumnHeader(StringBuilder tableInfo, PageContext pageContext, String bundle) throws JspException {
+    public void getColumnHeader(StringBuilder tableInfo, PageContext pageContext, String bundle) {
         tableInfo.append("<td ");
         tableInfo.append(" width=\"" + getColumnDetails().getColWidth() + "%\"");
         tableInfo.append(" align=\"" + getColumnDetails().getAlign() + "\" ");
@@ -109,8 +108,7 @@ public class Column {
         tableInfo.append("</td>");
     }
 
-    public void generateTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale prefferedLocale,
-            Locale mfiLocale) throws TableTagParseException {
+    public void generateTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale mfiLocale) throws TableTagParseException {
         tableInfo.append("<td class=\"" + getColumnDetails().getRowStyle() + "\"  ");
 
         tableInfo.append(" align=\"" + getColumnDetails().getAlign() + "\" ");
@@ -118,10 +116,10 @@ public class Column {
 
         if (getValueType().equalsIgnoreCase(TableTagConstants.METHOD)) {
             if (getColumnType().equalsIgnoreCase(TableTagConstants.TEXT)) {
-                getTableColumn(tableInfo, obj, locale, prefferedLocale, mfiLocale);
+                getTableColumn(tableInfo, obj, locale, mfiLocale);
             } else {
                 // Generate Link On Column
-                getTableColumnWithLink(tableInfo, obj, locale, prefferedLocale, mfiLocale);
+                getTableColumnWithLink(tableInfo, obj, locale, mfiLocale);
             }
         } else {
             if (getColumnType().equalsIgnoreCase(TableTagConstants.TEXT)) {
@@ -137,8 +135,7 @@ public class Column {
 
     }
 
-    public void getTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale prefferedLocale,
-            Locale mfiLocale) throws TableTagParseException {
+    public void getTableColumn(StringBuilder tableInfo, Object obj, Locale locale, Locale mfiLocale) throws TableTagParseException {
         Method[] methods = obj.getClass().getMethods();
         for (Method method : methods) {
             if (method.getName().equalsIgnoreCase("get".concat(getValue()))) {
@@ -173,12 +170,11 @@ public class Column {
         }
     }
 
-    public void getTableColumnWithLink(StringBuilder tableInfo, Object obj, Locale locale, Locale prefferedLocale,
-            Locale mfiLocale) throws TableTagParseException {
+    public void getTableColumnWithLink(StringBuilder tableInfo, Object obj, Locale locale, Locale mfiLocale) throws TableTagParseException {
         tableInfo.append("<a ");
         linkDetails.generateLink(tableInfo, obj);
         tableInfo.append(" >");
-        getTableColumn(tableInfo, obj, locale, prefferedLocale, mfiLocale);
+        getTableColumn(tableInfo, obj, locale, mfiLocale);
         tableInfo.append("</a>");
     }
 
@@ -190,7 +186,7 @@ public class Column {
         tableInfo.append("</a>");
     }
 
-    private String getLabelText(PageContext pageContext, String key, String bundle) throws JspException {
+    private String getLabelText(PageContext pageContext, String key, String bundle) {
 
         UserContext userContext = (UserContext) pageContext.getSession().getAttribute(Constants.USER_CONTEXT_KEY);
         LabelTagUtils labelTagUtils = LabelTagUtils.getInstance();
@@ -199,15 +195,15 @@ public class Column {
             labelText = labelTagUtils.getLabel(pageContext, bundle, userContext.getPreferredLocale(), key, null);
         } catch (Exception e) {
         }
-        if (labelText == null) {
+        if (StringUtils.isBlank(labelText)) {
             labelText = MessageLookup.getInstance().lookup(key);
         }
-        if (labelText == null) {
+        if (StringUtils.isBlank(labelText)) {
             try {
                 char[] charArray = bundle.toCharArray();
                 charArray[0] = Character.toUpperCase(charArray[0]);
-                bundle = new String(charArray);
-                labelText = labelTagUtils.getLabel(pageContext, bundle, userContext.getPreferredLocale(), key, null);
+                String newBundle = new String(charArray);
+                labelText = labelTagUtils.getLabel(pageContext, newBundle, userContext.getPreferredLocale(), key, null);
 
             } catch (Exception e) {
                 labelText = key;

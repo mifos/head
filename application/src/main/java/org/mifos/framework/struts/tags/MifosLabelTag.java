@@ -236,14 +236,14 @@ public class MifosLabelTag extends BodyTagSupport {
         html.endTag("script");
     }
 
-    protected String getLabelBundle() throws JspException {
+    protected String getLabelBundle() {
         if (bundle == null) {
             String[] labelNames = name.split("\\.");
             if (labelNames.length == 2) {
                 return labelNames[0] + "UIResources";
-            } else {
-                return "UIResources";
             }
+
+            return "UIResources";
         }
         return bundle;
     }

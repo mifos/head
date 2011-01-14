@@ -148,7 +148,7 @@ public class MenuBuilder {
         return new String[] { displayNameValue.toString().trim() };
     }
 
-    private static String parseLinkId(String[] displayNameParts) throws JspException {
+    private static String parseLinkId(String[] displayNameParts) {
         // concatenate the words in the link text (example: "Create", "loan", "account"),
         // with . and then lowercase the whole shebang to make a nice id, "create.loan.account".
         /*StringBuffer linkIdValue = new StringBuffer();
@@ -165,14 +165,5 @@ public class MenuBuilder {
     private static String getLabel(String key) throws JspException {
         return LabelTagUtils.getInstance().getLabel(pageContext, MenuConstants.MENU_RESOURCE_NAME,
                 LabelTagUtils.getInstance().getUserPreferredLocaleObject(pageContext), key, null);
-    }
-
-    /**
-     * This method is used for creating the link id's, that'll
-     * always be in english.
-     */
-    private static String getLabelInEnglish(String key) throws JspException {
-        return LabelTagUtils.getInstance().getLabel(pageContext, MenuConstants.MENU_RESOURCE_NAME,
-                Locale.ENGLISH, key, null);
     }
 }

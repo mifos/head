@@ -20,12 +20,12 @@
 
 package org.mifos.framework.components.customTableTag;
 
-import org.mifos.framework.exceptions.TableTagParseException;
-
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
 import java.util.List;
 import java.util.Locale;
+
+import javax.servlet.jsp.PageContext;
+
+import org.mifos.framework.exceptions.TableTagParseException;
 
 public class Table {
 
@@ -49,8 +49,9 @@ public class Table {
         return row;
     }
 
-    public void getTable(String id, StringBuilder tableInfo, List obj, Locale locale, Locale prefferedLocale, Locale mfiLocale,
-                         PageContext pageContext, String bundle) throws TableTagParseException, JspException {
+    @SuppressWarnings("unchecked")
+    public void getTable(String id, StringBuilder tableInfo, List obj, Locale locale, Locale mfiLocale,
+                         PageContext pageContext, String bundle) throws TableTagParseException {
         String totWidth = getRow().getTotWidth();
         tableInfo.append("<table id=\"");
         tableInfo.append(id);
@@ -67,7 +68,7 @@ public class Table {
         // End :: Generationg Header
 
         // Start :: Generating Rows
-        getRow().generateTableRows(tableInfo, obj, locale, prefferedLocale, mfiLocale);
+        getRow().generateTableRows(tableInfo, obj, locale, mfiLocale);
         // End :: Generating Rows
 
         // Genrate Last Line :: This line will have the same style as listed for
