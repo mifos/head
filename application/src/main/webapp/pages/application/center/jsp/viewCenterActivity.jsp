@@ -111,7 +111,7 @@ explanation of the license and how it is applied.
         </tr>
       </table>
 		<html:form action="customerAccountAction.do">
-        	<html-el:hidden property="globalCustNum" value="${BusinessKey.customer.globalCustNum}" />
+        	<html-el:hidden property="globalCustNum" value="${customerGlobalNum}" />
      	</html:form>
 </tiles:put>
 </tiles:insert>

@@ -69,6 +69,8 @@ public class CustomerAction extends AccountAppAction {
         String globalCustNum = request.getParameter("globalCustNum");
         List<CustomerRecentActivityDto> recentCustomerActivity = this.centerServiceFacade.retrieveAllAccountActivity(globalCustNum);
 
+        SessionUtils.setAttribute("customerGlobalNum", globalCustNum, request);
+        SessionUtils.setAttribute("customerGlobalNum", globalCustNum, request.getSession());
         SessionUtils.setCollectionAttribute(CustomerConstants.CLIENTRECENTACCACTIVITYLIST, recentCustomerActivity, request);
         return mapping.findForward("view" + type + "Activity");
     }

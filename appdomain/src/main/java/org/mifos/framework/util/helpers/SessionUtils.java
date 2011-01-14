@@ -83,6 +83,7 @@ public class SessionUtils {
      * returned immaterial of the fact that they are stored using
      * <code>setRemovaleAttribute</code> or <code>setAttribute</code> methods.
      */
+    @SuppressWarnings("unchecked")
     public static Object getAttribute(String key, HttpSession session) {
         logger.debug("The key to be compared is " + key);
         Enumeration keys = session.getAttributeNames();
@@ -90,7 +91,7 @@ public class SessionUtils {
         boolean sessionIsEmpty = null == keys;
         if (sessionIsEmpty || null == key) {
             return null;
-        } else {
+        }
             // start searching in the session if the session has some attributes
             while (keys.hasMoreElements()) {
 
@@ -123,10 +124,9 @@ public class SessionUtils {
 
             }// end-while
             return null;
-        }// end-if
-
     }// end-getAttribute
 
+    @SuppressWarnings("unchecked")
     public static Object getContext(String key, HttpSession session) {
         logger.debug("The key to be compared is   " + key);
         Enumeration keys = session.getAttributeNames();
@@ -135,7 +135,7 @@ public class SessionUtils {
         // if key is null or session is empty return null
         if (null == keys || null == key) {
             return null;
-        } else {
+        }
             // start searching in the session if the session has some attributes
             while (keys.hasMoreElements()) {
 
@@ -155,21 +155,18 @@ public class SessionUtils {
                             "An exact match has been found with key being " + key + " and attribute key being"
                                     + attributeKey);
                     return returnable;
-                } else {
+                }
                     logger.debug(
                             "No match was found for key " + key);
-                }// end-if
-
             }// end-while
             return returnable;
-        }// end-if
-
     }
 
     /**
      * Removes the attributes from the session where the key has path as its
      * prefix
      */
+    @SuppressWarnings("unchecked")
     public static void doCleanUp(String path, HttpSession session) {
         logger.debug("Clean up in session utils has been called");
         Enumeration keys = session.getAttributeNames();

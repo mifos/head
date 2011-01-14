@@ -29,6 +29,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
+import org.mifos.accounts.business.AccountBO;
+import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.ApplyChargeActionForm;
 import org.mifos.accounts.util.helpers.AccountConstants;
@@ -40,6 +42,7 @@ import org.mifos.dto.domain.ApplicableCharge;
 import org.mifos.dto.screen.AccountTypeCustomerLevelDto;
 import org.mifos.framework.struts.action.BaseAction;
 import org.mifos.framework.util.helpers.CloseSession;
+import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 
@@ -49,6 +52,10 @@ public class ApplyChargeAction extends BaseAction {
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         ApplyChargeActionForm applyChargeActionForm = (ApplyChargeActionForm) form;
+
+        AccountBO account = new AccountPersistence().getAccount(Integer.valueOf(applyChargeActionForm.getAccountId()));
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request);
+        SessionUtils.setAttribute(Constants.BUSINESS_KEY, account, request.getSession());
         applyChargeActionForm.clear();
         request.removeAttribute(AccountConstants.APPLICABLE_CHARGE_LIST);
 
