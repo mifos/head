@@ -293,6 +293,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
         PersonnelBO personnel = accountBO.getPersonnel();
         Short personnelId = personnel != null? personnel.getPersonnelId() : userContext.getId();
         Short officeId = accountBO.getOfficeId();
+        accountBusinessService.checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, userContext, officeId, personnelId);
         accountBusinessService.checkPermissionForAdjustmentOnBackDatedPayments(lastPaymentDate, userContext, officeId, personnelId);
     }
 

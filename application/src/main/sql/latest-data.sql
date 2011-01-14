@@ -3355,7 +3355,7 @@ insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_va
                 (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanAdjustBackDatedTransactions'),
                 null);
 insert into activity (activity_id, parent_id, activity_name_lookup_id, description_lookup_id) values
-(244,99,
+(244,113,
     (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanAdjustBackDatedTransactions'),
     (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanAdjustBackDatedTransactions'));
 insert into roles_activity (activity_id, role_id) values (244,1);

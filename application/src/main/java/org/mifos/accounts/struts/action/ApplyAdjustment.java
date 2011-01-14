@@ -26,9 +26,7 @@ import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.struts.actionforms.ApplyAdjustmentActionForm;
-import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.core.MifosRuntimeException;
-import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -94,12 +92,8 @@ public class ApplyAdjustment extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         request.setAttribute("method", "applyAdjustment");
         ApplyAdjustmentActionForm appAdjustActionForm = (ApplyAdjustmentActionForm) form;
-        AccountBO accountBOInSession = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
-        AccountBO accountBO = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
-        checkVersionMismatch(accountBOInSession.getVersionNo(), accountBO.getVersionNo());
+        checkVersionMismatchForAccountBO(request, appAdjustActionForm);
         UserContext userContext = (UserContext) SessionUtils.getAttribute(Constants.USER_CONTEXT_KEY, request.getSession());
-        accountBO.setUserContext(userContext);
-        checkPermissionForAdjustment(accountBO, userContext);
         try {
             accountServiceFacade.applyAdjustment(appAdjustActionForm.getGlobalAccountNum(),
                     appAdjustActionForm.getAdjustmentNote(), userContext.getId());
@@ -111,11 +105,10 @@ public class ApplyAdjustment extends BaseAction {
         return mapping.findForward("applyadj_success");
     }
 
-    private void checkPermissionForAdjustment(AccountBO accountBO, UserContext userContext) throws ApplicationException {
-        PersonnelBO personnel = accountBO.getPersonnel();
-        Short personnelId = personnel != null? personnel.getPersonnelId() : userContext.getId();
-        getBizService().checkPermissionForAdjustment(AccountTypes.LOAN_ACCOUNT, null, userContext,
-                accountBO.getOffice().getOfficeId(), personnelId);
+    private void checkVersionMismatchForAccountBO(HttpServletRequest request, ApplyAdjustmentActionForm appAdjustActionForm) throws ApplicationException {
+        AccountBO accountBOInSession = (AccountBO) SessionUtils.getAttribute(Constants.BUSINESS_KEY, request);
+        AccountBO accountBO = getBizService().findBySystemId(appAdjustActionForm.getGlobalAccountNum());
+        checkVersionMismatch(accountBOInSession.getVersionNo(), accountBO.getVersionNo());
     }
 
     @TransactionDemarcate(validateAndResetToken = true)

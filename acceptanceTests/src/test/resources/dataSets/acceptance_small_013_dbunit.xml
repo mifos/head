@@ -280,6 +280,7 @@
   <activity activity_id="241" parent_id="227" activity_name_lookup_id="712" description_lookup_id="712"/>
   <activity activity_id="242" parent_id="227" activity_name_lookup_id="713" description_lookup_id="713"/>
   <activity activity_id="243" parent_id="203" activity_name_lookup_id="714" description_lookup_id="714"/>
+  <activity activity_id="244" parent_id="113" activity_name_lookup_id="715" description_lookup_id="715"/>
   <admin_document/>
   <admin_document_acc_state_mix/>
   <applied_upgrades upgrade_id="1277565300"/>
@@ -2697,6 +2698,7 @@
   <roles_activity activity_id="241" role_id="1"/>
   <roles_activity activity_id="242" role_id="1"/>
   <roles_activity activity_id="243" role_id="1"/>
+  <roles_activity activity_id="244" role_id="1"/>
   <saving_schedule/>
   <savings_account/>
   <savings_activity_details/>

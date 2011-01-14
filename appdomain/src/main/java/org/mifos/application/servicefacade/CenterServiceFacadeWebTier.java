@@ -107,7 +107,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;

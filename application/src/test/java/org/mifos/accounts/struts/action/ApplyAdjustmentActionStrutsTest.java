@@ -20,12 +20,7 @@
 
 package org.mifos.accounts.struts.action;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +40,7 @@ import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.customers.personnel.util.helpers.PersonnelConstants;
 import org.mifos.customers.util.helpers.CustomerStatus;
+import org.mifos.domain.builders.MifosUserBuilder;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
@@ -52,7 +48,17 @@ import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextImpl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * This class tests methods of ApplyAdjustment action class.
@@ -210,11 +216,19 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("adjustmentNote", "Loan adjustment testing");
         addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        setUpSecurityContext();
         getRequest().getSession().setAttribute(Constants.USERCONTEXT, TestUtils.makeUser());
-
         actionPerform();
         loan = (LoanBO) TestObjectFactory.getObject(AccountBO.class, loan.getAccountId());
         verifyForward("applyadj_success");
+    }
+
+    private void setUpSecurityContext() {
+        SecurityContext securityContext = new SecurityContextImpl();
+        MifosUser mifosUser = new MifosUserBuilder().nonLoanOfficer().withAdminRole().build();
+        Authentication authentication = new TestingAuthenticationToken(mifosUser, mifosUser);
+        securityContext.setAuthentication(authentication);
+        SecurityContextHolder.setContext(securityContext);
     }
 
     @Test
@@ -246,6 +260,7 @@ public class ApplyAdjustmentActionStrutsTest extends MifosMockStrutsTestCase {
         addRequestParameter("adjustmentNote", "Loan adjustment testing");
         addRequestParameter("globalAccountNum", loan.getGlobalAccountNum());
         addRequestParameter(Constants.CURRENTFLOWKEY, (String) request.getAttribute(Constants.CURRENTFLOWKEY));
+        setUpSecurityContext();
         getRequest().getSession().setAttribute(Constants.USERCONTEXT, TestUtils.makeUser());
 
         actionPerform();

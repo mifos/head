@@ -359,7 +359,7 @@ public class AccountBusinessService implements BusinessService {
     }
 
     public void checkPermissionForAdjustment(AccountTypes accountTypes, CustomerLevel customerLevel,
-            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
+            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ServiceException {
         if (!isPermissionAllowedForAdjustment(accountTypes, customerLevel, userContext, recordOfficeId,
                 recordLoanOfficerId)) {
             throw new ServiceException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
