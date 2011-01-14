@@ -146,8 +146,7 @@ explanation of the license and how it is applied.
 											<td><c:set var="flags" scope="request"
 												value="${status.flagSet}" /> <mifos:select
 												name="editCustomerStatusActionForm" property="flagId" styleId="customerchangeStatus.input.cancel_reason" size="1" disabled="true">
-												<html-el:options collection="flags" property="id"
-													labelProperty="lookUpValue.messageText" />
+												<html-el:options collection="flags" property="id" labelProperty="statusFlagMessageText" />
 											</mifos:select></td>
 										</tr>
 									</c:if>
