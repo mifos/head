@@ -24,7 +24,6 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
@@ -56,7 +55,6 @@ import org.mifos.customers.personnel.util.helpers.PersonnelStatus;
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.CustomFieldDto;
-import org.mifos.dto.domain.OfficeDto;
 import org.mifos.dto.domain.UserDetailDto;
 import org.mifos.dto.domain.UserSearchDto;
 import org.mifos.dto.domain.ValueListElement;
@@ -77,6 +75,7 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticH
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,18 +87,20 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
     private final ApplicationConfigurationDao applicationConfigurationDao;
+    private final RolesPermissionsPersistence rolesPermissionsPersistence;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
-    LegacyMasterDao legacyMasterDao;
+    private LegacyMasterDao legacyMasterDao;
 
     @Autowired
-    public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao) {
+    public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao, RolesPermissionsPersistence rolesPermissionsPersistence) {
         super();
         this.officeDao = officeDao;
         this.customerDao = customerDao;
         this.personnelDao = personnelDao;
         this.applicationConfigurationDao = applicationConfigurationDao;
+        this.rolesPermissionsPersistence = rolesPermissionsPersistence;
     }
 
     @Override
@@ -111,15 +112,11 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     }
 
     @Override
-    public DefinePersonnelDto retrieveInfoForNewUserDefinition(Short officeId, Locale preferredLocale) {
-        OfficeDto officeDto;
-        String officeName;
+    public DefinePersonnelDto retrieveInfoForNewUserDefinition(Short officeId) {
+        String officeName = "";
         if (officeId != null) {
-            officeDto = officeDao.findOfficeDtoById(officeId);
-            officeName = officeDto.getLookupNameKey();
-        } else {
-            officeDto = null;
-            officeName = null;
+            OfficeBO office = officeDao.findOfficeById(officeId);
+            officeName = office.getOfficeName();
         }
 
         List<ValueListElement> titles = customerDao.retrieveTitles();
@@ -162,10 +159,10 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
             languageList.add(listElement);
         }
 
-        List<RoleBO> roles;
+        List<RoleBO> roles = new ArrayList<RoleBO>();
         try {
-            roles = new PersonnelBusinessService().getRoles();
-        } catch (ServiceException e) {
+            roles = rolesPermissionsPersistence.getRoles();
+        } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
 

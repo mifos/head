@@ -6,5 +6,7 @@
     <bean id="legacyAdminDocumentDao" class="org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao"/>
     <bean id="legacyFieldConfigurationDao" class="org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao"/>
     <bean id="legacyAdminDocAccStateMixDao" class="org.mifos.reports.admindocuments.persistence.LegacyAdminDocAccStateMixDao"/>
+    
+    <bean id="rolesPermissionsPersistence" class="org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence"/>
 
 </beans>

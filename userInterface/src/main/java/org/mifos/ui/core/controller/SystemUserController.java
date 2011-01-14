@@ -23,7 +23,6 @@ package org.mifos.ui.core.controller;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -126,7 +125,7 @@ public class SystemUserController {
         formBean.getAddress().setCountryHidden(dtoFields.isHideSystemCountry());
         formBean.getAddress().setPostalCodeHidden(dtoFields.isHideSystemPostalCode());
 
-        DefinePersonnelDto userRefData = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(officeId.shortValue(), Locale.getDefault());
+        DefinePersonnelDto userRefData = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(officeId.shortValue());
 
         Map<String, String> genderOptions = new LinkedHashMap<String, String>();
         for (ListElement option : userRefData.getGenderList()) {

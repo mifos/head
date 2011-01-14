@@ -20,8 +20,6 @@
 
 package org.mifos.application.admin.servicefacade;
 
-import java.util.Locale;
-
 import org.mifos.dto.domain.AddressDto;
 import org.mifos.dto.domain.CreateOrUpdatePersonnelInformation;
 import org.mifos.dto.domain.UserDetailDto;
@@ -36,7 +34,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 public interface PersonnelServiceFacade {
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CREATE_USER')")
-    DefinePersonnelDto retrieveInfoForNewUserDefinition(Short officeId, Locale preferredLocale);
+    DefinePersonnelDto retrieveInfoForNewUserDefinition(Short officeId);
 
     @PreAuthorize("isFullyAuthenticated() and hasRole('ROLE_CREATE_USER')")
     UserDetailDto createPersonnelInformation(CreateOrUpdatePersonnelInformation personnel);
