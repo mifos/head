@@ -242,6 +242,8 @@ public interface SecurityConstants {
     short EDIT_SAVING_PRODUCT = 98;
     short LOAN_MANAGEMENT = 99;
 
+    short LOAN_TRANSACTIONS = 113;
+
     // Loan management
     short LOAN_CREATE_LOAN_ACCOUNT_IN_SAVE_FOR_LATER_STATE = 101;
 

@@ -12,6 +12,6 @@ public class Upgrade1294738016 extends Upgrade {
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
         new AddActivity("Permissions-CanAdjustBackDatedTransactions", SecurityConstants.LOAN_ADJUST_BACK_DATED_TRXNS,
-                SecurityConstants.LOAN_MANAGEMENT).upgrade(connection);
+                SecurityConstants.LOAN_TRANSACTIONS).upgrade(connection);
     }
 }
