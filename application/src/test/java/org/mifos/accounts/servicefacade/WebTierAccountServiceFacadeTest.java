@@ -170,6 +170,7 @@ public class WebTierAccountServiceFacadeTest {
         when(loanBO.getLastPmntToBeAdjusted()).thenReturn(lastPmntToBeAdjusted);
         when(loanBO.getOfficeId()).thenReturn(recordOfficeId);
         when(loanBO.getPersonnel()).thenReturn(loanOfficer);
+        when(loanBO.getUserContext()).thenReturn(userContext);
         when(loanOfficer.getPersonnelId()).thenReturn(recordOfficeId);
         when(lastPmntToBeAdjusted.getPaymentDate()).thenReturn(paymentDate);
         when(accountBusinessService.findBySystemId(globalAccountNum)).thenReturn(loanBO);
@@ -178,6 +179,7 @@ public class WebTierAccountServiceFacadeTest {
         verify(accountBusinessService).findBySystemId(globalAccountNum);
         verify(personnelPersistence).findPersonnelById(personnelId);
         verify(loanBO).adjustLastPayment(adjustmentNote, personnelBO);
+        verify(loanBO).setUserContext(userContext);
         verify(accountPersistence).createOrUpdate(loanBO);
         verify(transactionHelper).startTransaction();
         verify(transactionHelper).commitTransaction();
@@ -200,6 +202,7 @@ public class WebTierAccountServiceFacadeTest {
         PersonnelBO loanOfficer = mock(PersonnelBO.class);
 
         when(loanBO.getPersonnel()).thenReturn(loanOfficer);
+        when(loanBO.getUserContext()).thenReturn(userContext);
         when(loanOfficer.getPersonnelId()).thenReturn(recordOfficeId);
         when(loanBO.getOfficeId()).thenReturn(recordOfficeId);
         when(loanBO.getLastPmntToBeAdjusted()).thenReturn(lastPmntToBeAdjusted);
@@ -222,6 +225,7 @@ public class WebTierAccountServiceFacadeTest {
         verify(personnelPersistence, never()).findPersonnelById(personnelId);
         verify(loanBO, never()).adjustLastPayment(anyString(), Matchers.<PersonnelBO>anyObject());
         verify(accountPersistence, never()).createOrUpdate(loanBO);
+        verify(loanBO).setUserContext(userContext);
         verify(transactionHelper, never()).startTransaction();
         verify(transactionHelper, never()).commitTransaction();
         verify(transactionHelper).rollbackTransaction();

@@ -267,6 +267,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     public void applyAdjustment(String globalAccountNum, String adjustmentNote, Short loggedInUser) {
         try {
             AccountBO accountBO = accountBusinessService.findBySystemId(globalAccountNum);
+            accountBO.setUserContext(getUserContext());
             checkPermissionForAdjustment(accountBO);
             PersonnelBO personnelBO = personnelPersistence.findPersonnelById(loggedInUser);
             transactionHelper.startTransaction();
@@ -288,7 +289,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private void checkPermissionForAdjustment(AccountBO accountBO) throws ServiceException {
         AccountPaymentEntity lastPmntToBeAdjusted = accountBO.getLastPmntToBeAdjusted();
         if (lastPmntToBeAdjusted == null) return;
-        UserContext userContext = getUserContext();
+        UserContext userContext = accountBO.getUserContext();
         Date lastPaymentDate = lastPmntToBeAdjusted.getPaymentDate();
         PersonnelBO personnel = accountBO.getPersonnel();
         Short personnelId = personnel != null? personnel.getPersonnelId() : userContext.getId();
