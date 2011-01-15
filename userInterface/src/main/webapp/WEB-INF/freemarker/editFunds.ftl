@@ -21,6 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]  <!--  Main Content Begins-->
 <div class=" content">
+<span id="page.id" title="editFund"/>
     <form method="POST" action="editFunds.ftl" name="editFunds">
         <div class="span-24">
         [@spring.bind "formBean.oldName"/]
