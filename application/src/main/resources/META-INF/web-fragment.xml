@@ -271,7 +271,7 @@
     </error-page>
 
     <!-- section: birt web viewer -->
-    <!-- this section is copied from reporting/BirtWebViewer/WEB-INF/web.xml -->
+    <!-- this section is copied from reporting/src/unused/WEB-INF/web.xml -->
 
     <context-param>
         <param-name>BIRT_VIEWER_LOCALE</param-name>
@@ -298,7 +298,7 @@
     <!-- Absolute downloaded image/chart directory. Default to ${birt home}/report/images -->
     <context-param>
         <param-name>BIRT_VIEWER_IMAGE_DIR</param-name>
-        <param-value></param-value>
+        <param-value>birt/report/images</param-value>
     </context-param>
 
     <!-- Absolute engine log directory. Default to ${birt home}/logs -->

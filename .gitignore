@@ -13,3 +13,4 @@ docs/
 *.ipr
 *.iws
 .DS_Store
+!.gitignore

@@ -10,7 +10,6 @@
 	<description>Embedded Servlet Container Web Server. 
 Principally for Mifos Eclipse (or other IDE) and Maven-based Development Environment,
 but could technically be used for running acceptanceTests, Demo/Test instances, or even &quot;all-in-one&quot; real deployment scenarios.</description>
-	<url>http://www.mifos.org</url>
 
 	<parent>
 		<groupId>org.mifos</groupId>

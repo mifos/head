@@ -9,7 +9,6 @@
 
 	<name>Mifos - WAR</name>
 	<description>The actual mifos.war (as the mifos-webapp/application is now a JAR)</description>
-	<url>http://www.mifos.org</url>
 
 	<parent>
 		<groupId>org.mifos</groupId>
