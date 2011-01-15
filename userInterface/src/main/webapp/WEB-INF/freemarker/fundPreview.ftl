@@ -21,7 +21,7 @@
 [#include "layout.ftl"]
 [@adminLeftPaneLayout]<!--Container Begins-->
 <div>
-
+	<span id="page.id" title="fundPreview" />
     <!--  Main Content Begins-->
     <div class="content">
         <form method="POST" action="fundPreview.ftl" name="fundPreview">

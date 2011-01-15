@@ -216,6 +216,12 @@ public class AdminPage extends MifosPage {
         return new ViewFundsPage(selenium);
     }
 
+    public FundCreatePage navigateToFundCreatePage(){
+        selenium.click("admin.link.defineNewFund");
+        waitForPageToLoad();
+        return new FundCreatePage(selenium);
+    }
+
     public DefineNewSavingsProductPage navigateToDefineSavingsProduct() {
         selenium.click("admin.link.defineNewSavingsProduct");
         waitForPageToLoad();
