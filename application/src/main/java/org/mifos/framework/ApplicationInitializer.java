@@ -435,7 +435,7 @@ public class ApplicationInitializer implements ServletContextListener, ServletRe
         } catch (IllegalAccessException e) {
             logger.warn("failed mysql timer cancellation", e);
         } catch (NullPointerException e) {
-            logger.info("No mysql timer cancellation required", e);
+            logger.info("No mysql timer cancellation required"); // Expected exception, do not log NPE causee
         }
     }
 
