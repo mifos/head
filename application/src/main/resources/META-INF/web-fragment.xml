@@ -280,7 +280,7 @@
 
     <context-param>
         <param-name>BIRT_VIEWER_WORKING_FOLDER</param-name>
-        <param-value></param-value>
+        <param-value>birt</param-value>
     </context-param>
 
     <context-param>

@@ -58,6 +58,7 @@
         <module>appdomain</module>
         <module>application</module>
         <module>acceptanceTests</module>
+        <module>reporting</module>
         <module>server</module>
         <module>war</module>
     </modules>
@@ -204,6 +205,11 @@
             <dependency>
                 <groupId>org.mifos</groupId>
                 <artifactId>mifos-webapp</artifactId>
+                <version>1.8-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mifos</groupId>
+                <artifactId>mifos-reporting</artifactId>
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>
