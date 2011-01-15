@@ -3364,12 +3364,12 @@ insert into roles_activity (activity_id, role_id) values (244,1);
 /* Upgrade - 1294927843*/
 
 insert into lookup_value(lookup_id,entity_id,lookup_name)
-    values((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-CanEditPhoneNumber');
+    values((select max(lv.lookup_id)+1 from lookup_value lv),87,'Permissions-Clients-CanEditPhoneNumber');
 insert into lookup_value_locale(lookup_value_id, locale_id, lookup_id, lookup_value)
-    values(967,1,(select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanEditPhoneNumber'),null);
+    values(967,1,(select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-Clients-CanEditPhoneNumber'),null);
 insert into activity(activity_id,parent_id,activity_name_lookup_id,description_lookup_id)values
     (245,34,
-    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanEditPhoneNumber'),
-    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-CanEditPhoneNumber'));
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-Clients-CanEditPhoneNumber'),
+    (select lookup_id from lookup_value where entity_id =87 and lookup_name='Permissions-Clients-CanEditPhoneNumber'));
 insert into roles_activity values (245,1);
 /* Upgrade - 1294927843*/

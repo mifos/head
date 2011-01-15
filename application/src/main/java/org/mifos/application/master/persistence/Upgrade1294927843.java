@@ -32,7 +32,7 @@ public class Upgrade1294927843 extends Upgrade {
 
     @Override
     public void upgrade(Connection connection) throws IOException, SQLException {
-        new AddActivity("Permissions-CanEditPhoneNumber", SecurityConstants.CAN_EDIT_PHONE_NUMBER,
+        new AddActivity("Permissions-Clients-CanEditPhoneNumber", SecurityConstants.CAN_EDIT_PHONE_NUMBER,
                 SecurityConstants.CLIENTS).upgrade(connection);
     }
 
