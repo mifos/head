@@ -280,6 +280,7 @@
 
     <context-param>
         <param-name>BIRT_VIEWER_WORKING_FOLDER</param-name>
+        <!-- this pam must not be "empty", but has to contain a folder, @see http://mifosforge.jira.com/browse/MIFOS-4429 for background -->
         <param-value>birt</param-value>
     </context-param>
 
