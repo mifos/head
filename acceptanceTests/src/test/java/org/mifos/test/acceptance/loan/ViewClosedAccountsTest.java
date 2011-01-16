@@ -100,13 +100,11 @@ public class ViewClosedAccountsTest extends UiTestCaseBase {
         searchResultsPage.verifyPage();
 
         GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
-        groupViewDetailsPage.verifyPage();
 
         ClosedAccountsPage closedAccountsPage = groupViewDetailsPage.navigateToClosedAccountsPage();
         closedAccountsPage.verifyPage();
 
-        GroupViewDetailsPage returnedGroupViewDetailsPage = closedAccountsPage.returnToGroupViewDetailsPage();
-        returnedGroupViewDetailsPage.verifyPage();
+        closedAccountsPage.returnToGroupViewDetailsPage();
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")

@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.mifos.test.acceptance.framework.admin.AdminPage;
 import org.mifos.test.acceptance.framework.admin.BatchJobsPage;
+import org.mifos.test.acceptance.framework.util.UiTestUtils;
 
 import com.thoughtworks.selenium.Selenium;
 
@@ -66,6 +67,8 @@ public class BatchJobHelper {
             batchJobsPage.selectBatchJob(name);
         }
         batchJobsPage.runSelectedBatchJobs();
+        // TODO we should check if the batch job is finished on the batch jobs page. For now we give 2 seconds fot the batch job to finish
+        UiTestUtils.sleep(2000);
     }
 
 }

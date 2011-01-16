@@ -116,7 +116,6 @@ public class NavigationHelper {
         SearchResultsPage searchResultsPage = homePage.search(groupName);
         searchResultsPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=" + groupName + "*");
-        groupDetailsPage.verifyPage();
 
         return groupDetailsPage;
     }

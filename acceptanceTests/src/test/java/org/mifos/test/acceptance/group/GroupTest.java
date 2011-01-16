@@ -103,7 +103,6 @@ public class GroupTest extends UiTestCaseBase {
         searchResultsPage.verifyPage();
         // click on any search result leading to a group dashboard
         GroupViewDetailsPage groupViewDetailsPage = searchResultsPage.navigateToGroupViewDetailsPage("link=MyGroup*");
-        groupViewDetailsPage.verifyPage();
     }
 
     @Test(sequential = true, groups = {"smoke","group","acceptance","ui"})
@@ -118,7 +117,6 @@ public class GroupTest extends UiTestCaseBase {
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();
         //Then
         groupDetailsPage.verifyStatus("Application Pending*");
         //When
@@ -144,7 +142,6 @@ public class GroupTest extends UiTestCaseBase {
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForPartialApplication(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();
         //Then
         groupDetailsPage.verifyStatus("Partial Application*");
         //When
@@ -167,13 +164,11 @@ public class GroupTest extends UiTestCaseBase {
         CreateGroupConfirmationPage confirmationPage = groupEntryPage.submitNewGroupForApproval(formParameters);
         confirmationPage.verifyPage();
         GroupViewDetailsPage groupDetailsPage = confirmationPage.navigateToGroupDetailsPage();
-        groupDetailsPage.verifyPage();
         CenterSearchTransferGroupPage centerSearchTransfer = groupDetailsPage.editCenterMembership();
         centerSearchTransfer.verifyPage();
         ConfirmCenterMembershipPage confirmMembership = centerSearchTransfer.search("Center3");
         confirmMembership.verifyPage();
         groupDetailsPage = confirmMembership.submitMembershipChange();
-        groupDetailsPage.verifyPage();
         groupDetailsPage.verifyLoanOfficer(" Loan officer: Jenna Barth");
     }
 
@@ -199,7 +194,6 @@ public class GroupTest extends UiTestCaseBase {
         responsePage.verifyQuestionPresent(question1, "30");
         responsePage.verifyQuestionPresent(question2, "Choice", "Choice2");
         responsePage.navigateToDetailsPage();
-        groupViewDetailsPage.verifyPage();
     }
 
     private Map<String, String> getChoiceTags() {

@@ -35,11 +35,7 @@ public class GroupViewDetailsPage extends MifosPage {
 
     public GroupViewDetailsPage(Selenium selenium) {
         super(selenium);
-    }
-
-    public GroupViewDetailsPage verifyPage() {
         verifyPage("ViewGroupDetails");
-        return this;
     }
 
     public void verifyStatus(String status) {
