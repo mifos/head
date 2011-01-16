@@ -29,6 +29,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.testng.Assert;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
 public class ViewInstallmentDetailsPage extends AbstractPage {
@@ -298,7 +299,8 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         int noOfMonths = selenium.getXpathCount(tableXpath + "//tr").intValue() - 1;
         double  cashFlow = cashFlowIncremental;
         boolean cashflowAdded = false;
-        DecimalFormat df = new DecimalFormat("#.00");
+        // TODO hard-coded English locale to make this test working on the non-English locale systems
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.ENGLISH));
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
             String cashFlowDisplayed = selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[2]");
             Assert.assertEquals(cashFlowDisplayed,df.format(cashFlow));
