@@ -55,7 +55,6 @@ import org.mifos.test.acceptance.framework.loan.QuestionResponseParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalEntryPage;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalParameters;
 import org.mifos.test.acceptance.framework.loan.RedoLoanDisbursalSchedulePreviewPage;
-import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPage;
 import org.mifos.test.acceptance.framework.loanproduct.EditLoanProductPreviewPage;
@@ -263,12 +262,9 @@ public class LoanTestHelper {
      * @param loanId The loan account id.
      */
     public void waiveFee(String loanId) {
-        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-
-        ViewInstallmentDetailsPage installmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
-        installmentDetailsPage.verifyPage();
-
-        installmentDetailsPage.waiveFee();
+        navigationHelper.navigateToLoanAccountPage(loanId).
+                navigateToViewInstallmentDetails().
+                waiveFee();
     }
 
     /**
@@ -276,12 +272,9 @@ public class LoanTestHelper {
      * @param loanId The loan account id.
      */
     public void waivePenalty(String loanId) {
-        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
-
-        ViewInstallmentDetailsPage installmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
-        installmentDetailsPage.verifyPage();
-
-        installmentDetailsPage.waivePenalty();
+        navigationHelper.navigateToLoanAccountPage(loanId).
+                navigateToViewInstallmentDetails().
+                waivePenalty();
     }
 
     /**
