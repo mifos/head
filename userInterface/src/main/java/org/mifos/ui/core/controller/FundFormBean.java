@@ -34,7 +34,6 @@ public class FundFormBean {
     @NotEmpty
     private String name;
 
-    @NotEmpty
     private String oldName;
 
     public String getId() {
