@@ -31,7 +31,7 @@ public class CreateNewFundConfirmationPage extends MifosPage {
     }
 
     public AdminPage submitAndNavigateToAdminPage() {
-        selenium.click("submit");
+        selenium.click("SUBMIT");
         waitForPageToLoad();
         return new AdminPage(selenium);
     }

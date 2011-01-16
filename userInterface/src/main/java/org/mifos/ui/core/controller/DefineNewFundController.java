@@ -89,6 +89,8 @@ public class DefineNewFundController {
             modelAndView.addObject("code", codeMap);
         } else {
             modelAndView.setViewName("newFundPreview");
+            Map<String, String> codeMap = retrieveFundCodeOptionMap();
+            formBean.setCodeValue(codeMap.get(formBean.getCodeId()));
             modelAndView.addObject("formBean", formBean);
         }
         return modelAndView;
