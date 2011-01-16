@@ -27,11 +27,13 @@ import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 import org.testng.Assert;
 
 public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     String validateButton = "validateBtn";
+    // TODO - English locale hard-coded
     DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy").withLocale(Locale.ENGLISH);
     String tableXpath = "//table[@id='cashflow']";
     String previewButton = "previewBtn";
@@ -271,7 +273,8 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
         int noOfMonths = selenium.getXpathCount(tableXpath + "//tr").intValue() - 1;
         double  cashFlow = cashFlowIncremental;
         boolean cashflowAdded = false;
-        DecimalFormat df = new DecimalFormat("#.00");
+        // TODO - English locale hard-coded
+        DecimalFormat df = new DecimalFormat("#.00", new DecimalFormatSymbols(Locale.ENGLISH));
         for (int rowIndex = 1; rowIndex <= noOfMonths ; rowIndex++) {
             String cashFlowDisplayed = selenium.getText(tableXpath + "//tr[" + (rowIndex + 1) + "]/td[2]");
             Assert.assertEquals(cashFlowDisplayed, df.format(cashFlow));
@@ -487,9 +490,15 @@ public class CreateLoanAccountReviewInstallmentPage extends AbstractPage {
     }
 
     public CreateLoanAccountReviewInstallmentPage verifyRepaymentCapacityOnPreview(String expectedRc, String minRc) {
-        clickPreviewAndGoToReviewLoanAccountPage();
+        clickPreview();
         verifyPage("SchedulePreview");
         isTextPresentInPage("Repayment Capacity of the client is " + expectedRc + " % which should be greater than the required value of " + minRc + " %");
+        return this;
+    }
+
+    public CreateLoanAccountReviewInstallmentPage clickPreview() {
+        selenium.click(previewButton);
+        waitForPageToLoad();
         return this;
     }
 
