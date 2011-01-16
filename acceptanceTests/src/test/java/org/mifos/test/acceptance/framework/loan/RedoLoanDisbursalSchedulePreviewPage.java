@@ -54,7 +54,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     public void typeAmountPaid(int amountPaid) {
-        selenium.type("name=paymentDataBeans[1].total", String.valueOf(amountPaid));
+        /* TODO selenium.type("name=paymentDataBeans[1].total", String.valueOf(amountPaid));*/
         selenium.type("name=paymentDataBeans[1].amount", String.valueOf(amountPaid));
     }
 

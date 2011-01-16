@@ -42,8 +42,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
     public RedoLoanDisbursalSchedulePreviewPage submitAndNavigateToRedoLoanDisbursalSchedulePreviewPage(RedoLoanDisbursalParameters params) {
         typeData(params);
 
-        selenium.click("loancreationdetails.button.continue");
-        waitForPageToLoad();
+        submit();
 
         return new RedoLoanDisbursalSchedulePreviewPage(selenium);
     }
@@ -51,8 +50,7 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
     public RedoLoanDisbursalEntryPage submitFutureDateAndReloadPageWithInputError(RedoLoanDisbursalParameters params) {
         typeData(params);
 
-        selenium.click("loancreationdetails.button.continue");
-        waitForPageToLoad();
+        submit();
 
         return new RedoLoanDisbursalEntryPage(selenium);
     }
@@ -66,8 +64,6 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         selenium.type("disbursementDateYY", params.getDisbursalDateYYYY());
 
         selenium.fireEvent("disbursementDateYY", "blur");
-
-        submit();
     }
 
     private void submit() {
