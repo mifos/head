@@ -21,6 +21,7 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import org.mifos.test.acceptance.framework.AbstractPage;
+import org.testng.Assert;
 import com.thoughtworks.selenium.Selenium;
 
 public class ViewNextInstallmentDetailsPage extends AbstractPage {
@@ -40,5 +41,21 @@ public class ViewNextInstallmentDetailsPage extends AbstractPage {
         selenium.click("nextPayment_loanAccount.link.waivePenaltyDue");
         waitForPageToLoad();
         return new ViewNextInstallmentDetailsPage(selenium);
+    }
+
+    public ApplyAdjustmentPage navigateToApplyAdjustment() {
+        selenium.click("nextPayment_loanAccount.link.applyAdjustment");
+        waitForPageToLoad();
+        return new ApplyAdjustmentPage(selenium);
+
+    }
+
+    public void verifyInstallmentAmount(int row, int column, String amount) {
+        Assert.assertEquals(selenium.getText("//tr[" + row + "]/td[" + column + "]"), amount);
+    }
+
+    public void waiveOverdueInstallmentFee() {
+        selenium.click("id=nextPayment_loanAccount.link.waiveFeeOverDue");
+        waitForPageToLoad();
     }
 }

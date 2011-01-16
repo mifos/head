@@ -26,7 +26,7 @@ import org.mifos.test.acceptance.framework.HomePage;
 import org.mifos.test.acceptance.framework.MifosPage;
 import org.mifos.test.acceptance.framework.UiTestCaseBase;
 import org.mifos.test.acceptance.framework.loan.LoanAccountPage;
-import org.mifos.test.acceptance.framework.loan.ViewInstallmentDetailsPage;
+import org.mifos.test.acceptance.framework.loan.ViewNextInstallmentDetailsPage;
 import org.mifos.test.acceptance.framework.login.LoginPage;
 import org.mifos.test.acceptance.framework.search.SearchResultsPage;
 import org.mifos.test.acceptance.remote.InitializeApplicationRemoteTestingService;
@@ -70,7 +70,7 @@ public class WaiveLoanFeeTest extends UiTestCaseBase {
         SearchResultsPage searchResultsPage = homePage.search("000100000000215");
         searchResultsPage.verifyPage();
         LoanAccountPage loanAccountPage = searchResultsPage.navigateToLoanAccountDetailPage("000100000000215");
-        ViewInstallmentDetailsPage viewInstallmentDetailsPage = loanAccountPage.navigateToViewInstallmentDetails();
+        ViewNextInstallmentDetailsPage viewInstallmentDetailsPage = loanAccountPage.navigateToViewNextInstallmentDetails();
         viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "16.0");
         viewInstallmentDetailsPage.waiveOverdueInstallmentFee();
         viewInstallmentDetailsPage.verifyInstallmentAmount(11, 2, "0.0");
