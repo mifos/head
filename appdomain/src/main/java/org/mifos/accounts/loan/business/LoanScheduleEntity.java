@@ -33,7 +33,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.util.CollectionUtils;
 
@@ -727,5 +726,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     double getExtraInterestPaidAsDouble() {
         return getExtraInterestPaid().getAmount().doubleValue();
+    }
+
+    public Money getEffectiveInterest() {
+        return interest.add(getExtraInterest());
     }
 }
