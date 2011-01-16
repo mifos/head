@@ -136,12 +136,17 @@ public class LoanTestHelper {
      * @return edit preview loan account page
      */
     public EditPreviewLoanAccountPage changeLoanAccountInformation(String loanId, CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
-        LoanAccountPage loanAccountPage = navigationHelper.navigateToLoanAccountPage(loanId);
+        return navigationHelper.navigateToLoanAccountPage(loanId).
+                navigateToEditAccountInformation().
+                editAccountParams(accountSubmitParameters, editAccountParameters).
+                submitAndNavigateToAccountInformationPreviewPage();
+    }
 
-        EditLoanAccountInformationPage editAccountInformationPage = loanAccountPage.navigateToEditAccountInformation();
-
-        editAccountInformationPage.editAccountParams(accountSubmitParameters, editAccountParameters);
-        return editAccountInformationPage.submitAndNavigateToAccountInformationPreviewPage();
+    public EditLoanAccountInformationPage changeLoanAccountInformationWithErrors(String loanId, CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
+        return navigationHelper.navigateToLoanAccountPage(loanId).
+                navigateToEditAccountInformation().
+                editAccountParams(accountSubmitParameters, editAccountParameters).
+                submitWithErrors();
     }
 
     /**
@@ -263,7 +268,7 @@ public class LoanTestHelper {
      */
     public void waiveFee(String loanId) {
         navigationHelper.navigateToLoanAccountPage(loanId).
-                navigateToViewInstallmentDetails().
+                navigateToViewNextInstallmentDetails().
                 waiveFee();
     }
 
@@ -273,7 +278,7 @@ public class LoanTestHelper {
      */
     public void waivePenalty(String loanId) {
         navigationHelper.navigateToLoanAccountPage(loanId).
-                navigateToViewInstallmentDetails().
+                navigateToViewNextInstallmentDetails().
                 waivePenalty();
     }
 

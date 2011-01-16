@@ -243,7 +243,7 @@ public class DecliningPrincipleLoanTest extends UiTestCaseBase {
                 clickContinue().
                 verifyLoanScheduleForDecliningPrincipal().
                 clickPreviewAndGoToReviewLoanAccountPage().
-                verifyPage().verifyInterestTypeInLoanPreview(interestTypeName).
+                verifyInterestTypeInLoanPreview(interestTypeName).
                 submit().navigateToLoanAccountDetailsPage().
                 verifyInterestTypeInLoanAccountDetails(interestTypeName).
                 navigateToRepaymentSchedulePage().

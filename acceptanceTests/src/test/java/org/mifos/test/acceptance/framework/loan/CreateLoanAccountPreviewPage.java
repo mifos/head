@@ -29,15 +29,11 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
 
     public CreateLoanAccountPreviewPage(Selenium selenium) {
         super(selenium);
+        this.verifyPage("CreateLoanPreview");
     }
 
     public CreateLoanAccountPreviewPage() {
         super();
-    }
-
-    public CreateLoanAccountPreviewPage verifyPage() {
-        this.verifyPage("CreateLoanPreview");
-        return this;
     }
 
     public CreateLoanAccountPreviewPage verifyInterestTypeInLoanPreview(String interestType) {
@@ -64,7 +60,6 @@ public class CreateLoanAccountPreviewPage extends AbstractPage {
     }
 
     public void verifyWarningForThreshold(String warningThreshold) {
-        verifyPage();
         isTextPresentInPage("Installment amount for September 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
         //isTextPresentInPage("Installment amount for November 2010 as % of warning threshold exceeds the allowed warning threshold of " + warningThreshold+ "%");
     }

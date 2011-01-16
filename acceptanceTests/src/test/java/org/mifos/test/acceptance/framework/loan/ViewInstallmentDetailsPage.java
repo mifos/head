@@ -40,9 +40,8 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
 
     public ViewInstallmentDetailsPage(Selenium selenium) {
         super(selenium);
-        this.verifyPage("NextPaymentLoanAccount");
+        this.verifyPage("SchedulePreview");
     }
-
 
     public void verifyInstallmentAmount(int row, int column, String amount) {
         Assert.assertEquals(selenium.getText("//tr[" + row + "]/td[" + column + "]"), amount);
@@ -52,18 +51,6 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         selenium.click("id=clientsAndAccountsHeader.link.home");
         waitForPageToLoad();
         return new HomePage(selenium);
-    }
-
-    public ViewInstallmentDetailsPage waiveFee() {
-        selenium.click("nextPayment_loanAccount.link.waiveFeeDue");
-        waitForPageToLoad();
-        return new ViewInstallmentDetailsPage(selenium);
-    }
-
-    public ViewInstallmentDetailsPage waivePenalty() {
-        selenium.click("nextPayment_loanAccount.link.waivePenaltyDue");
-        waitForPageToLoad();
-        return new ViewInstallmentDetailsPage(selenium);
     }
 
     public void waiveCurrentInstallmentFee() {

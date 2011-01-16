@@ -39,19 +39,28 @@ public class EditLoanAccountInformationPage extends MifosPage {
         waitForPageToLoad();
         return new EditPreviewLoanAccountPage(selenium);
     }
+
+    public EditLoanAccountInformationPage submitWithErrors() {
+
+        selenium.click("editLoanAccount.button.preview");
+
+        waitForPageToLoad();
+        return new EditLoanAccountInformationPage(selenium);
+    }
+
     public  void editExternalID(EditLoanAccountInformationParameters params) {
-
         selenium.type("externalId", params.getExternalID());
-   }
+    }
 
 
-    public void editAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
+    public EditLoanAccountInformationPage editAccountParams(CreateLoanAccountSubmitParameters accountSubmitParameters, EditLoanAccountInformationParameters editAccountParameters) {
         if (accountSubmitParameters.getAmount() != null) {
             selenium.type("editLoanAccount.input.loanAmount", accountSubmitParameters.getAmount());
         }
         if (editAccountParameters.getGracePeriod() != null) {
             selenium.type("editLoanAccount.input.gracePeriod", editAccountParameters.getGracePeriod());
         }
+        return this;
     }
 
     public void verifyGLIMClient(int clientNumber, String expectedClientName, String loanAmount, String loanPurpose){
@@ -59,5 +68,9 @@ public class EditLoanAccountInformationPage extends MifosPage {
         selenium.isChecked("clients[" + clientNumber + "]");
         Assert.assertEquals(selenium.getValue("clientDetails[" + clientNumber + "].loanAmount"), loanAmount);
         Assert.assertEquals(selenium.getSelectedLabel("clientDetails[" + clientNumber + "].businessActivity"), loanPurpose);
+    }
+
+    public void verifyErrorInForm(String error) {
+        Assert.assertTrue(selenium.isTextPresent(error));
     }
 }

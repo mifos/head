@@ -59,7 +59,7 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToLoanAccountConfirmationPage(CreateLoanAccountSubmitParameters formParameters,
                                                                                             QuestionResponseParameters responseParameters) {
-        submitAndNavigateToLoanPreviewPage(formParameters);
+        submitLoanAccount(formParameters);
         populateQuestionResponsesIfNeeded(responseParameters, selenium.getAttribute("page.id@title"));
         return navigateToConfirmationPage();
     }
@@ -91,6 +91,11 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
     }
 
     public ViewInstallmentDetailsPage submitAndNavigateToLoanPreviewPage(CreateLoanAccountSubmitParameters formParameters) {
+        submitLoanAccount(formParameters);
+        return new ViewInstallmentDetailsPage(selenium);
+    }
+
+    private void submitLoanAccount(CreateLoanAccountSubmitParameters formParameters) {
         selenium.type("loancreationdetails.input.sumLoanAmount",formParameters.getAmount());
         if (formParameters.isGracePeriodTypeNone()) {
             Assert.assertFalse(selenium.isEditable("loancreationdetails.input.gracePeriod"));
@@ -114,7 +119,6 @@ public class CreateLoanAccountEntryPage extends AbstractPage {
         }
 
         submit();
-        return new ViewInstallmentDetailsPage(selenium);
     }
 
     public CreateLoanAccountConfirmationPage submitAndNavigateToGLIMLoanAccountConfirmationPage() {
