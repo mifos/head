@@ -149,6 +149,10 @@ public class IntegrationTestObjectMother {
         return systemUser;
     }
 
+    public static MeetingBO getMeeting(Integer meetingId) throws PersistenceException {
+        return customerPersistence.getPersistentObject(MeetingBO.class, meetingId);
+    }
+
     public static void saveMeeting(final MeetingBO meeting) {
         try {
             customerPersistence.createOrUpdate(meeting);

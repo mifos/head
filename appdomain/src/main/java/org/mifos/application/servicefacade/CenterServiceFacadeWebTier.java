@@ -41,7 +41,7 @@ import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.util.helpers.EntityType;
@@ -107,7 +107,6 @@ import org.mifos.framework.business.util.Address;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.exceptions.ApplicationException;
-import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.exceptions.StatesInitializationException;
 import org.mifos.framework.exceptions.SystemException;
@@ -122,6 +121,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CenterServiceFacadeWebTier implements CenterServiceFacade {
@@ -132,6 +132,10 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
     private final CustomerService customerService;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
+    LegacyMasterDao legacyMasterDao;
+
+    @Autowired
     public CenterServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
         this.customerService = customerService;
@@ -269,7 +273,7 @@ public class CenterServiceFacadeWebTier implements CenterServiceFacade {
 
         List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
-        List<PositionEntity> allCustomerPositions = new MasterPersistence().findMasterDataEntitiesWithLocale(PositionEntity.class, localeId);
+        List<PositionEntity> allCustomerPositions = legacyMasterDao.findMasterDataEntitiesWithLocale(PositionEntity.class, localeId);
         if (!new ClientRules().getCenterHierarchyExists()) {
             customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);
         } else {

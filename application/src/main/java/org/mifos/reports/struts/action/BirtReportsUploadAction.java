@@ -94,7 +94,7 @@ public class BirtReportsUploadAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
         ReportsPersistence rp = new ReportsPersistence();
-        ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
+        ReportsCategoryBO category = rp.getPersistentObject(ReportsCategoryBO.class, Short
                 .valueOf(uploadForm.getReportCategoryId()));
         request.setAttribute("category", category);
         if (isReportAlreadyExist(request, uploadForm.getReportTitle(), category)) {
@@ -113,7 +113,7 @@ public class BirtReportsUploadAction extends BaseAction {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
 
         ReportsPersistence rp = new ReportsPersistence();
-        ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
+        ReportsCategoryBO category = rp.getPersistentObject(ReportsCategoryBO.class, Short
                 .valueOf(uploadForm.getReportCategoryId()));
 
         if (isReportAlreadyExist(request, uploadForm.getReportTitle(), category)) {
@@ -233,7 +233,7 @@ public class BirtReportsUploadAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
         ReportsPersistence rp = new ReportsPersistence();
-        ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
+        ReportsCategoryBO category = rp.getPersistentObject(ReportsCategoryBO.class, Short
                 .valueOf(uploadForm.getReportCategoryId()));
         request.setAttribute("category", category);
         ReportsBO report = new ReportsPersistence().getReport(Short.valueOf(uploadForm.getReportId()));
@@ -287,7 +287,7 @@ public class BirtReportsUploadAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
         ReportsPersistence rp = new ReportsPersistence();
-        ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
+        ReportsCategoryBO category = rp.getPersistentObject(ReportsCategoryBO.class, Short
                 .valueOf(uploadForm.getReportCategoryId()));
         request.setAttribute("category", category);
         return mapping.findForward(ActionForwards.editprevious_success.toString());
@@ -297,7 +297,7 @@ public class BirtReportsUploadAction extends BaseAction {
             @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         BirtReportsUploadActionForm uploadForm = (BirtReportsUploadActionForm) form;
         ReportsPersistence rp = new ReportsPersistence();
-        ReportsCategoryBO category = (ReportsCategoryBO) rp.getPersistentObject(ReportsCategoryBO.class, Short
+        ReportsCategoryBO category = rp.getPersistentObject(ReportsCategoryBO.class, Short
                 .valueOf(uploadForm.getReportCategoryId()));
         ReportsBO reportBO = rp.getReport(Short.valueOf(uploadForm.getReportId()));
         ReportsJasperMap reportJasperMap = reportBO.getReportsJasperMap();

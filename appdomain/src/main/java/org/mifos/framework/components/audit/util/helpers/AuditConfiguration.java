@@ -29,7 +29,8 @@ import java.util.PropertyResourceBundle;
 
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MasterDataEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfiguration;
 import org.mifos.config.exceptions.ConfigurationException;
@@ -42,6 +43,7 @@ import org.mifos.framework.components.audit.persistence.AuditConfigurationPersis
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.util.helpers.FilePaths;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AuditConfiguration {
 
@@ -62,13 +64,11 @@ public class AuditConfiguration {
 
     private List<Short> locales;
 
-    private MasterPersistence masterPersistence;
+    private LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
     public static AuditConfiguration auditConfigurtion = new AuditConfiguration();
 
     private AuditConfiguration() {
-        masterPersistence = new MasterPersistence();
-
         locales = Localization.getInstance().getSupportedLocaleIds();
         locale = Localization.getInstance().getMainLocale();
         columnNames = (PropertyResourceBundle) PropertyResourceBundle.getBundle(
@@ -281,7 +281,7 @@ public class AuditConfiguration {
     }
 
     private void fetchMasterData(String entityName, Short localeId) throws SystemException {
-        List<ValueListElement> businessActivityList = masterPersistence
+        List<ValueListElement> businessActivityList = legacyMasterDao
                 .findValueListElements(entityName);
         for (ValueListElement businessActivityEntity : businessActivityList) {
             valueMap.put(businessActivityEntity.getId().toString(), businessActivityEntity.getName());
@@ -295,7 +295,7 @@ public class AuditConfiguration {
         } catch (ClassNotFoundException e) {
             throw new SystemException(e);
         }
-        List<MasterDataEntity> masterDataList = masterPersistence.findMasterDataEntities(clazz);
+        List<MasterDataEntity> masterDataList = legacyMasterDao.findMasterDataEntities(clazz);
         for (MasterDataEntity masterDataEntity : masterDataList) {
             masterDataEntity.setLocaleId(localeId);
 

@@ -32,7 +32,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.reports.admindocuments.business.AdminDocumentBO;
-import org.mifos.reports.admindocuments.persistence.AdminDocumentPersistence;
+import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.reports.admindocuments.struts.actionforms.BirtAdminDocumentUploadActionForm;
 import org.mifos.reports.business.MockFormFile;
 import org.mifos.reports.business.ReportsBO;
@@ -40,11 +40,13 @@ import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Ignore
 public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
-
+    @Autowired
+    private LegacyAdminDocumentDao legacyAdminDocumentDao;
 
     @Override
     protected void setStrutsConfig() {
@@ -82,7 +84,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         AdminDocumentBO adminDocument = (AdminDocumentBO) request.getAttribute(Constants.BUSINESS_KEY);
         Assert.assertNotNull(adminDocument);
         ReportsPersistence rp = new ReportsPersistence();
-        ReportsJasperMap jasper = (ReportsJasperMap) rp.getPersistentObject(ReportsJasperMap.class, adminDocument
+        ReportsJasperMap jasper = rp.getPersistentObject(ReportsJasperMap.class, adminDocument
                 .getAdmindocId());
         Assert.assertNotNull(jasper);
 
@@ -94,15 +96,13 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
     }
 
     private void removeReport(Short reportId) throws PersistenceException {
-
-        AdminDocumentPersistence reportPersistence = new AdminDocumentPersistence();
-        reportPersistence.getSession().clear();
-        ReportsBO report = (ReportsBO) reportPersistence.getPersistentObject(AdminDocumentBO.class, reportId);
+        legacyAdminDocumentDao.getSession().clear();
+        ReportsBO report = legacyAdminDocumentDao.getPersistentObject(ReportsBO.class, reportId);
 
         RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
-        ActivityEntity activityEntity = (ActivityEntity) permPersistence.getPersistentObject(ActivityEntity.class,
+        ActivityEntity activityEntity = permPersistence.getPersistentObject(ActivityEntity.class,
                 report.getActivityId());
-        reportPersistence.delete(report);
+        legacyAdminDocumentDao.delete(report);
 
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
 

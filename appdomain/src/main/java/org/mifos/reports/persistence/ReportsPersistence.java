@@ -38,7 +38,7 @@ import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsCategoryBO;
 import org.mifos.reports.business.ReportsDataSource;
@@ -51,7 +51,7 @@ import org.mifos.reports.exceptions.ReportException;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 
-public class ReportsPersistence extends Persistence {
+public class ReportsPersistence extends LegacyGenericDao {
 
     public ReportsPersistence() {
 
@@ -396,7 +396,7 @@ public class ReportsPersistence extends Persistence {
     public void updateLookUpValue(Short activityId, String inputCategoryName) {
         ActivityEntity activityEntity = null;
         try {
-            activityEntity = (ActivityEntity) getPersistentObject(ActivityEntity.class, activityId);
+            activityEntity = getPersistentObject(ActivityEntity.class, activityId);
         } catch (Exception ex) {
             throw new RuntimeException(ex.getMessage());
         }

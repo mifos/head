@@ -35,13 +35,13 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
 /**
  * @deprecated move to {@link FeeDao} and replace all usage of this methods with calls to {@link FeeDao}.
  */
 @Deprecated
-public class FeePersistence extends Persistence {
+public class FeePersistence extends LegacyGenericDao {
 
     /**
      * use {@link FeeDao#findById(Short)}
@@ -55,10 +55,10 @@ public class FeePersistence extends Persistence {
     public FeeBO getFee(Short feeId, RateAmountFlag rateflag) throws PersistenceException {
 
         if (rateflag.equals(RateAmountFlag.AMOUNT)) {
-            return (AmountFeeBO) getPersistentObject(AmountFeeBO.class, feeId);
+            return getPersistentObject(AmountFeeBO.class, feeId);
         }
 
-        return (RateFeeBO) getPersistentObject(RateFeeBO.class, feeId);
+        return getPersistentObject(RateFeeBO.class, feeId);
     }
 
     @SuppressWarnings("unchecked")

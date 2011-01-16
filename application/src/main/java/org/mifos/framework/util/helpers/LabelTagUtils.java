@@ -231,6 +231,7 @@ public class LabelTagUtils {
     /**
      * Only use is in MifosSelectNew, which doesn't appear to be used.
      */
+    @SuppressWarnings("unchecked")
     public Collection getCustomValueListElements(PageContext pageContext, String bundle, Locale locale, String key,
             String mappingKey, String[] args) throws JspException {
         Collection returnVal = null;
@@ -251,6 +252,7 @@ public class LabelTagUtils {
      * @return true if the element associated with the key is configurable
      *         mandatory
      */
+    @SuppressWarnings("unchecked")
     public boolean isConfigurableMandatory(String key, PageContext pageContext) {
         // TODO get is mandatory or not from the cache.
         Map mandatoryMap = (Map) pageContext.getSession().getAttribute("ConfigurableMandatory");
@@ -270,6 +272,7 @@ public class LabelTagUtils {
      *            hidden or not
      * @return true if the element associated with the key is hidden
      */
+    @SuppressWarnings("unchecked")
     public boolean isHidden(String key, PageContext pageContext) {
         // TODO get is hidden or not from the cache.
         Map hiddenMap = (Map) pageContext.getSession().getAttribute("Hidden");
@@ -289,6 +292,7 @@ public class LabelTagUtils {
      *            confidential or not
      * @return true if the element associated with the key is confidential
      */
+    @SuppressWarnings("unchecked")
     public boolean isConfidential(String key, PageContext pageContext) {
         // TODO get is confidential or not from the cache.
         Map confidentialMap = (Map) pageContext.getSession().getAttribute("Confidential");

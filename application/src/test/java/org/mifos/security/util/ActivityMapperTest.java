@@ -20,14 +20,43 @@
 
 package org.mifos.security.util;
 
-import java.util.regex.Pattern;
-
 import junit.framework.Assert;
 import junit.framework.TestCase;
+import org.hamcrest.Description;
+import org.hamcrest.TypeSafeMatcher;
+import org.mifos.framework.TestUtils;
+import org.mifos.framework.util.DateTimeService;
+import org.mifos.security.authorization.AuthorizationManager;
+import org.mockito.Matchers;
+
+import java.util.regex.Pattern;
+
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ActivityMapperTest extends TestCase {
 
     Pattern allowableActionName = Pattern.compile("([a-zA-Z])+");
+
+    private AuthorizationManager authorizationManager;
+    private UserContext userContext;
+    private ActivityMapper activityMapper;
+
+    public void setUp(){
+        initMocks(this);
+        authorizationManager = mock(AuthorizationManager.class);
+        userContext = mock(UserContext.class);
+        activityMapper = new ActivityMapper(){
+            @Override
+            AuthorizationManager getAuthorizationManager() {
+                return authorizationManager;
+            }
+        };
+    }
 
     public void testNamesAcceptable() {
         for (ActionSecurity security : ActivityMapper.getInstance().getAllSecurity()) {
@@ -47,10 +76,42 @@ public class ActivityMapperTest extends TestCase {
         Assert.assertFalse(acceptableName(null));
     }
 
+    public void testAdjustmentPermittedForBackDatedPayments() {
+        new DateTimeService().setCurrentDateTime(TestUtils.getDateTime(11,10,2010));
+        when(authorizationManager.isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()))).thenReturn(true);
+        assertTrue(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
+                userContext, new Short("1"), new Short("1")));
+        verify(authorizationManager).isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()));
+    }
+
+    public void testAdjustmentNotPermittedForBackDatedPayments() {
+        new DateTimeService().setCurrentDateTime(TestUtils.getDateTime(11,10,2010));
+        when(authorizationManager.isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()))).thenReturn(false);
+        assertFalse(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
+                userContext, new Short("1"), new Short("1")));
+        verify(authorizationManager).isActivityAllowed(eq(userContext), Matchers.argThat(new ActivityContextTypeSafeMatcher()));
+    }
+
+    public void testAdjustmentPermittedForSameDayPayments() {
+        new DateTimeService().setCurrentDateTime(TestUtils.getDateTime(10, 10, 2010));
+        assertTrue(activityMapper.isAdjustmentPermittedForBackDatedPayments(TestUtils.getDate(10, 10, 2010),
+                userContext, new Short("1"), new Short("1")));
+        verify(authorizationManager, never()).isActivityAllowed(Matchers.<UserContext>anyObject(), Matchers.<ActivityContext>anyObject());
+    }
+
     private boolean acceptableName(String name) {
-        if (name == null) {
-            return false;
+        return name != null && allowableActionName.matcher(name).matches();
+    }
+
+    private static class ActivityContextTypeSafeMatcher extends TypeSafeMatcher<ActivityContext> {
+        @Override
+        public boolean matchesSafely(ActivityContext activityContext) {
+            return activityContext.getActivityId() == SecurityConstants.LOAN_ADJUST_BACK_DATED_TRXNS;
         }
-        return allowableActionName.matcher(name).matches();
+
+        @Override
+        public void describeTo(Description description) {
+            description.appendText("ActivityID mismatch");
+        }
     }
 }

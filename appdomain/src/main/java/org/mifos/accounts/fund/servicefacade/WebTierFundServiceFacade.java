@@ -30,11 +30,13 @@ import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class WebTierFundServiceFacade implements FundServiceFacade {
 
     private final FundDao fundDao;
 
+    @Autowired
     public WebTierFundServiceFacade(FundDao fundDao) {
         this.fundDao = fundDao;
     }

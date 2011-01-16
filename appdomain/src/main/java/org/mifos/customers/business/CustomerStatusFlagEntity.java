@@ -45,6 +45,8 @@ public class CustomerStatusFlagEntity extends MasterDataEntity {
     /** The value of the lookupValue association. */
     private LookUpValueEntity lookUpValue;
 
+    private String statusFlagMessageText = "";
+
     /*
      * Adding a default constructor is hibernate's requirement and should not be
      * used to create a valid Object.
@@ -105,7 +107,11 @@ public class CustomerStatusFlagEntity extends MasterDataEntity {
         this.lookUpValue = lookUpValue;
     }
 
-    protected void setName(String name) {
-        MessageLookup.getInstance().updateLookupValue(getLookUpValue(), name);
+    public String getStatusFlagMessageText() {
+        return this.statusFlagMessageText;
+    }
+
+    public void setStatusFlagMessageText(String statusFlagMessageText) {
+        this.statusFlagMessageText = statusFlagMessageText;
     }
 }

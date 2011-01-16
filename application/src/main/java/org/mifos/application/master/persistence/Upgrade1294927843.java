@@ -18,15 +18,22 @@
  * explanation of the license and how it is applied.
  */
 
-package org.mifos.application.meeting.persistence;
+package org.mifos.application.master.persistence;
 
-import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.Upgrade;
+import org.mifos.security.AddActivity;
+import org.mifos.security.util.SecurityConstants;
 
-public class MeetingPersistence extends Persistence {
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 
-    public MeetingBO getMeeting(Integer meetingId) throws PersistenceException {
-        return (MeetingBO) getPersistentObject(MeetingBO.class, meetingId);
+public class Upgrade1294927843 extends Upgrade {
+
+    @Override
+    public void upgrade(Connection connection) throws IOException, SQLException {
+        new AddActivity("Permissions-Clients-CanEditPhoneNumber", SecurityConstants.CAN_EDIT_PHONE_NUMBER,
+                SecurityConstants.CLIENTS).upgrade(connection);
     }
+
 }

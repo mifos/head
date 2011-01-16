@@ -96,7 +96,7 @@ import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -178,6 +178,7 @@ public class LoanBO extends AccountBO {
     // persistence
     private LoanPrdPersistence loanPrdPersistence;
     private LoanPersistence loanPersistence = null;
+    LegacyMasterDao legacyMasterDao = ApplicationContextProvider.getBean(LegacyMasterDao.class);
 
     public LoanPersistence getLoanPersistence() {
         if (null == loanPersistence) {
@@ -1154,7 +1155,7 @@ public class LoanBO extends AccountBO {
         final LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment,
                 AccountActionTypes.DISBURSAL, Short.valueOf("0"), transactionDate, loggedInUser, transactionDate,
                 this.loanAmount, "-", null, this.loanAmount, new Money(getCurrency()), new Money(getCurrency()),
-                new Money(getCurrency()), new Money(getCurrency()), null, getLoanPersistence());
+                new Money(getCurrency()), new Money(getCurrency()), null);
 
         accountPayment.addAccountTrxn(loanTrxnDetailEntity);
         this.addAccountPayment(accountPayment);
@@ -1216,7 +1217,6 @@ public class LoanBO extends AccountBO {
                                    final String paymentTypeId, final Short personnelId,
                                    boolean waiveInterest, Money interestDue) throws AccountException {
         try {
-            MasterPersistence masterPersistence = new MasterPersistence();
             PersonnelBO currentUser = new PersonnelPersistence().getPersonnel(personnelId);
             this.setUpdatedBy(personnelId);
             Date transactionDate = new DateTimeService().getCurrentJavaDateTime();
@@ -1238,11 +1238,11 @@ public class LoanBO extends AccountBO {
             addLoanActivity(loanActivity);
             buildFinancialEntries(accountPaymentEntity.getAccountTrxns());
 
-            AccountStateEntity newAccountState = (AccountStateEntity) masterPersistence.getPersistentObject(
+            AccountStateEntity newAccountState = legacyMasterDao.getPersistentObject(
                     AccountStateEntity.class, AccountStates.LOANACC_OBLIGATIONSMET);
             addAccountStatusChangeHistory(new AccountStatusChangeHistoryEntity(getAccountState(), newAccountState,
                     new PersonnelPersistence().getPersonnel(personnelId), this));
-            setAccountState((AccountStateEntity) masterPersistence.getPersistentObject(AccountStateEntity.class,
+            setAccountState(legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_OBLIGATIONSMET));
             setClosedDate(transactionDate);
 
@@ -1272,10 +1272,9 @@ public class LoanBO extends AccountBO {
     }
 
     public void handleArrears() throws AccountException {
-        MasterPersistence masterPersistence = new MasterPersistence();
         AccountStateEntity stateEntity;
         try {
-            stateEntity = (AccountStateEntity) masterPersistence.getPersistentObject(AccountStateEntity.class,
+            stateEntity = legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     AccountStates.LOANACC_BADSTANDING);
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -1519,7 +1518,7 @@ public class LoanBO extends AccountBO {
                 if (noOfInstallments <= 1) {
                     throw new AccountException(LoanExceptionConstants.INVALIDNOOFINSTALLMENTS);
                 }
-                setGracePeriodType(new MasterPersistence().findMasterDataEntityWithLocale(GracePeriodTypeEntity.class, GraceType.NONE
+                setGracePeriodType(legacyMasterDao.findMasterDataEntityWithLocale(GracePeriodTypeEntity.class, GraceType.NONE
                         .getValue(), getUserContext().getLocaleId()));
             } catch (PersistenceException e) {
                 throw new AccountException(e);
@@ -2714,7 +2713,7 @@ public class LoanBO extends AccountBO {
                 AccountActionTypes.FEE_REPAYMENT, Short.valueOf("0"), accountPayment.getPaymentDate(), accountPayment
                         .getCreatedByUser(), accountPayment.getPaymentDate(), feeAmountAtDisbursement, "-", null,
                 new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()),
-                new Money(getCurrency()), applicableAccountFees, getLoanPersistence());
+                new Money(getCurrency()), applicableAccountFees);
 
         accountPayment.addAccountTrxn(loanTrxnDetailEntity);
 
@@ -2753,7 +2752,7 @@ public class LoanBO extends AccountBO {
             throws AccountException {
         AccountStateEntity accountState = this.getAccountState();
         try {
-            setAccountState((AccountStateEntity) new MasterPersistence().getPersistentObject(AccountStateEntity.class,
+            setAccountState(legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     newAccountState.getValue()));
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -2807,7 +2806,7 @@ public class LoanBO extends AccountBO {
                 .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService().getCurrentJavaDateTime(),
                 totalAmt, comments, null, principal, interest,
                 loanSchedule.getPenalty().subtract(loanSchedule.getPenaltyPaid()),
-                loanSchedule.getMiscFeeDue(), loanSchedule.getMiscPenaltyDue(), null, getLoanPersistence());
+                loanSchedule.getMiscFeeDue(), loanSchedule.getMiscPenaltyDue(), null);
 
         addFeeTransactions(loanTrxnDetailEntity, loanSchedule.getAccountFeesActionDetails());
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
@@ -2830,7 +2829,7 @@ public class LoanBO extends AccountBO {
                 .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
                 .getCurrentJavaDateTime(), totalAmt, comments, null, principal, extraInterestDue,
                 loanSchedule.getPenalty().subtract(loanSchedule.getPenaltyPaid()), loanSchedule.getMiscFeeDue(), loanSchedule
-                .getMiscPenaltyDue(), null, getLoanPersistence());
+                .getMiscPenaltyDue(), null);
 
         addFeeTransactions(loanTrxnDetailEntity, loanSchedule.getAccountFeesActionDetails());
         accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
@@ -2861,8 +2860,7 @@ public class LoanBO extends AccountBO {
             LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPaymentEntity, accountActionTypes, loanSchedule
                     .getInstallmentId(), loanSchedule.getActionDate(), currentUser, new DateTimeService()
                     .getCurrentJavaDateTime(), principal, comments, null, principal, new Money(getCurrency()),
-                    new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null,
-                    getLoanPersistence());
+                    new Money(getCurrency()), new Money(getCurrency()), new Money(getCurrency()), null);
 
             accountPaymentEntity.addAccountTrxn(loanTrxnDetailEntity);
             loanSchedule.makeEarlyRepaymentEntries(LoanConstants.DONOT_PAY_FEES_PENALTY_INTEREST, loanSchedule.getInterestDue());
@@ -4200,7 +4198,7 @@ public class LoanBO extends AccountBO {
      * name of the PaymentTypeEntity.
      */
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
-        return (PaymentTypeEntity) getLoanPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
+        return getLoanPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 
     /*
@@ -4255,7 +4253,7 @@ public class LoanBO extends AccountBO {
     }
 
     public boolean isDecliningBalanceInterestRecalculation() {
-        return loanOffering.getInterestType() == InterestType.DECLINING_PB;
+        return loanOffering.isDecliningBalanceInterestRecalculation();
     }
 
     public LoanAccountDetailDto toDto() {

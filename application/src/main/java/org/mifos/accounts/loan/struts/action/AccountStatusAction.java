@@ -35,7 +35,7 @@ import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.AccountStatusActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -123,7 +123,7 @@ public class AccountStatusAction extends BaseAction {
         SessionUtils.setCollectionAttribute(LoanConstants.LOAN_OFFICERS, changeAccountStatusDto.getLoanOfficers(), request);
 
         if (officeId != null) {
-            AccountStateEntity accountStateEntity = new MasterPersistence().findMasterDataEntity(
+            AccountStateEntity accountStateEntity = legacyMasterDao.getPersistentObject(
                     AccountStateEntity.class, changeAccountStatusDto.getAccountState());
             accountStateEntity.setLocaleId(getUserContext(request).getLocaleId());
             SessionUtils.setAttribute(LoanConstants.LOANACCOUNTSTAES, accountStateEntity, request);

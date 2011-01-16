@@ -137,12 +137,6 @@
                 <version>1.8-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.5</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
                 <version>${spring.version}</version>
@@ -397,10 +391,19 @@
                 <version>1.8.0</version>
                 <scope>test</scope>
             </dependency>
+            
+            <!-- junit and hamcrest made compile and not test due to QuestionaireServiceFacadeTest and the moving of matchers it uses into production source of questionnaire module -->
+			<dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.5</version>
+                <scope>compile</scope>
+            </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-all</artifactId>
                 <version>1.1</version>
+                <scope>compile</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

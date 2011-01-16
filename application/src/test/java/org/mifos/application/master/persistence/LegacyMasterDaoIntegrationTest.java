@@ -40,10 +40,14 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
+public class LegacyMasterDaoIntegrationTest extends MifosIntegrationTestCase {
 
     final private static short DEFAULT_LOCALE = (short) 1;
+
+    @Autowired
+    LegacyMasterDao legacyMasterDao;
 
     @After
     public void tearDown() throws Exception {
@@ -52,8 +56,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testEntityMasterRetrieval() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto paymentTypes = masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
+        CustomValueDto paymentTypes = legacyMasterDao.getCustomValueList(MasterConstants.ATTENDENCETYPES,
                 "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
         List<CustomValueListElementDto> paymentValues = paymentTypes.getCustomValueListElements();
        Assert.assertEquals(4, paymentValues.size());
@@ -62,10 +65,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test @org.junit.Ignore
     public void testEntityMasterRetrievalForInvalidConnection() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-
         try {
-            masterPersistence.getCustomValueList(MasterConstants.ATTENDENCETYPES,
+            legacyMasterDao.getCustomValueList(MasterConstants.ATTENDENCETYPES,
                     "org.mifos.application.master.business.CustomerAttendanceType", "attendanceId");
             Assert.fail();
         } catch (Exception e) {
@@ -77,8 +78,7 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testGetLookUpEntity() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto gender = masterPersistence.getLookUpEntity(MasterConstants.GENDER);
+        CustomValueDto gender = legacyMasterDao.getLookUpEntity(MasterConstants.GENDER);
         List<CustomValueListElementDto> genderValues = gender.getCustomValueListElements();
        Assert.assertEquals(2, genderValues.size());
 
@@ -86,18 +86,15 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testRetrieveMasterEntities() throws NumberFormatException, PersistenceException {
-        MasterPersistence masterPersistence = new MasterPersistence();
-        List<ValueListElement> masterEntity = masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES);
+        List<ValueListElement> masterEntity = legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
         // 131 if includes the empty lookup_name for lookup id 259, 263
        Assert.assertEquals(131, masterEntity.size());
     }
 
     @Test @org.junit.Ignore
     public void testRetrieveMasterEntitiesForInvalidConnection() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-
         try {
-            masterPersistence.findValueListElements(MasterConstants.LOAN_PURPOSES);
+            legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
             Assert.fail();
         } catch (Exception e) {
            Assert.assertTrue(true);
@@ -107,10 +104,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     }
  @org.junit.Ignore
     public void retrieveCustomFieldsDefinitionForInvalidConnection() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-
         try {
-            masterPersistence.retrieveCustomFieldsDefinition(EntityType.CLIENT);
+            legacyMasterDao.retrieveCustomFieldsDefinition(EntityType.CLIENT);
             Assert.fail();
         } catch (Exception e) {
            Assert.assertTrue(true);
@@ -121,14 +116,12 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testGetMasterEntityName() throws NumberFormatException, PersistenceException {
-        MasterPersistence masterPersistence = new MasterPersistence();
-       Assert.assertEquals("Partial Application", masterPersistence.getMessageForLookupEntity(1));
+       Assert.assertEquals("Partial Application", legacyMasterDao.getMessageForLookupEntity(1));
     }
 
     @Test
     public void testRetrieveMasterDataEntity() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-        List<AccountStateEntity> masterDataList = masterPersistence
+        List<AccountStateEntity> masterDataList = legacyMasterDao
                 .findMasterDataEntities(AccountStateEntity.class);
        Assert.assertEquals(18, masterDataList.size());
         for (MasterDataEntity masterDataEntity : masterDataList) {
@@ -141,10 +134,8 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     @Test @Ignore("Convert to unit test")
     public void testRetrieveMasterDataEntityForInvalidConnection() throws Exception {
-        MasterPersistence masterPersistence = new MasterPersistence();
-
         try {
-            masterPersistence.findMasterDataEntities(AccountStateEntity.class);
+            legacyMasterDao.findMasterDataEntities(AccountStateEntity.class);
             Assert.fail();
         } catch (Exception e) {
            Assert.assertTrue(true);
@@ -153,9 +144,9 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         }
     }
 
-    private boolean foundStringInCustomValueList(final MasterPersistence masterPersistence, final String CustomValueListName,
+    private boolean foundStringInCustomValueList(final String CustomValueListName,
             final String searchString, final short localId) throws PersistenceException {
-        List<ValueListElement> salutations = masterPersistence.findValueListElements(CustomValueListName);
+        List<ValueListElement> salutations = legacyMasterDao.findValueListElements(CustomValueListName);
         boolean foundString = false;
         for (ValueListElement entity : salutations) {
             if (entity.getName().compareTo(searchString) == 0) {
@@ -165,9 +156,9 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         return foundString;
     }
 
-    private Integer findValueListElementId(final MasterPersistence masterPersistence, final String CustomValueListName,
+    private Integer findValueListElementId(final LegacyMasterDao legacyMasterDao, final String CustomValueListName,
             final String searchString, final short localId) throws PersistenceException {
-        List<ValueListElement> salutations = masterPersistence.findValueListElements(CustomValueListName);
+        List<ValueListElement> salutations = legacyMasterDao.findValueListElements(CustomValueListName);
         Integer elementId = null;
         for (ValueListElement entity : salutations) {
             if (entity.getName().compareTo(searchString) == 0) {
@@ -180,34 +171,32 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
     @Test
     public void testAddAndDeleteValueListElement() throws Exception {
         // get the CustomValueDto that we want to add to
-        MasterPersistence masterPersistence = new MasterPersistence();
-        CustomValueDto salutationValueList = masterPersistence.getLookUpEntity(MasterConstants.SALUTATION);
+        CustomValueDto salutationValueList = legacyMasterDao.getLookUpEntity(MasterConstants.SALUTATION);
 
         // add a CustomValueListElementDto to the list
         final String NEW_SALUTATION_STRING = "Sir";
-        LocalizedTextLookup lookupValueEntity = masterPersistence.addValueListElementForLocale(
+        LocalizedTextLookup lookupValueEntity = legacyMasterDao.addValueListElementForLocale(
                 DynamicLookUpValueCreationTypes.LookUpOption, salutationValueList.getEntityId(), NEW_SALUTATION_STRING);
         StaticHibernateUtil.flushSession();
 
         // verify that the new salutation was created
-        Integer newSalutationId = findValueListElementId(masterPersistence, MasterConstants.SALUTATION,
+        Integer newSalutationId = findValueListElementId(legacyMasterDao, MasterConstants.SALUTATION,
                 NEW_SALUTATION_STRING, DEFAULT_LOCALE);
        Assert.assertTrue(newSalutationId != null);
 
         StaticHibernateUtil.flushAndClearSession();
         // remove the new salutation
-        masterPersistence.deleteValueListElement(newSalutationId);
+        legacyMasterDao.deleteValueListElement(newSalutationId);
 
         // verify that the new salutation was deleted
-        Assert.assertFalse(foundStringInCustomValueList(masterPersistence, MasterConstants.SALUTATION, NEW_SALUTATION_STRING,
+        Assert.assertFalse(foundStringInCustomValueList(MasterConstants.SALUTATION, NEW_SALUTATION_STRING,
                 DEFAULT_LOCALE));
     }
 
     @Test
     public void testUpdateValueListElement() throws Exception {
         // get a CustomValueListElementDto (as a BusinessActivityEntity)
-        MasterPersistence masterPersistence = new MasterPersistence();
-        List<ValueListElement> salutations = masterPersistence.findValueListElements(MasterConstants.SALUTATION);
+        List<ValueListElement> salutations = legacyMasterDao.findValueListElements(MasterConstants.SALUTATION);
         ValueListElement first = salutations.get(0);
         Integer id = first.getId();
         String originalName = first.getName();
@@ -217,20 +206,20 @@ public class MasterPersistenceIntegrationTest extends MifosIntegrationTestCase {
         first.setName(UPDATED_NAME);
 
         // save it
-        masterPersistence.updateValueListElementForLocale(id, UPDATED_NAME);
+        legacyMasterDao.updateValueListElementForLocale(id, UPDATED_NAME);
         StaticHibernateUtil.flushSession();
 
         // get the element back
         // and verify that it has the new value
         salutations.clear();
-        salutations = masterPersistence.findValueListElements(MasterConstants.SALUTATION);
+        salutations = legacyMasterDao.findValueListElements(MasterConstants.SALUTATION);
         for (ValueListElement entity : salutations) {
             if (entity.getId() == id) {
                Assert.assertEquals(entity.getName(), UPDATED_NAME);
             }
         }
         // restore it
-        masterPersistence.updateValueListElementForLocale(id, originalName);
+        legacyMasterDao.updateValueListElementForLocale(id, originalName);
         StaticHibernateUtil.flushSession();
 
     }

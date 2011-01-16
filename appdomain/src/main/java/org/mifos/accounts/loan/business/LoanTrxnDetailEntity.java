@@ -30,9 +30,10 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountStateFlag;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,10 +106,9 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
     public LoanTrxnDetailEntity(AccountPaymentEntity accountPayment, AccountActionTypes accountActionType,
             Short installmentId, Date dueDate, PersonnelBO personnel, Date actionDate, Money amount, String comments,
             AccountTrxnEntity relatedTrxn, Money principalAmount, Money interestAmount, Money penaltyAmount,
-            Money miscFeeAmount, Money miscPenaltyAmount, List<AccountFeesEntity> accountFees,
-            Persistence persistence) {
+            Money miscFeeAmount, Money miscPenaltyAmount, List<AccountFeesEntity> accountFees) {
         super(accountPayment, accountActionType, installmentId, dueDate, personnel, null, actionDate, amount,
-                comments, relatedTrxn, persistence);
+                comments, relatedTrxn);
         this.principalAmount = principalAmount;
         this.interestAmount = interestAmount;
         this.penaltyAmount = penaltyAmount;
@@ -125,10 +125,10 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
 
     public LoanTrxnDetailEntity(AccountPaymentEntity accountPaymentEntity, LoanScheduleEntity loanScheduleEntity,
                                 PersonnelBO personnel, Date transactionDate, AccountActionTypes accountActionType,
-                                String comments, Persistence persistence) {
+                                String comments, LegacyGenericDao persistence) {
         super(accountPaymentEntity, accountActionType, loanScheduleEntity.getInstallmentId(), loanScheduleEntity
                 .getActionDate(), personnel, null, transactionDate, loanScheduleEntity.getPaymentAllocation().getTotalPaid(), comments,
-                null, persistence);
+                null);
         PaymentAllocation paymentAllocation = loanScheduleEntity.getPaymentAllocation();
         interestAmount = paymentAllocation.getTotalInterestPaid();
         penaltyAmount = paymentAllocation.getPenaltyPaid();
@@ -162,8 +162,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
         reverseAccntTrxn = new LoanTrxnDetailEntity(getAccountPayment(),
                 getReverseTransctionActionType(), getInstallmentId(), getDueDate(), loggedInUser, getActionDate(), getAmount()
                 .negate(), comment, this, getPrincipalAmount().negate(), getInterestAmount().negate(),
-                getPenaltyAmount().negate(), getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate(), null,
-                new MasterPersistence());
+                getPenaltyAmount().negate(), getMiscFeeAmount().negate(), getMiscPenaltyAmount().negate(), null);
         reverseAccntTrxn.setCalculatedInterestOnPayment(this.getCalculatedInterestOnPayment());
 
         if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
@@ -172,8 +171,7 @@ public class LoanTrxnDetailEntity extends AccountTrxnEntity {
             for (FeesTrxnDetailEntity feeTrxnDetail : getFeesTrxnDetails()) {
                 reverseAccntTrxn.addFeesTrxnDetail(feeTrxnDetail.generateReverseTrxn(reverseAccntTrxn));
             }
-            logger
-                    .debug("after generating reverse entries for fees");
+            logger.debug("after generating reverse entries for fees");
         }
 
         return reverseAccntTrxn;

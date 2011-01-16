@@ -25,14 +25,13 @@ import java.util.List;
 
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.reports.admindocuments.business.AdminDocAccStateMixBO;
 
-public class AdminDocAccStateMixPersistence extends Persistence {
+public class LegacyAdminDocAccStateMixDao extends LegacyGenericDao {
 
-    public AdminDocAccStateMixPersistence() {
+    private LegacyAdminDocAccStateMixDao() {
         super();
-
     }
 
     public List<AdminDocAccStateMixBO> getMixByAdminDocuments(Short admindocId) throws PersistenceException {

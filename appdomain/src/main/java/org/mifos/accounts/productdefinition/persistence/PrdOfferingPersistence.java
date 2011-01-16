@@ -38,9 +38,9 @@ import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class PrdOfferingPersistence extends Persistence {
+public class PrdOfferingPersistence extends LegacyGenericDao {
     private static final Logger logger = LoggerFactory.getLogger(PrdOfferingPersistence.class);
 
     public Short getMaxPrdOffering() throws PersistenceException {
@@ -50,7 +50,7 @@ public class PrdOfferingPersistence extends Persistence {
 
     public PrdStatusEntity getPrdStatus(PrdStatus prdStatus) throws PersistenceException {
         logger.debug("getting the product status for :" + prdStatus);
-        return (PrdStatusEntity) getPersistentObject(PrdStatusEntity.class, prdStatus.getValue());
+        return getPersistentObject(PrdStatusEntity.class, prdStatus.getValue());
     }
 
     public Integer getProductOfferingNameCount(String productOfferingName) throws PersistenceException {
@@ -169,11 +169,11 @@ public class PrdOfferingPersistence extends Persistence {
     }
 
     public PrdOfferingBO getPrdOffering(Short prdofferingId) throws PersistenceException {
-        return (PrdOfferingBO) getPersistentObject(PrdOfferingBO.class, prdofferingId);
+        return getPersistentObject(PrdOfferingBO.class, prdofferingId);
     }
 
     public LoanOfferingBO getLoanPrdOffering(Short loanPrdOfferingId) throws PersistenceException {
-        return (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class, loanPrdOfferingId);
+        return getPersistentObject(LoanOfferingBO.class, loanPrdOfferingId);
     }
 
     public PrdOfferingBO getPrdOfferingByID(Short prdId) throws PersistenceException {
@@ -185,9 +185,8 @@ public class PrdOfferingPersistence extends Persistence {
         return prdOffring;
     }
 
-    @SuppressWarnings("cast")
     public ProductTypeEntity getProductTypes(Short prdtype) throws PersistenceException {
-        return (ProductTypeEntity) getPersistentObject(ProductTypeEntity.class, prdtype);
+        return getPersistentObject(ProductTypeEntity.class, prdtype);
     }
 
     @SuppressWarnings("cast")

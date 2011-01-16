@@ -29,9 +29,9 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.components.audit.business.AuditLog;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class AuditPersistence extends Persistence {
+public class AuditPersistence extends LegacyGenericDao {
 
     public void save(AuditLog auditLog) {
         try {
@@ -50,7 +50,7 @@ public class AuditPersistence extends Persistence {
     }
 
     public List<AuditLog> getAuditLogRecords(Short entityType, Integer entityId) throws PersistenceException {
-        Map<Object, Object> queryParameter = new HashMap<Object, Object>();
+        Map<String, Object> queryParameter = new HashMap<String, Object>();
         queryParameter.put("entityType", entityType);
         queryParameter.put("entityId", entityId);
         return executeNamedQuery(NamedQueryConstants.RETRIEVE_AUDIT_LOG_RECORD, queryParameter);

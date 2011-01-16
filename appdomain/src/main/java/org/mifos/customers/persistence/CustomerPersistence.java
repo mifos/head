@@ -89,14 +89,14 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.ExceptionConstants;
 import org.mifos.framework.util.helpers.MifosStringUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.UserContext;
 
-public class CustomerPersistence extends Persistence {
+public class CustomerPersistence extends LegacyGenericDao {
 
     private static final Predicate CLIENTS_WITH_ACTIVE_LOAN_ACCOUNTS = new Predicate() {
         public boolean evaluate(final Object object) {
@@ -246,7 +246,7 @@ public class CustomerPersistence extends Persistence {
      */
     @Deprecated
     public CustomerBO getCustomer(final Integer customerId) throws PersistenceException {
-        return (CustomerBO) getPersistentObject(CustomerBO.class, customerId);
+        return getPersistentObject(CustomerBO.class, customerId);
     }
 
     public CustomerBO findBySystemId(final String globalCustNum) throws PersistenceException {
@@ -1098,7 +1098,7 @@ public class CustomerPersistence extends Persistence {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("CUSTOMER_ID", customerId);
 
-        return (CollectionSheetCustomerDto) execUniqueResultNamedQueryWithResultTransformer(
+        return execUniqueResultNamedQueryWithResultTransformer(
                 "findCustomerWithNoAssocationsLoaded", queryParameters, CollectionSheetCustomerDto.class);
 
     }

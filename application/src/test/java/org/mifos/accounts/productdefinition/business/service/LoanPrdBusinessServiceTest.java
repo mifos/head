@@ -5,12 +5,10 @@ import static org.mockito.Mockito.when;
 import junit.framework.Assert;
 
 import org.junit.Test;
-import org.mifos.accounts.productdefinition.business.PrdApplicableMasterEntity;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.productdefinition.persistence.PrdOfferingPersistence;
 import org.mifos.accounts.productdefinition.util.helpers.PrdCategoryStatus;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.springframework.test.annotation.ExpectedException;
@@ -18,7 +16,6 @@ import org.springframework.test.annotation.ExpectedException;
 public class LoanPrdBusinessServiceTest {
     final PrdOfferingPersistence prdOfferingPersistence = mock(PrdOfferingPersistence.class);
     final LoanPrdPersistence loanPrdPersistence = mock(LoanPrdPersistence.class);
-    final MasterPersistence masterPersistence = mock(MasterPersistence.class);
 
     LoanPrdBusinessService loanPrdBusinessService = new LoanPrdBusinessService() {
         @Override
@@ -29,11 +26,6 @@ public class LoanPrdBusinessServiceTest {
         @Override
         protected LoanPrdPersistence getLoanPrdPersistence() {
             return loanPrdPersistence;
-        }
-
-        @Override
-        protected MasterPersistence getMasterPersistence() {
-            return masterPersistence;
         }
     };
     private Short localeId = new Short("1");

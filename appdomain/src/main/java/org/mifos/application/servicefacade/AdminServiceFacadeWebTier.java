@@ -82,7 +82,7 @@ import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.RecurrenceTypeEntity;
 import org.mifos.application.meeting.util.helpers.MeetingType;
@@ -135,7 +135,7 @@ import org.mifos.dto.screen.SavingsProductFormDto;
 import org.mifos.framework.components.audit.business.service.AuditBusinessService;
 import org.mifos.framework.components.audit.util.helpers.AuditLogView;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
-import org.mifos.framework.components.fieldConfiguration.persistence.FieldConfigurationPersistence;
+import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
@@ -148,6 +148,7 @@ import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AdminServiceFacadeWebTier implements AdminServiceFacade {
@@ -163,6 +164,14 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     private final GeneralLedgerDao generalLedgerDao;
     private LoanProductAssembler loanProductAssembler;
 
+
+    @Autowired
+    LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    LegacyFieldConfigurationDao legacyFieldConfigurationDao;
+
+    @Autowired
     public AdminServiceFacadeWebTier(ProductService productService, OfficeHierarchyService officeHierarchyService,
             MandatoryHiddenFieldService mandatoryHiddenFieldService, LoanProductDao loanProductDao,
             SavingsProductDao savingsProductDao, OfficeDao officeDao,
@@ -868,7 +877,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     public MandatoryHiddenFieldsDto retrieveHiddenMandatoryFields() {
 
         try {
-            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence()
+            List<FieldConfigurationEntity> confFieldList = legacyFieldConfigurationDao
                     .getAllConfigurationFieldList();
             MandatoryHiddenFieldsDto dto = new MandatoryHiddenFieldsDto();
             populateDto(dto, confFieldList);
@@ -1009,7 +1018,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     @Override
     public void updateHiddenMandatoryFields(MandatoryHiddenFieldsDto dto) {
         try {
-            List<FieldConfigurationEntity> confFieldList = new FieldConfigurationPersistence()
+            List<FieldConfigurationEntity> confFieldList = legacyFieldConfigurationDao
                     .getAllConfigurationFieldList();
             mandatoryHiddenFieldService.updateMandatoryHiddenFields(dto, confFieldList);
         } catch (PersistenceException e) {
@@ -1044,7 +1053,7 @@ public class AdminServiceFacadeWebTier implements AdminServiceFacade {
     }
 
     private <T extends MasterDataEntity> List<T> getMasterEntities(Class<T> type, Short localeId) {
-        return new MasterPersistence().findMasterDataEntitiesWithLocale(type, localeId);
+        return legacyMasterDao.findMasterDataEntitiesWithLocale(type, localeId);
     }
 
     private void setPaymentTypesForATransaction(List<PaymentTypeDto> payments, TrxnTypes transactionType,

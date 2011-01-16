@@ -93,8 +93,7 @@ public class DatabaseMigrator {
         try {
             connection.setAutoCommit(false);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("couldn't change autocommit", e);
         }
         this.availableUpgrades = availableUpgrades;
         this.upgradesPackage = upgradesPackage;
@@ -125,23 +124,21 @@ public class DatabaseMigrator {
             }
 
         } catch (IOException e) {
-            logger.error("An error occurred whilst reading the upgrades.txt file");
+            logger.error("An error occurred whilst reading the upgrades.txt file", e);
 
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.error("couldn't close reader", e);
                 }
             }
             if (bufferedReader != null) {
                 try {
                     bufferedReader.close();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
+                    logger.error("couldn't close bufferedReader", e);
                 }
             }
         }
@@ -158,10 +155,10 @@ public class DatabaseMigrator {
 
         for (int i : availableUpgrades.keySet()) {
             if (!appliedUpgrades.contains(i)) {
-                System.out.print("applying upgrade with timestamp: " + i);
+                logger.info("applying upgrade with timestamp: " + i);
                 long startTimeMillis = System.currentTimeMillis();
                 applyUpgrade(i, availableUpgrades.get(i));
-                System.out.println(": Finished in " + (System.currentTimeMillis() - startTimeMillis) + " msec");
+                logger.info("upgrade " + i + " finished in " + (System.currentTimeMillis() - startTimeMillis) + " msec");
             }
         }
 
@@ -199,8 +196,7 @@ public class DatabaseMigrator {
         try {
             firstRun(getLegacyUpgradesMap());
         } catch (Exception e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("error getting legacy upgrades map", e);
         }
     }
 
@@ -305,8 +301,7 @@ public class DatabaseMigrator {
                     + "primary key(upgrade_id)" + ")engine=innodb character set utf8;");
             connection.commit();
         } catch (SQLException e) {
-            System.err.println("Unable to create table " + APPLIED_UPGRADES + " for non-sequential database upgrades. "
-                    + e);
+            logger.error("Unable to create table " + APPLIED_UPGRADES + " for non-sequential database upgrades. ", e);
         }
     }
 
@@ -350,26 +345,19 @@ public class DatabaseMigrator {
             upgrade.setUpgradeContext(applicationContext);
 
         } catch (SecurityException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("ndsu error (a)", e);
         } catch (IllegalArgumentException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("ndsu error (b)", e);
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("ndsu error (c)", e);
         } catch (NoSuchMethodException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("ndsu error (d)", e);
         } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("ndsu error (e)", e);
         } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("ndsu error (f)", e);
         } catch (InvocationTargetException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            logger.error("ndsu error (g)", e);
         }
 
         return upgrade;
@@ -390,7 +378,7 @@ public class DatabaseMigrator {
             rs.close();
             stmt.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            logger.error("error fetching applied upgrades", e);
         }
 
         return appliedUpgrades;

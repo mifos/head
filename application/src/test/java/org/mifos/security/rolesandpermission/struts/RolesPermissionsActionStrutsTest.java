@@ -80,7 +80,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionMessages();
         verifyForward(ActionForwards.viewRoles_success.toString());
         List<RoleBO> roles = (List<RoleBO>) SessionUtils.getAttribute(RolesAndPermissionConstants.ROLES, request);
-       Assert.assertEquals(2, roles.size());
+       Assert.assertEquals(3, roles.size());
         Assert.assertNotNull(request.getAttribute(Constants.CURRENTFLOWKEY));
     }
 

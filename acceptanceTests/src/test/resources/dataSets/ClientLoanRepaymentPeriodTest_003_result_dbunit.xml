@@ -1419,6 +1419,7 @@
   <activity activity_id="241" parent_id="227" activity_name_lookup_id="633" description_lookup_id="633"/>
   <activity activity_id="242" parent_id="227" activity_name_lookup_id="634" description_lookup_id="634"/>
   <activity activity_id="243" parent_id="203" activity_name_lookup_id="635" description_lookup_id="635"/>
+  <activity activity_id="244" parent_id="113" activity_name_lookup_id="636" description_lookup_id="636"/>
   <admin_document admin_document_id="1" admin_document_name="test2" admin_document_identifier="test2.rptdesign" admin_document_active="1" version_no="0"/>
   <admin_document_acc_state_mix admin_doc_acc_state_mix_id="1" account_state_id="1" admin_document_id="1" version_no="0"/>
   <admin_document_acc_state_mix admin_doc_acc_state_mix_id="2" account_state_id="2" admin_document_id="1" version_no="0"/>
@@ -7393,6 +7394,7 @@
   <lookup_value lookup_id="633" entity_id="87" lookup_name="Permissions-CanRunBatchJobsOnDemand"/>
   <lookup_value lookup_id="634" entity_id="87" lookup_name="Permissions-CanUpdateBatchJobsConfiguration"/>
   <lookup_value lookup_id="635" entity_id="87" lookup_name="Permissions-CanActivateQuestionGroups"/>
+  <lookup_value lookup_id="636" entity_id="87" lookup_name="Permissions-CanAdjustBackDatedTransactions"/>
   <lookup_value_locale lookup_value_id="1" locale_id="1" lookup_id="1"/>
   <lookup_value_locale lookup_value_id="3" locale_id="1" lookup_id="2"/>
   <lookup_value_locale lookup_value_id="5" locale_id="1" lookup_id="3"/>
@@ -9176,6 +9178,7 @@
   <roles_activity activity_id="241" role_id="1"/>
   <roles_activity activity_id="242" role_id="1"/>
   <roles_activity activity_id="243" role_id="1"/>
+  <roles_activity activity_id="244" role_id="1"/>
   <saving_schedule id="1" account_id="15" customer_id="9" action_date="2009-01-29" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="1" version_no="0"/>
   <saving_schedule id="2" account_id="15" customer_id="9" action_date="2009-02-05" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="2" version_no="0"/>
   <saving_schedule id="3" account_id="15" customer_id="9" action_date="2009-02-12" deposit="0.0000" deposit_currency_id="2" deposit_paid="0.0000" deposit_paid_currency_id="2" payment_status="0" installment_id="3" version_no="0"/>

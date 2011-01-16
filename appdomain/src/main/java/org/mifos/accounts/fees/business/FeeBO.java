@@ -41,8 +41,9 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.fees.util.helpers.RateAmountFlag;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.servicefacade.GLCodeDto;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.framework.business.AbstractBusinessObject;
@@ -306,7 +307,7 @@ public abstract class FeeBO extends AbstractBusinessObject {
 
     private FeeStatusEntity retrieveFeeStatusEntity(final FeeStatus status) throws FeeException {
         try {
-            return new MasterPersistence().findMasterDataEntityWithLocale(FeeStatusEntity.class, status.getValue(),
+            return ApplicationContextProvider.getBean(LegacyMasterDao.class).findMasterDataEntityWithLocale(FeeStatusEntity.class, status.getValue(),
                      userContext.getLocaleId());
         } catch (PersistenceException pe) {
             throw new FeeException(pe);

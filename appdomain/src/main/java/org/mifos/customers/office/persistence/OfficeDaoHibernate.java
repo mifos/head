@@ -54,6 +54,7 @@ import org.mifos.dto.domain.OfficeLevelDto;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -61,6 +62,7 @@ public class OfficeDaoHibernate implements OfficeDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public OfficeDaoHibernate(GenericDao genericDao) {
         this.genericDao = genericDao;
     }

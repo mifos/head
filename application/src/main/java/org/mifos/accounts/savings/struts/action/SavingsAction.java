@@ -50,7 +50,7 @@ import org.mifos.accounts.savings.struts.actionforms.SavingsActionForm;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
@@ -90,7 +90,6 @@ public class SavingsAction extends BaseAction {
 
     private static final Logger logger = LoggerFactory.getLogger(SavingsAction.class);
     private SavingsBusinessService savingsService;
-    private MasterPersistence masterPersistence;
     private QuestionnaireServiceFacadeLocator questionnaireServiceFacadeLocator = new DefaultQuestionnaireServiceFacadeLocator();
     private QuestionnaireFlowAdapter createGroupQuestionnaire = new QuestionnaireFlowAdapter("Create", "Savings",
             ActionForwards.preview_success, "custSearchAction.do?method=loadMainSearch", questionnaireServiceFacadeLocator);
@@ -124,7 +123,6 @@ public class SavingsAction extends BaseAction {
 
     public SavingsAction() throws Exception {
         savingsService = new SavingsBusinessService();
-        masterPersistence = new MasterPersistence();
     }
 
     @Override
@@ -165,9 +163,9 @@ public class SavingsAction extends BaseAction {
         SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savingsOfferingBO, request);
 
         // NOTE - these details are included in SavingsProductReferenceDto but left as is to satisfy JSP at present
-        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, masterPersistence.findMasterDataEntitiesWithLocale(
+        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(
                 SavingsTypeEntity.class, uc.getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, masterPersistence
+        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, legacyMasterDao
                 .findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
 
         List<CustomFieldDefinitionEntity> customFieldDefinitions = savingsService.retrieveCustomFieldsDefinition();
@@ -272,8 +270,8 @@ public class SavingsAction extends BaseAction {
         }
 
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, savings, request);
-        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, masterPersistence.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class, uc.getLocaleId()), request);
-        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, masterPersistence.findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.SAVINGS_TYPE, legacyMasterDao.findMasterDataEntitiesWithLocale(SavingsTypeEntity.class, uc.getLocaleId()), request);
+        SessionUtils.setCollectionAttribute(MasterConstants.RECOMMENDED_AMOUNT_UNIT, legacyMasterDao.findMasterDataEntitiesWithLocale(RecommendedAmntUnitEntity.class, uc.getLocaleId()), request);
         SessionUtils.setCollectionAttribute(SavingsConstants.CUSTOM_FIELDS, savingsService.retrieveCustomFieldsDefinition(), request);
 
         SessionUtils.setAttribute(SavingsConstants.PRDOFFERING, savings.getSavingsOffering(), request);

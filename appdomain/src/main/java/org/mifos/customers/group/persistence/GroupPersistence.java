@@ -41,7 +41,7 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.DateTimeService;
 
 import java.sql.Connection;
@@ -55,7 +55,7 @@ import java.util.Map;
  * @deprecated - use {@link CustomerDao}
  */
 @Deprecated
-public class GroupPersistence extends Persistence {
+public class GroupPersistence extends LegacyGenericDao {
     private final CenterPersistence centerPersistence = new CenterPersistence();
     private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
@@ -147,7 +147,7 @@ public class GroupPersistence extends Persistence {
     }
 
     public GroupBO getGroupByCustomerId(Integer customerId) throws PersistenceException {
-        return (GroupBO) getPersistentObject(GroupBO.class, customerId);
+        return getPersistentObject(GroupBO.class, customerId);
     }
 
     // this code is used in the PAR task to improve performance

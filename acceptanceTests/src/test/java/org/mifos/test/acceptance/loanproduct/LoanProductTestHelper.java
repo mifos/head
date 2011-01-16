@@ -2,6 +2,7 @@ package org.mifos.test.acceptance.loanproduct;
 
 import com.thoughtworks.selenium.Selenium;
 import org.mifos.test.acceptance.framework.loanproduct.DefineNewLoanProductPage;
+import org.mifos.test.acceptance.framework.testhelpers.FormParametersHelper;
 import org.mifos.test.acceptance.framework.testhelpers.NavigationHelper;
 import org.mifos.test.acceptance.util.StringUtil;
 
@@ -25,4 +26,12 @@ public class LoanProductTestHelper {
                 navigateToDefineLoanProduct();
     }
 
+    public DefineNewLoanProductPage.SubmitFormParameters defineLoanProductParameters(int defInstallments, int defaultLoanAmount, int defaultInterestRate, int interestType) {
+        DefineNewLoanProductPage.SubmitFormParameters formParameters = FormParametersHelper.getWeeklyLoanProductParameters();
+        formParameters.setDefInstallments(String.valueOf(defInstallments));
+        formParameters.setDefaultLoanAmount(String.valueOf(defaultLoanAmount));
+        formParameters.setInterestTypes(interestType);
+        formParameters.setDefaultInterestRate(String.valueOf(defaultInterestRate));
+        return formParameters;
+    }
 }

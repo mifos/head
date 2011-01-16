@@ -27,6 +27,8 @@ import com.thoughtworks.selenium.Selenium;
 
 
 public class RedoLoanDisbursalEntryPage extends MifosPage {
+
+
     public RedoLoanDisbursalEntryPage(Selenium selenium) {
         super(selenium);
         verifyPage("LoanCreationDetail");
@@ -64,5 +66,33 @@ public class RedoLoanDisbursalEntryPage extends MifosPage {
         selenium.type("disbursementDateYY", params.getDisbursalDateYYYY());
 
         selenium.fireEvent("disbursementDateYY", "blur");
+
+        submit();
+    }
+
+    private void submit() {
+        selenium.click("loancreationdetails.button.continue");
+        waitForPageToLoad();
+    }
+
+    public RedoLoanDisbursalEntryPage verifyFeeBlockedForVariableInstallmentLoan(String[] fees) {
+        selectFee(fees);
+        submit();
+        for (String fee : fees) {
+            Assert.assertTrue(selenium.isTextPresent(fee + " fee cannot be applied to loan with variable installments"));
+        }
+        for (int index = 0; index < fees.length; index++) {
+            selenium.select("selectedFee[" + index + "].feeId","--Select--");
+        }
+        return this;
+
+    }
+
+    public RedoLoanDisbursalEntryPage selectFee(String[] fees) {
+        for (int index = 0; index < fees.length; index++) {
+            String fee = fees[index];
+            selenium.select("selectedFee[" + index + "].feeId",fee);
+        }
+        return this;
     }
 }

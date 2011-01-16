@@ -60,6 +60,7 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class FeeServiceFacadeWebTier implements FeeServiceFacade {
@@ -68,6 +69,7 @@ public class FeeServiceFacadeWebTier implements FeeServiceFacade {
     private final GeneralLedgerDao generalLedgerDao;
     private final FeeService feeService;
 
+    @Autowired
     public FeeServiceFacadeWebTier(FeeService feeService, FeeDao feeDao, GeneralLedgerDao generalLedgerDao) {
         this.feeService = feeService;
         this.feeDao = feeDao;

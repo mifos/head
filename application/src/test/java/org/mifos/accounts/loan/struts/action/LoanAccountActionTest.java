@@ -149,7 +149,7 @@ public class LoanAccountActionTest {
 
     @Before
     public void setUp() throws PageExpiredException {
-        loanAccountAction = new LoanAccountAction(null, loanBusinessService, null, loanPrdBusinessService, null, null, null) {
+        loanAccountAction = new LoanAccountAction(null, loanBusinessService, null, loanPrdBusinessService, null, null) {
             @Override
             LoanBO getLoan(Integer loanId) {
                 return loanBO;
@@ -349,6 +349,7 @@ public class LoanAccountActionTest {
     public void showPreviewShouldSetPerspective() throws Exception {
         when(request.getParameter(PERSPECTIVE)).thenReturn(LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
         loanAccountAction.showPreview(mapping, form, request, response);
+        verify(request,times(1)).getParameter("preview_mode");
         verify(request,times(1)).setAttribute(LoanConstants.METHODCALLED, "showPreview");
         verify(request,times(1)).setAttribute(PERSPECTIVE, LoanConstants.PERSPECTIVE_VALUE_REDO_LOAN);
     }
@@ -385,6 +386,14 @@ public class LoanAccountActionTest {
         when(form.getPerspective()).thenReturn("redoLoan");
         loanAccountAction.preview(mapping, form, request, response);
         verify(loanBusinessService, times(1)).computeExtraInterest(Matchers.<LoanBO>any(), Matchers.<Date>any());
+    }
+
+    @Test
+    public void previousActionShouldSetPerspective() throws Exception {
+        when(request.getParameter(PERSPECTIVE)).thenReturn("redoLoan");
+        loanAccountAction.previous(mapping, form, request, response);
+        verify(request, times(1)).getParameter(PERSPECTIVE);
+        verify(request, times(1)).setAttribute(PERSPECTIVE, "redoLoan");
     }
 
 

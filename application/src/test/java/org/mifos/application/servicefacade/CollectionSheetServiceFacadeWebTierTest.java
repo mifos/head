@@ -38,7 +38,7 @@ import org.junit.runner.RunWith;
 import org.mifos.application.collectionsheet.struts.actionforms.BulkEntryActionForm;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.office.util.helpers.OfficeLevel;
@@ -69,7 +69,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
     private OfficePersistence officePersistence;
 
     @Mock
-    private MasterPersistence masterPersistence;
+    private LegacyMasterDao legacyMasterDao;
 
     @Mock
     private PersonnelPersistence personnelPersistence;
@@ -112,7 +112,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         collectionSheetForm.setPaymentId("2");
 
         collectionSheetServiceFacadeWebTier = new CollectionSheetServiceFacadeWebTier(officePersistence,
-                masterPersistence, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator);
+                legacyMasterDao, personnelPersistence, customerPersistence, collectionSheetService, collectionSheetTranslator);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class CollectionSheetServiceFacadeWebTierTest {
         // stubbing
         when(masterDataEntity.getId()).thenReturn(paymentTypeId);
         when(masterDataEntity.getName()).thenReturn(paymentTypeName);
-        when(masterPersistence.findMasterDataEntitiesWithLocale(PaymentTypeEntity.class, Short.valueOf("1"))).thenReturn(
+        when(legacyMasterDao.findMasterDataEntitiesWithLocale(PaymentTypeEntity.class, Short.valueOf("1"))).thenReturn(
                 paymentTypeEntities);
 
         // exercise test

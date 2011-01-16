@@ -70,7 +70,7 @@ import org.mifos.application.master.business.CustomFieldType;
 import org.mifos.application.master.business.FundCodeEntity;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
@@ -119,6 +119,7 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -175,6 +176,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private AccountPersistence accountPersistence = null;
     private Money zeroMoney;
     private String interestDueForNextInstallment = "0";
+
+    @Autowired
+    LegacyMasterDao legacyMasterDao;
 
 
     @Before
@@ -277,7 +281,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         officePersistence.getOffice((short)3).getHolidays().clear();
 
         HolidayBO holiday2 = IntegrationTestObjectMother.findHolidayById(holiday.getId());
-        new MasterPersistence().delete(holiday2);
+        legacyMasterDao.delete(holiday2);
         StaticHibernateUtil.flushAndClearSession();
     }
 

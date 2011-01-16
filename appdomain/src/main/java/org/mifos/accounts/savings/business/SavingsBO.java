@@ -1450,7 +1450,7 @@ public class SavingsBO extends AccountBO {
             final short acccountActionId, final Date trxnDate, final PersonnelBO personnel) throws AccountException {
         AccountActionEntity accountAction;
         try {
-            accountAction = (AccountActionEntity) getSavingsPersistence().getPersistentObject(
+            accountAction = getSavingsPersistence().getPersistentObject(
                     AccountActionEntity.class, acccountActionId);
         } catch (PersistenceException e) {
             throw new AccountException(e);
@@ -1677,7 +1677,7 @@ public class SavingsBO extends AccountBO {
      * name of the PaymentTypeEntity.
      */
     private PaymentTypeEntity getPaymentTypeEntity(final short paymentTypeId) {
-        return (PaymentTypeEntity) getSavingsPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
+        return getSavingsPersistence().loadPersistentObject(PaymentTypeEntity.class, paymentTypeId);
     }
 
     @Override

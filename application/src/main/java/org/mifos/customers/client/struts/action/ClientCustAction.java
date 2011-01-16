@@ -43,7 +43,7 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.DateTime;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.SpouseFatherLookupEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireAction;
@@ -95,6 +95,8 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.platform.questionnaire.service.QuestionGroupInstanceDetail;
 import org.mifos.platform.questionnaire.service.QuestionnaireServiceFacade;
+import org.mifos.security.util.ActivityMapper;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class ClientCustAction extends CustAction implements QuestionnaireAction {
@@ -153,7 +155,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         List<ApplicableAccountFeeDto> additionalFees = clientFormCreationDto.getAdditionalFees();
         SessionUtils.setCollectionAttribute(CustomerConstants.ADDITIONAL_FEES_LIST, additionalFees, request);
 
-        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setCollectionAttribute(ClientConstants.SALUTATION_ENTITY, clientFormCreationDto.getClientDropdowns().getSalutations(), request);
@@ -577,8 +579,10 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(ClientConstants.HANDICAPPED_ENTITY, personalInfo.getClientDropdowns().getHandicapped(), request);
 
         UserContext userContext = getUserContext(request);
-        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
+
+        SessionUtils.setAttribute("CanEditPhoneNumber", ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()), request);
 
         boolean isFamilyDetailsRequired = personalInfo.getClientRules().isFamilyDetailsRequired();
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_REQUIRED, isFamilyDetailsRequired, request);
@@ -683,9 +687,52 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
 
         List<CustomFieldDto> customFields = new ArrayList<CustomFieldDto>();
 
+        final String clientSystemId = clientInSession.getGlobalCustNum();
+
+        ClientPersonalInfoDto clientPersonalInfo = this.clientServiceFacade.retrieveClientPersonalInfoForUpdate(clientSystemId);
+
         AddressDto address = null;
         if (actionForm.getAddress() != null) {
             address = Address.toDto(actionForm.getAddress());
+        }
+
+        if(clientPersonalInfo.getCustomerDetail()!= null)
+        {
+            if(clientPersonalInfo.getCustomerDetail().getAddress()!=null)
+            {
+                if(clientPersonalInfo.getCustomerDetail().getAddress().getPhoneNumber() != null && (!clientPersonalInfo.getCustomerDetail().getAddress().getPhoneNumber().equals(address.getPhoneNumber())))
+                {
+                    UserContext userContext = getUserContext(request);
+                    if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()))
+                    {
+                        throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                    }
+                }
+                else if(clientPersonalInfo.getCustomerDetail().getAddress().getPhoneNumber() == null && address.getPhoneNumber()!= null && !address.getPhoneNumber().equals(""))
+                {
+                    UserContext userContext = getUserContext(request);
+                    if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()))
+                    {
+                        throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                    }
+                }
+            }
+            else if(address.getPhoneNumber()!= null && !address.getPhoneNumber().equals(""))
+            {
+                UserContext userContext = getUserContext(request);
+                if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()))
+                {
+                    throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+                }
+            }
+        }
+        else if(address.getPhoneNumber()!= null && !address.getPhoneNumber().equals(""))
+        {
+            UserContext userContext = getUserContext(request);
+            if(!ActivityMapper.getInstance().isEditPhoneNumberPermitted(userContext, userContext.getBranchId()))
+            {
+                throw new CustomerException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+            }
         }
 
         ClientNameDetailDto spouseFather = null;
@@ -729,7 +776,7 @@ public class ClientCustAction extends CustAction implements QuestionnaireAction 
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, new ArrayList<CustomFieldDto>(), request);
 
         UserContext userContext = getUserContext(request);
-        List<SpouseFatherLookupEntity> spouseFather = new MasterPersistence().findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
+        List<SpouseFatherLookupEntity> spouseFather = legacyMasterDao.findMasterDataEntitiesWithLocale(SpouseFatherLookupEntity.class, userContext.getLocaleId());
         SessionUtils.setCollectionAttribute(ClientConstants.SPOUSE_FATHER_ENTITY, spouseFather, request);
 
         SessionUtils.setAttribute(ClientConstants.ARE_FAMILY_DETAILS_MANDATORY, isFamilyDetailsMandatory(), request);

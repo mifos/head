@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+    
+    <bean id="legacyMasterDao" class="org.mifos.application.master.persistence.LegacyMasterDao"/>
+    <bean id="legacyAdminDocumentDao" class="org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao"/>
+    <bean id="legacyFieldConfigurationDao" class="org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao"/>
+    <bean id="legacyAdminDocAccStateMixDao" class="org.mifos.reports.admindocuments.persistence.LegacyAdminDocAccStateMixDao"/>
+    
+    <bean id="rolesPermissionsPersistence" class="org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence"/>
+
+</beans>

@@ -20,21 +20,23 @@
 
 package org.mifos.security.util;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.mifos.accounts.util.helpers.AccountStates;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.group.util.helpers.GroupConstants;
 import org.mifos.customers.util.helpers.CustomerConstants;
+import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.authorization.AuthorizationManager;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Singleton.
@@ -673,6 +675,7 @@ public class ActivityMapper {
         security.allow("editQuestionResponses", SecurityConstants.VIEW);
         security.allow("validateInstallments", SecurityConstants.VIEW);
         security.allow("showPreview", SecurityConstants.VIEW);
+        security.allow("viewOriginalSchedule", SecurityConstants.VIEW);
         return security;
     }
 
@@ -1323,7 +1326,7 @@ public class ActivityMapper {
 
     public boolean isStateChangePermittedForAccount(short newSate, short stateFlag, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance()
+        return getAuthorizationManager()
                 .isActivityAllowed(
                         userContext,
                         new ActivityContext(getActivityIdForNewStateId(newSate, stateFlag), recordOfficeId,
@@ -1332,7 +1335,7 @@ public class ActivityMapper {
 
     public boolean isStateChangePermittedForCustomer(short newSate, short stateFlag, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForNewCustomerStateId(newSate, stateFlag), recordOfficeId,
                         recordLoanOfficerId));
@@ -1340,7 +1343,7 @@ public class ActivityMapper {
 
     public boolean isSavePermittedForAccount(short newSate, UserContext userContext, Short recordOfficeId,
             Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(userContext,
+        return getAuthorizationManager().isActivityAllowed(userContext,
                 new ActivityContext(getActivityIdForState(newSate), recordOfficeId, recordLoanOfficerId));
     }
 
@@ -1360,7 +1363,7 @@ public class ActivityMapper {
 
         ActivityContext activityContext = new ActivityContext(activityId, officeId, loanOfficerId);
 
-        return AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext);
+        return getAuthorizationManager().isActivityAllowed(userContext, activityContext);
     }
 
     public boolean isAddingNotesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
@@ -1368,7 +1371,7 @@ public class ActivityMapper {
 
         short activityId = getActivityIdForAddingNotes(accountTypes, customerLevel);
         ActivityContext activityContext = new ActivityContext(activityId, recordOfficeId, recordLoanOfficerId);
-        return AuthorizationManager.getInstance().isActivityAllowed(userContext, activityContext);
+        return getAuthorizationManager().isActivityAllowed(userContext, activityContext);
     }
 
     private short getActivityIdForAddingNotes(AccountTypes accountTypes, CustomerLevel customerLevel) {
@@ -1391,13 +1394,13 @@ public class ActivityMapper {
 
     public boolean isAddingNotesPermittedForPersonnel(UserContext userContext, Short recordOfficeId,
             Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(userContext,
+        return getAuthorizationManager().isActivityAllowed(userContext,
                 new ActivityContext(SecurityConstants.PERSONNEL_NOTE_CREATE, recordOfficeId, recordLoanOfficerId));
     }
 
     public boolean isPaymentPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForPayment(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1421,7 +1424,7 @@ public class ActivityMapper {
 
     public boolean isAdjustmentPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForAdjustment(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1447,7 +1450,7 @@ public class ActivityMapper {
 
     public boolean isAddingHistoricaldataPermittedForCustomers(CustomerLevel customerLevel, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForAddingHistoricaldata(customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1465,7 +1468,7 @@ public class ActivityMapper {
 
     public boolean isWaiveDuePermittedForCustomers(WaiveEnum waiveEnum, AccountTypes accountTypes,
             CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForWaiveDue(waiveEnum, accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1493,14 +1496,14 @@ public class ActivityMapper {
 
     public boolean isRemoveFeesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForRemoveFees(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
     }
 
     public boolean isViewActiveSessionsPermitted(UserContext userContext, Short officeId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(SecurityConstants.CAN_VIEW_ACTIVE_SESSIONS, officeId));
     }
@@ -1523,7 +1526,7 @@ public class ActivityMapper {
 
     public boolean isApplyChargesPermittedForAccounts(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForApplyCharges(accountTypes, customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1547,7 +1550,7 @@ public class ActivityMapper {
 
     public boolean isEditMeetingSchedulePermittedForCustomers(CustomerLevel customerLevel, UserContext userContext,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return AuthorizationManager.getInstance().isActivityAllowed(
+        return getAuthorizationManager().isActivityAllowed(
                 userContext,
                 new ActivityContext(getActivityIdForEditMeetingSchedule(customerLevel), recordOfficeId,
                         recordLoanOfficerId));
@@ -1575,4 +1578,25 @@ public class ActivityMapper {
         allSecurity.add(security);
     }
 
+    public boolean isAdjustmentPermittedForBackDatedPayments(Date lastPaymentDate, UserContext userContext,
+                                                             Short recordOfficeId, Short recordLoanOfficer) {
+        boolean activityAllowed = true;
+        Date today = DateUtils.currentDate();
+        if(DateUtils.dateFallsBeforeDate(lastPaymentDate, today)){
+            ActivityContext activityContext = new ActivityContext(SecurityConstants.LOAN_ADJUST_BACK_DATED_TRXNS, recordOfficeId, recordLoanOfficer);
+            activityAllowed = getAuthorizationManager().isActivityAllowed(userContext, activityContext);
+        }
+
+        return activityAllowed;
+    }
+
+    AuthorizationManager getAuthorizationManager() {
+        return AuthorizationManager.getInstance();
+    }
+
+     public boolean isEditPhoneNumberPermitted(UserContext useContext, Short officeId){
+        return AuthorizationManager.getInstance().isActivityAllowed(
+                useContext,
+                new ActivityContext(SecurityConstants.CAN_EDIT_PHONE_NUMBER, officeId));
+    }
 }

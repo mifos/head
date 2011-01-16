@@ -32,15 +32,15 @@ import org.mifos.accounts.productsmix.business.ProductMixBO;
 import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class ProductMixPersistence extends Persistence {
+public class ProductMixPersistence extends LegacyGenericDao {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductMixPersistence.class);
 
     public ProductMixBO getAllLoanOfferingMixByID(Short prdofferingMixId) throws PersistenceException {
         logger.debug("in getAllLoanOfferingMix");
-        return (ProductMixBO) getPersistentObject(ProductMixBO.class, prdofferingMixId);
+        return getPersistentObject(ProductMixBO.class, prdofferingMixId);
     }
 
     @SuppressWarnings("cast")

@@ -67,7 +67,7 @@ import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.CustomValueListElementDto;
 import org.mifos.application.master.business.InterestTypesEntity;
 import org.mifos.application.master.business.MifosCurrency;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.master.util.helpers.PaymentTypes;
 import org.mifos.application.meeting.business.MeetingBO;
@@ -158,6 +158,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.math.BigDecimal;
@@ -184,6 +185,10 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     private final LoanBusinessService loanBusinessService;
     private final HibernateTransactionHelper transactionHelper;
 
+    @Autowired
+    LegacyMasterDao legacyMasterDao;
+
+    @Autowired
     public LoanAccountServiceFacadeWebTier(OfficeDao officeDao, LoanProductDao loanProductDao, CustomerDao customerDao,
                                            PersonnelDao personnelDao, FundDao fundDao, LoanDao loanDao,
                                            AccountService accountService, ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
@@ -381,11 +386,11 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
             LoanOfferingInstallmentRange eligibleNoOfInstall = loanOffering.eligibleNoOfInstall(customer
                     .getMaxLoanAmount(loanOffering), customer.getMaxLoanCycleForProduct(loanOffering));
 
-            CustomValueDto customValueDto = new MasterPersistence().getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
+            CustomValueDto customValueDto = legacyMasterDao.getLookUpEntity(MasterConstants.COLLATERAL_TYPES);
             List<CustomValueListElementDto> collateralTypes = customValueDto.getCustomValueListElements();
 
             // Business activities got in getPrdOfferings also but only for glim.
-            List<ValueListElement> loanPurposes = new MasterPersistence().findValueListElements(MasterConstants.LOAN_PURPOSES);
+            List<ValueListElement> loanPurposes = legacyMasterDao.findValueListElements(MasterConstants.LOAN_PURPOSES);
 
             MeetingDetailsEntity loanOfferingMeetingDetail = loanOffering.getLoanOfferingMeeting().getMeeting()
                     .getMeetingDetails();
@@ -980,11 +985,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     private String getAccountStateName(Short id) {
-
-        MasterPersistence masterPersistence = new MasterPersistence();
         AccountStateEntity accountStateEntity;
         try {
-            accountStateEntity = (AccountStateEntity) masterPersistence.getPersistentObject(AccountStateEntity.class,
+            accountStateEntity = legacyMasterDao.getPersistentObject(AccountStateEntity.class,
                     id);
             return accountStateEntity.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -993,11 +996,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     private String getGracePeriodTypeName(Short id) {
-
-        MasterPersistence masterPersistence = new MasterPersistence();
         GracePeriodTypeEntity gracePeriodType;
         try {
-            gracePeriodType = (GracePeriodTypeEntity) masterPersistence.getPersistentObject(GracePeriodTypeEntity.class,
+            gracePeriodType = legacyMasterDao.getPersistentObject(GracePeriodTypeEntity.class,
                     id);
             return gracePeriodType.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -1006,11 +1007,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     private String getInterestTypeName(Short id) {
-
-        MasterPersistence masterPersistence = new MasterPersistence();
         InterestTypesEntity interestType;
         try {
-            interestType = (InterestTypesEntity) masterPersistence.getPersistentObject(InterestTypesEntity.class,
+            interestType = legacyMasterDao.getPersistentObject(InterestTypesEntity.class,
                     id);
             return interestType.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {
@@ -1030,10 +1029,9 @@ public class LoanAccountServiceFacadeWebTier implements LoanAccountServiceFacade
     }
 
     private String getAccountStateFlagEntityName(Short id) {
-        MasterPersistence masterPersistence = new MasterPersistence();
         AccountStateFlagEntity accountStateFlagEntity;
         try {
-            accountStateFlagEntity = (AccountStateFlagEntity) masterPersistence.getPersistentObject(AccountStateFlagEntity.class,
+            accountStateFlagEntity = legacyMasterDao.getPersistentObject(AccountStateFlagEntity.class,
                     id);
             return accountStateFlagEntity.getLookUpValue().getLookUpName();
         } catch (PersistenceException e) {

@@ -15,7 +15,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.springframework.test.annotation.ExpectedException;
 
 public class FeeBOTest {
-    
+
     @Test
     @ExpectedException(value = FeeException.class)
     public void testInvalidConnectionThrowsExceptionInConstructor() throws PersistenceException{
@@ -33,7 +33,7 @@ public class FeeBOTest {
         } catch (FeeException e) {
         }
     }
-    
+
     @Test
     @ExpectedException(value = FeeException.class)
     public void testInvalidConnectionThrowsExceptionInSave() throws PersistenceException{
@@ -42,7 +42,7 @@ public class FeeBOTest {
             FeeBO feeBO = new RateFeeBO() {
                 @Override
                 protected FeePersistence getFeePersistence() {
-                    return super.getFeePersistence();    //To change body of overridden methods use File | Settings | File Templates.
+                    return feePersistence;    //To change body of overridden methods use File | Settings | File Templates.
                 }
 
             };

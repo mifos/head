@@ -161,6 +161,8 @@ public interface SecurityConstants {
 
     short CIENT_BLACKLIST_A_CLIENT = 55;
 
+    short CAN_EDIT_PHONE_NUMBER = 245;
+
     // Group management
     short GROUP_ADD_NOTE_TO_GROUP = 70;
 
@@ -240,6 +242,8 @@ public interface SecurityConstants {
     short EDIT_SAVING_PRODUCT = 98;
     short LOAN_MANAGEMENT = 99;
 
+    short LOAN_TRANSACTIONS = 113;
+
     // Loan management
     short LOAN_CREATE_LOAN_ACCOUNT_IN_SAVE_FOR_LATER_STATE = 101;
 
@@ -264,6 +268,8 @@ public interface SecurityConstants {
     short LOAN_CHANGE_STATE_TO_CLOSED_OBLIGATION_MET = 111;
 
     short LOAN_MODIFY_THE_DEFAULTS_AMOUNT = 112;
+
+    short LOAN_ADJUST_BACK_DATED_TRXNS = 244;
 
     // savings
     short SAVINGS_APPLY_ADJUSTMENT = 186;

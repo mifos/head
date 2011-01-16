@@ -45,12 +45,14 @@ import org.mifos.config.FiscalCalendarRules;
 import org.mifos.dto.domain.HolidayDetails;
 import org.mifos.dto.domain.OfficeHoliday;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class HolidayServiceFacadeWebTier implements HolidayServiceFacade {
 
     private final HolidayService holidayService;
     private final HolidayDao holidayDao;
 
+    @Autowired
     public HolidayServiceFacadeWebTier(HolidayService holidayService, HolidayDao holidayDao) {
         this.holidayService = holidayService;
         this.holidayDao = holidayDao;

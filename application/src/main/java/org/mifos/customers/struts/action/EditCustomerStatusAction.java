@@ -35,12 +35,14 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
+import org.mifos.application.master.MessageLookup;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.business.CustomerStatusEntity;
+import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.checklist.business.CustomerCheckListBO;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.struts.actionforms.EditCustomerStatusActionForm;
@@ -100,6 +102,13 @@ public class EditCustomerStatusAction extends BaseAction {
         default:
             break;
         };
+
+        for (CustomerStatusEntity customerStatusEntity : statusList) {
+            for (CustomerStatusFlagEntity flag : customerStatusEntity.getFlagSet()) {
+                String statusMessageText = MessageLookup.getInstance().lookup(flag.getLookUpValue().getPropertiesKey());
+                flag.setStatusFlagMessageText(statusMessageText);
+            }
+        }
 
         editCustomerStatusActionForm.setLevelId(customer.getCustomerLevel().getId().toString());
         editCustomerStatusActionForm.setCurrentStatusId(customer.getCustomerStatus().getId().toString());

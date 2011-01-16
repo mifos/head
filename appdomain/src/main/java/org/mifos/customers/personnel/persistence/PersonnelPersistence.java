@@ -49,10 +49,10 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 
-public class PersonnelPersistence extends Persistence {
+public class PersonnelPersistence extends LegacyGenericDao {
 
     /**
      * @deprecated - {@link PersonnelDao#findActiveLoanOfficersForOffice}
@@ -76,7 +76,7 @@ public class PersonnelPersistence extends Persistence {
         if (personnelId == null) {
             return null;
         }
-        return (PersonnelBO) getPersistentObject(PersonnelBO.class, personnelId);
+        return getPersistentObject(PersonnelBO.class, personnelId);
     }
 
     public boolean isUserExist(String userName) throws PersistenceException {

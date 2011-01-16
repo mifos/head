@@ -30,12 +30,14 @@ import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonnelServiceImpl implements PersonnelService {
 
     private final PersonnelDao personnelDao;
     private final HibernateTransactionHelper hibernateTransactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
     public PersonnelServiceImpl(PersonnelDao personnelDao) {
         this.personnelDao = personnelDao;
     }

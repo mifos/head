@@ -1529,4 +1529,8 @@ public class LoanOfferingBO extends PrdOfferingBO {
     public Double getRepaymentCapacity() {
         return cashFlowDetail != null ? cashFlowDetail.getRepaymentCapacity() : Double.valueOf(0);
     }
+
+    public boolean isDecliningBalanceInterestRecalculation() {
+        return getInterestType() == InterestType.DECLINING_PB;
+    }
 }

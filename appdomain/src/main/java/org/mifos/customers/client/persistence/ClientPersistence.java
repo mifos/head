@@ -32,9 +32,9 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.persistence.CustomerPersistence;
 import org.mifos.customers.util.helpers.CustomerConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class ClientPersistence extends Persistence {
+public class ClientPersistence extends LegacyGenericDao {
 
     private final CustomerPersistence customerPersistence = new CustomerPersistence();
     private final OfficePersistence officePersistence = new OfficePersistence();
@@ -43,7 +43,7 @@ public class ClientPersistence extends Persistence {
      * Get a client by Id and inject any required dependencies
      */
     public ClientBO getClient(final Integer customerId) throws PersistenceException {
-        return (ClientBO) getPersistentObject(ClientBO.class, customerId);
+        return getPersistentObject(ClientBO.class, customerId);
     }
 
     public Blob createBlob(final InputStream picture) throws PersistenceException {

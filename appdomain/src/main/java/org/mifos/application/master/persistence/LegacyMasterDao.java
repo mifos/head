@@ -45,7 +45,7 @@ import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 
@@ -53,10 +53,11 @@ import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
  * This class is mostly used to look up instances of (a subclass of)
  * {@link MasterDataEntity} in the database. Most of what is here can better be
  * accomplished by enums and by {@link MessageLookup}.
- *
- * Test cases: {@link MasterPersistenceIntegrationTest}
  */
-public class MasterPersistence extends Persistence {
+public class LegacyMasterDao extends LegacyGenericDao {
+
+    private LegacyMasterDao() {
+    }
 
     /**
      * Only two non-test usages, one that may never be called and one for getting labels.
@@ -180,7 +181,7 @@ public class MasterPersistence extends Persistence {
      * @param entityId - the primary key of a LookUpValueEntity
      */
     public String getMessageForLookupEntity(final Integer entityId) throws PersistenceException {
-        LookUpValueEntity lookupValue = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class, entityId);
+        LookUpValueEntity lookupValue = getPersistentObject(LookUpValueEntity.class, entityId);
         return MessageLookup.getInstance().lookup(lookupValue);
     }
 
@@ -188,11 +189,6 @@ public class MasterPersistence extends Persistence {
     public <T extends MasterDataEntity> List<T> findMasterDataEntities(final Class<T> clazz) {
         List<MasterDataEntity> queryResult = getSession().createQuery("from " + clazz.getName()).list();
         return (List<T>) queryResult;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends MasterDataEntity> T findMasterDataEntity(final Class<T> clazz, final Short id) throws PersistenceException {
-        return (T) getPersistentObject(clazz, id);
     }
 
     /**
@@ -204,7 +200,7 @@ public class MasterPersistence extends Persistence {
      */
     public void updateValueListElementForLocale(final Integer lookupValueEntityId, final String newValue)
             throws PersistenceException {
-        LookUpValueEntity lookupValueEntity = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class,
+        LookUpValueEntity lookupValueEntity = getPersistentObject(LookUpValueEntity.class,
                 lookupValueEntityId);
         Set<LookUpValueLocaleEntity> lookUpValueLocales = lookupValueEntity.getLookUpValueLocales();
         if (lookUpValueLocales != null) {
@@ -236,7 +232,7 @@ public class MasterPersistence extends Persistence {
      */
     public LookUpValueEntity addValueListElementForLocale(final Short lookupEnityId, final String newElementText, final String lookUpName)
             throws PersistenceException {
-        LookUpEntity lookUpEntity = (LookUpEntity) getPersistentObject(LookUpEntity.class, lookupEnityId);
+        LookUpEntity lookUpEntity = getPersistentObject(LookUpEntity.class, lookupEnityId);
         LookUpValueEntity lookUpValueEntity = new LookUpValueEntity();
         lookUpValueEntity.setLookUpEntity(lookUpEntity);
         lookUpValueEntity.setLookUpName(lookUpName);
@@ -265,7 +261,7 @@ public class MasterPersistence extends Persistence {
      * is a first step that works.
      */
     public void deleteValueListElement(final Integer lookupValueEntityId) throws PersistenceException {
-        LookUpValueEntity lookUpValueEntity = (LookUpValueEntity) getPersistentObject(LookUpValueEntity.class,
+        LookUpValueEntity lookUpValueEntity = getPersistentObject(LookUpValueEntity.class,
                 lookupValueEntityId);
         delete(lookUpValueEntity);
         MifosConfiguration.getInstance().deleteKey(lookUpValueEntity.getLookUpName());

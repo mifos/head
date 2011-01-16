@@ -33,9 +33,9 @@ import org.mifos.accounts.util.helpers.AccountConstants;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class LoanPrdPersistence extends Persistence {
+public class LoanPrdPersistence extends LegacyGenericDao {
 
     private static ThreadLocal<Map> reportsCacheTL = new ThreadLocal<Map>();
 
@@ -85,11 +85,11 @@ public class LoanPrdPersistence extends Persistence {
     }
 
     public LoanOfferingBO getLoanOffering(final Short prdofferingId) throws PersistenceException {
-        return (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class, prdofferingId);
+        return getPersistentObject(LoanOfferingBO.class, prdofferingId);
     }
 
     public LoanOfferingBO getLoanOffering(final Short loanOfferingId, final Short localeId) throws PersistenceException {
-        LoanOfferingBO loanOffering = (LoanOfferingBO) getPersistentObject(LoanOfferingBO.class, loanOfferingId);
+        LoanOfferingBO loanOffering = getPersistentObject(LoanOfferingBO.class, loanOfferingId);
         Hibernate.initialize(loanOffering);
         loanOffering.getPrdCategory().getProductCategoryName();
         loanOffering.getPrdApplicableMaster().setLocaleId(localeId);

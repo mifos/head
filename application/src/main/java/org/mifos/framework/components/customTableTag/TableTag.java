@@ -109,6 +109,7 @@ public class TableTag extends BodyTagSupport {
         return moduleName;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public int doStartTag() throws JspException {
         try {
@@ -145,8 +146,8 @@ public class TableTag extends BodyTagSupport {
 
             }
 
-            table.getTable(source, tableInfo, obj, locale, prefferedLocale, mfiLocale, pageContext,
-                    getResourcebundleName(moduleName));
+            table.getTable(source, tableInfo, obj, locale, mfiLocale, pageContext,
+                    getResourcebundleName());
 
         } catch (URISyntaxException e) {
             throw new JspException(e);
@@ -179,9 +180,8 @@ public class TableTag extends BodyTagSupport {
         }
     }
 
-    private String getResourcebundleName(String moduleName) {
+    private String getResourcebundleName() {
         return "LookupValueMessages";
-
     }
 
 }

@@ -20,10 +20,6 @@
 
 package org.mifos.accounts.business.service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.hibernate.Hibernate;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountBO;
@@ -47,9 +43,10 @@ import org.mifos.accounts.util.helpers.AccountStateFlag;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.accounts.util.helpers.WaiveEnum;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingHelper;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.config.AccountingRules;
 import org.mifos.customers.api.CustomerLevel;
@@ -67,6 +64,11 @@ import org.mifos.framework.util.LocalizationConverter;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 
 public class AccountBusinessService implements BusinessService {
 
@@ -95,7 +97,7 @@ public class AccountBusinessService implements BusinessService {
     public AccountActionEntity getAccountAction(Short actionType, Short localeId) throws ServiceException {
         AccountActionEntity accountAction = null;
         try {
-            accountAction = (AccountActionEntity) new MasterPersistence().getPersistentObject(
+            accountAction = ApplicationContextProvider.getBean(LegacyMasterDao.class).getPersistentObject(
                     AccountActionEntity.class, actionType);
             accountAction.setLocaleId(localeId);
         } catch (PersistenceException e) {
@@ -352,12 +354,12 @@ public class AccountBusinessService implements BusinessService {
 
     private boolean isPermissionAllowedForStatusChange(Short newState, UserContext userContext, Short flagSelected,
             Short recordOfficeId, Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isStateChangePermittedForAccount(newState.shortValue(),
+        return getActivityMapper().isStateChangePermittedForAccount(newState.shortValue(),
                 null != flagSelected ? flagSelected.shortValue() : 0, userContext, recordOfficeId, recordLoanOfficerId);
     }
 
     public void checkPermissionForAdjustment(AccountTypes accountTypes, CustomerLevel customerLevel,
-            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ApplicationException {
+            UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) throws ServiceException {
         if (!isPermissionAllowedForAdjustment(accountTypes, customerLevel, userContext, recordOfficeId,
                 recordLoanOfficerId)) {
             throw new ServiceException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
@@ -366,8 +368,12 @@ public class AccountBusinessService implements BusinessService {
 
     private boolean isPermissionAllowedForAdjustment(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isAdjustmentPermittedForAccounts(accountTypes, customerLevel, userContext,
+        return getActivityMapper().isAdjustmentPermittedForAccounts(accountTypes, customerLevel, userContext,
                 recordOfficeId, recordLoanOfficerId);
+    }
+
+    ActivityMapper getActivityMapper() {
+        return ActivityMapper.getInstance();
     }
 
     public void checkPermissionForWaiveDue(WaiveEnum waiveEnum, AccountTypes accountTypes, CustomerLevel customerLevel,
@@ -380,7 +386,7 @@ public class AccountBusinessService implements BusinessService {
 
     private boolean isPermissionAllowedForWaiveDue(WaiveEnum waiveEnum, AccountTypes accountTypes,
             CustomerLevel customerLevel, UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isWaiveDuePermittedForCustomers(waiveEnum, accountTypes, customerLevel,
+        return getActivityMapper().isWaiveDuePermittedForCustomers(waiveEnum, accountTypes, customerLevel,
                 userContext, recordOfficeId, recordLoanOfficerId);
     }
 
@@ -394,7 +400,7 @@ public class AccountBusinessService implements BusinessService {
 
     private boolean isPermissionAllowedForRemoveFees(AccountTypes accountTypes, CustomerLevel customerLevel,
             UserContext userContext, Short recordOfficeId, Short recordLoanOfficerId) {
-        return ActivityMapper.getInstance().isRemoveFeesPermittedForAccounts(accountTypes, customerLevel, userContext,
+        return getActivityMapper().isRemoveFeesPermittedForAccounts(accountTypes, customerLevel, userContext,
                 recordOfficeId, recordLoanOfficerId);
     }
 
@@ -423,4 +429,10 @@ public class AccountBusinessService implements BusinessService {
         }
     }
 
+    public void checkPermissionForAdjustmentOnBackDatedPayments(Date lastPaymentDate, UserContext userContext,
+                                                                Short recordOfficeId, Short recordLoanOfficer) throws ServiceException{
+        if (!getActivityMapper().isAdjustmentPermittedForBackDatedPayments(lastPaymentDate, userContext, recordOfficeId, recordLoanOfficer)) {
+            throw new ServiceException(SecurityConstants.KEY_ACTIVITY_NOT_ALLOWED);
+        }
+    }
 }

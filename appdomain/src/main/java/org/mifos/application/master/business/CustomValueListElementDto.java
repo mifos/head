@@ -71,7 +71,7 @@ public class CustomValueListElementDto implements DataTransferObject {
     }
 
     /**
-     * Possibly used in MasterPersistence.getCustomValueListElements
+     * Possibly used in legacyMasterDao.getCustomValueListElements
      */
     public CustomValueListElementDto(java.lang.Short id, java.lang.Integer lookUpId, String lookUpValue,
             String lookUpValueKey) {
@@ -83,7 +83,7 @@ public class CustomValueListElementDto implements DataTransferObject {
     }
 
     /**
-     * Possibly used in MasterPersistence.getCustomValueListElements
+     * Possibly used in legacyMasterDao.getCustomValueListElements
      */
     public CustomValueListElementDto(java.lang.Integer id, java.lang.Integer lookUpId, String lookUpValue) {
 

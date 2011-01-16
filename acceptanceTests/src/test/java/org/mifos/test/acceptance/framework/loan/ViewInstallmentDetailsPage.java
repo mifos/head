@@ -21,22 +21,18 @@
 package org.mifos.test.acceptance.framework.loan;
 
 import com.thoughtworks.selenium.Selenium;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.mifos.test.acceptance.framework.AbstractPage;
 import org.mifos.test.acceptance.framework.HomePage;
 import org.testng.Assert;
 
+<<<<<<< HEAD
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.Locale;
 
+=======
+>>>>>>> master
 public class ViewInstallmentDetailsPage extends AbstractPage {
-    String validateButton = "validateBtn";
-    DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MMM-yyyy").withLocale(Locale.ENGLISH);
-    String tableXpath = "//table[@id='cashflow']";
-    String previewButton = "previewBtn";
 
     public ViewInstallmentDetailsPage(Selenium selenium) {
         super(selenium);
@@ -62,6 +58,7 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         waitForPageToLoad();
     }
 
+<<<<<<< HEAD
     public ViewInstallmentDetailsPage verifyVariableInstalmetDisabled() {
         selenium.isEditable ("");
         Assert.assertTrue(!selenium.isElementPresent("validateBtn"));
@@ -512,10 +509,13 @@ public class ViewInstallmentDetailsPage extends AbstractPage {
         return this;
     }
 
+=======
+>>>>>>> master
     public ApplyAdjustmentPage navigateToApplyAdjustment() {
         selenium.click("nextPayment_loanAccount.link.applyAdjustment");
         waitForPageToLoad();
         return new ApplyAdjustmentPage(selenium);
 
     }
+    
 }

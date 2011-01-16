@@ -467,11 +467,9 @@ explanation of the license and how it is applied.
 														</td>
 													</tr>
 												</table>
-												<c:if test="${loanAccountActionForm.variableInstallmentsAllowed}">
-													<span class="fontnormal"> <br> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnScheduleEdit(this.form)">
-														<mifos:mifoslabel name="loan.edit_loan_schedule" />
-													</html-el:button> </span>
-												</c:if>
+												<span class="fontnormal"> <br> <html-el:button styleId="createloanpreview.button.edit" property="editButton" styleClass="insidebuttn" onclick="fnScheduleEdit(this.form)">
+													<mifos:mifoslabel name="loan.edit_loan_schedule" />
+												</html-el:button> </span>
 											</td>
 										</tr>
 									</table>
@@ -523,6 +521,7 @@ explanation of the license and how it is applied.
 												</html-el:button>
 											</td>
 											<!-- This hidden field is being used in the customPreview method of the LoanAction class to discriminate the preview method call-->
+											<html-el:hidden property="preview_mode" value="create" />
 											<html-el:hidden property="input" value="accountPreview" />
 											<html-el:hidden value="" property="stateSelected" />
 											<html-el:hidden property="currentFlowKey" value="${requestScope.currentFlowKey}" />

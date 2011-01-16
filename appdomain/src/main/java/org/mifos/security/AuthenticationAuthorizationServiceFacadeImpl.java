@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.mifos.config.Localization;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.security.login.util.helpers.LoginConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.dao.DataAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ public class AuthenticationAuthorizationServiceFacadeImpl implements Authenticat
 
     private final PersonnelDao personnelDao;
 
+    @Autowired
     public AuthenticationAuthorizationServiceFacadeImpl(PersonnelDao personnelDao) {
         this.personnelDao = personnelDao;
     }

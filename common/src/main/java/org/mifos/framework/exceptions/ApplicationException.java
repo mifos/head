@@ -78,7 +78,7 @@ public class ApplicationException extends Exception {
     }
 
     public ApplicationException(String key, Throwable cause, Object[] values) {
-        super(cause);
+        super(key, cause);
         this.key = key;
         this.values = values;
     }

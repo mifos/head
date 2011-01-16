@@ -40,6 +40,7 @@ import org.mifos.customers.business.CustomerStatusEntity;
 import org.mifos.customers.business.CustomerStatusFlagEntity;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,6 +52,7 @@ public class ApplicationConfigurationDaoHibernate implements ApplicationConfigur
 
     private final GenericDao genericDao;
 
+    @Autowired
     public ApplicationConfigurationDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }

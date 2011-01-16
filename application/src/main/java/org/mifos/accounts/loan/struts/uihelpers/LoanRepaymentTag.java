@@ -254,7 +254,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
 
     private Date getViewDate(String currentFlowKey, FlowManager flowManager) throws PageExpiredException {
         Date viewDate = (Date) flowManager.getFromFlow(currentFlowKey, Constants.VIEW_DATE);
-        viewDate = (viewDate == null) ? new Date() : viewDate;
+        viewDate = (viewDate == null) ? DateUtils.currentDate() : viewDate;
         return new DateTime(viewDate).withTime(23, 59, 59, 0).toDate();
     }
 

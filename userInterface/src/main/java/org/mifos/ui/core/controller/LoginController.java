@@ -35,6 +35,5 @@ public class LoginController {
 
     @RequestMapping(method = RequestMethod.GET)
     public void showForm() {
-        System.out.println("");
     }
 }

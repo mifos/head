@@ -52,11 +52,11 @@ import org.mifos.framework.hibernate.helper.QueryFactory;
 import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.security.util.UserContext;
 
 @Deprecated
-public class CenterPersistence extends Persistence {
+public class CenterPersistence extends LegacyGenericDao {
     private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
     private final OfficePersistence officePersistence = new OfficePersistence();
 
@@ -65,7 +65,7 @@ public class CenterPersistence extends Persistence {
     }
 
     public CenterBO getCenter(Integer customerId) throws PersistenceException {
-        return (CenterBO) getPersistentObject(CenterBO.class, customerId);
+        return getPersistentObject(CenterBO.class, customerId);
     }
 
     public CenterBO findBySystemId(String globalCustNum) throws PersistenceException {

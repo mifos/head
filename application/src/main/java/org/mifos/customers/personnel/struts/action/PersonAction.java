@@ -40,7 +40,6 @@ import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
 import org.mifos.application.master.business.MasterDataEntity;
 import org.mifos.application.master.business.SupportedLocalesEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
 import org.mifos.application.questionnaire.struts.DefaultQuestionnaireServiceFacadeLocator;
 import org.mifos.application.questionnaire.struts.QuestionnaireFlowAdapter;
 import org.mifos.application.util.helpers.ActionForwards;
@@ -112,8 +111,7 @@ public class PersonAction extends SearchAction {
 
         //Shahid - keeping the previous session objects for the sake of existing tests, once fully converted to spring
         //then we can get rid of the session objects made redundant by the dto
-        DefinePersonnelDto definePersonnelDto = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(
-                                                    getShortValue(personActionForm.getOfficeId()), getUserContext(request).getPreferredLocale());
+        DefinePersonnelDto definePersonnelDto = this.personnelServiceFacade.retrieveInfoForNewUserDefinition(officeId);
         SessionUtils.setAttribute("definePersonnelDto", definePersonnelDto, request);
 
         List<ValueListElement> titles = this.customerDao.retrieveTitles();
@@ -332,7 +330,7 @@ public class PersonAction extends SearchAction {
         SessionUtils.setCollectionAttribute(CustomerConstants.CUSTOM_FIELDS_LIST, customFieldDefs, request);
 
         UserContext userContext = getUserContext(request);
-        List<PersonnelStatusEntity> statuses = new MasterPersistence().findMasterDataEntitiesWithLocale(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
+        List<PersonnelStatusEntity> statuses = legacyMasterDao.findMasterDataEntitiesWithLocale(PersonnelStatusEntity.class, getUserContext(request).getLocaleId());
         SessionUtils.setCollectionAttribute(PersonnelConstants.STATUS_LIST, statuses, request);
 
         OfficeBO loggedInOffice = this.officeDao.findOfficeById(userContext.getBranchId());

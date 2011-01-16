@@ -30,16 +30,16 @@ import org.mifos.accounts.productdefinition.business.ProductTypeEntity;
 import org.mifos.accounts.productdefinition.util.helpers.ProductDefinitionConstants;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class ProductCategoryPersistence extends Persistence {
+public class ProductCategoryPersistence extends LegacyGenericDao {
 
     public Short getMaxPrdCategoryId() throws PersistenceException {
         return (Short) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTCATEGORIES_MAX, null);
     }
 
     public Integer getProductCategory(String productCategoryName) throws PersistenceException {
-        Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYNAME, productCategoryName);
         return ((Number) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTCATEGORIES_COUNT_CREATE, queryParameters))
                 .intValue();
@@ -48,7 +48,7 @@ public class ProductCategoryPersistence extends Persistence {
 
     @Deprecated
     public Integer getProductCategory(String productCategoryName, Short productCategoryId) throws PersistenceException {
-        Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYNAME, productCategoryName);
         queryParameters.put(ProductDefinitionConstants.PRODUCTCATEGORYID, productCategoryId);
         return ((Number) execUniqueResultNamedQuery(NamedQueryConstants.PRODUCTCATEGORIES_COUNT_UPDATE, queryParameters))
@@ -60,13 +60,12 @@ public class ProductCategoryPersistence extends Persistence {
         return (List<ProductTypeEntity>) executeNamedQuery(NamedQueryConstants.GET_PRD_TYPES, null);
     }
 
-    @SuppressWarnings("cast")
     public ProductTypeEntity getProductTypes(Short prdtype) throws PersistenceException {
-        return (ProductTypeEntity) getPersistentObject(ProductTypeEntity.class, prdtype);
+        return getPersistentObject(ProductTypeEntity.class, prdtype);
     }
 
     public ProductCategoryBO findByGlobalNum(String globalNum) throws PersistenceException {
-        Map<Object, Object> queryParameters = new HashMap<Object, Object>();
+        Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("globalNum", globalNum);
         return (ProductCategoryBO) execUniqueResultNamedQuery(NamedQueryConstants.GET_PRODUCTCATEGORY, queryParameters);
 

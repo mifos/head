@@ -38,24 +38,29 @@ public abstract class AbstractReportParameterValidator<T extends ReportParameter
     @SuppressWarnings("unchecked")
     public AbstractReportParameterValidator(List<String> applicableFilePaths) {
         this.applicableFilePaths = (List<String>) CollectionUtils.collect(applicableFilePaths, new Transformer() {
+            @Override
             public Object transform(Object input) {
                 return ((String) input).trim();
             }
         });
     }
 
+    @Override
     public void removeRequestParameters(ModifiableParameterServletRequest modifiedRequest, T form, Errors errors) {
         form.removeRequestParameters(modifiedRequest, errors);
     }
 
+    @Override
     public void validate(T form, Errors errors) {
         form.validate(errors);
     }
 
+    @Override
     public boolean isAFreshRequest(HttpServletRequest request) {
         return buildReportParameterForm(request).isFormEmpty();
     }
 
+    @Override
     public boolean isApplicableToReportFilePath(String reportFilePath) {
         return applicableFilePaths.contains(reportFilePath);
     }

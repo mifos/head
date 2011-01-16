@@ -70,6 +70,7 @@ import org.mifos.platform.cashflow.ui.model.CashFlowForm;
 import org.mifos.platform.cashflow.ui.model.MonthlyCashFlowForm;
 import org.mifos.platform.util.CollectionUtils;
 import org.mifos.platform.validations.Errors;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanServiceFacadeWebTier implements LoanServiceFacade {
 
@@ -84,6 +85,7 @@ public class LoanServiceFacadeWebTier implements LoanServiceFacade {
     private final HolidayServiceFacade holidayServiceFacade;
     private final LoanPrdBusinessService loanPrdBusinessService;
 
+    @Autowired
     public LoanServiceFacadeWebTier(final LoanProductDao loanProductDao, final CustomerDao customerDao,
                                     PersonnelDao personnelDao, FundDao fundDao, final LoanDao loanDao,
                                     InstallmentsValidator installmentsValidator,

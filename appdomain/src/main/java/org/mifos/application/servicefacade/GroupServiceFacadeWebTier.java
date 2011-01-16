@@ -35,7 +35,7 @@ import org.mifos.accounts.fees.persistence.FeePersistence;
 import org.mifos.accounts.servicefacade.UserContextFactory;
 import org.mifos.application.admin.servicefacade.InvalidDateException;
 import org.mifos.application.master.MessageLookup;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.business.MeetingFactory;
 import org.mifos.application.util.helpers.EntityType;
@@ -108,6 +108,7 @@ import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class GroupServiceFacadeWebTier implements GroupServiceFacade {
@@ -118,6 +119,10 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
     private final CustomerService customerService;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
+    LegacyMasterDao legacyMasterDao;
+
+    @Autowired
     public GroupServiceFacadeWebTier(CustomerService customerService, OfficeDao officeDao,
             PersonnelDao personnelDao, CustomerDao customerDao) {
         this.customerService = customerService;
@@ -423,7 +428,7 @@ public class GroupServiceFacadeWebTier implements GroupServiceFacade {
 
         List<PositionEntity> customerPositions = new ArrayList<PositionEntity>();
 
-        List<PositionEntity> allCustomerPositions = new MasterPersistence().findMasterDataEntitiesWithLocale(
+        List<PositionEntity> allCustomerPositions = legacyMasterDao.findMasterDataEntitiesWithLocale(
                 PositionEntity.class, localeId);
         if (!new ClientRules().getCenterHierarchyExists()) {
             customerPositions = populateWithNonCenterRelatedPositions(allCustomerPositions);

@@ -64,7 +64,7 @@ public class BranchReportConfigService extends ConfigService {
 
     public MifosCurrency getCurrency() throws ServiceException {
         try {
-            return (MifosCurrency) configurationPersistence.getPersistentObject(MifosCurrency.class,
+            return configurationPersistence.getPersistentObject(MifosCurrency.class,
                     getCurrencyIdForReports());
         } catch (PersistenceException e) {
             throw new ServiceException(e);

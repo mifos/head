@@ -29,6 +29,7 @@ import org.mifos.core.MifosRuntimeException;
 import org.mifos.dto.screen.ProductConfigurationDto;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelper;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ProductServiceImpl implements ProductService {
 
@@ -36,6 +37,7 @@ public class ProductServiceImpl implements ProductService {
     private final SavingsProductDao savingsProductDao;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
+    @Autowired
     public ProductServiceImpl(LoanProductDao loanProductDao, SavingsProductDao savingsProductDao) {
         this.loanProductDao = loanProductDao;
         this.savingsProductDao = savingsProductDao;

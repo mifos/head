@@ -120,11 +120,13 @@ import org.mifos.framework.util.helpers.Money;
 import org.mifos.security.util.ActivityMapper;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CustomerDaoHibernate implements CustomerDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public CustomerDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }

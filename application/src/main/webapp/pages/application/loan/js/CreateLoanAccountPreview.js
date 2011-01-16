@@ -30,6 +30,7 @@ function fnEdit(form) {
 }
 function fnScheduleEdit(form) {
 	form.method.value="showPreview";
+	form.preview_mode.value="edit";
 	form.action="loanAccountAction.do";
 	form.submit();
 }

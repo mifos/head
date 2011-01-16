@@ -38,9 +38,7 @@ public class RedoLoanDisbursalChooseLoanInstancePage extends MifosPage {
     public RedoLoanDisbursalEntryPage submitAndNavigateToRedoLoanDisbursalEntryPage (String loanProduct) {
         selenium.select("loancreationprodofferingselect.select.loanProduct", loanProduct);
         selenium.click("loancreationprdofferingselect.button.continue");
-
         waitForPageToLoad();
-
         return new RedoLoanDisbursalEntryPage(selenium);
     }
 }

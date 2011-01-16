@@ -136,6 +136,7 @@ public class GenericDaoHibernate implements GenericDao {
     }
 
     @Override
+    // NOTE: This is temporary, should be removed once we move to spring managed transaction
     public Session getSession() {
         return StaticHibernateUtil.getSessionTL();
     }

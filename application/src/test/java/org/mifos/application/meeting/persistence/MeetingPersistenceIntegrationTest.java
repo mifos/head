@@ -29,6 +29,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.WeekDay;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 
 public class MeetingPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -37,9 +38,9 @@ public class MeetingPersistenceIntegrationTest extends MifosIntegrationTestCase 
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, Short.valueOf("5"), new Date(), MeetingType.CUSTOMER_MEETING,
                 "Delhi");
 
-        new MeetingPersistence().createOrUpdate(meeting);
+        IntegrationTestObjectMother.saveMeeting(meeting);
 
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
         Assert.assertNotNull(meeting);
         Assert.assertEquals(Short.valueOf("5"), meeting.getMeetingDetails().getRecurAfter());
         Assert.assertEquals(WeekDay.MONDAY, meeting.getMeetingDetails().getWeekDay());

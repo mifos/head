@@ -42,6 +42,7 @@ import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class ImportTransactionsServiceFacadeWebTier implements ImportTransactionsServiceFacade {
@@ -51,6 +52,7 @@ public class ImportTransactionsServiceFacadeWebTier implements ImportTransaction
     private ImportedFilesService importedFilesService;
     private PersonnelDao personnelDao;
 
+    @Autowired
     public ImportTransactionsServiceFacadeWebTier(ImportedFilesService importedFilesService, PersonnelDao personnelDao) {
         this.importedFilesService = importedFilesService;
         this.personnelDao = personnelDao;

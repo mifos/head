@@ -26,13 +26,17 @@ import junitx.framework.StringAssert;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mifos.application.master.business.CustomFieldCategory;
-import org.mifos.framework.MifosSpringBasedUnitTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.security.util.UserContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-public class CustomFieldCategoryListTagTest extends MifosSpringBasedUnitTestCase {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "/org/mifos/config/resources/messageSourceBean.xml"})
+public class CustomFieldCategoryListTagTest {
 
     private UserContext userContext;
 

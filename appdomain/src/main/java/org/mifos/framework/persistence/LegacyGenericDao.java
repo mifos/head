@@ -43,9 +43,9 @@ import org.slf4j.LoggerFactory;
  * intentionally has a very similar set of methods (many subclasses can be moved
  * over just by changing what they inherit from, with no further changes).
  */
-public abstract class Persistence {
+public abstract class LegacyGenericDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(Persistence.class);
+    private static final Logger logger = LoggerFactory.getLogger(LegacyGenericDao.class);
 
     /**
      * @deprecated - move away from using this as starts transaction but doesn't not commit..
@@ -53,28 +53,24 @@ public abstract class Persistence {
     @Deprecated
     public Object createOrUpdate(final Object object) throws PersistenceException {
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
-            // FIXME remove this and fix the code
             StaticHibernateUtil.startTransaction();
-            session.saveOrUpdate(object);
+            getSession().saveOrUpdate(object);
             if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
                 StaticHibernateUtil.getInterceptor().createChangeValueMap(object);
             }
-        } catch (Exception e) { // including exceptions *not* from hibernate!
+        } catch (HibernateException e) {
             throw new PersistenceException(e);
         }
-
         return object;
     }
 
     public Object save(final Object object) throws PersistenceException {
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
-            session.saveOrUpdate(object);
+            getSession().saveOrUpdate(object);
             if (StaticHibernateUtil.getInterceptor().isAuditLogRequired()) {
                 StaticHibernateUtil.getInterceptor().createChangeValueMap(object);
             }
-        } catch (Exception e) { // including exceptions *not* from hibernate!
+        } catch (HibernateException e) {
             throw new PersistenceException(e);
         }
 
@@ -86,22 +82,9 @@ public abstract class Persistence {
     }
 
     public void delete(final Object object) throws PersistenceException {
-        Session session = StaticHibernateUtil.getSessionTL();
         try {
             StaticHibernateUtil.startTransaction();
-            session.delete(object);
-        } catch (Exception he) {
-            throw new PersistenceException(he);
-        }
-    }
-
-    /**
-     * assumes transactionality is controlled by caller of method.
-     */
-    public void deleteInTransaction(final Object object) throws PersistenceException {
-        Session session = StaticHibernateUtil.getSessionTL();
-        try {
-            session.delete(object);
+            getSession().delete(object);
         } catch (Exception he) {
             throw new PersistenceException(he);
         }
@@ -111,7 +94,7 @@ public abstract class Persistence {
      * This method takes the name of a named query to be executed as well as a
      * list of parameters that the query uses. It assumes the session is open.
      */
-    public List executeNamedQuery(final String queryName, final Map queryParameters) throws PersistenceException {
+    public List executeNamedQuery(final String queryName, final Map<String, ?> queryParameters) throws PersistenceException {
         try {
             Query query = createdNamedQuery(queryName);
             query.setProperties(queryParameters);
@@ -122,28 +105,18 @@ public abstract class Persistence {
     }
 
     public Query createdNamedQuery(final String queryName) {
-        Session session = StaticHibernateUtil.getSessionTL();
-        Query query = session.getNamedQuery(queryName);
-        logger.debug(
-                "The query object for the query with the name  " + queryName + " has been obtained");
+        Query query = getSession().getNamedQuery(queryName);
+        logger.debug("The query object for the query with the name  " + queryName + " has been obtained");
         return query;
     }
 
-    public Object execUniqueResultNamedQuery(final String queryName, final Map queryParameters) throws PersistenceException {
+    public Object execUniqueResultNamedQuery(final String queryName, final Map<String, ?> queryParameters)
+            throws PersistenceException {
         try {
-            Query query = null;
-            Session session = StaticHibernateUtil.getSessionTL();
-            if (null != session) {
-                query = session.getNamedQuery(queryName);
-                logger.debug(
-                        "The query object for the query with the name  " + queryName + " has been obtained");
-            }
-
+            Query query = getSession().getNamedQuery(queryName);
+            logger.debug("The query object for the query with the name  " + queryName + " has been obtained");
             query.setProperties(queryParameters);
-            if (null != query) {
-                return query.uniqueResult();
-            }
-            return null;
+            return query.uniqueResult();
         } catch (GenericJDBCException gje) {
             throw new ConnectionNotFoundException(gje);
         } catch (Exception e) {
@@ -151,16 +124,15 @@ public abstract class Persistence {
         }
     }
 
-    public Object execUniqueResultNamedQueryWithResultTransformer(final String queryName,
+    @SuppressWarnings("unchecked")
+    public <T extends Object> T execUniqueResultNamedQueryWithResultTransformer(final String queryName,
             final Map<String, ?> queryParameters,
-            final Class<?> clazz) {
+            final Class<T> clazz) {
         try {
-            Query query = null;
-            Session session = StaticHibernateUtil.getSessionTL();
-            query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(clazz));
+            Query query = getSession().getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(clazz));
             query.setProperties(queryParameters);
             query.setResultTransformer(Transformers.aliasToBean(clazz));
-            return query.uniqueResult();
+            return (T) query.uniqueResult();
         } catch (GenericJDBCException gje) {
             throw new ConnectionNotFoundException(gje);
         } catch (Exception e) {
@@ -170,11 +142,11 @@ public abstract class Persistence {
     }
 
     @SuppressWarnings("unchecked")
-    public List executeNamedQueryWithResultTransformer(final String queryName,
-            final Map<String, ?> queryParameters, final Class<?> clazz) {
+    public <T extends Object> List<T> executeNamedQueryWithResultTransformer(final String queryName,
+            final Map<String, ?> queryParameters, final Class<T> clazz) {
         try {
-            Session session = StaticHibernateUtil.getSessionTL();
-            Query query = session.getNamedQuery(queryName).setResultTransformer(Transformers.aliasToBean(clazz));
+            Query query = getSession().getNamedQuery(queryName);
+            query.setResultTransformer(Transformers.aliasToBean(clazz));
             query.setProperties(queryParameters);
             return query.list();
         } catch (Exception e) {
@@ -183,53 +155,35 @@ public abstract class Persistence {
     }
 
     public Object executeUniqueHqlQuery(final String hqlQuery) {
-
-        Session session = StaticHibernateUtil.getSessionTL();
-        final Query query = session.createQuery(hqlQuery);
-        return query.uniqueResult();
+        return getSession().createQuery(hqlQuery).uniqueResult();
     }
 
-    public List executeNonUniqueHqlQuery(final String hqlQuery) {
-
-        Session session = StaticHibernateUtil.getSessionTL();
-        final Query query = session.createQuery(hqlQuery);
-        return query.list();
+    public List<?> executeNonUniqueHqlQuery(final String hqlQuery) {
+        return getSession().createQuery(hqlQuery).list();
     }
 
-    /**
-     * Delegates to {@link Session#get(Class, Serializable)}.
-     */
-    public Object getPersistentObject(final Class clazz, final Serializable persistentObjectId) throws PersistenceException {
-        // keep current unit tests happy, they get confused with an
-        // IllegalArgumentException (thrown if get() is given a null ID, below)
-        // TODO: get rid of this. The default handling for null IDs of
-        // get() (throwing that IllegalArgumentException) should be fine.
+    @SuppressWarnings("unchecked")
+    public <T extends Object> T getPersistentObject(final Class<T> clazz, final Serializable persistentObjectId) throws PersistenceException {
         if (null == persistentObjectId) {
             throw new PersistenceException("persistentObjectId is required for fetch");
         }
-
-        // TODO: it is probably cleaner to NOT catch the HibernateException
-        // since it is a RuntimeException. Let's eventually make this method
-        // more like loadPersistentObject(), below.
         try {
-            return StaticHibernateUtil.getSessionTL().get(clazz, persistentObjectId);
+            return (T) getSession().get(clazz, persistentObjectId);
         } catch (HibernateException e) {
             throw new PersistenceException(e);
         }
     }
 
-    /**
-     * Deleagtes to {@link Session#load(Class, Serializable)}.
-     */
-    public Object loadPersistentObject(final Class clazz, final Serializable persistentObjectId) {
-        return StaticHibernateUtil.getSessionTL().load(clazz, persistentObjectId);
+    @SuppressWarnings("unchecked")
+    public <T extends Object> T loadPersistentObject(final Class<T> clazz, final Serializable persistentObjectId) {
+        return (T) getSession().load(clazz, persistentObjectId);
     }
 
     protected Param typeNameValue(final String type, final String name, final Object value) {
         return new Param(type, name, value);
     }
 
-    protected Integer getCountFromQueryResult(final List queryResult) {
+    protected Integer getCountFromQueryResult(final List<?> queryResult) {
         int count = 0;
         if (queryResult.size() > 0 && queryResult.get(0) != null) {
             count = ((Number) queryResult.get(0)).intValue();
@@ -237,7 +191,7 @@ public abstract class Persistence {
         return count;
     }
 
-    protected BigDecimal getCalculateValueFromQueryResult(final List queryResult) {
+    protected BigDecimal getCalculateValueFromQueryResult(final List<?> queryResult) {
         return queryResult.size() > 0 && queryResult.get(0) != null ? BigDecimal.valueOf(((Number) queryResult.get(0))
                 .doubleValue()) : null;
     }

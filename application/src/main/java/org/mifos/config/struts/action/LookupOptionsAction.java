@@ -34,7 +34,7 @@ import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.CustomValueDto;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.PaymentTypeEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.master.util.helpers.MasterConstants;
 import org.mifos.application.util.helpers.ActionForwards;
 import org.mifos.application.util.helpers.Methods;
@@ -203,10 +203,10 @@ public class LookupOptionsAction extends BaseAction {
         return mapping.findForward(ActionForwards.addEditLookupOption_failure.toString());
     }
 
-    private void populateConfigurationListBox(String configurationEntity, MasterPersistence masterPersistence,
+    private void populateConfigurationListBox(String configurationEntity, LegacyMasterDao legacyMasterDao,
             Short localeId, HttpServletRequest request, LookupOptionsActionForm lookupOptionsActionForm,
             String configurationEntityConst) throws Exception {
-        CustomValueDto valueList = masterPersistence.getLookUpEntity(configurationEntity);
+        CustomValueDto valueList = legacyMasterDao.getLookUpEntity(configurationEntity);
         Short valueListId = valueList.getEntityId();
         // save this value and will be retrieved when update the data to db
         SessionUtils.setAttribute(configurationEntityConst, valueListId, request);
@@ -295,30 +295,29 @@ public class LookupOptionsAction extends BaseAction {
 
         Short localeId = getUserContext(request).getLocaleId();
         setSpecialLables(getUserContext(request), lookupOptionsActionForm);
-        MasterPersistence masterPersistence = new MasterPersistence();
-        populateConfigurationListBox(MasterConstants.SALUTATION, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.SALUTATION, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_SALUTATION);
-        populateConfigurationListBox(MasterConstants.PERSONNEL_TITLE, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.PERSONNEL_TITLE, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_PERSONNEL_TITLE);
-        populateConfigurationListBox(MasterConstants.MARITAL_STATUS, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.MARITAL_STATUS, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_MARITAL_STATUS);
-        populateConfigurationListBox(MasterConstants.ETHINICITY, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.ETHINICITY, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_ETHNICITY);
-        populateConfigurationListBox(MasterConstants.EDUCATION_LEVEL, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.EDUCATION_LEVEL, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_EDUCATION_LEVEL);
-        populateConfigurationListBox(MasterConstants.CITIZENSHIP, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.CITIZENSHIP, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_CITIZENSHIP);
-        populateConfigurationListBox(MasterConstants.BUSINESS_ACTIVITIES, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.BUSINESS_ACTIVITIES, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_BUSINESS_ACTIVITY);
-        populateConfigurationListBox(MasterConstants.LOAN_PURPOSES, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.LOAN_PURPOSES, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_LOAN_PURPOSE);
-        populateConfigurationListBox(MasterConstants.COLLATERAL_TYPES, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.COLLATERAL_TYPES, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_COLLATERAL_TYPE);
-        populateConfigurationListBox(MasterConstants.HANDICAPPED, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.HANDICAPPED, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_HANDICAPPED);
-        populateConfigurationListBox(MasterConstants.OFFICER_TITLES, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.OFFICER_TITLES, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_OFFICER_TITLE);
-        populateConfigurationListBox(MasterConstants.PAYMENT_TYPE, masterPersistence, localeId, request,
+        populateConfigurationListBox(MasterConstants.PAYMENT_TYPE, legacyMasterDao, localeId, request,
                 lookupOptionsActionForm, ConfigurationConstants.CONFIG_PAYMENT_TYPE);
 
         logger.debug("Outside load method");
@@ -370,11 +369,10 @@ public class LookupOptionsAction extends BaseAction {
         LookupOptionData data = (LookupOptionData) SessionUtils.getAttribute(ConfigurationConstants.LOOKUP_OPTION_DATA,request);
         data.setLookupValue(lookupOptionsActionForm.getLookupValue());
         String entity = request.getParameter(ConfigurationConstants.ENTITY);
-        MasterPersistence masterPersistence = new MasterPersistence();
         if (data.getLookupId() > 0) {
-            masterPersistence.updateValueListElementForLocale(data.getLookupId(), data.getLookupValue());
+            legacyMasterDao.updateValueListElementForLocale(data.getLookupId(), data.getLookupValue());
         } else {
-            LookUpValueEntity newLookupValue =  masterPersistence.addValueListElementForLocale(
+            LookUpValueEntity newLookupValue =  legacyMasterDao.addValueListElementForLocale(
                     DynamicLookUpValueCreationTypes.LookUpOption, data.getValueListId(),
                     data.getLookupValue());
 
@@ -384,7 +382,7 @@ public class LookupOptionsAction extends BaseAction {
              */
             if (entity.equals(ConfigurationConstants.CONFIG_PAYMENT_TYPE)) {
                 PaymentTypeEntity newPaymentType = new PaymentTypeEntity(newLookupValue);
-                new MasterPersistence().createOrUpdate(newPaymentType);
+                legacyMasterDao.createOrUpdate(newPaymentType);
                 StaticHibernateUtil.commitTransaction();
             }
 

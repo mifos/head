@@ -27,13 +27,13 @@ import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.util.helpers.TrxnTypes;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class AcceptedPaymentTypePersistence extends Persistence {
+public class AcceptedPaymentTypePersistence extends LegacyGenericDao {
 
     public AcceptedPaymentType getAcceptedPaymentType(Short paymentTypeId) {
         Session session = StaticHibernateUtil.getSessionTL();

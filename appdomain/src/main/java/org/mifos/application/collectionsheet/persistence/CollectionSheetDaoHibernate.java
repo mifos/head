@@ -41,7 +41,7 @@ import org.mifos.application.servicefacade.CollectionSheetLoanFeeDto;
 import org.mifos.application.servicefacade.CustomerHierarchyParams;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.Constants;
 import org.mifos.framework.util.helpers.Money;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  *
  */
-public class CollectionSheetDaoHibernate extends Persistence implements CollectionSheetDao {
+public class CollectionSheetDaoHibernate extends LegacyGenericDao implements CollectionSheetDao {
 
     private final SavingsDao savingsDao;
 

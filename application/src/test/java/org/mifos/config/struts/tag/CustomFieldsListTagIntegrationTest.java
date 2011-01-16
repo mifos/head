@@ -28,7 +28,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.mifos.application.master.business.CustomFieldDefinitionEntity;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.EntityType;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
@@ -48,8 +49,8 @@ public class CustomFieldsListTagIntegrationTest extends MifosIntegrationTestCase
     public void testGetListRow() throws Exception {
         String categoryName = "Personnel";
         CustomFieldsListTag tag = new CustomFieldsListTag("action", "method", "flow", categoryName, categoryName);
-        MasterPersistence master = new MasterPersistence();
-        CustomFieldDefinitionEntity customField = master.retrieveCustomFieldsDefinition(EntityType.LOAN).get(0);
+        CustomFieldDefinitionEntity customField = ApplicationContextProvider.getBean(LegacyMasterDao.class)
+                .retrieveCustomFieldsDefinition(EntityType.LOAN).get(0);
         XmlBuilder link = tag.getRow(customField, userContext, 1);
         String sequenceNum = "1";
         String label = "External Loan Id";

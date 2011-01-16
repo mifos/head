@@ -30,20 +30,22 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.business.EntityMaster;
 import org.mifos.framework.components.fieldConfiguration.business.FieldConfigurationEntity;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FieldConfigurationPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private FieldConfigurationPersistence fieldConfigurationPersistence = new FieldConfigurationPersistence();
+    @Autowired
+    private LegacyFieldConfigurationDao legacyFieldConfigurationDao;
 
     @Test
     public void testGetEntityMasterList() throws PersistenceException {
-        List<EntityMaster> entityMasterList = fieldConfigurationPersistence.getEntityMasterList();
+        List<EntityMaster> entityMasterList = legacyFieldConfigurationDao.getEntityMasterList();
        Assert.assertEquals(22, entityMasterList.size());
     }
 
     @Test
     public void testGetListOfFields() throws NumberFormatException, PersistenceException {
-        List<FieldConfigurationEntity> fieldList = fieldConfigurationPersistence.getListOfFields(EntityType.LOAN
+        List<FieldConfigurationEntity> fieldList = legacyFieldConfigurationDao.getListOfFields(EntityType.LOAN
                 .getValue());
        Assert.assertEquals(7, fieldList.size());
     }

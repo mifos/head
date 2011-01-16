@@ -47,7 +47,7 @@ public class RolesAndPermissionPersistenceIntegrationTest extends MifosIntegrati
     @Test
     public void testGetRoles() throws Exception {
         List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
-       Assert.assertEquals(2, roles.size());
+       Assert.assertEquals(3, roles.size());
     }
 
     @Test

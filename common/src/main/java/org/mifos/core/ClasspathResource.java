@@ -21,6 +21,7 @@
 package org.mifos.core;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -87,9 +88,13 @@ public class ClasspathResource {
         this.path = path;
     }
 
-    public URL getUrl(String name) {
+    public URL getUrl(String name) throws IOException {
         String resourcePath = this.path + name;
-        return ClasspathResource.class.getResource(resourcePath);
+        URL url = ClasspathResource.class.getResource(resourcePath);
+        if (url == null) {
+            throw new FileNotFoundException(resourcePath + " not found on Classpath");
+        }
+        return url;
     }
 
     public InputStream getAsStream(String name) throws IOException {

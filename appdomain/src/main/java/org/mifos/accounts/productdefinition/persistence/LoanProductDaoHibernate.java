@@ -53,6 +53,7 @@ import org.mifos.customers.business.CustomerLevelEntity;
 import org.mifos.dto.domain.ValueListElement;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
@@ -61,6 +62,7 @@ public class LoanProductDaoHibernate implements LoanProductDao {
 
     private final GenericDao genericDao;
 
+    @Autowired
     public LoanProductDaoHibernate(final GenericDao genericDao) {
         this.genericDao = genericDao;
     }

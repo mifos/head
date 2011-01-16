@@ -26,7 +26,6 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.mifos.application.meeting.business.MeetingBO;
-import org.mifos.application.meeting.persistence.MeetingPersistence;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
@@ -40,7 +39,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
         String expected = "Recur every 5 Week(s) on Monday";
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
         IntegrationTestObjectMother.saveMeeting(meeting);
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
         Assert.assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser()));
     }
 
@@ -58,7 +57,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
                 MeetingType.CUSTOMER_MEETING, "Delhi");
         IntegrationTestObjectMother.saveMeeting(meeting);
 
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
         Assert.assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser()));
     }
 
@@ -68,7 +67,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = new MeetingBO((short) 7, (short) 2, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
         IntegrationTestObjectMother.saveMeeting(meeting);
 
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
         Assert.assertEquals(expected, helper.getMessage(meeting, TestUtils.makeUser()));
     }
 
@@ -78,7 +77,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
         IntegrationTestObjectMother.saveMeeting(meeting);
 
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
         Assert.assertEquals(expected, helper.getMessageWithFrequency(meeting, TestUtils.makeUser()));
     }
 
@@ -88,7 +87,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = new MeetingBO((short) 7, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
         IntegrationTestObjectMother.saveMeeting(meeting);
 
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
         Assert.assertEquals(expected, helper.getMessageWithFrequency(meeting, TestUtils.makeUser()));
     }
 
@@ -98,7 +97,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = new MeetingBO(WeekDay.MONDAY, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
         IntegrationTestObjectMother.saveMeeting(meeting);
 
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
     }
 
     @Test
@@ -107,7 +106,7 @@ public class MeetingHelperIntegrationTest extends MifosIntegrationTestCase {
         MeetingBO meeting = new MeetingBO((short) 7, (short) 5, new Date(), MeetingType.CUSTOMER_MEETING, "Delhi");
         IntegrationTestObjectMother.saveMeeting(meeting);
 
-        meeting = new MeetingPersistence().getMeeting(meeting.getMeetingId());
+        meeting = IntegrationTestObjectMother.getMeeting(meeting.getMeetingId());
         Assert.assertEquals(expected, helper.getDetailMessageWithFrequency(meeting, TestUtils.makeUser()));
     }
 

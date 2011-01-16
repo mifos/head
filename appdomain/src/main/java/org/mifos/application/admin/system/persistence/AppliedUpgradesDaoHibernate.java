@@ -4,6 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.mifos.accounts.savings.persistence.GenericDao;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,7 +15,7 @@ public class AppliedUpgradesDaoHibernate implements AppliedUpgradesDao {
 
     private final GenericDao genericDao;
 
-
+    @Autowired
     public AppliedUpgradesDaoHibernate(GenericDao genericDao){
         this.genericDao = genericDao;
 

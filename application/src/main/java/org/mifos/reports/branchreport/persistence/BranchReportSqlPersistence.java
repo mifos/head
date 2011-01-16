@@ -36,9 +36,9 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.customers.api.CustomerLevel;
 import org.mifos.customers.util.helpers.QueryParamConstants;
 import org.mifos.framework.exceptions.PersistenceException;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 
-public class BranchReportSqlPersistence extends Persistence {
+public class BranchReportSqlPersistence extends LegacyGenericDao {
 
     public Integer getCustomerCount(Short officeId, CustomerLevel customerLevel) throws PersistenceException {
         HashMap<String, Object> params = populateQueryParams(officeId, customerLevel);

@@ -82,7 +82,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
-    @Test(enabled=false)
+    @Test(enabled=true)
     public void verifyRepaymentScheduleField() throws Exception {
         int noOfInstallments = 5;
         int loanAmount = 1000;
@@ -112,6 +112,7 @@ public class VariableInstalmentLoanTest extends UiTestCaseBase {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")    // one of the dependent methods throws Exception
+    @Test(enabled=true)
     public void verifyInvalidFees() throws Exception {
         DefineNewLoanProductPage.SubmitFormParameters formParameters = defineLoanProductParameters(5, 1000, 20);
         applicationDatabaseOperation.updateLSIM(1);

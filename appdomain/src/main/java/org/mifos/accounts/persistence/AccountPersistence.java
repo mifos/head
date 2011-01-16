@@ -61,7 +61,7 @@ import org.mifos.framework.hibernate.helper.QueryInputs;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.QueryResultAccountIdSearch;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.MifosStringUtils;
 
@@ -79,10 +79,11 @@ import java.util.Map;
  * <li>A general ledger account</li>
  * </ol>
  */
-public class AccountPersistence extends Persistence {
+@SuppressWarnings("unchecked")
+public class AccountPersistence extends LegacyGenericDao {
 
     public AccountBO getAccount(Integer accountId) throws PersistenceException {
-        return (AccountBO) getPersistentObject(AccountBO.class, accountId);
+        return getPersistentObject(AccountBO.class, accountId);
     }
 
     public Integer getAccountRunningNumber() throws PersistenceException {
@@ -145,10 +146,9 @@ public class AccountPersistence extends Persistence {
     }
 
     public AccountFeesEntity getAccountFeeEntity(Integer accountFeesEntityId) throws PersistenceException {
-        return (AccountFeesEntity) getPersistentObject(AccountFeesEntity.class, accountFeesEntityId);
+        return getPersistentObject(AccountFeesEntity.class, accountFeesEntityId);
     }
 
-    @SuppressWarnings("unchecked")
     public List<AccountStateEntity> getAccountStates(Short optionalFlag) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
         queryParameters.put("OPTIONAL_FLAG", optionalFlag);
@@ -170,7 +170,6 @@ public class AccountPersistence extends Persistence {
         return notesResult;
     }
 
-    @SuppressWarnings("unchecked")
     public List<Integer> getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask() throws PersistenceException {
 
         LocalDate date = new LocalDate();
@@ -231,11 +230,10 @@ public class AccountPersistence extends Persistence {
         if (categoryType.getValue().equals(FeeCategory.LOAN.getValue())) {
             queryParameters.put("category", FeeCategory.LOAN.getValue());
             return executeNamedQuery(NamedQueryConstants.GET_ALL_APPLICABLE_LOAN_FEE, queryParameters);
-        } else {
+        }
             queryParameters.put("category1", FeeCategory.ALLCUSTOMERS.getValue());
             queryParameters.put("category2", categoryType.getValue());
             return executeNamedQuery(NamedQueryConstants.GET_ALL_APPLICABLE_CUSTOMER_FEE, queryParameters);
-        }
     }
 
     public QueryResult search(String queryString, Short officeId) throws PersistenceException {
@@ -418,7 +416,7 @@ public class AccountPersistence extends Persistence {
     /**
      * @see #addGeneralLedgerAccount(String, String, String, GLCategoryType)
      */
-    public COABO addGeneralLedgerAccount(String name, String glcode, Short parent_id, GLCategoryType categoryType) {
+    private COABO addGeneralLedgerAccount(String name, String glcode, Short parent_id, GLCategoryType categoryType) {
         Short id = getAccountIdFromGlCode(glcode);
         if (id != null) {
             throw new RuntimeException("An account already exists with glcode: " + glcode + ". id was " + id);
@@ -487,7 +485,6 @@ public class AccountPersistence extends Persistence {
         }
     }
 
-    @SuppressWarnings("unchecked")
     private List<Object[]> getListOfAccountIdsHavingSchedulesWithinAHoliday(final String queryName, final Holiday holiday)
             throws PersistenceException {
 
@@ -525,7 +522,6 @@ public class AccountPersistence extends Persistence {
                 "getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday", holiday);
     }
 
-    @SuppressWarnings("unchecked")
     public List<LoanScheduleEntity> getLoanSchedulesForAccountThatAreWithinDates(Integer accountId, DateTime fromDate,
             DateTime thruDate) throws PersistenceException {
 
@@ -538,7 +534,6 @@ public class AccountPersistence extends Persistence {
 
     }
 
-    @SuppressWarnings("unchecked")
     public List<SavingsScheduleEntity> getSavingsSchedulesForAccountThatAreWithinDates(Integer accountId,
             DateTime fromDate, DateTime thruDate) throws PersistenceException {
 
@@ -550,7 +545,6 @@ public class AccountPersistence extends Persistence {
         return executeNamedQuery("getSavingsSchedulesForAccountThatAreWithinDates", parameters);
     }
 
-    @SuppressWarnings("unchecked")
     public List<CustomerScheduleEntity> getCustomerSchedulesForAccountThatAreWithinDates(Integer accountId,
             DateTime fromDate, DateTime thruDate) throws PersistenceException {
 
@@ -562,7 +556,6 @@ public class AccountPersistence extends Persistence {
         return executeNamedQuery("getCustomerSchedulesForAccountThatAreWithinDates", parameters);
     }
 
-    @SuppressWarnings("unchecked")
 	public List<AccountPaymentEntity> findAccountPaymentsByReceiptNumber(String receiptNumber) throws PersistenceException {
     	 Map<String, Object> parameters = new HashMap<String, Object>();
          parameters.put("RECEIPT_NUMBER", receiptNumber);

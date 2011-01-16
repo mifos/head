@@ -31,9 +31,9 @@ import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.business.FeesTrxnDetailEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
-import org.mifos.application.master.persistence.MasterPersistence;
+import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.customers.personnel.business.PersonnelBO;
-import org.mifos.framework.persistence.Persistence;
+import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.Money;
 
 public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
@@ -57,9 +57,9 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
 
     public CustomerTrxnDetailEntity(final AccountPaymentEntity accountPayment, final AccountActionTypes accountActionType,
             final Short installmentId, final Date dueDate, final PersonnelBO personnel, final Date actionDate, final Money amount, final String comments,
-            final AccountTrxnEntity relatedTrxn, final Money miscFeeAmount, final Money miscPenaltyAmount, final Persistence persistence) {
+            final AccountTrxnEntity relatedTrxn, final Money miscFeeAmount, final Money miscPenaltyAmount) {
         super(accountPayment, accountActionType, installmentId, dueDate, personnel, null, actionDate, amount,
-                comments, relatedTrxn, persistence);
+                comments, relatedTrxn);
         this.miscFeeAmount = miscFeeAmount;
         this.miscPenaltyAmount = miscPenaltyAmount;
         this.totalAmount = amount;
@@ -100,7 +100,6 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
     @Override
     protected AccountTrxnEntity generateReverseTrxn(final PersonnelBO loggedInUser, final String adjustmentComment)
             throws AccountException {
-        MasterPersistence masterPersistence = new MasterPersistence();
         logger.debug(
                 "Inside generate reverse transaction method of loan trxn detail");
         String comment = null;
@@ -115,7 +114,7 @@ public class CustomerTrxnDetailEntity extends AccountTrxnEntity {
         reverseAccntTrxn = new CustomerTrxnDetailEntity(getAccountPayment(),
                 AccountActionTypes.CUSTOMER_ADJUSTMENT, getInstallmentId(), getDueDate(),
                 loggedInUser, getActionDate(), getAmount().negate(), comment, this, getMiscFeeAmount().negate(),
-                getMiscPenaltyAmount().negate(), masterPersistence);
+                getMiscPenaltyAmount().negate());
 
         if (null != getFeesTrxnDetails() && getFeesTrxnDetails().size() > 0) {
             logger.debug(

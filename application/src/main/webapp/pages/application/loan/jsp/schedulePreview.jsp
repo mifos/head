@@ -368,7 +368,7 @@ explanation of the license and how it is applied.
                                                     <tr>
                                                     <c:if test="${requestScope.perspective == 'redoLoan'}">
                                                     <td valign="top" align="center">
-                                                        <table width="100%" border="0" cellpadding="3" cellspacing="0">
+                                                        <table width="100%" border="0" id="scheduleTable" cellpadding="3" cellspacing="0">
                                                           <tr>
                                                             <td colspan="3" />
                                                             <td colspan="1" />

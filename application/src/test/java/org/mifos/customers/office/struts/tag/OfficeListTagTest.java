@@ -41,7 +41,6 @@ import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.office.util.helpers.OperationMode;
 import org.mifos.dto.domain.OfficeDetailsDto;
 import org.mifos.dto.domain.OfficeHierarchyDto;
-import org.mifos.framework.MifosSpringBasedUnitTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.struts.tags.XmlBuilder;
 import org.mifos.security.util.UserContext;

@@ -25,6 +25,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
@@ -49,6 +50,11 @@ public class CustomerAccountAction extends AccountAppAction {
     @TransactionDemarcate(saveToken = true)
     public ActionForward load(ActionMapping mapping, ActionForm form, HttpServletRequest request, @SuppressWarnings("unused") HttpServletResponse response) throws Exception {
         String globalCustNum = ((CustomerAccountActionForm) form).getGlobalCustNum();
+        if (StringUtils.isBlank(globalCustNum)) {
+            // NOTE: see CustomerAction.getAllActivity for explanation of this craziness
+            globalCustNum = (String) SessionUtils.getAttribute("customerGlobalNum", request.getSession());
+        }
+
         CustomerBO customerBO = this.customerDao.findCustomerBySystemId(globalCustNum);
         CustomerAccountBO customerAccount = customerBO.getCustomerAccount();
         SessionUtils.setAttribute(Constants.BUSINESS_KEY, customerAccount, request);

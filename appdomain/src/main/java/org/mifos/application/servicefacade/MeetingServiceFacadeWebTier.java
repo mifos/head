@@ -27,12 +27,14 @@ import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class MeetingServiceFacadeWebTier implements MeetingServiceFacade {
 
     private final CustomerService customerService;
 
+    @Autowired
     public MeetingServiceFacadeWebTier(CustomerService customerService) {
         this.customerService = customerService;
     }
