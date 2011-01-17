@@ -34,7 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.util.helpers.Money;
@@ -134,14 +134,14 @@ public class AccountBOTest {
 
     @Test(expected = AccountException.class)
     public void testInvalidConnectionThrowsExceptionInUpdate() throws Exception {
-        final AccountPersistence accountPersistence = mock(AccountPersistence.class);
+        final LegacyAccountDao legacyAccountDao = mock(LegacyAccountDao.class);
         AccountBO accountBO = new AccountBO() {
             @Override
-            public AccountPersistence getAccountPersistence() {
-                return accountPersistence;
+            public LegacyAccountDao getlegacyAccountDao() {
+                return legacyAccountDao;
             }
         };
-        when(accountPersistence.createOrUpdate(accountBO)).thenThrow(new PersistenceException("some exception"));
+        when(legacyAccountDao.createOrUpdate(accountBO)).thenThrow(new PersistenceException("some exception"));
 
         // exercise test
         accountBO.update();

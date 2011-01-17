@@ -27,24 +27,20 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.util.helpers.ProductType;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
 
-    private AccountPersistence accountPersistence;
-
-    @Before
-    public void setUp() throws Exception {
-        accountPersistence = new AccountPersistence();
-    }
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     /*
      * Check that the values in the enumerated type AccountState match with the
@@ -53,12 +49,12 @@ public class AccountStateIntegrationTest extends MifosIntegrationTestCase {
      */
     @Test
     public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
-        List<AccountStateEntity> accountStateEntityList = accountPersistence
+        List<AccountStateEntity> accountStateEntityList = legacyAccountDao
                 .retrieveAllAccountStateList(ProductType.SAVINGS.getValue());
         Assert.assertNotNull(accountStateEntityList);
        Assert.assertEquals(6, accountStateEntityList.size());
 
-        List<AccountStateEntity> accountStateEntityList2 = accountPersistence
+        List<AccountStateEntity> accountStateEntityList2 = legacyAccountDao
                 .retrieveAllAccountStateList(ProductType.LOAN.getValue());
         Assert.assertNotNull(accountStateEntityList2);
        Assert.assertEquals(12, accountStateEntityList2.size());

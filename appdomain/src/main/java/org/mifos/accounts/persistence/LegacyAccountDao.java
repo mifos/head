@@ -80,7 +80,10 @@ import java.util.Map;
  * </ol>
  */
 @SuppressWarnings("unchecked")
-public class AccountPersistence extends LegacyGenericDao {
+public class LegacyAccountDao extends LegacyGenericDao {
+
+    private LegacyAccountDao() {
+    }
 
     public AccountBO getAccount(Integer accountId) throws PersistenceException {
         return getPersistentObject(AccountBO.class, accountId);
@@ -311,7 +314,7 @@ public class AccountPersistence extends LegacyGenericDao {
     }
 
     /**
-     * This method is equivalent to {@link AccountPersistence#getAccountIdFromGlCode(String)} and is only for use during
+     * This method is equivalent to {@link LegacyAccountDao#getAccountIdFromGlCode(String)} and is only for use during
      * initialization as a workaround for avoiding dependencies on auditing & string resolution during application
      * startup. We should try to refactor the startup code so that this method can be eliminated.
      */
@@ -373,7 +376,7 @@ public class AccountPersistence extends LegacyGenericDao {
         Query topLevelAccounts = getSession().getNamedQuery(NamedQueryConstants.GET_TOP_LEVEL_ACCOUNTS);
         List listAccounts = topLevelAccounts.list();
         Iterator it = listAccounts.iterator();
-        AccountPersistence ap = new AccountPersistence();
+        LegacyAccountDao ap = new LegacyAccountDao();
         String assetsAccountGLCode = ap.getCategory(GLCategoryType.ASSET).getGlCode();
         String liabilitiesAccountGLCode = ap.getCategory(GLCategoryType.LIABILITY).getGlCode();
         String incomeAccountGLCode = ap.getCategory(GLCategoryType.INCOME).getGlCode();

@@ -45,7 +45,7 @@ import org.mifos.accounts.business.AccountStateEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -80,6 +80,9 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
     private GroupBO group;
     private ClientBO client;
     private LoanBO loan;
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     @AfterClass
     public static void resetCurrency() {
@@ -119,7 +122,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         // pay 3 installments
         makePayment(loan, "333.0");
         StaticHibernateUtil.flushAndClearSession();
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
         assertThat(loan.getLoanSummary().getOriginalPrincipal(), is(initialOriginalPrincipal));
         assertThat(loan.getLoanSummary().getOriginalInterest(), is(initialOriginalInterest));
@@ -132,7 +135,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
         makeEarlyPayment(loan);
         StaticHibernateUtil.flushAndClearSession();
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
         // The early repayment should have caused the original interest and fees to be changed to equal the amounts
         // paid.
@@ -147,7 +150,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
         adjustLastLoanPayment(loan, context);
         StaticHibernateUtil.flushAndClearSession();
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
         // The adjustment of a completed loan should have caused the original amounts to be reset
         assertThat(loan.getLoanSummary().getOriginalPrincipal(), is(initialOriginalPrincipal));
@@ -165,15 +168,15 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
         loan.updateDetails(TestUtils.makeUserWithLocales());
         // pay 3 installments
         makePayment(loan, "333.0");
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         makeEarlyPayment(loan);
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         adjustLastLoanPayment(loan, loan.getUserContext());
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
@@ -202,18 +205,18 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
         // pay 3 installments
         makePayment(loan, "333.0");
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         makeEarlyPayment(loan);
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         // ensure loan is in bad standing when reopened
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
 
         adjustLastLoanPayment(loan, loan.getUserContext());
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         AccountStateEntity currentStatus = loan.getAccountState();
@@ -232,19 +235,19 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
 
         // pay 2 installments
         makePayment(loan, "222.0");
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         // pay 1 more installment
         makePayment(loan, "111.0");
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         // Ensure that after the adjustment the loan is calculated to be in bad standing.
         new DateTimeService().setCurrentDateTimeFixed(date(2010, 11, 13));
 
         adjustLastLoanPayment(loan, loan.getUserContext());
-        loan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        loan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         loan.updateDetails(TestUtils.makeUserWithLocales());
 
         assertNotNull("Account Status Change History Should Not Be Null", loan.getAccountStatusChangeHistory());
@@ -317,7 +320,7 @@ public class LoanAdjustmentsIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void adjustLastLoanPayment(LoanBO loan, UserContext userContext) throws AccountException, PersistenceException {
-        LoanBO tempLoan = (LoanBO) new AccountPersistence().getAccount(loan.getAccountId());
+        LoanBO tempLoan = (LoanBO) legacyAccountDao.getAccount(loan.getAccountId());
         tempLoan.setUserContext(userContext);
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         tempLoan.adjustLastPayment("Undo last payment", loggedInUser);

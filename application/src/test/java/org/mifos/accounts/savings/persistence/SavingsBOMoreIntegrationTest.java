@@ -36,7 +36,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.business.SavingsScheduleEntity;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -69,6 +69,9 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
     private ClientBO client;
     private SavingsBO savings;
     private Money recommendedAmount;
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     @Autowired
     private DatabaseCleaner databaseCleaner;
@@ -130,7 +133,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data
-        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
 
         Money zero = new Money(Money.getDefaultCurrency());
         assertAllFutureSchedulesAreAsExpected(savings, zero);
@@ -145,7 +148,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data
-        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
 
         Money zero = new Money(Money.getDefaultCurrency());
         assertAllFutureSchedulesAreAsExpected(savings, zero);
@@ -156,7 +159,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data
-        savings = (SavingsBO) new AccountPersistence().getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
 
         assertAllFutureSchedulesAreAsExpected(savings, recommendedAmount);
     }

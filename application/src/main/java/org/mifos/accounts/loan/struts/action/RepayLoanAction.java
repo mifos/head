@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.struts.actionforms.RepayLoanActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -74,7 +74,7 @@ public class RepayLoanAction extends BaseAction {
         SessionUtils.setAttribute(LoanConstants.TOTAL_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getEarlyRepaymentMoney()), request);
         SessionUtils.setAttribute(LoanConstants.WAIVED_REPAYMENT_AMOUNT, new Money(loan.getCurrency(), repayLoanDto.getWaivedRepaymentMoney()), request);
 
-        List<PaymentTypeEntity> loanPaymentTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.loan_repayment.getValue());
+        List<PaymentTypeEntity> loanPaymentTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(userContext.getLocaleId(), TrxnTypes.loan_repayment.getValue());
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, loanPaymentTypes, request);
         return mapping.findForward(Constants.LOAD_SUCCESS);
     }

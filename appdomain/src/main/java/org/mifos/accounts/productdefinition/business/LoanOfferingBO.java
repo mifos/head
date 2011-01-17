@@ -25,7 +25,7 @@ import org.joda.time.LocalDate;
 import org.mifos.accounts.fees.business.FeeBO;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.fund.business.FundBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.LoanAmountCalculation;
 import org.mifos.accounts.productdefinition.LoanInstallmentCalculation;
 import org.mifos.accounts.productdefinition.LoanProductCalculationType;
@@ -42,6 +42,7 @@ import org.mifos.application.meeting.business.MeetingBO;
 import org.mifos.application.meeting.exceptions.MeetingException;
 import org.mifos.application.meeting.util.helpers.MeetingType;
 import org.mifos.application.meeting.util.helpers.RecurrenceType;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.util.helpers.YesNoFlag;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.customers.office.business.OfficeBO;
@@ -645,7 +646,7 @@ public class LoanOfferingBO extends PrdOfferingBO {
 
     public void save() throws ProductDefinitionException {
         try {
-            new LoanPersistence().createOrUpdate(this);
+            ApplicationContextProvider.getBean(LegacyLoanDao.class).createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new ProductDefinitionException(e);
         }

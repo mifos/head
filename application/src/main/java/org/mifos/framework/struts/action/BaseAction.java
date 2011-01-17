@@ -37,10 +37,12 @@ import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.apache.struts.actions.DispatchAction;
 import org.hibernate.HibernateException;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.fees.persistence.FeeDao;
 import org.mifos.accounts.fund.persistence.FundDao;
 import org.mifos.accounts.fund.servicefacade.FundServiceFacade;
 import org.mifos.accounts.loan.persistance.LoanDao;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.persistence.LoanProductDao;
 import org.mifos.accounts.productdefinition.persistence.SavingsProductDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
@@ -103,9 +105,11 @@ import org.mifos.reports.admindocuments.persistence.LegacyAdminDocAccStateMixDao
 import org.mifos.reports.admindocuments.persistence.LegacyAdminDocumentDao;
 import org.mifos.security.AuthenticationAuthorizationServiceFacade;
 import org.mifos.security.login.util.helpers.LoginConstants;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -151,6 +155,9 @@ public abstract class BaseAction extends DispatchAction {
     protected LegacyAdminDocumentDao legacyAdminDocumentDao;
     protected LegacyFieldConfigurationDao legacyFieldConfigurationDao;
     protected LegacyAdminDocAccStateMixDao legacyAdminDocAccStateMixDao;
+    protected LegacyRolesPermissionsDao legacyRolesPermissionsDao;
+    protected LegacyAccountDao legacyAccountDao;
+    protected LegacyAcceptedPaymentTypeDao legacyAcceptedPaymentTypeDao;
 
     // non domain app
     protected LoanServiceFacade loanServiceFacade;
@@ -159,13 +166,9 @@ public abstract class BaseAction extends DispatchAction {
     public ActionForward execute(ActionMapping mapping, ActionForm form, HttpServletRequest request,
             HttpServletResponse response) throws Exception {
 
-        ApplicationContext springAppContext = ApplicationContextProvider.getApplicationContext();
-
-        if (springAppContext != null) {
-            configureDaoBeans(springAppContext);
-            configureServiceFacadeBeans(springAppContext);
-            configureLegacyDaoBeans(springAppContext);
-        }
+        configureDaoBeans();
+        configureServiceFacadeBeans();
+        configureLegacyDaoBeans();
 
         if (MifosBatchJob.isBatchJobRunningThatRequiresExclusiveAccess()) {
             return logout(mapping, request);
@@ -187,45 +190,52 @@ public abstract class BaseAction extends DispatchAction {
         return forward;
     }
 
-    private void configureLegacyDaoBeans(ApplicationContext springAppContext) {
-        this.legacyMasterDao = springAppContext.getBean(LegacyMasterDao.class);
-        this.legacyAdminDocumentDao = springAppContext.getBean(LegacyAdminDocumentDao.class);
-        this.legacyFieldConfigurationDao = springAppContext.getBean(LegacyFieldConfigurationDao.class);
-        this.legacyAdminDocAccStateMixDao = springAppContext.getBean(LegacyAdminDocAccStateMixDao.class);
+    private <T extends Object> T getBean(Class<T> clazz) {
+        return ApplicationContextProvider.getBean(clazz);
     }
 
-    private void configureServiceFacadeBeans(ApplicationContext springAppContext) {
-        this.loginServiceFacade = springAppContext.getBean(NewLoginServiceFacade.class);
-        this.personnelServiceFacade = springAppContext.getBean(PersonnelServiceFacade.class);
-        this.customerServiceFacade = springAppContext.getBean(CustomerServiceFacade.class);
-        this.centerServiceFacade = springAppContext.getBean(CenterServiceFacade.class);
-        this.groupServiceFacade = springAppContext.getBean(GroupServiceFacade.class);
-        this.clientServiceFacade = springAppContext.getBean(ClientServiceFacade.class);
-        this.accountServiceFacade = springAppContext.getBean(AccountServiceFacade.class);
-        this.meetingServiceFacade = springAppContext.getBean(MeetingServiceFacade.class);
-        this.loanServiceFacade = springAppContext.getBean(LoanServiceFacade.class);
-        this.loanAccountServiceFacade = springAppContext.getBean(LoanAccountServiceFacade.class);
-        this.holidayServiceFacade = springAppContext.getBean(HolidayServiceFacade.class);
-        this.officeServiceFacade = springAppContext.getBean(OfficeServiceFacade.class);
-        this.feeServiceFacade = springAppContext.getBean(FeeServiceFacade.class);
-        this.fundServiceFacade = springAppContext.getBean(FundServiceFacade.class);
-        this.savingsServiceFacade = springAppContext.getBean(SavingsServiceFacade.class);
-        this.authenticationAuthorizationServiceFacade = springAppContext.getBean(AuthenticationAuthorizationServiceFacade.class);
-        this.importTransactionsServiceFacade = springAppContext.getBean(ImportTransactionsServiceFacade.class);
-        this.checkListServiceFacade = springAppContext.getBean(CheckListServiceFacade.class);
+    private void configureLegacyDaoBeans() {
+        this.legacyMasterDao = getBean(LegacyMasterDao.class);
+        this.legacyAdminDocumentDao = getBean(LegacyAdminDocumentDao.class);
+        this.legacyFieldConfigurationDao = getBean(LegacyFieldConfigurationDao.class);
+        this.legacyAdminDocAccStateMixDao = getBean(LegacyAdminDocAccStateMixDao.class);
+        this.legacyRolesPermissionsDao = getBean(LegacyRolesPermissionsDao.class);
+        this.legacyAccountDao = getBean(LegacyAccountDao.class);
+        this.legacyAcceptedPaymentTypeDao = getBean(LegacyAcceptedPaymentTypeDao.class);
     }
 
-    private void configureDaoBeans(ApplicationContext springAppContext) {
-        this.personnelDao = springAppContext.getBean(PersonnelDao.class);
-        this.officeDao = springAppContext.getBean(OfficeDao.class);
-        this.customerDao = springAppContext.getBean(CustomerDao.class);
-        this.savingsDao = springAppContext.getBean(SavingsDao.class);
-        this.loanDao = springAppContext.getBean(LoanDao.class);
-        this.loanProductDao = springAppContext.getBean(LoanProductDao.class);
-        this.savingsProductDao = springAppContext.getBean(SavingsProductDao.class);
-        this.feeDao = springAppContext.getBean(FeeDao.class);
-        this.fundDao = springAppContext.getBean(FundDao.class);
-        this.applicationConfigurationDao = springAppContext.getBean(ApplicationConfigurationDao.class);
+    private void configureServiceFacadeBeans() {
+        this.loginServiceFacade = getBean(NewLoginServiceFacade.class);
+        this.personnelServiceFacade = getBean(PersonnelServiceFacade.class);
+        this.customerServiceFacade = getBean(CustomerServiceFacade.class);
+        this.centerServiceFacade = getBean(CenterServiceFacade.class);
+        this.groupServiceFacade = getBean(GroupServiceFacade.class);
+        this.clientServiceFacade = getBean(ClientServiceFacade.class);
+        this.accountServiceFacade = getBean(AccountServiceFacade.class);
+        this.meetingServiceFacade = getBean(MeetingServiceFacade.class);
+        this.loanServiceFacade = getBean(LoanServiceFacade.class);
+        this.loanAccountServiceFacade = getBean(LoanAccountServiceFacade.class);
+        this.holidayServiceFacade = getBean(HolidayServiceFacade.class);
+        this.officeServiceFacade = getBean(OfficeServiceFacade.class);
+        this.feeServiceFacade = getBean(FeeServiceFacade.class);
+        this.fundServiceFacade = getBean(FundServiceFacade.class);
+        this.savingsServiceFacade = getBean(SavingsServiceFacade.class);
+        this.authenticationAuthorizationServiceFacade = getBean(AuthenticationAuthorizationServiceFacade.class);
+        this.importTransactionsServiceFacade = getBean(ImportTransactionsServiceFacade.class);
+        this.checkListServiceFacade = getBean(CheckListServiceFacade.class);
+    }
+
+    private void configureDaoBeans() {
+        this.personnelDao = getBean(PersonnelDao.class);
+        this.officeDao = getBean(OfficeDao.class);
+        this.customerDao = getBean(CustomerDao.class);
+        this.savingsDao = getBean(SavingsDao.class);
+        this.loanDao = getBean(LoanDao.class);
+        this.loanProductDao = getBean(LoanProductDao.class);
+        this.savingsProductDao = getBean(SavingsProductDao.class);
+        this.feeDao = getBean(FeeDao.class);
+        this.fundDao = getBean(FundDao.class);
+        this.applicationConfigurationDao = getBean(ApplicationConfigurationDao.class);
     }
 
     protected void preExecute(ActionForm actionForm, HttpServletRequest request, TransactionDemarcate annotation)

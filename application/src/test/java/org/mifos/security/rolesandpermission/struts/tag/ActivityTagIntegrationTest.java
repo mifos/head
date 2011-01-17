@@ -31,9 +31,13 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class ActivityTagIntegrationTest extends MifosIntegrationTestCase {
+
+    @Autowired
+    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     @Test
     public void testConvertToIdSet() throws Exception {
@@ -50,7 +54,7 @@ public class ActivityTagIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private List<ActivityEntity> getActivities() throws Exception {
-        return new RolesPermissionsPersistence().getActivities();
+        return legacyRolesPermissionsDao.getActivities();
     }
 
     private Map<String, String> getUiActivities() {

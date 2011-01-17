@@ -22,7 +22,6 @@ package org.mifos.test.acceptance.framework.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 
@@ -41,7 +40,7 @@ public class SeleniumSpeedControl {
     }
 
     @After("bean(selenium) && execution(public * *(..))")
-    public void after(JoinPoint joinPoint) throws Throwable {
+    public void after() throws Throwable {
         if (delay > 0) {
             try {
                 Thread.sleep(delay);

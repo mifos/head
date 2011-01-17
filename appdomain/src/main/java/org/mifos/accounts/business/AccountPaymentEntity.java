@@ -23,7 +23,7 @@ package org.mifos.accounts.business;
 import org.joda.time.DateTime;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanTrxnDetailEntity;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.util.helpers.AccountActionTypes;

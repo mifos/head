@@ -29,30 +29,34 @@ import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class RolesAndPermissionPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
+    @Autowired
+    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
+
     @Test
     public void testGetRole() throws Exception {
-        RoleBO role = new RolesPermissionsPersistence().getRole("Admin");
+        RoleBO role = legacyRolesPermissionsDao.getRole("Admin");
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
     }
 
     @Test
     public void testGetActivities() throws Exception {
-        List<ActivityEntity> activities = new RolesPermissionsPersistence().getActivities();
+        List<ActivityEntity> activities = legacyRolesPermissionsDao.getActivities();
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
     }
 
     @Test
     public void testGetRoles() throws Exception {
-        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
+        List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
        Assert.assertEquals(3, roles.size());
     }
 
     @Test
     public void testGetRoleForGivenId() throws Exception {
-        RoleBO role = new RolesPermissionsPersistence().getRole((short) 1);
+        RoleBO role = legacyRolesPermissionsDao.getRole((short) 1);
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
     }
 

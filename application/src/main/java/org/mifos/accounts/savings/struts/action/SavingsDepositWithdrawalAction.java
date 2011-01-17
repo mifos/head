@@ -33,7 +33,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
@@ -106,7 +106,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
             SessionUtils.setAttribute(SavingsConstants.CLIENT_LIST, new ArrayList<CustomerBO>(), request);
         }
 
-        AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+        LegacyAcceptedPaymentTypeDao persistence = legacyAcceptedPaymentTypeDao;
         List<PaymentTypeEntity> acceptedPaymentTypes = persistence.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.savings_deposit.getValue());
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, acceptedPaymentTypes, request);
 
@@ -142,7 +142,7 @@ public class SavingsDepositWithdrawalAction extends BaseAction {
 
             Short trxnTypeId = Short.valueOf(actionForm.getTrxnTypeId());
             // added for defect 1587 [start]
-            AcceptedPaymentTypePersistence persistence = new AcceptedPaymentTypePersistence();
+            LegacyAcceptedPaymentTypeDao persistence = legacyAcceptedPaymentTypeDao;
             if (trxnTypeId.equals(AccountActionTypes.SAVINGS_DEPOSIT.getValue())) {
                 if (StringUtils.isNotBlank(actionForm.getCustomerId())) {
                     actionForm.setAmount(depositWithdrawalReferenceDto.getDepositDue());

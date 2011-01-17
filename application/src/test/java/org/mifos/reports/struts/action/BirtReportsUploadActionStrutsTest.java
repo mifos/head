@@ -34,6 +34,7 @@ import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.MifosMockStrutsTestCase;
 import org.mifos.framework.TestUtils;
@@ -49,11 +50,12 @@ import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.AddActivity;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
@@ -63,6 +65,9 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Autowired
     LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     @Before
     public void setUp() throws Exception {
@@ -156,11 +161,11 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         AddActivity activity = null;
         try {
             activity = new AddActivity((short) newActivityId,
-                    SecurityConstants.ORGANIZATION_MANAGEMENT, DatabaseMigrator.ENGLISH_LOCALE, "no name");
+                    SecurityConstants.ORGANIZATION_MANAGEMENT, Localization.ENGLISH_LOCALE, "no name");
             activity.upgrade(StaticHibernateUtil.getSessionTL().connection());
 
         } catch (Exception e) {
-            new RolesPermissionsPersistence().delete(request.getAttribute("report"));
+            legacyRolesPermissionsDao.delete(request.getAttribute("report"));
             StaticHibernateUtil.flushSession();
             throw e;
         }
@@ -268,7 +273,8 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         report.setReportsCategoryBO(persistence.getPersistentObject(ReportsCategoryBO.class,
                 (short) 1));
         report.setIsActive((short) 1);
-        short newActivityId = (short) (new BirtReportsUploadAction()).insertActivity((short) 1, "test"
+        short newActivityId = (short) legacyRolesPermissionsDao.calculateDynamicActivityId();
+        legacyRolesPermissionsDao.createActivityForReports((short) 1, "test"
                 + "testShouldSubmitSuccessAfterEdit");
         report.setActivityId(newActivityId);
 
@@ -325,9 +331,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         ActivityContext ac = new ActivityContext((short) 0, userContext.getBranchId().shortValue(), userContext.getId().shortValue());
         request.getSession(false).setAttribute(Constants.ACTIVITYCONTEXT, ac);
 
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
-
-        RoleBO role = rolesPermissionsPersistence.getRole(userContext.getRoles().iterator().next());
+        RoleBO role = legacyRolesPermissionsDao.getRole(userContext.getRoles().iterator().next());
         List<ActivityEntity> roleActivities = role.getActivities();
         List<ActivityEntity> updatedRoleActivities = new ArrayList<ActivityEntity>();
         for (ActivityEntity ae : roleActivities) {
@@ -339,7 +343,7 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         try {
             StaticHibernateUtil.startTransaction();
             role.update(userContext.getId(), "test", updatedRoleActivities);
-            rolesPermissionsPersistence.save(role);
+            legacyRolesPermissionsDao.save(role);
             StaticHibernateUtil.commitTransaction();
             AuthorizationManager.getInstance().updateRole(role);
         } catch (Exception e) {
@@ -348,8 +352,6 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         } finally {
             StaticHibernateUtil.closeSession();
         }
-
-
         setRequestPathInfo("/birtReportsUploadAction.do");
         addRequestParameter("method", "edit");
         addRequestParameter("reportId", "1");
@@ -360,39 +362,35 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         ReportsPersistence reportPersistence = new ReportsPersistence();
         reportPersistence.getSession().clear();
         ReportsBO report = reportPersistence.getPersistentObject(ReportsBO.class, reportId);
-
-        RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
-        ActivityEntity activityEntity = permPersistence.getPersistentObject(ActivityEntity.class,
+        ActivityEntity activityEntity = legacyRolesPermissionsDao.getPersistentObject(ActivityEntity.class,
                 report.getActivityId());
         reportPersistence.delete(report);
 
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
 
-        permPersistence.delete(activityEntity);
-        permPersistence.delete(anLookUp);
+        legacyRolesPermissionsDao.delete(activityEntity);
+        legacyRolesPermissionsDao.delete(anLookUp);
 
         StaticHibernateUtil.flushSession();
     }
 
     private ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
         LookUpValueEntity anLookUp = new LookUpValueEntity();
         LookUpEntity lookUpEntity = legacyMasterDao.getPersistentObject(LookUpEntity.class, Short
                 .valueOf((short) LookUpEntity.ACTIVITY));
         anLookUp.setLookUpEntity(lookUpEntity);
         ActivityEntity parent = legacyMasterDao.getPersistentObject(ActivityEntity.class, (short) 13);
         ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);
-        rpp.createOrUpdate(anLookUp);
-        rpp.createOrUpdate(activityEntity);
+        legacyRolesPermissionsDao.createOrUpdate(anLookUp);
+        legacyRolesPermissionsDao.createOrUpdate(activityEntity);
         return activityEntity;
     }
 
     private void deleteActivityForTest(ActivityEntity activityEntity) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
-        rpp.getSession().clear();
+        legacyRolesPermissionsDao.getSession().clear();
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
-        rpp.delete(activityEntity);
-        rpp.delete(anLookUp);
+        legacyRolesPermissionsDao.delete(activityEntity);
+        legacyRolesPermissionsDao.delete(anLookUp);
     }
 
 }

@@ -75,7 +75,7 @@ import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticH
 import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.security.MifosUser;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,14 +87,14 @@ public class PersonnelServiceFacadeWebTier implements PersonnelServiceFacade {
     private final CustomerDao customerDao;
     private final PersonnelDao personnelDao;
     private final ApplicationConfigurationDao applicationConfigurationDao;
-    private final RolesPermissionsPersistence rolesPermissionsPersistence;
+    private final LegacyRolesPermissionsDao rolesPermissionsPersistence;
     private HibernateTransactionHelper transactionHelper = new HibernateTransactionHelperForStaticHibernateUtil();
 
     @Autowired
     private LegacyMasterDao legacyMasterDao;
 
     @Autowired
-    public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao, RolesPermissionsPersistence rolesPermissionsPersistence) {
+    public PersonnelServiceFacadeWebTier(OfficeDao officeDao, CustomerDao customerDao, PersonnelDao personnelDao, ApplicationConfigurationDao applicationConfigurationDao, LegacyRolesPermissionsDao rolesPermissionsPersistence) {
         super();
         this.officeDao = officeDao;
         this.customerDao = customerDao;

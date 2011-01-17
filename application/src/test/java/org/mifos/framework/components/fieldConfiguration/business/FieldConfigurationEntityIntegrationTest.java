@@ -24,14 +24,19 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
-import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
+import org.mifos.framework.components.fieldConfiguration.persistence.LegacyFieldConfigurationDao;
+import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.persistence.LegacyGenericDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FieldConfigurationEntityIntegrationTest extends MifosIntegrationTestCase {
 
+    @Autowired
+    LegacyFieldConfigurationDao legacyFieldConfigurationDao;
+
     @Test
-    public void testGetFieldConfigurationEntity() {
-        FieldConfigurationEntity fieldConfigurationEntity = (FieldConfigurationEntity) StaticHibernateUtil
-                .getSessionTL().get(FieldConfigurationEntity.class, Integer.valueOf("3"));
+    public void testGetFieldConfigurationEntity() throws PersistenceException {
+        FieldConfigurationEntity fieldConfigurationEntity = legacyFieldConfigurationDao.getPersistentObject(FieldConfigurationEntity.class, 3);
        Assert.assertEquals(fieldConfigurationEntity.getFieldName(), "SecondLastName");
     }
 }

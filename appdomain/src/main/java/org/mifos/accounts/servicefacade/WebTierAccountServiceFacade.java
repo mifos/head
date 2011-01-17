@@ -20,7 +20,7 @@
 
 package org.mifos.accounts.servicefacade;
 
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.AccountService;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
@@ -28,7 +28,7 @@ import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountTypes;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.servicefacade.ListItem;
@@ -69,23 +69,23 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private HibernateTransactionHelper transactionHelper;
     private AccountBusinessService accountBusinessService;
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
-    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
+    private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
     private PersonnelPersistence personnelPersistence;
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao legacyAccountDao;
 
     @Autowired
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
                                        AccountBusinessService accountBusinessService,
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
-                                       AcceptedPaymentTypePersistence acceptedPaymentTypePersistence,
-                                       PersonnelPersistence personnelPersistence, AccountPersistence accountPersistence) {
+                                       LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence,
+                                       PersonnelPersistence personnelPersistence, LegacyAccountDao legacyAccountDao) {
         this.accountService = accountService;
         this.transactionHelper = transactionHelper;
         this.accountBusinessService = accountBusinessService;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
         this.personnelPersistence = personnelPersistence;
-        this.accountPersistence = accountPersistence;
+        this.legacyAccountDao = legacyAccountDao;
     }
 
     @Override
@@ -272,7 +272,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             PersonnelBO personnelBO = personnelPersistence.findPersonnelById(loggedInUser);
             transactionHelper.startTransaction();
             accountBO.adjustLastPayment(adjustmentNote, personnelBO);
-            accountPersistence.createOrUpdate(accountBO);
+            legacyAccountDao.createOrUpdate(accountBO);
             transactionHelper.commitTransaction();
         } catch (ServiceException e) {
             transactionHelper.rollbackTransaction();

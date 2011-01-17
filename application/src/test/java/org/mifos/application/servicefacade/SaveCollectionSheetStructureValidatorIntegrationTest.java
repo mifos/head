@@ -34,7 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.business.AccountNotesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.application.master.business.PaymentTypeEntity;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -46,12 +46,16 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosIntegrationTestCase {
 
     private SaveCollectionSheetStructureValidator savecollectionSheetStructureValidator;
     private TestSaveCollectionSheetUtils saveCollectionSheetUtils;
     private TestCollectionSheetRetrieveSavingsAccountsUtils collectionSheetRetrieveSavingsAccountsUtils;
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     @Before
     public void setUp() throws Exception {
@@ -221,10 +225,9 @@ public class SaveCollectionSheetStructureValidatorIntegrationTest extends MifosI
                 collectionSheet, transactionDate);
 
         // close a savings account that is about to be saved
-        AccountPersistence accountPersistence = new AccountPersistence();
         UserContext userContext = TestUtils.makeUser();
 
-        SavingsBO clientSavings = (SavingsBO) accountPersistence.getAccount(collectionSheetRetrieveSavingsAccountsUtils
+        SavingsBO clientSavings = (SavingsBO) legacyAccountDao.getAccount(collectionSheetRetrieveSavingsAccountsUtils
                 .getClientOfGroupCompleteGroupSavingsAccount().getAccountId());
         AccountPaymentEntity payment = new AccountPaymentEntity(clientSavings, new Money(clientSavings.getCurrency()),
                 null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date());

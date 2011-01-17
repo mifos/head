@@ -32,8 +32,8 @@ import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -65,16 +65,16 @@ public class SaveCollectionSheetAssembler {
     private final PersonnelPersistence personnelPersistence = new PersonnelPersistence();
 
     private final ClientAttendanceDao clientAttendanceDao;
-    private final LoanPersistence loanPersistence;
-    private final AccountPersistence accountPersistence;
+    private final LegacyLoanDao legacyLoanDao;
+    private final LegacyAccountDao legacyAccountDao;
     private final SavingsDao savingsDao;
 
     public SaveCollectionSheetAssembler(final ClientAttendanceDao clientAttendanceDao,
-            final LoanPersistence loanPersistence, final AccountPersistence accountPersistence,
+            final LegacyLoanDao legacyLoanDao, final LegacyAccountDao legacyAccountDao,
             final SavingsDao savingsDao) {
         this.clientAttendanceDao = clientAttendanceDao;
-        this.loanPersistence = loanPersistence;
-        this.accountPersistence = accountPersistence;
+        this.legacyLoanDao = legacyLoanDao;
+        this.legacyAccountDao = legacyAccountDao;
         this.savingsDao = savingsDao;
     }
 
@@ -345,7 +345,7 @@ public class SaveCollectionSheetAssembler {
 
     private CustomerAccountBO findCustomerAccountById(final Integer accountId) {
         try {
-            return (CustomerAccountBO) accountPersistence.getAccount(accountId);
+            return (CustomerAccountBO) legacyAccountDao.getAccount(accountId);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
@@ -353,7 +353,7 @@ public class SaveCollectionSheetAssembler {
 
     private LoanBO findLoanAccountById(final Integer loanId) {
         try {
-            return loanPersistence.getAccount(loanId);
+            return legacyLoanDao.getAccount(loanId);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }

@@ -21,8 +21,8 @@
 package org.mifos.config;
 
 import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
@@ -192,14 +192,14 @@ public class ProcessFlowRules {
 
     private static void initLoanPendingApprovalState() throws ConfigurationException {
 
-        AccountPersistence ap = new AccountPersistence();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
+        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
+        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
 
         boolean fromDb = isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase);
         boolean fromCfg = isLoanPendingApprovalStateEnabled();
 
         if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
-            int count = new LoanPersistence().countOfLoanAccounts();
+            int count = ApplicationContextProvider.getBean(LegacyLoanDao.class).countOfLoanAccounts();
             if (count > 0) {
                 String errMsg = getBadOverrideMsg(LOAN_PENDING_APPROVAL, "Records for loans in the 'pending approval' state"
                         + " may already exist.");
@@ -210,7 +210,7 @@ public class ProcessFlowRules {
         }
     }
 
-    private static void makeDatabaseConfigurationMatchPropertiesFileConfiguration(AccountPersistence persistence,
+    private static void makeDatabaseConfigurationMatchPropertiesFileConfiguration(LegacyAccountDao persistence,
             AccountStateEntity entity, boolean fromCfg) {
         entity.setIsOptional(fromCfg);
         try {
@@ -239,14 +239,14 @@ public class ProcessFlowRules {
 
     private static void initSavingsPendingApprovalState() throws ConfigurationException {
 
-        AccountPersistence ap = new AccountPersistence();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
+        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
+        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
 
         boolean fromDb = isSavingPendingApprovalStateEnabledOnDatabaseConfig(ase);
         boolean fromCfg = isSavingsPendingApprovalStateEnabled();
 
         if (databaseAndCustomConfigurationAreNotTheSame(fromDb, fromCfg)) {
-            int count = new LoanPersistence().countOfSavingsAccounts();
+            int count = ApplicationContextProvider.getBean(LegacyLoanDao.class).countOfSavingsAccounts();
             if (count > 0) {
                 String errMsg = getBadOverrideMsg(SAVINGS_PENDING_APPROVAL,
                         "Records for savings accounts in the 'pending approval' state" + " may already exist.");

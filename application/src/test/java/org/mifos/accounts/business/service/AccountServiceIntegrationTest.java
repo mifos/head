@@ -51,7 +51,7 @@ import org.mifos.accounts.fees.util.helpers.FeeStatus;
 import org.mifos.accounts.loan.business.LoanBOTestUtils;
 import org.mifos.accounts.loan.business.LoanFeeScheduleEntity;
 import org.mifos.accounts.loan.business.LoanScheduleEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -74,6 +74,7 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -85,13 +86,13 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 
     protected CustomerBO group = null;
 
-    protected AccountPersistence accountPersistence;
+    @Autowired
+    protected LegacyAccountDao legacyAccountDao;
 
     private AccountBusinessService service;
 
     @Before
     public void setUp() throws Exception {
-        accountPersistence = new AccountPersistence();
         service = new AccountBusinessService();
     }
 
@@ -106,7 +107,7 @@ public class AccountServiceIntegrationTest extends MifosIntegrationTestCase {
 //            savingsBO = null;
 //            group = null;
 //            center = null;
-            accountPersistence = null;
+            legacyAccountDao = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
 

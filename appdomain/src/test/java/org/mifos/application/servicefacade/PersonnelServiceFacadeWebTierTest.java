@@ -35,7 +35,7 @@ import org.mifos.customers.persistence.CustomerDao;
 import org.mifos.customers.personnel.persistence.PersonnelDao;
 import org.mifos.domain.builders.OfficeBuilder;
 import org.mifos.dto.screen.DefinePersonnelDto;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -48,7 +48,7 @@ public class PersonnelServiceFacadeWebTierTest {
     @Mock private CustomerDao customerDao;
     @Mock private PersonnelDao personnelDao;
     @Mock private ApplicationConfigurationDao applicationConfigurationDao;
-    @Mock private RolesPermissionsPersistence rolesPermissionsPersistence;
+    @Mock private LegacyRolesPermissionsDao rolesPermissionsPersistence;
 
     @Before
     public void setup() {

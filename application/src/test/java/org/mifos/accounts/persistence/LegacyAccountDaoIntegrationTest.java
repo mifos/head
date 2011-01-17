@@ -84,15 +84,17 @@ import org.mifos.framework.util.helpers.TestGeneralLedgerCode;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCase {
+public class LegacyAccountDaoIntegrationTest extends AccountIntegrationTestCase {
 
     @Autowired
     LegacyMasterDao legacyMasterDao;
 
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
+
     public static final int LOAN_CUSTOMFIELDS_NUMBER = 1;
     private static final String ASSETS_GL_ACCOUNT_CODE = "10000";
     private static final String DIRECT_EXPENDITURE_GL_ACCOUNT_CODE = "41000";
-    private AccountPersistence accountPersistence = new AccountPersistence();
 
     @Test
     public void testAddDuplicateGlAccounts() {
@@ -102,8 +104,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         String parentGlCode = ASSETS_GL_ACCOUNT_CODE;
 
         try {
-            accountPersistence.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
-            accountPersistence.addGeneralLedgerAccount(name2, glCode, parentGlCode, null);
+            legacyAccountDao.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
+            legacyAccountDao.addGeneralLedgerAccount(name2, glCode, parentGlCode, null);
             Assert.fail();
         } catch (Exception e) {
             Assert.assertTrue(e.getMessage().contains("An account already exists with glcode"));
@@ -116,8 +118,8 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         String glCode = "999999";
         String parentGlCode = ASSETS_GL_ACCOUNT_CODE;
 
-        COABO coa = accountPersistence.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
-        Assert.assertEquals(coa.getAccountId(), accountPersistence.getAccountIdFromGlCode(glCode));
+        COABO coa = legacyAccountDao.addGeneralLedgerAccount(name, glCode, parentGlCode, null);
+        Assert.assertEquals(coa.getAccountId(), legacyAccountDao.getAccountIdFromGlCode(glCode));
     }
 
     /**
@@ -144,7 +146,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     @Test
     public void testTopLevelAccountPersisted() throws Exception {
-        COABO incomeCategory = accountPersistence.getCategory(GLCategoryType.INCOME);
+        COABO incomeCategory = legacyAccountDao.getCategory(GLCategoryType.INCOME);
         Assert.assertEquals(GLCategoryType.INCOME, incomeCategory.getCategoryType());
     }
 
@@ -212,7 +214,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
                 + "          <GLAccount code=\"41102\" name=\"Interest on clients mandatory savings\"/>"
                 + "        </GLAccount>" + "      </GLAccount>" + "    </GLExpenditureAccount>"
                 + "  </ChartOfAccounts>" + "</configuration>";
-        String chart = accountPersistence.dumpChartOfAccounts();
+        String chart = legacyAccountDao.dumpChartOfAccounts();
 
         // save old values so they can be restored when we clean up before
         // leaving this test method
@@ -232,14 +234,14 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     @Test
     public void testSuccessLoadBusinessObject() throws Exception {
-        AccountBO readAccount = accountPersistence.getAccount(groupLoan.getAccountId());
+        AccountBO readAccount = legacyAccountDao.getAccount(groupLoan.getAccountId());
         Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, readAccount.getState());
     }
 
     @Test
     public void testFailureLoadBusinessObject() {
         try {
-            accountPersistence.getAccount(null);
+            legacyAccountDao.getAccount(null);
             Assert.fail();
         } catch (PersistenceException expected) {
         }
@@ -254,12 +256,12 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
     @Test
     public void testOptionalAccountStates() throws Exception {
-        Assert.assertEquals(1, accountPersistence.getAccountStates(Short.valueOf("0")).size());
+        Assert.assertEquals(1, legacyAccountDao.getAccountStates(Short.valueOf("0")).size());
     }
 
     @Test
     public void testAccountStatesInUse() throws Exception {
-        Assert.assertEquals(17, accountPersistence.getAccountStates(Short.valueOf("1")).size());
+        Assert.assertEquals(17, legacyAccountDao.getAccountStates(Short.valueOf("1")).size());
     }
 
     @Test
@@ -268,7 +270,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
         QueryResult queryResult = null;
 
-        queryResult = accountPersistence.search(savingsBO.getGlobalAccountNum(), (short) 3);
+        queryResult = legacyAccountDao.search(savingsBO.getGlobalAccountNum(), (short) 3);
         Assert.assertNotNull(queryResult);
         Assert.assertEquals(1, queryResult.getSize());
         Assert.assertEquals(1, queryResult.get(0, 10).size());
@@ -277,13 +279,13 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
     @Test
     public void testSearchCustomerAccount() throws Exception {
         QueryResult queryResult = null;
-        queryResult = accountPersistence.search(center.getCustomerAccount().getGlobalAccountNum(), (short) 3);
+        queryResult = legacyAccountDao.search(center.getCustomerAccount().getGlobalAccountNum(), (short) 3);
         Assert.assertNull(queryResult);
     }
 
     @Test
     public void testRetrieveCustomFieldsDefinition() throws Exception {
-        List<CustomFieldDefinitionEntity> customFields = accountPersistence
+        List<CustomFieldDefinitionEntity> customFields = legacyAccountDao
                 .retrieveCustomFieldsDefinition(EntityType.LOAN.getValue());
         Assert.assertNotNull(customFields);
         Assert.assertEquals(LOAN_CUSTOMFIELDS_NUMBER, customFields.size());
@@ -311,7 +313,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         StaticHibernateUtil.flushSession();
 
 
-        List<Object[]> AccountIds = accountPersistence.getListOfAccountIdsHavingLoanSchedulesWithinAHoliday(
+        List<Object[]> AccountIds = legacyAccountDao.getListOfAccountIdsHavingLoanSchedulesWithinAHoliday(
                 holiday);
 
         Assert.assertNotNull(AccountIds);
@@ -339,7 +341,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         StaticHibernateUtil.flushSession();
 
 
-        List<Object[]> AccountIds = accountPersistence.getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday(
+        List<Object[]> AccountIds = legacyAccountDao.getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday(
                 holiday);
 
         Assert.assertNotNull(AccountIds);
@@ -351,7 +353,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
         DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
         DateTime thruDate = new DateMidnight().toDateTime().plusDays(30);
-        List<LoanScheduleEntity> affectedDates = accountPersistence.getLoanSchedulesForAccountThatAreWithinDates(
+        List<LoanScheduleEntity> affectedDates = legacyAccountDao.getLoanSchedulesForAccountThatAreWithinDates(
                 groupLoan.getAccountId(), fromDate, thruDate);
 
         Assert.assertNotNull(affectedDates);
@@ -363,7 +365,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
         DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
         DateTime thruDate = new DateMidnight().toDateTime().plusDays(23);
-        List<CustomerScheduleEntity> affectedDates = accountPersistence
+        List<CustomerScheduleEntity> affectedDates = legacyAccountDao
                 .getCustomerSchedulesForAccountThatAreWithinDates(center.getCustomerAccount().getAccountId(), fromDate,
                         thruDate);
 
@@ -378,7 +380,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
                 false, false);
         DateTime fromDate = new DateMidnight().toDateTime().plusDays(1);
         DateTime thruDate = new DateMidnight().toDateTime().plusDays(37);
-        List<SavingsScheduleEntity> affectedDates = accountPersistence.getSavingsSchedulesForAccountThatAreWithinDates(
+        List<SavingsScheduleEntity> affectedDates = legacyAccountDao.getSavingsSchedulesForAccountThatAreWithinDates(
                 savingsBO.getAccountId(), fromDate, thruDate);
 
         Assert.assertNotNull(affectedDates);
@@ -394,7 +396,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
 
         savingsBO = new SavingsTestHelper().createSavingsAccount(createSavingsOffering("qqqqq"), group,
                 AccountState.SAVINGS_ACTIVE, TestUtils.makeUser());
-        List<Integer> accountIds = accountPersistence.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+        List<Integer> accountIds = legacyAccountDao.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
         assertThat(accountIds.size(), is(0));
 
     }
@@ -409,7 +411,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         // Set time ahead 7 weeks to force regenerating customer schedules.
 
         new DateTimeService().setCurrentDateTime(new DateTime().plusWeeks(7));
-        List<Integer> accountIds = accountPersistence.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+        List<Integer> accountIds = legacyAccountDao.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
         assertThat(accountIds.size(), is(3));
         assertThat(accountIds.contains(center.getCustomerAccount().getAccountId()), is(true));
         assertThat(accountIds.contains(group.getCustomerAccount().getAccountId()), is(true));
@@ -428,7 +430,7 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
                 AccountState.SAVINGS_ACTIVE, TestUtils.makeUser());
 
         new DateTimeService().setCurrentDateTime(new DateTime().plusWeeks(7));
-        List<Integer> accountIds = accountPersistence.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
+        List<Integer> accountIds = legacyAccountDao.getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
         assertThat(accountIds.size(), is(4));
         assertThat(accountIds.contains(center.getCustomerAccount().getAccountId()), is(true));
         assertThat(accountIds.contains(group.getCustomerAccount().getAccountId()), is(true));
@@ -445,10 +447,10 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         List<AccountPaymentEntity> payments = new ArrayList<AccountPaymentEntity>();
         payments.add(accountPaymentEntity);
         savingsBO.setAccountPayments(payments);
-        new AccountPersistence().createOrUpdate(savingsBO);
+        legacyAccountDao.createOrUpdate(savingsBO);
         StaticHibernateUtil.commitTransaction();
 
-        List<AccountPaymentEntity> result = accountPersistence.findAccountPaymentsByReceiptNumber("1111");
+        List<AccountPaymentEntity> result = legacyAccountDao.findAccountPaymentsByReceiptNumber("1111");
         Assert.assertNotNull(result);
         Assert.assertEquals(1, result.size());
         Assert.assertEquals("1111", result.get(0).getReceiptNumber());
@@ -463,10 +465,10 @@ public class AccountPersistenceIntegrationTest extends AccountIntegrationTestCas
         List<AccountPaymentEntity> payments = new ArrayList<AccountPaymentEntity>();
         payments.add(accountPaymentEntity);
         savingsBO.setAccountPayments(payments);
-        new AccountPersistence().createOrUpdate(savingsBO);
+        legacyAccountDao.createOrUpdate(savingsBO);
         StaticHibernateUtil.commitTransaction();
 
-        List<AccountPaymentEntity> result = accountPersistence.findAccountPaymentsByReceiptNumber("1111");
+        List<AccountPaymentEntity> result = legacyAccountDao.findAccountPaymentsByReceiptNumber("1111");
         Assert.assertNotNull(result);
         Assert.assertEquals(0, result.size());
     }

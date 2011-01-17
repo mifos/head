@@ -20,7 +20,6 @@
 
 package org.mifos.accounts.loan.struts.uihelpers;
 
-import org.apache.commons.lang.StringUtils;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.util.helpers.PaymentDataTemplate;
 import org.mifos.application.master.util.helpers.PaymentTypes;
@@ -31,6 +30,8 @@ import org.mifos.framework.util.helpers.Money;
 
 import java.util.Date;
 import java.util.Locale;
+
+import static org.apache.commons.lang.StringUtils.isNotEmpty;
 
 public class PaymentDataHtmlBean implements PaymentDataTemplate {
     private String amount;
@@ -56,7 +57,7 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
     }
 
     public boolean hasValidAmount() {
-        return StringUtils.isNotEmpty(this.amount);
+        return isNotEmpty(this.amount);
     }
 
     public Money getTotalAmount() {
@@ -65,6 +66,31 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
         } else {
             return new Money(installment.getPrincipal().getCurrency(), amount);
         }
+    }
+
+    public Money paymentAmountAsMoney() {
+        Money result = new Money(installment.getPrincipal().getCurrency());
+        if (isNotEmpty(amount)) {
+            try {
+                result = new Money(installment.getPrincipal().getCurrency(), amount);
+            } catch (NumberFormatException nfe) {
+                return result;
+            }
+        }
+        return result;
+
+    }
+
+    public Money totalAsMoney() {
+        Money result = new Money(installment.getPrincipal().getCurrency());
+        if (isNotEmpty(installment.getTotal())) {
+            try {
+                result = new Money(installment.getPrincipal().getCurrency(), installment.getTotal());
+            } catch (NumberFormatException nfe) {
+                return result;
+            }
+        }
+        return result;
     }
 
     public PersonnelBO getPersonnel() {
@@ -124,11 +150,11 @@ public class PaymentDataHtmlBean implements PaymentDataTemplate {
     }
 
     public boolean hasTransactionDate() {
-        return StringUtils.isNotEmpty(date);
+        return isNotEmpty(date);
     }
 
     public boolean hasTotalAmount() {
-        return StringUtils.isNotEmpty(getTotal());
+        return isNotEmpty(getTotal());
     }
 
     public String getInstallmentNumber() {

@@ -22,21 +22,22 @@ package org.mifos.security.rolesandpermission.business.service;
 
 import java.util.List;
 
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.business.AbstractBusinessObject;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
 
 public class RolesPermissionsBusinessService implements BusinessService {
 
-    private RolesPermissionsPersistence rolesPermissionsPersistence = getRolesPermissionsPersistence();
+    private LegacyRolesPermissionsDao rolesPermissionsPersistence = getRolesPermissionsPersistence();
 
-    protected RolesPermissionsPersistence getRolesPermissionsPersistence() {
-        return new RolesPermissionsPersistence();
+    protected LegacyRolesPermissionsDao getRolesPermissionsPersistence() {
+        return ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class);
     }
 
     @Override

@@ -67,7 +67,7 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.struts.actionforms.LoanAccountActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.GracePeriodTypeEntity;
 import org.mifos.accounts.productdefinition.business.LoanAmountSameForAllLoanBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
@@ -135,6 +135,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -144,6 +145,8 @@ import org.springframework.security.core.context.SecurityContextImpl;
 @SuppressWarnings("unchecked")
 public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
 
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     private static final double DELTA = 0.00000001;
     private String flowKey1;
@@ -1245,9 +1248,8 @@ public class LoanAccountActionStrutsTest extends AbstractLoanActionTestCase {
     }
 
     private AccountBO saveAndFetch(AccountBO account) throws Exception {
-        AccountPersistence accountPersistence = new AccountPersistence();
         TestObjectFactory.updateObject(account);
-        return accountPersistence.getAccount(account.getAccountId());
+        return legacyAccountDao.getAccount(account.getAccountId());
     }
 
     private AccountNotesEntity createAccountNotes(String comment, AccountBO account) {

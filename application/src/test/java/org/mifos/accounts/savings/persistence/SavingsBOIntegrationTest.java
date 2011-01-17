@@ -50,7 +50,7 @@ import org.mifos.accounts.business.AccountStateMachines;
 import org.mifos.accounts.business.AccountTestUtils;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestCalcType;
@@ -106,7 +106,8 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
     private SavingsBO savings;
     private SavingsOfferingBO savingsOffering;
     private final SavingsTestHelper helper = new SavingsTestHelper();
-    private final AccountPersistence accountPersistence = new AccountPersistence();
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
     private MifosCurrency currency = null;
     private PersonnelBO createdBy = null;
 
@@ -312,7 +313,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 new Date(System.currentTimeMillis()), savingsOffering);
 
 
-        savings = (SavingsBO) accountPersistence.getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
         savings.setSavingsBalance(TestUtils.createMoney("100.0"));
         Money enteredAmount = new Money(currency, "100.0");
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(),
@@ -338,7 +339,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         savings = TestObjectFactory.createSavingsAccount("43245434", client1, AccountStates.SAVINGS_ACC_INACTIVE,
                 new Date(System.currentTimeMillis()), savingsOffering);
 
-        savings = (SavingsBO) accountPersistence.getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
         savings.setSavingsBalance(new Money(getCurrency()));
 
         Money enteredAmount = new Money(currency, "100.0");
@@ -372,7 +373,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 new Date(System.currentTimeMillis()), savingsOffering);
         savings.setSavingsBalance(new Money(getCurrency()));
 
-        savings = (SavingsBO) accountPersistence.getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
 
         Money enteredAmount = new Money(currency, "100.0");
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(),
@@ -386,7 +387,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
         paymentData.addAccountPaymentData(savingsPaymentData);
         IntegrationTestObjectMother.applyAccountPayment(savings, paymentData);
 
-        savings = (SavingsBO) accountPersistence.getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
         Assert.assertEquals(AccountStates.SAVINGS_ACC_APPROVED, savings.getAccountState().getId().shortValue());
         Assert.assertEquals(TestUtils.createMoney(100.0), savings.getSavingsBalance());
         Assert.assertEquals(1, savings.getSavingsActivityDetails().size());
@@ -448,7 +449,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
                 new Date(System.currentTimeMillis()), savingsOffering);
 
 
-        savings = (SavingsBO) accountPersistence.getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
         savings.setSavingsBalance(TestUtils.createMoney("100.0"));
         Money enteredAmount = new Money(currency, "300.0");
         PaymentData paymentData = PaymentData.createPaymentData(enteredAmount, savings.getPersonnel(),
@@ -821,7 +822,7 @@ public class SavingsBOIntegrationTest extends MifosIntegrationTestCase {
 
     private AccountBO saveAndFetch(final AccountBO account) throws Exception {
         TestObjectFactory.updateObject(account);
-        return accountPersistence.getAccount(account.getAccountId());
+        return legacyAccountDao.getAccount(account.getAccountId());
     }
 
     private java.sql.Date offSetCurrentDate(final int noOfDays) {

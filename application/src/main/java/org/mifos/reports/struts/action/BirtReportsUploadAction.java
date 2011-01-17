@@ -42,6 +42,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
 import org.hibernate.HibernateException;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -58,7 +59,6 @@ import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.activity.ActivityGenerator;
 import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.authorization.AuthorizationManager;
@@ -124,7 +124,8 @@ public class BirtReportsUploadAction extends BaseAction {
         int newActivityId;
         String activityNameHead = "Can view ";
         try {
-            newActivityId = insertActivity(parentActivity, activityNameHead + uploadForm.getReportTitle());
+            newActivityId = legacyRolesPermissionsDao.calculateDynamicActivityId();
+            legacyRolesPermissionsDao.createActivityForReports(parentActivity, activityNameHead + uploadForm.getReportTitle());
         } catch (ActivityGeneratorException ex) {
             ActionErrors errors = new ActionErrors();
             errors.add(ex.getKey(), new ActionMessage(ex.getKey()));
@@ -315,8 +316,8 @@ public class BirtReportsUploadAction extends BaseAction {
         // kim
         String activityNameHead = "Can view ";
         rp.updateLookUpValue(reportBO.getActivityId(), activityNameHead + uploadForm.getReportTitle());
-        ActivityGenerator.reparentActivityUsingHibernate(reportBO.getActivityId(), category.getActivityId());
-        ActivityGenerator.changeActivityMessage(reportBO.getActivityId(), DatabaseMigrator.ENGLISH_LOCALE,
+        legacyRolesPermissionsDao.reparentActivityUsingHibernate(reportBO.getActivityId(), category.getActivityId());
+        legacyRolesPermissionsDao.changeActivityMessage(reportBO.getActivityId(), Localization.ENGLISH_LOCALE,
                 "Can view " + reportBO.getReportName());
 
         FormFile formFile = uploadForm.getFile();
@@ -346,16 +347,6 @@ public class BirtReportsUploadAction extends BaseAction {
         request.getSession().setAttribute("reportsBO",
                 new ReportsPersistence().getReport(Short.valueOf(request.getParameter("reportId"))));
         return mapping.findForward(ActionForwards.download_success.toString());
-    }
-
-    protected int insertActivity(short parentActivity, String lookUpDescription) throws ServiceException,
-            ActivityGeneratorException, IOException, HibernateException, PersistenceException {
-        int newActivityId;
-        newActivityId = ActivityGenerator.calculateDynamicActivityId();
-        ActivityGenerator activityGenerator = new ActivityGenerator();
-        activityGenerator
-                .upgradeUsingHQL(DynamicLookUpValueCreationTypes.BirtReport, parentActivity, lookUpDescription);
-        return newActivityId;
     }
 
     private ReportsBO createOrUpdateReport(ReportsCategoryBO category, int newActivityId, String reportTitle,

@@ -24,10 +24,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.GeneralConfig;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -44,14 +45,14 @@ public class LoanArrearsHelper extends TaskHelper {
     @Override
     public void execute(long timeInMillis) throws BatchJobException {
         long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-        AccountPersistence accountPersistence = new AccountPersistence();
+        LegacyAccountDao legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
         List<String> errorList = new ArrayList<String>();
         List<Integer> listAccountIds = null;
         int accountNumber = 0;
         try {
             Short latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
             long time3 = new DateTimeService().getCurrentDateTime().getMillis();
-            listAccountIds = new LoanPersistence().getLoanAccountsInArrearsInGoodStanding(latenessDays);
+            listAccountIds = ApplicationContextProvider.getBean(LegacyLoanDao.class).getLoanAccountsInArrearsInGoodStanding(latenessDays);
             long duration2 = new DateTimeService().getCurrentDateTime().getMillis() - time3;
             accountNumber = listAccountIds.size();
             getLogger().info(
@@ -68,7 +69,7 @@ public class LoanArrearsHelper extends TaskHelper {
         try {
             long startTime = new DateTimeService().getCurrentDateTime().getMillis();
             for (Integer accountId : listAccountIds) {
-                loanBO = (LoanBO) accountPersistence.getAccount(accountId);
+                loanBO = (LoanBO) legacyAccountDao.getAccount(accountId);
                 assert (loanBO.getAccountState().getId().shortValue() == AccountState.LOAN_ACTIVE_IN_GOOD_STANDING
                         .getValue().shortValue());
 

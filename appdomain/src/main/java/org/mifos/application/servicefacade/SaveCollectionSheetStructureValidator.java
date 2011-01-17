@@ -27,7 +27,7 @@ import java.util.List;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.config.AccountingRules;
@@ -51,7 +51,7 @@ import org.mifos.framework.util.helpers.Money;
 public class SaveCollectionSheetStructureValidator {
 
     private CustomerPersistence customerPersistence;
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao legacyAccountDao;
     private final Short mifosCurrencyId;
 
     private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
@@ -69,7 +69,7 @@ public class SaveCollectionSheetStructureValidator {
     public SaveCollectionSheetStructureValidator() {
 
         this.customerPersistence = new CustomerPersistence();
-        this.accountPersistence = new AccountPersistence();
+        this.legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
         this.mifosCurrencyId = Money.getDefaultCurrency().getCurrencyId();
 
         validCustomerStatuses.add(CustomerStatus.CLIENT_ACTIVE);
@@ -264,7 +264,7 @@ public class SaveCollectionSheetStructureValidator {
 
         AccountBO account;
         try {
-            account = accountPersistence.getAccount(accountId);
+            account = legacyAccountDao.getAccount(accountId);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
@@ -473,7 +473,7 @@ public class SaveCollectionSheetStructureValidator {
         this.customerPersistence = customerPersistence;
     }
 
-    public void setAccountPersistence(AccountPersistence accountPersistence) {
-        this.accountPersistence = accountPersistence;
+    public void setlegacyAccountDao(LegacyAccountDao legacyAccountDao) {
+        this.legacyAccountDao = legacyAccountDao;
     }
 }

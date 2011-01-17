@@ -24,7 +24,7 @@ import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountFeesActionDetailEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
@@ -33,7 +33,6 @@ import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.personnel.business.PersonnelBO;
 import org.mifos.framework.util.DateTimeService;
-import org.mifos.framework.util.helpers.DateUtils;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.platform.util.CollectionUtils;
 
@@ -694,17 +693,17 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
                                                                    PersonnelBO personnel, Date transactionDate) {
 
         LoanBO loanBO = (LoanBO) account;
-        LoanPersistence loanPersistence = loanBO.getLoanPersistence();
-        LoanTrxnDetailEntity loanTrxnDetailEntity = recordTransaction(accountPayment, personnel, transactionDate, loanPersistence);
+        LegacyLoanDao legacyLoanDao = loanBO.getlegacyLoanDao();
+        LoanTrxnDetailEntity loanTrxnDetailEntity = recordTransaction(accountPayment, personnel, transactionDate, legacyLoanDao);
         loanBO.recordSummaryAndPerfHistory(isPaid(), paymentAllocation);
         return loanTrxnDetailEntity;
     }
 
     private LoanTrxnDetailEntity recordTransaction(AccountPaymentEntity accountPayment, PersonnelBO personnel,
-                                                   Date transactionDate, LoanPersistence loanPersistence) {
+                                                   Date transactionDate, LegacyLoanDao legacyLoanDao) {
         // TODO: Avoid passing the persistence instance in the constructor for reference data lookup
         LoanTrxnDetailEntity loanTrxnDetailEntity = new LoanTrxnDetailEntity(accountPayment, this, personnel, transactionDate,
-                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, loanPersistence);
+                AccountActionTypes.LOAN_REPAYMENT, AccountConstants.PAYMENT_RCVD, legacyLoanDao);
         accountPayment.addAccountTrxn(loanTrxnDetailEntity);
         return loanTrxnDetailEntity;
     }
@@ -727,5 +726,9 @@ public class LoanScheduleEntity extends AccountActionDateEntity {
 
     double getExtraInterestPaidAsDouble() {
         return getExtraInterestPaid().getAmount().doubleValue();
+    }
+
+    public Money getEffectiveInterest() {
+        return interest.add(getExtraInterest());
     }
 }

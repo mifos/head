@@ -32,11 +32,11 @@ import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.framework.hibernate.helper.HibernateTransactionHelperForStaticHibernateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.api.TransactionImport;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.business.service.CustomerSearchServiceImpl;
@@ -70,8 +70,8 @@ public class PluginManager {
         ClassLoader pluginClassLoader = initializePluginClassLoader();
         ServiceLoader<TransactionImport> loader = ServiceLoader.load(TransactionImport.class, pluginClassLoader);
         for (TransactionImport ti : loader) {
-            ti.setAccountService(new StandardAccountService(new AccountPersistence(), new LoanPersistence(),
-                    new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()),
+            ti.setAccountService(new StandardAccountService(ApplicationContextProvider.getBean(LegacyAccountDao.class), ApplicationContextProvider.getBean(LegacyLoanDao.class),
+                    ApplicationContextProvider.getBean(LegacyAcceptedPaymentTypeDao.class), new PersonnelDaoHibernate(new GenericDaoHibernate()),
                     new CustomerDaoHibernate(new GenericDaoHibernate()), ApplicationContextProvider.getBean(LoanBusinessService.class), new HibernateTransactionHelperForStaticHibernateUtil()));
 	    ti.setCustomerSearchService(new CustomerSearchServiceImpl(new CustomerDaoHibernate(new GenericDaoHibernate())));
             plugins.add(ti);

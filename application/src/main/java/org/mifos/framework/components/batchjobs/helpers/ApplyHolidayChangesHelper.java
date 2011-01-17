@@ -23,13 +23,14 @@ package org.mifos.framework.components.batchjobs.helpers;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.mifos.accounts.business.AccountActionDateEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.holiday.business.Holiday;
 import org.mifos.application.holiday.persistence.HolidayDao;
 import org.mifos.application.holiday.persistence.HolidayDaoHibernate;
 import org.mifos.application.holiday.util.helpers.RepaymentRuleTypes;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.FiscalCalendarRules;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -53,7 +54,7 @@ import java.util.Map;
 public class ApplyHolidayChangesHelper extends TaskHelper {
 
     // injectable external dependencies
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao legacyAccountDao;
     private BatchJobConfigurationService batchJobConfigurationService;
     private HolidayDao holidayDao;
     private FiscalCalendarRules fiscalCalendarRules;
@@ -84,15 +85,15 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         this.batchJobConfigurationService = batchJobConfigurationService;
     }
 
-    public AccountPersistence getAccountPersistence() {
-        if (accountPersistence == null) {
-            return new AccountPersistence();
+    public LegacyAccountDao getlegacyAccountDao() {
+        if (legacyAccountDao == null) {
+            return ApplicationContextProvider.getBean(LegacyAccountDao.class);
         }
-        return this.accountPersistence;
+        return this.legacyAccountDao;
     }
 
-    public void setAccountPersistence(AccountPersistence accountPersistence) {
-        this.accountPersistence = accountPersistence;
+    public void setlegacyAccountDao(LegacyAccountDao legacyAccountDao) {
+        this.legacyAccountDao = legacyAccountDao;
     }
 
     public HolidayDao getHolidayDao() {
@@ -342,7 +343,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         @Override
         public List<Object[]> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException {
-            return getAccountPersistence().getListOfAccountIdsHavingLoanSchedulesWithinAHoliday(holiday);
+            return getlegacyAccountDao().getListOfAccountIdsHavingLoanSchedulesWithinAHoliday(holiday);
         }
 
         @Override
@@ -350,7 +351,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 DateTime fromDate, DateTime thruDate) throws PersistenceException {
 
             List<AccountActionDateEntity> affectedInstallmentsGeneric = new ArrayList<AccountActionDateEntity>();
-            affectedInstallmentsGeneric.addAll(getAccountPersistence().getLoanSchedulesForAccountThatAreWithinDates(
+            affectedInstallmentsGeneric.addAll(getlegacyAccountDao().getLoanSchedulesForAccountThatAreWithinDates(
                     accountId, fromDate, thruDate));
             return affectedInstallmentsGeneric;
         }
@@ -366,7 +367,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
         @Override
         public List<Object[]> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException {
 
-            return getAccountPersistence().getListOfAccountIdsHavingSavingsSchedulesWithinAHoliday(holiday);
+            return getlegacyAccountDao().getListOfAccountIdsHavingSavingsSchedulesWithinAHoliday(holiday);
         }
 
         @Override
@@ -374,7 +375,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 DateTime fromDate, DateTime thruDate) throws PersistenceException {
 
             List<AccountActionDateEntity> affectedInstallmentsGeneric = new ArrayList<AccountActionDateEntity>();
-            affectedInstallmentsGeneric.addAll(getAccountPersistence().getSavingsSchedulesForAccountThatAreWithinDates(
+            affectedInstallmentsGeneric.addAll(getlegacyAccountDao().getSavingsSchedulesForAccountThatAreWithinDates(
                     accountId, fromDate, thruDate));
             return affectedInstallmentsGeneric;
         }
@@ -389,7 +390,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
 
         @Override
         public List<Object[]> getAccountIdsHavingSchedulesWithinHoliday(Holiday holiday) throws PersistenceException {
-            return getAccountPersistence().getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday(holiday);
+            return getlegacyAccountDao().getListOfAccountIdsHavingCustomerSchedulesWithinAHoliday(holiday);
         }
 
         @Override
@@ -397,7 +398,7 @@ public class ApplyHolidayChangesHelper extends TaskHelper {
                 DateTime fromDate, DateTime thruDate) throws PersistenceException {
 
             List<AccountActionDateEntity> affectedInstallmentsGeneric = new ArrayList<AccountActionDateEntity>();
-            affectedInstallmentsGeneric.addAll(getAccountPersistence()
+            affectedInstallmentsGeneric.addAll(getlegacyAccountDao()
                     .getCustomerSchedulesForAccountThatAreWithinDates(accountId, fromDate, thruDate));
             return affectedInstallmentsGeneric;
         }

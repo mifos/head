@@ -97,7 +97,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                 for (AccountActionDateEntity acctDate : list) {
                     LoanScheduleEntity loanScheduleEntity = (LoanScheduleEntity) acctDate;
                     totalPrincipal = totalPrincipal.add(loanScheduleEntity.getPrincipal());
-                    totalInterest = totalInterest.add(loanScheduleEntity.getInterest());
+                    totalInterest = totalInterest.add(loanScheduleEntity.getEffectiveInterest());
                     totalFees = totalFees.add(loanScheduleEntity.getTotalScheduledFeeAmountWithMiscFee());
                 }
 
@@ -164,7 +164,7 @@ public class LoanRepaymentTag extends BodyTagSupport {
                     html1.append(createInstallmentRow(installment, true));
                     html2.append(createRunningBalanceRow(installment, totalPrincipal, totalInterest, totalFees));
                     totalPrincipal = totalPrincipal.subtract(installment.getPrincipalPaid());
-                    totalInterest = totalInterest.subtract(installment.getInterestPaid());
+                    totalInterest = totalInterest.subtract(installment.getEffectiveInterestPaid());
                     totalFees = totalFees.subtract(installment.getTotalFeeAmountPaidWithMiscFee());
                     if (index != list.size() - 1 && installment.isPaid()) {
                         index++;

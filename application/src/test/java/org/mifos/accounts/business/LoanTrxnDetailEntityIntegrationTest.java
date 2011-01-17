@@ -31,7 +31,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.LoanSummaryEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.PaymentData;
@@ -43,12 +43,16 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCase {
 
     private CustomerBO center;
     private CustomerBO group;
     private AccountBO account;
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     @Before
     public void setUp() throws Exception {
@@ -72,7 +76,7 @@ public class LoanTrxnDetailEntityIntegrationTest extends MifosIntegrationTestCas
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 sampleDate, loanOffering);
         StaticHibernateUtil.flushSession();
-        account = new AccountPersistence().getAccount(account.getAccountId());
+        account = legacyAccountDao.getAccount(account.getAccountId());
         Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accountActionsToBeUpdated = new ArrayList<AccountActionDateEntity>();

@@ -29,7 +29,6 @@ import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
-import org.mifos.accounts.persistence.AccountPersistence;
 import org.mifos.accounts.savings.util.helpers.SavingsConstants;
 import org.mifos.accounts.struts.actionforms.NotesActionForm;
 import org.mifos.accounts.util.helpers.AccountTypes;
@@ -164,6 +163,6 @@ public class NotesAction extends SearchAction {
             NotesSearchResultsDto noteResults = this.savingsServiceFacade.retrievePagedNotesDto(noteSearchDto);
         }
 
-        return new AccountPersistence().getAllAccountNotes(accountId);
+        return legacyAccountDao.getAllAccountNotes(accountId);
     }
 }

@@ -46,7 +46,7 @@ public class NamingConsistencyTest {
             if (!clazzName.endsWith("IntegrationTest") && !clazzName.endsWith("StrutsTest")) {
                 if (clazz.getSuperclass().equals(MifosIntegrationTestCase.class)
                         || clazz.getSuperclass().equals(MifosMockStrutsTestCase.class)) {
-                    fail(clazz + " extends integration test cases MifosIntegrationTestCase or MifosMockStrutsTestCase");
+                    fail(clazz + " Integration test naming convension voilation");
                 }
             }
         }

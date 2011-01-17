@@ -31,13 +31,16 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Autowired
     LegacyMasterDao legacyMasterDao;
+
+    @Autowired
+    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     @Override
     protected void setStrutsConfig() {
@@ -319,24 +322,21 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
         LookUpValueEntity anLookUp = new LookUpValueEntity();
         LookUpEntity lookUpEntity = legacyMasterDao.getPersistentObject(LookUpEntity.class, Short
                 .valueOf((short) LookUpEntity.ACTIVITY));
         anLookUp.setLookUpEntity(lookUpEntity);
         ActivityEntity parent = legacyMasterDao.getPersistentObject(ActivityEntity.class, (short) 13);
         ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);
-        rpp.createOrUpdate(anLookUp);
-        rpp.createOrUpdate(activityEntity);
+        legacyRolesPermissionsDao.createOrUpdate(anLookUp);
+        legacyRolesPermissionsDao.createOrUpdate(activityEntity);
         return activityEntity;
     }
 
     private void deleteActivityForTest(ActivityEntity activityEntity) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
-        rpp.getSession().clear();
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
-        rpp.delete(activityEntity);
-        rpp.delete(anLookUp);
+        legacyRolesPermissionsDao.delete(activityEntity);
+        legacyRolesPermissionsDao.delete(anLookUp);
     }
 
 }

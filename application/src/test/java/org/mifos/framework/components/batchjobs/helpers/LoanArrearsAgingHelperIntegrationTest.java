@@ -41,7 +41,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.loan.business.LoanArrearsAgingEntity;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.LoanOfferingInstallmentRange;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -67,8 +67,12 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestCase {
+
+    @Autowired
+    private LegacyLoanDao legacyLoanDao;
 
     private LoanArrearsAgingHelper loanArrearsAgingHelper;
     private LoanArrearsHelper loanArrearHelper;
@@ -224,7 +228,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         runLoanArrearsThenLoanArrearsAging();
         StaticHibernateUtil.flushAndClearSession();
-        LoanBO reloadedLoan = new LoanPersistence().getAccount(loan.getAccountId());
+        LoanBO reloadedLoan = legacyLoanDao.getAccount(loan.getAccountId());
 
         return reloadedLoan.getLoanArrearsAgingEntity();
     }
@@ -297,7 +301,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
         runLoanArrearsThenLoanArrearsAging();
         StaticHibernateUtil.flushAndClearSession();
 
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
+        loan = legacyLoanDao.getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
         LoanArrearsAgingEntity loanArrearsAgingEntity = loan.getLoanArrearsAgingEntity();
@@ -330,7 +334,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         runLoanArrearsThenLoanArrearsAging();
 
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
+        loan = legacyLoanDao.getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
 
@@ -341,7 +345,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         //jpwrunLoanArrearsThenLoanArrearsAging();
 
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
+        loan = legacyLoanDao.getAccount(loan.getAccountId());
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
         Assert.assertTrue(loan.getState().equals(AccountState.LOAN_ACTIVE_IN_GOOD_STANDING));
@@ -362,7 +366,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         runLoanArrearsThenLoanArrearsAging();
 
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
+        loan = legacyLoanDao.getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
 
@@ -374,7 +378,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         //jpw runLoanArrearsThenLoanArrearsAging();
 
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
+        loan = legacyLoanDao.getAccount(loan.getAccountId());
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
         Assert.assertTrue(loan.getState().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
@@ -395,7 +399,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         runLoanArrearsThenLoanArrearsAging();
         StaticHibernateUtil.flushAndClearSession();
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
+        loan = legacyLoanDao.getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
 
@@ -407,7 +411,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         //jpw runLoanArrearsThenLoanArrearsAging();
 
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
+        loan = legacyLoanDao.getAccount(loan.getAccountId());
 
         Assert.assertNull(loan.getLoanArrearsAgingEntity());
         Assert.assertTrue(loan.getState().equals(AccountState.LOAN_CLOSED_OBLIGATIONS_MET));
@@ -438,7 +442,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
         runLoanArrearsThenLoanArrearsAging();
         StaticHibernateUtil.flushAndClearSession();
-        loan = new LoanPersistence().getAccount(loan.getAccountId());
+        loan = legacyLoanDao.getAccount(loan.getAccountId());
 
         Assert.assertNotNull(loan.getLoanArrearsAgingEntity());
         LoanArrearsAgingEntity loanArrearsAgingEntity = loan.getLoanArrearsAgingEntity();
@@ -459,7 +463,7 @@ public class LoanArrearsAgingHelperIntegrationTest extends MifosIntegrationTestC
 
     private void assertForLoanArrearsAgingEntity(LoanBO loan) throws PersistenceException {
 
-        LoanBO loanAccount = new LoanPersistence().getAccount(loan.getAccountId());
+        LoanBO loanAccount = legacyLoanDao.getAccount(loan.getAccountId());
         LoanArrearsAgingEntity loanArrearsAgingEntity = loanAccount.getLoanArrearsAgingEntity();
 
         Assert

@@ -37,16 +37,18 @@ import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.rolesandpermission.struts.action.RolesPermissionsAction;
 import org.mifos.security.rolesandpermission.struts.actionforms.RolesPermissionsActionForm;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
-
+    @Autowired
+    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     UserContext userContext = null;
 
@@ -123,9 +125,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyNoActionErrors();
         verifyNoActionMessages();
         verifyForward(ActionForwards.create_success.toString());
-
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
-        role = rolesPermissionsPersistence.getRole("New Role");
+        role = legacyRolesPermissionsDao.getRole("New Role");
        Assert.assertEquals(2, role.getActivities().size());
 
         UserContext userContext = TestUtils.makeUser(role.getId());
@@ -220,8 +220,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testManage() throws Exception {
-        RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
-        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
+        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", legacyRolesPermissionsDao.getActivities());
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "manage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -237,8 +236,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testUpdateSuccess() throws Exception {
-        RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
-        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
+        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", legacyRolesPermissionsDao.getActivities());
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "manage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -262,7 +260,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.update_success.toString());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
-        role = persistence.getRole(role.getId());
+        role = legacyRolesPermissionsDao.getRole(role.getId());
        Assert.assertEquals(2, role.getActivities().size());
 
         UserContext userContext = TestUtils.makeUser(role.getId());
@@ -276,8 +274,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testUpdateFailureWhenNameIsNull() throws Exception {
-        RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
-        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
+        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", legacyRolesPermissionsDao.getActivities());
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "manage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -303,8 +300,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testUpdateFailureWhenNameIsEmpty() throws Exception {
-        RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
-        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
+        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", legacyRolesPermissionsDao.getActivities());
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "manage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -330,8 +326,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testUpdateFailureForDuplicateName() throws Exception {
-        RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
-        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
+        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", legacyRolesPermissionsDao.getActivities());
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "manage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -357,8 +352,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testUpdateFailureWhenActivitiesAreNull() throws Exception {
-        RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
-        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
+        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", legacyRolesPermissionsDao.getActivities());
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "manage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -381,8 +375,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testUpdateFailureWhenActivitiesAreEmpty() throws Exception {
-        RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
-        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
+        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", legacyRolesPermissionsDao.getActivities());
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "manage");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -408,8 +401,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testPreview() throws Exception {
-        RolesPermissionsPersistence persistence = new RolesPermissionsPersistence();
-        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", persistence.getActivities());
+        role = TestObjectFactory.createRole(TestUtils.makeUser(), "New Role", legacyRolesPermissionsDao.getActivities());
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "preview");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);
@@ -424,8 +416,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
     @Test
     public void testDelete() throws Exception {
         Short roleId = null;
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
-        List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities();
+        List<ActivityEntity> activityList = legacyRolesPermissionsDao.getActivities();
         ActivityEntity activityEntity_0 = activityList.get(0);
         ActivityEntity activityEntity_1 = activityList.get(1);
         ActivityEntity activityEntity_2 = activityList.get(2);
@@ -452,7 +443,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
         verifyForward(ActionForwards.delete_success.toString());
         Assert.assertNull(request.getAttribute(Constants.CURRENTFLOWKEY));
 
-        role = rolesPermissionsPersistence.getRole("New Role");
+        role = legacyRolesPermissionsDao.getRole("New Role");
         Assert.assertNull(role);
 
         UserContext userContext = TestUtils.makeUser(roleId);
@@ -471,8 +462,7 @@ public class RolesPermissionsActionStrutsTest extends MifosMockStrutsTestCase {
 
     @Test
     public void testDeleteFailure() throws Exception {
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
-        RoleBO roleBO = rolesPermissionsPersistence.getRole("Admin");
+        RoleBO roleBO = legacyRolesPermissionsDao.getRole("Admin");
         setRequestPathInfo("/rolesPermission.do");
         addRequestParameter("method", "preview");
         addRequestParameter(Constants.CURRENTFLOWKEY, flowKey);

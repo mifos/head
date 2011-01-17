@@ -38,7 +38,7 @@ import org.mifos.accounts.fees.business.AmountFeeBO;
 import org.mifos.accounts.fees.business.FeeDto;
 import org.mifos.accounts.fees.util.helpers.FeeCategory;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.SavingsOfferingBO;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -80,6 +80,7 @@ import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.MifosUser;
 import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -87,7 +88,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
 
 public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
-
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     private CenterBO center;
 
@@ -639,8 +641,8 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(center.getCustomerId());
         group = TestObjectFactory.getGroup(group.getCustomerId());
         client = TestObjectFactory.getClient(client.getCustomerId());
-        loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO.getAccountId());
-        savingsBO = (SavingsBO) new AccountPersistence().getAccount(savingsBO.getAccountId());
+        loanBO = (LoanBO) legacyAccountDao.getAccount(loanBO.getAccountId());
+        savingsBO = (SavingsBO) legacyAccountDao.getAccount(savingsBO.getAccountId());
 
         GroupInformationDto groupInformationDto = (GroupInformationDto) SessionUtils.getAttribute(
                 "groupInformationDto", request);
@@ -660,8 +662,8 @@ public class GroupActionStrutsTest extends MifosMockStrutsTestCase {
         center = TestObjectFactory.getCenter(Integer.valueOf(center.getCustomerId()).intValue());
         group = TestObjectFactory.getGroup(Integer.valueOf(group.getCustomerId()).intValue());
         client = TestObjectFactory.getClient(Integer.valueOf(client.getCustomerId()).intValue());
-        loanBO = (LoanBO) new AccountPersistence().getAccount(loanBO.getAccountId());
-        savingsBO = (SavingsBO) new AccountPersistence().getAccount(savingsBO.getAccountId());
+        loanBO = (LoanBO) legacyAccountDao.getAccount(loanBO.getAccountId());
+        savingsBO = (SavingsBO) legacyAccountDao.getAccount(savingsBO.getAccountId());
     }
 
     @Test

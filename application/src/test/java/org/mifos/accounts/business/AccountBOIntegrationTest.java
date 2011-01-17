@@ -330,7 +330,7 @@ public class AccountBOIntegrationTest extends AccountIntegrationTestCase {
                 FeePayment.TIME_OF_DISBURSEMENT);
         AccountFeesEntity accountOneTimeFee = new AccountFeesEntity(groupLoan, oneTimeFee, new Double("1.0"));
         groupLoan.addAccountFees(accountOneTimeFee);
-        accountPersistence.createOrUpdate(groupLoan);
+        legacyAccountDao.createOrUpdate(groupLoan);
         TestObjectFactory.flushandCloseSession();
         groupLoan = TestObjectFactory.getObject(LoanBO.class, groupLoan.getAccountId());
         Assert.assertEquals(1, groupLoan.getPeriodicFeeList().size());

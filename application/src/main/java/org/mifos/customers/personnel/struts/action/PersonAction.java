@@ -81,7 +81,7 @@ import org.mifos.framework.util.helpers.SessionUtils;
 import org.mifos.framework.util.helpers.TransactionDemarcate;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
 
@@ -119,7 +119,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> languages = this.customerDao.retrieveLanguages();
 
-        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
+        List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
@@ -315,7 +315,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> languages = this.customerDao.retrieveLanguages();
 
-        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
+        List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
@@ -501,7 +501,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> languages = this.customerDao.retrieveLanguages();
 
-        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
+        List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);

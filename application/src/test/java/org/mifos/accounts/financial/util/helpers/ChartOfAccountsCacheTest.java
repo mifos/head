@@ -30,7 +30,7 @@ import org.mifos.accounts.financial.business.COABO;
 import org.mifos.accounts.financial.business.GLCategoryType;
 import org.mifos.accounts.financial.business.GLCodeEntity;
 import org.mifos.accounts.financial.exceptions.FinancialException;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 
 public class ChartOfAccountsCacheTest extends TestCase {
 
@@ -87,14 +87,14 @@ public class ChartOfAccountsCacheTest extends TestCase {
     }
 
     public void testTopLevelAccountCached() throws Exception {
-        AccountPersistence ap = createMockAccountPersistance();
+        LegacyAccountDao ap = createMockAccountPersistance();
         COABO income = ap.getCategory(GLCategoryType.INCOME);
         COABO cachedIncome = ChartOfAccountsCache.get(INCOME_GL_ACCOUNT_CODE);
        Assert.assertEquals(income, cachedIncome);
     }
 
-    private AccountPersistence createMockAccountPersistance() {
-        AccountPersistence ap = createMock(AccountPersistence.class);
+    private LegacyAccountDao createMockAccountPersistance() {
+        LegacyAccountDao ap = createMock(LegacyAccountDao.class);
         expect(ap.getCategory(GLCategoryType.INCOME)).andReturn(new COABO(ACCOUNT_ID, ACCOUNT_NAME));
         replay(ap);
         return ap;

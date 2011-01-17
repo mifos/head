@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.Localization;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.DatabaseMigrator;
@@ -39,7 +40,6 @@ import org.mifos.reports.business.service.ReportsBusinessService;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
-import org.mifos.security.activity.ActivityGenerator;
 import org.mifos.security.activity.ActivityGeneratorException;
 import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.util.SecurityConstants;
@@ -99,7 +99,7 @@ public class ReportsCategoryAction extends BaseAction {
 
         int newActivityId;
         try {
-            newActivityId = ActivityGenerator.calculateDynamicActivityId();
+            newActivityId = legacyRolesPermissionsDao.calculateDynamicActivityId();
         } catch (ActivityGeneratorException agex) {
 
             ActionErrors errors = new ActionErrors();
@@ -108,9 +108,8 @@ public class ReportsCategoryAction extends BaseAction {
             return mapping.findForward(ActionForwards.preview_failure.toString());
         }
 
-        ActivityGenerator activityGenerator = new ActivityGenerator();
         Short parentActivityId = SecurityConstants.REPORTS_MANAGEMENT;
-        activityGenerator.upgradeUsingHQL(DynamicLookUpValueCreationTypes.BirtReport, parentActivityId, categoryName);
+        legacyRolesPermissionsDao.createActivityForReports(parentActivityId, categoryName);
 
         reportsCategoryBO.setActivityId((short) newActivityId);
         reportsCategoryBO.setReportCategoryName(categoryName);
@@ -248,8 +247,8 @@ public class ReportsCategoryAction extends BaseAction {
         Short activityId = reportsCategoryBO.getActivityId();
         rPersistence.updateLookUpValue(activityId, inputCategoryName);
 
-        ActivityGenerator.changeActivityMessage(reportsCategoryBO.getActivityId(),
-                DatabaseMigrator.ENGLISH_LOCALE, reportsCategoryBO.getReportCategoryName());
+        legacyRolesPermissionsDao.changeActivityMessage(reportsCategoryBO.getActivityId(),
+                Localization.ENGLISH_LOCALE, reportsCategoryBO.getReportCategoryName());
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 }

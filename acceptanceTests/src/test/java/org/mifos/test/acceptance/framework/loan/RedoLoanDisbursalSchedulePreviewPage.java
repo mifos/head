@@ -215,7 +215,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     private void verifyErrorForInvalidTotal(int noOfInstallments) {
-        fillAllTotalFields(noOfInstallments, "abcd123");
+        fillAllFields(noOfInstallments, totalField, "abcd123");
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
             isTextPresentInPage("Installment "+(installment+1)+" has invalid total amount");
@@ -224,7 +224,7 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
 
     private void verifyErrorForTotalLessThanMinAmount(int minInstalmentAmount, int noOfInstallments, DateTime disbursalDate, int gap) {
         fillDate(disbursalDate, gap,noOfInstallments, true);
-        fillAllTotalFields(noOfInstallments, String.valueOf(minInstalmentAmount-1));
+        fillAllFields(noOfInstallments, totalField, String.valueOf(minInstalmentAmount - 1));
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
             isTextPresentInPage("Installment "+(installment+1)+" has total amount less than the allowed value");
@@ -232,7 +232,8 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
     }
 
     private void verifyBlankTotalField(int noOfInstallments) {
-        fillAllTotalFields(noOfInstallments, "");
+        fillAllFields(noOfInstallments, totalField, "");
+        fillAllFields(noOfInstallments, paidAmountField, "");
         clickPreviewButtonAndWaitForPageToLoad();
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
             isTextPresentInPage("Installment "+(installment+1)+" has invalid total amount");
@@ -240,14 +241,14 @@ public class RedoLoanDisbursalSchedulePreviewPage extends MifosPage {
 
     }
 
-    private void fillAllTotalFields(int noOfInstallments, String installmentAmount) {
+    private void fillAllFields(int noOfInstallments, String totalField, String installmentAmount) {
         for (int installment = 0; installment < noOfInstallments-1; installment++) {
             selenium.type(String.format(totalField,installment), installmentAmount);
         }
     }
 
     public RedoLoanDisbursalSchedulePreviewPage verifyValidData(int noOfInstallments, String minGap, String minInstalmentAmount, DateTime disbursalDate, String maxGap) {
-        fillAllTotalFields(noOfInstallments, String.valueOf(minInstalmentAmount));
+        fillAllFields(noOfInstallments, totalField, String.valueOf(minInstalmentAmount));
         fillDate(disbursalDate, Integer.parseInt(minGap), noOfInstallments, true);
         clickPreviewButtonAndWaitForPageToLoad();
         verifyPage("CreateLoanPreview");

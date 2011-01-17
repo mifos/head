@@ -18,7 +18,7 @@
     			<prop key="org.springframework.security.access.AccessDeniedException">accessDenied</prop>
     		</props>
     	</property>
-    	<property name="exceptionAttribute"><value>exception</value></property>
+        <property name="exceptionAttribute" value="exception" />
     </bean> 
     
     <bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">

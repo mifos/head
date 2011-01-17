@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.mifos.accounts.business.AccountBO;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.GeneralConfig;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.core.MifosRuntimeException;
@@ -49,7 +50,7 @@ import org.mifos.framework.util.DateTimeService;
  */
 public class Upgrade1285177663 extends Upgrade {
 
-    private final AccountPersistence accountPersistence = new AccountPersistence();
+    private final LegacyAccountDao legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
 
     public Upgrade1285177663() {
         super();
@@ -107,7 +108,7 @@ public class Upgrade1285177663 extends Upgrade {
             for (Integer accountId : customerAccountIds) {
                 currentRecordNumber++;
                 currentAccountId = accountId;
-                AccountBO accountBO = accountPersistence.getAccount(accountId);
+                AccountBO accountBO = legacyAccountDao.getAccount(accountId);
 
                 if (accountBO instanceof CustomerAccountBO) {
                     ((CustomerAccountBO) accountBO).applyPeriodicFeesToNextSetOfMeetingDates();
@@ -176,7 +177,7 @@ public class Upgrade1285177663 extends Upgrade {
 
         Map<String, Object> parameters = new HashMap<String, Object>();
         try {
-            AccountIds =  new AccountPersistence().executeNamedQuery("getCustomerAccountsWithSchedulesMissingPeriodicFees", parameters);
+            AccountIds =  ApplicationContextProvider.getBean(LegacyAccountDao.class).executeNamedQuery("getCustomerAccountsWithSchedulesMissingPeriodicFees", parameters);
         } catch (PersistenceException e) {
             throw new BatchJobException(e);
         }

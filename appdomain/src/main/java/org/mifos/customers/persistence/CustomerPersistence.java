@@ -39,7 +39,7 @@ import org.hibernate.Session;
 import org.mifos.accounts.business.AccountActionDateEntity;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountStateEntity;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.util.helpers.AccountState;
 import org.mifos.accounts.util.helpers.AccountTypes;
@@ -48,6 +48,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
@@ -300,7 +301,7 @@ public class CustomerPersistence extends LegacyGenericDao {
 
         try {
 
-           queryResult = new AccountPersistence().search(searchString, officeId);
+           queryResult = ApplicationContextProvider.getBean(LegacyAccountDao.class).search(searchString, officeId);
 			if (queryResult == null) {
 				queryResult = idSearch(searchString, officeId, userId);
 				if (queryResult == null) {

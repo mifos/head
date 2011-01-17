@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -37,20 +38,20 @@ import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.security.login.util.helpers.LoginConstants;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
 
 public class PersonnelBusinessService implements BusinessService {
     private static final String BRANCH_MANAGER_ROLE_NAME_KEY = "RolesAndPermissions.BranchManager.RoleName";
-    private RolesPermissionsPersistence rolesPermissionsPersistence;
+    private LegacyRolesPermissionsDao rolesPermissionsPersistence;
     private Configuration applicationConfiguration;
     private PersonnelPersistence personnelPersistence;
 
     public PersonnelBusinessService() {
-        this(new PersonnelPersistence(), new RolesPermissionsPersistence());
+        this(new PersonnelPersistence(), ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class));
     }
     public PersonnelBusinessService(PersonnelPersistence personnelPersistence,
-                                    RolesPermissionsPersistence rolesPermissionsPersistence) {
+                                    LegacyRolesPermissionsDao rolesPermissionsPersistence) {
         this.personnelPersistence = personnelPersistence;
         this.rolesPermissionsPersistence = rolesPermissionsPersistence;
         applicationConfiguration = MifosConfigurationManager.getInstance();

@@ -39,13 +39,13 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
-import org.mifos.accounts.persistence.AccountPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.config.persistence.ConfigurationPersistence;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.customers.persistence.CustomerDao;
@@ -71,7 +71,7 @@ public class StandardAccountServiceTest {
     private StandardAccountService standardAccountService;
 
     @Mock
-    private AccountPersistence accountPersistence;
+    private LegacyAccountDao legacyAccountDao;
 
     @Mock
     private CustomerPersistence customerPersistence;
@@ -94,10 +94,10 @@ public class StandardAccountServiceTest {
     private LoanBO accountBO;
 
     @Mock
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
 
     @Mock
-    private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
+    private LegacyAcceptedPaymentTypeDao acceptedPaymentTypePersistence;
 
     @Mock
     private PersonnelDao personnelDao;
@@ -112,11 +112,11 @@ public class StandardAccountServiceTest {
 
     @Before
     public void setup() {
-        standardAccountService = new StandardAccountService(accountPersistence, loanPersistence,
+        standardAccountService = new StandardAccountService(legacyAccountDao, legacyLoanDao,
                 acceptedPaymentTypePersistence, personnelDao, customerDao, loanBusinessService, transactionHelper);
         Money.setDefaultCurrency(TestUtils.RUPEE);
         accountBO = new LoanAccountBuilder().withCustomer(customerBO).build();
-        accountBO.setAccountPersistence(accountPersistence);
+        accountBO.setlegacyAccountDao(legacyAccountDao);
     }
 
     @Ignore
@@ -133,7 +133,7 @@ public class StandardAccountServiceTest {
         java.sql.Date lastMeetingDate = new java.sql.Date(paymentDate.minusWeeks(3).toDateMidnight().getMillis());
 
         when(customerBO.getCustomerId()).thenReturn(customerId);
-        when(accountPersistence.getAccount(accountId)).thenReturn(accountBO);
+        when(legacyAccountDao.getAccount(accountId)).thenReturn(accountBO);
         // when(accountBO.isTrxnDateValid(paymentDate.toDateMidnight().toDate())).thenReturn(true);
         when(configurationPersistence.isRepaymentIndepOfMeetingEnabled()).thenReturn(false);
         when(customerPersistence.getLastMeetingDateForCustomer(anyInt())).thenReturn(lastMeetingDate);
@@ -208,7 +208,7 @@ public class StandardAccountServiceTest {
     public void testLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
         String globalAccountNumber = "123456789012345";
         int accountId = 3;
-        when(accountPersistence.findBySystemId(globalAccountNumber)).thenReturn(someAccountBo);
+        when(legacyAccountDao.findBySystemId(globalAccountNumber)).thenReturn(someAccountBo);
         when(someAccountBo.getAccountId()).thenReturn(accountId);
         AccountReferenceDto accountReferenceDto = standardAccountService
                 .lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
@@ -218,7 +218,7 @@ public class StandardAccountServiceTest {
     @Test(expected = PersistenceException.class)
     public void testFailureOfLookupLoanAccountReferenceFromGlobalAccountNumber() throws Exception {
         String globalAccountNumber = "123456789012345";
-        when(accountPersistence.findBySystemId(globalAccountNumber)).thenReturn(null);
+        when(legacyAccountDao.findBySystemId(globalAccountNumber)).thenReturn(null);
         AccountReferenceDto accountReferenceDto = standardAccountService
                 .lookupLoanAccountReferenceFromGlobalAccountNumber(globalAccountNumber);
     }

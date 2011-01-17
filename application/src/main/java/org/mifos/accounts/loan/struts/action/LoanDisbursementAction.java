@@ -36,7 +36,7 @@ import org.apache.struts.action.ActionForm;
 import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.joda.time.LocalDate;
-import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
+import org.mifos.accounts.acceptedpaymenttype.persistence.LegacyAcceptedPaymentTypeDao;
 import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.struts.actionforms.LoanDisbursementActionForm;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
@@ -94,7 +94,7 @@ public class LoanDisbursementAction extends BaseAction {
         SessionUtils.setAttribute(LoanConstants.REPAYMENT_SCHEDULES_INDEPENDENT_OF_MEETING_IS_ENABLED, repaymentIndependentOfMeetingScheduleValue, request);
         SessionUtils.setAttribute(AccountingRulesConstants.BACKDATED_TRANSACTIONS_ALLOWED, loanDisbursalDto.isBackDatedTransactionsAllowed(), request);
 
-        List<PaymentTypeEntity> paymentTypes = new AcceptedPaymentTypePersistence().getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_disbursement.getValue());
+        List<PaymentTypeEntity> paymentTypes = legacyAcceptedPaymentTypeDao.getAcceptedPaymentTypesForATransaction(uc.getLocaleId(), TrxnTypes.loan_disbursement.getValue());
         SessionUtils.setCollectionAttribute(MasterConstants.PAYMENT_TYPE, paymentTypes, request);
 
         return mapping.findForward(Constants.LOAD_SUCCESS);

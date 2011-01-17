@@ -186,7 +186,7 @@ import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.ActivityContext;
 import org.mifos.security.util.UserContext;
@@ -1772,7 +1772,7 @@ public class TestObjectFactory {
     public static RoleBO createRole(final UserContext context, final String roleName,
                                     final List<ActivityEntity> activities) throws Exception {
 
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rolesPermissionsPersistence = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class);
 
         RoleBO roleBO = new RoleBO(context, roleName, activities);
         roleBO.validateRoleName(roleName);
