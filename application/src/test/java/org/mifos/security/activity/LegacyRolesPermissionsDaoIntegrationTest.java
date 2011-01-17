@@ -33,14 +33,13 @@ import org.mifos.config.Localization;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class LegacyRolesPermissionsDaoTest extends MifosIntegrationTestCase {
+public class LegacyRolesPermissionsDaoIntegrationTest extends MifosIntegrationTestCase {
 
     @Autowired
     LegacyMasterDao legacyMasterDao;
@@ -54,7 +53,7 @@ public class LegacyRolesPermissionsDaoTest extends MifosIntegrationTestCase {
         LookUpEntity lookUpEntity = new LookUpEntity();
         lookUpEntity.setEntityId((short) LookUpEntity.ACTIVITY);
         short parentId = 13;
-        int lookUpId = legacyRolesPermissionsDao.createActivity(DynamicLookUpValueCreationTypes.BirtReport, parentId, "abcd");
+        int lookUpId = legacyRolesPermissionsDao.createActivityForReports(parentId, "abcd");
         Assert.assertEquals("abcd",legacyMasterDao.retrieveOneLookUpValueLocaleEntity(Localization.ENGLISH_LOCALE, lookUpId).getLookUpValue());
         Assert.assertEquals(legacyRolesPermissionsDao.calculateDynamicActivityId(),
                 (int) legacyRolesPermissionsDao.getActivityEntity(lookUpId).getId() - 1);

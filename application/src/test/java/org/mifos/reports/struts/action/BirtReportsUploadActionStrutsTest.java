@@ -50,6 +50,7 @@ import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.reports.struts.actionforms.BirtReportsUploadActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.AddActivity;
+import org.mifos.security.activity.DynamicLookUpValueCreationTypes;
 import org.mifos.security.authorization.AuthorizationManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
@@ -272,7 +273,8 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         report.setReportsCategoryBO(persistence.getPersistentObject(ReportsCategoryBO.class,
                 (short) 1));
         report.setIsActive((short) 1);
-        short newActivityId = (short) (new BirtReportsUploadAction()).insertActivity((short) 1, "test"
+        short newActivityId = (short) legacyRolesPermissionsDao.calculateDynamicActivityId();
+        legacyRolesPermissionsDao.createActivityForReports((short) 1, "test"
                 + "testShouldSubmitSuccessAfterEdit");
         report.setActivityId(newActivityId);
 
@@ -350,8 +352,6 @@ public class BirtReportsUploadActionStrutsTest extends MifosMockStrutsTestCase {
         } finally {
             StaticHibernateUtil.closeSession();
         }
-
-
         setRequestPathInfo("/birtReportsUploadAction.do");
         addRequestParameter("method", "edit");
         addRequestParameter("reportId", "1");

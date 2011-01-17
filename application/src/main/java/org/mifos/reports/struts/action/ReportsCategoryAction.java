@@ -109,7 +109,7 @@ public class ReportsCategoryAction extends BaseAction {
         }
 
         Short parentActivityId = SecurityConstants.REPORTS_MANAGEMENT;
-        legacyRolesPermissionsDao.createActivity(DynamicLookUpValueCreationTypes.BirtReport, parentActivityId, categoryName);
+        legacyRolesPermissionsDao.createActivityForReports(parentActivityId, categoryName);
 
         reportsCategoryBO.setActivityId((short) newActivityId);
         reportsCategoryBO.setReportCategoryName(categoryName);

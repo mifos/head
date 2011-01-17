@@ -124,7 +124,8 @@ public class BirtReportsUploadAction extends BaseAction {
         int newActivityId;
         String activityNameHead = "Can view ";
         try {
-            newActivityId = insertActivity(parentActivity, activityNameHead + uploadForm.getReportTitle());
+            newActivityId = legacyRolesPermissionsDao.calculateDynamicActivityId();
+            legacyRolesPermissionsDao.createActivityForReports(parentActivity, activityNameHead + uploadForm.getReportTitle());
         } catch (ActivityGeneratorException ex) {
             ActionErrors errors = new ActionErrors();
             errors.add(ex.getKey(), new ActionMessage(ex.getKey()));
@@ -346,14 +347,6 @@ public class BirtReportsUploadAction extends BaseAction {
         request.getSession().setAttribute("reportsBO",
                 new ReportsPersistence().getReport(Short.valueOf(request.getParameter("reportId"))));
         return mapping.findForward(ActionForwards.download_success.toString());
-    }
-
-    protected int insertActivity(short parentActivity, String lookUpDescription) throws ServiceException,
-            ActivityGeneratorException, IOException, HibernateException, PersistenceException {
-        int newActivityId;
-        newActivityId = legacyRolesPermissionsDao.calculateDynamicActivityId();
-        legacyRolesPermissionsDao.createActivity(DynamicLookUpValueCreationTypes.BirtReport, parentActivity, lookUpDescription);
-        return newActivityId;
     }
 
     private ReportsBO createOrUpdateReport(ReportsCategoryBO category, int newActivityId, String reportTitle,

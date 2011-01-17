@@ -107,10 +107,10 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         return null;
     }
 
-    public int createActivity(DynamicLookUpValueCreationTypes type, short parentActivity, String lookUpDescription)
+    public int createActivityForReports(short parentActivity, String lookUpDescription)
             throws HibernateException, PersistenceException, ServiceException, ActivityGeneratorException {
         StaticHibernateUtil.startTransaction();
-        int lookUpId = createLookUpValue(type, lookUpDescription);
+        int lookUpId = createLookUpValue(DynamicLookUpValueCreationTypes.BirtReport, lookUpDescription);
         insertLookUpValueLocale(lookUpId, lookUpDescription);
         ActivityEntity activityEntity = createActivityEntity(parentActivity, lookUpId);
         insertRolesActivity(activityEntity);
