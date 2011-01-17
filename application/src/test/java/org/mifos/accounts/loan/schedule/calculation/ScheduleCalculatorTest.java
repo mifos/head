@@ -556,7 +556,21 @@ public class ScheduleCalculatorTest {
         assertThat(repaymentResultsHolder.getTotalRepaymentAmount().doubleValue(),is(1063.83));
         assertThat(repaymentResultsHolder.getWaiverAmount().doubleValue(),is(0.85));
     }
-    
+
+    @Test
+    public void computeRepaymentAmountShouldConsiderFeesAndPenaltyOfCurrentInstallmentAndDues() {
+        Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0, 1, 2, 3, 4);
+        Installment installment2 = getInstallment(2, getDate(25, 10, 2010), 247.67, 14.96, 0, 1, 2, 3, 4);
+        Installment installment3 = getInstallment(3, getDate(25, 11, 2010), 252.22, 10.40, 0, 1, 2, 3, 4);
+        Installment installment4 = getInstallment(4, getDate(25, 12, 2010), 257.87, 5.09, 0, 1, 2, 3, 4);
+        Installment installment5 = getInstallment(5, getDate(25, 1, 2011), 257.87, 5.09, 0, 1, 2, 3, 4);
+        schedule = new Schedule(getDate(25, 8, 2010), 0.000658, BigDecimal.valueOf(1000d),
+                asList(installment1, installment2, installment3, installment4, installment5));
+        RepaymentResultsHolder repaymentResultsHolder = scheduleCalculator.computeRepaymentAmount(schedule, getDate(30, 11, 2010));
+        assertThat(repaymentResultsHolder.getTotalRepaymentAmount().doubleValue(), is(1361.7));
+        assertThat(repaymentResultsHolder.getWaiverAmount().doubleValue(), is(0.85));
+    }
+
     @Test
     public void shouldComputeRepaymentAmountWhenLateExcessPaymentMade() {
         Installment installment1 = getInstallment(1, getDate(25, 9, 2010), 242.24, 20.40, 0);

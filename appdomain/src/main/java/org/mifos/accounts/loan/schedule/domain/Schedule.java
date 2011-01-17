@@ -238,7 +238,9 @@ public class Schedule {
             BigDecimal interestDue = computeAndAdjustInterest(firstFutureInstallment,
                     getDurationForAdjustment(firstFutureInstallment, asOfDate), outstandingPrincipal);
             repaymentResultsHolder.setWaiverAmount(interestDue);
-            payableAmount = payableAmount.add(interestDue).add(firstFutureInstallment.getExtraInterestDue());
+            payableAmount = payableAmount.add(interestDue).add(firstFutureInstallment.getExtraInterestDue())
+                    .add(firstFutureInstallment.getFeesDue()).add(firstFutureInstallment.getMiscFeesDue())
+                    .add(firstFutureInstallment.getPenaltyDue()).add(firstFutureInstallment.getMiscPenaltyDue());
             for (Installment futureInstallment : futureInstallments) {
                 payableAmount = payableAmount.add(futureInstallment.getPrincipalDue());
             }

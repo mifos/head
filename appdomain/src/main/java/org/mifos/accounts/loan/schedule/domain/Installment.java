@@ -114,7 +114,7 @@ public class Installment implements Comparable<Installment> {
     }
 
     public BigDecimal getTotalDue() {
-        return getMiscPenaltyDue().add(getPenaltyDue()).add(getMiscPenaltyDue()).add(getFeesDue()).
+        return getMiscPenaltyDue().add(getPenaltyDue()).add(getMiscFeesDue()).add(getFeesDue()).
                 add(getExtraInterestDue()).add(getInterestDue()).add(getPrincipalDue());
     }
 
