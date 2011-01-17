@@ -48,6 +48,9 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
     @Autowired
     private LegacyAdminDocumentDao legacyAdminDocumentDao;
 
+    @Autowired
+    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
+
     @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
@@ -98,16 +101,14 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
     private void removeReport(Short reportId) throws PersistenceException {
         legacyAdminDocumentDao.getSession().clear();
         ReportsBO report = legacyAdminDocumentDao.getPersistentObject(ReportsBO.class, reportId);
-
-        LegacyRolesPermissionsDao permPersistence = new LegacyRolesPermissionsDao();
-        ActivityEntity activityEntity = permPersistence.getPersistentObject(ActivityEntity.class,
+        ActivityEntity activityEntity = legacyRolesPermissionsDao.getPersistentObject(ActivityEntity.class,
                 report.getActivityId());
         legacyAdminDocumentDao.delete(report);
 
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
 
-        permPersistence.delete(activityEntity);
-        permPersistence.delete(anLookUp);
+        legacyRolesPermissionsDao.delete(activityEntity);
+        legacyRolesPermissionsDao.delete(anLookUp);
 
         StaticHibernateUtil.flushSession();
     }

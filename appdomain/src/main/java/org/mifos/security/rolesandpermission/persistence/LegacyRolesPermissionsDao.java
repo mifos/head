@@ -33,12 +33,11 @@ import org.mifos.application.master.business.LookUpEntity;
 import org.mifos.application.master.business.LookUpValueEntity;
 import org.mifos.application.master.business.LookUpValueLocaleEntity;
 import org.mifos.application.master.persistence.LegacyMasterDao;
-import org.mifos.application.servicefacade.ApplicationContextProvider;
+import org.mifos.config.Localization;
 import org.mifos.core.MifosRuntimeException;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
-import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.framework.util.helpers.SearchUtils;
 import org.mifos.security.activity.ActivityGeneratorException;
@@ -48,8 +47,15 @@ import org.mifos.security.rolesandpermission.business.RoleActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LegacyRolesPermissionsDao extends LegacyGenericDao {
+
+    @Autowired
+    LegacyMasterDao legacyMasterDao;
+
+    private LegacyRolesPermissionsDao() {
+    }
 
     public RoleBO getRole(String roleName) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
@@ -92,8 +98,7 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
 
     public ActivityEntity retrieveOneActivityEntity(int lookUpId) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();
-        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
-        LookUpValueEntity aLookUpValueEntity = mp.getPersistentObject(LookUpValueEntity.class, lookUpId);
+        LookUpValueEntity aLookUpValueEntity = getPersistentObject(LookUpValueEntity.class, lookUpId);
         queryParameters.put("aLookUpValueEntity", aLookUpValueEntity);
         Object obj = execUniqueResultNamedQuery(NamedQueryConstants.GETACTIVITYENTITY, queryParameters);
         if (null != obj) {
@@ -114,50 +119,45 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
     }
 
     private void insertRolesActivity(ActivityEntity activityEntity) throws PersistenceException {
-        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
-        RoleBO role = rpp.getPersistentObject(RoleBO.class, (short) RolesAndPermissionConstants.ADMIN_ROLE);
+        RoleBO role = getPersistentObject(RoleBO.class, (short) RolesAndPermissionConstants.ADMIN_ROLE);
         RoleActivityEntity roleActivityEntity = new RoleActivityEntity(role, activityEntity);
-        rpp.createOrUpdate(roleActivityEntity);
+        createOrUpdate(roleActivityEntity);
     }
 
     private ActivityEntity createActivityEntity(short parentActivity, int lookUpId) throws ServiceException,
             ActivityGeneratorException, PersistenceException {
         ActivityEntity parentActivityEntity;
-        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         if (parentActivity != 0) {
-            parentActivityEntity = rpp.getPersistentObject(ActivityEntity.class, parentActivity);
+            parentActivityEntity = getPersistentObject(ActivityEntity.class, parentActivity);
         } else {
             parentActivityEntity = null;
         }
-        LookUpValueEntity lookupValueEntity = rpp.getPersistentObject(LookUpValueEntity.class, lookUpId);
+        LookUpValueEntity lookupValueEntity = getPersistentObject(LookUpValueEntity.class, lookUpId);
         ActivityEntity activityEntity = new ActivityEntity((short) calculateDynamicActivityId(), parentActivityEntity,
                 lookupValueEntity);
-        rpp.createOrUpdate(activityEntity);
+        createOrUpdate(activityEntity);
 
         return activityEntity;
     }
 
     private void insertLookUpValueLocale(int lookUpId, String lookUpDescription) throws PersistenceException {
-        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
         LookUpValueLocaleEntity lookUpValueLocaleEntity = new LookUpValueLocaleEntity();
         lookUpValueLocaleEntity.setLookUpId(new Integer(lookUpId));
-        lookUpValueLocaleEntity.setLocaleId(DatabaseMigrator.ENGLISH_LOCALE);
+        lookUpValueLocaleEntity.setLocaleId(Localization.ENGLISH_LOCALE);
         lookUpValueLocaleEntity.setLookUpValue(lookUpDescription);
-        mp.createOrUpdate(lookUpValueLocaleEntity);
+        createOrUpdate(lookUpValueLocaleEntity);
 
     }
 
     private int createLookUpValue(DynamicLookUpValueCreationTypes type, String lookUpDescription)
             throws PersistenceException {
-
         LookUpValueEntity anLookUp = new LookUpValueEntity();
-        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
-        LookUpEntity lookUpEntity = mp.getPersistentObject(LookUpEntity.class,
+        LookUpEntity lookUpEntity = getPersistentObject(LookUpEntity.class,
                 Short.valueOf((short) LookUpEntity.ACTIVITY));
         String lookupName = SearchUtils.generateLookupName(type.name(), lookUpDescription);
         anLookUp.setLookUpName(lookupName);
         anLookUp.setLookUpEntity(lookUpEntity);
-        mp.createOrUpdate(anLookUp);
+        createOrUpdate(anLookUp);
         MessageLookup.getInstance().updateLookupValueInCache(lookupName, lookUpDescription);
         int lookUpId = anLookUp.getLookUpId().intValue();
         return lookUpId;
@@ -178,11 +178,6 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
         return newActivityId;
     }
 
-    public LookUpValueLocaleEntity getLookUpValueLocaleEntity(short localId, int lookUpId) throws PersistenceException {
-        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
-        return mp.retrieveOneLookUpValueLocaleEntity(localId, lookUpId);
-    }
-
     public ActivityEntity getActivityEntity(int lookUpId) throws PersistenceException {
         LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         return rpp.retrieveOneActivityEntity(lookUpId);
@@ -191,23 +186,20 @@ public class LegacyRolesPermissionsDao extends LegacyGenericDao {
 
 
     public void reparentActivityUsingHibernate(short activityId, Short newParent) throws PersistenceException {
-        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
-        ActivityEntity parent = rpp.getPersistentObject(ActivityEntity.class, newParent);
-        ActivityEntity activity = rpp.getPersistentObject(ActivityEntity.class, activityId);
+        ActivityEntity parent = getPersistentObject(ActivityEntity.class, newParent);
+        ActivityEntity activity = getPersistentObject(ActivityEntity.class, activityId);
         activity.setParent(parent);
-        rpp.createOrUpdate(activity);
+        createOrUpdate(activity);
     }
 
     public void changeActivityMessage(short activityId, short localeId, String newMessage)
             throws PersistenceException {
-        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
-        LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
-        ActivityEntity activityEntity = rpp.getPersistentObject(ActivityEntity.class, Short
+        ActivityEntity activityEntity = getPersistentObject(ActivityEntity.class, Short
                 .valueOf(activityId));
         Integer lookUpId = activityEntity.getActivityNameLookupValues().getLookUpId();
-        LookUpValueLocaleEntity lookUpValueLocaleEntity = mp.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId);
+        LookUpValueLocaleEntity lookUpValueLocaleEntity = legacyMasterDao.retrieveOneLookUpValueLocaleEntity(localeId, lookUpId);
         lookUpValueLocaleEntity.setLookUpValue(newMessage);
-        mp.createOrUpdate(lookUpValueLocaleEntity);
+        createOrUpdate(lookUpValueLocaleEntity);
     }
 
     public void save(RoleBO roleBO) {

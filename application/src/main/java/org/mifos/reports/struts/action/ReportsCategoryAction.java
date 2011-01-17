@@ -30,6 +30,7 @@ import org.apache.struts.action.ActionForward;
 import org.apache.struts.action.ActionMapping;
 import org.apache.struts.action.ActionMessage;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.Localization;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.framework.persistence.DatabaseMigrator;
@@ -247,7 +248,7 @@ public class ReportsCategoryAction extends BaseAction {
         rPersistence.updateLookUpValue(activityId, inputCategoryName);
 
         legacyRolesPermissionsDao.changeActivityMessage(reportsCategoryBO.getActivityId(),
-                DatabaseMigrator.ENGLISH_LOCALE, reportsCategoryBO.getReportCategoryName());
+                Localization.ENGLISH_LOCALE, reportsCategoryBO.getReportCategoryName());
         return mapping.findForward(ActionForwards.create_success.toString());
     }
 }

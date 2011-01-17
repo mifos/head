@@ -35,6 +35,8 @@ public class Localization {
     private static Locale mainLocale; // the Java locale to match with the
     // config defined locale
     private static Short localeId = -1;
+
+    public static final short ENGLISH_LOCALE = 1;
     private static ConfigLocale configLocale; // class with country code and
 
     // language defined in the config

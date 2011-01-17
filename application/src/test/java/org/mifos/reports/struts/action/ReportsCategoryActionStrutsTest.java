@@ -39,6 +39,9 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     @Autowired
     LegacyMasterDao legacyMasterDao;
 
+    @Autowired
+    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
+
     @Override
     protected void setStrutsConfig() {
         super.setStrutsConfig();
@@ -319,24 +322,21 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
-        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         LookUpValueEntity anLookUp = new LookUpValueEntity();
         LookUpEntity lookUpEntity = legacyMasterDao.getPersistentObject(LookUpEntity.class, Short
                 .valueOf((short) LookUpEntity.ACTIVITY));
         anLookUp.setLookUpEntity(lookUpEntity);
         ActivityEntity parent = legacyMasterDao.getPersistentObject(ActivityEntity.class, (short) 13);
         ActivityEntity activityEntity = new ActivityEntity(activityId, parent, anLookUp);
-        rpp.createOrUpdate(anLookUp);
-        rpp.createOrUpdate(activityEntity);
+        legacyRolesPermissionsDao.createOrUpdate(anLookUp);
+        legacyRolesPermissionsDao.createOrUpdate(activityEntity);
         return activityEntity;
     }
 
     private void deleteActivityForTest(ActivityEntity activityEntity) throws PersistenceException {
-        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
-        rpp.getSession().clear();
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
-        rpp.delete(activityEntity);
-        rpp.delete(anLookUp);
+        legacyRolesPermissionsDao.delete(activityEntity);
+        legacyRolesPermissionsDao.delete(anLookUp);
     }
 
 }

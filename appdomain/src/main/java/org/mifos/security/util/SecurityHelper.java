@@ -28,6 +28,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.framework.exceptions.ApplicationException;
 import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.SecurityException;
@@ -144,8 +145,7 @@ public class SecurityHelper {
      * @throws HibernateProcessException
      */
     public List<Short> getLeafActivities() throws SystemException, ApplicationException {
-        LegacyRolesPermissionsDao rolesPermissionsPersistence = new LegacyRolesPermissionsDao();
-        List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities();
+        List<ActivityEntity> activityList = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class).getActivities();
         List<Short> leafs = new ArrayList<Short>();
         buildLeafItems(activityList, leafs);
         return leafs;

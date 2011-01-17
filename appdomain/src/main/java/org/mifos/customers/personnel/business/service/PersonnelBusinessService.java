@@ -24,6 +24,7 @@ import java.util.List;
 
 import org.apache.commons.configuration.Configuration;
 import org.mifos.application.master.business.SupportedLocalesEntity;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.persistence.OfficePersistence;
@@ -47,7 +48,7 @@ public class PersonnelBusinessService implements BusinessService {
     private PersonnelPersistence personnelPersistence;
 
     public PersonnelBusinessService() {
-        this(new PersonnelPersistence(), new LegacyRolesPermissionsDao());
+        this(new PersonnelPersistence(), ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class));
     }
     public PersonnelBusinessService(PersonnelPersistence personnelPersistence,
                                     LegacyRolesPermissionsDao rolesPermissionsPersistence) {

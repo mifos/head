@@ -69,8 +69,6 @@ public class DatabaseMigrator {
 
     private String upgradesPackage;
 
-    public static final short ENGLISH_LOCALE = 1;
-
     public static final String CLASS_UPGRADE_TYPE = "class";
     public static final String METHOD_UPGRADE_TYPE = "method";
     public static final String SCRIPT_UPGRADE_TYPE = "sql";

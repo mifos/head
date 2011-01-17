@@ -1772,7 +1772,7 @@ public class TestObjectFactory {
     public static RoleBO createRole(final UserContext context, final String roleName,
                                     final List<ActivityEntity> activities) throws Exception {
 
-        LegacyRolesPermissionsDao rolesPermissionsPersistence = new LegacyRolesPermissionsDao();
+        LegacyRolesPermissionsDao rolesPermissionsPersistence = ApplicationContextProvider.getBean(LegacyRolesPermissionsDao.class);
 
         RoleBO roleBO = new RoleBO(context, roleName, activities);
         roleBO.validateRoleName(roleName);

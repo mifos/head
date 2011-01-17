@@ -42,6 +42,7 @@ import org.apache.struts.action.ActionServlet;
 import org.apache.struts.upload.FormFile;
 import org.hibernate.HibernateException;
 import org.mifos.application.util.helpers.ActionForwards;
+import org.mifos.config.Localization;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.framework.business.service.BusinessService;
 import org.mifos.framework.exceptions.ApplicationException;
@@ -315,7 +316,7 @@ public class BirtReportsUploadAction extends BaseAction {
         String activityNameHead = "Can view ";
         rp.updateLookUpValue(reportBO.getActivityId(), activityNameHead + uploadForm.getReportTitle());
         legacyRolesPermissionsDao.reparentActivityUsingHibernate(reportBO.getActivityId(), category.getActivityId());
-        legacyRolesPermissionsDao.changeActivityMessage(reportBO.getActivityId(), DatabaseMigrator.ENGLISH_LOCALE,
+        legacyRolesPermissionsDao.changeActivityMessage(reportBO.getActivityId(), Localization.ENGLISH_LOCALE,
                 "Can view " + reportBO.getReportName());
 
         FormFile formFile = uploadForm.getFile();

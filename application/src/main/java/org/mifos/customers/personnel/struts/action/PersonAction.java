@@ -119,7 +119,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> languages = this.customerDao.retrieveLanguages();
 
-        List<RoleBO> roles = new LegacyRolesPermissionsDao().getRoles();
+        List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
@@ -315,7 +315,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> languages = this.customerDao.retrieveLanguages();
 
-        List<RoleBO> roles = new LegacyRolesPermissionsDao().getRoles();
+        List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);
@@ -501,7 +501,7 @@ public class PersonAction extends SearchAction {
         List<ValueListElement> maritalStatuses = this.customerDao.retrieveMaritalStatuses();
         List<ValueListElement> languages = this.customerDao.retrieveLanguages();
 
-        List<RoleBO> roles = new LegacyRolesPermissionsDao().getRoles();
+        List<RoleBO> roles = legacyRolesPermissionsDao.getRoles();
         List<PersonnelLevelEntity> personnelLevels = this.customerDao.retrievePersonnelLevels();
 
         SessionUtils.setCollectionAttribute(PersonnelConstants.TITLE_LIST, titles, request);

@@ -61,10 +61,14 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
     private static final Short OFFICE_WITH_BRANCH_MANAGER = Short.valueOf("3");
+
+    @Autowired
+    LegacyRolesPermissionsDao legacyRolesPermissionsDao;
 
     private MeetingBO meeting;
     private CustomerBO center;
@@ -305,7 +309,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     @Test
     public void testGetActiveBranchManagerUnderOffice() throws Exception {
         List<PersonnelBO> activeBranchManagersUnderOffice = new PersonnelPersistence()
-                .getActiveBranchManagersUnderOffice(OFFICE_WITH_BRANCH_MANAGER, new LegacyRolesPermissionsDao()
+                .getActiveBranchManagersUnderOffice(OFFICE_WITH_BRANCH_MANAGER, legacyRolesPermissionsDao
                         .getRole(Short.valueOf("1")));
         Assert.assertNotNull(activeBranchManagersUnderOffice);
         Assert.assertEquals(2, activeBranchManagersUnderOffice.size());
