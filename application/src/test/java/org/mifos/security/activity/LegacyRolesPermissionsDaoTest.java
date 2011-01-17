@@ -39,7 +39,7 @@ import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsD
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
+public class LegacyRolesPermissionsDaoTest extends MifosIntegrationTestCase {
 
     @Autowired
     LegacyMasterDao legacyMasterDao;
