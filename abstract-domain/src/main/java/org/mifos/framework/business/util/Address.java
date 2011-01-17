@@ -164,4 +164,9 @@ public class Address implements Serializable {
         return new AddressDto(address.getLine1(), address.getLine2(), address.getLine3(), address.getCity(), address.getState(),
                 address.getCountry(), address.getZip(), address.getPhoneNumber());
     }
+
+    public static Address toAddress(Address address) {
+        return new Address(address.getLine1(), address.getLine2(), address.getLine3(),
+                address.getCity(), address.getState(), address.getCountry(), address.getZip(), address.getPhoneNumber());
+    }
 }
