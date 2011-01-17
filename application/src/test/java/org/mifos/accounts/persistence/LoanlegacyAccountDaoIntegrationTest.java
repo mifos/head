@@ -27,12 +27,16 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.mifos.customers.business.CustomerBO;
 import org.mifos.framework.MifosIntegrationTestCase;
+import org.springframework.beans.factory.annotation.Autowired;
 
-public class LoanAccountPersistenceIntegrationTest extends MifosIntegrationTestCase {
+public class LoanlegacyAccountDaoIntegrationTest extends MifosIntegrationTestCase {
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     @Test
     public void testSelectCoSigningClients() throws Exception {
-        List<CustomerBO> coSigningClients = new LegacyAccountDao().getCoSigningClientsForGlim(1);
+        List<CustomerBO> coSigningClients = legacyAccountDao.getCoSigningClientsForGlim(1);
         Assert.assertNotNull(coSigningClients);
        Assert.assertEquals(0, coSigningClients.size());
     }

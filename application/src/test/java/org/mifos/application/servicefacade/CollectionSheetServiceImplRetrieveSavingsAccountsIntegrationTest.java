@@ -51,9 +51,11 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest extends MifosIntegrationTestCase {
-
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
     @BeforeClass
     public static void init() {
         collectionSheetService = ApplicationContextProvider.getBean(CollectionSheetService.class);
@@ -97,13 +99,11 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
     @Ignore
     @Test
     public void testCollectionSheetRetrieveOnlyReturnsActiveAndInactiveSavingsAccounts() throws Exception {
-
-        LegacyAccountDao accountPersistence = new LegacyAccountDao();
         UserContext userContext = TestUtils.makeUser();
 
         collectionSheetRetrieveSavingsAccountsUtils.createSampleCenterHierarchy();
 
-        SavingsBO centerSavingsAccount = (SavingsBO) accountPersistence
+        SavingsBO centerSavingsAccount = (SavingsBO) legacyAccountDao
                 .getAccount(collectionSheetRetrieveSavingsAccountsUtils.getCenterSavingsAccount().getAccountId());
         centerSavingsAccount.setUserContext(userContext);
 
@@ -111,7 +111,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         centerSavingsAccount.changeStatus(AccountState.SAVINGS_INACTIVE, Short.valueOf("1"),
                 "Make Center Savings Account Inactive", loggedInUser);
 
-        SavingsBO clientSavings = (SavingsBO) accountPersistence.getAccount(collectionSheetRetrieveSavingsAccountsUtils
+        SavingsBO clientSavings = (SavingsBO) legacyAccountDao.getAccount(collectionSheetRetrieveSavingsAccountsUtils
                 .getClientOfGroupCompleteGroupSavingsAccount().getAccountId());
         AccountPaymentEntity payment = new AccountPaymentEntity(clientSavings, new Money(clientSavings.getCurrency()),
                 null, null, new PaymentTypeEntity(Short.valueOf("1")), new Date());
@@ -131,7 +131,7 @@ public class CollectionSheetServiceImplRetrieveSavingsAccountsIntegrationTest ex
         for (CollectionSheetCustomerDto customer : customers) {
             for (CollectionSheetCustomerSavingDto customerSaving : customer.getCollectionSheetCustomerSaving()) {
                 Boolean accountIsActiveOrInactive = false;
-                AccountBO accountBO = accountPersistence.getAccount(customerSaving.getAccountId());
+                AccountBO accountBO = legacyAccountDao.getAccount(customerSaving.getAccountId());
                 if ((accountBO.getState().equals(AccountState.SAVINGS_ACTIVE))
                         || (accountBO.getState().equals(AccountState.SAVINGS_INACTIVE))) {
                     accountIsActiveOrInactive = true;

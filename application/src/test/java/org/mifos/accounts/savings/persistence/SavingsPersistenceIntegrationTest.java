@@ -72,7 +72,8 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     private UserContext userContext;
     private SavingsPersistence savingsPersistence;
-    private LegacyAccountDao accountPersistence;
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
     private CustomerBO group;
     private CustomerBO center;
     private SavingsBO savings;
@@ -89,7 +90,6 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     @Before
     public void setUp() throws Exception {
         savingsPersistence = new SavingsPersistence();
-        accountPersistence = new LegacyAccountDao();
         userContext = TestUtils.makeUser();
 
     }
@@ -140,7 +140,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     @Test
     public void testRetrieveAllAccountStateList() throws NumberFormatException, PersistenceException {
-        List<AccountStateEntity> accountStateEntityList = accountPersistence.retrieveAllAccountStateList(Short
+        List<AccountStateEntity> accountStateEntityList = legacyAccountDao.retrieveAllAccountStateList(Short
                 .valueOf("2"));
         Assert.assertNotNull(accountStateEntityList);
         Assert.assertEquals(6, accountStateEntityList.size());
@@ -148,7 +148,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
 
     @Test
     public void testRetrieveAllActiveAccountStateList() throws NumberFormatException, PersistenceException {
-        List<AccountStateEntity> accountStateEntityList = accountPersistence.retrieveAllActiveAccountStateList(Short
+        List<AccountStateEntity> accountStateEntityList = legacyAccountDao.retrieveAllActiveAccountStateList(Short
                 .valueOf("2"));
         Assert.assertNotNull(accountStateEntityList);
         Assert.assertEquals(6, accountStateEntityList.size());
@@ -158,7 +158,7 @@ public class SavingsPersistenceIntegrationTest extends MifosIntegrationTestCase 
     public void testGetStatusChecklist() throws Exception {
         accountCheckList = TestObjectFactory.createAccountChecklist(AccountTypes.SAVINGS_ACCOUNT.getValue(),
                 AccountState.SAVINGS_PARTIAL_APPLICATION, Short.valueOf("1"));
-        List<AccountCheckListBO> statusCheckList = accountPersistence.getStatusChecklist(Short.valueOf("13"), AccountTypes.SAVINGS_ACCOUNT
+        List<AccountCheckListBO> statusCheckList = legacyAccountDao.getStatusChecklist(Short.valueOf("13"), AccountTypes.SAVINGS_ACCOUNT
                 .getValue());
         Assert.assertNotNull(statusCheckList);
 

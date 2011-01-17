@@ -930,7 +930,7 @@ public class LoanBO extends AccountBO {
             }
 
             try {
-                new LegacyAccountDao().createOrUpdate(this);
+                ApplicationContextProvider.getBean(LegacyAccountDao.class).createOrUpdate(this);
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }
@@ -1163,7 +1163,7 @@ public class LoanBO extends AccountBO {
 
         if (persistChange) {
             try {
-                new LegacyAccountDao().createOrUpdate(this);
+                ApplicationContextProvider.getBean(LegacyAccountDao.class).createOrUpdate(this);
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }

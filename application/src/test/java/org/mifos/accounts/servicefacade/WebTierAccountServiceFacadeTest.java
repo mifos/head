@@ -85,7 +85,7 @@ public class WebTierAccountServiceFacadeTest {
     @Mock
     private PersonnelPersistence personnelPersistence;
     @Mock
-    private LegacyAccountDao accountPersistence;
+    private LegacyAccountDao legacyAccountDao;
     @Mock
     private HibernateTransactionHelper transactionHelper;
     @Mock
@@ -98,7 +98,7 @@ public class WebTierAccountServiceFacadeTest {
     @Before
     public void setUp() throws Exception {
         accountServiceFacade = new WebTierAccountServiceFacade(null, transactionHelper,
-                accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence, personnelPersistence, accountPersistence){
+                accountBusinessService, scheduleCalculatorAdaptor, acceptedPaymentTypePersistence, personnelPersistence, legacyAccountDao){
             @Override
             void clearSessionAndRollback() {
                 // do nothing
@@ -180,7 +180,7 @@ public class WebTierAccountServiceFacadeTest {
         verify(personnelPersistence).findPersonnelById(personnelId);
         verify(loanBO).adjustLastPayment(adjustmentNote, personnelBO);
         verify(loanBO).setUserContext(userContext);
-        verify(accountPersistence).createOrUpdate(loanBO);
+        verify(legacyAccountDao).createOrUpdate(loanBO);
         verify(transactionHelper).startTransaction();
         verify(transactionHelper).commitTransaction();
         verify(accountBusinessService).checkPermissionForAdjustmentOnBackDatedPayments(paymentDate, userContext,
@@ -224,7 +224,7 @@ public class WebTierAccountServiceFacadeTest {
 
         verify(personnelPersistence, never()).findPersonnelById(personnelId);
         verify(loanBO, never()).adjustLastPayment(anyString(), Matchers.<PersonnelBO>anyObject());
-        verify(accountPersistence, never()).createOrUpdate(loanBO);
+        verify(legacyAccountDao, never()).createOrUpdate(loanBO);
         verify(loanBO).setUserContext(userContext);
         verify(transactionHelper, never()).startTransaction();
         verify(transactionHelper, never()).commitTransaction();

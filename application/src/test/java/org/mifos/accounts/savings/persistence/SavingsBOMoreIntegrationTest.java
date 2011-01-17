@@ -71,6 +71,9 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
     private Money recommendedAmount;
 
     @Autowired
+    private LegacyAccountDao legacyAccountDao;
+
+    @Autowired
     private DatabaseCleaner databaseCleaner;
 
     private static MifosCurrency oldDefaultCurrency;
@@ -130,7 +133,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data
-        savings = (SavingsBO) new LegacyAccountDao().getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
 
         Money zero = new Money(Money.getDefaultCurrency());
         assertAllFutureSchedulesAreAsExpected(savings, zero);
@@ -145,7 +148,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data
-        savings = (SavingsBO) new LegacyAccountDao().getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
 
         Money zero = new Money(Money.getDefaultCurrency());
         assertAllFutureSchedulesAreAsExpected(savings, zero);
@@ -156,7 +159,7 @@ public class SavingsBOMoreIntegrationTest extends MifosIntegrationTestCase {
         savings.save();
         StaticHibernateUtil.flushSession();
         // refresh hibernate data
-        savings = (SavingsBO) new LegacyAccountDao().getAccount(savings.getAccountId());
+        savings = (SavingsBO) legacyAccountDao.getAccount(savings.getAccountId());
 
         assertAllFutureSchedulesAreAsExpected(savings, recommendedAmount);
     }

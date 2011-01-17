@@ -32,7 +32,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.InterestType;
@@ -49,13 +48,11 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
     protected LoanBO accountBO = null;
     protected CustomerBO center = null;
     protected CustomerBO group = null;
-    protected LegacyAccountDao accountPersistence;
 
     @Before
     public void setUp() throws Exception {
 
         accountBO = createLoanAccount();
-        accountPersistence = new LegacyAccountDao();
 
         /**
          * if (super.accountBO == null) { //Calling super setup on the
@@ -77,7 +74,6 @@ public class OffsetAccountBOIntegrationTest extends MifosIntegrationTestCase {
             accountBO = null;
             group = null;
             center = null;
-            accountPersistence = null;
         } catch (Exception e) {
             // throwing here tends to mask failures
             e.printStackTrace();

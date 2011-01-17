@@ -47,7 +47,7 @@ import org.mifos.schedule.internal.HolidayAndWorkingDaysAndMoratoriaScheduledDat
 public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
 
     private HolidayDao holidayDao = ApplicationContextProvider.getBean(HolidayDao.class);
-    private final LegacyAccountDao accountPersistence = new LegacyAccountDao();
+    private final LegacyAccountDao legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
 
     private List<Days> workingDays;
     private Map<Short, List<Holiday>> officeCurrentAndFutureHolidays;
@@ -91,7 +91,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
             for (Integer accountId : customerAndSavingsAccountIds) {
                 currentRecordNumber++;
                 currentAccountId = accountId;
-                AccountBO accountBO = accountPersistence.getAccount(accountId);
+                AccountBO accountBO = legacyAccountDao.getAccount(accountId);
 
                 List<Holiday> currentAndFutureHolidays = getOfficeCurrentAndFutureHolidays(accountBO.getOffice()
                         .getOfficeId());
@@ -166,7 +166,7 @@ public class GenerateMeetingsForCustomerAndSavingsHelper extends TaskHelper {
         List<Integer> customerAndSavingsAccountIds = new ArrayList<Integer>();
         try {
             long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-            customerAndSavingsAccountIds = accountPersistence
+            customerAndSavingsAccountIds = legacyAccountDao
                     .getActiveCustomerAndSavingsAccountIdsForGenerateMeetingTask();
             long duration = new DateTimeService().getCurrentDateTime().getMillis() - time1;
             logMessage("Time to execute the query " + duration + " . Got " + customerAndSavingsAccountIds.size()

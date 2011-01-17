@@ -48,6 +48,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.DateTimeService;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCase {
 
@@ -59,7 +60,9 @@ public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCas
     protected ClientBO client;
     protected MeetingBO meeting;
     protected Holiday holiday;
-    protected LegacyAccountDao accountPersistence;
+
+    @Autowired
+    protected LegacyAccountDao legacyAccountDao;
 
 
     @Before
@@ -68,14 +71,13 @@ public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCas
         createInitialCustomerAccounts();
         groupLoan = createGroupLoanAccount();
         clientLoan = createClientLoanAccount();
-        accountPersistence = new LegacyAccountDao();
     }
 
     @After
     public void tearDown() throws Exception {
         try {
             this.getBranchOffice().setHolidays(null);
-            
+
             holiday = null;
             groupLoan = null;
             clientLoan = null;
@@ -83,7 +85,7 @@ public abstract class AccountIntegrationTestCase extends MifosIntegrationTestCas
             client = null;
             group = null;
             center = null;
-            accountPersistence = null;
+            legacyAccountDao = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
 

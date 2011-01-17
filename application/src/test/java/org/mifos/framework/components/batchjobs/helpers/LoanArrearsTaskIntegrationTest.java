@@ -59,8 +59,12 @@ import org.springframework.batch.core.BatchStatus;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobInstance;
 import org.springframework.batch.core.explore.JobExplorer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     MifosScheduler mifosScheduler = null;
 
@@ -76,7 +80,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
 
     @Before
     public void setUp() throws Exception {
-        
+
         mifosScheduler = getMifosScheduler("org/mifos/framework/components/batchjobs/loanArrearsTestTask.xml");
         jobName = "LoanArrearsTaskJob";
         meeting = TestObjectFactory.createMeeting(TestObjectFactory.getTypicalMeeting());
@@ -109,7 +113,7 @@ public class LoanArrearsTaskIntegrationTest extends MifosIntegrationTestCase {
         JobExecution lastExecution = jobExecutions.get(0);
         Assert.assertEquals(BatchStatus.COMPLETED, lastExecution.getStatus());
         StaticHibernateUtil.getSessionTL().refresh(loanAccount);
-        loanAccount = new LegacyAccountDao().getAccount(loanAccount.getAccountId());
+        loanAccount = legacyAccountDao.getAccount(loanAccount.getAccountId());
         Assert.assertEquals(AccountState.LOAN_ACTIVE_IN_BAD_STANDING, loanAccount.getState());
         Assert.assertEquals(statusChangeHistorySize + 1, loanAccount.getAccountStatusChangeHistory().size());
     }

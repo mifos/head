@@ -46,10 +46,12 @@ import org.mifos.framework.TestUtils;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
-    private LegacyAccountDao accountPersistence;
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     private CustomerBO center;
 
@@ -58,12 +60,6 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
     private CustomerBO client;
 
     private AccountBO account;
-
-    @Before
-    public void setUp() throws Exception {
-
-        accountPersistence = new LegacyAccountDao();
-    }
 
     @After
     public void tearDown() throws Exception {
@@ -85,7 +81,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
         StaticHibernateUtil.flushSession();
-        account = accountPersistence.getAccount(account.getAccountId());
+        account = legacyAccountDao.getAccount(account.getAccountId());
         Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
     }
 
@@ -99,7 +95,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
         StaticHibernateUtil.flushSession();
-        account = accountPersistence.getAccount(account.getAccountId());
+        account = legacyAccountDao.getAccount(account.getAccountId());
         Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
@@ -129,7 +125,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
         StaticHibernateUtil.flushSession();
-        account = accountPersistence.getAccount(account.getAccountId());
+        account = legacyAccountDao.getAccount(account.getAccountId());
         Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
 
         List<AccountActionDateEntity> accntActionDates = new ArrayList<AccountActionDateEntity>();
@@ -153,7 +149,7 @@ public class BulkEntryPersistenceIntegrationTest extends MifosIntegrationTestCas
         account = TestObjectFactory.createLoanAccount("42423142341", group, AccountState.LOAN_ACTIVE_IN_GOOD_STANDING,
                 startDate, loanOffering);
         StaticHibernateUtil.flushSession();
-        account = accountPersistence.getAccount(account.getAccountId());
+        account = legacyAccountDao.getAccount(account.getAccountId());
         Assert.assertEquals(((LoanBO) account).getLoanOffering().getPrdOfferingName(), "Loan");
         for (AccountActionDateEntity actionDate : account.getAccountActionDates()) {
             if (actionDate.getInstallmentId().equals(Short.valueOf("1"))) {

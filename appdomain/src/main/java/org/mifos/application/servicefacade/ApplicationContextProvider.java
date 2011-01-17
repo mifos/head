@@ -23,6 +23,15 @@ package org.mifos.application.servicefacade;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.context.ApplicationContext;
 
+/**
+ * Use of this class indicates something wrong with the Spring bean usage as this location
+ * <br />
+ * either this method belongs to some other place, or some refactoring is required
+ *
+ * If this is used in a spring bean then it should be replaced by <b>@Autowired</b> spring injection
+ */
+
+@Deprecated
 public class ApplicationContextProvider implements FactoryBean<ApplicationContextProvider> {
 
     private static ApplicationContextProvider applicationContextProvider;

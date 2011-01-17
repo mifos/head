@@ -28,6 +28,7 @@ import org.mifos.accounts.loan.persistance.LoanPersistence;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.GeneralConfig;
 import org.mifos.framework.components.batchjobs.SchedulerConstants;
 import org.mifos.framework.components.batchjobs.TaskHelper;
@@ -44,7 +45,7 @@ public class LoanArrearsHelper extends TaskHelper {
     @Override
     public void execute(long timeInMillis) throws BatchJobException {
         long time1 = new DateTimeService().getCurrentDateTime().getMillis();
-        LegacyAccountDao accountPersistence = new LegacyAccountDao();
+        LegacyAccountDao legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
         List<String> errorList = new ArrayList<String>();
         List<Integer> listAccountIds = null;
         int accountNumber = 0;
@@ -68,7 +69,7 @@ public class LoanArrearsHelper extends TaskHelper {
         try {
             long startTime = new DateTimeService().getCurrentDateTime().getMillis();
             for (Integer accountId : listAccountIds) {
-                loanBO = (LoanBO) accountPersistence.getAccount(accountId);
+                loanBO = (LoanBO) legacyAccountDao.getAccount(accountId);
                 assert (loanBO.getAccountState().getId().shortValue() == AccountState.LOAN_ACTIVE_IN_GOOD_STANDING
                         .getValue().shortValue());
 

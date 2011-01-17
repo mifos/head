@@ -71,21 +71,21 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
     private ScheduleCalculatorAdaptor scheduleCalculatorAdaptor;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private PersonnelPersistence personnelPersistence;
-    private LegacyAccountDao accountPersistence;
+    private LegacyAccountDao legacyAccountDao;
 
     @Autowired
     public WebTierAccountServiceFacade(AccountService accountService, HibernateTransactionHelper transactionHelper,
                                        AccountBusinessService accountBusinessService,
                                        ScheduleCalculatorAdaptor scheduleCalculatorAdaptor,
                                        AcceptedPaymentTypePersistence acceptedPaymentTypePersistence,
-                                       PersonnelPersistence personnelPersistence, LegacyAccountDao accountPersistence) {
+                                       PersonnelPersistence personnelPersistence, LegacyAccountDao legacyAccountDao) {
         this.accountService = accountService;
         this.transactionHelper = transactionHelper;
         this.accountBusinessService = accountBusinessService;
         this.scheduleCalculatorAdaptor = scheduleCalculatorAdaptor;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
         this.personnelPersistence = personnelPersistence;
-        this.accountPersistence = accountPersistence;
+        this.legacyAccountDao = legacyAccountDao;
     }
 
     @Override
@@ -272,7 +272,7 @@ public class WebTierAccountServiceFacade implements AccountServiceFacade {
             PersonnelBO personnelBO = personnelPersistence.findPersonnelById(loggedInUser);
             transactionHelper.startTransaction();
             accountBO.adjustLastPayment(adjustmentNote, personnelBO);
-            accountPersistence.createOrUpdate(accountBO);
+            legacyAccountDao.createOrUpdate(accountBO);
             transactionHelper.commitTransaction();
         } catch (ServiceException e) {
             transactionHelper.rollbackTransaction();

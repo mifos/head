@@ -79,7 +79,7 @@ public class AccountBusinessService implements BusinessService {
 
     public AccountBO findBySystemId(String accountGlobalNum) throws ServiceException {
         try {
-            return getAccountPersistence().findBySystemId(accountGlobalNum);
+            return getlegacyAccountDao().findBySystemId(accountGlobalNum);
         } catch (PersistenceException e) {
             throw new ServiceException(AccountExceptionConstants.FINDBYGLOBALACCNTEXCEPTION, e,
                     new Object[] { accountGlobalNum });
@@ -88,7 +88,7 @@ public class AccountBusinessService implements BusinessService {
 
     public AccountBO getAccount(Integer accountId) throws ServiceException {
         try {
-            return getAccountPersistence().getAccount(accountId);
+            return getlegacyAccountDao().getAccount(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -108,7 +108,7 @@ public class AccountBusinessService implements BusinessService {
 
     public List<AccountStateEntity> retrieveAllAccountStateList(AccountTypes accountTypes) throws ServiceException {
         try {
-            return getAccountPersistence().retrieveAllAccountStateList(accountTypes.getValue());
+            return getlegacyAccountDao().retrieveAllAccountStateList(accountTypes.getValue());
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -117,7 +117,7 @@ public class AccountBusinessService implements BusinessService {
     public List<AccountStateEntity> retrieveAllActiveAccountStateList(AccountTypes accountTypes)
             throws ServiceException {
         try {
-            return getAccountPersistence().retrieveAllActiveAccountStateList(accountTypes.getValue());
+            return getlegacyAccountDao().retrieveAllActiveAccountStateList(accountTypes.getValue());
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -126,7 +126,7 @@ public class AccountBusinessService implements BusinessService {
     public List<AccountCheckListBO> getStatusChecklist(Short accountStatusId, Short accountTypeId)
             throws ServiceException {
         try {
-            return getAccountPersistence().getStatusChecklist(accountStatusId, accountTypeId);
+            return getlegacyAccountDao().getStatusChecklist(accountStatusId, accountTypeId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }
@@ -136,12 +136,12 @@ public class AccountBusinessService implements BusinessService {
             throws ServiceException {
         List<ApplicableCharge> applicableChargeList = null;
         try {
-            AccountBO account = getAccountPersistence().getAccount(accountId);
+            AccountBO account = getlegacyAccountDao().getAccount(accountId);
             FeeCategory categoryType = getCategoryType(account.getCustomer());
 
             if (account.getType() == AccountTypes.LOAN_ACCOUNT) {
 
-                applicableChargeList = getLoanApplicableCharges(getAccountPersistence().getAllApplicableFees(
+                applicableChargeList = getLoanApplicableCharges(getlegacyAccountDao().getAllApplicableFees(
                         accountId, FeeCategory.LOAN), userContext, (LoanBO) account);
 
 
@@ -149,7 +149,7 @@ public class AccountBusinessService implements BusinessService {
                 if (account.getCustomer().getCustomerMeeting() == null) {
                     throw new ServiceException(AccountExceptionConstants.APPLY_CAHRGE_NO_CUSTOMER_MEETING_EXCEPTION);
                 }
-                applicableChargeList = getCustomerApplicableCharges(getAccountPersistence().getAllApplicableFees(
+                applicableChargeList = getCustomerApplicableCharges(getlegacyAccountDao().getAllApplicableFees(
                         accountId, categoryType), userContext, ((CustomerAccountBO) account).getCustomer()
                         .getCustomerMeeting().getMeeting().getMeetingDetails().getRecurrenceType().getRecurrenceId());
             }
@@ -408,7 +408,7 @@ public class AccountBusinessService implements BusinessService {
             throws ServiceException {
 
         try {
-            List<CustomFieldDefinitionEntity> customFields = getAccountPersistence()
+            List<CustomFieldDefinitionEntity> customFields = getlegacyAccountDao()
                     .retrieveCustomFieldsDefinition(entityType.getValue());
             Hibernate.initialize(customFields);
             return customFields;
@@ -417,13 +417,13 @@ public class AccountBusinessService implements BusinessService {
         }
     }
 
-    private LegacyAccountDao getAccountPersistence() {
-        return new LegacyAccountDao();
+    private LegacyAccountDao getlegacyAccountDao() {
+        return ApplicationContextProvider.getBean(LegacyAccountDao.class);
     }
 
     public List<CustomerBO> getCoSigningClientsForGlim(Integer accountId) throws ServiceException {
         try {
-            return getAccountPersistence().getCoSigningClientsForGlim(accountId);
+            return getlegacyAccountDao().getCoSigningClientsForGlim(accountId);
         } catch (PersistenceException e) {
             throw new ServiceException(e);
         }

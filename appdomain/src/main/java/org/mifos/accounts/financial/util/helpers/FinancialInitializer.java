@@ -30,6 +30,7 @@ import org.mifos.accounts.financial.exceptions.FinancialException;
 import org.mifos.accounts.financial.exceptions.FinancialExceptionConstants;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.application.NamedQueryConstants;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.ChartOfAccountsConfig;
 import org.mifos.config.GLAccount;
 import org.mifos.config.exceptions.ConfigurationException;
@@ -93,7 +94,7 @@ public class FinancialInitializer {
             throw new FinancialException(coaLocation + " loading failed", e);
         }
 
-        LegacyAccountDao ap = new LegacyAccountDao();
+        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
         for (GLAccount glAccount : coa.getGLAccounts()) {
             Short accountId = ap.getAccountIdFromGlCode(glAccount.glCode);
             if (null == accountId) {

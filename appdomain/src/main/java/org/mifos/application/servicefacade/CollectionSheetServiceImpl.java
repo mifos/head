@@ -56,7 +56,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
     private final ClientAttendanceDao clientAttendanceDao;
     private LoanPersistence loanPersistence = new LoanPersistence();
-    private LegacyAccountDao accountPersistence = new LegacyAccountDao();
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
     private final SavingsDao savingsDao;
     private final CollectionSheetDao collectionSheetDao;
 
@@ -69,11 +71,11 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     }
 
     public CollectionSheetServiceImpl(final ClientAttendanceDao clientAttendanceDao,
-            final LoanPersistence loanPersistence, final LegacyAccountDao accountPersistence,
+            final LoanPersistence loanPersistence, final LegacyAccountDao legacyAccountDao,
             final SavingsDao savingsDao, final CollectionSheetDao collectionSheetDao) {
         this.clientAttendanceDao = clientAttendanceDao;
         this.loanPersistence = loanPersistence;
-        this.accountPersistence = accountPersistence;
+        this.legacyAccountDao = legacyAccountDao;
         this.savingsDao = savingsDao;
         this.collectionSheetDao = collectionSheetDao;
     }
@@ -136,7 +138,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         final List<String> failedCustomerAccountPaymentNums = new ArrayList<String>();
 
         SaveCollectionSheetAssembler saveCollectionSheetAssembler = new SaveCollectionSheetAssembler(
-                clientAttendanceDao, loanPersistence, accountPersistence, savingsDao);
+                clientAttendanceDao, loanPersistence, legacyAccountDao, savingsDao);
 
         final List<ClientAttendanceBO> clientAttendances = saveCollectionSheetAssembler
                 .clientAttendanceAssemblerfromDto(saveCollectionSheet.getSaveCollectionSheetCustomers(),
@@ -232,7 +234,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
 
             clientAttendanceDao.save(clientAttendances);
             loanPersistence.save(loanAccounts);
-            accountPersistence.save(customerAccountList);
+            legacyAccountDao.save(customerAccountList);
             savingsDao.save(savingAccounts);
 
             StaticHibernateUtil.commitTransaction();

@@ -192,8 +192,8 @@ public class ProcessFlowRules {
 
     private static void initLoanPendingApprovalState() throws ConfigurationException {
 
-        LegacyAccountDao ap = new LegacyAccountDao();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
+        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
+        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.LOAN_PENDING_APPROVAL.getValue());
 
         boolean fromDb = isLoanPendingApprovalStateEnabledOnDatabaseConfig(ase);
         boolean fromCfg = isLoanPendingApprovalStateEnabled();
@@ -239,8 +239,8 @@ public class ProcessFlowRules {
 
     private static void initSavingsPendingApprovalState() throws ConfigurationException {
 
-        LegacyAccountDao ap = new LegacyAccountDao();
-        AccountStateEntity ase = (AccountStateEntity) ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
+        LegacyAccountDao ap = ApplicationContextProvider.getBean(LegacyAccountDao.class);
+        AccountStateEntity ase = ap.loadPersistentObject(AccountStateEntity.class, AccountState.SAVINGS_PENDING_APPROVAL.getValue());
 
         boolean fromDb = isSavingPendingApprovalStateEnabledOnDatabaseConfig(ase);
         boolean fromCfg = isSavingsPendingApprovalStateEnabled();

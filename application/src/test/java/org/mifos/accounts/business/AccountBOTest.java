@@ -134,14 +134,14 @@ public class AccountBOTest {
 
     @Test(expected = AccountException.class)
     public void testInvalidConnectionThrowsExceptionInUpdate() throws Exception {
-        final LegacyAccountDao accountPersistence = mock(LegacyAccountDao.class);
+        final LegacyAccountDao legacyAccountDao = mock(LegacyAccountDao.class);
         AccountBO accountBO = new AccountBO() {
             @Override
-            public LegacyAccountDao getAccountPersistence() {
-                return accountPersistence;
+            public LegacyAccountDao getlegacyAccountDao() {
+                return legacyAccountDao;
             }
         };
-        when(accountPersistence.createOrUpdate(accountBO)).thenThrow(new PersistenceException("some exception"));
+        when(legacyAccountDao.createOrUpdate(accountBO)).thenThrow(new PersistenceException("some exception"));
 
         // exercise test
         accountBO.update();

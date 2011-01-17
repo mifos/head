@@ -51,7 +51,7 @@ import org.mifos.framework.util.helpers.Money;
 public class SaveCollectionSheetStructureValidator {
 
     private CustomerPersistence customerPersistence;
-    private LegacyAccountDao accountPersistence;
+    private LegacyAccountDao legacyAccountDao;
     private final Short mifosCurrencyId;
 
     private List<InvalidSaveCollectionSheetReason> validationErrors = new ArrayList<InvalidSaveCollectionSheetReason>();
@@ -69,7 +69,7 @@ public class SaveCollectionSheetStructureValidator {
     public SaveCollectionSheetStructureValidator() {
 
         this.customerPersistence = new CustomerPersistence();
-        this.accountPersistence = new LegacyAccountDao();
+        this.legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
         this.mifosCurrencyId = Money.getDefaultCurrency().getCurrencyId();
 
         validCustomerStatuses.add(CustomerStatus.CLIENT_ACTIVE);
@@ -264,7 +264,7 @@ public class SaveCollectionSheetStructureValidator {
 
         AccountBO account;
         try {
-            account = accountPersistence.getAccount(accountId);
+            account = legacyAccountDao.getAccount(accountId);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }
@@ -473,7 +473,7 @@ public class SaveCollectionSheetStructureValidator {
         this.customerPersistence = customerPersistence;
     }
 
-    public void setAccountPersistence(LegacyAccountDao accountPersistence) {
-        this.accountPersistence = accountPersistence;
+    public void setlegacyAccountDao(LegacyAccountDao legacyAccountDao) {
+        this.legacyAccountDao = legacyAccountDao;
     }
 }

@@ -70,7 +70,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class StandardAccountService implements AccountService {
 
-    private LegacyAccountDao accountPersistence;
+    private LegacyAccountDao legacyAccountDao;
     private LoanPersistence loanPersistence;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private PersonnelDao personnelDao;
@@ -82,11 +82,11 @@ public class StandardAccountService implements AccountService {
     private LegacyMasterDao legacyMasterDao;
 
     @Autowired
-    public StandardAccountService(LegacyAccountDao accountPersistence, LoanPersistence loanPersistence,
+    public StandardAccountService(LegacyAccountDao legacyAccountDao, LoanPersistence loanPersistence,
                                   AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
                                   HibernateTransactionHelper transactionHelper) {
-        this.accountPersistence = accountPersistence;
+        this.legacyAccountDao = legacyAccountDao;
         this.loanPersistence = loanPersistence;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
         this.personnelDao = personnelDao;
@@ -129,7 +129,7 @@ public class StandardAccountService implements AccountService {
 
         PersonnelBO loggedInUser = new PersonnelPersistence().findPersonnelById(accountPaymentParametersDto.getUserMakingPayment().getUserId());
         final int accountId = accountPaymentParametersDto.getAccountId();
-        final AccountBO account = this.accountPersistence.getAccount(accountId);
+        final AccountBO account = this.legacyAccountDao.getAccount(accountId);
         List<InvalidPaymentReason> validationErrors = validatePayment(accountPaymentParametersDto);
         if (!(account instanceof CustomerAccountBO) && validationErrors.contains(InvalidPaymentReason.INVALID_DATE)) {
             throw new AccountException("errors.invalidTxndate");
@@ -153,7 +153,7 @@ public class StandardAccountService implements AccountService {
 
         account.applyPayment(paymentData);
 
-        this.accountPersistence.createOrUpdate(account);
+        this.legacyAccountDao.createOrUpdate(account);
     }
 
     @Override
@@ -255,7 +255,7 @@ public class StandardAccountService implements AccountService {
     public List<InvalidPaymentReason> validatePayment(AccountPaymentParametersDto payment) throws PersistenceException,
             AccountException {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
-        AccountBO accountBo = this.accountPersistence.getAccount(payment.getAccountId());
+        AccountBO accountBo = this.legacyAccountDao.getAccount(payment.getAccountId());
 
         Date meetingDate = new CustomerPersistence().getLastMeetingDateForCustomer(accountBo.getCustomer().getCustomerId());
         boolean repaymentIndependentOfMeetingEnabled = new ConfigurationPersistence().isRepaymentIndepOfMeetingEnabled();
@@ -295,7 +295,7 @@ public class StandardAccountService implements AccountService {
     public List<AccountPaymentParametersDto> lookupPayments(AccountReferenceDto accountRef)
     throws PersistenceException {
         final int accountId = accountRef.getAccountId();
-        final AccountBO account = this.accountPersistence.getAccount(accountId);
+        final AccountBO account = this.legacyAccountDao.getAccount(accountId);
         List<AccountPaymentParametersDto> paymentDtos = new ArrayList<AccountPaymentParametersDto>();
         for (AccountPaymentEntity paymentEntity : account.getAccountPayments()) {
             paymentDtos.add(makePaymentDto(paymentEntity));
@@ -356,7 +356,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromGlobalAccountNumber(String globalAccountNumber)
             throws PersistenceException {
-        AccountBO accountBo = this.accountPersistence.findBySystemId(globalAccountNumber);
+        AccountBO accountBo = this.legacyAccountDao.findBySystemId(globalAccountNumber);
         if (null == accountBo) {
             throw new PersistenceException("loan not found for global account number " + globalAccountNumber);
         }
@@ -366,7 +366,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromClientGovernmentIdAndLoanProductShortName(
             String clientGovernmentId, String loanProductShortName) throws Exception {
-        AccountBO accountBo = this.accountPersistence.findLoanByClientGovernmentIdAndProductShortName(
+        AccountBO accountBo = this.legacyAccountDao.findLoanByClientGovernmentIdAndProductShortName(
                 clientGovernmentId, loanProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("loan not found for client government id " + clientGovernmentId
@@ -378,7 +378,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupSavingsAccountReferenceFromClientGovernmentIdAndSavingsProductShortName(
             String clientGovernmentId, String savingsProductShortName) throws Exception {
-        AccountBO accountBo = this.accountPersistence.findSavingsByClientGovernmentIdAndProductShortName(
+        AccountBO accountBo = this.legacyAccountDao.findSavingsByClientGovernmentIdAndProductShortName(
                 clientGovernmentId, savingsProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("savings not found for client government id " + clientGovernmentId
@@ -390,7 +390,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromClientPhoneNumberAndLoanProductShortName(
             String phoneNumber, String loanProductShortName) throws Exception {
-        AccountBO accountBo = this.accountPersistence.findLoanByClientPhoneNumberAndProductShortName(
+        AccountBO accountBo = this.legacyAccountDao.findLoanByClientPhoneNumberAndProductShortName(
                 phoneNumber, loanProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("loan not found for client phone number " + phoneNumber
@@ -414,7 +414,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public AccountReferenceDto lookupSavingsAccountReferenceFromClientPhoneNumberAndSavingsProductShortName(
             String phoneNumber, String savingsProductShortName) throws Exception {
-        AccountBO accountBo = this.accountPersistence.findSavingsByClientPhoneNumberAndProductShortName(
+        AccountBO accountBo = this.legacyAccountDao.findSavingsByClientPhoneNumberAndProductShortName(
                 phoneNumber, savingsProductShortName);
         if (null == accountBo) {
             throw new PersistenceException("savings not found for client phone number " + phoneNumber
@@ -437,7 +437,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public BigDecimal getTotalPaymentDueAmount(AccountReferenceDto account) throws Exception {
-        AccountBO accountBo = this.accountPersistence.getAccount(account.getAccountId());
+        AccountBO accountBo = this.legacyAccountDao.getAccount(account.getAccountId());
         return accountBo.getTotalAmountDue().getAmount();
     }
 
@@ -449,7 +449,7 @@ public class StandardAccountService implements AccountService {
 
 	@Override
 	public boolean receiptExists(String receiptNumber) throws Exception {
-        List<AccountPaymentEntity> existentPaymentsWIthGivenReceiptNumber = this.accountPersistence.findAccountPaymentsByReceiptNumber(receiptNumber);
+        List<AccountPaymentEntity> existentPaymentsWIthGivenReceiptNumber = this.legacyAccountDao.findAccountPaymentsByReceiptNumber(receiptNumber);
 		return existentPaymentsWIthGivenReceiptNumber != null && !existentPaymentsWIthGivenReceiptNumber.isEmpty();
 	}
 }

@@ -48,6 +48,7 @@ import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.master.MessageLookup;
 import org.mifos.application.master.business.MifosCurrency;
 import org.mifos.application.meeting.business.MeetingBO;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
 import org.mifos.config.AccountingRules;
 import org.mifos.config.ClientRules;
@@ -300,7 +301,7 @@ public class CustomerPersistence extends LegacyGenericDao {
 
         try {
 
-           queryResult = new LegacyAccountDao().search(searchString, officeId);
+           queryResult = ApplicationContextProvider.getBean(LegacyAccountDao.class).search(searchString, officeId);
 			if (queryResult == null) {
 				queryResult = idSearch(searchString, officeId, userId);
 				if (queryResult == null) {

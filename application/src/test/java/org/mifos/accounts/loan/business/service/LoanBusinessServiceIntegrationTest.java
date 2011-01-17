@@ -55,6 +55,7 @@ import org.mifos.customers.util.helpers.CustomerStatus;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.framework.TestUtils;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -64,15 +65,12 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
 
     protected CustomerBO group = null;
 
-    protected LegacyAccountDao accountPersistence;
+    @Autowired
+    protected LegacyAccountDao legacyAccountDao;
 
+    @Autowired
     protected LoanBusinessService loanBusinessService;
 
-    @Before
-    public void setUp() throws Exception {
-        loanBusinessService = ApplicationContextProvider.getBean(LoanBusinessService.class);
-        accountPersistence = new LegacyAccountDao();
-    }
 
     @Test
     public void testFindBySystemId() throws Exception {

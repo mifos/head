@@ -120,7 +120,7 @@ public class AccountBO extends AbstractBusinessObject {
     private List<AccountPaymentEntity> accountPayments;
     private Set<AccountCustomFieldEntity> accountCustomFields;
 
-    private LegacyAccountDao accountPersistence = null;
+    private LegacyAccountDao legacyAccountDao = null;
     private LegacyMasterDao legacyMasterDao = null;
     private DateTimeService dateTimeService = null;
     private FinancialBusinessService financialBusinessService = null;
@@ -147,15 +147,15 @@ public class AccountBO extends AbstractBusinessObject {
         this.dateTimeService = dateTimeService;
     }
 
-    public LegacyAccountDao getAccountPersistence() {
-        if (null == accountPersistence) {
-            accountPersistence = new LegacyAccountDao();
+    public LegacyAccountDao getlegacyAccountDao() {
+        if (null == legacyAccountDao) {
+            legacyAccountDao = ApplicationContextProvider.getBean(LegacyAccountDao.class);
         }
-        return accountPersistence;
+        return legacyAccountDao;
     }
 
-    public void setAccountPersistence(final LegacyAccountDao accountPersistence) {
-        this.accountPersistence = accountPersistence;
+    public void setlegacyAccountDao(final LegacyAccountDao legacyAccountDao) {
+        this.legacyAccountDao = legacyAccountDao;
     }
 
     public LegacyMasterDao getlegacyMasterDao() {
@@ -996,7 +996,7 @@ public class AccountBO extends AbstractBusinessObject {
     public void update() throws AccountException {
         setUpdateDetails();
         try {
-            getAccountPersistence().createOrUpdate(this);
+            getlegacyAccountDao().createOrUpdate(this);
         } catch (PersistenceException e) {
             throw new AccountException(e);
         }
@@ -1338,7 +1338,7 @@ public class AccountBO extends AbstractBusinessObject {
         for (AccountActionDateEntity accountActionDateEntity : futureInstllments) {
             accountActionDates.remove(accountActionDateEntity);
             try {
-                getAccountPersistence().delete(accountActionDateEntity);
+                getlegacyAccountDao().delete(accountActionDateEntity);
             } catch (PersistenceException e) {
                 throw new AccountException(e);
             }

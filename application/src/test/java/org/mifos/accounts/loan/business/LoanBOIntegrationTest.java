@@ -173,7 +173,9 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private Short savedDigitAfterDecimal;
 
     private LoanDaoLegacyImpl loanDao;
-    private LegacyAccountDao accountPersistence = null;
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
     private Money zeroMoney;
     private String interestDueForNextInstallment = "0";
 
@@ -186,7 +188,6 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         zeroMoney = new Money(getCurrency());
         enableCustomWorkingDays();
         userContext = TestObjectFactory.getContext();
-        accountPersistence = new LegacyAccountDao();
 
         savedInitialRoundOffMultiple = AccountingRules.getInitialRoundOffMultiple();
         savedFinalRoundOffMultiple = AccountingRules.getFinalRoundOffMultiple();
@@ -1094,7 +1095,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         loanPerformanceHistory.setNoOfPayments(Integer.valueOf("3"));
         loanPerformanceHistory.setLoanMaturityDate(currentDate);
         TestObjectFactory.updateObject(loanBO);
-        loanBO = (LoanBO) new LegacyAccountDao().getAccount(loanBO.getAccountId());
+        loanBO = (LoanBO) legacyAccountDao.getAccount(loanBO.getAccountId());
         Assert.assertEquals(Integer.valueOf("3"), loanBO.getPerformanceHistory().getNoOfPayments());
         Assert.assertEquals(currentDate, loanBO.getPerformanceHistory().getLoanMaturityDate());
     }
@@ -2341,7 +2342,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
         int month = currentDateCalendar.get(Calendar.MONTH);
         int day = currentDateCalendar.get(Calendar.DAY_OF_MONTH);
         currentDateCalendar = new GregorianCalendar(year, month, day);
-        accountBO = accountPersistence.getAccount(accountBO.getAccountId());
+        accountBO = legacyAccountDao.getAccount(accountBO.getAccountId());
         Assert.assertEquals(((LoanBO) accountBO).getNextMeetingDate().toString(), new java.sql.Date(currentDateCalendar
                 .getTimeInMillis()).toString());
     }
@@ -2367,7 +2368,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
                 .getTimeInMillis()));
         TestObjectFactory.updateObject(accountBO);
 
-        accountBO = accountPersistence.getAccount(accountBO.getAccountId());
+        accountBO = legacyAccountDao.getAccount(accountBO.getAccountId());
         Assert.assertEquals(((LoanBO) accountBO).getNextMeetingDate().toString(), accountBO.getAccountActionDate(
                 Short.valueOf("2")).getActionDate().toString());
     }
@@ -5880,7 +5881,7 @@ public class LoanBOIntegrationTest extends MifosIntegrationTestCase {
     private AccountBO saveAndFetch(final AccountBO account) throws Exception {
         TestObjectFactory.updateObject(account);
         StaticHibernateUtil.flushAndClearSession();
-        return accountPersistence.getAccount(account.getAccountId());
+        return legacyAccountDao.getAccount(account.getAccountId());
     }
 
     private java.sql.Date offSetCurrentDate(final int noOfDays) {

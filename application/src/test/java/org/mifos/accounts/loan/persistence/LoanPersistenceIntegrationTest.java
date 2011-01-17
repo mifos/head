@@ -75,6 +75,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -91,6 +92,9 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
     private AccountBO loanAccountForDisbursement;
     private LoanBO badAccount;
     private LoanBO goodAccount;
+
+    @Autowired
+    private LegacyAccountDao legacyAccountDao;
 
     @Before
     public void setUp() throws Exception {
@@ -174,7 +178,7 @@ public class LoanPersistenceIntegrationTest extends MifosIntegrationTestCase {
             LoanBOTestUtils.setActionDate(accountAction, startDate);
         }
         TestObjectFactory.updateObject(loanAccount);
-        loanAccount = new LegacyAccountDao().getAccount(loanAccount.getAccountId());
+        loanAccount = legacyAccountDao.getAccount(loanAccount.getAccountId());
         List<Integer> list = loanPersistence.getLoanAccountsInArrearsInGoodStanding(latenessDays);
         Assert.assertNotNull(list);
         LoanBO testBO = TestObjectFactory.getObject(LoanBO.class, list.get(0));

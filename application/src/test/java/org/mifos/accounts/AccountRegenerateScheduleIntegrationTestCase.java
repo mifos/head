@@ -100,7 +100,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
     protected CustomerBO center;
     protected CustomerBO group;
     protected ClientBO client;
-    protected LegacyAccountDao accountPersistence;
+    protected LegacyAccountDao legacyAccountDao;
     // hard coded number of loan installments that are created (in TestObjectFactory)
     private int numberOfLoanInstallments = 6;
 
@@ -123,7 +123,7 @@ public class AccountRegenerateScheduleIntegrationTestCase extends MifosIntegrati
 //            group = null;
 //            center = null;
 
-            accountPersistence = null;
+            legacyAccountDao = null;
         } catch (Exception e) {
             // TODO Whoops, cleanup didnt work, reset db
 

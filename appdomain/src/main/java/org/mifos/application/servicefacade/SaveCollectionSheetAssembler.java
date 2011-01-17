@@ -66,15 +66,15 @@ public class SaveCollectionSheetAssembler {
 
     private final ClientAttendanceDao clientAttendanceDao;
     private final LoanPersistence loanPersistence;
-    private final LegacyAccountDao accountPersistence;
+    private final LegacyAccountDao legacyAccountDao;
     private final SavingsDao savingsDao;
 
     public SaveCollectionSheetAssembler(final ClientAttendanceDao clientAttendanceDao,
-            final LoanPersistence loanPersistence, final LegacyAccountDao accountPersistence,
+            final LoanPersistence loanPersistence, final LegacyAccountDao legacyAccountDao,
             final SavingsDao savingsDao) {
         this.clientAttendanceDao = clientAttendanceDao;
         this.loanPersistence = loanPersistence;
-        this.accountPersistence = accountPersistence;
+        this.legacyAccountDao = legacyAccountDao;
         this.savingsDao = savingsDao;
     }
 
@@ -345,7 +345,7 @@ public class SaveCollectionSheetAssembler {
 
     private CustomerAccountBO findCustomerAccountById(final Integer accountId) {
         try {
-            return (CustomerAccountBO) accountPersistence.getAccount(accountId);
+            return (CustomerAccountBO) legacyAccountDao.getAccount(accountId);
         } catch (PersistenceException e) {
             throw new MifosRuntimeException(e);
         }

@@ -82,6 +82,9 @@ import java.util.Map;
 @SuppressWarnings("unchecked")
 public class LegacyAccountDao extends LegacyGenericDao {
 
+    private LegacyAccountDao() {
+    }
+
     public AccountBO getAccount(Integer accountId) throws PersistenceException {
         return getPersistentObject(AccountBO.class, accountId);
     }

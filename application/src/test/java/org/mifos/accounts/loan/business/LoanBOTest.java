@@ -169,16 +169,16 @@ public class LoanBOTest {
     @Test
     @ExpectedException(value = AccountException.class)
     public void testInvalidConnectionForSave() throws PersistenceException {
-        final LegacyAccountDao accountPersistence = mock(LegacyAccountDao.class);
+        final LegacyAccountDao legacyAccountDao = mock(LegacyAccountDao.class);
 
         LoanBO loanBO = new LoanBO() {
             @Override
-            public LegacyAccountDao getAccountPersistence() {
-                return accountPersistence;
+            public LegacyAccountDao getlegacyAccountDao() {
+                return legacyAccountDao;
             }
         };
         try {
-            when(accountPersistence.createOrUpdate(loanBO)).thenThrow(new PersistenceException("some exception"));
+            when(legacyAccountDao.createOrUpdate(loanBO)).thenThrow(new PersistenceException("some exception"));
             loanBO.update();
             junit.framework.Assert.fail("should fail because of invalid session");
         } catch (AccountException e) {
