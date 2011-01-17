@@ -422,7 +422,7 @@ explanation of the license and how it is applied.
                                                             </td>
                                                             <td class="drawtablerow" align="center">
                                                                 <c:choose>
-                                                                    <c:when test="${loopStatus.index == (fn:length(loanAccountActionForm.paymentDataBeans) - 1)}">
+                                                                    <c:when test="${loanAccountActionForm.variableInstallmentsAllowed == false || loopStatus.index == (fn:length(loanAccountActionForm.paymentDataBeans) - 1)}">
                                                                         <c:out value="${paymentDataBeans.total}" />
                                                                     </c:when>
                                                                     <c:otherwise>
