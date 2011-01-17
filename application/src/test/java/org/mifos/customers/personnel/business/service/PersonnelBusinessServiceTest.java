@@ -10,14 +10,14 @@ import org.mifos.customers.office.persistence.OfficePersistence;
 import org.mifos.customers.personnel.persistence.PersonnelPersistence;
 import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.annotation.ExpectedException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class PersonnelBusinessServiceTest {
     final PersonnelPersistence personnelPersistence = mock(PersonnelPersistence.class);
-    final RolesPermissionsPersistence rolesPermissionsPersistence = mock(RolesPermissionsPersistence.class);
+    final LegacyRolesPermissionsDao rolesPermissionsPersistence = mock(LegacyRolesPermissionsDao.class);
     final OfficePersistence officePersistence = mock(OfficePersistence.class);
 
     PersonnelBusinessService service = new PersonnelBusinessService(personnelPersistence, rolesPermissionsPersistence) {

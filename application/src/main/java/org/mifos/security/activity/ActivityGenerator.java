@@ -36,7 +36,7 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 
 import java.io.IOException;
@@ -62,7 +62,7 @@ public class ActivityGenerator {
     }
 
     private void insertRolesActivity() throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         RoleBO role = rpp.getPersistentObject(RoleBO.class, (short) RolesAndPermissionConstants.ADMIN_ROLE);
 
         RoleActivityEntity roleActivityEntity = new RoleActivityEntity(role, activityEntity);
@@ -72,7 +72,7 @@ public class ActivityGenerator {
     private void insertActivity(short parentActivity, int lookUpId) throws ServiceException,
             ActivityGeneratorException, PersistenceException {
         ActivityEntity parentActivityEntity;
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         if (parentActivity != 0) {
             parentActivityEntity = rpp.getPersistentObject(ActivityEntity.class, parentActivity);
         } else {
@@ -116,7 +116,7 @@ public class ActivityGenerator {
     }
 
     public ActivityEntity getActivityEntity(int lookUpId) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         return rpp.retrieveOneActivityEntity(lookUpId);
     }
 
@@ -136,7 +136,7 @@ public class ActivityGenerator {
     }
 
     public static void reparentActivityUsingHibernate(short activityId, Short newParent) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         ActivityEntity parent = rpp.getPersistentObject(ActivityEntity.class, newParent);
         ActivityEntity activity = rpp.getPersistentObject(ActivityEntity.class, activityId);
         activity.setParent(parent);
@@ -145,7 +145,7 @@ public class ActivityGenerator {
 
     public static void changeActivityMessage(short activityId, short localeId, String newMessage)
             throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         LegacyMasterDao mp = ApplicationContextProvider.getBean(LegacyMasterDao.class);
         ActivityEntity activityEntity = rpp.getPersistentObject(ActivityEntity.class, Short
                 .valueOf(activityId));

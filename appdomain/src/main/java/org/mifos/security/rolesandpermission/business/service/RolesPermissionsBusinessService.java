@@ -28,15 +28,15 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.framework.exceptions.ServiceException;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.util.UserContext;
 
 public class RolesPermissionsBusinessService implements BusinessService {
 
-    private RolesPermissionsPersistence rolesPermissionsPersistence = getRolesPermissionsPersistence();
+    private LegacyRolesPermissionsDao rolesPermissionsPersistence = getRolesPermissionsPersistence();
 
-    protected RolesPermissionsPersistence getRolesPermissionsPersistence() {
-        return new RolesPermissionsPersistence();
+    protected LegacyRolesPermissionsDao getRolesPermissionsPersistence() {
+        return new LegacyRolesPermissionsDao();
     }
 
     @Override

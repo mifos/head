@@ -39,7 +39,7 @@ import org.mifos.reports.business.ReportsBO;
 import org.mifos.reports.business.ReportsJasperMap;
 import org.mifos.reports.persistence.ReportsPersistence;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Ignore
@@ -99,7 +99,7 @@ public class BirtAdminDocumentUploadActionStrutsTest extends MifosMockStrutsTest
         legacyAdminDocumentDao.getSession().clear();
         ReportsBO report = legacyAdminDocumentDao.getPersistentObject(ReportsBO.class, reportId);
 
-        RolesPermissionsPersistence permPersistence = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao permPersistence = new LegacyRolesPermissionsDao();
         ActivityEntity activityEntity = permPersistence.getPersistentObject(ActivityEntity.class,
                 report.getActivityId());
         legacyAdminDocumentDao.delete(report);

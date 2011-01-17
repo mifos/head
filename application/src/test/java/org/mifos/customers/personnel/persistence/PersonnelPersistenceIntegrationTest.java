@@ -60,7 +60,7 @@ import org.mifos.framework.hibernate.helper.QueryResult;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.TestObjectFactory;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 
 public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCase {
 
@@ -305,7 +305,7 @@ public class PersonnelPersistenceIntegrationTest extends MifosIntegrationTestCas
     @Test
     public void testGetActiveBranchManagerUnderOffice() throws Exception {
         List<PersonnelBO> activeBranchManagersUnderOffice = new PersonnelPersistence()
-                .getActiveBranchManagersUnderOffice(OFFICE_WITH_BRANCH_MANAGER, new RolesPermissionsPersistence()
+                .getActiveBranchManagersUnderOffice(OFFICE_WITH_BRANCH_MANAGER, new LegacyRolesPermissionsDao()
                         .getRole(Short.valueOf("1")));
         Assert.assertNotNull(activeBranchManagersUnderOffice);
         Assert.assertEquals(2, activeBranchManagersUnderOffice.size());

@@ -37,7 +37,7 @@ import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 
-public class RolesPermissionsPersistence extends LegacyGenericDao {
+public class LegacyRolesPermissionsDao extends LegacyGenericDao {
 
     public RoleBO getRole(String roleName) throws PersistenceException {
         Map<String, Object> queryParameters = new HashMap<String, Object>();

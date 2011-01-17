@@ -35,7 +35,7 @@ import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 
 /**
  * This class encupsulate all the funcionality requied by security module to
@@ -144,7 +144,7 @@ public class SecurityHelper {
      * @throws HibernateProcessException
      */
     public List<Short> getLeafActivities() throws SystemException, ApplicationException {
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rolesPermissionsPersistence = new LegacyRolesPermissionsDao();
         List<ActivityEntity> activityList = rolesPermissionsPersistence.getActivities();
         List<Short> leafs = new ArrayList<Short>();
         buildLeafItems(activityList, leafs);

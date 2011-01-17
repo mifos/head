@@ -34,25 +34,25 @@ public class RolesAndPermissionPersistenceIntegrationTest extends MifosIntegrati
 
     @Test
     public void testGetRole() throws Exception {
-        RoleBO role = new RolesPermissionsPersistence().getRole("Admin");
+        RoleBO role = new LegacyRolesPermissionsDao().getRole("Admin");
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
     }
 
     @Test
     public void testGetActivities() throws Exception {
-        List<ActivityEntity> activities = new RolesPermissionsPersistence().getActivities();
+        List<ActivityEntity> activities = new LegacyRolesPermissionsDao().getActivities();
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITY_COUNT, activities.size());
     }
 
     @Test
     public void testGetRoles() throws Exception {
-        List<RoleBO> roles = new RolesPermissionsPersistence().getRoles();
+        List<RoleBO> roles = new LegacyRolesPermissionsDao().getRoles();
        Assert.assertEquals(3, roles.size());
     }
 
     @Test
     public void testGetRoleForGivenId() throws Exception {
-        RoleBO role = new RolesPermissionsPersistence().getRole((short) 1);
+        RoleBO role = new LegacyRolesPermissionsDao().getRole((short) 1);
        Assert.assertEquals(RoleTestUtil.EXPECTED_ACTIVITIES_FOR_ROLE, role.getActivities().size());
     }
 

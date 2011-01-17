@@ -31,7 +31,7 @@ import org.mifos.framework.exceptions.PersistenceException;
 import org.mifos.reports.struts.actionforms.ReportsCategoryActionForm;
 import org.mifos.reports.util.helpers.ReportsConstants;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
@@ -319,7 +319,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     public ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         LookUpValueEntity anLookUp = new LookUpValueEntity();
         LookUpEntity lookUpEntity = legacyMasterDao.getPersistentObject(LookUpEntity.class, Short
                 .valueOf((short) LookUpEntity.ACTIVITY));
@@ -332,7 +332,7 @@ public class ReportsCategoryActionStrutsTest extends MifosMockStrutsTestCase {
     }
 
     private void deleteActivityForTest(ActivityEntity activityEntity) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         rpp.getSession().clear();
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
         rpp.delete(activityEntity);

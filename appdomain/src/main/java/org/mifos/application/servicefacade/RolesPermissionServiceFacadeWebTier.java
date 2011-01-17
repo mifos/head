@@ -17,7 +17,7 @@ import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
 import org.mifos.security.rolesandpermission.business.service.RolesPermissionsBusinessService;
 import org.mifos.security.rolesandpermission.exceptions.RolesPermissionException;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.mifos.security.util.UserContext;
 import org.mifos.service.BusinessRuleException;
@@ -56,7 +56,7 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
 
         RoleBO roleBO = new RoleBO(userContext, name, activityEntities);
 
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rolesPermissionsPersistence = new LegacyRolesPermissionsDao();
 
         roleBO.validateRoleName(name);
 
@@ -82,7 +82,7 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
     @Override
     public void updateRole(Short roleId, Short userId, String name, List<Short> ActivityIds) throws Exception {
         RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rolesPermissionsPersistence = new LegacyRolesPermissionsDao();
         RoleBO role = rolesPermissionsBusinessService.getRole(roleId);
 
         if (role.getName() == null || !role.getName().trim().equalsIgnoreCase(name.trim())) {
@@ -110,7 +110,7 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
 
     private List<ActivityEntity> getActivityEntities(List<Short> ActivityIds) {
         List<ActivityEntity> activityEntities = new ArrayList<ActivityEntity>();
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rolesPermissionsPersistence = new LegacyRolesPermissionsDao();
         for (Short id: ActivityIds) {
             try {
                 ActivityEntity activityEntity = rolesPermissionsPersistence.getActivityById(id);
@@ -125,7 +125,7 @@ public class RolesPermissionServiceFacadeWebTier implements RolesPermissionServi
     @Override
     public void deleteRole(Integer versionNo, Short roleId) throws Exception {
         RolesPermissionsBusinessService rolesPermissionsBusinessService = new RolesPermissionsBusinessService();
-        RolesPermissionsPersistence rolesPermissionsPersistence = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rolesPermissionsPersistence = new LegacyRolesPermissionsDao();
 
         RoleBO role = rolesPermissionsBusinessService.getRole(roleId);
         role.setVersionNo(versionNo);

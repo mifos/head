@@ -35,7 +35,7 @@ import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.DatabaseMigrator;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
 import org.mifos.security.rolesandpermission.business.RoleBO;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 import org.mifos.security.rolesandpermission.util.helpers.RolesAndPermissionConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -70,7 +70,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testShouldSuccessWhenChangeActivityParent() throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         ActivityEntity activity = rpp.getPersistentObject(ActivityEntity.class, Short
                 .valueOf((short) 2));
        Assert.assertEquals(1, activity.getParent().getId().shortValue());
@@ -82,7 +82,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
     @Test
     public void testShouldSuccessWhenChangeActivityMessage() throws Exception {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         ActivityEntity activityEntity = rpp.getPersistentObject(ActivityEntity.class, Short
                 .valueOf((short) 3));
         Integer lookUpId = activityEntity.getActivityNameLookupValues().getLookUpId();
@@ -111,7 +111,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
 
 
     private ActivityEntity insertActivityForTest(short activityId) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         LookUpValueEntity anLookUp = new LookUpValueEntity();
         LookUpEntity lookUpEntity = legacyMasterDao.getPersistentObject(LookUpEntity.class, Short
                 .valueOf((short) LookUpEntity.ACTIVITY));
@@ -124,7 +124,7 @@ public class ActivityGeneratorIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private void deleteActivityForTest(ActivityEntity activityEntity) throws PersistenceException {
-        RolesPermissionsPersistence rpp = new RolesPermissionsPersistence();
+        LegacyRolesPermissionsDao rpp = new LegacyRolesPermissionsDao();
         rpp.getSession().clear();
         LookUpValueEntity anLookUp = activityEntity.getActivityNameLookupValues();
         rpp.delete(activityEntity);

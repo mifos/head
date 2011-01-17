@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.mifos.framework.MifosIntegrationTestCase;
 import org.mifos.security.rolesandpermission.RoleTestUtil;
 import org.mifos.security.rolesandpermission.business.ActivityEntity;
-import org.mifos.security.rolesandpermission.persistence.RolesPermissionsPersistence;
+import org.mifos.security.rolesandpermission.persistence.LegacyRolesPermissionsDao;
 
 public class ActivityTagIntegrationTest extends MifosIntegrationTestCase {
 
@@ -50,7 +50,7 @@ public class ActivityTagIntegrationTest extends MifosIntegrationTestCase {
     }
 
     private List<ActivityEntity> getActivities() throws Exception {
-        return new RolesPermissionsPersistence().getActivities();
+        return new LegacyRolesPermissionsDao().getActivities();
     }
 
     private Map<String, String> getUiActivities() {
