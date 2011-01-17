@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.HibernateException;
+import org.hibernate.Query;
+import org.hibernate.Session;
 import org.mifos.application.NamedQueryConstants;
 import org.mifos.application.holiday.business.HolidayBO;
 import org.mifos.customers.office.business.OfficeBO;
@@ -34,11 +37,18 @@ import org.mifos.customers.office.util.helpers.OfficeLevel;
 import org.mifos.customers.office.util.helpers.OfficeStatus;
 import org.mifos.customers.util.helpers.CustomerSearchConstants;
 import org.mifos.dto.domain.OfficeDetailsDto;
+import org.mifos.framework.exceptions.ApplicationException;
+import org.mifos.framework.exceptions.HibernateProcessException;
 import org.mifos.framework.exceptions.PersistenceException;
+import org.mifos.framework.exceptions.SecurityException;
+import org.mifos.framework.exceptions.SystemException;
 import org.mifos.framework.exceptions.ValidationException;
+import org.mifos.framework.hibernate.helper.StaticHibernateUtil;
 import org.mifos.framework.persistence.LegacyGenericDao;
 import org.mifos.security.authorization.HierarchyManager;
 import org.mifos.security.util.OfficeCacheDto;
+import org.mifos.security.util.OfficeSearch;
+import org.mifos.security.util.SecurityConstants;
 import org.mifos.security.util.UserContext;
 
 public class OfficePersistence extends LegacyGenericDao {
@@ -282,5 +292,53 @@ public class OfficePersistence extends LegacyGenericDao {
         List<OfficeBO> queryResult = executeNamedQuery(NamedQueryConstants.GET_ALL_OFFICES_FOR_CUSTOM_FIELD,
                 queryParameters);
         return queryResult;
+    }
+
+
+
+    /**
+     * This function is used to get the list of the offices under the given
+     * personnel office under any user at any time
+     *
+     * @param officeid
+     *            office id of the person
+     * @return List list of the offices under him
+     * @throws HibernateProcessException
+     */
+    public List<OfficeSearch> getPersonnelOffices(Short officeid) throws SystemException, ApplicationException {
+        HierarchyManager hm = HierarchyManager.getInstance();
+        String pattern = hm.getSearchId(officeid) + "%";
+        List<OfficeSearch> lst = null;
+        try {
+            Session session = StaticHibernateUtil.getSessionTL();
+            Query officeSearch = session.getNamedQuery(NamedQueryConstants.GETOFFICESEARCH);
+            officeSearch.setString(SecurityConstants.PATTERN, pattern);
+            lst = officeSearch.list();
+        } catch (HibernateException he) {
+            throw new SecurityException(SecurityConstants.GENERALERROR, he);
+        }
+        return lst;
+    }
+
+    /**
+     * This function is used to initialise the the hirerchy manager which is
+     * paert of the security module which keeps the cache of officeid to office
+     * search id so that it can find office under given person without going to
+     * database every time
+     *
+     * @return List of OfficeSearch objects which contains office is and
+     *         associated searchid
+     * @throws HibernateProcessException
+     */
+    public List<OfficeSearch> getOffices() throws SystemException, ApplicationException {
+        List<OfficeSearch> lst = null;
+        try {
+            Session session = StaticHibernateUtil.getSessionTL();
+            Query queryOfficeSearchList = session.getNamedQuery(NamedQueryConstants.GETOFFICESEARCHLIST);
+            lst = queryOfficeSearchList.list();
+        } catch (HibernateException he) {
+            throw new SecurityException(SecurityConstants.GENERALERROR, he);
+        }
+        return lst;
     }
 }

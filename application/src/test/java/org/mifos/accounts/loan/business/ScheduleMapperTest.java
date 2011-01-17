@@ -49,7 +49,7 @@ import org.mifos.accounts.business.AccountActionEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.loan.business.matchers.LoanScheduleEntityMatcher;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentBuilder;
 import org.mifos.accounts.loan.schedule.domain.Schedule;
@@ -80,7 +80,7 @@ public class ScheduleMapperTest {
     @Mock
     private AccountPaymentEntity accountPaymentEntity;
     @Mock
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
     @Mock
     private AccountActionEntity accountActionEntity;
 
@@ -104,14 +104,14 @@ public class ScheduleMapperTest {
         Set<LoanScheduleEntity> loanScheduleEntities = new LinkedHashSet<LoanScheduleEntity>();
         loanScheduleEntities.add(scheduleEntityForPopulateTestInput);
         when(loanBO.getLoanScheduleEntities()).thenReturn(loanScheduleEntities);
-        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         Date paymentDate = getDate(24, 11, 2010);
         Schedule schedule = getScheduleWithSingleInstallment();
         scheduleMapper.populatePaymentDetails(schedule, loanBO, paymentDate, personnelBO, accountPaymentEntity);
         assertCalculatedInterestOnPayment(accountPaymentEntity);
         assertThat(getLoanScheduleEntity(paymentDate), new LoanScheduleEntityMatcher(scheduleEntityForPopulateTestInput));
         verify(loanBO, times(1)).getLoanScheduleEntities();
-        verify(loanBO, times(1)).getLoanPersistence();
+        verify(loanBO, times(1)).getlegacyLoanDao();
         verify(loanBO, times(1)).recordSummaryAndPerfHistory(anyBoolean(), Matchers.<PaymentAllocation>any());
     }
 

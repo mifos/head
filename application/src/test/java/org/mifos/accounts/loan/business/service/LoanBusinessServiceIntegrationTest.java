@@ -39,7 +39,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.service.AccountBusinessService;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.ScheduleCalculatorAdaptor;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -71,6 +71,8 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
     @Autowired
     protected LoanBusinessService loanBusinessService;
 
+    @Autowired
+    private LegacyLoanDao legacyLoanDao;
 
     @Test
     public void testFindBySystemId() throws Exception {
@@ -148,7 +150,7 @@ public class LoanBusinessServiceIntegrationTest extends MifosIntegrationTestCase
         replay(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,
                 accountBusinessServiceMock);
 
-        Assert.assertEquals(asList(loanMock1), new LoanBusinessService(new LoanPersistence(), configServiceMock,
+        Assert.assertEquals(asList(loanMock1), new LoanBusinessService(legacyLoanDao, configServiceMock,
                 accountBusinessServiceMock, createMock(HolidayService.class), createMock(ScheduleCalculatorAdaptor.class)).getActiveLoansForAllClientsAssociatedWithGroupLoan(groupLoanMock));
 
         verify(groupMock, clientMock, loanMock1, loanMock2, groupLoanMock, configServiceMock,

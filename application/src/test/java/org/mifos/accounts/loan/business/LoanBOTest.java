@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mifos.accounts.business.*;
 import org.mifos.accounts.exceptions.AccountException;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.LoanConstants;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallmentBuilder;
@@ -187,7 +187,7 @@ public class LoanBOTest {
 
     @Test
     public void repayInstallmentsShouldPopulateCalculatedInterestsForDIPBLoans() throws PersistenceException {
-        final LoanPersistence loanPersistence = mock(LoanPersistence.class);
+        final LegacyLoanDao legacyLoanDao = mock(LegacyLoanDao.class);
         final CustomerBO customerBO = mock(CustomerBO.class);
         final LoanSummaryEntity loanSummaryEntity = mock(LoanSummaryEntity.class);
 
@@ -198,8 +198,8 @@ public class LoanBOTest {
             }
 
             @Override
-            public LoanPersistence getLoanPersistence() {
-                return loanPersistence;
+            public LegacyLoanDao getlegacyLoanDao() {
+                return legacyLoanDao;
             }
 
             @Override
@@ -220,7 +220,7 @@ public class LoanBOTest {
         Money interest = new Money(rupee, "10");
         Money interestDue = new Money(rupee, "2.07");
 
-        when(loanPersistence.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
+        when(legacyLoanDao.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
         when(loanScheduleEntity.getPrincipalDue()).thenReturn(new Money(rupee,"1000"));
         when(loanScheduleEntity.getTotalFeeDueWithMiscFeeDue()).thenReturn(new Money(rupee,"10"));
         when(loanScheduleEntity.getPenaltyDue()).thenReturn(new Money(rupee,"10"));
@@ -245,7 +245,7 @@ public class LoanBOTest {
 
     @Test
     public void repayInstallmentsShouldPopulateCalculatedInterestsForDIPBLoansWithWaiverInterest() throws PersistenceException {
-        final LoanPersistence loanPersistence = mock(LoanPersistence.class);
+        final LegacyLoanDao legacyLoanDao = mock(LegacyLoanDao.class);
         final CustomerBO customerBO = mock(CustomerBO.class);
         final LoanSummaryEntity loanSummaryEntity = mock(LoanSummaryEntity.class);
 
@@ -256,8 +256,8 @@ public class LoanBOTest {
             }
 
             @Override
-            public LoanPersistence getLoanPersistence() {
-                return loanPersistence;
+            public LegacyLoanDao getlegacyLoanDao() {
+                return legacyLoanDao;
             }
 
             @Override
@@ -283,7 +283,7 @@ public class LoanBOTest {
         Money interest = new Money(rupee, "10");
         Money interestDue = new Money(rupee, "0");
 
-        when(loanPersistence.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
+        when(legacyLoanDao.getPersistentObject(AccountActionEntity.class, accountActionTypes.getValue())).thenReturn(accountActionEntity);
         when(loanScheduleEntity.getPrincipalDue()).thenReturn(new Money(rupee,"1000"));
         when(loanScheduleEntity.getTotalFeeDueWithMiscFeeDue()).thenReturn(new Money(rupee,"10"));
         when(loanScheduleEntity.getPenaltyDue()).thenReturn(new Money(rupee,"10"));

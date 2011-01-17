@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.productdefinition.persistence.LoanPrdPersistence;
 import org.mifos.accounts.util.helpers.AccountState;
@@ -52,7 +52,7 @@ public class LoanArrearsHelper extends TaskHelper {
         try {
             Short latenessDays = new LoanPrdPersistence().retrieveLatenessForPrd();
             long time3 = new DateTimeService().getCurrentDateTime().getMillis();
-            listAccountIds = new LoanPersistence().getLoanAccountsInArrearsInGoodStanding(latenessDays);
+            listAccountIds = ApplicationContextProvider.getBean(LegacyLoanDao.class).getLoanAccountsInArrearsInGoodStanding(latenessDays);
             long duration2 = new DateTimeService().getCurrentDateTime().getMillis() - time3;
             accountNumber = listAccountIds.size();
             getLogger().info(

@@ -58,8 +58,7 @@ import org.mifos.accounts.fees.util.helpers.FeeFormula;
 import org.mifos.accounts.fees.util.helpers.FeeFrequencyType;
 import org.mifos.accounts.financial.business.FinancialTransactionBO;
 import org.mifos.accounts.financial.util.helpers.FinancialConstants;
-import org.mifos.accounts.loan.persistance.LoanDaoLegacyImpl;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.util.helpers.ApplicableTo;
 import org.mifos.accounts.productdefinition.util.helpers.GraceType;
@@ -93,6 +92,7 @@ import org.mifos.framework.util.helpers.IntegrationTestObjectMother;
 import org.mifos.framework.util.helpers.Money;
 import org.mifos.framework.util.helpers.TestObjectFactory;
 import org.mifos.security.util.UserContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /*
  * LoanCalculationTest is a starting point for defining and exploring
@@ -151,7 +151,8 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
     private boolean allConsoleOutputEnabled = false;
     private boolean isFileNameConsoleOutputEnabled = false;
 
-    private LoanDaoLegacyImpl loanDao;
+    @Autowired
+    private LegacyLoanDao legacyLoanDao;
 
     @Before
     public void setUp() throws Exception {
@@ -165,8 +166,6 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         savedInitialRoundingMode = AccountingRules.getInitialRoundingMode();
         savedFinalRoundingMode = AccountingRules.getFinalRoundingMode();
         savedDaysInYear = AccountingRules.getNumberOfInterestDays();
-
-        loanDao = new LoanDaoLegacyImpl();
     }
 
     @After
@@ -319,13 +318,13 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
                 .getNumberOfPayments());
         // after all payments are made
         printLoanScheduleEntities(paymentsArray);
-        List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO
+        List<AccountPaymentEntity> accountPayments = legacyLoanDao.retrieveAllAccountPayments(accountBO
                 .getAccountId());
         accountBO.setAccountPayments(accountPayments);
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         accountBO.adjustLastPayment("Adjust last payment", loggedInUser);
         new TestObjectPersistence().persist(accountBO);
-        accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO.getAccountId());
+        accountPayments = legacyLoanDao.retrieveAllAccountPayments(accountBO.getAccountId());
         Assert.assertEquals(accountPayments.get(0).getAmount(), new Money(getCurrency(), "0")); // this
         // is
         // the
@@ -430,7 +429,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
         verifyReversedLoanSchedules(paymentsArray, expectedResults);
-        List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(accountBO
+        List<AccountPaymentEntity> accountPayments = legacyLoanDao.retrieveAllAccountPayments(accountBO
                 .getAccountId());
         // every payment is reversed so amount is 0
         for (AccountPaymentEntity payment : accountPayments) {
@@ -479,7 +478,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
-        AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+        AccountBO loan = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()),
                 loanParams.getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
@@ -556,14 +555,14 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         actionDateEntities = loan.getAccountActionDates();
         paymentsArray = LoanBOTestUtils.getSortedAccountActionDateEntity(actionDateEntities, loanParams
                 .getNumberOfPayments());
-        List<AccountPaymentEntity> accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan
+        List<AccountPaymentEntity> accountPayments = legacyLoanDao.retrieveAllAccountPayments(loan
                 .getAccountId());
         Assert.assertEquals(accountPayments.size(), paymentToReverse);
         loan.setAccountPayments(accountPayments);
         PersonnelBO loggedInUser = IntegrationTestObjectMother.testUser();
         loan.adjustLastPayment("Adjust last payment", loggedInUser);
         new TestObjectPersistence().persist(loan);
-        accountPayments = new LoanPersistence().retrieveAllAccountPayments(loan.getAccountId());
+        accountPayments = legacyLoanDao.retrieveAllAccountPayments(loan.getAccountId());
         Assert.assertEquals(accountPayments.get(0).getAmount(), new Money(getCurrency(), "0")); // this
         // is
         // the
@@ -883,7 +882,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
-        AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+        AccountBO loan = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()),
                 loanParams.getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
@@ -951,7 +950,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
         // loanOffering.updateLoanOfferingSameForAllLoan(loanOffering);
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
-        AccountBO loan = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+        AccountBO loan = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()),
                 loanParams.getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,
@@ -1591,7 +1590,7 @@ public class LoanCalculationIntegrationTest extends MifosIntegrationTestCase {
 
         List<FeeDto> feeViewList = createFeeViews(config, loanParams, meeting);
 
-        AccountBO accountBO = loanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
+        AccountBO accountBO = legacyLoanDao.createLoan(TestUtils.makeUser(), loanOffering, group,
                 AccountState.LOAN_ACTIVE_IN_GOOD_STANDING, new Money(getCurrency(), loanParams.getPrincipal()),
                 loanParams.getNumberOfPayments(), startDate, false, Double.parseDouble(loanParams.getAnnualInterest()),
                 config.getGracePeriod(), null, feeViewList, null, DOUBLE_ZERO, DOUBLE_ZERO, SHORT_ZERO, SHORT_ZERO,

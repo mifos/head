@@ -26,7 +26,8 @@ import java.util.Set;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.config.business.MifosConfigurationManager;
 import org.mifos.config.exceptions.ConfigurationException;
 import org.mifos.config.persistence.ConfigurationPersistence;
@@ -183,7 +184,7 @@ public class ClientRules {
                 getConfigPersistence().updateConfigurationKeyValueInteger(GroupCanApplyLoansKey, Constants.YES);
             } else if (dbValue == Constants.YES && cfgValue == false) {
 
-                if (new LoanPersistence().countOfGroupLoanAccounts() > 0) {
+                if (ApplicationContextProvider.getBean(LegacyLoanDao.class).countOfGroupLoanAccounts() > 0) {
 
                     // Trying to override db value of "true/yes" with "false/no"
                     // in the config file violates business rules.

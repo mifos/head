@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.mifos.accounts.acceptedpaymenttype.persistence.AcceptedPaymentTypePersistence;
 import org.mifos.accounts.api.StandardAccountService;
 import org.mifos.accounts.api.TransactionImport;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.persistence.GenericDaoHibernate;
 import org.mifos.application.servicefacade.ApplicationContextProvider;
@@ -70,7 +70,7 @@ public class PluginManager {
         ClassLoader pluginClassLoader = initializePluginClassLoader();
         ServiceLoader<TransactionImport> loader = ServiceLoader.load(TransactionImport.class, pluginClassLoader);
         for (TransactionImport ti : loader) {
-            ti.setAccountService(new StandardAccountService(ApplicationContextProvider.getBean(LegacyAccountDao.class), new LoanPersistence(),
+            ti.setAccountService(new StandardAccountService(ApplicationContextProvider.getBean(LegacyAccountDao.class), ApplicationContextProvider.getBean(LegacyLoanDao.class),
                     new AcceptedPaymentTypePersistence(), new PersonnelDaoHibernate(new GenericDaoHibernate()),
                     new CustomerDaoHibernate(new GenericDaoHibernate()), ApplicationContextProvider.getBean(LoanBusinessService.class), new HibernateTransactionHelperForStaticHibernateUtil()));
 	    ti.setCustomerSearchService(new CustomerSearchServiceImpl(new CustomerDaoHibernate(new GenericDaoHibernate())));

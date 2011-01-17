@@ -35,7 +35,7 @@ import org.mifos.accounts.business.AccountBO;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.persistance.ClientAttendanceDao;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
 import org.mifos.accounts.savings.persistence.SavingsDao;
@@ -55,7 +55,9 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     private static final Logger logger = LoggerFactory.getLogger(CollectionSheetServiceImpl.class);
 
     private final ClientAttendanceDao clientAttendanceDao;
-    private LoanPersistence loanPersistence = new LoanPersistence();
+
+    @Autowired
+    private LegacyLoanDao legacyLoanDao;
 
     @Autowired
     private LegacyAccountDao legacyAccountDao;
@@ -71,10 +73,10 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
     }
 
     public CollectionSheetServiceImpl(final ClientAttendanceDao clientAttendanceDao,
-            final LoanPersistence loanPersistence, final LegacyAccountDao legacyAccountDao,
+            final LegacyLoanDao legacyLoanDao, final LegacyAccountDao legacyAccountDao,
             final SavingsDao savingsDao, final CollectionSheetDao collectionSheetDao) {
         this.clientAttendanceDao = clientAttendanceDao;
-        this.loanPersistence = loanPersistence;
+        this.legacyLoanDao = legacyLoanDao;
         this.legacyAccountDao = legacyAccountDao;
         this.savingsDao = savingsDao;
         this.collectionSheetDao = collectionSheetDao;
@@ -138,7 +140,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
         final List<String> failedCustomerAccountPaymentNums = new ArrayList<String>();
 
         SaveCollectionSheetAssembler saveCollectionSheetAssembler = new SaveCollectionSheetAssembler(
-                clientAttendanceDao, loanPersistence, legacyAccountDao, savingsDao);
+                clientAttendanceDao, legacyLoanDao, legacyAccountDao, savingsDao);
 
         final List<ClientAttendanceBO> clientAttendances = saveCollectionSheetAssembler
                 .clientAttendanceAssemblerfromDto(saveCollectionSheet.getSaveCollectionSheetCustomers(),
@@ -233,7 +235,7 @@ public class CollectionSheetServiceImpl implements CollectionSheetService {
             StaticHibernateUtil.startTransaction();
 
             clientAttendanceDao.save(clientAttendances);
-            loanPersistence.save(loanAccounts);
+            legacyLoanDao.save(loanAccounts);
             legacyAccountDao.save(customerAccountList);
             savingsDao.save(savingAccounts);
 

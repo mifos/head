@@ -34,7 +34,7 @@ import org.mifos.accounts.exceptions.AccountException;
 import org.mifos.accounts.loan.business.LoanBO;
 import org.mifos.accounts.loan.business.service.LoanBusinessService;
 import org.mifos.accounts.loan.business.service.LoanScheduleGenerationDto;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.util.helpers.RepaymentScheduleInstallment;
 import org.mifos.accounts.persistence.LegacyAccountDao;
 import org.mifos.accounts.savings.business.SavingsBO;
@@ -71,7 +71,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class StandardAccountService implements AccountService {
 
     private LegacyAccountDao legacyAccountDao;
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
     private AcceptedPaymentTypePersistence acceptedPaymentTypePersistence;
     private PersonnelDao personnelDao;
     private CustomerDao customerDao;
@@ -82,12 +82,12 @@ public class StandardAccountService implements AccountService {
     private LegacyMasterDao legacyMasterDao;
 
     @Autowired
-    public StandardAccountService(LegacyAccountDao legacyAccountDao, LoanPersistence loanPersistence,
+    public StandardAccountService(LegacyAccountDao legacyAccountDao, LegacyLoanDao legacyLoanDao,
                                   AcceptedPaymentTypePersistence acceptedPaymentTypePersistence, PersonnelDao personnelDao,
                                   CustomerDao customerDao, LoanBusinessService loanBusinessService,
                                   HibernateTransactionHelper transactionHelper) {
         this.legacyAccountDao = legacyAccountDao;
-        this.loanPersistence = loanPersistence;
+        this.legacyLoanDao = legacyLoanDao;
         this.acceptedPaymentTypePersistence = acceptedPaymentTypePersistence;
         this.personnelDao = personnelDao;
         this.customerDao = customerDao;
@@ -161,7 +161,7 @@ public class StandardAccountService implements AccountService {
 
         StaticHibernateUtil.startTransaction();
         for (AccountPaymentParametersDto accountPaymentParametersDto : accountPaymentParametersDtoList) {
-            LoanBO loan = this.loanPersistence.getAccount(accountPaymentParametersDto.getAccountId());
+            LoanBO loan = this.legacyLoanDao.getAccount(accountPaymentParametersDto.getAccountId());
 
             PaymentTypeEntity paymentTypeEntity = legacyMasterDao.getPersistentObject(
                     PaymentTypeEntity.class, accountPaymentParametersDto.getPaymentType().getValue());
@@ -196,7 +196,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromId(Integer id) throws PersistenceException {
-        LoanBO loan = this.loanPersistence.getAccount(id);
+        LoanBO loan = this.legacyLoanDao.getAccount(id);
         if (null == loan) {
             throw new PersistenceException("loan not found for id " + id);
         }
@@ -205,7 +205,7 @@ public class StandardAccountService implements AccountService {
 
     @Override
     public AccountReferenceDto lookupLoanAccountReferenceFromExternalId(String externalId) throws PersistenceException {
-        LoanBO loan = this.loanPersistence.findByExternalId(externalId);
+        LoanBO loan = this.legacyLoanDao.findByExternalId(externalId);
         if (null == loan) {
             throw new PersistenceException("loan not found for external id " + externalId);
         }
@@ -221,7 +221,7 @@ public class StandardAccountService implements AccountService {
     @Override
     public List<InvalidPaymentReason> validateLoanDisbursement(AccountPaymentParametersDto payment) throws Exception {
         List<InvalidPaymentReason> errors = new ArrayList<InvalidPaymentReason>();
-        LoanBO loanAccount = this.loanPersistence.getAccount(payment.getAccountId());
+        LoanBO loanAccount = this.legacyLoanDao.getAccount(payment.getAccountId());
 
         if ((loanAccount.getState() != AccountState.LOAN_APPROVED)
                 && (loanAccount.getState() != AccountState.LOAN_DISBURSED_TO_LOAN_OFFICER)) {

@@ -25,9 +25,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.mifos.accounts.loan.business.LoanBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.productdefinition.business.LoanOfferingBO;
 import org.mifos.accounts.productdefinition.business.service.LoanPrdBusinessService;
+import org.mifos.application.servicefacade.ApplicationContextProvider;
 import org.mifos.customers.office.business.OfficeBO;
 import org.mifos.customers.office.business.service.OfficeBusinessService;
 import org.mifos.customers.personnel.business.PersonnelBO;
@@ -46,13 +47,13 @@ public class ReportsDataService {
 
     private PersonnelBO personnel;
 
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
 
     public ReportsDataService() {
         this.personnelBusinessService = new PersonnelBusinessService();
         this.officeBusinessService = new OfficeBusinessService();
         this.loanPrdBusinessService = new LoanPrdBusinessService();
-        this.loanPersistence = new LoanPersistence();
+        this.legacyLoanDao = ApplicationContextProvider.getBean(LegacyLoanDao.class);
     }
 
     public void initialize(Integer userId) throws ServiceException {
@@ -84,20 +85,20 @@ public class ReportsDataService {
 
     public List<LoanBO> getLoanAccountsInActiveBadStanding(Integer branchId, Integer loanOfficerId,
             Integer loanProductId) throws PersistenceException {
-        return loanPersistence.getLoanAccountsInActiveBadStanding(NumberUtils.convertIntegerToShort(branchId),
+        return legacyLoanDao.getLoanAccountsInActiveBadStanding(NumberUtils.convertIntegerToShort(branchId),
                 NumberUtils.convertIntegerToShort(loanOfficerId), NumberUtils.convertIntegerToShort(loanProductId));
     }
 
     public List<LoanBO> getActiveLoansBothInGoodAndBadStandingByLoanOfficer(Integer branchId, Integer loanOfficerId,
             Integer loanProductId) throws PersistenceException {
-        return loanPersistence.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(NumberUtils
+        return legacyLoanDao.getActiveLoansBothInGoodAndBadStandingByLoanOfficer(NumberUtils
                 .convertIntegerToShort(branchId), NumberUtils.convertIntegerToShort(loanOfficerId), NumberUtils
                 .convertIntegerToShort(loanProductId));
     }
 
     public BigDecimal getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(Integer branchId,
             Integer loanOfficerId, Integer loanProductId) throws PersistenceException {
-        return loanPersistence.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(NumberUtils
+        return legacyLoanDao.getTotalOutstandingPrincipalOfLoanAccountsInActiveGoodStanding(NumberUtils
                 .convertIntegerToShort(branchId), NumberUtils.convertIntegerToShort(loanOfficerId), NumberUtils
                 .convertIntegerToShort(loanProductId));
     }
@@ -118,8 +119,8 @@ public class ReportsDataService {
         this.personnel = personnel;
     }
 
-    public void setLoanPersistence(LoanPersistence loanPersistence) {
-        this.loanPersistence = loanPersistence;
+    public void setlegacyLoanDao(LegacyLoanDao legacyLoanDao) {
+        this.legacyLoanDao = legacyLoanDao;
     }
 
     PersonnelBO getPersonnel() {

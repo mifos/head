@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import org.joda.time.LocalDate;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.savings.persistence.SavingsDao;
 import org.mifos.application.servicefacade.CollectionSheetCustomerAccountCollectionDto;
 import org.mifos.application.servicefacade.CollectionSheetCustomerDto;
@@ -54,6 +54,9 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
     private final SavingsDao savingsDao;
 
     @Autowired
+    private LegacyLoanDao legacyLoanDao;
+
+    @Autowired
     public CollectionSheetDaoHibernate(final SavingsDao savingsDao) {
         this.savingsDao = savingsDao;
     }
@@ -66,7 +69,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         queryParameters.put("CUSTOMER_ID", customerId);
         queryParameters.put("TRANSACTION_DATE", transactionDate.toString());
 
-        CollectionSheetCustomerDto topCustomer = (CollectionSheetCustomerDto) execUniqueResultNamedQueryWithResultTransformer(
+        CollectionSheetCustomerDto topCustomer = execUniqueResultNamedQueryWithResultTransformer(
                 "findCustomerAtTopOfHierarchyAsDto", queryParameters, CollectionSheetCustomerDto.class);
 
         if (topCustomer == null) {
@@ -103,7 +106,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
         topOfHierarchyParameters.put("CUSTOMER_ID", customerAtTopOfHierarchyId);
         topOfHierarchyParameters.put("TRANSACTION_DATE", transactionDate.toString());
 
-        final CollectionSheetCustomerLoanDto loanRepaymentsForCustomerAtTopOfHierarchy = (CollectionSheetCustomerLoanDto) execUniqueResultNamedQueryWithResultTransformer(
+        final CollectionSheetCustomerLoanDto loanRepaymentsForCustomerAtTopOfHierarchy = execUniqueResultNamedQueryWithResultTransformer(
                 "findLoanRepaymentsforCustomerAtTopOfHierarchyAsDto", topOfHierarchyParameters,
                 CollectionSheetCustomerLoanDto.class);
 
@@ -220,7 +223,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
 
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> accountCollectionsOnCustomerAccountGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerAccountCollectionDto>>();
 
-        CollectionSheetCustomerAccountCollectionDto accountCollectionFeeForHierarchyCustomer = (CollectionSheetCustomerAccountCollectionDto) execUniqueResultNamedQueryWithResultTransformer(
+        CollectionSheetCustomerAccountCollectionDto accountCollectionFeeForHierarchyCustomer = execUniqueResultNamedQueryWithResultTransformer(
                 "findAccountCollectionsOnCustomerAccountForTopCustomerOfHierarchy", queryParameters,
                 CollectionSheetCustomerAccountCollectionDto.class);
 
@@ -269,7 +272,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
 
         final Map<Integer, List<CollectionSheetCustomerAccountCollectionDto>> accountCollectionsOnCustomerAccountGroupedByCustomerId = new HashMap<Integer, List<CollectionSheetCustomerAccountCollectionDto>>();
 
-        final CollectionSheetCustomerAccountCollectionDto accountCollectionFeeForHierarchyCustomer = (CollectionSheetCustomerAccountCollectionDto) execUniqueResultNamedQueryWithResultTransformer(
+        final CollectionSheetCustomerAccountCollectionDto accountCollectionFeeForHierarchyCustomer = execUniqueResultNamedQueryWithResultTransformer(
                 "findOutstandingCustomerAccountFeesForTopCustomerOfHierarchyAsDto", queryParameters,
                 CollectionSheetCustomerAccountCollectionDto.class);
 
@@ -408,7 +411,7 @@ public class CollectionSheetDaoHibernate extends LegacyGenericDao implements Col
             if (Constants.YES == loanDisbursementAccount.getPayInterestAtDisbursement()) {
                 amountDueAtDisbursement = findAmountDueWhenInterestIsDueAtDibursementTime(accountId);
             } else {
-                amountDueAtDisbursement = new LoanPersistence().getFeeAmountAtDisbursement(accountId,
+                amountDueAtDisbursement = legacyLoanDao.getFeeAmountAtDisbursement(accountId,
                         Money.getDefaultCurrency()).getAmountDoubleValue();
             }
 

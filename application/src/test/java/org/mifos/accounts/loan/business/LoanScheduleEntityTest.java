@@ -28,7 +28,7 @@ import org.mifos.accounts.business.AccountFeesEntity;
 import org.mifos.accounts.business.AccountPaymentEntity;
 import org.mifos.accounts.business.AccountTrxnEntity;
 import org.mifos.accounts.fees.business.FeeBO;
-import org.mifos.accounts.loan.persistance.LoanPersistence;
+import org.mifos.accounts.loan.persistance.LegacyLoanDao;
 import org.mifos.accounts.loan.schedule.domain.Installment;
 import org.mifos.accounts.loan.schedule.domain.InstallmentBuilder;
 import org.mifos.accounts.util.helpers.AccountActionTypes;
@@ -62,7 +62,7 @@ public class LoanScheduleEntityTest {
     @Mock
     private AccountPaymentEntity accountPayment;
     @Mock
-    private LoanPersistence loanPersistence;
+    private LegacyLoanDao legacyLoanDao;
     @Mock
     private AccountPaymentEntity accountPaymentEntity;
 
@@ -114,11 +114,11 @@ public class LoanScheduleEntityTest {
         loanScheduleEntity.setAccount(loanBO);
         loanScheduleEntity.setPaymentAllocation(paymentAllocation);
         Mockito.doNothing().when(accountPayment).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
-        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         when(accountPayment.getAccount()).thenReturn(loanBO);
         loanScheduleEntity.updateSummaryAndPerformanceHistory(accountPayment, personnel, paymentDate);
         verify(accountPayment, times(1)).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
-        verify(loanBO, times(1)).getLoanPersistence();
+        verify(loanBO, times(1)).getlegacyLoanDao();
         verify(accountPayment, times(1)).getAccount();
         verify(loanBO, times(1)).recordSummaryAndPerfHistory(true, paymentAllocation);
     }
@@ -135,11 +135,11 @@ public class LoanScheduleEntityTest {
         loanScheduleEntity.setAccount(loanBO);
         loanScheduleEntity.setPaymentAllocation(paymentAllocation);
         Mockito.doNothing().when(accountPayment).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
-        when(loanBO.getLoanPersistence()).thenReturn(loanPersistence);
+        when(loanBO.getlegacyLoanDao()).thenReturn(legacyLoanDao);
         when(accountPayment.getAccount()).thenReturn(loanBO);
         loanScheduleEntity.updateSummaryAndPerformanceHistory(accountPayment, personnel, paymentDate);
         verify(accountPayment, times(1)).addAccountTrxn(Mockito.<AccountTrxnEntity>any());
-        verify(loanBO, times(1)).getLoanPersistence();
+        verify(loanBO, times(1)).getlegacyLoanDao();
         verify(accountPayment, times(1)).getAccount();
         verify(loanBO, times(1)).recordSummaryAndPerfHistory(false, paymentAllocation);
     }
